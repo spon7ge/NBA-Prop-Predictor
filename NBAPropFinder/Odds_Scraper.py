@@ -64,18 +64,18 @@ class Odds_Scraper():
             print(f"Request failed: {e}")
             return []
     
-    def collect_all_odds(self):
+    def collect_all_odds(self): #us for all odds, us_dfs for dfs odds(prizepicks and underdog)
         for id in self.ids:
-            self.points.append(self.get_odds(id, 'player_points', 'us_dfs'))
-            self.rebounds.append(self.get_odds(id, 'player_rebounds', 'us_dfs'))
-            self.assists.append(self.get_odds(id, 'player_assists', 'us_dfs'))
-            self.threes.append(self.get_odds(id, 'player_threes', 'us_dfs'))
-            self.blocks.append(self.get_odds(id, 'player_blocks', 'us_dfs'))
-            self.steals.append(self.get_odds(id, 'player_steals', 'us_dfs'))
-            self.pra.append(self.get_odds(id, 'player_rebounds_assists', 'us_dfs'))
-            self.pr.append(self.get_odds(id, 'player_rebounds', 'us_dfs'))
-            self.pa.append(self.get_odds(id, 'player_assists', 'us_dfs'))
-            self.ra.append(self.get_odds(id, 'player_rebounds_assists', 'us_dfs'))
-            self.to.append(self.get_odds(id, 'player_turnovers', 'us_dfs'))
-            self.bs.append(self.get_odds(id, 'player_blocks_steals', 'us_dfs'))
+            self.points.append(self.get_odds(id, 'player_points', 'us'))
+            self.rebounds.append(self.get_odds(id, 'player_rebounds', 'us'))
+            self.assists.append(self.get_odds(id, 'player_assists', 'us'))
+            self.threes.append(self.get_odds(id, 'player_threes', 'us'))
+            self.blocks.append(self.get_odds(id, 'player_blocks', 'us'))
+            self.steals.append(self.get_odds(id, 'player_steals', 'us'))
+            self.pra.append(self.get_odds(id, 'player_rebounds_assists', 'us'))
+            self.pr.append(self.get_odds(id, 'player_rebounds', 'us'))
+            self.pa.append(self.get_odds(id, 'player_assists', 'us'))
+            self.ra.append(self.get_odds(id, 'player_rebounds_assists', 'us'))
+            self.to.append(self.get_odds(id, 'player_turnovers', 'us'))
+            self.bs.append(self.get_odds(id, 'player_blocks_steals', 'us'))
             
