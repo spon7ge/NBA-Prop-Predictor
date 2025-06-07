@@ -14,11 +14,12 @@ class FetchPlayersStats:
         self.sleep_time = sleep_time
 
     #grabs basic stats from gamelogs and adds other stats
-    def fetchPlayerStats(self, season=None, sample_size=None):
+    def fetchPlayerStats(self, season=None, sample_size=None, season_type='Regular Season'):
         season = season or self.default_season 
         game_logs = leaguegamelog.LeagueGameLog(
         season=season, 
-        player_or_team_abbreviation='P'
+        player_or_team_abbreviation='P',
+        season_type_all_star=season_type
         ).get_data_frames()[0]
     
         # Take a sample if specified
@@ -45,11 +46,16 @@ class FetchPlayersStats:
         def PointsPerShotAttempt(PTS,FGA,FTA):
             res = np.where(FGA == 0, 0.0,PTS/(FGA+0.44*FTA))
             return res.round(3)
+        
+        def eFG(PTS,FGA,FG3A,FTA):
+            res = np.where(FGA == 0, 0.0,PTS/(FGA+0.44*FTA))
+            return res.round(3)
 
         game_logs['OPP_ABBREVIATION'] = game_logs.apply(extract_opponent, axis=1)
         game_logs['HOME_GAME'] = game_logs['MATCHUP'].apply(lambda x: 1 if 'vs.' in x else 0)
         game_logs['AWAY_GAME'] = game_logs['MATCHUP'].apply(lambda x: 1 if '@' in x else 0)
         game_logs['PointsPerShot'] = PointsPerShotAttempt(game_logs['PTS'], game_logs['FGA'], game_logs['FTA'])
+        game_logs['eFG'] = eFG(game_logs['PTS'], game_logs['FGA'], game_logs['FG3A'], game_logs['FTA'])
 
         columns = [
             'PLAYER_NAME', 'PLAYER_ID', 'MATCHUP', 'TEAM_ABBREVIATION', 'TEAM_ID', 
@@ -57,7 +63,7 @@ class FetchPlayersStats:
             'MIN', 'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 
             'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
             'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PF', 
-            'PLUS_MINUS', 'FANTASY_PTS', 'PointsPerShot'
+            'PLUS_MINUS', 'FANTASY_PTS', 'PointsPerShot', 'eFG'
         ]
         game_logs = game_logs[columns]
         print(f"Basic data completed for {season}")
@@ -112,7 +118,7 @@ class FetchPlayersStats:
         merged_data = pd.merge(player_data, advanced_stats_subset, on=['GAME_ID', 'PLAYER_ID'], how='left')
         return merged_data
 
-    def getTeamData(self, season=None):
+    def getTeamData(self, season=None, season_type='Regular Season'):
         all_teams = teams.get_teams()
         team_ids = [team['id'] for team in all_teams]
         team_names = [team['full_name'] for team in all_teams]
@@ -122,7 +128,7 @@ class FetchPlayersStats:
         for i,id in enumerate(team_ids):
             try:
                 print(f"Fetching team data for {team_names[i]} ({i+1} of {total_teams})")
-                team_logs = teamgamelog.TeamGameLog(team_id=id, season=season).get_data_frames()[0]
+                team_logs = teamgamelog.TeamGameLog(team_id=id, season=season, season_type_all_star=season_type).get_data_frames()[0]
                 team_logs.columns = team_logs.columns.str.upper()
                 columns_to_remove_upper = [col.upper() for col in columns_removed]
                 team_logs = team_logs.drop(columns=columns_to_remove_upper, errors='ignore')
@@ -251,13 +257,13 @@ class FetchPlayersStats:
         )
         return merged_data
 
-    def getCompleteStats(self, season=None, sample_size=None, sleep_time=None, max_workers=10):
+    def getCompleteStats(self, season=None, sample_size=None, season_type='Regular Season', sleep_time=None, max_workers=10):
         """Complete workflow to fetch basic stats, advanced stats, and merge them with team data"""
         season = season or self.default_season
         
         # Step 1: Get basic player stats
         print("Fetching player stats...")
-        player_stats = self.fetchPlayerStats(season, sample_size=sample_size)
+        player_stats = self.fetchPlayerStats(season, sample_size=sample_size, season_type=season_type)
         
         # Step 2: Get advanced stats for all games
         print("Fetching advanced player stats...")
@@ -269,7 +275,7 @@ class FetchPlayersStats:
         
         # Step 4: Get team data
         print("Fetching team data...")
-        team_data = self.getTeamData(season)
+        team_data = self.getTeamData(season, season_type)
         
         # Step 5: Process team data with additional metrics
         print("Adding opponent statistics...")
