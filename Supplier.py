@@ -1,7 +1,8 @@
 class Supplier():
     def __init__(self):
-        self.api_key = "1364ab9544bc50cac6535f51283a69a9"
-        self.directory = "C:\\Users\\alexg\\Downloads\\projections.json"
+        self.api_key = "8aa8bb1fc5d56c98b45d6f3f58beab70"
+        # self.directory = "C:\\Users\\alexg\\Downloads\\projections.json"
+        self.directory = "/Users/alexg/Downloads/projections.json"
     
     def getKey(self):
         return self.api_key
