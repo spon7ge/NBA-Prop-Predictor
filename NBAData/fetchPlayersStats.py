@@ -53,13 +53,12 @@ class FetchPlayersStats:
 
         game_logs['OPP_ABBREVIATION'] = game_logs.apply(extract_opponent, axis=1)
         game_logs['HOME_GAME'] = game_logs['MATCHUP'].apply(lambda x: 1 if 'vs.' in x else 0)
-        game_logs['AWAY_GAME'] = game_logs['MATCHUP'].apply(lambda x: 1 if '@' in x else 0)
         game_logs['PointsPerShot'] = PointsPerShotAttempt(game_logs['PTS'], game_logs['FGA'], game_logs['FTA'])
         game_logs['eFG'] = eFG(game_logs['PTS'], game_logs['FGA'], game_logs['FG3A'], game_logs['FTA'])
 
         columns = [
             'PLAYER_NAME', 'PLAYER_ID', 'MATCHUP', 'TEAM_ABBREVIATION', 'TEAM_ID', 
-            'OPP_ABBREVIATION', 'HOME_GAME','AWAY_GAME', 'GAME_ID', 'GAME_DATE', 'WL', 
+            'OPP_ABBREVIATION', 'HOME_GAME', 'GAME_ID', 'GAME_DATE', 'WL', 
             'MIN', 'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 
             'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
             'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PF', 
