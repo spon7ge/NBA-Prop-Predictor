@@ -1,3 +1,7 @@
+from nba_api.stats.endpoints import commonplayerinfo
+import pandas as pd
+import time
+
 def starters(data):
     starters = ['G','F','C']
     if data['START_POSITION'] in starters:
@@ -21,7 +25,13 @@ def assign_position(data):
         time.sleep(1)
         
     data['POSITION'] = data['PLAYER_ID'].map(ids)
-    
-pos_dummies = pd.get_dummies(data['POSITION'], prefix='')
-team_dummies = pd.get_dummies(data['TEAM_ABBREVIATION'], prefix='TEAM').astype(int)
-opp_dummies = pd.get_dummies(data['OPP_ABBREVIATION'], prefix='OPP').astype(int)
+
+    # Create binary flags for simplified position types
+    data['GUARD'] = data['POSITION'].str.contains('G', na=False).astype(int)
+    data['FORWARD'] = data['POSITION'].str.contains('F', na=False).astype(int)
+    data['CENTER'] = data['POSITION'].str.contains('C', na=False).astype(int)
+    data = data.drop('POSITION', axis=1)
+    return data
+
+# team_dummies = pd.get_dummies(data['TEAM_ABBREVIATION'], prefix='TEAM').astype(int)
+# opp_dummies = pd.get_dummies(data['OPP_ABBREVIATION'], prefix='OPP').astype(int)
