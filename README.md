@@ -1,6 +1,6 @@
 # 🏀 NBA Player Prop Prediction & Betting Strategy
 ## 📌 Project Overview
-This project is an end-to-end pipeline that predicts NBA player performance using historical data, advanced stats, and machine learning. It evaluates the expected value (EV) and bet sizing using the Kelly Criterion and Monte Carlo Simulations for various betting scenarios (single legs, 2-leg, 3-leg, 4-leg props).
+This project is an end-to-end pipeline that predicts NBA player performance using players historical data, advanced stats to create ML models for each prop. Then grabbing the expected value (EV) and bet sizing using the Kelly Criterion for various betting scenarios (single legs, 2-leg, 3-leg props).
 ## Goals
 ### Predict NBA Player Prop Outcomes
 Train machine learning models (e.g., XGBoost) to forecast player stat lines like Points, Assists, and Rebounds based on historical and contextual data.
