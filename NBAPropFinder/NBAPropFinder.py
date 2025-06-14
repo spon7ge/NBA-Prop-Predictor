@@ -25,6 +25,10 @@ class NBAPropFinder():
         self.threes_map = self.create_map(self.odds_data.threes)
         self.blocks_map = self.create_map(self.odds_data.blocks)
         self.steals_map = self.create_map(self.odds_data.steals)
+        self.fg_map = self.create_map(self.odds_data.fg)
+        self.fg3_map = self.create_map(self.odds_data.fg3)
+        self.ftm_map = self.create_map(self.odds_data.ftm)
+        self.fta_map = self.create_map(self.odds_data.fta)
         self.pra_map = self.create_map(self.odds_data.pra)
         self.pr_map = self.create_map(self.odds_data.pr)
         self.pa_map = self.create_map(self.odds_data.pa)
@@ -52,6 +56,10 @@ class NBAPropFinder():
             self.threes_map,
             self.blocks_map,
             self.steals_map,
+            self.fg_map,
+            self.fg3_map,
+            self.ftm_map,
+            self.fta_map,
             self.pra_map,
             self.pr_map,
             self.pa_map,

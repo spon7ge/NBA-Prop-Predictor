@@ -12,6 +12,10 @@ class Odds_Scraper():
         self.threes = []
         self.blocks = []
         self.steals = []
+        self.fg = []
+        self.fg3 = []
+        self.ftm = []
+        self.fta = []
         self.pra = []
         self.pr = []
         self.pa = []
@@ -72,9 +76,13 @@ class Odds_Scraper():
             self.threes.append(self.get_odds(id, 'player_threes', region))
             self.blocks.append(self.get_odds(id, 'player_blocks', region))
             self.steals.append(self.get_odds(id, 'player_steals', region))
-            self.pra.append(self.get_odds(id, 'player_rebounds_assists', region))
-            self.pr.append(self.get_odds(id, 'player_rebounds', region))
-            self.pa.append(self.get_odds(id, 'player_assists', region))
+            self.fg.append(self.get_odds(id, 'player_field_goals', region))
+            self.fg3.append(self.get_odds(id, 'player_threes', region))
+            self.ftm.append(self.get_odds(id, 'player_frees_made', region))
+            self.fta.append(self.get_odds(id, 'player_frees_attempts', region))
+            self.pra.append(self.get_odds(id, 'player_points_rebounds_assists', region))
+            self.pr.append(self.get_odds(id, 'player_points_rebounds', region))
+            self.pa.append(self.get_odds(id, 'player_points_assists', region))
             self.ra.append(self.get_odds(id, 'player_rebounds_assists', region))
             self.to.append(self.get_odds(id, 'player_turnovers', region))
             self.bs.append(self.get_odds(id, 'player_blocks_steals', region))
