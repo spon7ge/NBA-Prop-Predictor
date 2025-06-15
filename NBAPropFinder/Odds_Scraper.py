@@ -68,7 +68,7 @@ class Odds_Scraper():
             print(f"Request failed: {e}")
             return []
     
-    def collect_all_odds(self, region='us_dfs'): #us for all odds, us_dfs for dfs odds(prizepicks and underdog)
+    def collect_all_odds(self, region='us'): #us for all odds, us_dfs for dfs odds(prizepicks and underdog)
         for id in self.ids:
             self.points.append(self.get_odds(id, 'player_points', region))
             self.rebounds.append(self.get_odds(id, 'player_rebounds', region))

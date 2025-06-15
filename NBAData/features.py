@@ -14,6 +14,30 @@ def starters(data):
         return 1
     else:
         return 0 # use .apply to apply this function to each row or else it wont work
+    
+# only for the playoffs
+def assign_playoff_series_info(df):
+    df = df.copy()
+    # Ensure GAME_DATE is in datetime format
+    df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+
+    # Create a consistent matchup key regardless of home/away
+    df['MATCHUP_KEY'] = df.apply(
+        lambda x: '-'.join(sorted([x['TEAM_ABBREVIATION'], x['OPP_ABBREVIATION']])), axis=1
+    )
+
+    # Get unique games to avoid player duplicates
+    unique_games = df.drop_duplicates(subset=['GAME_ID'])
+    # Sort by matchup and date
+    unique_games = unique_games.sort_values(by=['MATCHUP_KEY', 'GAME_DATE'])
+    # Assign game number within series
+    unique_games['GameInSeries'] = unique_games.groupby('MATCHUP_KEY').cumcount() + 1
+    # Assign series number per team (assumes one series at a time in sequence)
+    unique_games['Series'] = unique_games.groupby('TEAM_ABBREVIATION')['MATCHUP_KEY'] \
+                                         .rank(method='dense').astype(int)
+    # Merge back to full DataFrame
+    df = df.merge(unique_games[['GAME_ID', 'GameInSeries', 'Series']], on='GAME_ID', how='left')
+    return df
 
 #for points and usage rate
 def add_PTS_features(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
