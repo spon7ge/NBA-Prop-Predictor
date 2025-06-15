@@ -22,4 +22,7 @@ Train machine learning models (e.g., XGBoost) to forecast player stat lines like
 - Predicted player stats from the model
 - Over/Under recommendation
 - EV rankings
-- Parlay builder (2-leg, 3-leg, 4-leg props)
+- Parlay builder (1-leg, 2-leg, 3-leg props)
+  
+## Disclaimer
+This project was created as a personal learning exercise and is intended for educational purposes only. The predictive models implemented here are experimental and have not demonstrated high accuracy in forecasting player performance. As such, the results should not be considered reliable for decision-making or betting purposes.
