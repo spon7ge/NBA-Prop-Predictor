@@ -97,7 +97,7 @@ def assign_position(data, max_workers=4, delay_between_requests=0.5):
     print("Position assignment completed!")
     return data
 
-def assign_position_with_cache(data, cache_file='player_positions_cache.csv', max_workers=4, delay_between_requests=0.5):
+def assign_position_with_cache(data, cache_file='nba_positions.csv', max_workers=4, delay_between_requests=0.5):
     """
     Enhanced version with persistent caching to avoid re-fetching known players
     
