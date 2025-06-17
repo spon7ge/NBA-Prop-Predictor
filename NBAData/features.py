@@ -115,3 +115,33 @@ def addFgaRollingAvgs(player_data, player_id_col='PLAYER_ID', date_col='GAME_DAT
         )
     return player_data
 
+def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    """
+    Calculate rolling averages and standard deviations for key features per player over multiple window sizes,
+    using only *past* games to avoid target leakage.
+    """
+    player_data = player_data.sort_values([player_id_col, date_col])
+    rolling_features = ['PTS', 'MIN', 'FG_PCT', 'FGM', 'FGA', 'FG3M', 'FG3A',
+                        'FG3_PCT', 'FTM', 'FT_PCT', 'REB', 'AST']
+
+    for window in rolling_windows:
+        for feature in rolling_features:
+            roll_avg_col = f'{feature}_ROLL_AVG_{window}'"
+            player_data[roll_avg_col] = (
+                player_data
+                .groupby(player_id_col)[feature]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2))
+            )
+
+            if feature == 'PTS':
+                std_col = f'{feature}_STD_AVG_{window}'
+                player_data[std_col] = (
+                    player_data
+                    .groupby(player_id_col)[feature]
+                    .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).std().round(2))
+                )
+
+    return player_data
+
+
+
