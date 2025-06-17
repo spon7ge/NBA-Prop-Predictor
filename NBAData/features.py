@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 #grabs players rest days between games
 def calculate_days_of_rest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'):
@@ -31,43 +32,6 @@ def assign_playoff_series_info(df):
     df = df.merge(unique_games[['GAME_ID', 'GameInSeries', 'Series']], on='GAME_ID', how='left')
     return df
 
-#for points and usage rate
-def add_PTS_features(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    # Sort by player and date to ensure rolling works correctly
-    player_data = player_data.sort_values([player_id_col, date_col])
-
-    # Add USG_PCT for last 3 and 5 games
-    player_data['USG_PCT_LAST_3'] = player_data.groupby(player_id_col)['USG_PCT'].transform(lambda x: x.rolling(window=3, min_periods=1).mean().round(2))
-    player_data['USG_PCT_LAST_5'] = player_data.groupby(player_id_col)['USG_PCT'].transform(lambda x: x.rolling(window=5, min_periods=1).mean().round(2))
-    player_data['USG_PCT_LAST_7'] = player_data.groupby(player_id_col)['USG_PCT'].transform(lambda x: x.rolling(window=7, min_periods=1).mean().round(2))
-    
-    # Add average PTS for last 3, 5, and 7 games
-    for games in [3, 5, 7]:
-        rolling_col_name = f"PTS_LAST_{games}"
-        player_data[rolling_col_name] = (
-            player_data.groupby(player_id_col)['PTS']
-            .transform(lambda x: x.rolling(window=games, min_periods=1).mean().round(2))
-        )
-
-    for game in [3, 5, 7]:
-        rolling_col_name = f"STD_PTS_LAST_{game}"
-        player_data[rolling_col_name] = (
-            player_data.groupby(player_id_col)['PTS']
-            .transform(lambda x: x.rolling(window=game, min_periods=1).std().round(2))
-        )
-
-    # Add home and away average PTS
-    for home_away in ['HOME', 'AWAY']:
-        avg_column_name = f'PLAYER_{home_away}_AVG_PTS'
-        is_home = player_data['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
-        player_data[avg_column_name] = (
-        player_data.groupby(player_id_col)
-        .apply(lambda group: group.loc[is_home, 'PTS'].expanding().mean().round(2), include_groups=False)
-        .reset_index(level=0, drop=True)
-    )
-
-    return player_data
-
 #rolling averages for points against each team
 def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION'):
     player_data = player_data.sort_values([player_id_col, 'GAME_DATE'])
@@ -87,34 +51,6 @@ def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBR
 #rolling averages for players
 ########################################################################################
 
-def addMinRollingAvgs(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    # Sort by player and date to ensure rolling works correctly
-    player_data = player_data.sort_values([player_id_col, date_col])
-
-    # Add min for last 2, 4, and 6 games
-    for window in [2, 4, 6]:
-        col_name = f'MIN_LAST_{window}'
-        player_data[col_name] = (
-            player_data
-            .groupby(player_id_col)['MIN']
-            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
-        )
-    return player_data
-
-def addFgaRollingAvgs(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    # Sort by player and date to ensure rolling works correctly
-    player_data = player_data.sort_values([player_id_col, date_col])
-
-    # Add FGA and FTA for last 2, 4, and 6 games
-    for window in [2, 4, 6]:
-        col_name = f'FGA_LAST_{window}'
-        player_data[col_name] = (
-            player_data
-            .groupby(player_id_col)['FGA']
-            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
-        )
-    return player_data
-
 def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     """
     Calculate rolling averages and standard deviations for key features per player over multiple window sizes,
@@ -122,11 +58,10 @@ def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAY
     """
     player_data = player_data.sort_values([player_id_col, date_col])
     rolling_features = ['PTS', 'MIN', 'FG_PCT', 'FGM', 'FGA', 'FG3M', 'FG3A',
-                        'FG3_PCT', 'FTM', 'FT_PCT', 'REB', 'AST']
-
+                        'FG3_PCT', 'FTM', 'FT_PCT', 'REB', 'AST', 'USG_PCT']
     for window in rolling_windows:
         for feature in rolling_features:
-            roll_avg_col = f'{feature}_ROLL_AVG_{window}'"
+            roll_avg_col = f'{feature}_ROLL_AVG_{window}'
             player_data[roll_avg_col] = (
                 player_data
                 .groupby(player_id_col)[feature]
@@ -140,8 +75,34 @@ def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAY
                     .groupby(player_id_col)[feature]
                     .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).std().round(2))
                 )
-
     return player_data
+
+def home_away_averages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    player_data = player_data.sort_values([player_id_col, date_col])
+    for home_away in ['HOME', 'AWAY']:
+        avg_column_name = f'PLAYER_{home_away}_AVG_PTS'
+        is_home = player_data['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
+        player_data[avg_column_name] = (
+        player_data.groupby(player_id_col)
+        .apply(lambda group: group.loc[is_home, 'PTS'].expanding().mean().round(2), include_groups=False)
+        .reset_index(level=0, drop=True)
+    )
+    return player_data
+
+def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    player_data = player_data.sort_values([player_id_col, date_col])
+    for lag in range(1,5):
+        player_data[f'PTS_LAG_{lag}'] = player_data.groupby(player_id_col)['PTS'].shift(lag)
+    return player_data
+
+def preprocessGamesData(player_data):
+    player_data['GAME_DATE'] = pd.to_datetime(
+        player_data['GAME_DATE'], format='%b %d, %Y')
+    today = pd.Timestamp.today().normalize()
+    player_data['DAYS_AGO'] = (today - player_data['GAME_DATE']).dt.days
+    return player_data
+
+
 
 
 
