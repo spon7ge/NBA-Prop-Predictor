@@ -6,14 +6,6 @@ def calculate_days_of_rest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DA
     df = df.sort_values(by=[player_id_col, game_date_col])
     df['DAYS_OF_REST'] = df.groupby(player_id_col)[game_date_col].diff().dt.days
     return df
-
-#assigns 1 if player is a starter, 0 if not
-def starters(data):
-    starters = ['G','F','C']
-    if data['START_POSITION'] in starters:
-        return 1
-    else:
-        return 0 # use .apply to apply this function to each row or else it wont work
     
 # only for the playoffs
 def assign_playoff_series_info(df):
@@ -90,3 +82,36 @@ def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBR
     player_data['GAMES_VS_OPP'] = player_data.groupby([player_id_col, opp_col]).cumcount() + 1
     
     return player_data
+
+########################################################################################
+#rolling averages for players
+########################################################################################
+
+def addMinRollingAvgs(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    # Sort by player and date to ensure rolling works correctly
+    player_data = player_data.sort_values([player_id_col, date_col])
+
+    # Add min for last 2, 4, and 6 games
+    for window in [2, 4, 6]:
+        col_name = f'MIN_LAST_{window}'
+        player_data[col_name] = (
+            player_data
+            .groupby(player_id_col)['MIN']
+            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
+        )
+    return player_data
+
+def addFgaRollingAvgs(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    # Sort by player and date to ensure rolling works correctly
+    player_data = player_data.sort_values([player_id_col, date_col])
+
+    # Add FGA and FTA for last 2, 4, and 6 games
+    for window in [2, 4, 6]:
+        col_name = f'FGA_LAST_{window}'
+        player_data[col_name] = (
+            player_data
+            .groupby(player_id_col)['FGA']
+            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
+        )
+    return player_data
+
