@@ -28,16 +28,6 @@ __pycache__/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
-# VSCode
-.vscode/
-*.code-workspace
-
-# PyCharm
-.idea/
-*.iml
-*.iws
-.idea_modules/
-
 # Environment variables
 .env
 .env.local
@@ -46,9 +36,6 @@ __pycache__/
 .env.test
 .env.production
 
-# Data files
-*.cs
-*.sqlite3
 
 # Logs
 *.log
@@ -75,15 +62,3 @@ Thumbs.db
 *secrets.py
 *credentials.json
 suppliers.py
-
-# Model files
-*.joblib
-*.pkl
-*.h5
-*.model
-*.weights
-
-# Temporary files
-*.swp
-*.swo
-*~
