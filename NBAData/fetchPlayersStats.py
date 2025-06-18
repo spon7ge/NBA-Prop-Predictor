@@ -47,7 +47,7 @@ class FetchPlayersStats:
             print(f"[ERROR] Game {game_id}: {e}")
             return pd.DataFrame()
 
-    def getAdvancedStats(self, player_data, sleep_time=None, max_workers=None, cache_file ='PLAYOFF_DATA/PLAYOFFS_25.csv'):
+    def getAdvancedStats(self, player_data, sleep_time=None, max_workers=None, cache_file ='PLAYOFF_DATA/ALL_PLAYOFF_DATA.csv'):
         sleep_time = sleep_time or self.sleep_time
         max_workers = max_workers or min(10, os.cpu_count() or 4)
         game_ids = player_data['GAME_ID'].unique()
@@ -93,9 +93,9 @@ class FetchPlayersStats:
         advanced_stats['PLAYER_ID'] = advanced_stats['PLAYER_ID'].astype(int)
 
         adv_cols = [
-            'GAME_ID', 'PLAYER_ID', 'START_POSITION', 'OFF_RATING', 'DEF_RATING',
-            'NET_RATING', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT',
-            'AST_TOV', 'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'PACE_PER40'
+            'GAME_ID', 'PLAYER_ID', 'START_POSITION', 'COMMENT','OFF_RATING', 'E_OFF_RATING', 'DEF_RATING',
+            'E_DEF_RATING', 'NET_RATING', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT',
+            'AST_TOV', 'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS','PACE_PER40', 'E_USG_PCT',
         ]
         return pd.merge(player_data, advanced_stats[adv_cols], on=['GAME_ID', 'PLAYER_ID'], how='left')
 
@@ -169,7 +169,7 @@ class FetchPlayersStats:
     def mergeWithTeam(self, player_data, team_data):
         return pd.merge(player_data, team_data, on=['GAME_ID', 'TEAM_ID'], how='left')
 
-    def getCompleteStats(self, season=None, season_type='Regular Season', sleep_time=None, max_workers=None, cache_file = 'PLAYOFF_DATA/PLAYOFFS_25.csv'):
+    def getCompleteStats(self, season=None, season_type='Regular Season', sleep_time=None, max_workers=None, cache_file = 'PLAYOFF_DATA/ALL_PLAYOFF_DATA.csv'):
         season = season or self.default_season
         print("[1] Fetching basic player stats...")
         player_stats = self.fetchPlayerStats(season, season_type)

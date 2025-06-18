@@ -102,6 +102,83 @@ def preprocessGamesData(player_data):
     player_data['DAYS_AGO'] = (today - player_data['GAME_DATE']).dt.days
     return player_data
 
+def add_opponent_metrics(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION'):
+    """
+    Add opponent-related metrics using rolling windows to track opponent defensive strength
+    """
+    # First sort by date to ensure chronological calculations
+    player_data = player_data.sort_values(['GAME_DATE'])
+    
+    # Calculate opponent rolling averages (last 5 games) - defensive stats only
+    opp_metrics = ['OPP_DEF_RATING', 'OPP_STL', 'OPP_BLK']
+    window = 5
+    
+    for metric in opp_metrics:
+        # Calculate opponent's rolling average for each metric
+        player_data[f'OPP_ROLL_{metric}_{window}'] = (
+            player_data.groupby(opp_col)[metric]
+            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
+        )
+    
+    # Normalize defensive rating (higher rating is worse defense, so multiply by -1)
+    player_data['NORMALIZED_DEF_RATING'] = -1 * (
+        (player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'] - 
+         player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'].mean()) / 
+        player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'].std()
+    )
+
+    # Calculate defensive strength using normalized values
+    player_data['OPP_DEF_STRENGTH'] = (
+        (player_data[f'OPP_ROLL_OPP_STL_{window}'] / player_data[f'OPP_ROLL_OPP_STL_{window}'].mean()) +
+        (player_data[f'OPP_ROLL_OPP_BLK_{window}'] / player_data[f'OPP_ROLL_OPP_BLK_{window}'].mean()) +
+        player_data['NORMALIZED_DEF_RATING']
+    ) / 3
+
+    return player_data
+
+def categorize_opponent_defense(player_data):
+    """
+    Categorize opponents into strong (1) and weak (0) defenses
+    """
+    # Calculate median defensive strength
+    median_defense = player_data['OPP_DEF_STRENGTH'].median()
+    
+    # Categorize defenses
+    player_data['DEF_CATEGORY'] = (
+        player_data['OPP_DEF_STRENGTH'] >= median_defense).astype(int)
+    
+    return player_data
+
+def calculate_player_vs_defense(player_data, player_id_col='PLAYER_ID'):
+    """
+    Calculate how players perform against different defensive categories
+    """
+    # Calculate average performance against each defensive category
+    metrics = ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT']
+    
+    for metric in metrics:
+        # Calculate average against strong and weak defenses
+        avg_by_def = (
+            player_data.groupby([player_id_col, 'DEF_CATEGORY'])[metric]
+            .transform('mean')
+            .round(2)
+        )
+        player_data[f'{metric}_VS_DEF'] = (
+            (player_data[metric] - avg_by_def) / avg_by_def
+        ).round(3)
+
+    return player_data
+
+def add_all_opponent_features(player_data):
+    """
+    Wrapper function to add all opponent-related features
+    """
+    player_data = add_opponent_metrics(player_data)
+    player_data = categorize_opponent_defense(player_data)
+    player_data = calculate_player_vs_defense(player_data)
+    return player_data
+
+
 
 
 
