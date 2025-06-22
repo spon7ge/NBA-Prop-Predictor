@@ -20,9 +20,10 @@ wheels/
 .installed.cfg
 *.egg
 .txt
-NBAPropFinder/__pycache__/
-NBAData/__pycache__/
+NBAPropFinder/__pycache__
+NBAData/__pycache__
 __pycache__/
+*cpython.pyc
 
 # Jupyter Notebook
 .ipynb_checkpoints
