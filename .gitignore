@@ -4,14 +4,6 @@ myenv/
 __pycache__/
 .env
 
-# Data files
-*.csv
-REGULAR_DATA/
-PROPS_EV/
-PROPS_DATA/
-PLAYOFF_DATA/
-NBAData/
-
 # Jupyter Notebooks
 *.ipynb_checkpoints/
 
