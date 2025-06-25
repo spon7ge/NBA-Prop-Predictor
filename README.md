@@ -23,6 +23,38 @@ Train machine learning models (e.g., XGBoost) to forecast player stat lines like
 - Over/Under recommendation
 - EV rankings
 - Parlay builder (1-leg, 2-leg, 3-leg props)
-  
+
+### How to use it
+### To Scrape odds from prizepicks and odds api
+```
+python NBAPropFinder(region='us_dfs')
+```
+If you want the odds from below use region='us'
+### Supported Sportsbooks from The Odds API
+- FanDuel
+- DraftKings
+- BetMGM
+- Caesars (William Hill)
+- BetRivers
+- PointsBet
+- Bovada
+- MyBookie.ag
+- Unibet
+- TwinSpires
+- WynnBet
+- LowVig.ag
+- batPARX
+- ESPN BET
+- Fliff
+- SI Sportsbook
+- Tipico
+- SuperBook
+- Wind Creek (Betfred PA)
+### To grab player and team stats
+```
+python getCompleteStats(season='2024-25', season_type='Regular Season')
+```
+
+
 ## Disclaimer
 This project was created as a personal learning exercise and is intended for educational purposes only. The predictive models implemented here are experimental and have not demonstrated high accuracy in forecasting player performance. As such, the results should not be considered reliable for decision-making or betting purposes.
