@@ -1,12 +1,12 @@
-from dotenv import load_dotenv
-import os
+# from dotenv import load_dotenv
+# import os
 
-load_dotenv()
+# load_dotenv()
 
 class Supplier():
     def __init__(self):
-        self.api_key = os.getenv('ODDS_API_KEY')
-        self.directory = os.getenv('PROJECTIONS_DIRECTORY')
+        self.api_key = "a291ae2e07e29b8ce3d0793cbb340d07"
+        self.directory = '/Users/alexg/Downloads/projections.json'
     
     def getKey(self):
         return self.api_key
