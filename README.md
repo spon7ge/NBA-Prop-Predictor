@@ -15,7 +15,7 @@ Train machine learning models (e.g., XGBoost) to forecast player stat lines like
 - Evaluate bets using:
 - Expected Value (EV)
 - Kelly Criterion
-- Blended probabilities (Z-Score + Monte Carlo) soon implement using machine learning
+- Probabilities implemented using machine learning (XGBoost)
 
 ### Deploy a Streamlit Dashboard
 - Display the best bets of the day, including:
