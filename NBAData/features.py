@@ -97,7 +97,7 @@ def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBR
     return player_data
 
 ########################################################################################
-#rolling averages for players
+#rolling averages for players points
 ########################################################################################
 
 def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
