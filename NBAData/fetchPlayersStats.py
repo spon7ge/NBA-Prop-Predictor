@@ -47,7 +47,7 @@ class FetchPlayersStats:
             print(f"[ERROR] Game {game_id}: {e}")
             return pd.DataFrame()
 
-    def getAdvancedStats(self, player_data, sleep_time=None, max_workers=None, cache_file ='PLAYOFF_DATA/ALL_PLAYOFF_DATA.csv'):
+    def getAdvancedStats(self, player_data, sleep_time=None, max_workers=None, cache_file ='REGULAR_DATA/ALL_REGULAR_DATA.csv'):
         sleep_time = sleep_time or self.sleep_time
         max_workers = max_workers or min(10, os.cpu_count() or 4)
         game_ids = player_data['GAME_ID'].unique()
@@ -169,7 +169,7 @@ class FetchPlayersStats:
     def mergeWithTeam(self, player_data, team_data):
         return pd.merge(player_data, team_data, on=['GAME_ID', 'TEAM_ID'], how='left')
 
-    def getCompleteStats(self, season=None, season_type='Regular Season', sleep_time=None, max_workers=None, cache_file = 'PLAYOFF_DATA/ALL_PLAYOFF_DATA.csv'):
+    def getCompleteStats(self, season=None, season_type='Regular Season', sleep_time=None, max_workers=None, cache_file = 'REGULAR_DATA/ALL_REGULAR_DATA.csv'):
         season = season or self.default_season
         print("[1] Fetching basic player stats...")
         player_stats = self.fetchPlayerStats(season, season_type)
