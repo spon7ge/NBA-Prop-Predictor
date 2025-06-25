@@ -4,10 +4,10 @@ from NBAPropFinder.PrizePicks_Scraper import PrizePicks_Scraper
 import pandas as pd
 
 class NBAPropFinder():
-    def __init__(self):
+    def __init__(self, region='us_dfs'):
         # Get data from both scrapers
         print("Scraping Odds API...")
-        self.odds_data = Odds_Scraper()
+        self.odds_data = Odds_Scraper(region=region)
         # print("Scraping PrizePicks...")
         self.prizepicks_data = PrizePicks_Scraper().lines
         print("Organizing Data...")
@@ -26,7 +26,6 @@ class NBAPropFinder():
         self.blocks_map = self.create_map(self.odds_data.blocks)
         self.steals_map = self.create_map(self.odds_data.steals)
         self.fg_map = self.create_map(self.odds_data.fg)
-        self.fg3_map = self.create_map(self.odds_data.fg3)
         self.ftm_map = self.create_map(self.odds_data.ftm)
         self.fta_map = self.create_map(self.odds_data.fta)
         self.pra_map = self.create_map(self.odds_data.pra)
@@ -57,7 +56,6 @@ class NBAPropFinder():
             self.blocks_map,
             self.steals_map,
             self.fg_map,
-            self.fg3_map,
             self.ftm_map,
             self.fta_map,
             self.pra_map,
