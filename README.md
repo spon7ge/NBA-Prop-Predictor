@@ -29,6 +29,27 @@ Train machine learning models (e.g., XGBoost) to forecast player stat lines like
 ```
 python NBAPropFinder(region='us_dfs')
 ```
+If you want the odds from below use region='us'
+### Supported Sportsbooks from The Odds API
+- FanDuel
+- DraftKings
+- BetMGM
+- Caesars (William Hill)
+- BetRivers
+- PointsBet
+- Bovada
+- MyBookie.ag
+- Unibet
+- TwinSpires
+- WynnBet
+- LowVig.ag
+- batPARX
+- ESPN BET
+- Fliff
+- SI Sportsbook
+- Tipico
+- SuperBook
+- Wind Creek (Betfred PA)
 ### To grab player and team stats
 ```
 python getCompleteStats(season='2024-25', season_type='Regular Season')
