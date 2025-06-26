@@ -58,7 +58,7 @@ class ODDS_MLB_SCRAPER:
     def get_odds(self, id, market_type):
         try:
             response = requests.get(
-            f"https://api.the-odds-api.com/v4/sports/baseball_mlb/events/{id}/odds?apiKey={self.api_key}&regions={self.region}&markets={market_type}&oddsFormat=american",
+            f"{self.base_url}{id}/odds?apiKey={self.api_key}&regions={self.region}&markets={market_type}&oddsFormat=american",
             )
             if response.status_code == 200:
                 data = response.json()
@@ -67,22 +67,28 @@ class ODDS_MLB_SCRAPER:
                     for market in bookmaker['markets']:
                         if market['key'] == market_type:
                             for outcome in market['outcomes']:
+                                # Some markets might not have 'point', use get() with default None
+                                point = outcome.get('point')
                                 props.append((
                                     market['key'],
                                     bookmaker['title'],
-                                    outcome['description'],
+                                    outcome.get('description', ''),  # Handle missing description
                                     outcome['name'],
-                                    outcome['point'],
+                                    point,
                                     outcome['price'],
                                 ))
                 # Save the last response
                 self.last_response = response
                 return props
             else:
-                print(f"Failed to retrieve data: {response.status_code}")
+                print(f"Failed to retrieve data for {market_type}: {response.status_code}")
                 return []
         except requests.RequestException as e:
-            print(f"Request failed: {e}")
+            print(f"Request failed for {market_type}: {e}")
+            return []
+        except KeyError as e:
+            print(f"Unexpected response structure for {market_type}: {e}")
+            print(f"Response data: {response.json()}")
             return []
     
     def collect_all_odds(self):

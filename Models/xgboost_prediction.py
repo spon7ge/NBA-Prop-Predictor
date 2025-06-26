@@ -39,17 +39,25 @@ def get_espn_games(date_str=today):  # YYYYMMDD format
 def getPlayerAVG(player, data, stat_type='PTS'):
     player_data = data[data['PLAYER_NAME'] == player]
     feature_sets = {
-        'PTS': ['MIN','FGA', 'FTA', 'FG3A','FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'PF','OFF_RATING','E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 'PointsPerShot', 'eFG',
-                'AST_PCT', 'AST_TOV','USG_PCT', 'TS_PCT','PACE', 'PIE', 'POSS', 'E_USG_PCT',
-                'TEAM_FGA', 'TEAM_FG3A','TEAM_FTA','TEAM_AST', 'TEAM_REB', 'TEAM_STL', 'TEAM_BLK', 
-                'TEAM_TOV', 'TEAM_PF','TEAM_OFF_RATING', 'TEAM_PACE', 'PTS_VS_DEF',
-                'FGA_VS_DEF', 'FTA_VS_DEF', 'FG3A_VS_DEF', 'USG_PCT_VS_DEF'],
-        'AST': ['PTS','MIN', 'STL', 'TOV', 'PF','OFF_RATING','E_OFF_RATING', 'NET_RATING', 'PointsPerShot', 'eFG',
-                'AST_PCT', 'AST_TOV','USG_PCT','PACE', 'PIE', 'POSS', 'E_USG_PCT',
-                'TEAM_FGA', 'TEAM_FG3A','TEAM_FTA','TEAM_AST', 'TEAM_REB', 'TEAM_STL', 'TEAM_BLK', 
-                'TEAM_TOV', 'TEAM_PF','TEAM_OFF_RATING', 'TEAM_PACE', 'PLUS_MINUS'],
-        'REB': ['MIN', 'OREB', 'DREB', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'USG_PCT','E_USG_PCT', 'TEAM_REB', 'TEAM_OREB', 'TEAM_DREB',
-                'TEAM_PACE', 'AST_PCT', 'AST_TOV', 'POSS']
+        'PTS': [
+                'MIN','FGA', 'FTA', 'FG3A','FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB','OREB', 'DREB', 'AST', 'STL', 'BLK', 'TOV', 'PF',
+                'OFF_RATING','E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 'PointsPerShot', 'EFG_PCT',
+                'AST_PCT', 'AST_TOV','USG_PCT', 'TS_PCT','PACE', 'PIE', 'POSS', 'E_USG_PCT', 'PLUS_MINUS',
+                'TEAM_FGA', 'TEAM_FG3A','TEAM_FG_PCT','TEAM_FG3_PCT','TEAM_AST', 'TEAM_REB', 'TEAM_STL', 'TEAM_BLK', 
+                'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS'
+                ],
+        'AST': [
+                'MIN','FGA', 'FTA', 'FG3A','FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB','OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PF',
+                'OFF_RATING','E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 'PointsPerShot', 'EFG_PCT',
+                'AST_PCT', 'AST_TOV','USG_PCT', 'TS_PCT','PACE', 'PIE', 'POSS', 'E_USG_PCT', 'PLUS_MINUS',
+                'TEAM_FGA', 'TEAM_FG3A','TEAM_FG_PCT','TEAM_FG3_PCT','TEAM_AST', 'TEAM_REB', 'TEAM_STL', 'TEAM_BLK', 
+                'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS'
+                ],
+        'REB': [
+                'MIN', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'TOV', 'PF', 'BLKS', 'PointsPerShot', 'USG_PCT', 'TS_PCT', 'EFG_PCT', 'PIE', 'POSS',
+                'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'PACE', 'E_PACE',
+                'TEAM_PACE', 'TEAM_REB', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_BLKS', 'TEAM_OFF_RATING', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT'
+                ]
     }
     include = feature_sets[stat_type]
 
@@ -72,7 +80,7 @@ def findOPP(player, data, games):
 
 def getOppAVG(team, data):
     team_data = data[data['OPP_ABBREVIATION'] == team]
-    include = ['OPP_DEF_RATING', 'OPP_STL',	'OPP_BLK','OPP_REB','OPP_FG_PCT','OPP_PACE']
+    include = ['OPP_PACE', 'OPP_DEF_RATING','OPP_STL', 'OPP_BLK', 'OPP_REB', 'OPP_FG_PCT']
     team_stats = team_data.groupby('GAME_DATE')[include].mean().reset_index()
 
     return [round(team_stats[col].mean(), 2) for col in include]
@@ -82,19 +90,98 @@ def getPlayerRollingAVG(player, data, stat_type='PTS'):
     player.sort_values(by='GAME_DATE', inplace=True)
     res = []
     feature_sets = {
-        'PTS': ['PTS_ROLL_AVG_2', 'PTS_STD_AVG_2', 'MIN_ROLL_AVG_2', 'FG_PCT_ROLL_AVG_2', 'FGM_ROLL_AVG_2', 'FGA_ROLL_AVG_2', 'FG3M_ROLL_AVG_2', 'FG3A_ROLL_AVG_2', 'FG3_PCT_ROLL_AVG_2', 'FTM_ROLL_AVG_2', 'FT_PCT_ROLL_AVG_2', 'REB_ROLL_AVG_2', 'AST_ROLL_AVG_2', 'USG_PCT_ROLL_AVG_2', 
-                'PTS_ROLL_AVG_4', 'PTS_STD_AVG_4', 'MIN_ROLL_AVG_4', 'FG_PCT_ROLL_AVG_4', 'FGM_ROLL_AVG_4', 'FGA_ROLL_AVG_4', 'FG3M_ROLL_AVG_4', 'FG3A_ROLL_AVG_4', 'FG3_PCT_ROLL_AVG_4', 'FTM_ROLL_AVG_4', 'FT_PCT_ROLL_AVG_4', 'REB_ROLL_AVG_4', 'AST_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4',
-                'PTS_ROLL_AVG_6', 'PTS_STD_AVG_6', 'MIN_ROLL_AVG_6', 'FG_PCT_ROLL_AVG_6', 'FGM_ROLL_AVG_6', 'FGA_ROLL_AVG_6', 'FG3M_ROLL_AVG_6', 'FG3A_ROLL_AVG_6', 'FG3_PCT_ROLL_AVG_6', 'FTM_ROLL_AVG_6', 'FT_PCT_ROLL_AVG_6', 'REB_ROLL_AVG_6', 'AST_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6',
-                'PTS_LAG_1', 'PTS_LAG_2', 'PTS_LAG_3', 'PTS_LAG_4','PLAYER_HOME_AVG_PTS', 'PLAYER_AWAY_AVG_PTS'],
-        'AST': ['MIN_ROLL_AVG_2', 'AST_ROLL_AVG_2', 'AST_STD_AVG_2', 'TOV_ROLL_AVG_2', 'AST_TOV_ROLL_AVG_2', 'USG_PCT_ROLL_AVG_2', 'AST_PCT_ROLL_AVG_2', 'PACE_ROLL_AVG_2', 'POSS_ROLL_AVG_2', 'OFF_RATING_ROLL_AVG_2', 
-                'MIN_ROLL_AVG_4', 'AST_ROLL_AVG_4', 'AST_STD_AVG_4', 'TOV_ROLL_AVG_4', 'AST_TOV_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4', 'AST_PCT_ROLL_AVG_4', 'PACE_ROLL_AVG_4', 'POSS_ROLL_AVG_4', 'OFF_RATING_ROLL_AVG_4', 
-                'MIN_ROLL_AVG_6', 'AST_ROLL_AVG_6', 'AST_STD_AVG_6', 'TOV_ROLL_AVG_6', 'AST_TOV_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6', 'AST_PCT_ROLL_AVG_6', 'PACE_ROLL_AVG_6', 'POSS_ROLL_AVG_6', 'OFF_RATING_ROLL_AVG_6',
-                'AST_LAG_1', 'AST_LAG_2', 'AST_LAG_3', 'AST_LAG_4', 'PLAYER_HOME_AVG_AST', 'PLAYER_AWAY_AVG_AST'],
-        'REB': ['MIN_ROLL_REB_2', 'REB_ROLL_REB_2', 'REB_STD_AVG_2', 'OREB_ROLL_REB_2', 'DREB_ROLL_REB_2', 'OREB_PCT_ROLL_REB_2', 'DREB_PCT_ROLL_REB_2', 'REB_PCT_ROLL_REB_2', 'USG_PCT_ROLL_REB_2', 'GAME_PACE_ROLL_REB_2',
-                'MIN_ROLL_REB_4', 'REB_ROLL_REB_4', 'REB_STD_AVG_4', 'OREB_ROLL_REB_4', 'DREB_ROLL_REB_4', 'OREB_PCT_ROLL_REB_4', 'DREB_PCT_ROLL_REB_4', 'REB_PCT_ROLL_REB_4', 'USG_PCT_ROLL_REB_4', 'GAME_PACE_ROLL_REB_4',
-                'MIN_ROLL_REB_6', 'REB_ROLL_REB_6', 'REB_STD_AVG_6', 'OREB_ROLL_REB_6', 'DREB_ROLL_REB_6', 'OREB_PCT_ROLL_REB_6', 'DREB_PCT_ROLL_REB_6', 'REB_PCT_ROLL_REB_6', 'USG_PCT_ROLL_REB_6', 'GAME_PACE_ROLL_REB_6',
-                'REB_LAG_1', 'REB_LAG_2', 'REB_LAG_3', 'REB_LAG_4', 'PLAYER_HOME_AVG_REB', 'PLAYER_AWAY_AVG_REB']
-    }
+        'PTS': [
+                'MIN_ROLL_AVG_2', 'PTS_ROLL_AVG_2', 'PTS_STD_AVG_2', 'FGA_ROLL_AVG_2',
+                'FGM_ROLL_AVG_2', 'FG_PCT_ROLL_AVG_2', 'FG3A_ROLL_AVG_2', 'FG3M_ROLL_AVG_2',
+                'FG3_PCT_ROLL_AVG_2', 'FTM_ROLL_AVG_2', 'FTA_ROLL_AVG_2', 'FT_PCT_ROLL_AVG_2',
+                'USG_PCT_ROLL_AVG_2', 'TS_PCT_ROLL_AVG_2', 'EFG_PCT_ROLL_AVG_2',
+                'OREB_ROLL_AVG_2', 'DREB_ROLL_AVG_2', 'REB_ROLL_AVG_2',
+                'PLUS_MINUS_ROLL_AVG_2', 'PIE_ROLL_AVG_2', 'TEAM_FGA_ROLL_AVG_2',
+                'TEAM_FG_PCT_ROLL_AVG_2', 'TEAM_FG3A_ROLL_AVG_2', 'TEAM_FG3_PCT_ROLL_AVG_2',
+                'TEAM_FTM_ROLL_AVG_2', 'TEAM_FTA_ROLL_AVG_2', 'TEAM_FT_PCT_ROLL_AVG_2',
+                'TEAM_PTS_ROLL_AVG_2', 'TEAM_PACE_ROLL_AVG_2', 'TEAM_OFF_RATING_ROLL_AVG_2',
+                'OPP_DEF_RATING_ROLL_AVG_2', 'OPP_PACE_ROLL_AVG_2', 'OPP_FG_PCT_ROLL_AVG_2',
+                'MIN_ROLL_AVG_4', 'PTS_ROLL_AVG_4', 'PTS_STD_AVG_4', 'FGA_ROLL_AVG_4',
+                'FGM_ROLL_AVG_4', 'FG_PCT_ROLL_AVG_4', 'FG3A_ROLL_AVG_4', 'FG3M_ROLL_AVG_4',
+                'FG3_PCT_ROLL_AVG_4', 'FTM_ROLL_AVG_4', 'FTA_ROLL_AVG_4', 'FT_PCT_ROLL_AVG_4',
+                'USG_PCT_ROLL_AVG_4', 'TS_PCT_ROLL_AVG_4', 'EFG_PCT_ROLL_AVG_4',
+                'OREB_ROLL_AVG_4', 'DREB_ROLL_AVG_4', 'REB_ROLL_AVG_4',
+                'PLUS_MINUS_ROLL_AVG_4', 'PIE_ROLL_AVG_4', 'TEAM_FGA_ROLL_AVG_4',
+                'TEAM_FG_PCT_ROLL_AVG_4', 'TEAM_FG3A_ROLL_AVG_4', 'TEAM_FG3_PCT_ROLL_AVG_4',
+                'TEAM_FTM_ROLL_AVG_4', 'TEAM_FTA_ROLL_AVG_4', 'TEAM_FT_PCT_ROLL_AVG_4',
+                'TEAM_PTS_ROLL_AVG_4', 'TEAM_PACE_ROLL_AVG_4', 'TEAM_OFF_RATING_ROLL_AVG_4',
+                'OPP_DEF_RATING_ROLL_AVG_4', 'OPP_PACE_ROLL_AVG_4', 'OPP_FG_PCT_ROLL_AVG_4',
+                'MIN_ROLL_AVG_6', 'PTS_ROLL_AVG_6', 'PTS_STD_AVG_6', 'FGA_ROLL_AVG_6',
+                'FGM_ROLL_AVG_6', 'FG_PCT_ROLL_AVG_6', 'FG3A_ROLL_AVG_6', 'FG3M_ROLL_AVG_6',
+                'FG3_PCT_ROLL_AVG_6', 'FTM_ROLL_AVG_6', 'FTA_ROLL_AVG_6', 'FT_PCT_ROLL_AVG_6',
+                'USG_PCT_ROLL_AVG_6', 'TS_PCT_ROLL_AVG_6', 'EFG_PCT_ROLL_AVG_6',
+                'OREB_ROLL_AVG_6', 'DREB_ROLL_AVG_6', 'REB_ROLL_AVG_6',
+                'PLUS_MINUS_ROLL_AVG_6', 'PIE_ROLL_AVG_6', 'TEAM_FGA_ROLL_AVG_6',
+                'TEAM_FG_PCT_ROLL_AVG_6', 'TEAM_FG3A_ROLL_AVG_6', 'TEAM_FG3_PCT_ROLL_AVG_6',
+                'TEAM_FTM_ROLL_AVG_6', 'TEAM_FTA_ROLL_AVG_6', 'TEAM_FT_PCT_ROLL_AVG_6',
+                'TEAM_PTS_ROLL_AVG_6', 'TEAM_PACE_ROLL_AVG_6', 'TEAM_OFF_RATING_ROLL_AVG_6',
+                'OPP_DEF_RATING_ROLL_AVG_6', 'OPP_PACE_ROLL_AVG_6', 'OPP_FG_PCT_ROLL_AVG_6',
+                'PTS_LAG_1', 'PTS_LAG_2', 'PTS_LAG_3', 'PTS_LAG_4',
+                'PLAYER_HOME_AVG_PTS', 'PLAYER_AWAY_AVG_PTS', 'MATCHUP_AVG_PTS_LAST_3'
+],
+        'AST': ['MIN_ROLL_AVG_2', 'AST_ROLL_AVG_2', 'FGA_ROLL_AVG_2', 'FGM_ROLL_AVG_2',
+                'FG_PCT_ROLL_AVG_2', 'FG3A_ROLL_AVG_2', 'FG3M_ROLL_AVG_2', 'FG3_PCT_ROLL_AVG_2',
+                'FTM_ROLL_AVG_2', 'FTA_ROLL_AVG_2', 'FT_PCT_ROLL_AVG_2', 'USG_PCT_ROLL_AVG_2',
+                'AST_PCT_ROLL_AVG_2', 'AST_TOV_ROLL_AVG_2', 'TS_PCT_ROLL_AVG_2',
+                'EFG_PCT_ROLL_AVG_2', 'PIE_ROLL_AVG_2', 'PLUS_MINUS_ROLL_AVG_2',
+                'TEAM_FG_PCT_ROLL_AVG_2', 'TEAM_FGM_ROLL_AVG_2', 'TEAM_AST_ROLL_AVG_2',
+                'TEAM_TOV_ROLL_AVG_2', 'TEAM_PACE_ROLL_AVG_2', 'TEAM_PTS_ROLL_AVG_2',
+                'OPP_DEF_RATING_ROLL_AVG_2', 'OPP_STL_ROLL_AVG_2', 'OPP_PACE_ROLL_AVG_2',
+                'MIN_ROLL_AVG_4', 'AST_ROLL_AVG_4', 'FGA_ROLL_AVG_4', 'FGM_ROLL_AVG_4',
+                'FG_PCT_ROLL_AVG_4', 'FG3A_ROLL_AVG_4', 'FG3M_ROLL_AVG_4', 'FG3_PCT_ROLL_AVG_4',
+                'FTM_ROLL_AVG_4', 'FTA_ROLL_AVG_4', 'FT_PCT_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4',
+                'AST_PCT_ROLL_AVG_4', 'AST_TOV_ROLL_AVG_4', 'TS_PCT_ROLL_AVG_4',
+                'EFG_PCT_ROLL_AVG_4', 'PIE_ROLL_AVG_4', 'PLUS_MINUS_ROLL_AVG_4',
+                'TEAM_FG_PCT_ROLL_AVG_4', 'TEAM_FGM_ROLL_AVG_4', 'TEAM_AST_ROLL_AVG_4',
+                'TEAM_TOV_ROLL_AVG_4', 'TEAM_PACE_ROLL_AVG_4', 'TEAM_PTS_ROLL_AVG_4',
+                'OPP_DEF_RATING_ROLL_AVG_4', 'OPP_STL_ROLL_AVG_4', 'OPP_PACE_ROLL_AVG_4',
+                'MIN_ROLL_AVG_6', 'AST_ROLL_AVG_6', 'FGA_ROLL_AVG_6', 'FGM_ROLL_AVG_6',
+                'FG_PCT_ROLL_AVG_6', 'FG3A_ROLL_AVG_6', 'FG3M_ROLL_AVG_6', 'FG3_PCT_ROLL_AVG_6',
+                'FTM_ROLL_AVG_6', 'FTA_ROLL_AVG_6', 'FT_PCT_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6',
+                'AST_PCT_ROLL_AVG_6', 'AST_TOV_ROLL_AVG_6', 'TS_PCT_ROLL_AVG_6',
+                'EFG_PCT_ROLL_AVG_6', 'PIE_ROLL_AVG_6', 'PLUS_MINUS_ROLL_AVG_6',
+                'TEAM_FG_PCT_ROLL_AVG_6', 'TEAM_FGM_ROLL_AVG_6', 'TEAM_AST_ROLL_AVG_6',
+                'TEAM_TOV_ROLL_AVG_6', 'TEAM_PACE_ROLL_AVG_6', 'TEAM_PTS_ROLL_AVG_6',
+                'OPP_DEF_RATING_ROLL_AVG_6', 'OPP_STL_ROLL_AVG_6', 'OPP_PACE_ROLL_AVG_6',
+                'AST_LAG_1', 'AST_LAG_2', 'AST_LAG_3', 'AST_LAG_4',
+                'PLAYER_HOME_AVG_AST', 'PLAYER_AWAY_AVG_AST', 'MATCHUP_AVG_AST_LAST_3'
+],
+        'REB': ['MIN_ROLL_AVG_2', 'OREB_ROLL_AVG_2', 'DREB_ROLL_AVG_2', 'REB_ROLL_AVG_2',
+                'FGA_ROLL_AVG_2', 'FGM_ROLL_AVG_2', 'FG_PCT_ROLL_AVG_2', 'FG3A_ROLL_AVG_2',
+                'FG3M_ROLL_AVG_2', 'FG3_PCT_ROLL_AVG_2', 'FTM_ROLL_AVG_2', 'FTA_ROLL_AVG_2',
+                'FT_PCT_ROLL_AVG_2', 'OREB_PCT_ROLL_AVG_2', 'DREB_PCT_ROLL_AVG_2',
+                'REB_PCT_ROLL_AVG_2', 'PIE_ROLL_AVG_2', 'PLUS_MINUS_ROLL_AVG_2',
+                'USG_PCT_ROLL_AVG_2', 'TS_PCT_ROLL_AVG_2', 'EFG_PCT_ROLL_AVG_2',
+                'PACE_ROLL_AVG_2', 'POSS_ROLL_AVG_2', 'TEAM_FG_PCT_ROLL_AVG_2',
+                'TEAM_FG3_PCT_ROLL_AVG_2', 'TEAM_FGA_ROLL_AVG_2', 'TEAM_FG3A_ROLL_AVG_2',
+                'OPP_REB_ROLL_AVG_2', 'OPP_FG_PCT_ROLL_AVG_2', 'OPP_DEF_RATING_ROLL_AVG_2',
+                'OPP_PACE_ROLL_AVG_2', 'MIN_ROLL_AVG_4', 'OREB_ROLL_AVG_4', 'DREB_ROLL_AVG_4',
+                'REB_ROLL_AVG_4', 'FGA_ROLL_AVG_4', 'FGM_ROLL_AVG_4', 'FG_PCT_ROLL_AVG_4',
+                'FG3A_ROLL_AVG_4', 'FG3M_ROLL_AVG_4', 'FG3_PCT_ROLL_AVG_4', 'FTM_ROLL_AVG_4',
+                'FTA_ROLL_AVG_4', 'FT_PCT_ROLL_AVG_4', 'OREB_PCT_ROLL_AVG_4',
+                'DREB_PCT_ROLL_AVG_4', 'REB_PCT_ROLL_AVG_4', 'PIE_ROLL_AVG_4',
+                'PLUS_MINUS_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4', 'TS_PCT_ROLL_AVG_4',
+                'EFG_PCT_ROLL_AVG_4', 'PACE_ROLL_AVG_4', 'POSS_ROLL_AVG_4',
+                'TEAM_FG_PCT_ROLL_AVG_4', 'TEAM_FG3_PCT_ROLL_AVG_4', 'TEAM_FGA_ROLL_AVG_4',
+                'TEAM_FG3A_ROLL_AVG_4', 'OPP_REB_ROLL_AVG_4', 'OPP_FG_PCT_ROLL_AVG_4',
+                'OPP_DEF_RATING_ROLL_AVG_4', 'OPP_PACE_ROLL_AVG_4', 'MIN_ROLL_AVG_6',
+                'OREB_ROLL_AVG_6', 'DREB_ROLL_AVG_6', 'REB_ROLL_AVG_6', 'FGA_ROLL_AVG_6',
+                'FGM_ROLL_AVG_6', 'FG_PCT_ROLL_AVG_6', 'FG3A_ROLL_AVG_6', 'FG3M_ROLL_AVG_6',
+                'FG3_PCT_ROLL_AVG_6', 'FTM_ROLL_AVG_6', 'FTA_ROLL_AVG_6', 'FT_PCT_ROLL_AVG_6',
+                'OREB_PCT_ROLL_AVG_6', 'DREB_PCT_ROLL_AVG_6', 'REB_PCT_ROLL_AVG_6',
+                'PIE_ROLL_AVG_6', 'PLUS_MINUS_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6',
+                'TS_PCT_ROLL_AVG_6', 'EFG_PCT_ROLL_AVG_6', 'PACE_ROLL_AVG_6',
+                'POSS_ROLL_AVG_6', 'TEAM_FG_PCT_ROLL_AVG_6', 'TEAM_FG3_PCT_ROLL_AVG_6',
+                'TEAM_FGA_ROLL_AVG_6', 'TEAM_FG3A_ROLL_AVG_6', 'OPP_REB_ROLL_AVG_6',
+                'OPP_FG_PCT_ROLL_AVG_6', 'OPP_DEF_RATING_ROLL_AVG_6', 'OPP_PACE_ROLL_AVG_6',
+                'REB_LAG_1', 'REB_LAG_2', 'REB_LAG_3', 'REB_LAG_4',
+                'PLAYER_HOME_AVG_REB', 'PLAYER_AWAY_AVG_REB', 'MATCHUP_AVG_REB_LAST_3']
+}
     include = feature_sets[stat_type]
 
     for col in include:
@@ -106,7 +193,7 @@ def getPlayerRollingAVG(player, data, stat_type='PTS'):
         res.append(value)
     return res
 
-def otherFeatures(player, data, games, is_playoff=0, series=0, game_in_series=0):
+def otherFeatures(player, data, games, is_playoff=0):
     player = data[data['PLAYER_NAME'] == player].copy()
     player.sort_values(by='GAME_DATE', inplace=True)
     
@@ -122,8 +209,17 @@ def otherFeatures(player, data, games, is_playoff=0, series=0, game_in_series=0)
         else:
             res.append(0)
     res.append(is_playoff)
+    if is_playoff == 0:
+        series = 0
+        gameInSeries = 0
+    elif is_playoff == 1:
+        series = 1
+        gameInSeries = 1
+    else:
+        series = 0
+        gameInSeries = 0
     res.append(series)
-    res.append(game_in_series)
+    res.append(gameInSeries)
     return res
 
 def buildFeatureVector(player, opponent, data, games, is_playoff, series, game_in_series, stat_line='PTS'):

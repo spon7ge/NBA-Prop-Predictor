@@ -7,9 +7,8 @@ import os
 import shap
 import pandas as pd
 
-def train_xgb_model(X, y, n_iter=50, stat_line='PTS'):
+def train_xgb_model(X, y,stat_line='PTS'):
     #sort by date to give more weight to recent games
-    X.sort_values(by='GAME_DATE', ascending=False, inplace=True)
     weights = np.linspace(1,3,num=len(X))**2
 
     param_grid = {
@@ -29,7 +28,7 @@ def train_xgb_model(X, y, n_iter=50, stat_line='PTS'):
     search = RandomizedSearchCV(
         estimator=model,
         param_distributions=param_grid,
-        n_iter=n_iter,
+        n_iter=50,
         scoring='neg_mean_absolute_error',
         cv=3,
         verbose=1,

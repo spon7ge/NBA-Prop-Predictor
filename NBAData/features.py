@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 #grabs players rest days between games
-def calculate_days_of_rest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'):
+def calculateDaysOfRest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'):
     df[game_date_col] = pd.to_datetime(df[game_date_col], format='%Y-%m-%d')
     df = df.sort_values(by=[player_id_col, game_date_col])
     df['DAYS_OF_REST'] = df.groupby(player_id_col)[game_date_col].diff().dt.days
@@ -82,12 +82,12 @@ def assign_playoff_series_info(df):
     return df
 
 #rolling averages for points against each team
-def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION'):
+def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION', stat_line='PTS'):
     player_data = player_data.sort_values([player_id_col, 'GAME_DATE'])
     
     # Calculate recent average points (last 3 games)
-    player_data['MATCHUP_AVG_PTS_LAST_3'] = (
-        player_data.groupby([player_id_col, opp_col])['PTS']
+    player_data[f'MATCHUP_AVG_{stat_line}_LAST_3'] = (
+        player_data.groupby([player_id_col, opp_col])[stat_line]
         .transform(lambda x: x.rolling(window=3, min_periods=1).mean().round(2))
     )
     
@@ -97,54 +97,111 @@ def add_matchup_points(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBR
     return player_data
 
 ########################################################################################
-#rolling averages for players points
+#rolling averages
 ########################################################################################
 
-def calculate_rolling_averages(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    """
-    Calculate rolling averages and standard deviations for key features per player over multiple window sizes,
-    using only *past* games to avoid target leakage.
-    """
-    player_data = player_data.sort_values([player_id_col, date_col])
-    rolling_features = ['PTS', 'MIN', 'FG_PCT', 'FGM', 'FGA', 'FG3M', 'FG3A',
-                        'FG3_PCT', 'FTM', 'FT_PCT', 'REB', 'AST', 'USG_PCT']
+def rollingAverages(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_line='PTS'):
+    player_data = player_data.sort_values([player_id_col, date_col]).copy()
+    rolling_features = {
+        'PTS': [
+            'MIN', 'PTS', 'FGA', 'FGM', 'FG_PCT', 'FG3A', 'FG3M', 'FG3_PCT',
+            'FTM', 'FTA', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'EFG_PCT',
+            'OREB', 'DREB', 'REB', 'PLUS_MINUS', 'PIE',
+            'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT',
+            'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT',
+            'TEAM_PTS', 'TEAM_PACE', 'TEAM_OFF_RATING',
+            'OPP_DEF_RATING', 'OPP_PACE', 'OPP_FG_PCT'
+        ],
+        'AST': [
+            'MIN', 'AST', 'FGA', 'FGM', 'FG_PCT', 'FG3A', 'FG3M', 'FG3_PCT',
+            'FTM', 'FTA', 'FT_PCT', 'USG_PCT', 'AST_PCT', 'AST_TOV', 'TS_PCT', 'EFG_PCT', 'PIE', 'PLUS_MINUS',
+            'TEAM_FG_PCT', 'TEAM_FGM', 'TEAM_AST', 'TEAM_TOV', 'TEAM_PACE', 'TEAM_PTS',
+            'OPP_DEF_RATING', 'OPP_STL', 'OPP_PACE'
+        ],
+        'REB': [
+            'MIN', 'OREB', 'DREB', 'REB', 'FGA', 'FGM', 'FG_PCT',
+            'FG3A', 'FG3M', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
+            'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'PIE', 'PLUS_MINUS',
+            'USG_PCT', 'TS_PCT', 'EFG_PCT', 'PACE', 'POSS',
+            'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'TEAM_FGA', 'TEAM_FG3A',
+            'OPP_REB', 'OPP_FG_PCT', 'OPP_DEF_RATING', 'OPP_PACE'
+        ]
+    }
+
+    if stat_line not in rolling_features:
+        raise ValueError(f"Invalid stat_line: {stat_line}. Must be one of {list(rolling_features.keys())}")
+
     for window in rolling_windows:
-        for feature in rolling_features:
+        for feature in rolling_features[stat_line]:
             roll_avg_col = f'{feature}_ROLL_AVG_{window}'
+
+            # Compute rolling average (no leakage)
             player_data[roll_avg_col] = (
                 player_data
                 .groupby(player_id_col)[feature]
                 .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2))
             )
 
-            if feature == 'PTS':
+            # Fill missing values: bfill → ffill → global mean
+            global_mean = player_data[roll_avg_col].mean()
+            player_data[roll_avg_col] = (
+                player_data[roll_avg_col]
+                .bfill()
+                .ffill()
+                .fillna(global_mean)
+            )
+
+            # Add rolling std for PTS only
+            if stat_line == 'PTS' and feature == 'PTS':
                 std_col = f'{feature}_STD_AVG_{window}'
                 player_data[std_col] = (
                     player_data
                     .groupby(player_id_col)[feature]
                     .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).std().round(2))
                 )
+                global_std = player_data[std_col].mean()
+                player_data[std_col] = (
+                    player_data[std_col]
+                    .bfill()
+                    .ffill()
+                    .fillna(global_std)
+                )
+
     return player_data
 
-def home_away_averages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    player_data = player_data.sort_values([player_id_col, date_col])
+def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_line='PTS'):
+    player_data = player_data.sort_values([player_id_col, date_col]).copy()
+    
     for home_away in ['HOME', 'AWAY']:
-        avg_column_name = f'PLAYER_{home_away}_AVG_PTS'
-        is_home = player_data['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
+        avg_column_name = f'PLAYER_{home_away}_AVG_{stat_line}'
+
+        def compute_expanding_avg(group):
+            mask = group['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
+            result = pd.Series(index=group.index, dtype='float64')
+            result[mask] = group.loc[mask, stat_line].expanding().mean().round(2)
+            if home_away == 'AWAY':
+                result = result.bfill().ffill()
+            elif home_away == 'HOME':
+                result = result.bfill().ffill()
+            return result
+
         player_data[avg_column_name] = (
-        player_data.groupby(player_id_col)
-        .apply(lambda group: group.loc[is_home, 'PTS'].expanding().mean().round(2), include_groups=False)
-        .reset_index(level=0, drop=True)
-    )
+            player_data.groupby(player_id_col)
+            .apply(compute_expanding_avg)
+            .reset_index(level=0, drop=True)
+        )
+
     return player_data
 
-def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+
+
+def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_line='PTS'):
     player_data = player_data.sort_values([player_id_col, date_col])
     for lag in range(1,5):
-        player_data[f'PTS_LAG_{lag}'] = player_data.groupby(player_id_col)['PTS'].shift(lag)
+        player_data[f'{stat_line}_LAG_{lag}'] = player_data.groupby(player_id_col)[stat_line].shift(lag)
     return player_data
 
-def preprocessGamesData(player_data):
+def preprocessGamesData(player_data):   
     player_data['GAME_DATE'] = pd.to_datetime(
         player_data['GAME_DATE'], format='%b %d, %Y')
     today = pd.Timestamp.today().normalize()
@@ -198,14 +255,18 @@ def categorize_opponent_defense(player_data):
     
     return player_data
 
-def calculate_player_vs_defense(player_data, player_id_col='PLAYER_ID'):
+def CalculatePlayerVsDefense(player_data, player_id_col='PLAYER_ID', stat_line='PTS'):
     """
     Calculate how players perform against different defensive categories
     """
     # Calculate average performance against each defensive category
-    metrics = ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT']
+    metrics = {
+        'PTS': ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT'],
+        'AST': ['AST','AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING'],
+        'REB': ['REB','OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE']
+    }
     
-    for metric in metrics:
+    for metric in metrics[stat_line]:
         # Calculate average against strong and weak defenses
         avg_by_def = (
             player_data.groupby([player_id_col, 'DEF_CATEGORY'])[metric]
@@ -218,163 +279,11 @@ def calculate_player_vs_defense(player_data, player_id_col='PLAYER_ID'):
 
     return player_data
 
-def add_all_opponent_features(player_data):
+def add_all_opponent_features(player_data, stat_line='PTS'):
     """
     Wrapper function to add all opponent-related features
     """
     player_data = add_opponent_metrics(player_data)
     player_data = categorize_opponent_defense(player_data)
-    player_data = calculate_player_vs_defense(player_data)
-    return player_data
-
-########################################################################################
-#rolling averages for assists
-########################################################################################    
-
-def calculate_rolling_averages_ast(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    """
-    Calculate rolling averages and standard deviations for key features per player over multiple window sizes,
-    using only *past* games to avoid target leakage.
-    """
-    player_data = player_data.sort_values([player_id_col, date_col])
-    rolling_features = ['MIN', 'AST', 'TOV', 'AST_TOV', 'USG_PCT', 'AST_PCT', 'PACE', 'POSS', 'OFF_RATING']
-    for window in rolling_windows:
-        for feature in rolling_features:
-            roll_avg_col = f'{feature}_ROLL_AVG_{window}'
-            player_data[roll_avg_col] = (
-                player_data
-                .groupby(player_id_col)[feature]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2))
-            )
-
-            if feature == 'AST':
-                std_col = f'{feature}_STD_AVG_{window}'
-                player_data[std_col] = (
-                    player_data
-                    .groupby(player_id_col)[feature]
-                    .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).std().round(2))
-                )
-    return player_data
-
-def addLagFeatures_Ast(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    player_data = player_data.sort_values([player_id_col, date_col])
-    for lag in range(1,5):
-        player_data[f'AST_LAG_{lag}'] = player_data.groupby(player_id_col)['AST'].shift(lag)
-    return player_data
-
-def home_away_ast_averages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    player_data = player_data.sort_values([player_id_col, date_col])
-    for home_away in ['HOME', 'AWAY']:
-        avg_column_name = f'PLAYER_{home_away}_AVG_AST'
-        is_home = player_data['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
-        player_data[avg_column_name] = (
-        player_data.groupby(player_id_col)
-        .apply(lambda group: group.loc[is_home, 'AST'].expanding().mean().round(2), include_groups=False)
-        .reset_index(level=0, drop=True)
-    )
-    return player_data
-
-def calculate_player_ast_vs_defense(player_data, player_id_col='PLAYER_ID'):
-    """
-    Calculate how players perform against different defensive categories
-    """
-    # Calculate average performance against each defensive category
-    metrics = ['AST','AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING']
-    
-    for metric in metrics:
-        # Calculate average against strong and weak defenses
-        avg_by_def = (
-            player_data.groupby([player_id_col, 'DEF_CATEGORY'])[metric]
-            .transform('mean')
-            .round(2)
-        )
-        player_data[f'{metric}_VS_DEF'] = (
-            (player_data[metric] - avg_by_def) / avg_by_def
-        ).round(3)
-
-    return player_data
-
-def add_all_opponent_features_ast(player_data):
-    """
-    Wrapper function to add all opponent-related features
-    """
-    player_data = add_opponent_metrics(player_data)
-    player_data = categorize_opponent_defense(player_data)
-    player_data = calculate_player_ast_vs_defense(player_data)
-    return player_data
-
-########################################################################################
-#rolling averages for rebounds
-########################################################################################   
-
-def calculate_rolling_averages_reb(player_data, rolling_windows, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    """
-    Calculate rolling averages and standard deviations for key features per player over multiple window sizes,
-    using only *past* games to avoid target leakage.
-    """
-    player_data = player_data.sort_values([player_id_col, date_col])
-    rolling_features = ['MIN', 'REB', 'OREB', 'DREB', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'USG_PCT', 'GAME_PACE']
-    for window in rolling_windows:
-        for feature in rolling_features:
-            roll_avg_col = f'{feature}_ROLL_REB_{window}'
-            player_data[roll_avg_col] = (
-                player_data
-                .groupby(player_id_col)[feature]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2))
-            )
-
-            if feature == 'REB':
-                std_col = f'{feature}_STD_AVG_{window}'
-                player_data[std_col] = (
-                    player_data
-                    .groupby(player_id_col)[feature]
-                    .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).std().round(2))
-                )
-    return player_data
-
-def addLagFeatures_Reb(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    player_data = player_data.sort_values([player_id_col, date_col])
-    for lag in range(1,5):
-        player_data[f'REB_LAG_{lag}'] = player_data.groupby(player_id_col)['REB'].shift(lag)
-    return player_data
-
-def home_away_reb_averages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    player_data = player_data.sort_values([player_id_col, date_col])
-    for home_away in ['HOME', 'AWAY']:
-        avg_column_name = f'PLAYER_{home_away}_AVG_REB'
-        is_home = player_data['HOME_GAME'] == (1 if home_away == 'HOME' else 0)
-        player_data[avg_column_name] = (
-        player_data.groupby(player_id_col)
-        .apply(lambda group: group.loc[is_home, 'REB'].expanding().mean().round(2), include_groups=False)
-        .reset_index(level=0, drop=True)
-    )
-    return player_data
-
-def calculate_player_reb_vs_defense(player_data, player_id_col='PLAYER_ID'):
-    """
-    Calculate how players perform against different defensive categories
-    """
-    # Calculate average performance against each defensive category
-    metrics = ['REB','OREB_PCT', 'DREB_PCT', 'REB_PCT', 'USG_PCT', 'GAME_PACE']
-    
-    for metric in metrics:
-        # Calculate average against strong and weak defenses
-        avg_by_def = (
-            player_data.groupby([player_id_col, 'DEF_CATEGORY'])[metric]
-            .transform('mean')
-            .round(2)
-        )
-        player_data[f'{metric}_VS_DEF'] = (
-            (player_data[metric] - avg_by_def) / avg_by_def
-        ).round(3)
-
-    return player_data
-
-def add_all_opponent_features_reb(player_data):
-    """
-    Wrapper function to add all opponent-related features
-    """
-    player_data = add_opponent_metrics(player_data)
-    player_data = categorize_opponent_defense(player_data)
-    player_data = calculate_player_reb_vs_defense(player_data)
+    player_data = CalculatePlayerVsDefense(player_data, stat_line=stat_line)
     return player_data
