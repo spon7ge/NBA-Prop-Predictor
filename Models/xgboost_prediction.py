@@ -5,8 +5,8 @@ import pandas as pd
 import joblib
 today = datetime.today().strftime('%Y-%m-%d')
 
-def load_xgboost_model(stat_line='PTS'):
-    model = joblib.load(f'Models/{stat_line}_xgboost_model.pkl')
+def loadXGBModel(stat_line='PTS'):
+    model = joblib.load(f'Models/{stat_line}_xgb_model.pkl')
     return model
 
 def get_espn_games(date_str=today):  # YYYYMMDD format
@@ -40,7 +40,7 @@ def getPlayerAVG(player, data, stat_type='PTS'):
     player_data = data[data['PLAYER_NAME'] == player]
     feature_sets = {
         'PTS': [
-                'MIN','FGA', 'FTA', 'FG3A','FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB','OREB', 'DREB', 'AST', 'STL', 'BLK', 'TOV', 'PF',
+                'MIN','FGA', 'FTA', 'FG3A','FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB','OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PF',
                 'OFF_RATING','E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 'PointsPerShot', 'EFG_PCT',
                 'AST_PCT', 'AST_TOV','USG_PCT', 'TS_PCT','PACE', 'PIE', 'POSS', 'E_USG_PCT', 'PLUS_MINUS',
                 'TEAM_FGA', 'TEAM_FG3A','TEAM_FG_PCT','TEAM_FG3_PCT','TEAM_AST', 'TEAM_REB', 'TEAM_STL', 'TEAM_BLK', 
@@ -54,9 +54,9 @@ def getPlayerAVG(player, data, stat_type='PTS'):
                 'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS'
                 ],
         'REB': [
-                'MIN', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'TOV', 'PF', 'BLKS', 'PointsPerShot', 'USG_PCT', 'TS_PCT', 'EFG_PCT', 'PIE', 'POSS',
+                'MIN', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'TOV', 'PF', 'BLK', 'PointsPerShot', 'USG_PCT', 'TS_PCT', 'EFG_PCT', 'PIE', 'POSS',
                 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'PACE', 'E_PACE',
-                'TEAM_PACE', 'TEAM_REB', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_BLKS', 'TEAM_OFF_RATING', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT'
+                'TEAM_PACE', 'TEAM_REB', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_BLK', 'TEAM_OFF_RATING', 'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT'
                 ]
     }
     include = feature_sets[stat_type]
@@ -82,7 +82,6 @@ def getOppAVG(team, data):
     team_data = data[data['OPP_ABBREVIATION'] == team]
     include = ['OPP_PACE', 'OPP_DEF_RATING','OPP_STL', 'OPP_BLK', 'OPP_REB', 'OPP_FG_PCT']
     team_stats = team_data.groupby('GAME_DATE')[include].mean().reset_index()
-
     return [round(team_stats[col].mean(), 2) for col in include]
 
 def getPlayerRollingAVG(player, data, stat_type='PTS'):
@@ -198,35 +197,35 @@ def otherFeatures(player, data, games, is_playoff=0):
     player.sort_values(by='GAME_DATE', inplace=True)
     
     res = []
-    res.append(player['GUARD'].iloc[-1])
-    res.append(player['FORWARD'].iloc[-1])
-    res.append(player['CENTER'].iloc[-1])
-    res.append(player['STARTING'].iloc[-1])
-    res.append(player['DAYS_OF_REST'].iloc[-1])
+    # Position features
+    res.append(player['GUARD'].iloc[-1])      # 1
+    res.append(player['FORWARD'].iloc[-1])    # 2
+    res.append(player['CENTER'].iloc[-1])     # 3
+    res.append(player['STARTING'].iloc[-1])   # 4
+    res.append(player['DAYS_OF_REST'].iloc[-1]) # 5
+    
+    # Home game (just one value, not one per game)
+    home_game = 0
     for game in games:
         if game['home_team'] == player['TEAM_ABBREVIATION'].iloc[-1]:
-            res.append(1)
-        else:
-            res.append(0)
-    res.append(is_playoff)
-    if is_playoff == 0:
-        series = 0
-        gameInSeries = 0
-    elif is_playoff == 1:
-        series = 1
-        gameInSeries = 1
-    else:
-        series = 0
-        gameInSeries = 0
-    res.append(series)
-    res.append(gameInSeries)
+            home_game = 1
+            break
+        if game['away_team'] == player['TEAM_ABBREVIATION'].iloc[-1]:
+            home_game = 0
+            break
+    res.append(home_game)  # 6
+    
+    # Playoff features
+    res.append(is_playoff)  # 7
+    res.append(1 if is_playoff == 1 else 0)  # 8 (Series)
+    res.append(1 if is_playoff == 1 else 0)  # 9 (GameInSeries)
     return res
 
-def buildFeatureVector(player, opponent, data, games, is_playoff, series, game_in_series, stat_line='PTS'):
+def buildFeatureVector(player, opponent, data, games, is_playoff, stat_line='PTS'):
     features = (getPlayerAVG(player, data, stat_line) + 
                    getOppAVG(opponent, data) + 
                    getPlayerRollingAVG(player, data, stat_line) + 
-                   otherFeatures(player, data, games, is_playoff, series, game_in_series))
+                   otherFeatures(player, data, games, is_playoff))
     return features
 
 def loadPrizePicksProps(date_str=today, prop_type=None):
@@ -235,11 +234,11 @@ def loadPrizePicksProps(date_str=today, prop_type=None):
     prizePicksProps = prizePicksProps[['NAME', 'LINE']].drop_duplicates()
     return prizePicksProps
 
-def make_prediction(player_name, opponent, model, data, prizePicksProps, games, is_playoff, series, game_in_series, stat_line='PTS'):
-    features = buildFeatureVector(player_name, opponent, data, games, is_playoff, series, game_in_series, stat_line)
+def make_prediction(player_name, bookmakers, opponent, model, data, games, is_playoff, stat_line='PTS'):
+    features = buildFeatureVector(player_name, opponent, data, games, is_playoff, stat_line)
     X_pred = pd.DataFrame([features], columns=model.feature_names_in_)
     prediction = model.predict(X_pred)[0]
-    prop_line = prizePicksProps[prizePicksProps['NAME'] == player_name]['LINE'].values[0]
+    prop_line = bookmakers[bookmakers['NAME'] == player_name]['LINE'].values[0]
     return {
         'player': player_name,
         'opponent': opponent,
