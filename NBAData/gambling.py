@@ -77,7 +77,7 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
         return round(-100 / (odds_to_decimal - 1))
     
 #monte carlo simulation using my model to calculate the probability of the prop
-def monte_carlo_prop_simulation(player_name, player_df, model_pred, prop_line, stat_line, num_simulations=10000):
+def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_simulations=10000):
     """
     Simulates player performance using model prediction as mean and rolling std dev as sigma.
     """
@@ -86,27 +86,39 @@ def monte_carlo_prop_simulation(player_name, player_df, model_pred, prop_line, s
         'REB': 'REB_STD_AVG_4',
         'AST': 'AST_STD_AVG_4'
     }
-    if std_col[stat_line] not in player_df.columns or player_df.empty:
-        raise ValueError("Missing PTS_STD_AVG_4 or empty data for player.")
-
-    std_dev = player_df.iloc[-1][std_col[stat_line]]
-
-    if np.isnan(std_dev) or std_dev == 0:
-        std_dev = player_df['PTS'].std() # default fallback if std is missing or 0
-
-    #another option i can use for std_dev
-    historical_std_dev = player_df['PTS'].std()
-    final_std_dev = 0.7 * std_dev + 0.3 * historical_std_dev
     
+    # Check if the required column exists
+    if std_col[stat_line] not in player_df.columns or player_df.empty:
+        raise ValueError(f"Missing {std_col[stat_line]} or empty data for player.")
+
+    # Try to get the rolling std from the column
+    try:
+        std_dev = player_df.iloc[-1][std_col[stat_line]]
+    except (IndexError, KeyError):
+        std_dev = None
+
+    # If std_dev is missing, NaN, or 0, calculate it on the fly
+    if std_dev is None or np.isnan(std_dev) or std_dev == 0:
+        # Calculate both rolling and overall std
+        player_df = player_df.sort_values('GAME_DATE')
+        rolling_std = player_df[stat_line].rolling(window=4, min_periods=1).std().iloc[-1]
+        overall_std = player_df[stat_line].std()
+        
+        # Use a weighted average (70% rolling, 30% overall)
+        std_dev = 0.7 * rolling_std + 0.3 * overall_std
+        
+        # Cap it at a reasonable value
+        std_dev = min(std_dev, 8.0)  # You can adjust this cap
+
     # Monte Carlo sampling
-    simulated_points = np.random.normal(loc=model_pred, scale=std_dev, size=num_simulations)
+    simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
 
     prob_over = np.mean(simulated_points > prop_line)
     prob_under = 1 - prob_over
     ci = np.percentile(simulated_points, [2.5, 97.5])
 
     return {
-        'mean_prediction': model_pred,
+        'mean_prediction': modelPred,
         'std_used': std_dev,
         'prob_over': prob_over,
         'prob_under': prob_under,
@@ -145,9 +157,8 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
         meanPred = pred['predicted_stat']
 
         sim_results = monte_carlo_prop_simulation(
-            player_name = name,
             player_df = data[data['PLAYER_NAME']==name].sort_values('GAME_DATE'),
-            model_pred = pred['predicted_stat'],
+            modelPred = pred['predicted_stat'],
             prop_line = line,
             stat_line = stat_line,
             num_simulations = 10000
@@ -194,9 +205,10 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
     
     # Load datasets and cache them
     datasets = {}
-    for stat_type in set(propDict.values()):  # Get unique stat types
+    stat_types = list(propDict.values())
+    for stat_type in stat_types:  # Get unique stat types
         try:
-            datasets[stat_type] = pd.read_csv(f'PLAYOFF_DATA/PLAYOFFS_25_{stat_type}_FEATURES.csv')
+            datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_type}_FEATURES.csv')
             print(f"Loaded dataset for {stat_type}")
         except Exception as e:
             print(f"Error loading dataset for {stat_type}: {e}")
@@ -230,14 +242,12 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 
                 pred = make_prediction(
                     player_name=player,
+                    bookmakers=temp_props,
                     opponent=opponent,
                     model=models[stat_line],
                     data=data,
-                    prizePicksProps=temp_props,  # Use player-specific props
                     games=games,
-                    is_playoff=1,
-                    series=4,
-                    game_in_series=7,
+                    is_playoff=0,
                     stat_line=stat_line
                 )
                 
@@ -292,9 +302,8 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 player_df = data[data['PLAYER_NAME'] == players[i]].sort_values('GAME_DATE')
                 
                 sim = monte_carlo_prop_simulation(
-                    player_name=players[i],
                     player_df=player_df,
-                    model_pred=predictions[i]['predicted_stat'],
+                    modelPred=predictions[i]['predicted_stat'],
                     prop_line=lines[i],  # Use the stored line
                     stat_line=stat_lines[i],
                     num_simulations=simulations
@@ -505,9 +514,8 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                 player_df = data[data['PLAYER_NAME'] == players[i]].sort_values('GAME_DATE')
                 
                 sim = monte_carlo_prop_simulation(
-                    player_name=players[i],
                     player_df=player_df,
-                    model_pred=predictions[i]['predicted_stat'],
+                    modelPred=predictions[i]['predicted_stat'],
                     prop_line=lines[i],
                     stat_line=stat_lines[i],
                     num_simulations=simulations
