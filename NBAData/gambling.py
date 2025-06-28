@@ -79,36 +79,17 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 #monte carlo simulation using my model to calculate the probability of the prop
 def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_simulations=10000):
     """
-    Simulates player performance using model prediction as mean and rolling std dev as sigma.
+    Simulates player performance using model prediction as mean and standard deviation of the stat.
     """
-    std_col = {
-        'PTS': 'PTS_STD_AVG_4',
-        'REB': 'REB_STD_AVG_4',
-        'AST': 'AST_STD_AVG_4'
-    }
+    # Calculate standard deviation directly from the stat column
+    std_dev = player_df[stat_line].std()
     
-    # Check if the required column exists
-    if std_col[stat_line] not in player_df.columns or player_df.empty:
-        raise ValueError(f"Missing {std_col[stat_line]} or empty data for player.")
-
-    # Try to get the rolling std from the column
-    try:
-        std_dev = player_df.iloc[-1][std_col[stat_line]]
-    except (IndexError, KeyError):
-        std_dev = None
-
-    # If std_dev is missing, NaN, or 0, calculate it on the fly
+    # If std_dev is missing or 0, use a default value
     if std_dev is None or np.isnan(std_dev) or std_dev == 0:
-        # Calculate both rolling and overall std
-        player_df = player_df.sort_values('GAME_DATE')
-        rolling_std = player_df[stat_line].rolling(window=4, min_periods=1).std().iloc[-1]
-        overall_std = player_df[stat_line].std()
-        
-        # Use a weighted average (70% rolling, 30% overall)
-        std_dev = 0.7 * rolling_std + 0.3 * overall_std
-        
-        # Cap it at a reasonable value
-        std_dev = min(std_dev, 8.0)  # You can adjust this cap
+        std_dev = 5.0  # Default fallback value
+    
+    # Cap it at a reasonable value
+    std_dev = min(std_dev, 8.0)
 
     # Monte Carlo sampling
     simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
@@ -214,13 +195,12 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
     
-    # Pre-compute valid players and their predictions
-    available_players = set()
+    # Store player teams along with predictions
     predictions_cache = {}
+    available_players = set()
     
     # Process each category
     for category, stat_line in propDict.items():
-        # Get players for this specific category
         category_data = prizePicks[prizePicks['CATEGORY'] == category]
         
         for _, row in category_data.iterrows():
@@ -228,12 +208,28 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             line = row['LINE']
             data = datasets[stat_line]
             
-            opponent = findOPP(player, data, games)
+            # Get player data first
+            player_data = data[data['PLAYER_NAME'] == player]
+            if player_data.empty:
+                continue
+                
+            # Get player's team before finding opponent
+            player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
+            
+            # Find opponent using team
+            opponent = None
+            for game in games:
+                if game['home_team'] == player_team:
+                    opponent = game['away_team']
+                    break
+                elif game['away_team'] == player_team:
+                    opponent = game['home_team']
+                    break
+                    
             if opponent is None:
                 continue
                 
             try:
-                # Create a temporary DataFrame with just this player's line
                 temp_props = pd.DataFrame({
                     'NAME': [player],
                     'LINE': [line],
@@ -251,11 +247,11 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                     stat_line=stat_line
                 )
                 
-                # Store prediction with category and line
                 predictions_cache[(player, category)] = {
                     'prediction': pred,
                     'line': line,
-                    'stat_line': stat_line
+                    'stat_line': stat_line,
+                    'team': player_team
                 }
                 available_players.add((player, category))
                 
@@ -271,8 +267,10 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             player1, cat1 = available_players[i]
             player2, cat2 = available_players[j]
             
-            # Skip if same player
-            if player1 == player2:
+            # Skip if same player or same team
+            team1 = predictions_cache[(player1, cat1)]['team']
+            team2 = predictions_cache[(player2, cat2)]['team']
+            if player1 == player2 or team1 == team2:
                 continue
             
             valid_combinations.append({
@@ -414,19 +412,18 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
     datasets = {}
     for stat_type in set(propDict.values()):
         try:
-            datasets[stat_type] = pd.read_csv(f'PLAYOFF_DATA/PLAYOFFS_25_{stat_type}_FEATURES.csv')
+            datasets[stat_type] = pd.read_csv(f'CSV_FILES/PLAYOFF_DATA/PLAYOFFS_25_{stat_type}_FEATURES.csv')
             print(f"Loaded dataset for {stat_type}")
         except Exception as e:
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
     
-    # Pre-compute valid players and their predictions
-    available_players = set()
+    # Store player teams along with predictions
     predictions_cache = {}
+    available_players = set()
     
     # Process each category
     for category, stat_line in propDict.items():
-        # Get players for this specific category
         category_data = prizePicks[prizePicks['CATEGORY'] == category]
         
         for _, row in category_data.iterrows():
@@ -434,12 +431,28 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
             line = row['LINE']
             data = datasets[stat_line]
             
-            opponent = findOPP(player, data, games)
+            # Get player data first
+            player_data = data[data['PLAYER_NAME'] == player]
+            if player_data.empty:
+                continue
+                
+            # Get player's team before finding opponent
+            player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
+            
+            # Find opponent using team
+            opponent = None
+            for game in games:
+                if game['home_team'] == player_team:
+                    opponent = game['away_team']
+                    break
+                elif game['away_team'] == player_team:
+                    opponent = game['home_team']
+                    break
+                    
             if opponent is None:
                 continue
                 
             try:
-                # Create a temporary DataFrame with just this player's line
                 temp_props = pd.DataFrame({
                     'NAME': [player],
                     'LINE': [line],
@@ -448,21 +461,20 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                 
                 pred = make_prediction(
                     player_name=player,
+                    bookmakers=temp_props,
                     opponent=opponent,
                     model=models[stat_line],
                     data=data,
-                    prizePicksProps=temp_props,
                     games=games,
-                    is_playoff=1,
-                    series=4,
-                    game_in_series=7,
+                    is_playoff=0,
                     stat_line=stat_line
                 )
                 
                 predictions_cache[(player, category)] = {
                     'prediction': pred,
                     'line': line,
-                    'stat_line': stat_line
+                    'stat_line': stat_line,
+                    'team': player_team
                 }
                 available_players.add((player, category))
                 
@@ -480,7 +492,21 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                 player2, cat2 = available_players[j]
                 player3, cat3 = available_players[k]
                 
-                # Skip if any players are the same
+                # Get teams for all players
+                team1 = predictions_cache[(player1, cat1)]['team']
+                team2 = predictions_cache[(player2, cat2)]['team']
+                team3 = predictions_cache[(player3, cat3)]['team']
+                
+                # Count how many players are from each team
+                team_counts = {}
+                for team in [team1, team2, team3]:
+                    team_counts[team] = team_counts.get(team, 0) + 1
+                
+                # Skip if any team has more than 2 players
+                if any(count > 2 for count in team_counts.values()):
+                    continue
+                
+                # Skip if same player
                 if player1 == player2 or player1 == player3 or player2 == player3:
                     continue
                 
