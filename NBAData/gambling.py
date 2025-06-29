@@ -3,6 +3,7 @@ import numpy as np
 from scipy.stats import norm
 import scipy.stats as stats
 from Models.xgboost_prediction import *
+from Models.xgboost_model import *
 
 
 def impliedProb(odds):
@@ -11,29 +12,12 @@ def impliedProb(odds):
     else:
         return abs(odds) / (abs(odds) + 100)
 
-def zscore_prob(mean, std, line, side="over"):
-    z = (line - mean) / std
-    prob = 1 - norm.cdf(z)
-    return prob if side == "over" else 1 - prob
-
 def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     netProfit = payout - stake
     probabilityOfLoss = 1 - probability
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
-def get_combined_stat_values(data, player_name, stat_line):
-    """Helper function to get stat values for single or combined stats"""
-    df = data.loc[data['PLAYER_NAME'] == player_name]
-    
-    if df.empty:
-        return pd.Series()
-    
-    if '+' in stat_line:
-        stat_parts = stat_line.split('+')
-        return df[stat_parts].sum(axis=1)
-    else:
-        return df[stat_line]
 
 def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.035):
     df = bookmakersData[
@@ -81,8 +65,12 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_
     """
     Simulates player performance using model prediction as mean and standard deviation of the stat.
     """
-    # Calculate standard deviation directly from the stat column
     std_dev = player_df[stat_line].std()
+    std_dev = std_dev * 0.7
+    
+    # Future: Much better approach  
+    # line_residuals = actual_points - historical_lines
+    # std = line_residuals.std()
     
     # If std_dev is missing or 0, use a default value
     if std_dev is None or np.isnan(std_dev) or std_dev == 0:
@@ -90,7 +78,7 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_
     
     # Cap it at a reasonable value
     std_dev = min(std_dev, 8.0)
-
+    
     # Monte Carlo sampling
     simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
 
@@ -129,13 +117,9 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
             data = data,
             prizePicksProps = bookmakers,
             games = games,
-            is_playoff = 1,
-            series = 4,
-            game_in_series = 7,
+            is_playoff = 0,
             stat_line = stat_line
         )
-
-        meanPred = pred['predicted_stat']
 
         sim_results = monte_carlo_prop_simulation(
             player_df = data[data['PLAYER_NAME']==name].sort_values('GAME_DATE'),
@@ -184,10 +168,10 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
     print("Loading datasets and generating valid combinations...")
     valid_combinations = []
     
-    # Load datasets and cache them
+    # Load datasets
     datasets = {}
     stat_types = list(propDict.values())
-    for stat_type in stat_types:  # Get unique stat types
+    for stat_type in stat_types:
         try:
             datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_type}_FEATURES.csv')
             print(f"Loaded dataset for {stat_type}")
@@ -195,11 +179,8 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
     
-    # Store player teams along with predictions
-    predictions_cache = {}
-    available_players = set()
-    
     # Process each category
+    available_players = []
     for category, stat_line in propDict.items():
         category_data = prizePicks[prizePicks['CATEGORY'] == category]
         
@@ -208,15 +189,15 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             line = row['LINE']
             data = datasets[stat_line]
             
-            # Get player data first
+            # Get player data
             player_data = data[data['PLAYER_NAME'] == player]
             if player_data.empty:
                 continue
                 
-            # Get player's team before finding opponent
+            # Get player's team
             player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
             
-            # Find opponent using team
+            # Find opponent
             opponent = None
             for game in games:
                 if game['home_team'] == player_team:
@@ -247,41 +228,56 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                     stat_line=stat_line
                 )
                 
-                predictions_cache[(player, category)] = {
+                available_players.append({
+                    'player': player,
+                    'category': category,
                     'prediction': pred,
                     'line': line,
                     'stat_line': stat_line,
                     'team': player_team
-                }
-                available_players.add((player, category))
+                })
                 
             except Exception as e:
                 print(f"Error getting prediction for {player} ({category}): {e}")
                 continue
     
-    available_players = list(available_players)
-    
+    # For pairs:
+    def get_combination_key(player1_data, player2_data):
+        """Create a unique key for a player combination that is order-independent"""
+        players = sorted([
+            (player1_data['player'], player1_data['category'], player1_data['line']),
+            (player2_data['player'], player2_data['category'], player2_data['line'])
+        ])
+        return tuple(players)
+
+    # Keep track of seen combinations
+    seen_combinations = set()
+
     # Generate all valid pairs
     for i in range(len(available_players)):
         for j in range(i + 1, len(available_players)):
-            player1, cat1 = available_players[i]
-            player2, cat2 = available_players[j]
+            player1_data = available_players[i]
+            player2_data = available_players[j]
             
-            # Skip if same player or same team
-            team1 = predictions_cache[(player1, cat1)]['team']
-            team2 = predictions_cache[(player2, cat2)]['team']
-            if player1 == player2 or team1 == team2:
+            # Create unique key for this combination
+            combo_key = get_combination_key(player1_data, player2_data)
+            
+            # Skip if we've seen this combination before
+            if combo_key in seen_combinations:
                 continue
             
+            # Skip if same player or same team
+            if (player1_data['player'] == player2_data['player'] or 
+                player1_data['team'] == player2_data['team']):
+                continue
+            
+            seen_combinations.add(combo_key)
             valid_combinations.append({
-                'players': [player1, player2],
-                'categories': [cat1, cat2],
-                'stat_lines': [predictions_cache[(player1, cat1)]['stat_line'],
-                             predictions_cache[(player2, cat2)]['stat_line']],
-                'lines': [predictions_cache[(player1, cat1)]['line'],
-                         predictions_cache[(player2, cat2)]['line']],
-                'predictions': [predictions_cache[(player1, cat1)]['prediction'],
-                              predictions_cache[(player2, cat2)]['prediction']]
+                'players': [player1_data['player'], player2_data['player']],
+                'categories': [player1_data['category'], player2_data['category']],
+                'stat_lines': [player1_data['stat_line'], player2_data['stat_line']],
+                'lines': [player1_data['line'], player2_data['line']],
+                'predictions': [player1_data['prediction'], player2_data['prediction']]
             })
     
     def process_combination(combo):
@@ -302,13 +298,13 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 sim = monte_carlo_prop_simulation(
                     player_df=player_df,
                     modelPred=predictions[i]['predicted_stat'],
-                    prop_line=lines[i],  # Use the stored line
+                    prop_line=lines[i],
                     stat_line=stat_lines[i],
                     num_simulations=simulations
                 )
                 sims.append(sim)
             
-            # Calculate probabilities for each combination
+            # Calculate probabilities
             sim1_over = sims[0]['prob_over']
             sim1_under = sims[0]['prob_under']
             sim2_over = sims[1]['prob_over']
@@ -335,7 +331,6 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 'stat_lines': stat_lines,
                 'lines': lines,
                 'predictions': [pred['predicted_stat'] for pred in predictions],
-                'edges': [pred['edge'] for pred in predictions],
                 'best_type': best_type,
                 'best_ev': best_ev,
                 'best_prob': best_prob
@@ -383,13 +378,13 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
     for result in results:
         all_pairs.append({
             'PLAYER 1': result['players'][0],
-            'CATEGORY 1': result['categories'][0],  # Use original category name
-            'STAT TYPE 1': result['stat_lines'][0],  # Add stat type for clarity
+            'CATEGORY 1': result['categories'][0],
+            'STAT TYPE 1': result['stat_lines'][0],
             'PLAYER 1 LINE': result['lines'][0],
             'PLAYER 1 PREDICTION': result['predictions'][0],
             'PLAYER 2': result['players'][1],
-            'CATEGORY 2': result['categories'][1],  # Use original category name
-            'STAT TYPE 2': result['stat_lines'][1],  # Add stat type for clarity
+            'CATEGORY 2': result['categories'][1],
+            'STAT TYPE 2': result['stat_lines'][1],
             'PLAYER 2 LINE': result['lines'][1],
             'PLAYER 2 PREDICTION': result['predictions'][1],
             'TYPE': result['best_type'],
@@ -408,21 +403,19 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
     print("Loading datasets and generating valid combinations...")
     valid_combinations = []
     
-    # Load datasets and cache them
+    # Load datasets
     datasets = {}
-    for stat_type in set(propDict.values()):
+    stat_types = list(propDict.values())
+    for stat_type in stat_types:
         try:
-            datasets[stat_type] = pd.read_csv(f'CSV_FILES/PLAYOFF_DATA/PLAYOFFS_25_{stat_type}_FEATURES.csv')
+            datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_type}_FEATURES.csv')
             print(f"Loaded dataset for {stat_type}")
         except Exception as e:
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
     
-    # Store player teams along with predictions
-    predictions_cache = {}
-    available_players = set()
-    
     # Process each category
+    available_players = []
     for category, stat_line in propDict.items():
         category_data = prizePicks[prizePicks['CATEGORY'] == category]
         
@@ -431,15 +424,15 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
             line = row['LINE']
             data = datasets[stat_line]
             
-            # Get player data first
+            # Get player data
             player_data = data[data['PLAYER_NAME'] == player]
             if player_data.empty:
                 continue
                 
-            # Get player's team before finding opponent
+            # Get player's team
             player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
             
-            # Find opponent using team
+            # Find opponent
             opponent = None
             for game in games:
                 if game['home_team'] == player_team:
@@ -470,36 +463,51 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                     stat_line=stat_line
                 )
                 
-                predictions_cache[(player, category)] = {
+                available_players.append({
+                    'player': player,
+                    'category': category,
                     'prediction': pred,
                     'line': line,
                     'stat_line': stat_line,
                     'team': player_team
-                }
-                available_players.add((player, category))
+                })
                 
             except Exception as e:
                 print(f"Error getting prediction for {player} ({category}): {e}")
                 continue
     
-    available_players = list(available_players)
-    
+    # For trios:
+    def get_trio_combination_key(player1_data, player2_data, player3_data):
+        """Create a unique key for a trio combination that is order-independent"""
+        players = sorted([
+            (player1_data['player'], player1_data['category'], player1_data['line']),
+            (player2_data['player'], player2_data['category'], player2_data['line']),
+            (player3_data['player'], player3_data['category'], player3_data['line'])
+        ])
+        return tuple(players)
+
+    # Keep track of seen combinations
+    seen_combinations = set()
+
     # Generate all valid trios
     for i in range(len(available_players)):
         for j in range(i + 1, len(available_players)):
             for k in range(j + 1, len(available_players)):
-                player1, cat1 = available_players[i]
-                player2, cat2 = available_players[j]
-                player3, cat3 = available_players[k]
+                player1_data = available_players[i]
+                player2_data = available_players[j]
+                player3_data = available_players[k]
                 
-                # Get teams for all players
-                team1 = predictions_cache[(player1, cat1)]['team']
-                team2 = predictions_cache[(player2, cat2)]['team']
-                team3 = predictions_cache[(player3, cat3)]['team']
+                # Create unique key for this combination
+                combo_key = get_trio_combination_key(player1_data, player2_data, player3_data)
+                
+                # Skip if we've seen this combination before
+                if combo_key in seen_combinations:
+                    continue
                 
                 # Count how many players are from each team
                 team_counts = {}
-                for team in [team1, team2, team3]:
+                for player_data in [player1_data, player2_data, player3_data]:
+                    team = player_data['team']
                     team_counts[team] = team_counts.get(team, 0) + 1
                 
                 # Skip if any team has more than 2 players
@@ -507,21 +515,18 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                     continue
                 
                 # Skip if same player
-                if player1 == player2 or player1 == player3 or player2 == player3:
+                if (player1_data['player'] == player2_data['player'] or 
+                    player1_data['player'] == player3_data['player'] or 
+                    player2_data['player'] == player3_data['player']):
                     continue
                 
+                seen_combinations.add(combo_key)
                 valid_combinations.append({
-                    'players': [player1, player2, player3],
-                    'categories': [cat1, cat2, cat3],
-                    'stat_lines': [predictions_cache[(player1, cat1)]['stat_line'],
-                                 predictions_cache[(player2, cat2)]['stat_line'],
-                                 predictions_cache[(player3, cat3)]['stat_line']],
-                    'lines': [predictions_cache[(player1, cat1)]['line'],
-                             predictions_cache[(player2, cat2)]['line'],
-                             predictions_cache[(player3, cat3)]['line']],
-                    'predictions': [predictions_cache[(player1, cat1)]['prediction'],
-                                  predictions_cache[(player2, cat2)]['prediction'],
-                                  predictions_cache[(player3, cat3)]['prediction']]
+                    'players': [player1_data['player'], player2_data['player'], player3_data['player']],
+                    'categories': [player1_data['category'], player2_data['category'], player3_data['category']],
+                    'stat_lines': [player1_data['stat_line'], player2_data['stat_line'], player3_data['stat_line']],
+                    'lines': [player1_data['line'], player2_data['line'], player3_data['line']],
+                    'predictions': [player1_data['prediction'], player2_data['prediction'], player3_data['prediction']]
                 })
     
     def process_combination(combo):
@@ -548,7 +553,7 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                 )
                 sims.append(sim)
             
-            # Calculate probabilities for each combination
+            # Calculate probabilities
             sim1_over = sims[0]['prob_over']
             sim1_under = sims[0]['prob_under']
             sim2_over = sims[1]['prob_over']
@@ -556,7 +561,6 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
             sim3_over = sims[2]['prob_over']
             sim3_under = sims[2]['prob_under']
             
-            # Calculate probabilities for all possible combinations
             combo_probs = {
                 'OVER/OVER/OVER': sim1_over * sim2_over * sim3_over,
                 'OVER/OVER/UNDER': sim1_over * sim2_over * sim3_under,
@@ -582,7 +586,6 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                 'stat_lines': stat_lines,
                 'lines': lines,
                 'predictions': [pred['predicted_stat'] for pred in predictions],
-                'edges': [pred['edge'] for pred in predictions],
                 'best_type': best_type,
                 'best_ev': best_ev,
                 'best_prob': best_prob

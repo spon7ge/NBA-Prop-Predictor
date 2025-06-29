@@ -7,6 +7,14 @@ def calculateDaysOfRest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'
     df = df.sort_values(by=[player_id_col, game_date_col])
     df['DAYS_OF_REST'] = df.groupby(player_id_col)[game_date_col].diff().dt.days
     return df
+
+def convert_height_to_inches(height_str):
+    if pd.isna(height_str):
+        return np.nan
+    # Split the string into feet and inches
+    feet, inches = map(int, height_str.split('-'))
+    # Convert to total inches
+    return (feet * 12) + inches
     
 # only for the playoffs
 def assign_playoff_series_info(df):
