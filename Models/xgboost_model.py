@@ -47,15 +47,23 @@ def train_xgb_model(X, y,stat_line='PTS'):
     print(f"RMSE: {np.sqrt(mean_squared_error(y_test, pred)):.4f}")
     print(f"\nBest Parameters: {search.best_params_}")
 
-    save_xgb_model(best_model, stat_line)
+    saveXGBModel(best_model, stat_line)
     return best_model
 
-def save_xgb_model(model, stat_line):
-    joblib.dump(model, f'Models/{stat_line}_xgb_model.pkl')
-    print(f"Model saved to {stat_line}_xgb_model.pkl")
+def saveXGBModel(model, stat_line):
+    models_dir = 'Models'
+    if not os.path.exists(models_dir):
+        os.makedirs(models_dir)
+    model_path = os.path.join(models_dir, f'{stat_line}_xgb_model.pkl')
+    joblib.dump(model, model_path)
+    print(f"Model saved to {model_path}")
 
-def load_xgb_model(stat_line):
-    model = joblib.load(f'Models/{stat_line}_xgb_model.pkl')
+def loadXGBModel(stat_line):
+    models_dir = 'Models'
+    if not os.path.exists(models_dir):
+        os.makedirs(models_dir)
+    model_path = os.path.join(models_dir, 'Models', f'{stat_line}_xgb_model.pkl')
+    model = joblib.load(model_path)
     return model
     
 def getTopFeatures(model, X):

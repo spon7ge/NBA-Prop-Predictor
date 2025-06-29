@@ -3,11 +3,11 @@ from datetime import datetime
 import pytz
 import pandas as pd
 import joblib
+from Models.xgboost_model import *
+
+
 today = datetime.today().strftime('%Y-%m-%d')
 
-def loadXGBModel(stat_line='PTS'):
-    model = joblib.load(f'Models/{stat_line}_xgb_model.pkl')
-    return model
 
 def get_espn_games(date_str=today):  # YYYYMMDD format
     url = f"http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={date_str}"
@@ -198,6 +198,8 @@ def otherFeatures(player, data, games, is_playoff=0):
     
     res = []
     # Position features
+    res.append(player['HEIGHT_IN_INCHES'].iloc[-1])
+    res.append(player['WEIGHT'].iloc[-1])
     res.append(player['GUARD'].iloc[-1])      # 1
     res.append(player['FORWARD'].iloc[-1])    # 2
     res.append(player['CENTER'].iloc[-1])     # 3
