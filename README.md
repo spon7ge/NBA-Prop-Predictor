@@ -54,7 +54,8 @@ If you want the odds from below use region='us'
 ```
 python getCompleteStats(season='2024-25', season_type='Regular Season')
 ```
-
+## EXAMPLE of what you get for a 2 leg
+<img width="1180" alt="Screenshot 2025-06-29 at 9 08 23 AM" src="https://github.com/user-attachments/assets/daa9366d-6d61-4f75-8a68-90100f576237" />
 
 ## Disclaimer
 This project was created as a personal learning exercise and is intended for educational purposes only. The predictive models implemented here are experimental and have not demonstrated high accuracy in forecasting player performance. As such, the results should not be considered reliable for decision-making or betting purposes.
