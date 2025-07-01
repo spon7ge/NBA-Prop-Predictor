@@ -1,6 +1,85 @@
 import pandas as pd
 import numpy as np
 
+#grabbing play by play data
+import re
+from nba_api.stats.endpoints import PlayByPlayV2
+def PlayByPlayOrangized(game_id):
+    df = PlayByPlayV2(game_id=game_id).get_data_frames()[0]
+    df['DESCRIPTION'] = df['HOMEDESCRIPTION'].fillna(df['VISITORDESCRIPTION'])
+    df['DESCRIPTION'] = df['DESCRIPTION'].fillna(df['NEUTRALDESCRIPTION'])
+    
+    scores = df[['GAME_ID','PERIOD','PCTIMESTRING','DESCRIPTION','SCORE', 'PLAYER1_NAME', 'PLAYER2_NAME', 'PLAYER3_NAME','PLAYER1_TEAM_ABBREVIATION','PLAYER2_TEAM_ABBREVIATION','PLAYER3_TEAM_ABBREVIATION','PLAYER1_ID','PLAYER2_ID','PLAYER3_ID']].reset_index(drop=True)
+    scores['SECONDS_REMAINING'] = scores['PCTIMESTRING'].apply(lambda x: 
+    int(x.split(':')[0]) * 60 + int(x.split(':')[1])
+    )
+    scores['HOME_SCORE'] = scores['SCORE'].str.split('-').str[0].astype(float)
+    scores['AWAY_SCORE'] = scores['SCORE'].str.split('-').str[1].astype(float)
+
+    scores['HOME_SCORE'] = scores['HOME_SCORE'].ffill().fillna(0).astype(int)
+    scores['AWAY_SCORE'] = scores['AWAY_SCORE'].ffill().fillna(0).astype(int)
+
+    scores = scores.drop(columns=['SCORE'])
+    scores = scores[['GAME_ID', 'PERIOD', 'PCTIMESTRING', 'SECONDS_REMAINING', 'DESCRIPTION', 'HOME_SCORE', 'AWAY_SCORE', 'PLAYER1_NAME', 'PLAYER2_NAME', 'PLAYER3_NAME','PLAYER1_TEAM_ABBREVIATION','PLAYER2_TEAM_ABBREVIATION','PLAYER3_TEAM_ABBREVIATION']]
+    return scores
+
+#grabbing action types from description
+def parseDescription(pbp_df):
+    # Initialize columns - only PLAYER1 gets shot-related columns
+    pbp_df['PLAYER1_NAME'] = None
+    pbp_df['PLAYER1_ACTION'] = None
+    pbp_df['PLAYER1_SHOT_TYPE'] = None
+    pbp_df['PLAYER1_SHOT_OUTCOME'] = None
+    pbp_df['PLAYER1_DISTANCE'] = None
+    
+    # Other players just need name and action
+    pbp_df['PLAYER2_NAME'] = None
+    pbp_df['PLAYER2_ACTION'] = None
+    
+    pbp_df['PLAYER3_NAME'] = None
+    pbp_df['PLAYER3_ACTION'] = None
+    
+    for idx, description in enumerate(pbp_df['DESCRIPTION']):
+        if pd.isna(description):
+            continue
+            
+        # Primary action (shots)
+        shot_match = re.search(r"(\w+)\s+(\d+)'\s+([\w\s]+)(?=\s+\()", str(description))
+        if shot_match:
+            pbp_df.loc[idx, 'PLAYER1_NAME'] = shot_match.group(1)  # Player name
+            pbp_df.loc[idx, 'PLAYER1_DISTANCE'] = int(shot_match.group(2))  # Shot distance
+            pbp_df.loc[idx, 'PLAYER1_SHOT_TYPE'] = shot_match.group(3)  # Shot type
+            pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'SHOT'
+            pbp_df.loc[idx, 'PLAYER1_SHOT_OUTCOME'] = 1 if re.search(r"\(\d+ PTS\)", description) else 0
+            
+            # Check for assist
+            assist_match = re.search(r"\((\w+)\s+(\d+)\s+AST\)", str(description))
+            if assist_match:
+                pbp_df.loc[idx, 'PLAYER2_NAME'] = assist_match.group(1)
+                pbp_df.loc[idx, 'PLAYER2_ACTION'] = 'ASSIST'
+    
+        
+        # Handle non-shot actions
+        elif 'REBOUND' in str(description):
+            rebound_match = re.search(r"(\w+)\s+REBOUND", str(description))
+            if rebound_match:
+                pbp_df.loc[idx, 'PLAYER1_NAME'] = rebound_match.group(1)
+                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'REBOUND'
+                
+        elif 'STEAL' in str(description):
+            steal_match = re.search(r"(\w+)\s+STEAL", str(description))
+            if steal_match:
+                pbp_df.loc[idx, 'PLAYER1_NAME'] = steal_match.group(1)
+                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'STEAL'
+                
+        elif 'BLOCK' in str(description):
+            block_match = re.search(r"(\w+)\s+BLOCK", str(description))
+            if block_match:
+                pbp_df.loc[idx, 'PLAYER1_NAME'] = block_match.group(1)
+                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'BLOCK'
+            
+    return pbp_df
+
 #grabs players rest days between games
 def calculateDaysOfRest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'):
     df[game_date_col] = pd.to_datetime(df[game_date_col], format='%Y-%m-%d')

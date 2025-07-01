@@ -95,9 +95,18 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_
     }
 
 def single_bet(data, bookmakers, models, games, category='player_points', stat_line='PTS'):  
+    print("Processing single bets...")
     Props = bookmakers[['NAME', 'BOOKMAKER', 'CATEGORY', 'LINE', 'OVER/UNDER', 'ODDS']].loc[bookmakers['CATEGORY'] == category]
     results = []
     model = models[stat_line]
+    
+    # Load dataset
+    try:
+        data = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_line}_FEATURES.csv')
+        print(f"Loaded dataset for {stat_line}")
+    except Exception as e:
+        print(f"Error loading dataset for {stat_line}: {e}")
+        return pd.DataFrame()
     
     for idx, row in Props.iterrows():
         name = row['NAME']
@@ -106,57 +115,87 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
         over_under = row['OVER/UNDER']
         odds = row['ODDS']
 
-        opponent = findOPP(name, data, games)
+        # Get player data
+        player_data = data[data['PLAYER_NAME'] == name]
+        if player_data.empty:
+            continue
+            
+        # Get player's team
+        player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
+        
+        # Find opponent
+        opponent = None
+        for game in games:
+            if game['home_team'] == player_team:
+                opponent = game['away_team']
+                break
+            elif game['away_team'] == player_team:
+                opponent = game['home_team']
+                break
+                
         if opponent is None:
             continue
 
-        pred = make_prediction(
-            player_name = name,
-            opponent = opponent,
-            model = model,
-            data = data,
-            prizePicksProps = bookmakers,
-            games = games,
-            is_playoff = 0,
-            stat_line = stat_line
-        )
-
-        sim_results = monte_carlo_prop_simulation(
-            player_df = data[data['PLAYER_NAME']==name].sort_values('GAME_DATE'),
-            modelPred = pred['predicted_stat'],
-            prop_line = line,
-            stat_line = stat_line,
-            num_simulations = 10000
-        )
-
-        prob_over = sim_results['prob_over']
-
-        # EV calculation
-        stake = 100
-        profit = (odds / 100) * stake if odds > 0 else (100 / abs(odds)) * stake
-        payout = stake + profit
-        ev = (prob_over * profit) - ((1 - prob_over) * stake)
-
-        kelly = kelly_criterion(prob_over, payout, stake)
-
-        # Calculate fair odds
         try:
-            fair_odds = fairProb(bookmakers, name, line, category, over_under)
-        except ValueError as e:
-            fair_odds = None
+            temp_props = pd.DataFrame({
+                'NAME': [name],
+                'LINE': [line],
+                'CATEGORY': [category]
+            })
 
-        results.append({
-            'NAME': name,
-            'BOOKMAKER': bookmaker,
-            'CATEGORY': category,
-            'LINE': line,
-            'OVER/UNDER': over_under,
-            'ODDS': odds,
-            'FAIR ODDS': fair_odds,
-            'SIM PROB': round(prob_over, 3),
-            'EV': round(ev, 2),
-            'KELLY CRITERION': kelly,
-        })
+            pred = make_prediction(
+                player_name=name,
+                bookmakers=temp_props,
+                opponent=opponent,
+                model=model,
+                data=data,
+                games=games,
+                is_playoff=0,
+                stat_line=stat_line
+            )
+
+            sim_results = monte_carlo_prop_simulation(
+                player_df=player_data.sort_values('GAME_DATE'),
+                modelPred=pred['predicted_stat'],
+                prop_line=line,
+                stat_line=stat_line,
+                num_simulations=10000
+            )
+
+            prob_over = sim_results['prob_over']
+
+            # EV calculation
+            stake = 100
+            profit = (odds / 100) * stake if odds > 0 else (100 / abs(odds)) * stake
+            payout = stake + profit
+            ev = (prob_over * profit) - ((1 - prob_over) * stake)
+
+            kelly = kelly_criterion(prob_over, payout, stake)
+
+            # Calculate fair odds
+            try:
+                fair_odds = fairProb(bookmakers, name, line, category, over_under)
+            except ValueError as e:
+                fair_odds = None
+
+            results.append({
+                'NAME': name,
+                'TEAM': player_team,
+                'OPPONENT': opponent,
+                'BOOKMAKER': bookmaker,
+                'CATEGORY': category,
+                'LINE': line,
+                'OVER/UNDER': over_under,
+                'ODDS': odds,
+                'FAIR ODDS': fair_odds,
+                'MODEL_PREDICTION': round(pred['predicted_stat']),
+                'SIM_PROB': round(prob_over, 3),
+                'EV': round(ev, 2),
+                'KELLY CRITERION': kelly,
+            })
+        except Exception as e:
+            print(f"Error processing {name}: {e}")
+            continue
 
     return pd.DataFrame(results)
 
