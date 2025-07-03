@@ -1,3 +1,26 @@
 next steps:
 - create model for blks, stls, and fg3m
 - any single category that prizePicks offers before moving on to jointed categories
+features id like to implement:
+- position vs defense
+- injury status prior to the game
+- star player out or in (maybe: using play by play to get the starting lineup and see if the star player is in the lineup? )
+- lineup changes
+- team style of play
+- coaching 
+- play by play data to get tendencies
+- player vs player espically if the player is a good defender
+- altitude(utah and denver) works in favor of the home team
+
+Backtest:
+For each strategy track, per bet and cumulatively:
+ROI (%) = (Total profit ÷ Total amount staked) × 100
+Hit rate = (Number of winning bets) ÷ (Total bets)
+Volatility = Standard deviation of daily P&L
+Max drawdown = Largest peak-to-trough loss
+Sharpe ratio = (Average daily return ÷ Std. dev. of daily returns) × √252
+
+TEAM FEATURES:
+Regularly update usual starters e.g., monthly to adapt to trades/injuries.
+Log unusual values e.g., 0-2 usual starters → opportunity for big deviations.
+Combine with opponent features: both teams lineup health can affect game pace and scoring.
