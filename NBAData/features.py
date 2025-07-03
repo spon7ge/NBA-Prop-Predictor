@@ -280,67 +280,39 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
 
     return player_data
 
-
-
 def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_line='PTS'):
     player_data = player_data.sort_values([player_id_col, date_col])
     for lag in range(1,5):
         player_data[f'{stat_line}_LAG_{lag}'] = player_data.groupby(player_id_col)[stat_line].shift(lag)
     return player_data
 
-def preprocessGamesData(player_data):   
-    player_data['GAME_DATE'] = pd.to_datetime(
-        player_data['GAME_DATE'], format='%b %d, %Y')
-    today = pd.Timestamp.today().normalize()
-    player_data['DAYS_AGO'] = (today - player_data['GAME_DATE']).dt.days
-    return player_data
-
-def add_opponent_metrics(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION'):
-    """
-    Add opponent-related metrics using rolling windows to track opponent defensive strength
-    """
-    # First sort by date to ensure chronological calculations
-    player_data = player_data.sort_values(['GAME_DATE'])
-    
-    # Calculate opponent rolling averages (last 5 games) - defensive stats only
-    opp_metrics = ['OPP_DEF_RATING', 'OPP_STL', 'OPP_BLK']
-    window = 5
-    
-    for metric in opp_metrics:
-        # Calculate opponent's rolling average for each metric
-        player_data[f'OPP_ROLL_{metric}_{window}'] = (
-            player_data.groupby(opp_col)[metric]
-            .transform(lambda x: x.rolling(window=window, min_periods=1).mean().round(2))
-        )
-    
-    # Normalize defensive rating (higher rating is worse defense, so multiply by -1)
-    player_data['NORMALIZED_DEF_RATING'] = -1 * (
-        (player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'] - 
-         player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'].mean()) / 
-        player_data[f'OPP_ROLL_OPP_DEF_RATING_{window}'].std()
+def defenseRollingAverage(df):
+    df = df.sort_values(by='GAME_DATE', ascending=True).reset_index(drop=True)
+    rolling_df = (
+    df.groupby('OPP_ABBREVIATION')
+      .apply(lambda group: group.assign(
+          ROLL_OPP_DEF_RATING=group['OPP_DEF_RATING']
+              .expanding(min_periods=1)
+              .mean()
+      ))
+      .reset_index(drop=True)
     )
+    return rolling_df
 
-    # Calculate defensive strength using normalized values
-    player_data['OPP_DEF_STRENGTH'] = (
-        (player_data[f'OPP_ROLL_OPP_STL_{window}'] / player_data[f'OPP_ROLL_OPP_STL_{window}'].mean()) +
-        (player_data[f'OPP_ROLL_OPP_BLK_{window}'] / player_data[f'OPP_ROLL_OPP_BLK_{window}'].mean()) +
-        player_data['NORMALIZED_DEF_RATING']
-    ) / 3
-
-    return player_data
-
-def categorize_opponent_defense(player_data):
+def categorize_by_rank(df, opp_col='OPP_ABBREVIATION', strength_col='ROLL_OPP_DEF_RATING', top_n=10):
     """
-    Categorize opponents into strong (1) and weak (0) defenses
+    Assigns a binary defense category (1=strong, 0=weak) based on team-level defensive strength rank.
+    Each unique opponent gets one consistent label across all games.
     """
-    # Calculate median defensive strength
-    median_defense = player_data['OPP_DEF_STRENGTH'].median()
-    
-    # Categorize defenses
-    player_data['DEF_CATEGORY'] = (
-        player_data['OPP_DEF_STRENGTH'] >= median_defense).astype(int)
-    
-    return player_data
+    # Calculate average defense strength per team
+    team_strength = df.groupby(opp_col)[strength_col].mean().reset_index()
+    # Rank teams: 1 is strongest defense
+    team_strength['DEF_RANK'] = team_strength[strength_col].rank(ascending=True, method='min')
+    # Assign category: top_n strongest defenses → 1
+    team_strength['DEF_CATEGORY'] = (team_strength['DEF_RANK'] <= top_n).astype(int)
+    # Merge back to main dataframe so every row for same team gets consistent label
+    df = df.merge(team_strength[[opp_col, 'DEF_RANK', 'DEF_CATEGORY']], on=opp_col, how='left')
+    return df
 
 def CalculatePlayerVsDefense(player_data, player_id_col='PLAYER_ID', stat_line='PTS'):
     """
@@ -348,9 +320,9 @@ def CalculatePlayerVsDefense(player_data, player_id_col='PLAYER_ID', stat_line='
     """
     # Calculate average performance against each defensive category
     metrics = {
-        'PTS': ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT'],
-        'AST': ['AST','AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING'],
-        'REB': ['REB','OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE']
+        'PTS': ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT','TOV'],
+        'AST': ['AST','AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING','TOV'],
+        'REB': ['REB','OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE','TOV']
     }
     
     for metric in metrics[stat_line]:
@@ -370,7 +342,269 @@ def add_all_opponent_features(player_data, stat_line='PTS'):
     """
     Wrapper function to add all opponent-related features
     """
-    player_data = add_opponent_metrics(player_data)
-    player_data = categorize_opponent_defense(player_data)
+    player_data = defenseRollingAverage(player_data)
+    player_data = categorize_by_rank(player_data)
     player_data = CalculatePlayerVsDefense(player_data, stat_line=stat_line)
     return player_data
+
+
+########################################################################################
+#lineup composition features
+########################################################################################
+def teamUsualStarters(df):
+    """
+    Adds to df:
+    - TEAM_STARTER_OFF_RATING_AVG, TEAM_STARTER_DEF_RATING_AVG, TEAM_STARTER_USG_PCT_AVG
+    - NUM_USUAL_STARTERS_PRESENT: number of usual starters present for own team
+    """
+    # 1) Compute usual starters: top 5 most frequent starters per team
+    player_starts = (
+        df[df['STARTING'] == 1]
+        .groupby(['TEAM_ID', 'PLAYER_ID'])
+        .size()
+        .reset_index(name='NUM_STARTS')
+    )
+    usual_starters = (
+        player_starts
+        .sort_values(['TEAM_ID', 'NUM_STARTS'], ascending=[True, False])
+        .groupby('TEAM_ID')
+        .head(5)
+    )
+    usual_starters_dict = (
+        usual_starters
+        .groupby('TEAM_ID')['PLAYER_ID']
+        .apply(set)
+        .to_dict()
+    )
+
+    # 2) Compute NUM_USUAL_STARTERS_PRESENT for each game-team
+    starters_per_game = (
+        df[df['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'PLAYER_ID': list})
+        .reset_index()
+    )
+    def count_usual_starters(row):
+        team_id = row['TEAM_ID']
+        actual_starters = set(row['PLAYER_ID'])
+        usual_starters = usual_starters_dict.get(team_id, set())
+        return len(actual_starters & usual_starters)
+    
+    starters_per_game['NUM_USUAL_STARTERS_PRESENT'] = starters_per_game.apply(count_usual_starters, axis=1)
+    
+    # 3) Compute team starter averages (OFF/DEF/USG)
+    starters_df = df[df['STARTING'] == 1].copy()
+    team_starter_features = (
+        starters_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({
+            'OFF_RATING': 'mean',
+            'DEF_RATING': 'mean',
+            'USG_PCT': 'mean'
+        })
+        .rename(columns={
+            'OFF_RATING': 'TEAM_STARTER_OFF_RATING_AVG',
+            'DEF_RATING': 'TEAM_STARTER_DEF_RATING_AVG',
+            'USG_PCT': 'TEAM_STARTER_USG_PCT_AVG'
+        })
+        .reset_index()
+    )
+
+    # 4) Merge NUM_USUAL_STARTERS_PRESENT into team starter features
+    team_starter_features = team_starter_features.merge(
+        starters_per_game[['GAME_ID', 'TEAM_ID', 'NUM_USUAL_STARTERS_PRESENT']],
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    
+    # 5) Merge combined features into main df
+    df = df.merge(
+        team_starter_features,
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    
+    return df
+
+def oppTeamUsualStarters(df):
+    """
+    Adds opponent-side starter features:
+    - NUM_USUAL_STARTERS_PRESENT_OPP: count of opponent usual starters present
+    - OPP_STARTER_AVG_DEF_RATING: average DEF_RATING of opponent starters
+    - OPP_GUARDS_AVG_DEF_RATING_OPP: average DEF_RATING of opponent starting guards
+    - OPP_FORWARDS_AVG_DEF_RATING_OPP: average DEF_RATING of opponent starting forwards
+    """
+
+    # 1) Compute usual starters: top 5 most frequent starters per team
+    player_starts = (
+        df[df['STARTING'] == 1]
+        .groupby(['TEAM_ID', 'PLAYER_ID'])
+        .size()
+        .reset_index(name='NUM_STARTS')
+    )
+    usual_starters = (
+        player_starts
+        .sort_values(['TEAM_ID', 'NUM_STARTS'], ascending=[True, False])
+        .groupby('TEAM_ID')
+        .head(5)
+    )
+    usual_starters_dict = (
+        usual_starters
+        .groupby('TEAM_ID')['PLAYER_ID']
+        .apply(set)
+        .to_dict()
+    )
+
+    # 2) Compute NUM_USUAL_STARTERS_PRESENT for opponent team
+    opp_actual_starters_per_game = (
+        df[df['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'PLAYER_ID': list})
+        .reset_index()
+    )
+    def count_opp_usual_starters(row):
+        team_id = row['TEAM_ID']
+        actual_starters = set(row['PLAYER_ID'])
+        usual_starters = usual_starters_dict.get(team_id, set())
+        return len(actual_starters & usual_starters)
+    
+    opp_actual_starters_per_game['NUM_USUAL_STARTERS_PRESENT'] = opp_actual_starters_per_game.apply(count_opp_usual_starters, axis=1)
+    df = df.merge(
+        opp_actual_starters_per_game[['GAME_ID', 'TEAM_ID', 'NUM_USUAL_STARTERS_PRESENT']],
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+
+    # 3) Compute overall opponent starter average DEF_RATING
+    starters_df = df[df['STARTING'] == 1].copy()
+    opp_starter_def_rating = (
+        starters_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'DEF_RATING': 'mean'})
+        .rename(columns={'DEF_RATING': 'OPP_STARTER_AVG_DEF_RATING'})
+        .reset_index()
+    )
+    df = df.merge(
+        opp_starter_def_rating,
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+
+    # 4) Compute average DEF_RATING of opponent starting guards and forwards directly using existing categories
+    guards_df = starters_df[starters_df['GUARD'] == 1].copy()
+    opp_guards_def_rating = (
+        guards_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'DEF_RATING': 'mean'})
+        .rename(columns={'DEF_RATING': 'OPP_GUARDS_AVG_DEF_RATING_OPP'})
+        .reset_index()
+    )
+    df = df.merge(
+        opp_guards_def_rating,
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+
+    forwards_df = starters_df[starters_df['FORWARD'] == 1].copy()
+    opp_forwards_def_rating = (
+        forwards_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'DEF_RATING': 'mean'})
+        .rename(columns={'DEF_RATING': 'OPP_FORWARDS_AVG_DEF_RATING_OPP'})
+        .reset_index()
+    )
+    df = df.merge(
+        opp_forwards_def_rating,
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+
+    centers_df = starters_df[starters_df['CENTER'] == 1].copy()
+    opp_centers_def_rating = (
+    centers_df
+    .groupby(['GAME_ID', 'TEAM_ID'])
+    .agg({'DEF_RATING': 'mean'})
+    .rename(columns={'DEF_RATING': 'OPP_CENTERS_AVG_DEF_RATING_OPP'})
+    .reset_index()
+    )
+    df = df.merge(
+        opp_centers_def_rating,
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+    return df
+
+def team_starter_spacing(df):
+    starters_df = df[df['STARTING'] == 1].copy()
+    
+    team_spacing = (
+        starters_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'FG3_PCT': 'mean'})
+        .rename(columns={'FG3_PCT': 'TEAM_STARTER_SPACING_METRIC'})
+        .reset_index()
+    )
+    
+    df = df.merge(
+        team_spacing,
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    
+    return df
+
+def pace_expectation(df):
+    starters_df = df[df['STARTING'] == 1].copy()
+    
+    # Team starter average pace
+    team_pace = (
+        starters_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'PACE': 'mean'})
+        .rename(columns={'PACE': 'TEAM_STARTER_PACE'})
+        .reset_index()
+    )
+    df = df.merge(
+        team_pace,
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    
+    # Opponent starter average pace
+    opp_pace = (
+        starters_df
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'PACE': 'mean'})
+        .rename(columns={'PACE': 'OPP_STARTER_PACE'})
+        .reset_index()
+    )
+    df = df.merge(
+        opp_pace,
+        left_on=['GAME_ID', 'OPP_TEAM_ID'],
+        right_on=['GAME_ID', 'TEAM_ID'],
+        how='left',
+        suffixes=('', '_OPP')
+    )
+    
+    # Calculate expected pace as average of team + opponent starters
+    df['PACE_EXPECTATION'] = (df['TEAM_STARTER_PACE'] + df['OPP_STARTER_PACE']) / 2
+    
+    return df
+
+def allLineupFeatures(df):
+    df = teamUsualStarters(df)
+    df = oppTeamUsualStarters(df)
+    df = team_starter_spacing(df)
+    df = pace_expectation(df)
+    return df
+
