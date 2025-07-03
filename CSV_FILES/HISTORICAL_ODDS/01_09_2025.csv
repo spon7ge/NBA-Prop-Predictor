@@ -1,0 +1,641 @@
+player,market,bookmaker,side,line,price,home_team,away_team,game_id,commence_time
+Corey Kispert,player_assists,Underdog,Over,1.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Corey Kispert,player_assists,Underdog,Under,1.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jared Butler,player_assists,Underdog,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jared Butler,player_assists,Underdog,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_assists,Underdog,Over,2.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_assists,Underdog,Under,2.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Adem Bona,player_points,Underdog,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Adem Bona,player_points,Underdog,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_points,Underdog,Over,20.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_points,Underdog,Under,20.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_points,Underdog,Over,31.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_points,Underdog,Under,31.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_points,Underdog,Over,15.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_points,Underdog,Under,15.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Corey Kispert,player_points,Underdog,Over,11.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Corey Kispert,player_points,Underdog,Under,11.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Eric Gordon,player_points,Underdog,Over,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Eric Gordon,player_points,Underdog,Under,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_points,Underdog,Over,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_points,Underdog,Under,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Caleb Martin,player_points,Underdog,Over,12.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Caleb Martin,player_points,Underdog,Under,12.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_points,Underdog,Over,17.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_points,Underdog,Under,17.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jared Butler,player_points,Underdog,Over,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jared Butler,player_points,Underdog,Under,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_points,Underdog,Over,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_points,Underdog,Under,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Adem Bona,player_rebounds,Underdog,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Adem Bona,player_rebounds,Underdog,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_rebounds,Underdog,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_rebounds,Underdog,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_rebounds,Underdog,Over,8.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_rebounds,Underdog,Under,8.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyshawn George,player_rebounds,Underdog,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyshawn George,player_rebounds,Underdog,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_assists,PrizePicks,Over,2.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_assists,PrizePicks,Under,2.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_assists,PrizePicks,Over,7.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_assists,PrizePicks,Under,7.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Caleb Martin,player_points,PrizePicks,Over,12.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Caleb Martin,player_points,PrizePicks,Under,12.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_points,PrizePicks,Over,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_points,PrizePicks,Under,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_points,PrizePicks,Over,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_points,PrizePicks,Under,13.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_points,PrizePicks,Over,9.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_points,PrizePicks,Under,9.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_points,PrizePicks,Over,17.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_points,PrizePicks,Under,17.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_points,PrizePicks,Over,31.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Maxey,player_points,PrizePicks,Under,31.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Eric Gordon,player_points,PrizePicks,Over,9.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Eric Gordon,player_points,PrizePicks,Under,9.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_points,PrizePicks,Over,16.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_points,PrizePicks,Under,16.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_points,PrizePicks,Over,19.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_points,PrizePicks,Under,19.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_rebounds,PrizePicks,Over,5.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Bilal Coulibaly,player_rebounds,PrizePicks,Under,5.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_rebounds,PrizePicks,Over,8.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Guerschon Yabusele,player_rebounds,PrizePicks,Under,8.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_rebounds,PrizePicks,Over,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Carlton Carrington,player_rebounds,PrizePicks,Under,4.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_rebounds,PrizePicks,Over,7.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kelly Oubre Jr,player_rebounds,PrizePicks,Under,7.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_rebounds,PrizePicks,Over,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Jonas Valanciunas,player_rebounds,PrizePicks,Under,10.5,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_rebounds,PrizePicks,Over,6.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Kyle Kuzma,player_rebounds,PrizePicks,Under,6.0,-137,Philadelphia 76ers,Washington Wizards,e49c35167662c7e6ea6970b981b018f8,2025-01-09T00:00:00Z
+Tyrese Haliburton,player_assists,Underdog,Over,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_assists,Underdog,Under,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_points,Underdog,Over,25.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_points,Underdog,Under,25.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_points,Underdog,Over,22.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_points,Underdog,Under,22.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Coby White,player_points,Underdog,Over,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Coby White,player_points,Underdog,Under,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_points,Underdog,Over,12.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_points,Underdog,Under,12.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_points,Underdog,Over,13.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_points,Underdog,Under,13.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_points,Underdog,Over,18.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_points,Underdog,Under,18.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+T.J. McConnell,player_points,Underdog,Over,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+T.J. McConnell,player_points,Underdog,Under,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_points,Underdog,Over,11.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_points,Underdog,Under,11.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jarace Walker,player_points,Underdog,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jarace Walker,player_points,Underdog,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Ben Sheppard,player_points,Underdog,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Ben Sheppard,player_points,Underdog,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_rebounds,Underdog,Over,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_rebounds,Underdog,Under,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_rebounds,Underdog,Over,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_rebounds,Underdog,Under,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_rebounds,Underdog,Over,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_rebounds,Underdog,Under,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Thomas Bryant,player_rebounds,Underdog,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Thomas Bryant,player_rebounds,Underdog,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jarace Walker,player_rebounds,Underdog,Over,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jarace Walker,player_rebounds,Underdog,Under,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_assists,PrizePicks,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_assists,PrizePicks,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_assists,PrizePicks,Over,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_assists,PrizePicks,Under,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_assists,PrizePicks,Over,9.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_assists,PrizePicks,Under,9.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Coby White,player_points,PrizePicks,Over,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Coby White,player_points,PrizePicks,Under,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_points,PrizePicks,Over,13.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_points,PrizePicks,Under,13.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_points,PrizePicks,Over,12.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_points,PrizePicks,Under,12.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_points,PrizePicks,Over,18.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_points,PrizePicks,Under,18.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Nikola Vucevic,player_points,PrizePicks,Over,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Nikola Vucevic,player_points,PrizePicks,Under,19.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Patrick Williams,player_points,PrizePicks,Over,10.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Patrick Williams,player_points,PrizePicks,Under,10.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_points,PrizePicks,Over,22.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_points,PrizePicks,Under,22.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_points,PrizePicks,Over,25.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_points,PrizePicks,Under,25.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_points,PrizePicks,Over,21.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_points,PrizePicks,Under,21.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_points,PrizePicks,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_points,PrizePicks,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Ben Sheppard,player_points,PrizePicks,Over,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Ben Sheppard,player_points,PrizePicks,Under,6.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+T.J. McConnell,player_points,PrizePicks,Over,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+T.J. McConnell,player_points,PrizePicks,Under,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jalen Smith,player_points,PrizePicks,Over,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jalen Smith,player_points,PrizePicks,Under,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_points,PrizePicks,Over,12.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_points,PrizePicks,Under,12.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Thomas Bryant,player_points,PrizePicks,Over,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Thomas Bryant,player_points,PrizePicks,Under,9.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_rebounds,PrizePicks,Over,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Andrew Nembhard,player_rebounds,PrizePicks,Under,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_rebounds,PrizePicks,Over,7.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Josh Giddey,player_rebounds,PrizePicks,Under,7.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_rebounds,PrizePicks,Over,6.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Bennedict Mathurin,player_rebounds,PrizePicks,Under,6.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Nikola Vucevic,player_rebounds,PrizePicks,Over,11.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Nikola Vucevic,player_rebounds,PrizePicks,Under,11.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_rebounds,PrizePicks,Over,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Pascal Siakam,player_rebounds,PrizePicks,Under,8.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_rebounds,PrizePicks,Over,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Zach LaVine,player_rebounds,PrizePicks,Under,4.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_rebounds,PrizePicks,Over,4.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Tyrese Haliburton,player_rebounds,PrizePicks,Under,4.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_rebounds,PrizePicks,Over,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Lonzo Ball,player_rebounds,PrizePicks,Under,3.5,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jalen Smith,player_rebounds,PrizePicks,Over,5.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Jalen Smith,player_rebounds,PrizePicks,Under,5.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_rebounds,PrizePicks,Over,5.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Obi Toppin,player_rebounds,PrizePicks,Under,5.0,-137,Indiana Pacers,Chicago Bulls,c62f042c293d7c240b837a532e82e1f9,2025-01-09T00:10:00Z
+Darius Garland,player_assists,PrizePicks,Over,6.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_assists,PrizePicks,Under,6.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_assists,PrizePicks,Over,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_assists,PrizePicks,Under,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_assists,PrizePicks,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_assists,PrizePicks,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_assists,PrizePicks,Over,5.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_assists,PrizePicks,Under,5.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_assists,PrizePicks,Over,6.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_assists,PrizePicks,Under,6.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_assists,PrizePicks,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_assists,PrizePicks,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_points,PrizePicks,Over,18.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_points,PrizePicks,Under,18.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_points,PrizePicks,Over,12.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_points,PrizePicks,Under,12.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_points,PrizePicks,Over,22.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_points,PrizePicks,Under,22.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_points,PrizePicks,Over,20.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_points,PrizePicks,Under,20.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Evan Mobley,player_points,PrizePicks,Over,17.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Evan Mobley,player_points,PrizePicks,Under,17.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_points,PrizePicks,Over,10.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_points,PrizePicks,Under,10.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jarrett Allen,player_points,PrizePicks,Over,12.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jarrett Allen,player_points,PrizePicks,Under,12.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_points,PrizePicks,Over,32.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_points,PrizePicks,Under,32.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Caris LeVert,player_points,PrizePicks,Over,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Caris LeVert,player_points,PrizePicks,Under,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_points,PrizePicks,Over,8.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_points,PrizePicks,Under,8.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Aaron Wiggins,player_points,PrizePicks,Over,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Aaron Wiggins,player_points,PrizePicks,Under,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_points,PrizePicks,Over,8.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_points,PrizePicks,Under,8.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Joe,player_points,PrizePicks,Over,7.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Joe,player_points,PrizePicks,Under,7.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_points,PrizePicks,Over,6.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_points,PrizePicks,Under,6.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_rebounds,PrizePicks,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_rebounds,PrizePicks,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_rebounds,PrizePicks,Over,12.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Hartenstein,player_rebounds,PrizePicks,Under,12.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_rebounds,PrizePicks,Over,4.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_rebounds,PrizePicks,Under,4.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_rebounds,PrizePicks,Over,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_rebounds,PrizePicks,Under,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_rebounds,PrizePicks,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_rebounds,PrizePicks,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jarrett Allen,player_rebounds,PrizePicks,Over,10.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jarrett Allen,player_rebounds,PrizePicks,Under,10.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_rebounds,PrizePicks,Over,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_rebounds,PrizePicks,Under,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_rebounds,PrizePicks,Over,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_rebounds,PrizePicks,Under,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_rebounds,PrizePicks,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_rebounds,PrizePicks,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_assists,Underdog,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_assists,Underdog,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_assists,Underdog,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_assists,Underdog,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_assists,Underdog,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_assists,Underdog,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_points,Underdog,Over,32.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Shai Gilgeous-Alexander,player_points,Underdog,Under,32.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_points,Underdog,Over,22.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Donovan Mitchell,player_points,Underdog,Under,22.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Evan Mobley,player_points,Underdog,Over,17.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Evan Mobley,player_points,Underdog,Under,17.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_points,Underdog,Over,20.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_points,Underdog,Under,20.0,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_points,Underdog,Over,7.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_points,Underdog,Under,7.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_points,Underdog,Over,8.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Cason Wallace,player_points,Underdog,Under,8.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Aaron Wiggins,player_points,Underdog,Over,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Aaron Wiggins,player_points,Underdog,Under,9.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Kenrich Williams,player_points,Underdog,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Kenrich Williams,player_points,Underdog,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_points,Underdog,Over,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_points,Underdog,Under,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_rebounds,Underdog,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Darius Garland,player_rebounds,Underdog,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_rebounds,Underdog,Over,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Jalen Williams,player_rebounds,Underdog,Under,5.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_rebounds,Underdog,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Luguentz Dort,player_rebounds,Underdog,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_rebounds,Underdog,Over,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Max Strus,player_rebounds,Underdog,Under,3.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_rebounds,Underdog,Over,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Dean Wade,player_rebounds,Underdog,Under,4.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Kenrich Williams,player_rebounds,Underdog,Over,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Kenrich Williams,player_rebounds,Underdog,Under,2.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_rebounds,Underdog,Over,1.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Ty Jerome,player_rebounds,Underdog,Under,1.5,-137,Cleveland Cavaliers,Oklahoma City Thunder,5d1e8ab87ce778e4c7ab00c0553faa9f,2025-01-09T00:10:00Z
+Isaiah Stewart II,player_assists,Underdog,Over,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_assists,Underdog,Under,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_assists,Underdog,Over,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_assists,Underdog,Under,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_assists,Underdog,Over,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_assists,Underdog,Under,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_assists,Underdog,Over,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_assists,Underdog,Under,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_assists,Underdog,Over,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_assists,Underdog,Under,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_points,Underdog,Over,25.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_points,Underdog,Under,25.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_points,Underdog,Over,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_points,Underdog,Under,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_points,Underdog,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_points,Underdog,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tim Hardaway Jr,player_points,Underdog,Over,12.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tim Hardaway Jr,player_points,Underdog,Under,12.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ron Holland,player_points,Underdog,Over,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ron Holland,player_points,Underdog,Under,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_points,Underdog,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_points,Underdog,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Simone Fontecchio,player_points,Underdog,Over,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Simone Fontecchio,player_points,Underdog,Under,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_points,Underdog,Over,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_points,Underdog,Under,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_points,Underdog,Over,7.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_points,Underdog,Under,7.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tyrese Martin,player_points,Underdog,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tyrese Martin,player_points,Underdog,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_points,Underdog,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_points,Underdog,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_points,Underdog,Over,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_points,Underdog,Under,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_rebounds,Underdog,Over,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_rebounds,Underdog,Under,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_rebounds,Underdog,Over,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_rebounds,Underdog,Under,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Wilson,player_rebounds,Underdog,Over,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Wilson,player_rebounds,Underdog,Under,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_rebounds,Underdog,Over,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tosan Evbuomwan,player_rebounds,Underdog,Under,4.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_assists,PrizePicks,Over,9.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_assists,PrizePicks,Under,9.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_assists,PrizePicks,Over,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_assists,PrizePicks,Under,1.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_assists,PrizePicks,Over,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_assists,PrizePicks,Under,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_assists,PrizePicks,Over,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_assists,PrizePicks,Under,2.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_points,PrizePicks,Over,25.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_points,PrizePicks,Under,25.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_points,PrizePicks,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Keon Johnson,player_points,PrizePicks,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Duren,player_points,PrizePicks,Over,10.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Duren,player_points,PrizePicks,Under,10.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_points,PrizePicks,Over,13.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_points,PrizePicks,Under,13.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Malik Beasley,player_points,PrizePicks,Over,17.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Malik Beasley,player_points,PrizePicks,Under,17.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_points,PrizePicks,Over,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_points,PrizePicks,Under,13.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_points,PrizePicks,Over,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Marcus Sasser,player_points,PrizePicks,Under,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_points,PrizePicks,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ziaire Williams,player_points,PrizePicks,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ron Holland,player_points,PrizePicks,Over,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Ron Holland,player_points,PrizePicks,Under,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Wilson,player_points,PrizePicks,Over,12.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Wilson,player_points,PrizePicks,Under,12.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Simone Fontecchio,player_points,PrizePicks,Over,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Simone Fontecchio,player_points,PrizePicks,Under,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tim Hardaway Jr,player_points,PrizePicks,Over,13.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tim Hardaway Jr,player_points,PrizePicks,Under,13.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_points,PrizePicks,Over,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_points,PrizePicks,Under,14.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_rebounds,PrizePicks,Over,6.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Cade Cunningham,player_rebounds,PrizePicks,Under,6.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_rebounds,PrizePicks,Over,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Isaiah Stewart II,player_rebounds,PrizePicks,Under,5.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Duren,player_rebounds,PrizePicks,Over,10.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Jalen Duren,player_rebounds,PrizePicks,Under,10.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_rebounds,PrizePicks,Over,9.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Nicolas Claxton,player_rebounds,PrizePicks,Under,9.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_rebounds,PrizePicks,Over,6.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Noah Clowney,player_rebounds,PrizePicks,Under,6.0,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_rebounds,PrizePicks,Over,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Tobias Harris,player_rebounds,PrizePicks,Under,6.5,-137,Brooklyn Nets,Detroit Pistons,b5c93aa8425dd073ff0965efeee639f8,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_assists,Underdog,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_assists,Underdog,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_points,Underdog,Over,26.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_points,Underdog,Under,26.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_points,Underdog,Over,18.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_points,Underdog,Under,18.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_points,Underdog,Over,20.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_points,Underdog,Under,20.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_points,Underdog,Over,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_points,Underdog,Under,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_points,Underdog,Over,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_points,Underdog,Under,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Gradey Dick,player_points,Underdog,Over,12.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Gradey Dick,player_points,Underdog,Under,12.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_points,Underdog,Over,19.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_points,Underdog,Under,19.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_points,Underdog,Over,11.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_points,Underdog,Under,11.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_points,Underdog,Over,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_points,Underdog,Under,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_points,Underdog,Over,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_points,Underdog,Under,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Ochai Agbaji,player_points,Underdog,Over,6.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Ochai Agbaji,player_points,Underdog,Under,6.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Kelly Olynyk,player_points,Underdog,Over,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Kelly Olynyk,player_points,Underdog,Under,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_rebounds,Underdog,Over,7.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_rebounds,Underdog,Under,7.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_rebounds,Underdog,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_rebounds,Underdog,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_rebounds,Underdog,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_rebounds,Underdog,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_rebounds,Underdog,Over,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_rebounds,Underdog,Under,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_rebounds,Underdog,Over,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_rebounds,Underdog,Under,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_rebounds,Underdog,Over,2.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_rebounds,Underdog,Under,2.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_assists,PrizePicks,Over,8.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_assists,PrizePicks,Under,8.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_assists,PrizePicks,Over,6.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_assists,PrizePicks,Under,6.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_assists,PrizePicks,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_assists,PrizePicks,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_assists,PrizePicks,Over,5.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_assists,PrizePicks,Under,5.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Gradey Dick,player_points,PrizePicks,Over,12.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Gradey Dick,player_points,PrizePicks,Under,12.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_points,PrizePicks,Over,26.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jalen Brunson,player_points,PrizePicks,Under,26.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_points,PrizePicks,Over,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_points,PrizePicks,Under,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_points,PrizePicks,Over,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_points,PrizePicks,Under,15.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_points,PrizePicks,Over,11.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_points,PrizePicks,Under,11.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_points,PrizePicks,Over,24.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Karl-Anthony Towns,player_points,PrizePicks,Under,24.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Ochai Agbaji,player_points,PrizePicks,Over,6.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Ochai Agbaji,player_points,PrizePicks,Under,6.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_points,PrizePicks,Over,19.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_points,PrizePicks,Under,19.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_points,PrizePicks,Over,20.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_points,PrizePicks,Under,20.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_points,PrizePicks,Over,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_points,PrizePicks,Under,16.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_points,PrizePicks,Over,18.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_points,PrizePicks,Under,18.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Kelly Olynyk,player_points,PrizePicks,Over,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Kelly Olynyk,player_points,PrizePicks,Under,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_points,PrizePicks,Over,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Bruce Brown Jr,player_points,PrizePicks,Under,5.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_rebounds,PrizePicks,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Immanuel Quickley,player_rebounds,PrizePicks,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_rebounds,PrizePicks,Over,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Josh Hart,player_rebounds,PrizePicks,Under,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_rebounds,PrizePicks,Over,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Jakob Poeltl,player_rebounds,PrizePicks,Under,9.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_rebounds,PrizePicks,Over,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Mikal Bridges,player_rebounds,PrizePicks,Under,3.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_rebounds,PrizePicks,Over,6.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+R.J. Barrett,player_rebounds,PrizePicks,Under,6.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_rebounds,PrizePicks,Over,5.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+OG Anunoby,player_rebounds,PrizePicks,Under,5.0,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_rebounds,PrizePicks,Over,7.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Scottie Barnes,player_rebounds,PrizePicks,Under,7.5,-137,New York Knicks,Toronto Raptors,c33de7a122ef4c821ab8550248df9a08,2025-01-09T00:40:00Z
+Yves Missi,player_assists,Underdog,Over,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_assists,Underdog,Under,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_assists,Underdog,Over,3.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_assists,Underdog,Under,3.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Daniel Theis,player_assists,Underdog,Over,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Daniel Theis,player_assists,Underdog,Under,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Toumani Camara,player_assists,Underdog,Over,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Toumani Camara,player_assists,Underdog,Under,1.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_points,Underdog,Over,21.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_points,Underdog,Under,21.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Scoot Henderson,player_points,Underdog,Over,10.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Scoot Henderson,player_points,Underdog,Under,10.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+C.J. McCollum,player_points,Underdog,Over,25.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+C.J. McCollum,player_points,Underdog,Under,25.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Deandre Ayton,player_points,Underdog,Over,15.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Deandre Ayton,player_points,Underdog,Under,15.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_points,Underdog,Over,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_points,Underdog,Under,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Deni Avdija,player_points,Underdog,Over,16.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Deni Avdija,player_points,Underdog,Under,16.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_points,Underdog,Over,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_points,Underdog,Under,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Shaedon Sharpe,player_points,Underdog,Over,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Shaedon Sharpe,player_points,Underdog,Under,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_points,Underdog,Over,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_points,Underdog,Under,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Daniel Theis,player_points,Underdog,Over,4.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Daniel Theis,player_points,Underdog,Under,4.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_rebounds,Underdog,Over,9.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_rebounds,Underdog,Under,9.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_assists,PrizePicks,Over,6.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_assists,PrizePicks,Under,6.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_assists,PrizePicks,Over,8.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_assists,PrizePicks,Under,8.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_points,PrizePicks,Over,21.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Anfernee Simons,player_points,PrizePicks,Under,21.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+C.J. McCollum,player_points,PrizePicks,Over,25.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+C.J. McCollum,player_points,PrizePicks,Under,25.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_points,PrizePicks,Over,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_points,PrizePicks,Under,19.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_points,PrizePicks,Over,12.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Herb Jones,player_points,PrizePicks,Under,12.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_points,PrizePicks,Over,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_points,PrizePicks,Under,11.5,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_rebounds,PrizePicks,Over,6.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Dejounte Murray,player_rebounds,PrizePicks,Under,6.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_rebounds,PrizePicks,Over,10.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Yves Missi,player_rebounds,PrizePicks,Under,10.0,-137,New Orleans Pelicans,Portland Trail Blazers,c5d1a55aacf259e6a3e167e5fd5d0372,2025-01-09T01:00:00Z
+Kris Dunn,player_assists,Underdog,Over,2.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kris Dunn,player_assists,Underdog,Under,2.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_points,Underdog,Over,28.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_points,Underdog,Under,28.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_points,Underdog,Over,22.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_points,Underdog,Under,22.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_points,Underdog,Over,21.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_points,Underdog,Under,21.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_points,Underdog,Over,18.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_points,Underdog,Under,18.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_points,Underdog,Over,15.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_points,Underdog,Under,15.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Derrick Jones,player_points,Underdog,Over,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Derrick Jones,player_points,Underdog,Under,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_points,Underdog,Over,13.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_points,Underdog,Under,13.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_points,Underdog,Over,23.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_points,Underdog,Under,23.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Amir Coffey,player_points,Underdog,Over,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Amir Coffey,player_points,Underdog,Under,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_points,Underdog,Over,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_points,Underdog,Under,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_rebounds,Underdog,Over,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_rebounds,Underdog,Under,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_rebounds,Underdog,Over,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_rebounds,Underdog,Under,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_rebounds,Underdog,Over,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_rebounds,Underdog,Under,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_assists,PrizePicks,Over,8.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_assists,PrizePicks,Under,8.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Over,6.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Under,6.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kris Dunn,player_assists,PrizePicks,Over,2.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kris Dunn,player_assists,PrizePicks,Under,2.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Over,8.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Under,8.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_points,PrizePicks,Over,15.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_points,PrizePicks,Under,15.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_points,PrizePicks,Over,22.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_points,PrizePicks,Under,22.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_points,PrizePicks,Over,21.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Jamal Murray,player_points,PrizePicks,Under,21.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_points,PrizePicks,Over,18.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_points,PrizePicks,Under,18.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kris Dunn,player_points,PrizePicks,Over,7.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kris Dunn,player_points,PrizePicks,Under,7.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_points,PrizePicks,Over,28.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_points,PrizePicks,Under,28.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_points,PrizePicks,Over,23.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_points,PrizePicks,Under,23.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_points,PrizePicks,Over,13.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_points,PrizePicks,Under,13.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_points,PrizePicks,Over,10.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_points,PrizePicks,Under,10.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Derrick Jones,player_points,PrizePicks,Over,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Derrick Jones,player_points,PrizePicks,Under,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Amir Coffey,player_points,PrizePicks,Over,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Amir Coffey,player_points,PrizePicks,Under,9.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_rebounds,PrizePicks,Over,13.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Ivica Zubac,player_rebounds,PrizePicks,Under,13.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Christian Braun,player_rebounds,PrizePicks,Over,4.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Christian Braun,player_rebounds,PrizePicks,Under,4.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_rebounds,PrizePicks,Over,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+James Harden,player_rebounds,PrizePicks,Under,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_rebounds,PrizePicks,Over,6.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Michael Porter Jr,player_rebounds,PrizePicks,Under,6.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_rebounds,PrizePicks,Over,12.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Nikola Jokic,player_rebounds,PrizePicks,Under,12.0,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_rebounds,PrizePicks,Over,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Norman Powell,player_rebounds,PrizePicks,Under,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_rebounds,PrizePicks,Over,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Russell Westbrook,player_rebounds,PrizePicks,Under,5.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_rebounds,PrizePicks,Over,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Kevin Porter Jr.,player_rebounds,PrizePicks,Under,3.5,-137,Denver Nuggets,Los Angeles Clippers,dd8248b21938d4246870fa725dd003b0,2025-01-09T02:00:00Z
+Giannis Antetokounmpo,player_assists,Underdog,Over,6.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_assists,Underdog,Under,6.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Tre Jones,player_assists,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Tre Jones,player_assists,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_assists,Underdog,Over,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_assists,Underdog,Under,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Stephon Castle,player_assists,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Stephon Castle,player_assists,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_assists,Underdog,Over,1.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_assists,Underdog,Under,1.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_points,Underdog,Over,30.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_points,Underdog,Under,30.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_points,Underdog,Over,26.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_points,Underdog,Under,26.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Damian Lillard,player_points,Underdog,Over,22.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Damian Lillard,player_points,Underdog,Under,22.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_points,Underdog,Over,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_points,Underdog,Under,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_points,Underdog,Over,17.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_points,Underdog,Under,17.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_points,Underdog,Over,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_points,Underdog,Under,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_points,Underdog,Over,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_points,Underdog,Under,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_points,Underdog,Over,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_points,Underdog,Under,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Tre Jones,player_points,Underdog,Over,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Tre Jones,player_points,Underdog,Under,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_points,Underdog,Over,13.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_points,Underdog,Under,13.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Julian Champagnie,player_points,Underdog,Over,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Julian Champagnie,player_points,Underdog,Under,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_points,Underdog,Over,7.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_points,Underdog,Under,7.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Zach Collins,player_points,Underdog,Over,5.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Zach Collins,player_points,Underdog,Under,5.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Andre Jackson Jr,player_points,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Andre Jackson Jr,player_points,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_rebounds,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_rebounds,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_rebounds,Underdog,Over,4.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_rebounds,Underdog,Under,4.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_rebounds,Underdog,Over,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_rebounds,Underdog,Under,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Julian Champagnie,player_rebounds,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Julian Champagnie,player_rebounds,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_rebounds,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Taurean Prince,player_rebounds,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Zach Collins,player_rebounds,Underdog,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Zach Collins,player_rebounds,Underdog,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Andre Jackson Jr,player_rebounds,Underdog,Over,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Andre Jackson Jr,player_rebounds,Underdog,Under,2.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_assists,PrizePicks,Over,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_assists,PrizePicks,Under,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_assists,PrizePicks,Over,6.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_assists,PrizePicks,Under,6.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_assists,PrizePicks,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_assists,PrizePicks,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_points,PrizePicks,Over,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_points,PrizePicks,Under,11.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_points,PrizePicks,Over,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Chris Paul,player_points,PrizePicks,Under,9.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Damian Lillard,player_points,PrizePicks,Over,23.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Damian Lillard,player_points,PrizePicks,Under,23.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_points,PrizePicks,Over,17.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_points,PrizePicks,Under,17.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_points,PrizePicks,Over,31.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_points,PrizePicks,Under,31.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_points,PrizePicks,Over,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_points,PrizePicks,Under,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_points,PrizePicks,Over,26.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_points,PrizePicks,Under,26.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_points,PrizePicks,Over,13.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_points,PrizePicks,Under,13.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_points,PrizePicks,Over,12.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Keldon Johnson,player_points,PrizePicks,Under,12.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Stephon Castle,player_points,PrizePicks,Over,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Stephon Castle,player_points,PrizePicks,Under,10.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_rebounds,PrizePicks,Over,4.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Brook Lopez,player_rebounds,PrizePicks,Under,4.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_rebounds,PrizePicks,Over,4.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Devin Vassell,player_rebounds,PrizePicks,Under,4.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_rebounds,PrizePicks,Over,12.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Giannis Antetokounmpo,player_rebounds,PrizePicks,Under,12.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_rebounds,PrizePicks,Over,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Harrison Barnes,player_rebounds,PrizePicks,Under,3.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_rebounds,PrizePicks,Over,11.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Victor Wembanyama,player_rebounds,PrizePicks,Under,11.0,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_rebounds,PrizePicks,Over,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z
+Bobby Portis,player_rebounds,PrizePicks,Under,8.5,-137,Milwaukee Bucks,San Antonio Spurs,ce5fe0a6d5f99b9c1659e2f03a0b405e,2025-01-09T02:40:00Z

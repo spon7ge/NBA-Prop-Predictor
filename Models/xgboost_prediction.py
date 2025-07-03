@@ -195,16 +195,16 @@ def getPlayerRollingAVG(player, data, stat_type='PTS'):
 def otherFeatures(player, data, games, is_playoff=0):
     player = data[data['PLAYER_NAME'] == player].copy()
     player.sort_values(by='GAME_DATE', inplace=True)
-    
     res = []
+
     # Position features
     res.append(player['HEIGHT_IN_INCHES'].iloc[-1])
     res.append(player['WEIGHT'].iloc[-1])
-    res.append(player['GUARD'].iloc[-1])      # 1
-    res.append(player['FORWARD'].iloc[-1])    # 2
-    res.append(player['CENTER'].iloc[-1])     # 3
-    res.append(player['STARTING'].iloc[-1])   # 4
-    res.append(player['DAYS_OF_REST'].iloc[-1]) # 5
+    res.append(player['GUARD'].iloc[-1])      
+    res.append(player['FORWARD'].iloc[-1])    
+    res.append(player['CENTER'].iloc[-1])     
+    res.append(player['STARTING'].iloc[-1])   
+    res.append(player['DAYS_OF_REST'].iloc[-1]) 
     
     # Home game (just one value, not one per game)
     home_game = 0
@@ -215,12 +215,12 @@ def otherFeatures(player, data, games, is_playoff=0):
         if game['away_team'] == player['TEAM_ABBREVIATION'].iloc[-1]:
             home_game = 0
             break
-    res.append(home_game)  # 6
+    res.append(home_game)  
     
     # Playoff features
-    res.append(is_playoff)  # 7
-    res.append(1 if is_playoff == 1 else 0)  # 8 (Series)
-    res.append(1 if is_playoff == 1 else 0)  # 9 (GameInSeries)
+    res.append(is_playoff)  
+    res.append(1 if is_playoff == 1 else 0)  
+    res.append(1 if is_playoff == 1 else 0)  
     return res
 
 def buildFeatureVector(player, opponent, data, games, is_playoff, stat_line='PTS'):

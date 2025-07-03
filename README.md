@@ -54,7 +54,7 @@ If you want the odds from below use region='us'
 ```
 python getCompleteStats(season='2024-25', season_type='Regular Season')
 ```
-## EXAMPLE of what you get for a 2 leg
+## Example of what you get for a 2 leg w/ a $100 stake and a payout of $300 and odds at -137
 <img width="1180" alt="Screenshot 2025-06-29 at 9 08 23 AM" src="https://github.com/user-attachments/assets/daa9366d-6d61-4f75-8a68-90100f576237" />
 
 ## Disclaimer
