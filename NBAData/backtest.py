@@ -25,8 +25,8 @@ class BetResult:
 
 class PrizePicksBacktest:
     def __init__(self, 
-                 props_ev_dir: str = "CSV_FILES/HISTORICAL_PROP_PAIRS",
-                 regular_data_dir: str = "CSV_FILES/REGULAR_DATA",
+                 props_ev_dir: str = "../CSV_FILES/HISTORICAL_PROP_PAIRS",
+                 regular_data_dir: str = "../CSV_FILES/REGULAR_DATA",
                  min_ev: float = 60.0,
                  stake: float = 100,
                  max_bets_per_day: int = 3,
