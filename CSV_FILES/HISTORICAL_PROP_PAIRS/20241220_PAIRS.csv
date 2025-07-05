@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Paul George,player_points,PTS,19.5,14,Tyler Herro,player_assists,AST,4.0,6,UNDER/OVER,123.88,0.7463,0.745
+1,Josh Green,player_points,PTS,9.5,6,Tyler Herro,player_assists,AST,4.0,6,UNDER/OVER,118.67,0.7289,0.7275
+2,Josh Green,player_points,PTS,9.5,6,Paul George,player_points,PTS,19.5,14,UNDER/UNDER,109.28,0.6976,0.6961
+3,Joel Embiid,player_points,PTS,26.0,22,Tyler Herro,player_assists,AST,4.0,6,UNDER/OVER,96.49,0.655,0.6532
+4,Tyler Herro,player_assists,AST,4.0,6,Luguentz Dort,player_assists,AST,1.5,2,OVER/OVER,91.82,0.6394,0.6376

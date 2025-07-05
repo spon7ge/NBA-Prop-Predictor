@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Joel Embiid,player_points,PTS,28.0,22,D'Angelo Russell,player_assists,AST,6.0,4,UNDER/UNDER,110.86,0.7029,0.7014
+1,Jayson Tatum,player_rebounds,REB,10.0,8,D'Angelo Russell,player_assists,AST,6.0,4,UNDER/UNDER,110.57,0.7019,0.7004
+2,Tyler Herro,player_rebounds,REB,5.5,4,D'Angelo Russell,player_assists,AST,6.0,4,UNDER/UNDER,110.55,0.7018,0.7003
+3,Jayson Tatum,player_rebounds,REB,10.0,8,Tyler Herro,player_rebounds,REB,5.5,4,UNDER/UNDER,106.66,0.6889,0.6873
+4,Andrew Nembhard,player_assists,AST,4.5,6,D'Angelo Russell,player_assists,AST,6.0,4,OVER/UNDER,105.61,0.6854,0.6838

@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Mason Plumlee,player_rebounds,REB,10.5,6,John Konchar,player_assists,AST,2.5,1,UNDER/UNDER,186.41,0.9547,0.9545
+1,John Konchar,player_points,PTS,6.5,3,Mason Plumlee,player_rebounds,REB,10.5,6,UNDER/UNDER,184.05,0.9468,0.9466
+2,Mason Plumlee,player_rebounds,REB,10.5,6,John Konchar,player_rebounds,REB,8.5,5,UNDER/UNDER,171.76,0.9059,0.9054
+3,Bradley Beal,player_rebounds,REB,5.0,3,John Konchar,player_assists,AST,2.5,1,UNDER/UNDER,166.7,0.889,0.8884
+4,John Konchar,player_points,PTS,6.5,3,Bradley Beal,player_rebounds,REB,5.0,3,UNDER/UNDER,164.74,0.8825,0.8819
