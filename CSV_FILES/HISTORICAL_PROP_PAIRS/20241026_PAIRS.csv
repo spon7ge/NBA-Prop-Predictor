@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Terry Rozier,player_points,PTS,15.5,9,Ja Morant,player_rebounds,REB,5.5,3,UNDER/UNDER,163.73,0.8791,0.8785
+1,Russell Westbrook,player_points,PTS,6.5,13,Ja Morant,player_rebounds,REB,5.5,3,OVER/UNDER,162.02,0.8734,0.8728
+2,Russell Westbrook,player_points,PTS,6.5,13,Terry Rozier,player_points,PTS,15.5,9,OVER/UNDER,158.99,0.8633,0.8626
+3,Ivica Zubac,player_rebounds,REB,10.5,14,Ja Morant,player_rebounds,REB,5.5,3,OVER/UNDER,157.59,0.8586,0.8579
+4,Terry Rozier,player_points,PTS,15.5,9,Ivica Zubac,player_rebounds,REB,10.5,14,UNDER/OVER,155.72,0.8524,0.8517

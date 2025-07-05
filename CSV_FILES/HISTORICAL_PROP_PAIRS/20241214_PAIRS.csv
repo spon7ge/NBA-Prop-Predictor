@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Trae Young,player_rebounds,REB,3.5,2,Shai Gilgeous-Alexander,player_assists,AST,5.0,7,UNDER/OVER,134.6,0.782,0.7809
+1,Taurean Prince,player_points,PTS,4.5,8,Shai Gilgeous-Alexander,player_assists,AST,5.0,7,OVER/OVER,128.04,0.7601,0.7589
+2,Taurean Prince,player_rebounds,REB,2.5,4,Shai Gilgeous-Alexander,player_assists,AST,5.0,7,OVER/OVER,124.89,0.7496,0.7484
+3,Taurean Prince,player_points,PTS,4.5,8,Trae Young,player_rebounds,REB,3.5,2,OVER/UNDER,122.64,0.7421,0.7408
+4,Trae Young,player_rebounds,REB,3.5,2,Taurean Prince,player_rebounds,REB,2.5,4,UNDER/OVER,121.36,0.7379,0.7365

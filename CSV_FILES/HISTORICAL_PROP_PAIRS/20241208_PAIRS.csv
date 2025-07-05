@@ -1,0 +1,6 @@
+,PLAYER 1,CATEGORY 1,STAT TYPE 1,PLAYER 1 LINE,PLAYER 1 PREDICTION,PLAYER 2,CATEGORY 2,STAT TYPE 2,PLAYER 2 LINE,PLAYER 2 PREDICTION,TYPE,EV,PROBABILITY,KELLY CRITERION
+0,Mike Conley,player_points,PTS,10.5,6,Jalen Suggs,player_assists,AST,5.0,3,UNDER/UNDER,153.89,0.8463,0.8455
+1,Goga Bitadze,player_points,PTS,11.0,6,Mike Conley,player_points,PTS,10.5,6,UNDER/UNDER,148.61,0.8287,0.8278
+2,Jaden McDaniels,player_rebounds,REB,3.5,6,Jalen Suggs,player_assists,AST,5.0,3,OVER/UNDER,147.14,0.8238,0.8229
+3,Goga Bitadze,player_points,PTS,11.0,6,Jaden McDaniels,player_rebounds,REB,3.5,6,UNDER/OVER,143.19,0.8106,0.8097
+4,Brandon Miller,player_points,PTS,26.5,21,Jalen Suggs,player_assists,AST,5.0,3,UNDER/UNDER,131.8,0.7727,0.7715
