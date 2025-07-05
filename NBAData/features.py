@@ -1,90 +1,55 @@
 import pandas as pd
 import numpy as np
 
-#grabbing play by play data
-import re
-from nba_api.stats.endpoints import PlayByPlayV2
-def PlayByPlayOrangized(game_id):
-    df = PlayByPlayV2(game_id=game_id).get_data_frames()[0]
-    df['DESCRIPTION'] = df['HOMEDESCRIPTION'].fillna(df['VISITORDESCRIPTION'])
-    df['DESCRIPTION'] = df['DESCRIPTION'].fillna(df['NEUTRALDESCRIPTION'])
-    
-    scores = df[['GAME_ID','PERIOD','PCTIMESTRING','DESCRIPTION','SCORE', 'PLAYER1_NAME', 'PLAYER2_NAME', 'PLAYER3_NAME','PLAYER1_TEAM_ABBREVIATION','PLAYER2_TEAM_ABBREVIATION','PLAYER3_TEAM_ABBREVIATION','PLAYER1_ID','PLAYER2_ID','PLAYER3_ID']].reset_index(drop=True)
-    scores['SECONDS_REMAINING'] = scores['PCTIMESTRING'].apply(lambda x: 
-    int(x.split(':')[0]) * 60 + int(x.split(':')[1])
-    )
-    scores['HOME_SCORE'] = scores['SCORE'].str.split('-').str[0].astype(float)
-    scores['AWAY_SCORE'] = scores['SCORE'].str.split('-').str[1].astype(float)
 
-    scores['HOME_SCORE'] = scores['HOME_SCORE'].ffill().fillna(0).astype(int)
-    scores['AWAY_SCORE'] = scores['AWAY_SCORE'].ffill().fillna(0).astype(int)
-
-    scores = scores.drop(columns=['SCORE'])
-    scores = scores[['GAME_ID', 'PERIOD', 'PCTIMESTRING', 'SECONDS_REMAINING', 'DESCRIPTION', 'HOME_SCORE', 'AWAY_SCORE', 'PLAYER1_NAME', 'PLAYER2_NAME', 'PLAYER3_NAME','PLAYER1_TEAM_ABBREVIATION','PLAYER2_TEAM_ABBREVIATION','PLAYER3_TEAM_ABBREVIATION']]
-    return scores
-
-#grabbing action types from description
-def parseDescription(pbp_df):
-    # Initialize columns - only PLAYER1 gets shot-related columns
-    pbp_df['PLAYER1_NAME'] = None
-    pbp_df['PLAYER1_ACTION'] = None
-    pbp_df['PLAYER1_SHOT_TYPE'] = None
-    pbp_df['PLAYER1_SHOT_OUTCOME'] = None
-    pbp_df['PLAYER1_DISTANCE'] = None
-    
-    # Other players just need name and action
-    pbp_df['PLAYER2_NAME'] = None
-    pbp_df['PLAYER2_ACTION'] = None
-    
-    pbp_df['PLAYER3_NAME'] = None
-    pbp_df['PLAYER3_ACTION'] = None
-    
-    for idx, description in enumerate(pbp_df['DESCRIPTION']):
-        if pd.isna(description):
-            continue
-            
-        # Primary action (shots)
-        shot_match = re.search(r"(\w+)\s+(\d+)'\s+([\w\s]+)(?=\s+\()", str(description))
-        if shot_match:
-            pbp_df.loc[idx, 'PLAYER1_NAME'] = shot_match.group(1)  # Player name
-            pbp_df.loc[idx, 'PLAYER1_DISTANCE'] = int(shot_match.group(2))  # Shot distance
-            pbp_df.loc[idx, 'PLAYER1_SHOT_TYPE'] = shot_match.group(3)  # Shot type
-            pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'SHOT'
-            pbp_df.loc[idx, 'PLAYER1_SHOT_OUTCOME'] = 1 if re.search(r"\(\d+ PTS\)", description) else 0
-            
-            # Check for assist
-            assist_match = re.search(r"\((\w+)\s+(\d+)\s+AST\)", str(description))
-            if assist_match:
-                pbp_df.loc[idx, 'PLAYER2_NAME'] = assist_match.group(1)
-                pbp_df.loc[idx, 'PLAYER2_ACTION'] = 'ASSIST'
-    
-        
-        # Handle non-shot actions
-        elif 'REBOUND' in str(description):
-            rebound_match = re.search(r"(\w+)\s+REBOUND", str(description))
-            if rebound_match:
-                pbp_df.loc[idx, 'PLAYER1_NAME'] = rebound_match.group(1)
-                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'REBOUND'
-                
-        elif 'STEAL' in str(description):
-            steal_match = re.search(r"(\w+)\s+STEAL", str(description))
-            if steal_match:
-                pbp_df.loc[idx, 'PLAYER1_NAME'] = steal_match.group(1)
-                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'STEAL'
-                
-        elif 'BLOCK' in str(description):
-            block_match = re.search(r"(\w+)\s+BLOCK", str(description))
-            if block_match:
-                pbp_df.loc[idx, 'PLAYER1_NAME'] = block_match.group(1)
-                pbp_df.loc[idx, 'PLAYER1_ACTION'] = 'BLOCK'
-            
-    return pbp_df
 
 #grabs players rest days between games
-def calculateDaysOfRest(df, player_id_col='PLAYER_ID', game_date_col='GAME_DATE'):
-    df[game_date_col] = pd.to_datetime(df[game_date_col], format='%Y-%m-%d')
-    df = df.sort_values(by=[player_id_col, game_date_col])
-    df['DAYS_OF_REST'] = df.groupby(player_id_col)[game_date_col].diff().dt.days
+def add_rest_day_features(df):
+    '''
+    Add rest day features for both teams and individual players.
+    '''
+    df = df.copy()
+    
+    # Convert GAME_DATE to datetime if needed
+    if not pd.api.types.is_datetime64_any_dtype(df['GAME_DATE']):
+        df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+    
+    # Sort by date
+    df = df.sort_values(['TEAM_ID', 'GAME_DATE', 'PLAYER_ID'])
+    
+    # Calculate team rest days
+    df['TEAM_DAYS_REST'] = df.groupby('TEAM_ID')['GAME_DATE'].diff().dt.days
+    df['TEAM_DAYS_REST'] = df['TEAM_DAYS_REST'].fillna(3)  # First game of season
+    df['TEAM_B2B'] = (df['TEAM_DAYS_REST'] <= 1).astype(int)
+    
+    # Calculate player rest days
+    df['PLAYER_DAYS_REST'] = df.groupby('PLAYER_ID')['GAME_DATE'].diff().dt.days
+    df['PLAYER_DAYS_REST'] = df['PLAYER_DAYS_REST'].fillna(3)  # First game of season
+    df['PLAYER_B2B'] = (df['PLAYER_DAYS_REST'] <= 1).astype(int)
+    
+    # Calculate if player missed team's last game
+    # First, get the previous game date for each team
+    df['PREV_TEAM_GAME'] = df.groupby('TEAM_ID')['GAME_DATE'].shift(1)
+    
+    # Then, get the previous game date for each player
+    df['PREV_PLAYER_GAME'] = df.groupby('PLAYER_ID')['GAME_DATE'].shift(1)
+    
+    # Player missed last game if:
+    # 1. It's not the team's first game (PREV_TEAM_GAME is not null)
+    # 2. Either:
+    #    a. Player has no previous game (PREV_PLAYER_GAME is null), or
+    #    b. Player's last game was before team's last game
+    df['PLAYER_MISSED_LAST'] = ((~df['PREV_TEAM_GAME'].isna()) & 
+                               (df['PREV_PLAYER_GAME'].isna() | 
+                                (df['PREV_PLAYER_GAME'] != df['PREV_TEAM_GAME']))).astype(int)
+    
+    # Drop helper columns
+    df = df.drop(['PREV_TEAM_GAME', 'PREV_PLAYER_GAME'], axis=1)
+    
+    # Ensure all numeric columns are properly typed
+    numeric_columns = ['TEAM_DAYS_REST', 'TEAM_B2B', 'PLAYER_DAYS_REST', 'PLAYER_B2B', 'PLAYER_MISSED_LAST']
+    for col in numeric_columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
     return df
 
 def convert_height_to_inches(height_str):
@@ -601,10 +566,112 @@ def pace_expectation(df):
     
     return df
 
+def process_star_players_data(regular_season_files, star_players_by_year):
+
+    # Load and combine all season data
+    dfs = []
+    for year, file_path in regular_season_files.items():
+        df = pd.read_csv(file_path)
+        df['SEASON_YEAR'] = year
+        dfs.append(df)
+    
+    df_all = pd.concat(dfs, ignore_index=True)
+    
+    # Build the union of all stars across years
+    all_stars = set()
+    for year_stars in star_players_by_year.values():
+        all_stars.update(year_stars)
+    
+    # Process each year
+    processed_dfs = []
+    for year, star_list in star_players_by_year.items():
+        df_year = df_all[df_all['SEASON_YEAR'] == year]
+        
+        # Get starters per game
+        starters_per_game = (
+            df_year[df_year['STARTING'] == 1]
+            .groupby(['GAME_ID', 'TEAM_ID'])
+            .agg({'PLAYER_NAME': list})
+            .reset_index()
+        )
+        
+        # Process each star player
+        for star_name in all_stars:
+            col_name = f'STARTS_WITH_STAR_{star_name.replace(" ", "_")}'
+            if star_name in star_list:
+                starters_per_game[col_name] = starters_per_game['PLAYER_NAME'].apply(
+                    lambda players: int(star_name in players)
+                )
+            else:
+                starters_per_game[col_name] = 0  # always 0 if not a star that year
+        
+        # Merge star player columns back to main DataFrame
+        merge_cols = ['GAME_ID', 'TEAM_ID'] + [
+            col for col in starters_per_game.columns if col.startswith('STARTS_WITH_STAR_')
+        ]
+        df_year = df_year.merge(starters_per_game[merge_cols], on=['GAME_ID', 'TEAM_ID'], how='left')
+        processed_dfs.append(df_year)
+    
+    # Combine all processed years
+    return pd.concat(processed_dfs, ignore_index=True)
+
+# regular_season_files = {
+#     2021: 'CSV_FILES/REGULAR_DATA/SEASON_21_PTS_FEATURES.csv',
+#     2022: 'CSV_FILES/REGULAR_DATA/SEASON_22_PTS_FEATURES.csv',
+#     2023: 'CSV_FILES/REGULAR_DATA/SEASON_23_PTS_FEATURES.csv',
+#     2024: 'CSV_FILES/REGULAR_DATA/SEASON_24_PTS_FEATURES.csv',
+#     # 2025: 'CSV_FILES/REGULAR_DATA/SEASON_25_PTS_FEATURES.csv'
+# }
+
+# star_players_by_year = {
+#     2021: [
+#         "Giannis Antetokounmpo", "Kawhi Leonard", "Nikola Jokic", "Stephen Curry", "Luka Doncic",
+#         "Julius Randle", "LeBron James", "Joel Embiid", "Damian Lillard", "Chris Paul",
+#         "Jimmy Butler", "Paul George", "Rudy Gobert", "Bradley Beal", "Kyrie Irving",
+#         "Devin Booker", "Mike Conley", "James Harden", "Zach LaVine", "Donovan Mitchell",
+#         "Nikola Vucevic", "Anthony Davis"
+#     ],
+#     2022: [
+#         "Giannis Antetokounmpo", "Luka Doncic", "Jayson Tatum", "Nikola Jokic", "Devin Booker",
+#         "Ja Morant", "Stephen Curry", "DeMar DeRozan", "Kevin Durant", "Joel Embiid",
+#         "LeBron James", "Chris Paul", "Trae Young", "Pascal Siakam", "Karl-Anthony Towns",
+#         "Andrew Wiggins", "Donovan Mitchell", "Rudy Gobert", "Zach LaVine", "Khris Middleton",
+#         "Jimmy Butler", "Darius Garland", "Fred VanVleet", "LaMelo Ball"
+#     ],
+#     2023: [
+#         "Giannis Antetokounmpo", "Jayson Tatum", "Joel Embiid", "Shai Gilgeous-Alexander", "Luka Doncic",
+#         "Jaylen Brown", "Jimmy Butler", "Nikola Jokic", "Stephen Curry", "Donovan Mitchell",
+#         "LeBron James", "Julius Randle", "Domantas Sabonis", "De'Aaron Fox", "Damian Lillard",
+#         "Kyrie Irving", "Zion Williamson", "Kevin Durant", "Ja Morant", "DeMar DeRozan",
+#         "Tyrese Haliburton", "Jrue Holiday", "Bam Adebayo", "Jaren Jackson Jr.", "Paul George",
+#         "Pascal Siakam", "Anthony Edwards"
+#     ],
+#     2024: [
+#         "Shai Gilgeous-Alexander", "Luka Doncic", "Jayson Tatum", "Giannis Antetokounmpo", "Nikola Jokic",
+#         "Jalen Brunson", "Anthony Edwards", "Kawhi Leonard", "Kevin Durant", "Anthony Davis",
+#         "Stephen Curry", "Devin Booker", "LeBron James", "Domantas Sabonis", "Bam Adebayo",
+#         "Tyrese Haliburton", "Damian Lillard", "Karl-Anthony Towns", "Jaylen Brown",
+#         "Trae Young", "Paolo Banchero", "Scottie Barnes"
+#     ],
+#     # 2025: ["Shai Gilgeous-Alexander", "Nikola Jokic", "Giannis Antetokounmpo", "Jayson Tatum", "Donovan Mitchell",
+#     # "Anthony Edwards", "LeBron James", "Stephen Curry", "Evan Mobley", "Jalen Brunson",
+#     # "Cade Cunningham", "Karl-Anthony Towns", "Tyrese Haliburton", "Jalen Williams", "James Harden", 'Jaylen Brown',
+#     # 'Kevin Durant', 'Kyrie Irving', 'Damian Lillard', 'Anthony Davis', 'Darius Garland', 'Tyler Herro', 'Jaren Jackson Jr.',
+#     # 'Alperen Sengun', 'Pascal Siakam', 'Victor Wembanyama', 'Giannis Antetokounmpo', 'Trae Young'
+#     # ]
+# }
 def allLineupFeatures(df):
     df = teamUsualStarters(df)
     df = oppTeamUsualStarters(df)
     df = team_starter_spacing(df)
     df = pace_expectation(df)
+    # df = process_star_players_data(regular_season_files, star_players_by_year)
     return df
+
+def encode_teams(df):
+    # One-hot encode player team and opponent team
+    df_teams = pd.get_dummies(df['TEAM_ABBREVIATION'], prefix='TEAM_').astype(int)
+    df_opps = pd.get_dummies(df['OPP_ABBREVIATION'], prefix='OPP_').astype(int)
+    df_encoded = pd.concat([df, df_teams, df_opps], axis=1)
+    return df_encoded
 

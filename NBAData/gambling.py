@@ -4,7 +4,15 @@ from scipy.stats import norm
 import scipy.stats as stats
 from Models.xgboost_prediction import *
 from Models.xgboost_model import *
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
+
+# Convert UTC to ET and create game_date column
+def convert_to_et(utc_time):
+    utc_dt = datetime.fromisoformat(utc_time.replace('Z', '+00:00'))
+    et_dt = utc_dt.astimezone(ZoneInfo("America/New_York"))
+    return et_dt.strftime('%Y-%m-%d')  
 
 def impliedProb(odds):
     if odds > 0:
@@ -59,33 +67,69 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
         return round((odds_to_decimal - 1) * 100)
     else:
         return round(-100 / (odds_to_decimal - 1))
-    
-#monte carlo simulation using my model to calculate the probability of the prop
-def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_simulations=10000):
-    """
-    Simulates player performance using model prediction as mean and standard deviation of the stat.
-    """
-    std_dev = player_df[stat_line].std()
-    std_dev = std_dev * 0.7
-    
-    # Future: Much better approach  
-    # line_residuals = actual_points - historical_lines
-    # std = line_residuals.std()
-    
-    # If std_dev is missing or 0, use a default value
-    if std_dev is None or np.isnan(std_dev) or std_dev == 0:
-        std_dev = 5.0  # Default fallback value
-    
-    # Cap it at a reasonable value
-    std_dev = min(std_dev, 8.0)
-    
-    # Monte Carlo sampling
-    simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def precompute_player_residual_stds(players, datasets, models, games, stat_lines):
+    """
+    Precompute residual standard deviation for each player. Returns dict: player -> stat_line -> std_dev.
+    """
+    residual_stds = {}
+    for player in players:
+        residual_stds[player] = {}
+        for stat_line in stat_lines:
+            player_df = datasets[stat_line]
+            player_data = player_df[player_df['PLAYER_NAME'] == player].sort_values('GAME_DATE')
+            residuals = []
+            for idx, row in player_data.iterrows():
+                if pd.isna(row[stat_line]):
+                    continue
+                try:
+                    opponent = row.get('OPP_ABBREVIATION', 'UNK')
+                    temp_props = pd.DataFrame({
+                        'NAME': [row['PLAYER_NAME']],
+                        'LINE': [row[stat_line]],
+                        'CATEGORY': [f'player_{stat_line.lower()}']
+                    })
+                    pred = make_prediction(
+                        player_name=row['PLAYER_NAME'],
+                        bookmakers=temp_props,
+                        opponent=opponent,
+                        model=models[stat_line],
+                        data=player_data[player_data['GAME_DATE'] < row['GAME_DATE']],
+                        games=games,
+                        is_playoff=0,
+                        stat_line=stat_line
+                    )
+                    residual = row[stat_line] - pred['predicted_stat']
+                    residuals.append(residual)
+                except:
+                    continue
+            if len(residuals) >= 3:
+                std_dev = np.std(residuals)
+            else:
+                fallback_std = player_data[stat_line].std()
+                std_dev = fallback_std * 0.7 if not pd.isna(fallback_std) else 5.0
+            std_dev = std_dev if std_dev and not np.isnan(std_dev) and std_dev != 0 else 5.0
+            std_dev = min(std_dev, 12.0)
+            residual_stds[player][stat_line] = std_dev
+    return residual_stds
+
+
+
+
+
+
+
+#monte carlo simulation using my model to calculate the probability of the prop
+def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_simulations=10000):
+    """
+    Simulates player performance using model prediction as mean and precomputed residual std_dev.
+    """
+    simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
     prob_over = np.mean(simulated_points > prop_line)
     prob_under = 1 - prob_over
     ci = np.percentile(simulated_points, [2.5, 97.5])
-
     return {
         'mean_prediction': modelPred,
         'std_used': std_dev,
@@ -94,7 +138,9 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, stat_line, num_
         'confidence_interval': (ci[0], ci[1])
     }
 
-def single_bet(data, bookmakers, models, games, category='player_points', stat_line='PTS'):  
+
+
+def single_bet(data, bookmakers, models, games, category='player_points', stat_line='PTS', current_dataset=None):  
     print("Processing single bets...")
     Props = bookmakers[['NAME', 'BOOKMAKER', 'CATEGORY', 'LINE', 'OVER/UNDER', 'ODDS']].loc[bookmakers['CATEGORY'] == category]
     results = []
@@ -102,11 +148,20 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
     
     # Load dataset
     try:
-        data = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_line}_FEATURES.csv')
-        print(f"Loaded dataset for {stat_line}")
+        if current_dataset is not None:
+            data = current_dataset
+            print(f"Using provided current dataset for {stat_line}")
+        else:
+            data = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_25_{stat_line}_FEATURES.csv')
+            print(f"Loaded dataset for {stat_line}")
     except Exception as e:
         print(f"Error loading dataset for {stat_line}: {e}")
         return pd.DataFrame()
+    
+    # Get unique players and precompute residual stds
+    unique_players = Props['NAME'].unique()
+    print(f"Precomputing residual stds for {len(unique_players)} players...")
+    residual_stds = precompute_player_residual_stds(unique_players, {stat_line: data}, models, games, [stat_line])
     
     for idx, row in Props.iterrows():
         name = row['NAME']
@@ -154,11 +209,14 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
                 stat_line=stat_line
             )
 
+            # Get precomputed std_dev
+            std_dev = residual_stds.get(name, {}).get(stat_line, 5.0)
+
             sim_results = monte_carlo_prop_simulation(
                 player_df=player_data.sort_values('GAME_DATE'),
                 modelPred=pred['predicted_stat'],
                 prop_line=line,
-                stat_line=stat_line,
+                std_dev=std_dev,
                 num_simulations=10000
             )
 
@@ -199,44 +257,46 @@ def single_bet(data, bookmakers, models, games, category='player_points', stat_l
 
     return pd.DataFrame(results)
 
-def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, stake=100, payout=300):
-    """
-    Calculate EV for PrizePicks pairs using model predictions and Monte Carlo simulations
-    Uses separate feature datasets for different stat types
-    """
+def prizePicksPairsEV(prizePicks, propDict, models, games, current_datasets=None, simulations=10000, stake=100, payout=300):
     print("Loading datasets and generating valid combinations...")
     valid_combinations = []
-    
+
     # Load datasets
     datasets = {}
     stat_types = list(propDict.values())
     for stat_type in stat_types:
         try:
-            datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_type}_FEATURES.csv')
-            print(f"Loaded dataset for {stat_type}")
+            if current_datasets is not None and stat_type in current_datasets:
+                datasets[stat_type] = current_datasets[stat_type]
+                print(f"Using provided current dataset for {stat_type}")
+            else:
+                datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_25_{stat_type}_FEATURES.csv')
+                print(f"Loaded dataset for {stat_type}")
         except Exception as e:
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
-    
-    # Process each category
+
+    # Get unique players in PrizePicks lines
+    unique_players = prizePicks['NAME'].unique()
+
+    print(f"Precomputing residual stds for {len(unique_players)} players...")
+    residual_stds = precompute_player_residual_stds(unique_players, datasets, models, games, stat_types)
+
     available_players = []
     for category, stat_line in propDict.items():
         category_data = prizePicks[prizePicks['CATEGORY'] == category]
-        
+
         for _, row in category_data.iterrows():
             player = row['NAME']
             line = row['LINE']
             data = datasets[stat_line]
-            
-            # Get player data
+
             player_data = data[data['PLAYER_NAME'] == player]
             if player_data.empty:
                 continue
-                
-            # Get player's team
+
             player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
-            
-            # Find opponent
+
             opponent = None
             for game in games:
                 if game['home_team'] == player_team:
@@ -245,17 +305,17 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 elif game['away_team'] == player_team:
                     opponent = game['home_team']
                     break
-                    
+
             if opponent is None:
                 continue
-                
+
             try:
                 temp_props = pd.DataFrame({
                     'NAME': [player],
                     'LINE': [line],
                     'CATEGORY': [category]
                 })
-                
+
                 pred = make_prediction(
                     player_name=player,
                     bookmakers=temp_props,
@@ -266,104 +326,94 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                     is_playoff=0,
                     stat_line=stat_line
                 )
-                
+
                 available_players.append({
                     'player': player,
                     'category': category,
                     'prediction': pred,
                     'line': line,
                     'stat_line': stat_line,
-                    'team': player_team
+                    'team': player_team,
+                    'opponent': opponent,
+                    'std_dev': residual_stds.get(player, {}).get(stat_line, 5.0)  # use fallback if missing
                 })
-                
+
             except Exception as e:
                 print(f"Error getting prediction for {player} ({category}): {e}")
                 continue
-    
-    # For pairs:
+
     def get_combination_key(player1_data, player2_data):
-        """Create a unique key for a player combination that is order-independent"""
         players = sorted([
             (player1_data['player'], player1_data['category'], player1_data['line']),
             (player2_data['player'], player2_data['category'], player2_data['line'])
         ])
         return tuple(players)
 
-    # Keep track of seen combinations
     seen_combinations = set()
-
-    # Generate all valid pairs
     for i in range(len(available_players)):
         for j in range(i + 1, len(available_players)):
             player1_data = available_players[i]
             player2_data = available_players[j]
-            
-            # Create unique key for this combination
+
             combo_key = get_combination_key(player1_data, player2_data)
-            
-            # Skip if we've seen this combination before
+
             if combo_key in seen_combinations:
                 continue
-            
-            # Skip if same player or same team
-            if (player1_data['player'] == player2_data['player'] or 
-                player1_data['team'] == player2_data['team']):
+
+            if player1_data['player'] == player2_data['player'] or player1_data['team'] == player2_data['team']:
                 continue
-            
+
             seen_combinations.add(combo_key)
             valid_combinations.append({
                 'players': [player1_data['player'], player2_data['player']],
                 'categories': [player1_data['category'], player2_data['category']],
                 'stat_lines': [player1_data['stat_line'], player2_data['stat_line']],
                 'lines': [player1_data['line'], player2_data['line']],
-                'predictions': [player1_data['prediction'], player2_data['prediction']]
+                'predictions': [player1_data['prediction'], player2_data['prediction']],
+                'opponents': [player1_data['opponent'], player2_data['opponent']],
+                'std_devs': [player1_data['std_dev'], player2_data['std_dev']]
             })
-    
+
     def process_combination(combo):
-        """Process a single combination"""
         players = combo['players']
         categories = combo['categories']
         stat_lines = combo['stat_lines']
         predictions = combo['predictions']
         lines = combo['lines']
-        
+        opponents = combo['opponents']
+        std_devs = combo['std_devs']
+
         try:
-            # Run Monte Carlo simulations for each player
             sims = []
             for i in range(2):
                 data = datasets[stat_lines[i]]
                 player_df = data[data['PLAYER_NAME'] == players[i]].sort_values('GAME_DATE')
-                
+
                 sim = monte_carlo_prop_simulation(
                     player_df=player_df,
                     modelPred=predictions[i]['predicted_stat'],
                     prop_line=lines[i],
-                    stat_line=stat_lines[i],
+                    std_dev=std_devs[i],
                     num_simulations=simulations
                 )
                 sims.append(sim)
-            
-            # Calculate probabilities
-            sim1_over = sims[0]['prob_over']
-            sim1_under = sims[0]['prob_under']
-            sim2_over = sims[1]['prob_over']
-            sim2_under = sims[1]['prob_under']
-            
+
+            sim1_over, sim1_under = sims[0]['prob_over'], sims[0]['prob_under']
+            sim2_over, sim2_under = sims[1]['prob_over'], sims[1]['prob_under']
+
             combo_probs = {
                 'OVER/OVER': sim1_over * sim2_over,
                 'UNDER/UNDER': sim1_under * sim2_under,
                 'OVER/UNDER': sim1_over * sim2_under,
                 'UNDER/OVER': sim1_under * sim2_over
             }
-            
-            # Calculate EVs
+
             evs = {k: round((combo_probs[k] * payout) - stake, 2) for k in combo_probs}
-            
-            # Find best combination
+
             best_type = max(evs, key=evs.get)
             best_ev = evs[best_type]
             best_prob = combo_probs[best_type]
-            
+
             return {
                 'players': players,
                 'categories': categories,
@@ -374,26 +424,24 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 'best_ev': best_ev,
                 'best_prob': best_prob
             }
-            
+
         except Exception as e:
             print(f"Error processing combination {players}: {e}")
             return None
-    
-    # Process combinations in parallel
+
     from concurrent.futures import ThreadPoolExecutor, as_completed
     import multiprocessing as mp
-    
+
     results = []
     max_workers = min(mp.cpu_count(), len(valid_combinations))
-    
+
     print(f"Processing {len(valid_combinations)} combinations with {max_workers} threads...")
-    
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_combo = {
-            executor.submit(process_combination, combo): i 
+            executor.submit(process_combination, combo): i
             for i, combo in enumerate(valid_combinations)
         }
-        
+
         completed = 0
         for future in as_completed(future_to_combo):
             try:
@@ -401,19 +449,14 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
                 if result is not None:
                     results.append(result)
                 completed += 1
-                
                 if completed % 100 == 0:
                     print(f"Completed {completed}/{len(valid_combinations)} combinations")
-                    
             except Exception as e:
                 print(f"Error in future: {e}")
-    
+
     print(f"Successfully processed {len(results)} combinations")
-    
-    # Build final results DataFrame
     print("Building final results...")
     all_pairs = []
-    
     for result in results:
         all_pairs.append({
             'PLAYER 1': result['players'][0],
@@ -431,10 +474,10 @@ def prizePicksPairsEV(prizePicks, propDict, models, games, simulations=10000, st
             'PROBABILITY': round(result['best_prob'], 4),
             'KELLY CRITERION': kelly_criterion(result['best_prob'], payout, stake)
         })
-    
+
     return pd.DataFrame(all_pairs)
 
-def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, stake=100, payout=600):
+def prizePicksTriosEV(prizePicks, propDict, models, games, current_datasets=None, simulations=10000, stake=100, payout=600):
     """
     Calculate EV for PrizePicks trios using model predictions and Monte Carlo simulations
     Uses separate feature datasets for different stat types
@@ -447,11 +490,20 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
     stat_types = list(propDict.values())
     for stat_type in stat_types:
         try:
-            datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_24_{stat_type}_FEATURES.csv')
-            print(f"Loaded dataset for {stat_type}")
+            if current_datasets is not None and stat_type in current_datasets:
+                datasets[stat_type] = current_datasets[stat_type]
+                print(f"Using provided current dataset for {stat_type}")
+            else:
+                datasets[stat_type] = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_25_{stat_type}_FEATURES.csv')
+                print(f"Loaded dataset for {stat_type}")
         except Exception as e:
             print(f"Error loading dataset for {stat_type}: {e}")
             return pd.DataFrame()
+    
+    # Get unique players and precompute residual stds
+    unique_players = prizePicks['NAME'].unique()
+    print(f"Precomputing residual stds for {len(unique_players)} players...")
+    residual_stds = precompute_player_residual_stds(unique_players, datasets, models, games, stat_types)
     
     # Process each category
     available_players = []
@@ -508,7 +560,9 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                     'prediction': pred,
                     'line': line,
                     'stat_line': stat_line,
-                    'team': player_team
+                    'team': player_team,
+                    'opponent': opponent,
+                    'std_dev': residual_stds.get(player, {}).get(stat_line, 5.0)  # use fallback if missing
                 })
                 
             except Exception as e:
@@ -565,7 +619,8 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                     'categories': [player1_data['category'], player2_data['category'], player3_data['category']],
                     'stat_lines': [player1_data['stat_line'], player2_data['stat_line'], player3_data['stat_line']],
                     'lines': [player1_data['line'], player2_data['line'], player3_data['line']],
-                    'predictions': [player1_data['prediction'], player2_data['prediction'], player3_data['prediction']]
+                    'predictions': [player1_data['prediction'], player2_data['prediction'], player3_data['prediction']],
+                    'opponents': [player1_data['opponent'], player2_data['opponent'], player3_data['opponent']]
                 })
     
     def process_combination(combo):
@@ -575,6 +630,9 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
         stat_lines = combo['stat_lines']
         predictions = combo['predictions']
         lines = combo['lines']
+        opponents = combo['opponents']
+        std_devs = [residual_stds.get(player, {}).get(stat_line, 5.0) 
+                   for player, stat_line in zip(players, stat_lines)]
         
         try:
             # Run Monte Carlo simulations for each player
@@ -587,7 +645,7 @@ def prizePicksTriosEV(prizePicks, propDict, models, games, simulations=10000, st
                     player_df=player_df,
                     modelPred=predictions[i]['predicted_stat'],
                     prop_line=lines[i],
-                    stat_line=stat_lines[i],
+                    std_dev=std_devs[i],
                     num_simulations=simulations
                 )
                 sims.append(sim)
