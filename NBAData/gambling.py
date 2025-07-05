@@ -115,14 +115,8 @@ def precompute_player_residual_stds(players, datasets, models, games, stat_lines
             residual_stds[player][stat_line] = std_dev
     return residual_stds
 
-
-
-
-
-
-
 #monte carlo simulation using my model to calculate the probability of the prop
-def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_simulations=10000):
+def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
     """
     Simulates player performance using model prediction as mean and precomputed residual std_dev.
     """
@@ -137,7 +131,6 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_si
         'prob_under': prob_under,
         'confidence_interval': (ci[0], ci[1])
     }
-
 
 
 def single_bet(data, bookmakers, models, games, category='player_points', stat_line='PTS', current_dataset=None):  

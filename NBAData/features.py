@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-
 #grabs players rest days between games
 def add_rest_day_features(df):
     '''
@@ -116,8 +115,8 @@ def assign_playoff_series_info(df):
         return series_num
     
     # Apply series number and game number within series
-    df['Series'] = df.apply(get_series_number, axis=1)
-    df['GameInSeries'] = df.groupby(['MATCHUP_KEY'])['GAME_DATE'].rank(method='dense').astype(int)
+    df['SERIES'] = df.apply(get_series_number, axis=1)
+    df['GAME_IN_SERIES'] = df.groupby(['MATCHUP_KEY'])['GAME_DATE'].rank(method='dense').astype(int)
     
     # Add series name for better context
     def get_series_name(series_num):
@@ -129,7 +128,7 @@ def assign_playoff_series_info(df):
         }
         return series_names.get(series_num, 'Unknown')
     
-    df['SeriesName'] = df['Series'].map(get_series_name)
+    df['SERIES_NAME'] = df['SERIES'].map(get_series_name)
     
     return df
 
@@ -156,27 +155,16 @@ def rollingAverages(player_data, rolling_windows, player_id_col='PLAYER_ID', dat
     player_data = player_data.sort_values([player_id_col, date_col]).copy()
     rolling_features = {
         'PTS': [
-            'MIN', 'PTS', 'FGA', 'FGM', 'FG_PCT', 'FG3A', 'FG3M', 'FG3_PCT',
-            'FTM', 'FTA', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'EFG_PCT',
-            'OREB', 'DREB', 'REB', 'PLUS_MINUS', 'PIE',
-            'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT',
-            'TEAM_FTM', 'TEAM_FTA', 'TEAM_FT_PCT',
-            'TEAM_PTS', 'TEAM_PACE', 'TEAM_OFF_RATING',
-            'OPP_DEF_RATING', 'OPP_PACE', 'OPP_FG_PCT'
+            'MIN', 'FGA', 'FGM', 'FG_PCT', 'FG3A', 'FG3M', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'EFG_PCT', 
+            'TEAM_PACE', 'TEAM_OFF_RATING', 'OPP_DEF_RATING'
         ],
         'AST': [
-            'MIN', 'AST', 'FGA', 'FGM', 'FG_PCT', 'FG3A', 'FG3M', 'FG3_PCT',
-            'FTM', 'FTA', 'FT_PCT', 'USG_PCT', 'AST_PCT', 'AST_TOV', 'TS_PCT', 'EFG_PCT', 'PIE', 'PLUS_MINUS',
-            'TEAM_FG_PCT', 'TEAM_FGM', 'TEAM_AST', 'TEAM_TOV', 'TEAM_PACE', 'TEAM_PTS',
-            'OPP_DEF_RATING', 'OPP_STL', 'OPP_PACE'
+            'MIN', 'USG_PCT', 'AST_PCT', 'AST_TOV', 'TEAM_FGM', 'TEAM_AST', 'TEAM_PACE', 'OPP_DEF_RATING', 'OPP_STL', 'TEAM_FGA',
+            'TEAM_FG3A'
         ],
         'REB': [
-            'MIN', 'OREB', 'DREB', 'REB', 'FGA', 'FGM', 'FG_PCT',
-            'FG3A', 'FG3M', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
-            'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'PIE', 'PLUS_MINUS',
-            'USG_PCT', 'TS_PCT', 'EFG_PCT', 'PACE', 'POSS',
-            'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'TEAM_FGA', 'TEAM_FG3A',
-            'OPP_REB', 'OPP_FG_PCT', 'OPP_DEF_RATING', 'OPP_PACE'
+            'MIN', 'FGA', 'FGM', 'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'USG_PCT', 'POSS', 
+            'TEAM_FGA', 'TEAM_FG3A', 'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'OPP_REB', 'OPP_FG_PCT', 'OPP_PACE',
         ]
     }
 
@@ -203,8 +191,8 @@ def rollingAverages(player_data, rolling_windows, player_id_col='PLAYER_ID', dat
                 .fillna(global_mean)
             )
 
-            # Add rolling std for PTS only
-            if stat_line == 'PTS' and feature == 'PTS':
+            # Add rolling std for stat_line only
+            if feature == stat_line:
                 std_col = f'{feature}_STD_AVG_{window}'
                 player_data[std_col] = (
                     player_data
@@ -251,65 +239,81 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE',
         player_data[f'{stat_line}_LAG_{lag}'] = player_data.groupby(player_id_col)[stat_line].shift(lag)
     return player_data
 
-def defenseRollingAverage(df):
-    df = df.sort_values(by='GAME_DATE', ascending=True).reset_index(drop=True)
-    rolling_df = (
-    df.groupby('OPP_ABBREVIATION')
-      .apply(lambda group: group.assign(
-          ROLL_OPP_DEF_RATING=group['OPP_DEF_RATING']
-              .expanding(min_periods=1)
-              .mean()
-      ))
-      .reset_index(drop=True)
-    )
-    return rolling_df
+def dynamic_defense_ranking(df, game_date_col='GAME_DATE'):
+    """Rank defenses based only on games played before each game date"""
+    df_ranked = []
+    
+    for date in df[game_date_col].unique():
+        # Only use games before this date for ranking
+        historical_data = df[df[game_date_col] < date]
+        
+        if len(historical_data) > 0:
+            # Calculate defensive strength up to this date
+            team_strength = historical_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING'].mean()
+            rankings = team_strength.rank(ascending=True, method='min')
+            
+            # Apply rankings to games on this date
+            games_today = df[df[game_date_col] == date].copy()
+            games_today['DEF_CATEGORY'] = games_today['OPP_ABBREVIATION'].map(
+                lambda x: 1 if rankings.get(x, 999) <= 10 else 0
+            )
+            df_ranked.append(games_today)
+    
+    return pd.concat(df_ranked, ignore_index=True)
 
-def categorize_by_rank(df, opp_col='OPP_ABBREVIATION', strength_col='ROLL_OPP_DEF_RATING', top_n=10):
+# If you want absolute averages instead of relative performance
+def calculate_absolute_vs_defense(player_data, player_id_col='PLAYER_ID', stat_line='PTS'):
     """
-    Assigns a binary defense category (1=strong, 0=weak) based on team-level defensive strength rank.
-    Each unique opponent gets one consistent label across all games.
+    Calculate absolute averages against strong vs weak defenses for different stat categories
     """
-    # Calculate average defense strength per team
-    team_strength = df.groupby(opp_col)[strength_col].mean().reset_index()
-    # Rank teams: 1 is strongest defense
-    team_strength['DEF_RANK'] = team_strength[strength_col].rank(ascending=True, method='min')
-    # Assign category: top_n strongest defenses → 1
-    team_strength['DEF_CATEGORY'] = (team_strength['DEF_RANK'] <= top_n).astype(int)
-    # Merge back to main dataframe so every row for same team gets consistent label
-    df = df.merge(team_strength[[opp_col, 'DEF_RANK', 'DEF_CATEGORY']], on=opp_col, how='left')
-    return df
-
-def CalculatePlayerVsDefense(player_data, player_id_col='PLAYER_ID', stat_line='PTS'):
-    """
-    Calculate how players perform against different defensive categories
-    """
-    # Calculate average performance against each defensive category
+    
+    # Define metrics for each stat line
     metrics = {
-        'PTS': ['PTS','FGA', 'FTA', 'FG3A', 'USG_PCT','TOV'],
-        'AST': ['AST','AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING','TOV'],
-        'REB': ['REB','OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE','TOV']
+        'PTS': ['PTS', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TOV'],
+        'AST': ['AST', 'AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'TOV'],
+        'REB': ['REB', 'OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE', 'TOV']
     }
     
+    # Validate stat_line parameter
+    if stat_line not in metrics:
+        raise ValueError(f"stat_line must be one of: {list(metrics.keys())}")
+    
+    # Filter data by defense category
+    strong_def = player_data[player_data['DEF_CATEGORY'] == 1]
+    weak_def = player_data[player_data['DEF_CATEGORY'] == 0]
+    
+    # Calculate absolute averages for each metric
     for metric in metrics[stat_line]:
-        # Calculate average against strong and weak defenses
-        avg_by_def = (
-            player_data.groupby([player_id_col, 'DEF_CATEGORY'])[metric]
-            .transform('mean')
-            .round(2)
+        # Check if metric exists in the dataframe
+        if metric not in player_data.columns:
+            print(f"Warning: Column '{metric}' not found in dataframe, skipping...")
+            continue
+            
+        # Calculate averages vs strong defenses
+        strong_avg = strong_def.groupby(player_id_col)[metric].mean()
+        player_data[f'{metric}_VS_DEF_STRONG'] = (
+            player_data[player_id_col].map(strong_avg).fillna(0).round(2)
         )
-        player_data[f'{metric}_VS_DEF'] = (
-            (player_data[metric] - avg_by_def) / avg_by_def
-        ).round(3)
-
+        
+        # Calculate averages vs weak defenses  
+        weak_avg = weak_def.groupby(player_id_col)[metric].mean()
+        player_data[f'{metric}_VS_DEF_WEAK'] = (
+            player_data[player_id_col].map(weak_avg).fillna(0).round(2)
+        )
+        
+        # Optional: Calculate difference (performance gap)
+        player_data[f'{metric}_VS_DEF_DIFF'] = (
+            player_data[f'{metric}_VS_DEF_WEAK'] - player_data[f'{metric}_VS_DEF_STRONG']
+        ).round(2)
+    
     return player_data
 
 def add_all_opponent_features(player_data, stat_line='PTS'):
     """
     Wrapper function to add all opponent-related features
     """
-    player_data = defenseRollingAverage(player_data)
-    player_data = categorize_by_rank(player_data)
-    player_data = CalculatePlayerVsDefense(player_data, stat_line=stat_line)
+    player_data = dynamic_defense_ranking(player_data)
+    player_data = calculate_absolute_vs_defense(player_data, stat_line=stat_line)
     return player_data
 
 
@@ -566,106 +570,41 @@ def pace_expectation(df):
     
     return df
 
-def process_star_players_data(regular_season_files, star_players_by_year):
+def process_star_players_data(season_df, star_players):
+    """
+    Process star players data for a single season and return simple star metrics.
+    """
+    # Add IS_STAR column
+    season_df['IS_STAR'] = season_df['PLAYER_NAME'].isin(star_players).astype(int)
+    
+    # Get starters per game
+    starters_per_game = (
+        season_df[season_df['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg({'PLAYER_NAME': list})
+        .reset_index()
+    )
+    
+    # Count stars for each team-game
+    starters_per_game['NUM_STARS_ON_TEAM'] = starters_per_game['PLAYER_NAME'].apply(
+        lambda players: sum(1 for player in players if player in star_players)
+    )
+    
+    # Merge the star count back to main DataFrame
+    merge_cols = ['GAME_ID', 'TEAM_ID', 'NUM_STARS_ON_TEAM']
+    merged_df = season_df.merge(starters_per_game[merge_cols], on=['GAME_ID', 'TEAM_ID'], how='left')
+    
+    # Fill any NaN values with 0
+    merged_df['NUM_STARS_ON_TEAM'] = merged_df['NUM_STARS_ON_TEAM'].fillna(0)
+    
+    return merged_df
 
-    # Load and combine all season data
-    dfs = []
-    for year, file_path in regular_season_files.items():
-        df = pd.read_csv(file_path)
-        df['SEASON_YEAR'] = year
-        dfs.append(df)
-    
-    df_all = pd.concat(dfs, ignore_index=True)
-    
-    # Build the union of all stars across years
-    all_stars = set()
-    for year_stars in star_players_by_year.values():
-        all_stars.update(year_stars)
-    
-    # Process each year
-    processed_dfs = []
-    for year, star_list in star_players_by_year.items():
-        df_year = df_all[df_all['SEASON_YEAR'] == year]
-        
-        # Get starters per game
-        starters_per_game = (
-            df_year[df_year['STARTING'] == 1]
-            .groupby(['GAME_ID', 'TEAM_ID'])
-            .agg({'PLAYER_NAME': list})
-            .reset_index()
-        )
-        
-        # Process each star player
-        for star_name in all_stars:
-            col_name = f'STARTS_WITH_STAR_{star_name.replace(" ", "_")}'
-            if star_name in star_list:
-                starters_per_game[col_name] = starters_per_game['PLAYER_NAME'].apply(
-                    lambda players: int(star_name in players)
-                )
-            else:
-                starters_per_game[col_name] = 0  # always 0 if not a star that year
-        
-        # Merge star player columns back to main DataFrame
-        merge_cols = ['GAME_ID', 'TEAM_ID'] + [
-            col for col in starters_per_game.columns if col.startswith('STARTS_WITH_STAR_')
-        ]
-        df_year = df_year.merge(starters_per_game[merge_cols], on=['GAME_ID', 'TEAM_ID'], how='left')
-        processed_dfs.append(df_year)
-    
-    # Combine all processed years
-    return pd.concat(processed_dfs, ignore_index=True)
-
-# regular_season_files = {
-#     2021: 'CSV_FILES/REGULAR_DATA/SEASON_21_PTS_FEATURES.csv',
-#     2022: 'CSV_FILES/REGULAR_DATA/SEASON_22_PTS_FEATURES.csv',
-#     2023: 'CSV_FILES/REGULAR_DATA/SEASON_23_PTS_FEATURES.csv',
-#     2024: 'CSV_FILES/REGULAR_DATA/SEASON_24_PTS_FEATURES.csv',
-#     # 2025: 'CSV_FILES/REGULAR_DATA/SEASON_25_PTS_FEATURES.csv'
-# }
-
-# star_players_by_year = {
-#     2021: [
-#         "Giannis Antetokounmpo", "Kawhi Leonard", "Nikola Jokic", "Stephen Curry", "Luka Doncic",
-#         "Julius Randle", "LeBron James", "Joel Embiid", "Damian Lillard", "Chris Paul",
-#         "Jimmy Butler", "Paul George", "Rudy Gobert", "Bradley Beal", "Kyrie Irving",
-#         "Devin Booker", "Mike Conley", "James Harden", "Zach LaVine", "Donovan Mitchell",
-#         "Nikola Vucevic", "Anthony Davis"
-#     ],
-#     2022: [
-#         "Giannis Antetokounmpo", "Luka Doncic", "Jayson Tatum", "Nikola Jokic", "Devin Booker",
-#         "Ja Morant", "Stephen Curry", "DeMar DeRozan", "Kevin Durant", "Joel Embiid",
-#         "LeBron James", "Chris Paul", "Trae Young", "Pascal Siakam", "Karl-Anthony Towns",
-#         "Andrew Wiggins", "Donovan Mitchell", "Rudy Gobert", "Zach LaVine", "Khris Middleton",
-#         "Jimmy Butler", "Darius Garland", "Fred VanVleet", "LaMelo Ball"
-#     ],
-#     2023: [
-#         "Giannis Antetokounmpo", "Jayson Tatum", "Joel Embiid", "Shai Gilgeous-Alexander", "Luka Doncic",
-#         "Jaylen Brown", "Jimmy Butler", "Nikola Jokic", "Stephen Curry", "Donovan Mitchell",
-#         "LeBron James", "Julius Randle", "Domantas Sabonis", "De'Aaron Fox", "Damian Lillard",
-#         "Kyrie Irving", "Zion Williamson", "Kevin Durant", "Ja Morant", "DeMar DeRozan",
-#         "Tyrese Haliburton", "Jrue Holiday", "Bam Adebayo", "Jaren Jackson Jr.", "Paul George",
-#         "Pascal Siakam", "Anthony Edwards"
-#     ],
-#     2024: [
-#         "Shai Gilgeous-Alexander", "Luka Doncic", "Jayson Tatum", "Giannis Antetokounmpo", "Nikola Jokic",
-#         "Jalen Brunson", "Anthony Edwards", "Kawhi Leonard", "Kevin Durant", "Anthony Davis",
-#         "Stephen Curry", "Devin Booker", "LeBron James", "Domantas Sabonis", "Bam Adebayo",
-#         "Tyrese Haliburton", "Damian Lillard", "Karl-Anthony Towns", "Jaylen Brown",
-#         "Trae Young", "Paolo Banchero", "Scottie Barnes"
-#     ],
-#     # 2025: ["Shai Gilgeous-Alexander", "Nikola Jokic", "Giannis Antetokounmpo", "Jayson Tatum", "Donovan Mitchell",
-#     # "Anthony Edwards", "LeBron James", "Stephen Curry", "Evan Mobley", "Jalen Brunson",
-#     # "Cade Cunningham", "Karl-Anthony Towns", "Tyrese Haliburton", "Jalen Williams", "James Harden", 'Jaylen Brown',
-#     # 'Kevin Durant', 'Kyrie Irving', 'Damian Lillard', 'Anthony Davis', 'Darius Garland', 'Tyler Herro', 'Jaren Jackson Jr.',
-#     # 'Alperen Sengun', 'Pascal Siakam', 'Victor Wembanyama', 'Giannis Antetokounmpo', 'Trae Young'
-#     # ]
-# }
-def allLineupFeatures(df):
+def allLineupFeatures(df, star_players):
     df = teamUsualStarters(df)
     df = oppTeamUsualStarters(df)
     df = team_starter_spacing(df)
     df = pace_expectation(df)
-    # df = process_star_players_data(regular_season_files, star_players_by_year)
+    df = process_star_players_data(df, star_players)
     return df
 
 def encode_teams(df):
