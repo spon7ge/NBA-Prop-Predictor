@@ -176,22 +176,35 @@ def getOppPlayerTeam(opp_team):
             res.append(0)
     return res
 
-def getPlayerVsDefense(player, data, Opp, stat_type='PTS'):
-    '''
-    DEF_CATEGORY,
-    PTS_VS_DEF_STRONG, PTS_VS_DEF_WEAK, PTS_VS_DEF_DIFF,
-    FGA_VS_DEF_STRONG, FGA_VS_DEF_WEAK, FGA_VS_DEF_DIFF,
-    FTA_VS_DEF_STRONG, FTA_VS_DEF_WEAK, FTA_VS_DEF_DIFF,
-    FG3A_VS_DEF_STRONG, FG3A_VS_DEF_WEAK, FG3A_VS_DEF_DIFF,
-    '''
+def get_opponent_defense_category(opp_team, data, current_date=None):
+    """
+    Determine if opponent is currently a strong (1) or weak (0) defense
+    """
+    if current_date:
+        recent_data = data[data['GAME_DATE'] <= current_date]
+    else:
+        recent_data = data
+    
+    opp_def_rating = recent_data[recent_data['OPP_ABBREVIATION'] == opp_team]['OPP_DEF_RATING'].mean()
+    all_team_ratings = recent_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING'].mean()
+    team_rank = (all_team_ratings <= opp_def_rating).sum()
+    return 1 if team_rank <= 10 else 0
+
+def getPlayerVsDefensePTS(player, data, Opp, stat_type=['PTS', 'FGA', 'FTA', 'FG3A']):
+    opp_def_category = get_opponent_defense_category(Opp, data)
     player_data = data[data['PLAYER_NAME'] == player].copy()
     res = []
-    def get_defense_averages(df, stat=stat_type):
-        strong = df[df['DEF_CATEGORY'] == 1][stat].mean()
-        weak = df[df['DEF_CATEGORY'] == 0][stat].mean()
-        diff = strong - weak
-        return [strong, weak, diff]
-    res.extend(get_defense_averages(player_data, Opp))
+    
+    for stat in stat_type:
+        strong_avg = player_data[player_data['DEF_CATEGORY'] == 1][stat_type].mean()
+        weak_avg = player_data[player_data['DEF_CATEGORY'] == 0][stat_type].mean()
+        diff = strong_avg - weak_avg
+        res.append(strong_avg)
+        res.append(weak_avg)
+        res.append(diff)
+    return res
+    
+    
     
 
 
