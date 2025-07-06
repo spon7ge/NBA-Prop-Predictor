@@ -287,69 +287,28 @@ def get_most_recent_starters(historical_data, team_id):
     ]
     
     return recent_starters
-def get_usual_starters(historical_data, team_id):
-    """
-    Get the 5 most frequent starters for a team based on historical data
-    """
-    # Get count of starts for each player on the team
-    player_starts = (
-        historical_data[
-            (historical_data['TEAM_ID'] == team_id) & 
-            (historical_data['STARTING'] == 1)
-        ]
-        .groupby('PLAYER_ID')
-        .size()
-        .reset_index(name='NUM_STARTS')
-    )
-    
-    # Get top 5 most frequent starters
-    usual_starters = (
-        player_starts
-        .nlargest(5, 'NUM_STARTS')['PLAYER_ID']
-        .values
-    )
-    
-    return set(usual_starters)
-
-def count_usual_starters_present(current_starters, usual_starters):
-    """
-    Count how many usual starters are in the current starting lineup
-    """
-    current_starters_set = set(current_starters)
-    return len(current_starters_set & usual_starters)
 
 def get_team_starter_features(historical_data, team_id):
     """
-    Calculate all starter features using most recent game's starters
+    Calculate starter features using most recent game's starters, focusing only on statistical averages
     """
-    # Get usual starters (based on all historical data)
-    usual_starters = get_usual_starters(historical_data, team_id)
-    
     # Get starters from most recent game
     current_starters_df = get_most_recent_starters(historical_data, team_id)
     
-    # Calculate number of usual starters present
-    current_starter_ids = current_starters_df['PLAYER_ID'].values
-    num_usual_starters = count_usual_starters_present(current_starter_ids, usual_starters)
-    
-    # Calculate starter pace
-    team_starter_pace = current_starters_df['PACE'].mean()
-    
-    # Calculate all starter features
+    # Calculate all starter averages
     starter_features = {
         'TEAM_STARTER_OFF_RATING_AVG': current_starters_df['OFF_RATING'].mean(),
         'TEAM_STARTER_DEF_RATING_AVG': current_starters_df['DEF_RATING'].mean(),
         'TEAM_STARTER_USG_PCT_AVG': current_starters_df['USG_PCT'].mean(),
         'TEAM_STARTER_SPACING_METRIC': current_starters_df['FG3_PCT'].mean(),
-        'TEAM_STARTER_PACE': team_starter_pace,
-        'NUM_USUAL_STARTERS_PRESENT': num_usual_starters
+        'TEAM_STARTER_PACE': current_starters_df['PACE'].mean()
     }
     
-    return starter_features, team_starter_pace  # Return pace separately for PACE_EXPECTATION calculation
+    return starter_features, starter_features['TEAM_STARTER_PACE']  # Return pace separately for PACE_EXPECTATION
 
 def get_all_starter_features(historical_data, home_team_id, away_team_id):
     """
-    Get starter features for both teams using most recent starters, including PACE_EXPECTATION
+    Get starter features for both teams, including PACE_EXPECTATION
     """
     home_features, home_pace = get_team_starter_features(historical_data, home_team_id)
     away_features, away_pace = get_team_starter_features(historical_data, away_team_id)
@@ -380,8 +339,6 @@ def getPlayoffFeatures(player, data, IS_PLAYOFF=0):
         res.append(series)
         res.append(series_game)
     return res
-
-
 
 
 #--------------------------------------------------------------------------------------------------------------------------------

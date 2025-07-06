@@ -606,7 +606,174 @@ def allLineupFeatures(df, star_players):
     df = pace_expectation(df)
     df = process_star_players_data(df, star_players)
     return df
+#-----------------------------------------------------------------------------------------------------------
+'''
+Player Splits with star and without star
+'''
+def analyzeTeammateSplitsPTS(player_data, game_data, min_minutes=10):
+    """
+    Analyze player's performance splits based on presence of star teammates
+    and add useful features for modeling.
+    """
+    # Filter for games with minimum minutes
+    player_data = player_data[player_data['MIN'] >= min_minutes].copy()
+    
+    # Precompute starters for each team-game
+    game_starters = (
+        game_data[game_data['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg(PLAYER_NAMES=('PLAYER_NAME', list))
+        .reset_index()
+    )
+    
+    def get_star_info(row):
+        game_id = row['GAME_ID']
+        team_id = row['TEAM_ID']
+        player_name = row['PLAYER_NAME']
+        
+        # Lookup starters for this game/team
+        starters_row = game_starters[
+            (game_starters['GAME_ID'] == game_id) &
+            (game_starters['TEAM_ID'] == team_id)
+        ]
+        starters = starters_row.iloc[0]['PLAYER_NAMES'] if not starters_row.empty else []
+        
+        # Find which starters were stars
+        starters_info = game_data[
+            (game_data['GAME_ID'] == game_id) &
+            (game_data['TEAM_ID'] == team_id) &
+            (game_data['PLAYER_NAME'].isin(starters))
+        ]
+        
+        star_teammates = starters_info[
+            (starters_info['IS_STAR'] == 1) &
+            (starters_info['PLAYER_NAME'] != player_name)
+        ]['PLAYER_NAME'].tolist()
+        
+        return {
+            'num_star_teammates': len(star_teammates),
+            'star_names': star_teammates
+        }
+    
+    # Compute star teammate info per row
+    star_info = player_data.apply(get_star_info, axis=1)
+    player_data['NUM_STAR_TEAMMATES'] = star_info.apply(lambda x: x['num_star_teammates'])
+    player_data['HAS_STAR_TEAMMATE'] = (player_data['NUM_STAR_TEAMMATES'] > 0).astype(int)
+    
+    # Calculate per-36 stats
+    player_data['PTS_PER_36'] = player_data['PTS'] * (36 / player_data['MIN'])
+    player_data['FGA_PER_36'] = player_data['FGA'] * (36 / player_data['MIN'])
+    
+    # Create splits for aggregate stats
+    with_star = player_data[player_data['HAS_STAR_TEAMMATE'] == 1]
+    without_star = player_data[player_data['HAS_STAR_TEAMMATE'] == 0]
+    
+    with_star_pts36 = round(with_star['PTS_PER_36'].mean(), 2) if not with_star.empty else 0
+    without_star_pts36 = round(without_star['PTS_PER_36'].mean(), 2) if not without_star.empty else 0
+    
+    # Add modeling features based on aggregate splits
+    player_data['AVG_PTS_PER_36_WITH_STAR'] = with_star_pts36
+    player_data['AVG_PTS_PER_36_WITHOUT_STAR'] = without_star_pts36
+    
+    # Optionally add USG_PCT averages too
+    with_star_usg = round(with_star['USG_PCT'].mean(), 2) if not with_star.empty else 0
+    without_star_usg = round(without_star['USG_PCT'].mean(), 2) if not without_star.empty else 0
+    
+    player_data['AVG_USG_PCT_WITH_STAR'] = with_star_usg
+    player_data['AVG_USG_PCT_WITHOUT_STAR'] = without_star_usg
+    return player_data
 
+def analyzeTeammateSplitsWhenAnyStarSitsPTS(player_data, game_data, min_minutes=10):
+    """
+    For the player's star teammates (IS_STAR=1), calculate historical averages
+    (PTS, USG_PCT, MIN) in games where ANY star teammate did not start.
+    """
+    # Filter for games with sufficient minutes
+    player_data = player_data[player_data['MIN'] >= min_minutes].copy()
+
+    # Precompute starters per team-game
+    game_starters = (
+        game_data[game_data['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .agg(PLAYER_NAMES=('PLAYER_NAME', list))
+        .reset_index()
+    )
+
+    # Identify unique star teammates on the same team
+    star_teammates = (
+        game_data[
+            (game_data['IS_STAR'] == 1) &
+            (game_data['TEAM_ID'].isin(player_data['TEAM_ID'].unique())) &
+            (game_data['PLAYER_NAME'] != player_data['PLAYER_NAME'].iloc[0])
+        ]['PLAYER_NAME'].unique().tolist()
+    )
+
+    games_without_any_star_idx = []
+
+    for idx, row in player_data.iterrows():
+        game_id, team_id = row['GAME_ID'], row['TEAM_ID']
+
+        # Get starters for this game/team
+        starters_row = game_starters[
+            (game_starters['GAME_ID'] == game_id) &
+            (game_starters['TEAM_ID'] == team_id)
+        ]
+        starters = starters_row.iloc[0]['PLAYER_NAMES'] if not starters_row.empty else []
+
+        # If ANY star teammate is NOT among the starters → consider this game
+        if any(star not in starters for star in star_teammates):
+            games_without_any_star_idx.append(idx)
+
+    # Compute historical averages across games where any star was absent
+    player_games_without_star = player_data.loc[games_without_any_star_idx]
+
+    if not player_games_without_star.empty:
+        avg_pts = round(player_games_without_star['PTS'].mean(), 2)
+        avg_usg = round(player_games_without_star['USG_PCT'].mean(), 2)
+        avg_min = round(player_games_without_star['MIN'].mean(), 2)
+    else:
+        avg_pts = avg_usg = avg_min = 0
+
+    # Add generic "star out" features to every row
+    player_data['AVG_PTS_WHEN_STAR_OUT'] = avg_pts
+    player_data['AVG_USG_PCT_WHEN_STAR_OUT'] = avg_usg
+    player_data['AVG_MIN_WHEN_STAR_OUT'] = avg_min
+
+    # Also compute HAS_STAR_TEAMMATE for each game
+    def has_star(row):
+        game_id, team_id = row['GAME_ID'], row['TEAM_ID']
+        player_name = row['PLAYER_NAME']
+
+        # Lookup starters
+        starters_row = game_starters[
+            (game_starters['GAME_ID'] == game_id) &
+            (game_starters['TEAM_ID'] == team_id)
+        ]
+        starters = starters_row.iloc[0]['PLAYER_NAMES'] if not starters_row.empty else []
+
+        # Among starters, check if any IS_STAR=1 (excluding the player)
+        starters_info = game_data[
+            (game_data['GAME_ID'] == game_id) &
+            (game_data['TEAM_ID'] == team_id) &
+            (game_data['PLAYER_NAME'].isin(starters))
+        ]
+        star_teammates = starters_info[
+            (starters_info['IS_STAR'] == 1) &
+            (starters_info['PLAYER_NAME'] != player_name)
+        ]
+        return int(not star_teammates.empty)
+
+    player_data['HAS_STAR_TEAMMATE'] = player_data.apply(has_star, axis=1)
+
+    return player_data
+
+# loop through all players and add features
+# all_players = []
+# for player_name in data['PLAYER_NAME'].unique():
+#     player_games = data[data['PLAYER_NAME'] == player_name]
+#     player_features = analyzeTeammateSplitsPTS(player_games, data, min_minutes=10)
+#     all_players.append(player_features)
+#-----------------------------------------------------------------------------------------------------------
 def encode_teams(df):
     # One-hot encode player team and opponent team
     df_teams = pd.get_dummies(df['TEAM_ABBREVIATION'], prefix='TEAM_').astype(int)
@@ -614,3 +781,27 @@ def encode_teams(df):
     df_encoded = pd.concat([df, df_teams, df_opps], axis=1)
     return df_encoded
 
+def add_game_pace_adjustment(df):
+    df = df.copy()
+    # Get team-level paces first
+    team_paces = df.groupby('TEAM_ID')['TEAM_PACE'].mean()
+    opp_paces = df.groupby('OPP_TEAM_ID')['OPP_PACE'].mean()
+    
+    # Calculate league average pace from team averages
+    league_pace = team_paces.mean()
+    
+    # Calculate opponent pace factor (how much faster/slower than league average)
+    opp_pace_factors = opp_paces / league_pace
+    
+    # Calculate game pace adjustment and merge back
+    pace_adjustments = round((league_pace * opp_pace_factors), 2).reset_index()
+    pace_adjustments.columns = ['OPP_TEAM_ID', 'OPP_GAME_PACE_ADJUSTMENT']
+    df = df.merge(pace_adjustments, on='OPP_TEAM_ID', how='left')
+    
+    return df
+
+def playerUsageAndOppurtunity(data):
+    data['MIN_X_USG'] = data['MIN'] * data['USG_PCT']
+    data['USG_X_DRTG'] = data['USG_PCT'] * data['OPP_DEF_RATING']
+    data['TEAM_PACE_X_MIN'] = data['TEAM_PACE'] * data['MIN']/100
+    return data

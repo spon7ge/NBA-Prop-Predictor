@@ -7,21 +7,28 @@ import os
 import shap
 import pandas as pd
 
-def train_xgb_model(X, y,stat_line='PTS'):
-    #sort by date to give more weight to recent games
-    weights = np.linspace(1,3,num=len(X))**2
+def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2):
+    n_total = len(X)
+    split_idx = int(n_total * (1 - val_fraction))
+    
+    X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
+    y_train, y_test = y.iloc[:split_idx], y.iloc[split_idx:]
+
+    # Time-based weights: more recent training games get higher weight
+    train_weights = np.linspace(1, 3, num=len(X_train)) ** 2
+    test_weights = np.linspace(1, 3, num=len(X_test)) ** 2
 
     param_grid = {
-        'learning_rate': [0.01, 0.02, 0.05],       # Lower is better for stability
-        'max_depth': [3, 4, 5],                    # Avoid overfitting on training stats
-        'n_estimators': [200, 300, 500],           # More trees with lower learning rate
-        'subsample': [0.6, 0.7, 0.8],              # Add randomness
-        'colsample_bytree': [0.6, 0.7, 0.8],       # Avoid dependency on specific features
-        'gamma': [0.1, 0.2, 0.5],                  # Avoid unnecessary splits
-        'min_child_weight': [3, 5, 10],            # Avoid learning from outliers
-        'reg_alpha': [0.1, 0.5, 1],                # L1 – sparsity helps with irrelevant stats
-        'reg_lambda': [3, 5, 10]                   # L2 – strong penalty helps generalize
-}
+        'learning_rate': [0.01, 0.02, 0.05],
+        'max_depth': [3, 4, 5],
+        'n_estimators': [200, 300, 500],
+        'subsample': [0.6, 0.7, 0.8],
+        'colsample_bytree': [0.6, 0.7, 0.8],
+        'gamma': [0.1, 0.2, 0.5],
+        'min_child_weight': [3, 5, 10],
+        'reg_alpha': [0.1, 0.5, 1],
+        'reg_lambda': [3, 5, 10]
+    }
 
     model = XGBRegressor(objective='reg:squarederror', random_state=42)
 
@@ -36,11 +43,11 @@ def train_xgb_model(X, y,stat_line='PTS'):
         random_state=42
     )
 
-    X_train, X_test, y_train, y_test, w_train, w_test = train_test_split(X, y, weights, test_size=0.2, random_state=42)
-    search.fit(X_train, y_train, sample_weight=w_train)
+    search.fit(X_train, y_train, sample_weight=train_weights)
 
     best_model = search.best_estimator_
     pred = best_model.predict(X_test)
+
     print(f"\nModel Performance Metrics for {stat_line}:")
     print(f"R2 Score: {r2_score(y_test, pred):.4f}")
     print(f"MAE: {mean_absolute_error(y_test, pred):.4f}")
@@ -49,6 +56,8 @@ def train_xgb_model(X, y,stat_line='PTS'):
 
     saveXGBModel(best_model, stat_line)
     return best_model
+
+
 
 def saveXGBModel(model, stat_line):
     models_dir = 'Models'
