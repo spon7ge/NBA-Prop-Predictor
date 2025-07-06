@@ -190,26 +190,25 @@ def get_opponent_defense_category(opp_team, data, current_date=None):
     team_rank = (all_team_ratings <= opp_def_rating).sum()
     return 1 if team_rank <= 10 else 0
 
-def getPlayerVsDefensePTS(player, data, Opp, stat_type=['PTS', 'FGA', 'FTA', 'FG3A']):
+def getPlayerVsDefense(player, data, Opp, stat_type='PTS'):
+    metrics = {
+        'PTS': ['PTS', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TOV'],
+        'AST': ['AST', 'AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'TOV'],
+        'REB': ['REB', 'OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE', 'TOV']
+    }
     opp_def_category = get_opponent_defense_category(Opp, data)
     player_data = data[data['PLAYER_NAME'] == player].copy()
     res = []
     
-    for stat in stat_type:
-        strong_avg = player_data[player_data['DEF_CATEGORY'] == 1][stat_type].mean()
-        weak_avg = player_data[player_data['DEF_CATEGORY'] == 0][stat_type].mean()
+    for stat in metrics[stat_type]:
+        strong_avg = player_data[player_data['DEF_CATEGORY'] == 1][stat].mean()
+        weak_avg = player_data[player_data['DEF_CATEGORY'] == 0][stat].mean()
         diff = strong_avg - weak_avg
         res.append(strong_avg)
         res.append(weak_avg)
         res.append(diff)
     return res
     
-    
-    
-
-
-
-
 def getPlayerSpecificFeatures(player, data, games, stat_type='PTS'):
     currStars = ['Shai Gilgeous-Alexander', 'Nikola Jokić', 'Giannis Antetokounmpo', 'Jayson Tatum', 'Donovan Mitchell',
         'Anthony Edwards', 'LeBron James', 'Stephen Curry', 'Evan Mobley', 'Jalen Brunson',
@@ -262,16 +261,125 @@ def getPlayerSpecificFeatures(player, data, games, stat_type='PTS'):
         res.append(1)
     else:
         res.append(0)
-    res.append(player_data['MISSED_LAST'].iloc[-1])
     
     # Star features
     if player in currStars:
         res.append(1)
     else:
-        res.append(0)
+        res.append(0) 
     return res
 
+def get_most_recent_starters(historical_data, team_id):
+    """
+    Get starters from the team's most recent game
+    """
+    # Get team's data and sort by date
+    team_data = historical_data[historical_data['TEAM_ID'] == team_id].copy()
+    team_data = team_data.sort_values('GAME_DATE', ascending=False)
+    
+    # Get most recent game date
+    most_recent_date = team_data['GAME_DATE'].iloc[0]
+    
+    # Get starters from that game
+    recent_starters = team_data[
+        (team_data['GAME_DATE'] == most_recent_date) & 
+        (team_data['STARTING'] == 1)
+    ]
+    
+    return recent_starters
+def get_usual_starters(historical_data, team_id):
+    """
+    Get the 5 most frequent starters for a team based on historical data
+    """
+    # Get count of starts for each player on the team
+    player_starts = (
+        historical_data[
+            (historical_data['TEAM_ID'] == team_id) & 
+            (historical_data['STARTING'] == 1)
+        ]
+        .groupby('PLAYER_ID')
+        .size()
+        .reset_index(name='NUM_STARTS')
+    )
+    
+    # Get top 5 most frequent starters
+    usual_starters = (
+        player_starts
+        .nlargest(5, 'NUM_STARTS')['PLAYER_ID']
+        .values
+    )
+    
+    return set(usual_starters)
 
+def count_usual_starters_present(current_starters, usual_starters):
+    """
+    Count how many usual starters are in the current starting lineup
+    """
+    current_starters_set = set(current_starters)
+    return len(current_starters_set & usual_starters)
+
+def get_team_starter_features(historical_data, team_id):
+    """
+    Calculate all starter features using most recent game's starters
+    """
+    # Get usual starters (based on all historical data)
+    usual_starters = get_usual_starters(historical_data, team_id)
+    
+    # Get starters from most recent game
+    current_starters_df = get_most_recent_starters(historical_data, team_id)
+    
+    # Calculate number of usual starters present
+    current_starter_ids = current_starters_df['PLAYER_ID'].values
+    num_usual_starters = count_usual_starters_present(current_starter_ids, usual_starters)
+    
+    # Calculate starter pace
+    team_starter_pace = current_starters_df['PACE'].mean()
+    
+    # Calculate all starter features
+    starter_features = {
+        'TEAM_STARTER_OFF_RATING_AVG': current_starters_df['OFF_RATING'].mean(),
+        'TEAM_STARTER_DEF_RATING_AVG': current_starters_df['DEF_RATING'].mean(),
+        'TEAM_STARTER_USG_PCT_AVG': current_starters_df['USG_PCT'].mean(),
+        'TEAM_STARTER_SPACING_METRIC': current_starters_df['FG3_PCT'].mean(),
+        'TEAM_STARTER_PACE': team_starter_pace,
+        'NUM_USUAL_STARTERS_PRESENT': num_usual_starters
+    }
+    
+    return starter_features, team_starter_pace  # Return pace separately for PACE_EXPECTATION calculation
+
+def get_all_starter_features(historical_data, home_team_id, away_team_id):
+    """
+    Get starter features for both teams using most recent starters, including PACE_EXPECTATION
+    """
+    home_features, home_pace = get_team_starter_features(historical_data, home_team_id)
+    away_features, away_pace = get_team_starter_features(historical_data, away_team_id)
+    
+    # Calculate PACE_EXPECTATION
+    pace_expectation = (home_pace + away_pace) / 2
+    
+    # Add PACE_EXPECTATION to both feature sets
+    home_features['PACE_EXPECTATION'] = pace_expectation
+    away_features['PACE_EXPECTATION'] = pace_expectation
+    
+    return home_features, away_features
+
+def getPlayoffFeatures(player, data, IS_PLAYOFF=0):
+    player_data = data[data['PLAYER_NAME'] == player].copy()
+    series = 0
+    series_game = 0
+    res = []
+    if IS_PLAYOFF == 0:
+        res.append(series)
+        res.append(series_game)
+    else:
+        series = player_data['SERIES'].iloc[-1]
+        series_game = player_data['GAME_IN_SERIES'].iloc[-1] + 1
+        if series_game > 7:
+            series += 1
+            series_game = 1
+        res.append(series)
+        res.append(series_game)
+    return res
 
 
 
@@ -281,7 +389,12 @@ def buildFeatureVector(player, opponent, data, games, is_playoff, stat_line='PTS
     features = (getPlayerAVG(player, data, stat_line) + 
                    getOppAVG(opponent, data) + 
                    getPlayerRollingAVG(player, data, stat_line) + 
-                   otherFeatures(player, data, games, is_playoff))
+                   getPlayerTeam(player, data) +
+                   getOppPlayerTeam(opponent) +
+                   getPlayerVsDefense(player, data, opponent, stat_line) +
+                   getPlayerSpecificFeatures(player, data, games) +
+                   get_all_starter_features(data, games) +
+                   getPlayoffFeatures(player, data, is_playoff))
     return features
 
 def make_prediction(player_name, bookmakers, opponent, model, data, games, is_playoff, stat_line='PTS'):
