@@ -1,0 +1,978 @@
+player,market,bookmaker,side,line,price,home_team,away_team,game_id,commence_time
+Anthony Edwards,player_assists,PrizePicks,Over,5.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_assists,PrizePicks,Under,5.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_assists,PrizePicks,Over,3.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_assists,PrizePicks,Under,3.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_assists,PrizePicks,Over,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_assists,PrizePicks,Under,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_assists,PrizePicks,Over,8.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_assists,PrizePicks,Under,8.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_assists,PrizePicks,Over,5.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_assists,PrizePicks,Under,5.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_assists,PrizePicks,Over,3.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_assists,PrizePicks,Under,3.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_points,PrizePicks,Over,0.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_points,PrizePicks,Over,26.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_points,PrizePicks,Under,26.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_points,PrizePicks,Over,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_points,PrizePicks,Under,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_points,PrizePicks,Over,18.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_points,PrizePicks,Under,18.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_points,PrizePicks,Over,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_points,PrizePicks,Under,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_points,PrizePicks,Over,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_points,PrizePicks,Under,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_points,PrizePicks,Over,15.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_points,PrizePicks,Under,15.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Mike Conley,player_points,PrizePicks,Over,10.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Mike Conley,player_points,PrizePicks,Under,10.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Austin Reaves,player_points,PrizePicks,Over,14.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Austin Reaves,player_points,PrizePicks,Under,14.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaden McDaniels,player_points,PrizePicks,Over,9.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaden McDaniels,player_points,PrizePicks,Under,9.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_points,PrizePicks,Over,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_points,PrizePicks,Under,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_points,PrizePicks,Over,5.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_points,PrizePicks,Under,5.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_points,PrizePicks,Over,11.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_points,PrizePicks,Under,11.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Naz Reid,player_points,PrizePicks,Over,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Naz Reid,player_points,PrizePicks,Under,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Dalton Knecht,player_points,PrizePicks,Over,6.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Dalton Knecht,player_points,PrizePicks,Under,6.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_rebounds,PrizePicks,Over,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_rebounds,PrizePicks,Under,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_rebounds,PrizePicks,Over,7.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_rebounds,PrizePicks,Under,7.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_rebounds,PrizePicks,Over,7.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_rebounds,PrizePicks,Under,7.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_rebounds,PrizePicks,Over,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_rebounds,PrizePicks,Under,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Austin Reaves,player_rebounds,PrizePicks,Over,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Austin Reaves,player_rebounds,PrizePicks,Under,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_rebounds,PrizePicks,Over,4.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_rebounds,PrizePicks,Under,4.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_rebounds,PrizePicks,Over,1.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_rebounds,PrizePicks,Under,1.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_assists,Underdog,Over,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_assists,Underdog,Under,4.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_points,Underdog,Over,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+LeBron James,player_points,Underdog,Under,24.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_points,Underdog,Over,27.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Edwards,player_points,Underdog,Under,27.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_points,Underdog,Over,25.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_points,Underdog,Under,25.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_points,Underdog,Over,18.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_points,Underdog,Under,18.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_points,Underdog,Over,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rudy Gobert,player_points,Underdog,Under,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_points,Underdog,Over,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Donte DiVincenzo,player_points,Underdog,Under,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_points,Underdog,Over,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Rui Hachimura,player_points,Underdog,Under,12.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_points,Underdog,Over,15.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+D'Angelo Russell,player_points,Underdog,Under,15.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaden McDaniels,player_points,Underdog,Over,9.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaden McDaniels,player_points,Underdog,Under,9.0,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Mike Conley,player_points,Underdog,Over,9.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Mike Conley,player_points,Underdog,Under,9.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Gabe Vincent,player_points,Underdog,Over,3.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Gabe Vincent,player_points,Underdog,Under,3.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Naz Reid,player_points,Underdog,Over,11.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Naz Reid,player_points,Underdog,Under,11.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_points,Underdog,Over,5.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Nickeil Alexander-Walker,player_points,Underdog,Under,5.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaxson Hayes,player_points,Underdog,Over,4.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Jaxson Hayes,player_points,Underdog,Under,4.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_rebounds,Underdog,Over,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Anthony Davis,player_rebounds,Underdog,Under,12.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_rebounds,Underdog,Over,7.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Julius Randle,player_rebounds,Underdog,Under,7.5,-137,Los Angeles Lakers,Minnesota Timberwolves,026ffb7b2ccf8a09dab9b24f33de27f7,2024-10-23T02:00:00Z
+Cade Cunningham,player_assists,Underdog,Over,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_assists,Underdog,Under,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_points,Underdog,Over,19.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_points,Underdog,Under,19.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_points,Underdog,Over,24.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_points,Underdog,Under,24.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_points,Underdog,Over,22.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_points,Underdog,Under,22.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_points,Underdog,Over,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_points,Underdog,Under,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_points,Underdog,Over,16.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_points,Underdog,Under,16.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Andrew Nembhard,player_points,Underdog,Over,11.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Andrew Nembhard,player_points,Underdog,Under,11.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_points,Underdog,Over,15.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_points,Underdog,Under,15.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_points,Underdog,Over,14.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_points,Underdog,Under,14.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_points,Underdog,Over,10.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_points,Underdog,Under,10.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Bennedict Mathurin,player_points,Underdog,Over,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Bennedict Mathurin,player_points,Underdog,Under,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+T.J. McConnell,player_points,Underdog,Over,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+T.J. McConnell,player_points,Underdog,Under,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Obi Toppin,player_points,Underdog,Over,8.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Obi Toppin,player_points,Underdog,Under,8.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_rebounds,Underdog,Over,4.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_rebounds,Underdog,Under,4.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_rebounds,Underdog,Over,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_rebounds,Underdog,Under,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_rebounds,Underdog,Over,7.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_rebounds,Underdog,Under,7.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_rebounds,Underdog,Over,3.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_rebounds,Underdog,Under,3.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_rebounds,Underdog,Over,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_rebounds,Underdog,Under,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Obi Toppin,player_rebounds,Underdog,Over,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Obi Toppin,player_rebounds,Underdog,Under,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_assists,PrizePicks,Over,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_assists,PrizePicks,Under,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_assists,PrizePicks,Over,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_assists,PrizePicks,Under,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_assists,PrizePicks,Over,9.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_assists,PrizePicks,Under,9.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_points,PrizePicks,Over,24.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_points,PrizePicks,Under,24.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_points,PrizePicks,Over,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_points,PrizePicks,Under,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_points,PrizePicks,Over,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jaden Ivey,player_points,PrizePicks,Under,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Andrew Nembhard,player_points,PrizePicks,Over,11.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Andrew Nembhard,player_points,PrizePicks,Under,11.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_points,PrizePicks,Over,13.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_points,PrizePicks,Under,13.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_points,PrizePicks,Over,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_points,PrizePicks,Under,16.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_points,PrizePicks,Over,15.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_points,PrizePicks,Under,15.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_points,PrizePicks,Over,22.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_points,PrizePicks,Under,22.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+T.J. McConnell,player_points,PrizePicks,Over,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+T.J. McConnell,player_points,PrizePicks,Under,10.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_points,PrizePicks,Over,19.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_points,PrizePicks,Under,19.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Bennedict Mathurin,player_points,PrizePicks,Over,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Bennedict Mathurin,player_points,PrizePicks,Under,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_rebounds,PrizePicks,Over,4.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Cade Cunningham,player_rebounds,PrizePicks,Under,4.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_rebounds,PrizePicks,Over,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Aaron Nesmith,player_rebounds,PrizePicks,Under,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_rebounds,PrizePicks,Over,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Jalen Duren,player_rebounds,PrizePicks,Under,11.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_rebounds,PrizePicks,Over,7.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Myles Turner,player_rebounds,PrizePicks,Under,7.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_rebounds,PrizePicks,Over,6.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tobias Harris,player_rebounds,PrizePicks,Under,6.5,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_rebounds,PrizePicks,Over,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Pascal Siakam,player_rebounds,PrizePicks,Under,8.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_rebounds,PrizePicks,Over,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Tyrese Haliburton,player_rebounds,PrizePicks,Under,4.0,-137,Detroit Pistons,Indiana Pacers,bcd8b3510e7a9d55ccbd7ce761761e11,2024-10-23T23:00:00Z
+Trae Young,player_points,Underdog,Over,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_points,Underdog,Under,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cam Thomas,player_points,Underdog,Over,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cam Thomas,player_points,Underdog,Under,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_points,Underdog,Over,12.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_points,Underdog,Under,12.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Bogdan Bogdanovic,player_points,Underdog,Over,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Bogdan Bogdanovic,player_points,Underdog,Under,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_points,Underdog,Over,17.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_points,Underdog,Under,17.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_points,Underdog,Over,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_points,Underdog,Under,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_points,Underdog,Over,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_points,Underdog,Under,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_points,Underdog,Over,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_points,Underdog,Under,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cameron Johnson,player_points,Underdog,Over,14.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cameron Johnson,player_points,Underdog,Under,14.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_points,Underdog,Over,16.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_points,Underdog,Under,16.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Onyeka Okongwu,player_points,Underdog,Over,8.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Onyeka Okongwu,player_points,Underdog,Under,8.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_points,Underdog,Over,7.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_points,Underdog,Under,7.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Wilson,player_points,Underdog,Over,6.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Wilson,player_points,Underdog,Under,6.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Ziaire Williams,player_points,Underdog,Over,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Ziaire Williams,player_points,Underdog,Under,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_rebounds,Underdog,Over,2.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_rebounds,Underdog,Under,2.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_rebounds,Underdog,Over,9.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_rebounds,Underdog,Under,9.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_rebounds,Underdog,Over,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_rebounds,Underdog,Under,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_rebounds,Underdog,Over,10.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_rebounds,Underdog,Under,10.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_rebounds,Underdog,Over,3.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_rebounds,Underdog,Under,3.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Onyeka Okongwu,player_rebounds,Underdog,Over,6.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Onyeka Okongwu,player_rebounds,Underdog,Under,6.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_rebounds,Underdog,Over,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_rebounds,Underdog,Under,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Wilson,player_rebounds,Underdog,Over,3.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Wilson,player_rebounds,Underdog,Under,3.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Ziaire Williams,player_rebounds,Underdog,Over,3.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Ziaire Williams,player_rebounds,Underdog,Under,3.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_assists,PrizePicks,Over,1.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_assists,PrizePicks,Under,1.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_assists,PrizePicks,Over,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_assists,PrizePicks,Under,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_assists,PrizePicks,Over,1.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_assists,PrizePicks,Under,1.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_assists,PrizePicks,Over,10.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_assists,PrizePicks,Under,10.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Bogdan Bogdanovic,player_points,PrizePicks,Over,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Bogdan Bogdanovic,player_points,PrizePicks,Under,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cameron Johnson,player_points,PrizePicks,Over,14.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cameron Johnson,player_points,PrizePicks,Under,14.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_points,PrizePicks,Over,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_points,PrizePicks,Under,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cam Thomas,player_points,PrizePicks,Over,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Cam Thomas,player_points,PrizePicks,Under,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_points,PrizePicks,Over,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_points,PrizePicks,Under,15.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_points,PrizePicks,Over,16.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dennis Schroder,player_points,PrizePicks,Under,16.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_points,PrizePicks,Over,17.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_points,PrizePicks,Under,17.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_points,PrizePicks,Over,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_points,PrizePicks,Under,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_points,PrizePicks,Over,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_points,PrizePicks,Under,24.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_points,PrizePicks,Over,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_points,PrizePicks,Under,11.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_points,PrizePicks,Over,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_points,PrizePicks,Under,7.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_rebounds,PrizePicks,Over,10.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Clint Capela,player_rebounds,PrizePicks,Under,10.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_rebounds,PrizePicks,Over,3.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+De'Andre Hunter,player_rebounds,PrizePicks,Under,3.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_rebounds,PrizePicks,Over,8.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Jalen Johnson,player_rebounds,PrizePicks,Under,8.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_rebounds,PrizePicks,Over,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dorian Finney-Smith,player_rebounds,PrizePicks,Under,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_rebounds,PrizePicks,Over,2.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Trae Young,player_rebounds,PrizePicks,Under,2.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_rebounds,PrizePicks,Over,9.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Nicolas Claxton,player_rebounds,PrizePicks,Under,9.5,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_rebounds,PrizePicks,Over,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Dyson Daniels,player_rebounds,PrizePicks,Under,4.0,-137,Atlanta Hawks,Brooklyn Nets,3f1e025363323de9c99f3d7ec0eb26b7,2024-10-23T23:30:00Z
+Scottie Barnes,player_points,Underdog,Over,21.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_points,Underdog,Under,21.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_points,Underdog,Over,25.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_points,Underdog,Under,25.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_points,Underdog,Over,18.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_points,Underdog,Under,18.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_points,Underdog,Over,22.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_points,Underdog,Under,22.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_points,Underdog,Over,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_points,Underdog,Under,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_points,Underdog,Over,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_points,Underdog,Under,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_points,Underdog,Over,14.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_points,Underdog,Under,14.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_points,Underdog,Over,11.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_points,Underdog,Under,11.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Davion Mitchell,player_points,Underdog,Over,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Davion Mitchell,player_points,Underdog,Under,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Ochai Agbaji,player_points,Underdog,Over,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Ochai Agbaji,player_points,Underdog,Under,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Chris Boucher,player_points,Underdog,Over,6.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Chris Boucher,player_points,Underdog,Under,6.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_rebounds,Underdog,Over,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_rebounds,Underdog,Under,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_rebounds,Underdog,Over,4.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_rebounds,Underdog,Under,4.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_rebounds,Underdog,Over,9.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_rebounds,Underdog,Under,9.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_rebounds,Underdog,Over,10.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_rebounds,Underdog,Under,10.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_rebounds,Underdog,Over,3.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_rebounds,Underdog,Under,3.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_rebounds,Underdog,Over,8.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_rebounds,Underdog,Under,8.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Davion Mitchell,player_rebounds,Underdog,Over,2.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Davion Mitchell,player_rebounds,Underdog,Under,2.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Ochai Agbaji,player_rebounds,Underdog,Over,4.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Ochai Agbaji,player_rebounds,Underdog,Under,4.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_assists,PrizePicks,Over,7.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_assists,PrizePicks,Under,7.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_assists,PrizePicks,Over,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_assists,PrizePicks,Under,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_assists,PrizePicks,Over,5.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_assists,PrizePicks,Under,5.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_assists,PrizePicks,Over,6.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_assists,PrizePicks,Under,6.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_points,PrizePicks,Over,13.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_points,PrizePicks,Under,13.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_points,PrizePicks,Over,18.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Darius Garland,player_points,PrizePicks,Under,18.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_points,PrizePicks,Over,21.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Immanuel Quickley,player_points,PrizePicks,Under,21.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_points,PrizePicks,Over,25.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_points,PrizePicks,Under,25.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_points,PrizePicks,Over,11.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_points,PrizePicks,Under,11.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_points,PrizePicks,Over,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_points,PrizePicks,Under,16.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_points,PrizePicks,Over,22.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_points,PrizePicks,Under,22.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_points,PrizePicks,Over,15.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_points,PrizePicks,Under,15.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_rebounds,PrizePicks,Over,3.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Gradey Dick,player_rebounds,PrizePicks,Under,3.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_rebounds,PrizePicks,Over,4.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Donovan Mitchell,player_rebounds,PrizePicks,Under,4.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_rebounds,PrizePicks,Over,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jakob Poeltl,player_rebounds,PrizePicks,Under,8.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_rebounds,PrizePicks,Over,9.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Evan Mobley,player_rebounds,PrizePicks,Under,9.0,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_rebounds,PrizePicks,Over,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Scottie Barnes,player_rebounds,PrizePicks,Under,7.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_rebounds,PrizePicks,Over,10.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Jarrett Allen,player_rebounds,PrizePicks,Under,10.5,-137,Toronto Raptors,Cleveland Cavaliers,520febbdcfd2e1f8c002f0e5969ddd49,2024-10-23T23:30:00Z
+Paolo Banchero,player_assists,Underdog,Over,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_assists,Underdog,Under,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_assists,Underdog,Over,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_assists,Underdog,Under,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_assists,Underdog,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_assists,Underdog,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_assists,Underdog,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_assists,Underdog,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_points,Underdog,Over,22.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_points,Underdog,Under,22.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_points,Underdog,Over,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_points,Underdog,Under,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_points,Underdog,Over,16.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_points,Underdog,Under,16.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_points,Underdog,Over,18.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_points,Underdog,Under,18.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_points,Underdog,Over,13.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_points,Underdog,Under,13.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_points,Underdog,Over,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_points,Underdog,Under,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Terry Rozier,player_points,Underdog,Over,15.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Terry Rozier,player_points,Underdog,Under,15.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_points,Underdog,Over,10.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_points,Underdog,Under,10.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jaime Jaquez Jr,player_points,Underdog,Over,7.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jaime Jaquez Jr,player_points,Underdog,Under,7.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Kentavious Caldwell-Pope,player_points,Underdog,Over,8.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Kentavious Caldwell-Pope,player_points,Underdog,Under,8.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_points,Underdog,Over,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_points,Underdog,Under,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Gary Harris,player_points,Underdog,Over,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Gary Harris,player_points,Underdog,Under,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Duncan Robinson,player_points,Underdog,Over,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Duncan Robinson,player_points,Underdog,Under,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_rebounds,Underdog,Over,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_rebounds,Underdog,Under,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_rebounds,Underdog,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_rebounds,Underdog,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_rebounds,Underdog,Over,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_rebounds,Underdog,Under,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jaime Jaquez Jr,player_rebounds,Underdog,Over,2.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jaime Jaquez Jr,player_rebounds,Underdog,Under,2.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_rebounds,Underdog,Over,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_rebounds,Underdog,Under,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_assists,PrizePicks,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_assists,PrizePicks,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_assists,PrizePicks,Over,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_assists,PrizePicks,Under,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_assists,PrizePicks,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_assists,PrizePicks,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_assists,PrizePicks,Over,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_assists,PrizePicks,Under,6.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_points,PrizePicks,Over,16.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_points,PrizePicks,Under,16.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_points,PrizePicks,Over,19.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_points,PrizePicks,Under,19.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_points,PrizePicks,Over,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_points,PrizePicks,Under,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_points,PrizePicks,Over,12.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_points,PrizePicks,Under,12.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_points,PrizePicks,Over,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_points,PrizePicks,Under,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Kentavious Caldwell-Pope,player_points,PrizePicks,Over,8.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Kentavious Caldwell-Pope,player_points,PrizePicks,Under,8.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Terry Rozier,player_points,PrizePicks,Over,15.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Terry Rozier,player_points,PrizePicks,Under,15.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_points,PrizePicks,Over,22.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_points,PrizePicks,Under,22.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_points,PrizePicks,Over,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_points,PrizePicks,Under,19.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_points,PrizePicks,Over,10.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_points,PrizePicks,Under,10.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_rebounds,PrizePicks,Over,10.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Bam Adebayo,player_rebounds,PrizePicks,Under,10.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_rebounds,PrizePicks,Over,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Franz Wagner,player_rebounds,PrizePicks,Under,5.0,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_rebounds,PrizePicks,Over,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jimmy Butler,player_rebounds,PrizePicks,Under,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_rebounds,PrizePicks,Over,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Jalen Suggs,player_rebounds,PrizePicks,Under,3.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_rebounds,PrizePicks,Over,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Nikola Jovic,player_rebounds,PrizePicks,Under,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_rebounds,PrizePicks,Over,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Paolo Banchero,player_rebounds,PrizePicks,Under,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_rebounds,PrizePicks,Over,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Tyler Herro,player_rebounds,PrizePicks,Under,4.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_rebounds,PrizePicks,Over,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Wendell Carter Jr,player_rebounds,PrizePicks,Under,7.5,-137,Miami Heat,Orlando Magic,8e1c55c639dc5d22d84decb3f27c7b66,2024-10-23T23:30:00Z
+Alperen Sengun,player_assists,Underdog,Over,4.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_assists,Underdog,Under,4.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_assists,Underdog,Over,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_assists,Underdog,Under,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_points,Underdog,Over,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_points,Underdog,Under,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_points,Underdog,Over,23.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_points,Underdog,Under,23.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_points,Underdog,Over,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_points,Underdog,Under,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Brandon Miller,player_points,Underdog,Over,18.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Brandon Miller,player_points,Underdog,Under,18.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_points,Underdog,Over,19.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_points,Underdog,Under,19.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_points,Underdog,Over,16.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_points,Underdog,Under,16.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Dillon Brooks,player_points,Underdog,Over,11.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Dillon Brooks,player_points,Underdog,Under,11.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_points,Underdog,Over,13.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_points,Underdog,Under,13.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Nick Richards,player_points,Underdog,Over,8.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Nick Richards,player_points,Underdog,Under,8.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_rebounds,Underdog,Over,9.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_rebounds,Underdog,Under,9.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_rebounds,Underdog,Over,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_rebounds,Underdog,Under,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_rebounds,Underdog,Over,6.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_rebounds,Underdog,Under,6.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_rebounds,Underdog,Over,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_rebounds,Underdog,Under,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Nick Richards,player_rebounds,Underdog,Over,7.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Nick Richards,player_rebounds,Underdog,Under,7.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_assists,PrizePicks,Over,8.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_assists,PrizePicks,Under,8.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_assists,PrizePicks,Over,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_assists,PrizePicks,Under,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_assists,PrizePicks,Over,4.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_assists,PrizePicks,Under,4.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_points,PrizePicks,Over,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_points,PrizePicks,Under,20.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Brandon Miller,player_points,PrizePicks,Over,18.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Brandon Miller,player_points,PrizePicks,Under,18.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Dillon Brooks,player_points,PrizePicks,Over,11.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Dillon Brooks,player_points,PrizePicks,Under,11.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Josh Green,player_points,PrizePicks,Over,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Josh Green,player_points,PrizePicks,Under,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_points,PrizePicks,Over,16.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Fred VanVleet,player_points,PrizePicks,Under,16.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_points,PrizePicks,Over,23.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_points,PrizePicks,Under,23.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_points,PrizePicks,Over,13.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_points,PrizePicks,Under,13.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_points,PrizePicks,Over,19.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_points,PrizePicks,Under,19.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_points,PrizePicks,Over,21.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_points,PrizePicks,Under,21.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_rebounds,PrizePicks,Over,9.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Alperen Sengun,player_rebounds,PrizePicks,Under,9.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_rebounds,PrizePicks,Over,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+LaMelo Ball,player_rebounds,PrizePicks,Under,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_rebounds,PrizePicks,Over,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jabari Smith Jr,player_rebounds,PrizePicks,Under,7.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_rebounds,PrizePicks,Over,6.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Miles Bridges,player_rebounds,PrizePicks,Under,6.5,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_rebounds,PrizePicks,Over,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Jalen Green,player_rebounds,PrizePicks,Under,5.0,-137,Houston Rockets,Charlotte Hornets,3614297da4247a7aaef3dbd9463e644b,2024-10-24T00:00:00Z
+Zion Williamson,player_assists,Underdog,Over,4.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_assists,Underdog,Under,4.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_points,Underdog,Over,22.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_points,Underdog,Under,22.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_points,Underdog,Over,20.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_points,Underdog,Under,20.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_points,Underdog,Over,19.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_points,Underdog,Under,19.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_points,Underdog,Over,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_points,Underdog,Under,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_points,Underdog,Over,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_points,Underdog,Under,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_points,Underdog,Over,12.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_points,Underdog,Under,12.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_points,Underdog,Over,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_points,Underdog,Under,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Patrick Williams,player_points,Underdog,Over,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Patrick Williams,player_points,Underdog,Under,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Lonzo Ball,player_points,Underdog,Over,5.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Lonzo Ball,player_points,Underdog,Under,5.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Dejounte Murray,player_points,Underdog,Over,21.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Dejounte Murray,player_points,Underdog,Under,21.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Ayo Dosunmu,player_points,Underdog,Over,10.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Ayo Dosunmu,player_points,Underdog,Under,10.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_points,Underdog,Over,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_points,Underdog,Under,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_rebounds,Underdog,Over,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_rebounds,Underdog,Under,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_rebounds,Underdog,Over,5.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_rebounds,Underdog,Under,5.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_rebounds,Underdog,Over,10.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_rebounds,Underdog,Under,10.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_rebounds,Underdog,Over,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_rebounds,Underdog,Under,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_rebounds,Underdog,Over,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_rebounds,Underdog,Under,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_assists,PrizePicks,Over,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_assists,PrizePicks,Under,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_assists,PrizePicks,Over,6.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_assists,PrizePicks,Under,6.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_assists,PrizePicks,Over,4.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_assists,PrizePicks,Under,4.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_points,PrizePicks,Over,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Brandon Ingram,player_points,PrizePicks,Under,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_points,PrizePicks,Over,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Coby White,player_points,PrizePicks,Under,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_points,PrizePicks,Over,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+C.J. McCollum,player_points,PrizePicks,Under,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_points,PrizePicks,Over,12.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_points,PrizePicks,Under,12.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Dejounte Murray,player_points,PrizePicks,Over,21.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Dejounte Murray,player_points,PrizePicks,Under,21.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_points,PrizePicks,Over,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Nikola Vucevic,player_points,PrizePicks,Under,18.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_points,PrizePicks,Over,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Herb Jones,player_points,PrizePicks,Under,9.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_points,PrizePicks,Over,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_points,PrizePicks,Under,19.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_points,PrizePicks,Over,22.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zion Williamson,player_points,PrizePicks,Under,22.5,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_rebounds,PrizePicks,Over,6.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Josh Giddey,player_rebounds,PrizePicks,Under,6.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_rebounds,PrizePicks,Over,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Zach LaVine,player_rebounds,PrizePicks,Under,4.0,-137,New Orleans Pelicans,Chicago Bulls,ed3d298bba3be64b2ccdf364afa3c097,2024-10-24T00:00:00Z
+Ja Morant,player_assists,Underdog,Over,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_assists,Underdog,Under,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_assists,Underdog,Over,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_assists,Underdog,Under,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_points,Underdog,Over,25.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_points,Underdog,Under,25.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_points,Underdog,Over,23.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_points,Underdog,Under,23.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_points,Underdog,Over,22.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_points,Underdog,Under,22.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_points,Underdog,Over,14.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_points,Underdog,Under,14.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_points,Underdog,Over,10.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_points,Underdog,Under,10.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_points,Underdog,Over,15.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_points,Underdog,Under,15.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_points,Underdog,Over,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_points,Underdog,Under,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_points,Underdog,Over,13.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_points,Underdog,Under,13.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+John Collins,player_points,Underdog,Over,11.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+John Collins,player_points,Underdog,Under,11.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_points,Underdog,Over,19.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_points,Underdog,Under,19.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Santi Aldama,player_points,Underdog,Over,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Santi Aldama,player_points,Underdog,Under,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Brandon Clarke,player_points,Underdog,Over,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Brandon Clarke,player_points,Underdog,Under,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_points,Underdog,Over,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_points,Underdog,Under,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_rebounds,Underdog,Over,5.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_rebounds,Underdog,Under,5.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_rebounds,Underdog,Over,4.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_rebounds,Underdog,Under,4.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_rebounds,Underdog,Over,2.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_rebounds,Underdog,Under,2.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_rebounds,Underdog,Over,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_rebounds,Underdog,Under,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_rebounds,Underdog,Over,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_rebounds,Underdog,Under,8.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+John Collins,player_rebounds,Underdog,Over,6.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+John Collins,player_rebounds,Underdog,Under,6.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Santi Aldama,player_rebounds,Underdog,Over,6.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Santi Aldama,player_rebounds,Underdog,Under,6.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Brandon Clarke,player_rebounds,Underdog,Over,5.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Brandon Clarke,player_rebounds,Underdog,Under,5.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_rebounds,Underdog,Over,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_rebounds,Underdog,Under,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_assists,PrizePicks,Over,6.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_assists,PrizePicks,Under,6.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_assists,PrizePicks,Over,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_assists,PrizePicks,Under,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_assists,PrizePicks,Over,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_assists,PrizePicks,Under,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_assists,PrizePicks,Over,3.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_assists,PrizePicks,Under,3.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_points,PrizePicks,Over,19.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Collin Sexton,player_points,PrizePicks,Under,19.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_points,PrizePicks,Over,22.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_points,PrizePicks,Under,22.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_points,PrizePicks,Over,15.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Jordan Clarkson,player_points,PrizePicks,Under,15.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_points,PrizePicks,Over,25.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Ja Morant,player_points,PrizePicks,Under,25.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_points,PrizePicks,Over,14.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Keyonte George,player_points,PrizePicks,Under,14.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_points,PrizePicks,Over,12.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Marcus Smart,player_points,PrizePicks,Under,12.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_points,PrizePicks,Over,22.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_points,PrizePicks,Under,22.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_points,PrizePicks,Over,10.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_points,PrizePicks,Under,10.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_points,PrizePicks,Over,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_points,PrizePicks,Under,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_points,PrizePicks,Over,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Walker Kessler,player_points,PrizePicks,Under,7.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_rebounds,PrizePicks,Over,4.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Desmond Bane,player_rebounds,PrizePicks,Under,4.5,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_rebounds,PrizePicks,Over,7.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Lauri Markkanen,player_rebounds,PrizePicks,Under,7.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_rebounds,PrizePicks,Over,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Zach Edey,player_rebounds,PrizePicks,Under,8.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_rebounds,PrizePicks,Over,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Taylor Hendricks,player_rebounds,PrizePicks,Under,5.0,-137,Utah Jazz,Memphis Grizzlies,6f2e578dbd59095e80b5b0c74f43d8d8,2024-10-24T01:00:00Z
+Stephen Curry,player_assists,Underdog,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_assists,Underdog,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_assists,Underdog,Over,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_assists,Underdog,Under,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_points,Underdog,Over,27.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_points,Underdog,Under,27.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_points,Underdog,Over,20.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_points,Underdog,Under,20.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_points,Underdog,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_points,Underdog,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_points,Underdog,Over,12.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_points,Underdog,Under,12.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Andrew Wiggins,player_points,Underdog,Over,12.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Andrew Wiggins,player_points,Underdog,Under,12.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_points,Underdog,Over,17.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_points,Underdog,Under,17.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_points,Underdog,Over,20.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_points,Underdog,Under,20.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_points,Underdog,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_points,Underdog,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_points,Underdog,Over,16.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_points,Underdog,Under,16.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_points,Underdog,Over,15.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_points,Underdog,Under,15.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Buddy Hield,player_points,Underdog,Over,9.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Buddy Hield,player_points,Underdog,Under,9.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_points,Underdog,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_points,Underdog,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_points,Underdog,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_points,Underdog,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_rebounds,Underdog,Over,4.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_rebounds,Underdog,Under,4.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_rebounds,Underdog,Over,3.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_rebounds,Underdog,Under,3.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_rebounds,Underdog,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_rebounds,Underdog,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_rebounds,Underdog,Over,3.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_rebounds,Underdog,Under,3.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_rebounds,Underdog,Over,11.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_rebounds,Underdog,Under,11.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_rebounds,Underdog,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_rebounds,Underdog,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_rebounds,Underdog,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_rebounds,Underdog,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_assists,PrizePicks,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_assists,PrizePicks,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_assists,PrizePicks,Over,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_assists,PrizePicks,Under,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_assists,PrizePicks,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_assists,PrizePicks,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_assists,PrizePicks,Over,2.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_assists,PrizePicks,Under,2.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_assists,PrizePicks,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_assists,PrizePicks,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_assists,PrizePicks,Over,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_assists,PrizePicks,Under,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_assists,PrizePicks,Over,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_assists,PrizePicks,Under,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_assists,PrizePicks,Over,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_assists,PrizePicks,Under,1.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Andrew Wiggins,player_points,PrizePicks,Over,13.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Andrew Wiggins,player_points,PrizePicks,Under,13.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_points,PrizePicks,Over,20.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Anfernee Simons,player_points,PrizePicks,Under,20.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_points,PrizePicks,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_points,PrizePicks,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_points,PrizePicks,Over,16.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_points,PrizePicks,Under,16.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_points,PrizePicks,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_points,PrizePicks,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_points,PrizePicks,Over,15.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_points,PrizePicks,Under,15.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_points,PrizePicks,Over,17.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_points,PrizePicks,Under,17.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_points,PrizePicks,Over,19.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jerami Grant,player_points,PrizePicks,Under,19.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_points,PrizePicks,Over,27.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_points,PrizePicks,Under,27.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_points,PrizePicks,Over,12.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Scoot Henderson,player_points,PrizePicks,Under,12.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_points,PrizePicks,Over,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_points,PrizePicks,Under,8.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_points,PrizePicks,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_points,PrizePicks,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_rebounds,PrizePicks,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Brandin Podziemski,player_rebounds,PrizePicks,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_rebounds,PrizePicks,Over,11.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deandre Ayton,player_rebounds,PrizePicks,Under,11.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_rebounds,PrizePicks,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Draymond Green,player_rebounds,PrizePicks,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_rebounds,PrizePicks,Over,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Deni Avdija,player_rebounds,PrizePicks,Under,7.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_rebounds,PrizePicks,Over,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Jonathan Kuminga,player_rebounds,PrizePicks,Under,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_rebounds,PrizePicks,Over,4.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Stephen Curry,player_rebounds,PrizePicks,Under,4.0,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_rebounds,PrizePicks,Over,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Trayce Jackson-Davis,player_rebounds,PrizePicks,Under,5.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_rebounds,PrizePicks,Over,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Toumani Camara,player_rebounds,PrizePicks,Under,4.5,-137,Portland Trail Blazers,Golden State Warriors,7f82790f1c8e7caa7dfa873ec0547fe4,2024-10-24T02:00:00Z
+Devin Booker,player_assists,Underdog,Over,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Devin Booker,player_assists,Underdog,Under,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_assists,Underdog,Over,7.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_assists,Underdog,Under,7.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_points,Underdog,Over,23.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_points,Underdog,Under,23.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Devin Booker,player_points,Underdog,Over,25.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Devin Booker,player_points,Underdog,Under,25.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_points,Underdog,Over,17.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_points,Underdog,Under,17.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_points,Underdog,Over,22.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_points,Underdog,Under,22.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_points,Underdog,Over,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_points,Underdog,Under,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_points,Underdog,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_points,Underdog,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_points,Underdog,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_points,Underdog,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_points,Underdog,Over,8.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_points,Underdog,Under,8.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Derrick Jones,player_points,Underdog,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Derrick Jones,player_points,Underdog,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Norman Powell,player_points,Underdog,Over,19.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Norman Powell,player_points,Underdog,Under,19.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_points,Underdog,Over,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_points,Underdog,Under,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Nicolas Batum,player_points,Underdog,Over,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Nicolas Batum,player_points,Underdog,Under,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Porter Jr.,player_points,Underdog,Over,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Porter Jr.,player_points,Underdog,Under,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_rebounds,Underdog,Over,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_rebounds,Underdog,Under,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_rebounds,Underdog,Over,10.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_rebounds,Underdog,Under,10.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_rebounds,Underdog,Over,3.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_rebounds,Underdog,Under,3.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_rebounds,Underdog,Over,2.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_rebounds,Underdog,Under,2.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_rebounds,Underdog,Over,2.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_rebounds,Underdog,Under,2.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_assists,PrizePicks,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_assists,PrizePicks,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_assists,PrizePicks,Over,7.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_assists,PrizePicks,Under,7.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_points,PrizePicks,Over,17.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_points,PrizePicks,Under,17.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Derrick Jones,player_points,PrizePicks,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Derrick Jones,player_points,PrizePicks,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Devin Booker,player_points,PrizePicks,Over,25.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Devin Booker,player_points,PrizePicks,Under,25.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_points,PrizePicks,Over,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_points,PrizePicks,Under,13.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_points,PrizePicks,Over,8.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Grayson Allen,player_points,PrizePicks,Under,8.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_points,PrizePicks,Over,22.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_points,PrizePicks,Under,22.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_points,PrizePicks,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_points,PrizePicks,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Norman Powell,player_points,PrizePicks,Over,18.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Norman Powell,player_points,PrizePicks,Under,18.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_points,PrizePicks,Over,24.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_points,PrizePicks,Under,24.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_points,PrizePicks,Over,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_points,PrizePicks,Under,9.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_points,PrizePicks,Over,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_points,PrizePicks,Under,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_rebounds,PrizePicks,Over,4.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Bradley Beal,player_rebounds,PrizePicks,Under,4.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_rebounds,PrizePicks,Over,9.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Ivica Zubac,player_rebounds,PrizePicks,Under,9.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_rebounds,PrizePicks,Over,5.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+James Harden,player_rebounds,PrizePicks,Under,5.0,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_rebounds,PrizePicks,Over,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Jusuf Nurkic,player_rebounds,PrizePicks,Under,10.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_rebounds,PrizePicks,Over,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Kevin Durant,player_rebounds,PrizePicks,Under,5.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_rebounds,PrizePicks,Over,3.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Terance Mann,player_rebounds,PrizePicks,Under,3.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_rebounds,PrizePicks,Over,2.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Tyus Jones,player_rebounds,PrizePicks,Under,2.5,-137,Los Angeles Clippers,Phoenix Suns,8de94b8af5293483abe2a5c52875810d,2024-10-24T02:00:00Z
+Luka Doncic,player_assists,Underdog,Over,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_assists,Underdog,Under,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_assists,Underdog,Over,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_assists,Underdog,Under,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_points,Underdog,Over,29.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_points,Underdog,Under,29.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_points,Underdog,Over,25.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_points,Underdog,Under,25.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_points,Underdog,Over,22.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_points,Underdog,Under,22.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_points,Underdog,Over,10.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_points,Underdog,Under,10.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Klay Thompson,player_points,Underdog,Over,16.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Klay Thompson,player_points,Underdog,Under,16.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_points,Underdog,Over,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_points,Underdog,Under,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_points,Underdog,Over,12.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_points,Underdog,Under,12.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_points,Underdog,Over,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_points,Underdog,Under,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_points,Underdog,Over,13.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_points,Underdog,Under,13.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Spencer Dinwiddie,player_points,Underdog,Over,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Spencer Dinwiddie,player_points,Underdog,Under,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Tre Jones,player_points,Underdog,Over,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Tre Jones,player_points,Underdog,Under,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Julian Champagnie,player_points,Underdog,Over,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Julian Champagnie,player_points,Underdog,Under,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Zach Collins,player_points,Underdog,Over,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Zach Collins,player_points,Underdog,Under,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_rebounds,Underdog,Over,11.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_rebounds,Underdog,Under,11.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_rebounds,Underdog,Over,3.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_rebounds,Underdog,Under,3.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_rebounds,Underdog,Over,2.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_rebounds,Underdog,Under,2.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_rebounds,Underdog,Over,5.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_rebounds,Underdog,Under,5.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_rebounds,Underdog,Over,6.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_rebounds,Underdog,Under,6.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Zach Collins,player_rebounds,Underdog,Over,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Zach Collins,player_rebounds,Underdog,Under,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_assists,PrizePicks,Over,8.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_assists,PrizePicks,Under,8.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_assists,PrizePicks,Over,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_assists,PrizePicks,Under,5.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_assists,PrizePicks,Over,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_assists,PrizePicks,Under,9.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_assists,PrizePicks,Over,1.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_assists,PrizePicks,Under,1.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_assists,PrizePicks,Over,1.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_assists,PrizePicks,Under,1.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_assists,PrizePicks,Over,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_assists,PrizePicks,Under,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_points,PrizePicks,Over,10.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Chris Paul,player_points,PrizePicks,Under,10.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Klay Thompson,player_points,PrizePicks,Over,16.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Klay Thompson,player_points,PrizePicks,Under,16.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_points,PrizePicks,Over,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_points,PrizePicks,Under,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_points,PrizePicks,Over,22.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_points,PrizePicks,Under,22.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Julian Champagnie,player_points,PrizePicks,Over,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Julian Champagnie,player_points,PrizePicks,Under,8.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_points,PrizePicks,Over,29.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_points,PrizePicks,Under,29.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_points,PrizePicks,Over,13.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_points,PrizePicks,Under,13.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_points,PrizePicks,Over,12.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_points,PrizePicks,Under,12.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_points,PrizePicks,Over,25.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_points,PrizePicks,Under,25.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_points,PrizePicks,Over,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Jeremy Sochan,player_points,PrizePicks,Under,11.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_rebounds,PrizePicks,Over,2.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Harrison Barnes,player_rebounds,PrizePicks,Under,2.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_rebounds,PrizePicks,Over,3.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Kyrie Irving,player_rebounds,PrizePicks,Under,3.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_rebounds,PrizePicks,Over,9.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Luka Doncic,player_rebounds,PrizePicks,Under,9.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_rebounds,PrizePicks,Over,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Keldon Johnson,player_rebounds,PrizePicks,Under,4.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_rebounds,PrizePicks,Over,5.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+P.J. Washington,player_rebounds,PrizePicks,Under,5.5,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_rebounds,PrizePicks,Over,11.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Victor Wembanyama,player_rebounds,PrizePicks,Under,11.0,-137,Dallas Mavericks,San Antonio Spurs,9fc2bfeed6fed586c135c5f1bafbab54,2024-10-24T23:30:00Z
+Shai Gilgeous-Alexander,player_assists,Underdog,Over,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_assists,Underdog,Under,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,Underdog,Over,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,Underdog,Under,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_assists,Underdog,Over,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_assists,Underdog,Under,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_points,Underdog,Over,26.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_points,Underdog,Under,26.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_points,Underdog,Over,31.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_points,Underdog,Under,31.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_points,Underdog,Over,20.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_points,Underdog,Under,20.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_points,Underdog,Over,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_points,Underdog,Under,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_points,Underdog,Over,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_points,Underdog,Under,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jalen Williams,player_points,Underdog,Over,18.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jalen Williams,player_points,Underdog,Under,18.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_points,Underdog,Over,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_points,Underdog,Under,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_points,Underdog,Over,14.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_points,Underdog,Under,14.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Russell Westbrook,player_points,Underdog,Over,9.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Russell Westbrook,player_points,Underdog,Under,9.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_points,Underdog,Over,11.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_points,Underdog,Under,11.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_points,Underdog,Over,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_points,Underdog,Under,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_rebounds,Underdog,Over,12.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_rebounds,Underdog,Under,12.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jalen Williams,player_rebounds,Underdog,Over,4.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jalen Williams,player_rebounds,Underdog,Under,4.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Russell Westbrook,player_rebounds,Underdog,Over,3.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Russell Westbrook,player_rebounds,Underdog,Under,3.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_rebounds,Underdog,Over,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_rebounds,Underdog,Under,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Over,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Under,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Over,8.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Under,8.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_assists,PrizePicks,Over,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_assists,PrizePicks,Under,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Over,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_assists,PrizePicks,Under,5.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Over,8.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_assists,PrizePicks,Under,8.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_assists,PrizePicks,Over,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_assists,PrizePicks,Under,4.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_points,PrizePicks,Over,31.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Shai Gilgeous-Alexander,player_points,PrizePicks,Under,31.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_points,PrizePicks,Over,21.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Jamal Murray,player_points,PrizePicks,Under,21.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_points,PrizePicks,Over,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_points,PrizePicks,Under,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_points,PrizePicks,Over,26.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_points,PrizePicks,Under,26.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_points,PrizePicks,Over,11.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_points,PrizePicks,Under,11.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_points,PrizePicks,Over,14.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_points,PrizePicks,Under,14.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_points,PrizePicks,Over,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Alex Caruso,player_points,PrizePicks,Under,9.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_points,PrizePicks,Over,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_points,PrizePicks,Under,16.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_points,PrizePicks,Over,9.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Christian Braun,player_points,PrizePicks,Under,9.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_rebounds,PrizePicks,Over,12.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Nikola Jokic,player_rebounds,PrizePicks,Under,12.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_rebounds,PrizePicks,Over,8.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Chet Holmgren,player_rebounds,PrizePicks,Under,8.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_rebounds,PrizePicks,Over,3.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Luguentz Dort,player_rebounds,PrizePicks,Under,3.5,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_rebounds,PrizePicks,Over,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Aaron Gordon,player_rebounds,PrizePicks,Under,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_rebounds,PrizePicks,Over,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
+Michael Porter Jr,player_rebounds,PrizePicks,Under,6.0,-137,Denver Nuggets,Oklahoma City Thunder,d1c48b0232af93a5b1b27fce495ae28b,2024-10-25T02:00:00Z
