@@ -156,3 +156,138 @@ def analyzeTeammateSplitsWhenAnyStarSitsPTS(game_data, min_minutes=10):
     )
     
     return result
+
+
+def check_all_defensive_players_at_position(df, all_defensive_players, position, year=2025):
+    """
+    Check if there are all-defensive players at a specific position (guard, forward, or center).
+    """
+    # Create copy and validate inputs
+    df = df.copy()
+    position = position.lower()
+    
+    if position not in ['guard', 'forward', 'center']:
+        raise ValueError("Position must be 'guard', 'forward', or 'center'")
+    
+    if year not in all_defensive_players:
+        raise ValueError(f"Year {year} not found in all_defensive_players dictionary")
+    
+    # Get all-defensive players for the specified year
+    def_players = all_defensive_players[year]
+    
+    # Create position column mapping
+    position_mapping = {
+        'guard': 'GUARD',
+        'forward': 'FORWARD', 
+        'center': 'CENTER'
+    }
+    
+    position_col = position_mapping[position]
+    
+    # Ensure required columns exist
+    required_cols = ['PLAYER_NAME', 'GAME_ID', 'TEAM_ID', position_col]
+    missing_cols = [col for col in required_cols if col not in df.columns]
+    if missing_cols:
+        raise ValueError(f"Missing required columns: {missing_cols}")
+    
+    # Mark if player is an all-defensive player (only add if not already exists)
+    if 'IS_ALL_DEFENSIVE' not in df.columns:
+        df['IS_ALL_DEFENSIVE'] = df['PLAYER_NAME'].isin(def_players).astype(int)
+    
+    # Mark if player is an all-defensive player at the specified position
+    df[f'IS_ALL_DEF_{position.upper()}'] = (
+        (df['IS_ALL_DEFENSIVE'] == 1) & (df[position_col] == 1)
+    ).astype(int)
+    
+    # Group by game and team to count all-defensive players at position
+    team_def_counts = (
+        df[df[f'IS_ALL_DEF_{position.upper()}'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])
+        .size()
+        .reset_index(name=f'ALL_DEF_{position.upper()}_COUNT')
+    )
+    
+    # Initialize count columns with zeros
+    df[f'ALL_DEF_{position.upper()}_COUNT_TEAM'] = 0
+    
+    # Merge counts back to main dataframe for player's team (only if there are counts)
+    if not team_def_counts.empty:
+        df = df.merge(
+            team_def_counts,
+            on=['GAME_ID', 'TEAM_ID'],
+            how='left'
+        )
+        # Update the team count column with actual values, keeping 0 for NaN
+        df[f'ALL_DEF_{position.upper()}_COUNT_TEAM'] = df[f'ALL_DEF_{position.upper()}_COUNT'].fillna(0).astype(int)
+        # Clean up the temporary column
+        df.drop(columns=[f'ALL_DEF_{position.upper()}_COUNT'], inplace=True, errors='ignore')
+    
+    # Add opponent team counts (if OPP_TEAM_ID exists)
+    if 'OPP_TEAM_ID' in df.columns:
+        # Initialize opponent count column
+        df[f'ALL_DEF_{position.upper()}_COUNT_OPP'] = 0
+        
+        # Only merge if there are defensive players at this position
+        if not team_def_counts.empty:
+            opp_counts = team_def_counts.rename(columns={
+                'TEAM_ID': 'OPP_TEAM_ID', 
+                f'ALL_DEF_{position.upper()}_COUNT': f'ALL_DEF_{position.upper()}_COUNT_OPP'
+            })
+            
+            df = df.merge(
+                opp_counts,
+                on=['GAME_ID', 'OPP_TEAM_ID'],
+                how='left',
+                suffixes=('', '_merge')
+            )
+            
+            # Update opponent count, handling the case where merge column exists
+            if f'ALL_DEF_{position.upper()}_COUNT_OPP_merge' in df.columns:
+                df[f'ALL_DEF_{position.upper()}_COUNT_OPP'] = df[f'ALL_DEF_{position.upper()}_COUNT_OPP_merge'].fillna(0).astype(int)
+                df.drop(columns=[f'ALL_DEF_{position.upper()}_COUNT_OPP_merge'], inplace=True)
+        
+        # Binary flag for facing all-defensive player at position
+        df[f'FACING_ALL_DEF_{position.upper()}'] = (df[f'ALL_DEF_{position.upper()}_COUNT_OPP'] > 0).astype(int)
+    
+    # Binary flag for having all-defensive player at position in game
+    opp_count = df.get(f'ALL_DEF_{position.upper()}_COUNT_OPP', 0)
+    df[f'ALL_DEF_{position.upper()}_IN_GAME'] = (
+        (df[f'ALL_DEF_{position.upper()}_COUNT_TEAM'] > 0) | 
+        (opp_count > 0)
+    ).astype(int)
+    
+    return df
+
+def add_all_defensive_features(df, all_defensive_players, year=2025):
+    """
+    Add comprehensive all-defensive player features for all positions.
+    
+    Parameters:
+    - df: DataFrame containing player data
+    - all_defensive_players: Dictionary with years as keys and lists of all-defensive player names as values
+    - year: Integer - Year to get all-defensive players list from (default: 2025)
+    
+    Returns:
+    - DataFrame with all-defensive features for guards, forwards, and centers
+    """
+    # Apply for all three positions
+    for position in ['guard', 'forward', 'center']:
+        df = check_all_defensive_players_at_position(df, all_defensive_players, position, year)
+    
+    # Add summary features
+    df['TOTAL_ALL_DEF_TEAM'] = (
+        df['ALL_DEF_GUARD_COUNT_TEAM'] + 
+        df['ALL_DEF_FORWARD_COUNT_TEAM'] + 
+        df['ALL_DEF_CENTER_COUNT_TEAM']
+    )
+    
+    if 'OPP_TEAM_ID' in df.columns:
+        df['TOTAL_ALL_DEF_OPP'] = (
+            df['ALL_DEF_GUARD_COUNT_OPP'] + 
+            df['ALL_DEF_FORWARD_COUNT_OPP'] + 
+            df['ALL_DEF_CENTER_COUNT_OPP']
+        )
+        
+        df['ALL_DEF_MATCHUP_TOTAL'] = df['TOTAL_ALL_DEF_TEAM'] + df['TOTAL_ALL_DEF_OPP']
+    
+    return df
