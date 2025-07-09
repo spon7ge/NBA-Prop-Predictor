@@ -13,6 +13,7 @@ Train machine learning models (e.g., XGBoost) to forecast player stat lines like
 
 ### Calculate Smart Bets Using EV and proper risk management
 Evaluate bets using:
+- Monte Carlo Simulation to get the probability of it hitting 
 - Expected Value (EV)
 - Kelly Criterion
 
