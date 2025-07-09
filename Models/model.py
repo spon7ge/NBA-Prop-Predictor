@@ -1,5 +1,5 @@
 from xgboost import XGBRegressor
-from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import numpy as np
 import joblib
@@ -7,17 +7,45 @@ import os
 import shap
 import pandas as pd
 
-def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2):
-    n_total = len(X)
-    split_idx = int(n_total * (1 - val_fraction))
+from xgboost import XGBRegressor
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+from xgboost import XGBRegressor
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2, playoff_weight=0.5):
+    """
+    Train XGBoost model with randomized search CV, time-based weights, 
+    and down-weighted playoff games for a regular-season focus.
     
+    Parameters:
+    - X: Features DataFrame
+    - y: Target Series
+    - stat_line: Statistic being predicted (e.g., 'PTS', 'AST')
+    - val_fraction: Fraction of data to reserve for final validation
+    - playoff_weight: Multiplier for playoff games (e.g., 0.5 → playoff games get half weight)
+    """
+    # Split train/test
+    split_idx = int(len(X) * (1 - val_fraction))
     X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
     y_train, y_test = y.iloc[:split_idx], y.iloc[split_idx:]
 
-    # Time-based weights: more recent training games get higher weight
+    # Base time-based weights
     train_weights = np.linspace(1, 3, num=len(X_train)) ** 2
-    test_weights = np.linspace(1, 3, num=len(X_test)) ** 2
+    test_weights  = np.linspace(1, 3, num=len(X_test))  ** 2
 
+    # Down-weight playoff games if present
+    if 'IS_PLAYOFF' in X_train.columns:
+        mask_train = X_train['IS_PLAYOFF'].astype(bool)
+        mask_test  = X_test['IS_PLAYOFF'].astype(bool)
+        train_weights[mask_train] *= playoff_weight
+        test_weights[mask_test]   *= playoff_weight
+
+    # Hyperparameter space
     param_grid = {
         'learning_rate': [0.01, 0.02, 0.05],
         'max_depth': [3, 4, 5],
@@ -30,10 +58,10 @@ def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2):
         'reg_lambda': [3, 5, 10]
     }
 
-    model = XGBRegressor(objective='reg:squarederror', random_state=42)
+    base_model = XGBRegressor(objective='reg:squarederror', random_state=42)
 
     search = RandomizedSearchCV(
-        estimator=model,
+        estimator=base_model,
         param_distributions=param_grid,
         n_iter=50,
         scoring='neg_mean_absolute_error',
@@ -44,10 +72,10 @@ def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2):
     )
 
     search.fit(X_train, y_train, sample_weight=train_weights)
-
     best_model = search.best_estimator_
-    pred = best_model.predict(X_test)
 
+    # Evaluate on test set
+    pred = best_model.predict(X_test)
     print(f"\nModel Performance Metrics for {stat_line}:")
     print(f"R2 Score: {r2_score(y_test, pred):.4f}")
     print(f"MAE: {mean_absolute_error(y_test, pred):.4f}")
@@ -56,6 +84,8 @@ def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2):
 
     saveXGBModel(best_model, stat_line)
     return best_model
+
+
 
 
 
