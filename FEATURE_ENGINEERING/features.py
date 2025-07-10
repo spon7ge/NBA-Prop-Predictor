@@ -31,7 +31,7 @@ def add_rest_day_features(df):
     
     # Vectorized operations for B2B calculations (faster than comparison loops)
     df['TEAM_B2B'] = (df['TEAM_DAYS_REST'] <= 1).astype('int8')  # Use int8 to save memory
-    df['PLAYER_B2B'] = (df['PLAYER_DAYS_REST'] <= 1).astype('int8')
+    df['IS_BACK_TO_BACK'] = (df['PLAYER_DAYS_REST'] <= 1).astype('int8')
     
     # Calculate missed games more efficiently
     df['PREV_TEAM_GAME'] = team_groups.shift(1)

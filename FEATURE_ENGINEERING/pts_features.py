@@ -1,4 +1,5 @@
 import pandas as pd
+from nba_api.stats.endpoints import playerdashptshots
 
 def analyzeTeammateSplitsPTS(game_data, min_minutes=10):
     """
@@ -291,3 +292,121 @@ def add_all_defensive_features(df, all_defensive_players, year=2025):
         df['ALL_DEF_MATCHUP_TOTAL'] = df['TOTAL_ALL_DEF_TEAM'] + df['TOTAL_ALL_DEF_OPP']
     
     return df
+
+
+def process_shot_clock_shooting(df):
+    """
+    Aggregates ShotClockShooting data into engineered features.
+    Returns DataFrame with PLAYER_ID and feature columns.
+    """
+    df = df.copy()
+    df['FGA'] = df['FGA'].astype(float)
+    total_fga = df.groupby('PLAYER_ID')['FGA'].transform('sum')
+
+    features = df.copy()
+    features['FGA_SHARE'] = features['FGA'] / total_fga
+
+    pivot = features.pivot(index='PLAYER_ID', columns='SHOT_CLOCK_RANGE', values='FGA_SHARE').fillna(0)
+    pivot.columns = [f'SC_FGA_SHARE_{c.replace(" ", "_")}' for c in pivot.columns]
+    return pivot.reset_index()
+
+def process_closest_defender_shooting(df):
+    """
+    Aggregates ClosestDefenderShooting into open/contested shot profile features.
+    """
+    df = df.copy()
+    df['FGA'] = df['FGA'].astype(float)
+    total_fga = df.groupby('PLAYER_ID')['FGA'].transform('sum')
+    df['FGA_SHARE'] = df['FGA'] / total_fga
+
+    # Categorize defense range
+    def map_defense(dist):
+        if '0-2' in dist: return 'Very_Tight'
+        elif '2-4' in dist: return 'Tight'
+        elif '4-6' in dist: return 'Open'
+        elif '6+' in dist: return 'Wide_Open'
+        else: return 'Unknown'
+
+    df['DEF_CATEGORY'] = df['CLOSE_DEF_DIST_RANGE'].apply(map_defense)
+    pivot = df.pivot_table(index='PLAYER_ID', columns='DEF_CATEGORY', values='FGA_SHARE', aggfunc='sum').fillna(0)
+    pivot.columns = [f'DEF_FGA_SHARE_{c}' for c in pivot.columns]
+    return pivot.reset_index()
+
+def process_dribble_shooting(df):
+    """
+    Aggregates DribbleShooting into on-ball vs off-ball scoring shares.
+    """
+    df = df.copy()
+    df['FGA'] = df['FGA'].astype(float)
+    total_fga = df.groupby('PLAYER_ID')['FGA'].transform('sum')
+    df['FGA_SHARE'] = df['FGA'] / total_fga
+
+    def map_dribbles(d):
+        if '0' in d: return 'No_Dribble'
+        elif '1' in d: return 'One_Dribble'
+        elif '2-6' in d: return 'Few_Dribbles'
+        elif '7+' in d: return 'Many_Dribbles'
+        else: return 'Unknown'
+
+    df['DRIBBLE_CATEGORY'] = df['DRIBBLE_RANGE'].apply(map_dribbles)
+    pivot = df.pivot_table(index='PLAYER_ID', columns='DRIBBLE_CATEGORY', values='FGA_SHARE', aggfunc='sum').fillna(0)
+    pivot.columns = [f'DRIBBLE_FGA_SHARE_{c}' for c in pivot.columns]
+    return pivot.reset_index()
+
+def get_player_shooting_features(player_id, team_id, season_type='Regular Season'):
+    """
+    Get detailed shooting features for a player, separated by home and away games.
+    """
+    # Fetch home data
+    shot_clock_df_home = playerdashptshots.PlayerDashPtShots(
+        team_id=team_id, 
+        player_id=player_id, 
+        season_type_all_star=season_type, 
+        location_nullable='Home'
+    ).get_data_frames()
+    
+    defender_df_home = shot_clock_df_home[4]  # Defender stats
+    dribble_df_home = shot_clock_df_home[3]   # Dribble stats
+    shot_clock_df_home = shot_clock_df_home[2] # Shot clock stats
+    
+    # Fetch away data
+    shot_clock_df_away = playerdashptshots.PlayerDashPtShots(
+        team_id=team_id, 
+        player_id=player_id, 
+        season_type_all_star=season_type, 
+        location_nullable='Road'
+    ).get_data_frames()
+    
+    defender_df_away = shot_clock_df_away[4]
+    dribble_df_away = shot_clock_df_away[3]
+    shot_clock_df_away = shot_clock_df_away[2]
+    
+    # Process home data
+    sc_df_home = process_shot_clock_shooting(shot_clock_df_home)
+    def_df_home = process_closest_defender_shooting(defender_df_home)
+    drib_df_home = process_dribble_shooting(dribble_df_home)
+
+    # Add '_HOME' suffix
+    sc_df_home.columns = ['PLAYER_ID'] + [col + '_HOME' for col in sc_df_home.columns if col != 'PLAYER_ID']
+    def_df_home.columns = ['PLAYER_ID'] + [col + '_HOME' for col in def_df_home.columns if col != 'PLAYER_ID']
+    drib_df_home.columns = ['PLAYER_ID'] + [col + '_HOME' for col in drib_df_home.columns if col != 'PLAYER_ID']
+
+    # Process away data
+    sc_df_away = process_shot_clock_shooting(shot_clock_df_away)
+    def_df_away = process_closest_defender_shooting(defender_df_away)
+    drib_df_away = process_dribble_shooting(dribble_df_away)
+
+    # Add '_AWAY' suffix
+    sc_df_away.columns = ['PLAYER_ID'] + [col + '_AWAY' for col in sc_df_away.columns if col != 'PLAYER_ID']
+    def_df_away.columns = ['PLAYER_ID'] + [col + '_AWAY' for col in def_df_away.columns if col != 'PLAYER_ID']
+    drib_df_away.columns = ['PLAYER_ID'] + [col + '_AWAY' for col in drib_df_away.columns if col != 'PLAYER_ID']
+
+    # Merge all dataframes
+    final = (sc_df_home
+             .merge(def_df_home, on='PLAYER_ID')
+             .merge(drib_df_home, on='PLAYER_ID')
+             .merge(sc_df_away, on='PLAYER_ID')
+             .merge(def_df_away, on='PLAYER_ID')
+             .merge(drib_df_away, on='PLAYER_ID'))
+    
+    return final
