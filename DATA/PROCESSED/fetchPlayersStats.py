@@ -21,7 +21,7 @@ class FetchPlayersStats:
         ).get_data_frames()[0]
 
         df['OPP_ABBREVIATION'] = df['MATCHUP'].str.extract(r'(?:vs\.|@) ([A-Z]+)')
-        df['HOME_GAME'] = df['MATCHUP'].str.contains('vs\.').astype(int)
+        df['HOME_GAME'] = df['MATCHUP'].str.contains(r'vs\.').astype(int)
         fga, fta, pts, fgm, fg3m = df['FGA'], df['FTA'], df['PTS'], df['FGM'], df['FG3M']
         df['POINT_PER_SHOT'] = np.where(fga == 0, 0.0, pts / (fga + 0.44 * fta)).round(3)
         df['EFG'] = (fgm + 0.5 * fg3m) / fga
@@ -439,7 +439,17 @@ class FetchPlayersStats:
         
         # Get miscellaneous stats
         misc = self.getMiscStats(new_stats, sleep_time, max_workers)
-        player_team_track_misc = pd.merge(player_team_track, misc, on=['GAME_ID','PLAYER_ID'], how='left')
+        player_team_track_misc = pd.merge(
+            player_team_track, 
+            misc, 
+            on=['GAME_ID','PLAYER_ID'], 
+            how='left',
+            suffixes=('', '_misc')  # Keep original columns and add '_misc' suffix to duplicates from misc
+        )
+
+        # Then drop the duplicate columns with '_misc' suffix if they exist
+        cols_to_drop = [col for col in player_team_track_misc.columns if col.endswith('_misc')]
+        player_team_track_misc = player_team_track_misc.drop(columns=cols_to_drop)
         
         # Get usage stats
         usage = self.getUsageStats(new_stats, sleep_time, max_workers)
