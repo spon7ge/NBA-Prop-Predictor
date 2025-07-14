@@ -140,7 +140,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     rolling_features = {
         'PTS': [
             'MIN', 'FGA', 'FG_PCT', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'USG_PCT', 
-            'TS_PCT', 'EFG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'PointsPerShot', 'TOV',
+            'TS_PCT', 'EFG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'POINT_PER_SHOT', 'TOV',
             'TEAM_FGA', 'TEAM_FG3A', 'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'TEAM_AST', 
             'TEAM_REB', 'TEAM_PACE', 'TEAM_PTS', 'OPP_DEF_RATING', 'OPP_PACE'
         ]

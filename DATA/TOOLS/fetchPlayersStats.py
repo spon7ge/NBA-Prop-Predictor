@@ -393,72 +393,118 @@ class FetchPlayersStats:
         return df.groupby('GAME_ID',group_keys=False).apply(fn)
 
     def getCompleteStats(self, season=None, season_type='Regular Season',
-                         sleep_time=None, max_workers=None,
+                         sleep_time=2, max_workers=3, batch_limit=None,
                          complete_cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
-        season = season or self.default_season
-        sleep_time = sleep_time or self.sleep_time
-        # Load existing cache if available
+        
+        # Your existing cache loading code
         if os.path.exists(complete_cache_file):
             cache = pd.read_csv(complete_cache_file, dtype={'GAME_ID':str})
             existing_ids = set(cache['GAME_ID'].astype(str).unique())
         else:
             cache, existing_ids = pd.DataFrame(), set()
+
         # Fetch full player stats and identify new games
         all_stats = self.fetchPlayerStats(season, season_type)
         all_stats['GAME_ID'] = all_stats['GAME_ID'].astype(str)
         new_stats = all_stats[~all_stats['GAME_ID'].isin(existing_ids)]
+
         if new_stats.empty:
             print("No new games to update, returning cached data.")
             return cache
-        print(f"Updating cache with {new_stats['GAME_ID'].nunique()} new games.")
-        
-        # Advanced stats for new games
-        adv = self.getAdvancedStats(new_stats, sleep_time, max_workers)
-        merged_player = self.mergeData(new_stats, adv)
-        
-        # Team stats
-        team_df = self.getTeamData(season, season_type)
-        team_df = self.addOpponentStats(team_df)
-        team_df = self.addOffensiveRating(team_df)
-        team_df = self.add_pace_stats(team_df)
-        team_new = team_df[team_df['GAME_ID'].isin(new_stats['GAME_ID'])]
-        
-        # Select team-level columns including pace and defensive rating
-        team_cols = ['GAME_ID', 'TEAM_ID', 'TEAM_MIN', 'TEAM_FGM', 'TEAM_FGA', 'TEAM_FG_PCT',
-                    'TEAM_FG3M', 'TEAM_FG3A', 'TEAM_FG3_PCT', 'TEAM_FTM', 'TEAM_FTA',
-                    'TEAM_FT_PCT', 'TEAM_OREB', 'TEAM_DREB', 'TEAM_REB', 'TEAM_AST',
-                    'TEAM_STL', 'TEAM_BLK', 'TEAM_TOV', 'TEAM_PF', 'TEAM_PTS',
-                    'TEAM_PACE', 'GAME_PACE', 'OPP_PACE', 'OPP_DEF_RATING']
-        
-        # Merge player data with team data
-        player_team = pd.merge(merged_player, team_new[team_cols], on=['GAME_ID', 'TEAM_ID'], how='left')
-        
-        # Get tracking stats
-        track = self.getTrackingStats(new_stats, sleep_time, max_workers)
-        player_team_track = pd.merge(player_team, track, on=['GAME_ID','PLAYER_ID'], how='left')
-        
-        # Get miscellaneous stats
-        misc = self.getMiscStats(new_stats, sleep_time, max_workers)
-        player_team_track_misc = pd.merge(
-            player_team_track, 
-            misc, 
-            on=['GAME_ID','PLAYER_ID'], 
-            how='left',
-            suffixes=('', '_misc')  # Keep original columns and add '_misc' suffix to duplicates from misc
-        )
 
-        # Then drop the duplicate columns with '_misc' suffix if they exist
-        cols_to_drop = [col for col in player_team_track_misc.columns if col.endswith('_misc')]
-        player_team_track_misc = player_team_track_misc.drop(columns=cols_to_drop)
+        new_game_ids = new_stats['GAME_ID'].unique()
         
-        # Get usage stats
-        usage = self.getUsageStats(new_stats, sleep_time, max_workers)
-        complete_new = pd.merge(player_team_track_misc, usage, on=['GAME_ID','PLAYER_ID'], how='left')
+        # Apply batch limit if specified
+        if batch_limit and batch_limit > 0:
+            new_game_ids = new_game_ids[:batch_limit]
+            new_stats = new_stats[new_stats['GAME_ID'].isin(new_game_ids)]
+            print(f"Processing {len(new_game_ids)} games (limited by batch_limit={batch_limit})")
+        else:
+            print(f"Processing all {len(new_game_ids)} new games")
+
+        # Process games in batches
+        batch_size = max_workers * 2  # Process 2 games per worker at a time
+        game_batches = [new_game_ids[i:i + batch_size] for i in range(0, len(new_game_ids), batch_size)]
         
-        # Combine and save
-        combined = pd.concat([cache, complete_new], ignore_index=True)
+        all_advanced = []
+        all_tracking = []
+        all_misc = []
+        all_usage = []
+
+        total_batches = len(game_batches)
+        for batch_idx, game_batch in enumerate(game_batches, 1):
+            print(f"\nProcessing batch {batch_idx}/{total_batches} ({len(game_batch)} games)")
+            
+            # Process each game in the batch
+            for game_id in game_batch:
+                with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                    # Submit all stat types for this game concurrently
+                    futures = {
+                        'advanced': executor.submit(self.fetchAdvancedStats, game_id, sleep_time),
+                        'tracking': executor.submit(self.fetchTrackingStats, game_id, sleep_time),
+                        'misc': executor.submit(self.fetchBoxScoreMisc, game_id, sleep_time),
+                        'usage': executor.submit(self.fetchBoxScoreUsage, game_id, sleep_time)
+                    }
+                    
+                    # Collect results
+                    results = {}
+                    for stat_type, future in futures.items():
+                        try:
+                            result = future.result()
+                            if not result.empty:
+                                if stat_type == 'advanced': all_advanced.append(result)
+                                elif stat_type == 'tracking': all_tracking.append(result)
+                                elif stat_type == 'misc': all_misc.append(result)
+                                elif stat_type == 'usage': all_usage.append(result)
+                        except Exception as e:
+                            print(f"Error fetching {stat_type} stats for game {game_id}: {e}")
+
+                # Sleep between games within a batch
+                time.sleep(sleep_time)
+            
+            print(f"Completed batch {batch_idx}/{total_batches}")
+            # Sleep between batches
+            time.sleep(sleep_time * 2)
+
+        # Combine all stats
+        if all_advanced:
+            advanced_stats = pd.concat(all_advanced, ignore_index=True)
+            merged_player = self.mergeData(new_stats, advanced_stats)
+        else:
+            merged_player = new_stats
+
+        if all_tracking:
+            tracking_stats = pd.concat(all_tracking, ignore_index=True)
+            merged_player = pd.merge(
+                merged_player, 
+                tracking_stats, 
+                on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        if all_misc:
+            misc_stats = pd.concat(all_misc, ignore_index=True)
+            merged_player = pd.merge(
+                merged_player, 
+                misc_stats, 
+                on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        if all_usage:
+            usage_stats = pd.concat(all_usage, ignore_index=True)
+            merged_player = pd.merge(
+                merged_player, 
+                usage_stats, 
+                on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        # Combine with existing cache and save
+        combined = pd.concat([cache, merged_player], ignore_index=True)
         combined.to_csv(complete_cache_file, index=False)
         print(f"Cache updated. Total games now: {combined['GAME_ID'].nunique()}")
+        
         return combined
 
     def mergeData(self, player_data, advanced_stats):
