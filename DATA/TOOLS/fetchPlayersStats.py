@@ -499,6 +499,18 @@ class FetchPlayersStats:
                 on=['GAME_ID', 'PLAYER_ID'], 
                 how='left'
             )
+        
+        team_data = self.getTeamData(season, season_type)
+        team_data = self.addOpponentStats(team_data)
+        team_data = self.addOffensiveRating(team_data)
+        team_data = self.add_pace_stats(team_data)
+
+        merged_player = pd.merge(
+            merged_player,
+            team_data,
+            on=['GAME_ID', 'TEAM_ID'],
+            how='left'
+        )
 
         # Combine with existing cache and save
         combined = pd.concat([cache, merged_player], ignore_index=True)
