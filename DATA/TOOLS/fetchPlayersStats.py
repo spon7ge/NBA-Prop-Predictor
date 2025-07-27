@@ -173,75 +173,6 @@ class FetchPlayersStats:
         combined = pd.concat(stats, ignore_index=True).drop_duplicates(subset=['GAME_ID','PLAYER_ID'])
         combined.to_csv(cache_file, index=False)
         return combined
-
-    def fetchBoxScoreUsage(self, game_id, sleep_time=None):
-        """
-        Fetches usage boxscore stats for a specific game.
-        
-        Args:
-            game_id (str): NBA game ID
-            sleep_time (float, optional): Time to sleep between API calls
-            
-        Returns:
-            pd.DataFrame: Usage boxscore statistics
-        """
-        sleep_time = sleep_time or self.sleep_time
-        try:
-            time.sleep(sleep_time)
-            from nba_api.stats.endpoints import boxscoreusagev2
-            df = boxscoreusagev2.BoxScoreUsageV2(game_id=game_id).get_data_frames()[0]
-            cols = [
-                'GAME_ID', 'PLAYER_ID', 'PCT_FGM', 'PCT_FGA', 'PCT_FG3M', 'PCT_FG3A',
-                'PCT_FTM', 'PCT_FTA', 'PCT_OREB', 'PCT_DREB', 'PCT_REB', 'PCT_AST',
-                'PCT_TOV', 'PCT_STL', 'PCT_BLK', 'PCT_BLKA', 'PCT_PF', 'PCT_PFD', 'PCT_PTS'
-            ]
-            return df[cols]
-        except Exception as e:
-            print(f"[ERROR] Usage stats for game {game_id}: {e}")
-            return pd.DataFrame()
-
-    def getUsageStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
-        """
-        Gets usage stats for all games in player_data.
-        """
-        sleep_time = sleep_time or self.sleep_time
-        max_workers = max_workers or min(10, os.cpu_count() or 4)
-        game_ids = player_data['GAME_ID'].unique()
-        total_games = len(game_ids)
-        
-        # Check cache
-        if os.path.exists(cache_file):
-            cached = pd.read_csv(cache_file, dtype={'GAME_ID': str})
-            usage_cols = ['PCT_FGM', 'PCT_FGA', 'PCT_PTS']  # Check a few key columns
-            if all(c in cached for c in usage_cols):
-                cached = cached[cached[usage_cols].notna().any(axis=1)]
-                cached_ids = cached['GAME_ID'].unique()
-            else:
-                cached, cached_ids = pd.DataFrame(), []
-        else:
-            cached, cached_ids = pd.DataFrame(), []
-            
-        # Get missing games
-        missing = [gid for gid in game_ids if gid not in cached_ids]
-        stats = [cached]
-        
-        if missing:
-            print(f"\nFetching usage stats for {len(missing)} out of {total_games} games...")
-            completed = 0
-            with ThreadPoolExecutor(max_workers=max_workers) as ex:
-                futures = {ex.submit(self.fetchBoxScoreUsage, gid, sleep_time): gid for gid in missing}
-                for f in as_completed(futures):
-                    df = f.result()
-                    if not df.empty: stats.append(df)
-                    completed += 1
-                    print(f"\rProgress: {completed}/{len(missing)} games processed", end="", flush=True)
-            print("\nFinished fetching usage stats.")
-        else:
-            print(f"\nAll {total_games} usage stats found in cache.")
-            
-        combined = pd.concat(stats, ignore_index=True).drop_duplicates(subset=['GAME_ID','PLAYER_ID'])
-        combined.to_csv(cache_file, index=False)
-        return combined
         
     def getAdvancedStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
         sleep_time = sleep_time or self.sleep_time
@@ -323,75 +254,6 @@ class FetchPlayersStats:
         combined.to_csv(cache_file, index=False)
         return combined
 
-    def getTeamData(self, season=None, season_type='Regular Season'):
-        season = season or self.default_season
-        tlist = teams.get_teams()
-        data = []
-        for t in tlist:
-            try:
-                df = teamgamelog.TeamGameLog(
-                    team_id=t['id'], season=season,
-                    season_type_all_star=season_type
-                ).get_data_frames()[0]
-                df.columns = df.columns.str.upper()
-                drop = ['MATCHUP','WL','W','L','W_PCT','GAMEDATE']
-                df.drop(columns=[c for c in drop if c in df], errors='ignore', inplace=True)
-                df.rename(columns={c: f'TEAM_{c}' for c in df.columns if c not in ['GAME_ID','TEAM_ID']}, inplace=True)
-                data.append(df)
-            except:
-                continue
-        return pd.concat(data, ignore_index=True)
-
-    def addOpponentStats(self, df):
-        def fn(g):
-            if len(g)!=2: return g
-            a,b = g.iloc
-            def1 = (b['TEAM_PTS']/(b['TEAM_FGA']+0.44*b['TEAM_FTA']-b['TEAM_OREB']+b['TEAM_TOV']))*100
-            def2 = (a['TEAM_PTS']/(a['TEAM_FGA']+0.44*a['TEAM_FTA']-a['TEAM_OREB']+a['TEAM_TOV']))*100
-            
-            # Create columns if they don't exist
-            for col in ['OPP_DEF_RATING', 'OPP_STL', 'OPP_BLK', 'OPP_REB', 'OPP_FG_PCT', 'OPP_TEAM_ID']:
-                if col not in g.columns:
-                    g[col] = 0.0
-            
-            # Get indices after ensuring columns exist
-            idx = g.columns.get_indexer(['OPP_DEF_RATING','OPP_STL','OPP_BLK','OPP_REB','OPP_FG_PCT','OPP_TEAM_ID'])
-            g.iloc[0, idx]=[def2,b['TEAM_STL'],b['TEAM_BLK'],b['TEAM_OREB']+b['TEAM_DREB'],b['TEAM_FGM']/b['TEAM_FGA'],b['TEAM_ID']]
-            g.iloc[1, idx]=[def1,a['TEAM_STL'],a['TEAM_BLK'],a['TEAM_OREB']+a['TEAM_DREB'],a['TEAM_FGM']/a['TEAM_FGA'],a['TEAM_ID']]
-            return g
-        return df.groupby('GAME_ID',group_keys=False).apply(fn)
-
-    def addOffensiveRating(self, df):
-        def fn(g):
-            if len(g)!=2: return g
-            a,b = g.iloc
-            p1=a['TEAM_FGA']+0.44*a['TEAM_FTA']-a['TEAM_OREB']+a['TEAM_TOV']
-            p2=b['TEAM_FGA']+0.44*b['TEAM_FTA']-b['TEAM_OREB']+b['TEAM_TOV']
-            g.iloc[0,g.columns.get_indexer(['TEAM_OFF_RATING'])]=[(a['TEAM_PTS']/p1)*100]
-            g.iloc[1,g.columns.get_indexer(['TEAM_OFF_RATING'])]=[(b['TEAM_PTS']/p2)*100]
-            return g
-        return df.groupby('GAME_ID',group_keys=False).apply(fn)
-
-    def add_pace_stats(self, df):
-        def fn(g):
-            if len(g)!=2: return g
-            a,b=g.iloc
-            p1=a['TEAM_FGA']+0.44*a['TEAM_FTA']-a['TEAM_OREB']+a['TEAM_TOV']
-            p2=b['TEAM_FGA']+0.44*b['TEAM_FTA']-b['TEAM_OREB']+b['TEAM_TOV']
-            avg=(p1+p2)/2
-            
-            # Create columns if they don't exist
-            for col in ['TEAM_PACE', 'GAME_PACE', 'OPP_PACE']:
-                if col not in g.columns:
-                    g[col] = 0.0
-            
-            # Get indices after ensuring columns exist
-            idx=g.columns.get_indexer(['TEAM_PACE','GAME_PACE','OPP_PACE'])
-            g.iloc[0,idx]=[p1,avg,p2]
-            g.iloc[1,idx]=[p2,avg,p1]
-            return g
-        return df.groupby('GAME_ID',group_keys=False).apply(fn)
-
     def getCompleteStats(self, season=None, season_type='Regular Season',
                          sleep_time=2, max_workers=3, batch_limit=None,
                          complete_cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
@@ -429,7 +291,6 @@ class FetchPlayersStats:
         all_advanced = []
         all_tracking = []
         all_misc = []
-        all_usage = []
 
         total_batches = len(game_batches)
         for batch_idx, game_batch in enumerate(game_batches, 1):
@@ -443,7 +304,6 @@ class FetchPlayersStats:
                         'advanced': executor.submit(self.fetchAdvancedStats, game_id, sleep_time),
                         'tracking': executor.submit(self.fetchTrackingStats, game_id, sleep_time),
                         'misc': executor.submit(self.fetchBoxScoreMisc, game_id, sleep_time),
-                        'usage': executor.submit(self.fetchBoxScoreUsage, game_id, sleep_time)
                     }
                     
                     # Collect results
@@ -455,7 +315,6 @@ class FetchPlayersStats:
                                 if stat_type == 'advanced': all_advanced.append(result)
                                 elif stat_type == 'tracking': all_tracking.append(result)
                                 elif stat_type == 'misc': all_misc.append(result)
-                                elif stat_type == 'usage': all_usage.append(result)
                         except Exception as e:
                             print(f"Error fetching {stat_type} stats for game {game_id}: {e}")
 
@@ -491,26 +350,16 @@ class FetchPlayersStats:
                 how='left'
             )
 
-        if all_usage:
-            usage_stats = pd.concat(all_usage, ignore_index=True)
-            merged_player = pd.merge(
-                merged_player, 
-                usage_stats, 
-                on=['GAME_ID', 'PLAYER_ID'], 
-                how='left'
-            )
         
-        team_data = self.getTeamData(season, season_type)
-        team_data = self.addOpponentStats(team_data)
-        team_data = self.addOffensiveRating(team_data)
-        team_data = self.add_pace_stats(team_data)
-
-        merged_player = pd.merge(
-            merged_player,
-            team_data,
-            on=['GAME_ID', 'TEAM_ID'],
-            how='left'
-        )
+        # Remove getTeamData, addOpponentStats, addOffensiveRating, add_pace_stats, and all team_data usage
+        # Remove getTeamData
+        # Remove addOpponentStats
+        # Remove addOffensiveRating
+        # Remove add_pace_stats
+        # Remove all lines assigning or using team_data in getCompleteStats and elsewhere
+        # Remove merging with team_data
+        # Remove any references to these functions in the file
+        # The rest of the code remains unchanged
 
         # Combine with existing cache and save
         combined = pd.concat([cache, merged_player], ignore_index=True)
