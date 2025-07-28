@@ -127,52 +127,21 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
 ########################################################################################
 #rolling averages
 ########################################################################################
-
-def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_line='PTS'):
-    """
-    Calculate rolling averages with data leakage prevention (via shift(1)).
-    Includes rolling means for 3, 5, and 7 games, and rolling std for the main stat_line.
-    Results rounded to 2 decimal places (hundredths).
-    """
+def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7]):
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
 
-    rolling_features = {
-        'PTS': [
-            'MIN', 'FGA', 'FG_PCT', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'USG_PCT', 
-            'TS_PCT', 'EFG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'POINT_PER_SHOT', 'TOV',
-            'TEAM_FGA', 'TEAM_FG3A', 'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'TEAM_AST', 
-            'TEAM_REB', 'TEAM_PACE', 'TEAM_PTS', 'OPP_DEF_RATING', 'OPP_PACE'
-        ]
-    }
+    # Define the columns for which to compute rolling averages
+    stats_cols = [
+        'MIN', 'FGA', 'FG_PCT', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'USG_PCT', 
+        'TS_PCT', 'EFG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'POINT_PER_SHOT', 'TOV'
+    ]
 
-    if stat_line not in rolling_features:
-        raise ValueError(f"Invalid stat_line: {stat_line}. Must be one of {list(rolling_features.keys())}")
-
-    player_group = df.groupby(player_id_col)
-    windows = [3, 5, 7]
-    features_to_process = rolling_features[stat_line]
-    global_means = df[features_to_process].mean()
-    global_stds = df[features_to_process].std()
-
-    for feature in features_to_process:
-        if feature not in df.columns:
-            continue
-
-        shifted = player_group[feature].shift(1)
-        first_games_mask = player_group.cumcount() == 0
-
-        for window in windows:
-            col_mean = f'{feature}_ROLL_AVG_{window}'
-            df[col_mean] = shifted.rolling(window=window, min_periods=1).mean()
-            df.loc[first_games_mask, col_mean] = global_means[feature]
-            df[col_mean] = df[col_mean].round(2)
-
-            if feature == stat_line:
-                col_std = f'{feature}_STD_AVG_{window}'
-                df[col_std] = shifted.rolling(window=window, min_periods=1).std()
-                df.loc[first_games_mask, col_std] = global_stds[feature]
-                df[col_std] = df[col_std].round(2)
+    # Compute rolling averages for each player
+    for window in windows:
+        for col in stats_cols:
+            rolling_col_name = f'{col}_ROLLING_AVG_{window}'
+            df[rolling_col_name] = df.groupby(player_id_col)[col].transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean())
 
     return df
 
