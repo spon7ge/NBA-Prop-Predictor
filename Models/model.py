@@ -6,88 +6,85 @@ import joblib
 import os
 import shap
 import pandas as pd
-
-from xgboost import XGBRegressor
 from sklearn.model_selection import RandomizedSearchCV
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import numpy as np
 
-from xgboost import XGBRegressor
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import numpy as np
 
-def train_xgb_model(X, y, stat_line='PTS', val_fraction=0.2, playoff_weight=0.5):
-    """
-    Train XGBoost model with randomized search CV, time-based weights, 
-    and down-weighted playoff games for a regular-season focus.
-    
-    Parameters:
-    - X: Features DataFrame
-    - y: Target Series
-    - stat_line: Statistic being predicted (e.g., 'PTS', 'AST')
-    - val_fraction: Fraction of data to reserve for final validation
-    - playoff_weight: Multiplier for playoff games (e.g., 0.5 → playoff games get half weight)
-    """
-    # Split train/test
-    split_idx = int(len(X) * (1 - val_fraction))
-    X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
-    y_train, y_test = y.iloc[:split_idx], y.iloc[split_idx:]
 
-    # Base time-based weights
-    train_weights = np.linspace(1, 3, num=len(X_train)) ** 2
-    test_weights  = np.linspace(1, 3, num=len(X_test))  ** 2
+def train_xgb_model(data,feature_cols,date_col,target_col='PTS',n_splits=5,n_iter=60,random_state=42):
+    df = data.sort_values(date_col).reset_index(drop=True)
+    # features and target
+    X = df[feature_cols].select_dtypes(include=[np.number]).astype(np.float32).values
+    y = df[target_col].astype(np.float32).values
 
-    # Down-weight playoff games if present
-    if 'IS_PLAYOFF' in X_train.columns:
-        mask_train = X_train['IS_PLAYOFF'].astype(bool)
-        mask_test  = X_test['IS_PLAYOFF'].astype(bool)
-        train_weights[mask_train] *= playoff_weight
-        test_weights[mask_test]   *= playoff_weight
+    # time series CV
+    tscv = TimeSeriesSplit(n_splits=n_splits)
 
-    # Hyperparameter space
-    param_grid = {
-        'learning_rate': [0.01, 0.02, 0.05],
-        'max_depth': [3, 4, 5],
-        'n_estimators': [200, 300, 500],
-        'subsample': [0.6, 0.7, 0.8],
-        'colsample_bytree': [0.6, 0.7, 0.8],
-        'gamma': [0.1, 0.2, 0.5],
-        'min_child_weight': [3, 5, 10],
-        'reg_alpha': [0.1, 0.5, 1],
-        'reg_lambda': [3, 5, 10]
-    }
-
-    base_model = XGBRegressor(objective='reg:squarederror', random_state=42)
-
-    search = RandomizedSearchCV(
-        estimator=base_model,
-        param_distributions=param_grid,
-        n_iter=50,
-        scoring='neg_mean_absolute_error',
-        cv=3,
-        verbose=1,
+    # model
+    base_model = XGBRegressor(
+        objective="reg:squarederror",
         n_jobs=-1,
-        random_state=42
+        tree_method="hist",
+        random_state=random_state
     )
 
-    search.fit(X_train, y_train, sample_weight=train_weights)
+    # randomized search grid
+    param_distributions = {
+        "n_estimators": [200, 400, 600, 800, 1000],
+        "max_depth": [3, 4, 5, 6, 8, 10],
+        "learning_rate": [0.005, 0.01, 0.02, 0.05, 0.1],
+        "subsample": [0.6, 0.7, 0.8, 0.9, 1.0],
+        "colsample_bytree": [0.6, 0.7, 0.8, 0.9, 1.0],
+        "gamma": [0, 0.1, 0.2, 0.3, 0.5, 1.0],
+        "reg_alpha": [0, 0.01, 0.05, 0.1, 1, 5, 10],
+        "reg_lambda": [0.1, 0.5, 1, 5, 10, 20],
+        "min_child_weight": [1, 3, 5, 7, 10]
+    }
+
+    # search
+    search = RandomizedSearchCV(
+        estimator=base_model,
+        param_distributions=param_distributions,
+        n_iter=n_iter,
+        scoring="neg_mean_squared_error",
+        cv=tscv,
+        verbose=1,
+        n_jobs=-1,
+        random_state=random_state
+    )
+
+    search.fit(X, y)
+
+    print("Best params:")
+    print(search.best_params_)
+    print("CV best RMSE:")
+    print(np.sqrt(-search.best_score_))
+
     best_model = search.best_estimator_
 
-    # Evaluate on test set
-    pred = best_model.predict(X_test)
-    print(f"\nModel Performance Metrics for {stat_line}:")
-    print(f"R2 Score: {r2_score(y_test, pred):.4f}")
-    print(f"MAE: {mean_absolute_error(y_test, pred):.4f}")
-    print(f"RMSE: {np.sqrt(mean_squared_error(y_test, pred)):.4f}")
-    print(f"\nBest Parameters: {search.best_params_}")
+    # evaluate best model across folds
+    r2_list, mae_list, rmse_list = [], [], []
+    for fold, (train_idx, test_idx) in enumerate(tscv.split(X), start=1):
+        X_train, X_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
 
-    saveXGBModel(best_model, stat_line)
+        best_model.fit(X_train, y_train)
+        y_pred = best_model.predict(X_test)
+
+        r2 = r2_score(y_test, y_pred)
+        mae = mean_absolute_error(y_test, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+        r2_list.append(r2)
+        mae_list.append(mae)
+        rmse_list.append(rmse)
+
+        print(f"Fold {fold} R2: {r2:.4f}  MAE: {mae:.4f}  RMSE: {rmse:.4f}")
+
+    print("Mean CV R2:", np.mean(r2_list))
+    print("Mean CV MAE:", np.mean(mae_list))
+    print("Mean CV RMSE:", np.mean(rmse_list))
+
     return best_model
-
-
-
-
 
 def saveXGBModel(model, stat_line):
     models_dir = 'Models'

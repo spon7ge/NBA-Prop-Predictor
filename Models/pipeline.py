@@ -37,30 +37,6 @@ def get_espn_games(date_str=today):  # YYYYMMDD format
     
     return games_list
 
-def getPlayerAVG(player, data, stat_type='PTS'):
-    player_data = data[data['PLAYER_NAME'] == player]
-    feature_sets = {
-        'PTS': [
-                'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FT_PCT', 'FG3_PCT', 'REB', 
-                'OFF_RATING', 'PointsPerShot', 'EFG_PCT','USG_PCT', 'TS_PCT', 'PACE', 'POSS',
-                'TEAM_FGA', 'TEAM_FG3A', 'TEAM_FG_PCT', 'TEAM_FG3_PCT', 'TEAM_AST', 'TEAM_REB', 'TEAM_PACE', 'TEAM_PTS'
-                ],
-        'AST': [
-                'MIN', 'FGA', 'USG_PCT', 'AST_PCT', 'AST_TOV', 'TOV', 'PACE', 'POSS',
-                'OFF_RATING', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-                'TEAM_AST', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_FG_PCT',
-            ],
-        'REB': [
-                'MIN', 'FGA', 'FGM', 'FG3A', 'FG3M', 'USG_PCT', 'BLK', 'DEF_RATING', 'PACE', 'POSS',
-                'OREB_PCT', 'DREB_PCT', 'REB_PCT', 
-                'TEAM_FGA', 'TEAM_FG_PCT', 'TEAM_FG3A', 'TEAM_FG3_PCT', 'TEAM_PACE', 'TEAM_REB', 'TEAM_OREB', 'TEAM_DREB'
-                ]
-    }
-    include = feature_sets[stat_type]
-
-    res = [round(player_data[col].mean(), 2) for col in include]
-    return res
-
 def findOPP(player, data, games):
     player = data[data['PLAYER_NAME'] == player].sort_values(by='GAME_DATE')
     opponent = None
@@ -74,12 +50,6 @@ def findOPP(player, data, games):
     if not opponent:
         return None
     return opponent
-
-def getOppAVG(team, data):
-    team_data = data[data['OPP_ABBREVIATION'] == team]
-    include = ['OPP_PACE', 'OPP_DEF_RATING','OPP_STL', 'OPP_BLK', 'OPP_REB', 'OPP_FG_PCT']
-    team_stats = team_data.groupby('GAME_DATE')[include].mean().reset_index()
-    return [round(team_stats[col].mean(), 2) for col in include]
 
 def getPlayerRollingAVG(player, data, stat_type='PTS'):
     player = data[data['PLAYER_NAME'] == player].copy()
@@ -100,37 +70,7 @@ def getPlayerRollingAVG(player, data, stat_type='PTS'):
             'FG3M_ROLL_AVG_6', 'FG3_PCT_ROLL_AVG_6', 'FTM_ROLL_AVG_6', 'FTA_ROLL_AVG_6',
             'FT_PCT_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6', 'TS_PCT_ROLL_AVG_6', 'EFG_PCT_ROLL_AVG_6',
             'TEAM_PACE_ROLL_AVG_6', 'TEAM_OFF_RATING_ROLL_AVG_6', 'OPP_DEF_RATING_ROLL_AVG_6',
-            'PLAYER_HOME_AVG_PTS', 'PLAYER_AWAY_AVG_PTS',
-],
-        'AST': [    
-            'MIN_ROLL_AVG_2', 'USG_PCT_ROLL_AVG_2', 'AST_PCT_ROLL_AVG_2', 'AST_TOV_ROLL_AVG_2',
-            'TEAM_FGM_ROLL_AVG_2', 'TEAM_AST_ROLL_AVG_2', 'TEAM_PACE_ROLL_AVG_2',
-            'OPP_DEF_RATING_ROLL_AVG_2', 'OPP_STL_ROLL_AVG_2',
-            'MIN_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4', 'AST_PCT_ROLL_AVG_4', 'AST_TOV_ROLL_AVG_4',
-            'TEAM_FGM_ROLL_AVG_4', 'TEAM_AST_ROLL_AVG_4', 'TEAM_PACE_ROLL_AVG_4',
-            'OPP_DEF_RATING_ROLL_AVG_4', 'OPP_STL_ROLL_AVG_4',
-            'MIN_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6', 'AST_PCT_ROLL_AVG_6', 'AST_TOV_ROLL_AVG_6',
-            'TEAM_FGM_ROLL_AVG_6', 'TEAM_AST_ROLL_AVG_6', 'TEAM_PACE_ROLL_AVG_6',
-            'OPP_DEF_RATING_ROLL_AVG_6', 'OPP_STL_ROLL_AVG_6',
-            'PLAYER_HOME_AVG_AST', 'PLAYER_AWAY_AVG_AST',
-],
-        'REB': [
-            'MIN_ROLL_AVG_2', 'FGA_ROLL_AVG_2', 'FGM_ROLL_AVG_2',
-            'OREB_PCT_ROLL_AVG_2', 'DREB_PCT_ROLL_AVG_2', 'REB_PCT_ROLL_AVG_2',
-            'USG_PCT_ROLL_AVG_2', 'POSS_ROLL_AVG_2',
-            'TEAM_FGA_ROLL_AVG_2', 'TEAM_FG3A_ROLL_AVG_2', 'TEAM_FG_PCT_ROLL_AVG_2', 'TEAM_FG3_PCT_ROLL_AVG_2',
-            'OPP_REB_ROLL_AVG_2', 'OPP_FG_PCT_ROLL_AVG_2', 'OPP_PACE_ROLL_AVG_2',
-            'MIN_ROLL_AVG_4', 'FGA_ROLL_AVG_4', 'FGM_ROLL_AVG_4',
-            'OREB_PCT_ROLL_AVG_4', 'DREB_PCT_ROLL_AVG_4', 'REB_PCT_ROLL_AVG_4',
-            'USG_PCT_ROLL_AVG_4', 'POSS_ROLL_AVG_4',
-            'TEAM_FGA_ROLL_AVG_4', 'TEAM_FG3A_ROLL_AVG_4', 'TEAM_FG_PCT_ROLL_AVG_4', 'TEAM_FG3_PCT_ROLL_AVG_4',
-            'OPP_REB_ROLL_AVG_4', 'OPP_FG_PCT_ROLL_AVG_4', 'OPP_PACE_ROLL_AVG_4',
-            'MIN_ROLL_AVG_6', 'FGA_ROLL_AVG_6', 'FGM_ROLL_AVG_6',
-            'OREB_PCT_ROLL_AVG_6', 'DREB_PCT_ROLL_AVG_6', 'REB_PCT_ROLL_AVG_6',
-            'USG_PCT_ROLL_AVG_6', 'POSS_ROLL_AVG_6',
-            'TEAM_FGA_ROLL_AVG_6', 'TEAM_FG3A_ROLL_AVG_6', 'TEAM_FG_PCT_ROLL_AVG_6', 'TEAM_FG3_PCT_ROLL_AVG_6',
-            'OPP_REB_ROLL_AVG_6', 'OPP_FG_PCT_ROLL_AVG_6', 'OPP_PACE_ROLL_AVG_6',
-            'PLAYER_HOME_AVG_REB', 'PLAYER_AWAY_AVG_REB',]
+            'PLAYER_HOME_AVG_PTS', 'PLAYER_AWAY_AVG_PTS']
 }
     include = feature_sets[stat_type]
 
@@ -184,7 +124,6 @@ def get_opponent_defense_category(opp_team, data, current_date=None):
         recent_data = data[data['GAME_DATE'] <= current_date]
     else:
         recent_data = data
-    
     opp_def_rating = recent_data[recent_data['OPP_ABBREVIATION'] == opp_team]['OPP_DEF_RATING'].mean()
     all_team_ratings = recent_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING'].mean()
     team_rank = (all_team_ratings <= opp_def_rating).sum()
@@ -193,8 +132,6 @@ def get_opponent_defense_category(opp_team, data, current_date=None):
 def getPlayerVsDefense(player, data, Opp, stat_type='PTS'):
     metrics = {
         'PTS': ['PTS', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TOV'],
-        'AST': ['AST', 'AST_PCT', 'AST_TOV', 'USG_PCT', 'PACE', 'POSS', 'OFF_RATING', 'TOV'],
-        'REB': ['REB', 'OREB', 'DREB', 'REB_PCT', 'USG_PCT', 'GAME_PACE', 'TOV']
     }
     opp_def_category = get_opponent_defense_category(Opp, data)
     player_data = data[data['PLAYER_NAME'] == player].copy()
@@ -343,9 +280,7 @@ def getPlayoffFeatures(player, data, IS_PLAYOFF=0):
 
 #--------------------------------------------------------------------------------------------------------------------------------
 def buildFeatureVector(player, opponent, data, games, is_playoff, stat_line='PTS'):
-    features = (getPlayerAVG(player, data, stat_line) + 
-                   getOppAVG(opponent, data) + 
-                   getPlayerRollingAVG(player, data, stat_line) + 
+    features = (   getPlayerRollingAVG(player, data, stat_line) + 
                    getPlayerTeam(player, data) +
                    getOppPlayerTeam(opponent) +
                    getPlayerVsDefense(player, data, opponent, stat_line) +
