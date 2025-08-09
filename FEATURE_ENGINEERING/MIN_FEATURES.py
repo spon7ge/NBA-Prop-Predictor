@@ -1,5 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+from collections import defaultdict
+from collections import deque
 
 def convert_min_to_float(min_str):
     """Convert minutes string (MM:SS) to float."""
@@ -65,7 +67,7 @@ def MINrollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DA
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = [
-        'MIN'
+        'MIN', 'PF'
     ]
 
     # Compute rolling averages (leave NaNs untouched)
@@ -130,58 +132,45 @@ def getPlayerMINAvgToDate(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     return df_enhanced
 
 def MINHomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    """
-    Calculate home/away rolling averages (expanding) for key metrics,
-    prevent data leakage via shift(1), and fill missing values with the opposite location's current average.
-    All results are rounded to 2 decimal places.
-    """
     df = player_data.copy()
-    df.sort_values([player_id_col, date_col], inplace=True)
-    
-    metrics = ['MIN']
-    global_means = df[metrics].mean()
-    player_group = df.groupby(player_id_col)
+    df = df.sort_values([player_id_col, date_col])
 
-    for location in ['HOME', 'AWAY']:
-        loc_mask = df['HOME_GAME'] == (1 if location == 'HOME' else 0)
+    metric = 'MIN'
+    if metric not in df.columns:
+        return df
 
-        for metric in metrics:
-            if metric not in df.columns:
-                continue
+    global_mean = df[metric].mean()
 
-            col_name = f'PLAYER_{location}_AVG_{metric}'
-            df[col_name] = np.nan
+    # Overall per player expanding avg, shifted 1, used as a neutral fallback
+    overall_shifted = df.groupby(player_id_col)[metric].shift(1)
+    overall_cumcount = overall_shifted.groupby(df[player_id_col]).expanding().count().reset_index(level=[0], drop=True)
+    overall_cumsum = overall_shifted.groupby(df[player_id_col]).expanding().sum().reset_index(level=[0], drop=True)
+    overall_avg = overall_cumsum / overall_cumcount
 
-            for player_id in df[player_id_col].unique():
-                player_mask = df[player_id_col] == player_id
-                combined_mask = player_mask & loc_mask
+    # Per location expanding avg, shifted 1
+    g_loc = df.groupby([player_id_col, 'HOME_GAME'])[metric]
+    loc_shifted = g_loc.shift(1)
 
-                shifted = df.loc[combined_mask, metric].shift(1)
-                expanding_mean = shifted.expanding().mean()
+    # Compute expanding mean per player, per location
+    loc_cumcount = loc_shifted.groupby([df[player_id_col], df['HOME_GAME']]).expanding().count().reset_index(level=[0,1], drop=True)
+    loc_cumsum = loc_shifted.groupby([df[player_id_col], df['HOME_GAME']]).expanding().sum().reset_index(level=[0,1], drop=True)
+    loc_avg = loc_cumsum / loc_cumcount
 
-                df.loc[combined_mask, col_name] = expanding_mean
+    # Write into separate columns by location
+    df['PLAYER_HOME_AVG_MIN'] = np.where(df['HOME_GAME'] == 1, loc_avg, np.nan)
+    df['PLAYER_AWAY_AVG_MIN'] = np.where(df['HOME_GAME'] == 0, loc_avg, np.nan)
 
-            # Fill first games with global mean
-            first_games_mask = player_group.cumcount() == 0
-            df.loc[first_games_mask, col_name] = global_means[metric]
+    # First game for a player, set both to global mean
+    first_game_mask = df.groupby(player_id_col).cumcount() == 0
+    df.loc[first_game_mask, 'PLAYER_HOME_AVG_MIN'] = global_mean
+    df.loc[first_game_mask, 'PLAYER_AWAY_AVG_MIN'] = global_mean
 
-    # Fill NaNs with the opposite-location average
-    for metric in metrics:
-        home_col = f'PLAYER_HOME_AVG_{metric}'
-        away_col = f'PLAYER_AWAY_AVG_{metric}'
+    # Fill remaining NaNs with the player's overall prior average, then global mean
+    for col in ['PLAYER_HOME_AVG_MIN', 'PLAYER_AWAY_AVG_MIN']:
+        df[col] = df[col].fillna(overall_avg)
+        df[col] = df[col].fillna(global_mean)
+        df[col] = df[col].astype('float32').round(2)
 
-        df[home_col] = df[home_col].fillna(df[away_col])
-        df[away_col] = df[away_col].fillna(df[home_col])
-
-        df[home_col] = df[home_col].fillna(global_means[metric])
-        df[away_col] = df[away_col].fillna(global_means[metric])
-
-        # Cast to float32 then apply real rounding
-        df[home_col] = df[home_col].astype('float32')
-        df[home_col] = df[home_col].apply(lambda x: round(x, 2))
-
-        df[away_col] = df[away_col].astype('float32')
-        df[away_col] = df[away_col].apply(lambda x: round(x, 2))
     return df
 
 def MINAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION', stat_line='MIN'):
@@ -285,3 +274,169 @@ def assign_opponent_team_stats_dict(df):
     for col in ['OPP_PACE_AVG_TO_DATE']:
         df_enhanced[col] = [team_stats_dict.get(key, {}).get(col, None) for key in lookup_keys]
     return df_enhanced
+
+def _rolling_slope(y, window):
+    if len(y) < window:
+        return np.nan
+    x = np.arange(window, dtype=float)
+    yw = y[-window:].astype(float)
+    x_mean = x.mean()
+    y_mean = yw.mean()
+    denom = ((x - x_mean) ** 2).sum()
+    if denom == 0:
+        return 0.0
+    slope = ((x - x_mean) * (yw - y_mean)).sum() / denom
+    return slope
+
+def add_minutes_trend_features(df, date_col='GAME_DATE'):
+    d = df.sort_values([ 'PLAYER_ID', date_col ])
+    # shift to avoid leakage
+    d['MIN_PRIOR'] = d.groupby('PLAYER_ID')['MIN'].shift(1)
+
+    # slope of minutes over last 5 prior games
+    d['MIN_SLOPE_5'] = (
+        d.groupby('PLAYER_ID')['MIN_PRIOR']
+         .apply(lambda s: s.rolling(5).apply(lambda w: _rolling_slope(w.values, 5), raw=False))
+         .reset_index(level=0, drop=True)
+    )
+
+    # rolling std of minutes over last 3, 5, 7 prior games
+    for k in [3, 5, 7]:
+        d[f'STD_MIN_{k}'] = (
+            d.groupby('PLAYER_ID')['MIN_PRIOR']
+             .rolling(k).std()
+             .reset_index(level=0, drop=True)
+        )
+
+    # clean up
+    d.drop(columns=['MIN_PRIOR'], inplace=True)
+    return d
+
+def add_usage_shift(df, window=5, date_col='GAME_DATE'):
+    d = df.sort_values(['PLAYER_ID', date_col, 'GAME_ID']).copy()
+
+    # rolling avg USG over last N prior games
+    d[f'USG_LAST_{window}'] = (
+        d.groupby('PLAYER_ID')['USG_PCT']
+         .shift(1)
+         .rolling(window)
+         .mean()
+    )
+
+    # season prior mean without MultiIndex
+    g = d.groupby(['PLAYER_ID', 'TEAM_SEASON_ID'])
+    prior_sum = g['USG_PCT'].cumsum().shift(1)
+    prior_cnt = g.cumcount()  # 0 for first row in season
+    d['SEASON_USG_PRIOR'] = prior_sum / prior_cnt.replace(0, np.nan)
+
+    d[f'USG_SHIFT_{window}'] = d[f'USG_LAST_{window}'] - d['SEASON_USG_PRIOR']
+    d.drop(columns=[f'USG_LAST_{window}', 'SEASON_USG_PRIOR'], inplace=True)
+    return d
+
+def add_rotation_stability(df, window=10, date_col='GAME_DATE'):
+    d = df.sort_values(['TEAM_ID', date_col, 'GAME_ID', 'PLAYER_ID']).copy()
+
+    # build starters per team game as lists
+    starters = (
+        d[d['STARTING'] == 1]
+        .groupby(['TEAM_ID', date_col, 'GAME_ID'])['PLAYER_ID']
+        .apply(list)
+        .reset_index()
+        .sort_values(['TEAM_ID', date_col, 'GAME_ID'])
+    )
+
+    records = {}
+    for team_id, grp in starters.groupby('TEAM_ID', sort=False):
+        prev = deque(maxlen=window)
+        for _, row in grp.iterrows():
+            gid = row['GAME_ID']
+            cur = set(row['PLAYER_ID'])
+            if len(prev) == 0:
+                stability = np.nan
+            else:
+                overlaps = [len(cur.intersection(p)) / 5.0 for p in prev]
+                stability = float(np.mean(overlaps))
+            records[(team_id, gid)] = stability
+            prev.append(cur)
+
+    d[f'ROTATION_STABILITY_{window}'] = d.set_index(['TEAM_ID', 'GAME_ID']).index.map(records)
+    d.reset_index(drop=True, inplace=True)
+    return d
+
+def add_lineup_cohesion(df, date_col='GAME_DATE'):
+    d = df.sort_values(['TEAM_ID', date_col, 'GAME_ID', 'PLAYER_ID']).copy()
+
+    starters = (
+        d[d['STARTING'] == 1]
+        .groupby(['TEAM_ID', date_col, 'GAME_ID'])['PLAYER_ID']
+        .apply(list)
+        .reset_index()
+        .sort_values(['TEAM_ID', date_col, 'GAME_ID'])
+    )
+
+    records = {}
+    for team_id, grp in starters.groupby('TEAM_ID', sort=False):
+        pair_counts = defaultdict(int)  # prior co-start counts for pairs
+        for _, row in grp.iterrows():
+            gid = row['GAME_ID']
+            lineup = row['PLAYER_ID']
+            if len(lineup) < 2:
+                records[(team_id, gid)] = np.nan
+            else:
+                pairs = []
+                for i in range(len(lineup)):
+                    for j in range(i + 1, len(lineup)):
+                        a, b = lineup[i], lineup[j]
+                        key = (a, b) if a < b else (b, a)
+                        pairs.append(pair_counts[key])
+                cohesion = float(np.mean(pairs)) if len(pairs) else np.nan
+                records[(team_id, gid)] = cohesion
+                # update counts after computing prior value
+                for i in range(len(lineup)):
+                    for j in range(i + 1, len(lineup)):
+                        a, b = lineup[i], lineup[j]
+                        key = (a, b) if a < b else (b, a)
+                        pair_counts[key] += 1
+
+    d['LINEUP_COHESION_IDX'] = d.set_index(['TEAM_ID', 'GAME_ID']).index.map(records)
+    d.reset_index(drop=True, inplace=True)
+    return d
+
+def process_star_players(season_df, star_players, usg_col='USG_PCT'):
+    """Process star and usage data for a single season."""
+    df = season_df.copy()
+
+    # IS_STAR
+    df['IS_STAR'] = df['PLAYER_NAME'].isin(star_players).astype(int)
+
+    # Count starters and stars among starters per team-game
+    starters = (
+        df[df['STARTING'] == 1]
+        .groupby(['GAME_ID', 'TEAM_ID'])['PLAYER_NAME']
+        .agg(list)
+        .reset_index()
+        .rename(columns={'PLAYER_NAME': 'STARTERS_LIST'})
+    )
+    starters['NUM_STARS_ON_TEAM'] = starters['STARTERS_LIST'].apply(
+        lambda players: sum(p in star_players for p in players)
+    )
+
+    # Merge star starter count
+    df = df.merge(
+        starters[['GAME_ID', 'TEAM_ID', 'NUM_STARS_ON_TEAM']],
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    df['NUM_STARS_ON_TEAM'] = df['NUM_STARS_ON_TEAM'].fillna(0).astype(int)
+
+    # HIGHEST_USG_RATE per team-game
+    if usg_col not in df.columns:
+        raise KeyError(f"Column '{usg_col}' not in DataFrame")
+
+    df['HIGHEST_USG_RATE'] = 0
+    valid = df[usg_col].notna()
+    max_usg = df.loc[valid].groupby(['GAME_ID', 'TEAM_ID'])[usg_col].transform('max')
+    df.loc[valid & (df[usg_col] == max_usg), 'HIGHEST_USG_RATE'] = 1
+    df['HIGHEST_USG_RATE'] = df['HIGHEST_USG_RATE'].astype(int)
+
+    return df

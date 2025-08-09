@@ -244,51 +244,45 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
+    if 'HOME_GAME' not in df.columns:
+        return df
+
     metrics = ['PTS', 'USG_PCT', 'POSS', 'PACE', 'OFF_RATING']
+    metrics = [m for m in metrics if m in df.columns]
+    if not metrics:
+        return df
+
     global_means = df[metrics].mean()
-    player_group = df.groupby(player_id_col)
 
-    for location in ['HOME', 'AWAY']:
-        loc_mask = df['HOME_GAME'] == (1 if location == 'HOME' else 0)
+    def shifted_expanding_mean(values, group_keys):
+        shifted = values.groupby(group_keys).shift(1)
+        cumsum = shifted.groupby(group_keys).cumsum()
+        count = shifted.notna().groupby(group_keys).cumsum()
+        return cumsum / count
 
-        for metric in metrics:
-            if metric not in df.columns:
-                continue
+    first_game_mask = df.groupby(player_id_col).cumcount() == 0
 
-            col_name = f'PLAYER_{location}_AVG_{metric}'
-            df[col_name] = np.nan
-
-            for player_id in df[player_id_col].unique():
-                player_mask = df[player_id_col] == player_id
-                combined_mask = player_mask & loc_mask
-
-                shifted = df.loc[combined_mask, metric].shift(1)
-                expanding_mean = shifted.expanding().mean()
-
-                df.loc[combined_mask, col_name] = expanding_mean
-
-            # Fill first games with global mean
-            first_games_mask = player_group.cumcount() == 0
-            df.loc[first_games_mask, col_name] = global_means[metric]
-
-    # Fill NaNs with the opposite-location average
     for metric in metrics:
+        overall_avg = shifted_expanding_mean(df[metric], df[player_id_col])
+        loc_avg = shifted_expanding_mean(df[metric], [df[player_id_col], df['HOME_GAME']])
+
         home_col = f'PLAYER_HOME_AVG_{metric}'
         away_col = f'PLAYER_AWAY_AVG_{metric}'
 
-        df[home_col] = df[home_col].fillna(df[away_col])
-        df[away_col] = df[away_col].fillna(df[home_col])
+        df[home_col] = np.where(df['HOME_GAME'] == 1, loc_avg, np.nan)
+        df[away_col] = np.where(df['HOME_GAME'] == 0, loc_avg, np.nan)
 
-        df[home_col] = df[home_col].fillna(global_means[metric])
-        df[away_col] = df[away_col].fillna(global_means[metric])
+        df.loc[first_game_mask, home_col] = global_means[metric]
+        df.loc[first_game_mask, away_col] = global_means[metric]
 
-        # Cast to float32 then apply real rounding
-        df[home_col] = df[home_col].astype('float32')
-        df[home_col] = df[home_col].apply(lambda x: round(x, 2))
+        df[home_col] = df[home_col].fillna(overall_avg)
+        df[away_col] = df[away_col].fillna(overall_avg)
 
-        df[away_col] = df[away_col].astype('float32')
-        df[away_col] = df[away_col].apply(lambda x: round(x, 2))
+        df[home_col] = df[home_col].fillna(global_means[metric]).astype('float32').round(2)
+        df[away_col] = df[away_col].fillna(global_means[metric]).astype('float32').round(2)
+
     return df
+
 
 def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION', stat_line='PTS'):
     """
@@ -1341,3 +1335,85 @@ def add_all_defensive_features(df, all_defensive_players, year=2025):
         df['ALL_DEF_MATCHUP_TOTAL'] = df['TOTAL_ALL_DEF_TEAM'] + df['TOTAL_ALL_DEF_OPP']
     
     return df
+
+########################################################
+
+def merge_betting_data(player_df, betting_df, team_dict):
+    """
+    Merge betting data (spread, total, who's favored) into player dataset
+    """
+    df = player_df.copy()
+    odds = betting_df.copy()
+    df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+    odds['date'] = pd.to_datetime(odds['date'])
+    
+    # Convert betting data team abbreviations to uppercase using team_dict
+    odds['away_upper'] = odds['away'].map(team_dict)
+    odds['home_upper'] = odds['home'].map(team_dict)
+    
+    # First, create a unique identifier for each game in odds data
+    odds['game_key_home'] = odds['date'].astype(str) + '_' + odds['home_upper'] + '_' + odds['away_upper']
+    odds['game_key_away'] = odds['date'].astype(str) + '_' + odds['away_upper'] + '_' + odds['home_upper']
+    
+    df['game_key'] = df['GAME_DATE'].astype(str) + '_' + df['TEAM_ABBREVIATION'] + '_' + df['OPP_ABBREVIATION']
+    home_merge = df.merge(
+        odds[['game_key_home', 'whos_favored', 'spread', 'total']].rename(columns={'game_key_home': 'game_key'}),
+        on='game_key',
+        how='left',
+        suffixes=('', '_home')
+    )
+    away_merge = df.merge(
+        odds[['game_key_away', 'whos_favored', 'spread', 'total']].rename(columns={'game_key_away': 'game_key'}),
+        on='game_key', 
+        how='left',
+        suffixes=('', '_away')
+    )
+    df['whos_favored'] = home_merge['whos_favored'].fillna(away_merge['whos_favored'])
+    df['spread'] = home_merge['spread'].fillna(away_merge['spread'])
+    df['total'] = home_merge['total'].fillna(away_merge['total'])
+    df['team_is_favored'] = ((df['whos_favored'] == 'home') & (df['HOME_GAME'] == 1)) | \
+                           ((df['whos_favored'] == 'away') & (df['HOME_GAME'] == 0))
+    df['team_spread'] = df.apply(lambda row: 
+        row['spread'] if row['HOME_GAME'] == 1 else -row['spread'], axis=1)
+    df.drop('game_key', axis=1, inplace=True)
+    return df
+
+team_dict = {
+    'min': 'MIN', 
+    'bos': 'BOS', 
+    'bkn': 'BKN', 
+    'ny': 'NYK', 
+    'phi': 'PHI', 
+    'tor': 'TOR', 
+    'chi': 'CHI', 
+    'cle': 'CLE', 
+    'det': 'DET', 
+    'ind': 'IND', 
+    'mia': 'MIA', 
+    'atl': 'ATL', 
+    'cha': 'CHA', 
+    'was': 'WAS',
+    'wsh': 'WAS',
+    'orl': 'ORL', 
+    'mil': 'MIL', 
+    'chh': 'CHH', 
+    'dal': 'DAL', 
+    'hou': 'HOU',
+    'lac': 'LAC',
+    'lal': 'LAL',
+    'sac': 'SAC',
+    'por': 'POR',
+    'uta': 'UTA',
+    'utah': 'UTA', 
+    'den': 'DEN',
+    'okc': 'OKC',
+    'mem': 'MEM',
+    'no': 'NOP',
+    'sa': 'SAS',    
+    'gs': 'GSW',
+    'phx': 'PHX',  
+}
+
+
+
+########################################################
