@@ -16,25 +16,24 @@ def getGameLogs(season, season_type):
         df = df.copy()
         
         # Calculate possessions for each team
-        p1 = round(a['FGA'] + 0.44 * a['FTA'] - a['OREB'] + a['TOV'], 2)  # Team A possessions
-        p2 = round(b['FGA'] + 0.44 * b['FTA'] - b['OREB'] + b['TOV'], 2)  # Team B possessions
-        avg_pace = (p1 + p2) / 2  # Average game pace
+        p1 = round(a['FGA'] + 0.44 * a['FTA'] - a['OREB'] + a['TOV'], 2)
+        p2 = round(b['FGA'] + 0.44 * b['FTA'] - b['OREB'] + b['TOV'], 2)
+        avg_pace = (p1 + p2) / 2
         
-        # Calculate offensive ratings (points per 100 possessions)
-        off_rating_a = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)  # Team A's offensive rating
-        off_rating_b = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)  # Team B's offensive rating
+        # Offensive and Defensive Ratings
+        off_rating_a = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)
+        off_rating_b = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)
+        def_rating_a = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)
+        def_rating_b = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)
         
-        # Calculate defensive ratings (opponent points per 100 possessions)
-        def_rating_a = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)  # Team A's defensive rating
-        def_rating_b = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)  # Team B's defensive rating
-        
-        # Add stats for team A
+        # Team A
         df.loc[df.index[0], 'OPP_TEAM_ID'] = b['TEAM_ID']
         df.loc[df.index[0], 'TEAM_OFF_RATING'] = off_rating_a
         df.loc[df.index[0], 'TEAM_DEF_RATING'] = def_rating_a
         df.loc[df.index[0], 'TEAM_PACE'] = p1
         df.loc[df.index[0], 'GAME_PACE'] = avg_pace
         df.loc[df.index[0], 'OPP_PACE'] = p2
+        df.loc[df.index[0], 'OPP_DEF_RATING'] = def_rating_b
         df.loc[df.index[0], 'OPP_OFF_RATING'] = off_rating_b
         df.loc[df.index[0], 'OPP_PTS'] = b['PTS']
         df.loc[df.index[0], 'OPP_FGM'] = b['FGM']
@@ -46,13 +45,14 @@ def getGameLogs(season, season_type):
         df.loc[df.index[0], 'OPP_BLK'] = b['BLK']
         df.loc[df.index[0], 'OPP_TOV'] = b['TOV']
         
-        # Add stats for team B
+        # Team B
         df.loc[df.index[1], 'OPP_TEAM_ID'] = a['TEAM_ID']
         df.loc[df.index[1], 'TEAM_OFF_RATING'] = off_rating_b
         df.loc[df.index[1], 'TEAM_DEF_RATING'] = def_rating_b
         df.loc[df.index[1], 'TEAM_PACE'] = p2
         df.loc[df.index[1], 'GAME_PACE'] = avg_pace
         df.loc[df.index[1], 'OPP_PACE'] = p1
+        df.loc[df.index[1], 'OPP_DEF_RATING'] = def_rating_a
         df.loc[df.index[1], 'OPP_OFF_RATING'] = off_rating_a
         df.loc[df.index[1], 'OPP_PTS'] = a['PTS']
         df.loc[df.index[1], 'OPP_FGM'] = a['FGM']
@@ -74,4 +74,29 @@ def getGameLogs(season, season_type):
         data.append(processed_game)
     
     # Combine all processed games
-    return pd.concat(data, ignore_index=True)
+    df = pd.concat(data, ignore_index=True)
+    df['OPP_TEAM_ID'] = df['OPP_TEAM_ID'].astype(int)
+    
+    # Dynamically prefix TEAM_ to own team stats
+    exclude_prefixes = ['OPP_', 'TEAM_']  # Skip already prefixed columns
+    exclude_cols = ['GAME_ID', 'GAME_PACE', 'VIDEO_AVAILABLE']
+    cols_to_prefix = [
+    col for col in df.columns 
+    if not any(col.startswith(p) for p in exclude_prefixes) and col not in exclude_cols
+    ]
+    
+    rename_dict = {col: f'TEAM_{col}' for col in cols_to_prefix}
+    df = df.rename(columns=rename_dict)
+    
+    return df
+
+
+def mergeTeamtoPlayer(player_df, season='2024-25', season_type='Regular Season'):
+    team_df = getGameLogs(season=season, season_type=season_type)
+    player_df[['TEAM_ID', 'GAME_ID']] = player_df[['TEAM_ID', 'GAME_ID']].astype(int)
+    team_df[['TEAM_ID', 'GAME_ID']] = team_df[['TEAM_ID', 'GAME_ID']].astype(int)
+    
+    # Drop TEAM_ABBREVIATION from team_df to avoid duplicates
+    team_df = team_df.drop(columns=['TEAM_ABBREVIATION'], errors='ignore')
+    
+    return player_df.merge(team_df, on=['GAME_ID', 'TEAM_ID'], how='left')
