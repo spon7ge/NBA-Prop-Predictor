@@ -10,8 +10,8 @@ from sklearn.model_selection import RandomizedSearchCV
 
 
 
-def train_xgb_model(data,feature_cols,date_col,target_col='PTS',n_splits=5,n_iter=60,random_state=42):
-    df = data.sort_values(date_col).reset_index(drop=True)
+def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,random_state=42):
+    df = data.sort_values('GAME_DATE').reset_index(drop=True)
     # features and target
     X = df[feature_cols].select_dtypes(include=[np.number]).astype(np.float32).values
     y = df[target_col].astype(np.float32).values
