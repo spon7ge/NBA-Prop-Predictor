@@ -440,3 +440,37 @@ def process_star_players(season_df, star_players, usg_col='USG_PCT'):
     df['HIGHEST_USG_RATE'] = df['HIGHEST_USG_RATE'].astype(int)
 
     return df
+
+def add_fatigue_features(df):
+    d = df.copy()
+    d['GAME_DATE'] = pd.to_datetime(d['GAME_DATE'])
+    d.sort_values(['PLAYER_ID','GAME_DATE','GAME_ID'], inplace=True)
+
+    g = d.groupby('PLAYER_ID', sort=False)
+    prev_dist = g['DIST'].shift(1)
+    prev_spd  = g['SPD'].shift(1)
+    prev_min  = g['MIN'].shift(1)
+
+    d['WORKLOAD_RAW_L1']     = (prev_dist.fillna(0) * prev_spd.fillna(0)).astype('float32')
+    d['WORKLOAD_PER_MIN_L1'] = (d['WORKLOAD_RAW_L1'] / (prev_min.fillna(0) + 1e-6)).astype('float32')
+
+    s = d['WORKLOAD_PER_MIN_L1']
+    d['ACUTE_WORKLOAD_3'] = s.groupby(d['PLAYER_ID']).rolling(3,  min_periods=1).mean().reset_index(level=0, drop=True).astype('float32')
+    d['CHRONIC_WORKLOAD_12'] = s.groupby(d['PLAYER_ID']).rolling(12, min_periods=3).mean().reset_index(level=0, drop=True).astype('float32')
+    d['ACWR'] = (d['ACUTE_WORKLOAD_3'] / d['CHRONIC_WORKLOAD_12']).replace([np.inf,-np.inf], np.nan).fillna(1.0).astype('float32')
+
+    sp = g['SPD'].shift(1)
+    d['SPD_MEAN_5']  = sp.groupby(d['PLAYER_ID']).rolling(5,  min_periods=1).mean().reset_index(level=0, drop=True).astype('float32')
+    d['SPD_MEAN_15'] = sp.groupby(d['PLAYER_ID']).rolling(15, min_periods=3).mean().reset_index(level=0, drop=True).astype('float32')
+    d['SPD_TREND_5v15'] = (d['SPD_MEAN_5'] - d['SPD_MEAN_15']).astype('float32')
+
+    di = g['DIST'].shift(1)
+    d['DIST_MEAN_5']  = di.groupby(d['PLAYER_ID']).rolling(5,  min_periods=1).mean().reset_index(level=0, drop=True).astype('float32')
+    d['DIST_MEAN_15'] = di.groupby(d['PLAYER_ID']).rolling(15, min_periods=3).mean().reset_index(level=0, drop=True).astype('float32')
+    d['DIST_TREND_5v15'] = (d['DIST_MEAN_5'] - d['DIST_MEAN_15']).astype('float32')
+
+    if 'PLAYER_DAYS_REST' not in d.columns: d['PLAYER_DAYS_REST'] = 3
+    if 'IS_BACK_TO_BACK' not in d.columns:  d['IS_BACK_TO_BACK'] = 0
+    rest_term = 1.0 / (1.0 + d['PLAYER_DAYS_REST'].clip(lower=0))
+    d['FATIGUE_PROXY'] = (0.6*d['ACWR'].clip(0,3) + 0.2*d['IS_BACK_TO_BACK'].astype('float32') + 0.2*rest_term.astype('float32')).astype('float32')
+    return d

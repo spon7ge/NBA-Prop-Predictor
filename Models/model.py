@@ -8,13 +8,19 @@ import shap
 import pandas as pd
 from sklearn.model_selection import RandomizedSearchCV
 
-
-
-def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,random_state=42):
+def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,random_state=42,half_life_days=60,min_weight=0.05):
     df = data.sort_values('GAME_DATE').reset_index(drop=True)
+    # features and target
     # features and target
     X = df[feature_cols].select_dtypes(include=[np.number]).astype(np.float32).values
     y = df[target_col].astype(np.float32).values
+
+    # recency weights
+    # weight = 0.5 ** (age_days / half_life_days), clipped at min_weight
+    dates = pd.to_datetime(df["GAME_DATE"]).astype("int64") // 10**9
+    max_t = dates.max()
+    age_days = (max_t - dates) / 86400.0
+    weights = np.clip(0.5 ** (age_days / float(half_life_days)), min_weight, 1.0).astype(np.float32)
 
     # time series CV
     tscv = TimeSeriesSplit(n_splits=n_splits)
@@ -40,7 +46,7 @@ def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,rand
         "min_child_weight": [1, 3, 5, 7, 10]
     }
 
-    # search
+    # search, pass sample_weight so each training fold uses the correct slice
     search = RandomizedSearchCV(
         estimator=base_model,
         param_distributions=param_distributions,
@@ -52,7 +58,7 @@ def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,rand
         random_state=random_state
     )
 
-    search.fit(X, y)
+    search.fit(X, y, sample_weight=weights)
 
     print("Best params:")
     print(search.best_params_)
@@ -61,30 +67,34 @@ def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,rand
 
     best_model = search.best_estimator_
 
-    # evaluate best model across folds
+    # evaluate best model across folds with recency-weighted fits
     r2_list, mae_list, rmse_list = [], [], []
     for fold, (train_idx, test_idx) in enumerate(tscv.split(X), start=1):
         X_train, X_test = X[train_idx], X[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
+        w_train = weights[train_idx]
 
-        best_model.fit(X_train, y_train)
+        best_model.fit(X_train, y_train, sample_weight=w_train)
         y_pred = best_model.predict(X_test)
 
         r2 = r2_score(y_test, y_pred)
         mae = mean_absolute_error(y_test, y_pred)
         rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 
+        print(f"Fold {fold} R2: {r2:.4f}  MAE: {mae:.4f}  RMSE: {rmse:.4f}")
+
         r2_list.append(r2)
         mae_list.append(mae)
         rmse_list.append(rmse)
-
-        print(f"Fold {fold} R2: {r2:.4f}  MAE: {mae:.4f}  RMSE: {rmse:.4f}")
 
     print("Mean CV R2:", np.mean(r2_list))
     print("Mean CV MAE:", np.mean(mae_list))
     print("Mean CV RMSE:", np.mean(rmse_list))
 
-    return best_model
+    # final refit on all data with weights
+    best_model.fit(X, y, sample_weight=weights)
+
+    return best_model, weights
 
 def saveXGBModel(model, stat_line):
     models_dir = 'Models'
