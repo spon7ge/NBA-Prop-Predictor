@@ -37,9 +37,11 @@ def get_espn_games(date_str=today):  # YYYYMMDD format
     
     return games_list
 
-def findOPP(player, data, games):
+def findOPP(player, data):
     player = data[data['PLAYER_NAME'] == player].sort_values(by='GAME_DATE')
+    games = get_espn_games()
     opponent = None
+    
     for game in games:
         if game['home_team'] == player['TEAM_ABBREVIATION'].iloc[-1]:
             opponent = game['away_team']
@@ -51,27 +53,55 @@ def findOPP(player, data, games):
         return None
     return opponent
 
+def getPlayerSpecificFeatures(player, data, games, stat_type='PTS'):
+    player_data = data[data['PLAYER_NAME'] == player].copy()
+    res = []
+    
+    # Position features
+    res.append(player_data['GUARD'].iloc[-1])      
+    res.append(player_data['FORWARD'].iloc[-1])    
+    res.append(player_data['CENTER'].iloc[-1])     
+    res.append(player_data['STARTING'].iloc[-1]) 
+    
+    # Home game
+    home_game = 0
+    for game in games:
+        if game['home_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
+            home_game = 1
+            break
+        if game['away_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
+            home_game = 0
+            break
+    res.append(home_game)
+    return res
+
+def getPlayerRest(player,data):
+    player_data = data[data['PLAYER_NAME'] == player].copy()
+    res = []
+    res.append(today - player_data['GAME_DATE'].iloc[-1]) # gets how long since last game
+    if today - player_data['GAME_DATE'].iloc[-1] == 1: # checks for back to back
+        res.append(1)
+    else:
+        res.append(0)
+    return res
+
+def getPlayerSeasonAverages(player, data):
+    player_data = data[data['PLAYER_NAME'] == player].copy()
+    cols = ['MIN', 'PTS', 'FGA', 'FG3A', 'FTA', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'POINT_PER_SHOT', 
+            'TCHS', 'POSS', 'PACE']
+    res = []
+    for col in cols:
+        res.append(player_data[col].mean())
+    return res
+
 def getPlayerRollingAVG(player, data, stat_type='PTS'):
     player = data[data['PLAYER_NAME'] == player].copy()
     player.sort_values(by='GAME_DATE', inplace=True)
     res = []
-    feature_sets = {
-        'PTS': [
-            'MIN_ROLL_AVG_2', 'FGA_ROLL_AVG_2', 'FGM_ROLL_AVG_2', 'FG_PCT_ROLL_AVG_2',
-            'FG3A_ROLL_AVG_2', 'FG3M_ROLL_AVG_2', 'FG3_PCT_ROLL_AVG_2', 'FTM_ROLL_AVG_2',
-            'FTA_ROLL_AVG_2', 'FT_PCT_ROLL_AVG_2', 'USG_PCT_ROLL_AVG_2', 'TS_PCT_ROLL_AVG_2',
-            'EFG_PCT_ROLL_AVG_2', 'TEAM_PACE_ROLL_AVG_2', 'TEAM_OFF_RATING_ROLL_AVG_2',
-            'OPP_DEF_RATING_ROLL_AVG_2', 'MIN_ROLL_AVG_4', 'FGA_ROLL_AVG_4', 'FGM_ROLL_AVG_4',
-            'FG_PCT_ROLL_AVG_4', 'FG3A_ROLL_AVG_4', 'FG3M_ROLL_AVG_4', 'FG3_PCT_ROLL_AVG_4',
-            'FTM_ROLL_AVG_4', 'FTA_ROLL_AVG_4', 'FT_PCT_ROLL_AVG_4', 'USG_PCT_ROLL_AVG_4',
-            'TS_PCT_ROLL_AVG_4', 'EFG_PCT_ROLL_AVG_4', 'TEAM_PACE_ROLL_AVG_4',
-            'TEAM_OFF_RATING_ROLL_AVG_4', 'OPP_DEF_RATING_ROLL_AVG_4', 'MIN_ROLL_AVG_6',
-            'FGA_ROLL_AVG_6', 'FGM_ROLL_AVG_6', 'FG_PCT_ROLL_AVG_6', 'FG3A_ROLL_AVG_6',
-            'FG3M_ROLL_AVG_6', 'FG3_PCT_ROLL_AVG_6', 'FTM_ROLL_AVG_6', 'FTA_ROLL_AVG_6',
-            'FT_PCT_ROLL_AVG_6', 'USG_PCT_ROLL_AVG_6', 'TS_PCT_ROLL_AVG_6', 'EFG_PCT_ROLL_AVG_6',
-            'TEAM_PACE_ROLL_AVG_6', 'TEAM_OFF_RATING_ROLL_AVG_6', 'OPP_DEF_RATING_ROLL_AVG_6',
-            'PLAYER_HOME_AVG_PTS', 'PLAYER_AWAY_AVG_PTS']
-}
+    feature_sets = {'PTS': [ 'MIN_ROLLING_AVG_5', 'PTS_ROLLING_AVG_5', 'FGA_ROLLING_AVG_5',
+    'FG3A_ROLLING_AVG_5', 'FTA_ROLLING_AVG_5', 'USG_PCT_ROLLING_AVG_5',
+    'TS_PCT_ROLLING_AVG_5', 'OFF_RATING_ROLLING_AVG_5', 'PTS_LAG_1', 'PTS_LAG_2']
+    }
     include = feature_sets[stat_type]
 
     for col in include:
@@ -83,38 +113,9 @@ def getPlayerRollingAVG(player, data, stat_type='PTS'):
         res.append(value)
     return res
 
-def getPlayerTeam(player, data):
-    teams = ['TEAM__ATL', 'TEAM__BKN', 'TEAM__BOS', 'TEAM__CHA', 'TEAM__CHI',
-    'TEAM__CLE', 'TEAM__DAL', 'TEAM__DEN', 'TEAM__DET', 'TEAM__GSW',
-    'TEAM__HOU', 'TEAM__IND', 'TEAM__LAC', 'TEAM__LAL', 'TEAM__MEM',
-    'TEAM__MIA', 'TEAM__MIL', 'TEAM__MIN', 'TEAM__NOP', 'TEAM__NYK',
-    'TEAM__OKC', 'TEAM__ORL', 'TEAM__PHI', 'TEAM__PHX', 'TEAM__POR',
-    'TEAM__SAC', 'TEAM__SAS', 'TEAM__TOR', 'TEAM__UTA', 'TEAM__WAS']
-    res = []
-    player_team = data[data['PLAYER_NAME'] == player]['TEAM_ABBREVIATION'].iloc[-1]
-    for team in teams:
-        team_abbv = team.split('__')[1]
-        if team_abbv in player_team:
-            res.append(1)
-        else:
-            res.append(0)
-    return res
 
-def getOppPlayerTeam(opp_team):
-    teams = ['OPP__ATL', 'OPP__BKN', 'OPP__BOS', 'OPP__CHA', 'OPP__CHI',
-    'OPP__CLE', 'OPP__DAL', 'OPP__DEN', 'OPP__DET', 'OPP__GSW',
-    'OPP__HOU', 'OPP__IND', 'OPP__LAC', 'OPP__LAL', 'OPP__MEM',
-    'OPP__MIA', 'OPP__MIL', 'OPP__MIN', 'OPP__NOP', 'OPP__NYK',
-    'OPP__OKC', 'OPP__ORL', 'OPP__PHI', 'OPP__PHX', 'OPP__POR',
-    'OPP__SAC', 'OPP__SAS', 'OPP__TOR', 'OPP__UTA', 'OPP__WAS']
-    res = []
-    for team in teams:
-        team_abbv = team.split('__')[1]
-        if team_abbv in opp_team:
-            res.append(1)
-        else:
-            res.append(0)
-    return res
+def getPlayerStarInformation(player, data):
+    pass
 
 def get_opponent_defense_category(opp_team, data, current_date=None):
     """
@@ -128,83 +129,6 @@ def get_opponent_defense_category(opp_team, data, current_date=None):
     all_team_ratings = recent_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING'].mean()
     team_rank = (all_team_ratings <= opp_def_rating).sum()
     return 1 if team_rank <= 10 else 0
-
-def getPlayerVsDefense(player, data, Opp, stat_type='PTS'):
-    metrics = {
-        'PTS': ['PTS', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TOV'],
-    }
-    opp_def_category = get_opponent_defense_category(Opp, data)
-    player_data = data[data['PLAYER_NAME'] == player].copy()
-    res = []
-    
-    for stat in metrics[stat_type]:
-        strong_avg = player_data[player_data['DEF_CATEGORY'] == 1][stat].mean()
-        weak_avg = player_data[player_data['DEF_CATEGORY'] == 0][stat].mean()
-        diff = strong_avg - weak_avg
-        res.append(strong_avg)
-        res.append(weak_avg)
-        res.append(diff)
-    return res
-    
-def getPlayerSpecificFeatures(player, data, games, stat_type='PTS'):
-    currStars = ['Shai Gilgeous-Alexander', 'Nikola Jokić', 'Giannis Antetokounmpo', 'Jayson Tatum', 'Donovan Mitchell',
-        'Anthony Edwards', 'LeBron James', 'Stephen Curry', 'Evan Mobley', 'Jalen Brunson',
-        'Cade Cunningham', 'Karl-Anthony Towns', 'Tyrese Haliburton', 'Jalen Williams', 'James Harden',
-        'Darius Garland', 'Kevin Durant', 'Anthony Davis', 'Kyrie Irving', 'Jaylen Brown', 'Tyler Herro', 'Jaren Jackson Jr.', 
-        'Pascal Siakam', 'Victor Wembanyama', 'Alperen Sengun', 'Trae Young']
-    
-    player_data = data[data['PLAYER_NAME'] == player].copy()
-    res = []
-    
-    # Calculate matchup average against opponent
-    opponent_team = None
-    for game in games:
-        if game['home_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
-            opponent_team = game['away_team']
-            break
-        if game['away_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
-            opponent_team = game['home_team']
-            break
-    
-    if opponent_team:
-        # Get last 3 games against this opponent
-        games_vs_opp = player_data[player_data['OPP_ABBREVIATION'] == opponent_team].tail(3)
-        matchup_avg = games_vs_opp[stat_type].mean() if not games_vs_opp.empty else 0
-        res.append(matchup_avg)
-    else:
-        res.append(0)  # No matchup found
-    
-    # Position features
-    res.append(player_data['GUARD'].iloc[-1])      
-    res.append(player_data['FORWARD'].iloc[-1])    
-    res.append(player_data['CENTER'].iloc[-1])     
-    res.append(player_data['STARTING'].iloc[-1])   
-    
-    # Home game
-    home_game = 0
-    for game in games:
-        if game['home_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
-            home_game = 1
-            break
-        if game['away_team'] == player_data['TEAM_ABBREVIATION'].iloc[-1]:
-            home_game = 0
-            break
-    res.append(home_game)
-    
-    # Rest features
-    days_rested = (datetime.today() - player_data['GAME_DATE'].iloc[-1]).days
-    res.append(days_rested)
-    if days_rested == 0:
-        res.append(1)
-    else:
-        res.append(0)
-    
-    # Star features
-    if player in currStars:
-        res.append(1)
-    else:
-        res.append(0) 
-    return res
 
 def get_most_recent_starters(historical_data, team_id):
     """
@@ -259,23 +183,6 @@ def get_all_starter_features(historical_data, home_team_id, away_team_id):
     
     return home_features, away_features
 
-def getPlayoffFeatures(player, data, IS_PLAYOFF=0):
-    player_data = data[data['PLAYER_NAME'] == player].copy()
-    series = 0
-    series_game = 0
-    res = []
-    if IS_PLAYOFF == 0:
-        res.append(series)
-        res.append(series_game)
-    else:
-        series = player_data['SERIES'].iloc[-1]
-        series_game = player_data['GAME_IN_SERIES'].iloc[-1] + 1
-        if series_game > 7:
-            series += 1
-            series_game = 1
-        res.append(series)
-        res.append(series_game)
-    return res
 
 
 #--------------------------------------------------------------------------------------------------------------------------------
