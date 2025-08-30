@@ -28,22 +28,22 @@ def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,rand
     # model
     base_model = XGBRegressor(
         objective="reg:squarederror",
-        n_jobs=-1,
+        n_jobs=8,
         tree_method="hist",
         random_state=random_state
     )
 
     # randomized search grid
     param_distributions = {
-        "n_estimators": [200, 400, 600, 800, 1000],
-        "max_depth": [3, 4, 5, 6, 8, 10],
-        "learning_rate": [0.005, 0.01, 0.02, 0.05, 0.1],
+        "n_estimators": [200, 400, 600],
+        "max_depth": [5, 6],
+        "learning_rate": [0.005, 0.01, 0.02],
         "subsample": [0.6, 0.7, 0.8, 0.9, 1.0],
-        "colsample_bytree": [0.6, 0.7, 0.8, 0.9, 1.0],
-        "gamma": [0, 0.1, 0.2, 0.3, 0.5, 1.0],
-        "reg_alpha": [0, 0.01, 0.05, 0.1, 1, 5, 10],
-        "reg_lambda": [0.1, 0.5, 1, 5, 10, 20],
-        "min_child_weight": [1, 3, 5, 7, 10]
+        "colsample_bytree": [0.6, 0.7],
+        "gamma": [0, 0.1, 0.2, 0.3],
+        "reg_alpha": [0, 0.01, 0.05],
+        "reg_lambda": [0.1, 0.5, 1],
+        "min_child_weight": [5, 7, 10]
     }
 
     # search, pass sample_weight so each training fold uses the correct slice
@@ -95,6 +95,7 @@ def train_xgb_model(data,feature_cols,target_col='PTS',n_splits=5,n_iter=60,rand
     best_model.fit(X, y, sample_weight=weights)
 
     return best_model, weights
+
 
 def saveXGBModel(model, stat_line):
     models_dir = 'Models'
