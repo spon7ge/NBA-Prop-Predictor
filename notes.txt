@@ -1,16 +1,27 @@
-next steps:
-- create model for blks, stls, and fg3m
-- any single category that prizePicks offers before moving on to jointed categories
-features id like to implement:
-- position vs defense
-- injury status prior to the game
-- star player out or in (maybe: using play by play to get the starting lineup and see if the star player is in the lineup? )
-- lineup changes
-- team style of play
-- coaching 
-- play by play data to get tendencies
-- player vs player espically if the player is a good defender
-- altitude(utah and denver) works in favor of the home team
+Next steps to improve
+
+Volatility features
+- Add rolling standard deviation of PTS and MIN over last 5–10 games.
+- Helps model uncertainty.
+- Volatility features (std of PTS over last 5 games).
+- Interaction features (e.g., MIN × TEAM_PACE).
+
+Injury/team context
+- Flag when key teammates are out (boosts usage).
+- Could derive from minutes changes or an injury feed.
+- Injury context (star teammates out → higher usage).
+
+Market efficiency
+- Compare your predictions to sportsbook player prop lines.
+- If your RMSE vs market is lower than vs raw PTS, you’re adding real value.
+
+Model ensembling
+- Train LightGBM or XGBoost with the same features.
+- Blend with CatBoost for small gains.
+
+Distributional predictions
+- Move beyond point estimates → predict quantiles or full distributions.
+- Useful for betting overs/unders, not just averages.
 
 Backtest:
 For each strategy track, per bet and cumulatively:
@@ -19,11 +30,3 @@ Hit rate = (Number of winning bets) ÷ (Total bets)
 Volatility = Standard deviation of daily P&L
 Max drawdown = Largest peak-to-trough loss
 Sharpe ratio = (Average daily return ÷ Std. dev. of daily returns) × √252
-
-TEAM FEATURES:
-Regularly update usual starters e.g., monthly to adapt to trades/injuries.
-Log unusual values e.g., 0-2 usual starters → opportunity for big deviations.
-Combine with opponent features: both teams lineup health can affect game pace and scoring.
-
-
-compare a player’s height/weight to average opponent starter heights/weights at the same position → a measure of mismatch advantage.
