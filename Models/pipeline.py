@@ -53,14 +53,11 @@ def findOPP(player, data):
         return None
     return opponent
 
-def getPlayerSpecificFeatures(player, data, games, stat_type='PTS'):
-    player_data = data[data['PLAYER_NAME'] == player].copy()
+def getPlayerSpecificFeatures(player_id, data, games, stat_type='PTS'):
+    player_data = data[data['PLAYER_ID'] == player_id].copy()
     res = []
     
-    # Position features
-    res.append(player_data['GUARD'].iloc[-1])      
-    res.append(player_data['FORWARD'].iloc[-1])    
-    res.append(player_data['CENTER'].iloc[-1])     
+    # Position features  
     res.append(player_data['STARTING'].iloc[-1]) 
     
     # Home game
