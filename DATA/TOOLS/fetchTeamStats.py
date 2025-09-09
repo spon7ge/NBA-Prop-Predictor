@@ -16,23 +16,35 @@ def getGameLogs(season, season_type):
         df = df.copy()
         
         # Calculate possessions for each team
-        p1 = round(a['FGA'] + 0.44 * a['FTA'] - a['OREB'] + a['TOV'], 2)
-        p2 = round(b['FGA'] + 0.44 * b['FTA'] - b['OREB'] + b['TOV'], 2)
-        avg_pace = (p1 + p2) / 2
+        p1 = a['FGA'] + 0.44 * a['FTA'] - a['OREB'] + a['TOV']
+        p2 = b['FGA'] + 0.44 * b['FTA'] - b['OREB'] + b['TOV']
         
+        # Use the same team minutes (game minutes) for both teams
+        game_minutes = float(a['MIN'])
+        
+        # CORRECT: Single pace calculation for the entire game
+        game_pace = ((240.0 / game_minutes) * (p1 + p2) / 2.0) if game_minutes > 0 else 0
+        game_pace = round(game_pace, 1)
         # Offensive and Defensive Ratings
-        off_rating_a = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)
-        off_rating_b = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)
-        def_rating_a = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 2)
-        def_rating_b = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 2)
+        off_rating_a = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 1)
+        off_rating_b = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 1)
+        def_rating_a = round((b['PTS'] / p1) * 100 if p1 > 0 else 0, 1)
+        def_rating_b = round((a['PTS'] / p2) * 100 if p2 > 0 else 0, 1)
+        
+        # Team A assignments
+        df.loc[df.index[0], 'TEAM_PACE'] = game_pace
+        df.loc[df.index[0], 'GAME_PACE'] = game_pace  
+        df.loc[df.index[0], 'OPP_PACE'] = game_pace
+        
+        # Team B assignments  
+        df.loc[df.index[1], 'TEAM_PACE'] = game_pace
+        df.loc[df.index[1], 'GAME_PACE'] = game_pace
+        df.loc[df.index[1], 'OPP_PACE'] = game_pace
         
         # Team A
         df.loc[df.index[0], 'OPP_TEAM_ID'] = b['TEAM_ID']
         df.loc[df.index[0], 'TEAM_OFF_RATING'] = off_rating_a
         df.loc[df.index[0], 'TEAM_DEF_RATING'] = def_rating_a
-        df.loc[df.index[0], 'TEAM_PACE'] = p1
-        df.loc[df.index[0], 'GAME_PACE'] = avg_pace
-        df.loc[df.index[0], 'OPP_PACE'] = p2
         df.loc[df.index[0], 'OPP_DEF_RATING'] = def_rating_b
         df.loc[df.index[0], 'OPP_OFF_RATING'] = off_rating_b
         df.loc[df.index[0], 'OPP_PTS'] = b['PTS']
@@ -49,9 +61,6 @@ def getGameLogs(season, season_type):
         df.loc[df.index[1], 'OPP_TEAM_ID'] = a['TEAM_ID']
         df.loc[df.index[1], 'TEAM_OFF_RATING'] = off_rating_b
         df.loc[df.index[1], 'TEAM_DEF_RATING'] = def_rating_b
-        df.loc[df.index[1], 'TEAM_PACE'] = p2
-        df.loc[df.index[1], 'GAME_PACE'] = avg_pace
-        df.loc[df.index[1], 'OPP_PACE'] = p1
         df.loc[df.index[1], 'OPP_DEF_RATING'] = def_rating_a
         df.loc[df.index[1], 'OPP_OFF_RATING'] = off_rating_a
         df.loc[df.index[1], 'OPP_PTS'] = a['PTS']

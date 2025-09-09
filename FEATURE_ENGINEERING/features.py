@@ -100,14 +100,28 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
         'MIN', 'PTS', 'FGA', 'FG3A', 'FTA', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'POINT_PER_SHOOT', 'AST', 'REB', 'TOV'
     ]
 
+    # First compute expanding averages as baseline for stability
+    for col in stats_cols:
+        if col in df.columns:
+            expanding_col = f'{col}_EXPANDING_AVG'
+            df[expanding_col] = df.groupby(player_id_col)[col].transform(
+                lambda x: x.shift(1).expanding(min_periods=1).mean().round(2)
+            )
+
     # Compute rolling averages - FIXED: Always shift by 1 to prevent leakage
     for window in windows:
         for col in stats_cols:
             if col in df.columns:
                 rolling_col_name = f'{col}_ROLLING_AVG_{window}'
-                df[rolling_col_name] = df.groupby(player_id_col)[col].transform(
+                expanding_col = f'{col}_EXPANDING_AVG'
+                
+                # Calculate rolling average
+                rolling_avg = df.groupby(player_id_col)[col].transform(
                     lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2)
                 )
+                
+                # Use expanding average as fallback when rolling window isn't full
+                df[rolling_col_name] = rolling_avg.fillna(df[expanding_col])
 
     # Add longer rolling windows for recent form comparison (15, 25, 40 games)
     recent_windows = [15, 25, 40]
@@ -115,18 +129,23 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
         for col in stats_cols:
             if col in df.columns:
                 rolling_col_name = f'{col}_ROLLING_AVG_{window}'
-                df[rolling_col_name] = df.groupby(player_id_col)[col].transform(
+                expanding_col = f'{col}_EXPANDING_AVG'
+                
+                # Calculate rolling average with min_periods=5 for longer windows
+                rolling_avg = df.groupby(player_id_col)[col].transform(
                     lambda x: x.shift(1).rolling(window=window, min_periods=5).mean().round(2)
                 )
+                
+                # Use expanding average as fallback when rolling window isn't available
+                df[rolling_col_name] = rolling_avg.fillna(df[expanding_col])
 
     # Compute Season Average up to Previous Game - FIXED: Use shift(1) to prevent leakage
     for col in stats_cols:
         if col in df.columns:
             season_avg_col = f'{col}_SEASON_AVG_TO_DATE'  # RENAMED with _TO_DATE suffix
             df[season_avg_col] = df.groupby(player_id_col)[col].transform(
-                lambda x: x.shift(1).expanding().mean().round(2)
+                lambda x: x.shift(1).expanding(min_periods=1).mean().round(2)
             )
-
 
     return df
 
@@ -171,8 +190,8 @@ def getPlayerAvgToDate(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     df_enhanced = df_enhanced.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define the stats we want to calculate averages for
-    stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'EFG_PCT', 'POINT_PER_SHOOT'
-                        'AST', 'REB', 'TOV']
+    stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 
+                        'EFG_PCT', 'POINT_PER_SHOOT', 'AST', 'REB', 'TOV']
     
     # Initialize the new columns
     for stat in stats_to_average:
@@ -207,7 +226,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats
-    stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT']
+    stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'AST', 'REB', 'TOV']
     
     # Use transform to avoid multi-index issues - FIXED: Always shift by 1
     for stat in stats_to_average:
@@ -314,10 +333,18 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     
     # Define metrics to track with their windows
     metrics = {
+        'MIN': [3],
+        'FGA': [3],
+        'FG3A': [3],
+        'FTA': [3],
         'PTS': [3],
         'USG_PCT': [3],
-        'POSS': [3],
-        'OFF_RATING': [3]
+        'EFG_PCT': [3],
+        'TS_PCT': [3],
+        'OFF_RATING': [3],
+        'AST': [3],
+        'REB': [3],
+        'TOV': [3]
     }
     
     # Calculate games against opponent count efficiently
@@ -1187,8 +1214,13 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_STAR'] = round(star_out_data['MIN'].mean(), 2)
             player_group['USG_PCT_WITHOUT_STAR'] = round(star_out_data['USG_PCT'].mean(), 2)
             player_group['FGA_WITHOUT_STAR'] = round(star_out_data['FGA'].mean(), 2)
+            player_group['FG3A_WITHOUT_STAR'] = round(star_out_data['FG3A'].mean(), 2)
+            player_group['FTA_WITHOUT_STAR'] = round(star_out_data['FTA'].mean(), 2)
+            player_group['EFG_PCT_WITHOUT_STAR'] = round(star_out_data['EFG_PCT'].mean(), 2)
+            player_group['TS_PCT_WITHOUT_STAR'] = round(star_out_data['TS_PCT'].mean(), 2)
             player_group['AST_WITHOUT_STAR'] = round(star_out_data['AST'].mean(), 2)
             player_group['REB_WITHOUT_STAR'] = round(star_out_data['REB'].mean(), 2)
+            player_group['TOV_WITHOUT_STAR'] = round(star_out_data['TOV'].mean(), 2)
             player_group['PTS_PER_36_WITHOUT_STAR'] = round((star_out_data['PTS'] * 36 / star_out_data['MIN']).mean(), 2)
             player_group['GAMES_WITHOUT_STAR'] = star_out_mask.sum()
         else:
@@ -1196,6 +1228,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_STAR'] = 0
             player_group['USG_PCT_WITHOUT_STAR'] = 0
             player_group['FGA_WITHOUT_STAR'] = 0
+            player_group['FG3A_WITHOUT_STAR'] = 0
+            player_group['FTA_WITHOUT_STAR'] = 0
+            player_group['EFG_PCT_WITHOUT_STAR'] = 0
+            player_group['TS_PCT_WITHOUT_STAR'] = 0
             player_group['AST_WITHOUT_STAR'] = 0
             player_group['REB_WITHOUT_STAR'] = 0
             player_group['PTS_PER_36_WITHOUT_STAR'] = 0
@@ -1208,6 +1244,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_ALL_NBA'] = round(all_nba_out_data['MIN'].mean(), 2)
             player_group['USG_PCT_WITHOUT_ALL_NBA'] = round(all_nba_out_data['USG_PCT'].mean(), 2)
             player_group['FGA_WITHOUT_ALL_NBA'] = round(all_nba_out_data['FGA'].mean(), 2)
+            player_group['FG3A_WITHOUT_ALL_NBA'] = round(all_nba_out_data['FG3A'].mean(), 2)
+            player_group['FTA_WITHOUT_ALL_NBA'] = round(all_nba_out_data['FTA'].mean(), 2)
+            player_group['EFG_PCT_WITHOUT_ALL_NBA'] = round(all_nba_out_data['EFG_PCT'].mean(), 2)
+            player_group['TS_PCT_WITHOUT_ALL_NBA'] = round(all_nba_out_data['TS_PCT'].mean(), 2)
             player_group['AST_WITHOUT_ALL_NBA'] = round(all_nba_out_data['AST'].mean(), 2)
             player_group['REB_WITHOUT_ALL_NBA'] = round(all_nba_out_data['REB'].mean(), 2)
             player_group['PTS_PER_36_WITHOUT_ALL_NBA'] = round((all_nba_out_data['PTS'] * 36 / all_nba_out_data['MIN']).mean(), 2)
@@ -1217,6 +1257,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_ALL_NBA'] = 0
             player_group['USG_PCT_WITHOUT_ALL_NBA'] = 0
             player_group['FGA_WITHOUT_ALL_NBA'] = 0
+            player_group['FG3A_WITHOUT_ALL_NBA'] = 0
+            player_group['FTA_WITHOUT_ALL_NBA'] = 0
+            player_group['EFG_PCT_WITHOUT_ALL_NBA'] = 0
+            player_group['TS_PCT_WITHOUT_ALL_NBA'] = 0
             player_group['AST_WITHOUT_ALL_NBA'] = 0
             player_group['REB_WITHOUT_ALL_NBA'] = 0
             player_group['PTS_PER_36_WITHOUT_ALL_NBA'] = 0
@@ -1229,6 +1273,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_BOTH_STARS'] = round(both_out_data['MIN'].mean(), 2)
             player_group['USG_PCT_WITHOUT_BOTH_STARS'] = round(both_out_data['USG_PCT'].mean(), 2)
             player_group['FGA_WITHOUT_BOTH_STARS'] = round(both_out_data['FGA'].mean(), 2)
+            player_group['FG3A_WITHOUT_BOTH_STARS'] = round(both_out_data['FG3A'].mean(), 2)
+            player_group['FTA_WITHOUT_BOTH_STARS'] = round(both_out_data['FTA'].mean(), 2)
+            player_group['EFG_PCT_WITHOUT_BOTH_STARS'] = round(both_out_data['EFG_PCT'].mean(), 2)
+            player_group['TS_PCT_WITHOUT_BOTH_STARS'] = round(both_out_data['TS_PCT'].mean(), 2)
             player_group['AST_WITHOUT_BOTH_STARS'] = round(both_out_data['AST'].mean(), 2)
             player_group['REB_WITHOUT_BOTH_STARS'] = round(both_out_data['REB'].mean(), 2)
             player_group['PTS_PER_36_WITHOUT_BOTH_STARS'] = round((both_out_data['PTS'] * 36 / both_out_data['MIN']).mean(), 2)
@@ -1238,6 +1286,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['MIN_WITHOUT_BOTH_STARS'] = 0
             player_group['USG_PCT_WITHOUT_BOTH_STARS'] = 0
             player_group['FGA_WITHOUT_BOTH_STARS'] = 0
+            player_group['FG3A_WITHOUT_BOTH_STARS'] = 0
+            player_group['FTA_WITHOUT_BOTH_STARS'] = 0
+            player_group['EFG_PCT_WITHOUT_BOTH_STARS'] = 0
+            player_group['TS_PCT_WITHOUT_BOTH_STARS'] = 0
             player_group['AST_WITHOUT_BOTH_STARS'] = 0
             player_group['REB_WITHOUT_BOTH_STARS'] = 0
             player_group['PTS_PER_36_WITHOUT_BOTH_STARS'] = 0
