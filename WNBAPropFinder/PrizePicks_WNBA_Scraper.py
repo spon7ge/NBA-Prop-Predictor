@@ -18,7 +18,7 @@ class PRIZEPICKS_WNBA_SCRAPER():
 
     def getJSON(self):
         url = "https://api.prizepicks.com/projections?league_id=3"
-        driver = webdriver.Firefox()
+        driver = webdriver.Chrome()
         driver.get(url)
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.ID, "json-tab")))

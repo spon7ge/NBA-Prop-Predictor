@@ -1,25 +1,22 @@
 from collections import defaultdict
 from WNBAPropFinder.Odds_WNBA_Scraper import ODDS_WNBA_SCRAPER
-from WNBAPropFinder.PrizePicks_WNBA_Scraper import PRIZEPICKS_WNBA_SCRAPER
 import pandas as pd
+import os
+from datetime import datetime
 
 class WNBAPropFinder():
     
     def __init__(self, region='us_dfs'):
-        # Get data from both scrapers
+        # Get data only from Odds API
         print("Scraping Odds API...")
         self.odds_data = ODDS_WNBA_SCRAPER(region=region)
-        # print("Scraping PrizePicks...")
-        self.prizepicks_data = PRIZEPICKS_WNBA_SCRAPER().lines
         print("Organizing Data...")
         self.organizeData()
         self.dataframe = self.getDataFrame()
+        self.save_data()
         
     def organizeData(self):
-        temp = set()
-        for item in self.prizepicks_data: # (player_name, stat_type, line_score, flash_sale, formatted_date)
-            temp.add(item[1])
-        self.categories = temp
+        # Create maps for all the different prop types
         self.points_map = self.create_map(self.odds_data.points)
         self.rebounds_map = self.create_map(self.odds_data.rebounds)
         self.assists_map = self.create_map(self.odds_data.assists)
@@ -35,21 +32,20 @@ class WNBAPropFinder():
         self.ra_map = self.create_map(self.odds_data.ra)
         self.to_map = self.create_map(self.odds_data.to)
         self.bs_map = self.create_map(self.odds_data.bs)
-        
 
     def create_map(self, data):
         result = defaultdict(list)
         for game_data in data:
             for prop in game_data:
                 if len(prop) >= 6:
-                    # From the example: ('player_points', 'PrizePicks', 'Jamal Murray', 'Over', 20.5, -137)
+                    # From the odds API: (market_key, bookmaker, player_name, over_under, line_score, price)
                     market_key, bookmaker, player_name, over_under, line_score, price = prop
                     key = (market_key, bookmaker)
                     result[key].append((player_name, over_under, line_score, price))
         return result
 
     def getDataFrame(self):
-        # list out all of the maps you created in organizeData()
+        # List all the maps created in organizeData()
         maps = [
             self.points_map,
             self.rebounds_map,
@@ -73,13 +69,30 @@ class WNBAPropFinder():
             for (market_key, bookmaker), props in market_map.items():
                 for player_name, over_under, line_score, price in props:
                     odds_records.append({
-                        'BOOKMAKER':   bookmaker,
-                        'CATEGORY':  market_key,
+                        'BOOKMAKER': bookmaker,
+                        'CATEGORY': market_key,
                         'NAME': player_name,
-                        'OVER/UNDER':  over_under,
-                        'LINE':  line_score,
-                        'ODDS':       price
+                        'OVER/UNDER': over_under,
+                        'LINE': line_score,
+                        'ODDS': price
                     })
 
-        # turn it into a DataFrame and return
+        # Turn it into a DataFrame and return
         return pd.DataFrame(odds_records)
+    
+    def save_data(self):
+        # Create directory path
+        save_dir = "/Users/alexg/Documents/Documents/Prize-Picks-Prop-Predictor/DATA/CSV_FILES/PROP_DATA"
+        
+        # Create timestamp for filename
+        timestamp = datetime.now().strftime("%Y%m%d")
+        filename = f"WNBA_{timestamp}.csv"
+        filepath = os.path.join(save_dir, filename)
+        
+        # Save DataFrame to CSV
+        if not self.dataframe.empty:
+            self.dataframe.to_csv(filepath, index=False)
+            print(f"WNBA prop data saved to: {filepath}")
+            print(f"Total records: {len(self.dataframe)}")
+        else:
+            print("No WNBA data to save (likely off-season)")
