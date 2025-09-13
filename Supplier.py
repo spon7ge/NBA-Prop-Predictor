@@ -5,7 +5,7 @@ load_dotenv()
 
 class Supplier():
     def __init__(self):
-        self.api_key = os.environ.get('ODDS_API_KEY')
+        self.api_key = os.environ.get('API_KEY')
         self.directory = os.environ.get('PROJECTIONS_DIRECTORY')
     
     def getKey(self):
