@@ -2,10 +2,8 @@ import requests
 from datetime import datetime
 import pytz
 import pandas as pd
-import joblib
 from MODELS.model import *
-from nba_api.stats.endpoints import leaguegamelog, teamgamelogs
-import re
+from catboost import Pool
 
 
 today = datetime.today().strftime('%Y-%m-%d')
@@ -314,13 +312,32 @@ def buildFeatureVector(player, data, games, todayDate, starters, game_id, n_game
                 getTeamOdds(player, data, game_id))
     return features
 
-def makePrediction(player_name, data, model, bookmakers, games, todayDate, starters, game_id, n_games=3):
-    features = buildFeatureVector(player_name, data, games, todayDate, starters, game_id, n_games=n_games)
+def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDate, starters, game_id, features, n_games=3): # make sure bookmakers is filtered to only the prop type you are predicting
+    feature_vector = buildFeatureVector(player_name, data, games, todayDate, starters, game_id, n_games=n_games)
     
-    # For CatBoost models, we don't need column names - just pass the feature array
-    prediction = model.predict([features])[0]
+    # Convert to DataFrame with proper feature names
+    X = pd.DataFrame([feature_vector], columns=features)
     
-    prop_line = bookmakers[bookmakers['NAME'] == player_name]['LINE'].values[0]
+    # Define categorical features (same as used during training)
+    categorical_cols = ['PLAYER_ID', 'TEAM_ID', 'OPP_TEAM_ID']
+    cat_cols = [c for c in categorical_cols if c in features]
+    cat_idx = [features.index(c) for c in cat_cols]
+    
+    # Data type cleanup (matching training preprocessing)
+    for c in X.columns:
+        if c not in cat_cols:
+            if X[c].dtype == 'bool':
+                X[c] = X[c].astype(int)
+            elif X[c].dtype == 'object':
+                X[c] = pd.to_numeric(X[c], errors='coerce')
+    
+    # Create CatBoost Pool with categorical features
+    pool = Pool(X, cat_features=cat_idx)
+    
+    # Make prediction
+    prediction = model.predict(pool)[0]
+    
+    prop_line = bookmakers[bookmakers['player'] == player_name]['line'].values[0]
     
     # Get opponent team for display
     player_id, player_team = findPlayerID(player_name, data)
