@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from scipy.stats import norm
 import scipy.stats as stats
-from Models.pipeline import *
-from Models.model import *
+from MODELS.pipeline import *
+from MODELS.model import *
 from datetime import datetime
 from zoneinfo import ZoneInfo
 

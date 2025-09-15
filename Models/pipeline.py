@@ -312,7 +312,11 @@ def buildFeatureVector(player, data, games, todayDate, starters, game_id, n_game
                 getTeamOdds(player, data, game_id))
     return features
 
-def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDate, starters, game_id, features, n_games=3): # make sure bookmakers is filtered to only the prop type you are predicting
+def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDate, starters, game_id, features, n_games=3):
+    from catboost import Pool
+    import pandas as pd
+    
+    # Get feature vector
     feature_vector = buildFeatureVector(player_name, data, games, todayDate, starters, game_id, n_games=n_games)
     
     # Convert to DataFrame with proper feature names
@@ -352,4 +356,3 @@ def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDat
         'edge': round(prediction - prop_line, 2),
         'recommendation': 'OVER' if prediction > prop_line else 'UNDER'
     }
-    
