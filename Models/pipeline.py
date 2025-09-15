@@ -76,11 +76,11 @@ ESPN_MAPPING = {
 def normalize_team_abbreviation(espn_abbrev):
     return ESPN_MAPPING.get(espn_abbrev, espn_abbrev)
 
-def getPlayerSpecificFeatures(player, data, starters, games,todayDate):
+def getPlayerSpecificFeatures(player, data, starters, games, todayDate):
     player_id, player_team = findPlayerID(player, data)
     opponent_team, homeGame = findOppTeam(player, data, games)
     player_data = data[data['PLAYER_ID'] == player_id].copy()
-    player_data.sort_values(by='GAME_DATE', inplace=True, ascending=True)
+    player_data.sort_values(by='GAME_DATE', inplace=True, ascending=False)
     res = []
     
     # player ID and team ID

@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 from scipy.stats import norm
 import scipy.stats as stats
-from Models.pipeline import *
-from Models.model import *
+from MODELS.pipeline import *
+from MODELS.model import *
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from scipy.stats import truncnorm
 
 
 # Convert UTC to ET and create game_date column
@@ -70,60 +71,20 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def precompute_player_residual_stds(players, datasets, models, games, stat_lines):
-    """
-    Precompute residual standard deviation for each player. Returns dict: player -> stat_line -> std_dev.
-    """
-    residual_stds = {}
-    for player in players:
-        residual_stds[player] = {}
-        for stat_line in stat_lines:
-            player_df = datasets[stat_line]
-            player_data = player_df[player_df['PLAYER_NAME'] == player].sort_values('GAME_DATE')
-            residuals = []
-            for idx, row in player_data.iterrows():
-                if pd.isna(row[stat_line]):
-                    continue
-                try:
-                    opponent = row.get('OPP_ABBREVIATION', 'UNK')
-                    temp_props = pd.DataFrame({
-                        'NAME': [row['PLAYER_NAME']],
-                        'LINE': [row[stat_line]],
-                        'CATEGORY': [f'player_{stat_line.lower()}']
-                    })
-                    pred = make_prediction(
-                        player_name=row['PLAYER_NAME'],
-                        bookmakers=temp_props,
-                        opponent=opponent,
-                        model=models[stat_line],
-                        data=player_data[player_data['GAME_DATE'] < row['GAME_DATE']],
-                        games=games,
-                        is_playoff=0,
-                        stat_line=stat_line
-                    )
-                    residual = row[stat_line] - pred['predicted_stat']
-                    residuals.append(residual)
-                except:
-                    continue
-            if len(residuals) >= 3:
-                std_dev = np.std(residuals)
-            else:
-                fallback_std = player_data[stat_line].std()
-                std_dev = fallback_std * 0.7 if not pd.isna(fallback_std) else 5.0
-            std_dev = std_dev if std_dev and not np.isnan(std_dev) and std_dev != 0 else 5.0
-            std_dev = min(std_dev, 12.0)
-            residual_stds[player][stat_line] = std_dev
-    return residual_stds
-
 #monte carlo simulation using my model to calculate the probability of the prop
-def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
+def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
     """
-    Simulates player performance using model prediction as mean and precomputed residual std_dev.
+    Simulates player performance using truncated normal distribution to prevent negative values.
     """
-    simulated_points = np.random.normal(loc=modelPred, scale=std_dev, size=num_simulations)
+    # Create truncated normal distribution (lower bound = 0)
+    a = -modelPred / std_dev  # Lower bound in standard deviations
+    b = np.inf  # No upper bound
+    
+    simulated_points = truncnorm.rvs(a, b, loc=modelPred, scale=std_dev, size=num_simulations)
     prob_over = np.mean(simulated_points > prop_line)
     prob_under = 1 - prob_over
     ci = np.percentile(simulated_points, [2.5, 97.5])
+    
     return {
         'mean_prediction': modelPred,
         'std_used': std_dev,
@@ -133,123 +94,106 @@ def monte_carlo_prop_simulation(player_df, modelPred, prop_line, std_dev, num_si
     }
 
 
-def single_bet(data, bookmakers, models, games, category='player_points', stat_line='PTS', current_dataset=None):  
+def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stake = 100,
+               simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_line='PTS'):
+
     print("Processing single bets...")
-    Props = bookmakers[['NAME', 'BOOKMAKER', 'CATEGORY', 'LINE', 'OVER/UNDER', 'ODDS']].loc[bookmakers['CATEGORY'] == category]
+    date_obj = datetime.strptime(todayDate, "%Y%m%d")
+    game_date = date_obj.strftime("%Y-%m-%d")
+    todayDate = str(todayDate)
+
+    def get_player_std(player_df, stat_col):
+        s = player_df[stat_col].dropna()
+        if s.empty:
+            return 5.0
+        sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
+        if pd.isna(sd) or sd == 0:
+            sd = 5.0
+        return float(np.clip(sd, min_std, max_std))
+
     results = []
-    model = models[stat_line]
-    
-    # Load dataset
-    try:
-        if current_dataset is not None:
-            data = current_dataset
-            print(f"Using provided current dataset for {stat_line}")
-        else:
-            data = pd.read_csv(f'CSV_FILES/REGULAR_DATA/season_25_{stat_line}_FEATURES.csv')
-            print(f"Loaded dataset for {stat_line}")
-    except Exception as e:
-        print(f"Error loading dataset for {stat_line}: {e}")
-        return pd.DataFrame()
-    
-    # Get unique players and precompute residual stds
-    unique_players = Props['NAME'].unique()
-    print(f"Precomputing residual stds for {len(unique_players)} players...")
-    residual_stds = precompute_player_residual_stds(unique_players, {stat_line: data}, models, games, [stat_line])
-    
-    for idx, row in Props.iterrows():
+    bookmakers = bookmakers.drop_duplicates(subset=['NAME'])
+
+    for _, row in bookmakers.iterrows():
         name = row['NAME']
         bookmaker = row['BOOKMAKER']
+        category = row['CATEGORY']
         line = row['LINE']
         over_under = row['OVER/UNDER']
-        odds = row['ODDS']
+        odds = row['PRICE']
 
-        # Get player data
-        player_data = data[data['PLAYER_NAME'] == name]
-        if player_data.empty:
+        player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
+        if player_df.empty:
             continue
-            
-        # Get player's team
-        player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
-        
-        # Find opponent
-        opponent = None
-        for game in games:
-            if game['home_team'] == player_team:
-                opponent = game['away_team']
-                break
-            elif game['away_team'] == player_team:
-                opponent = game['home_team']
-                break
-                
+
+        player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
+        game_id = int(player_df['GAME_ID'].iloc[-1])
+        starters = getStarters(game_id, player_team, data)
+        opponent, _ = findOppTeam(name, data, gamesSchedule)
         if opponent is None:
             continue
 
-        try:
-            temp_props = pd.DataFrame({
-                'NAME': [name],
-                'LINE': [line],
-                'CATEGORY': [category]
-            })
+        temp_props = pd.DataFrame({
+            'player': [name],
+            'line': [line],
+            'NAME': [name],
+            'LINE': [line],
+            'CATEGORY': [category]
+        })
+    # Team odds
+        features_list = features
+        if features_list is None:
+            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
+            features_list = [f'f{i}' for i in range(len(fv))]
 
-            pred = make_prediction(
-                player_name=name,
-                bookmakers=temp_props,
-                opponent=opponent,
-                model=model,
-                data=data,
-                games=games,
-                is_playoff=0,
-                stat_line=stat_line
-            )
+        pred = makePredictionCatBoost(
+            player_name=name,
+            data=data,
+            model=model,
+            bookmakers=temp_props,
+            games=gamesSchedule,
+            todayDate=todayDate,
+            starters=starters,
+            game_id=game_id,
+            features=features_list,
+            n_games=3
+        )
 
-            # Get precomputed std_dev
-            std_dev = residual_stds.get(name, {}).get(stat_line, 5.0)
+        std_dev = get_player_std(player_df, stat_line)
+        
+        # Use the monte_carlo_prop_simulation function instead of inline simulation
+        sim_results = monteCarloSim(
+            player_df=player_df,
+            modelPred=pred['predicted_stat'],
+            prop_line=line,
+            std_dev=std_dev,
+            num_simulations=simulations
+        )
+        
+        prob_over = sim_results['prob_over'] #find prob_under and best prob you use to find the EV
+        
+        
+        profit = (odds / 100) * stake if odds > 0 else (100 / abs(odds)) * stake
+        payout = stake + profit
+        ev = (prob_over * profit) - ((1 - prob_over) * stake)
+        kelly = kelly_criterion(prob_over, payout, stake)
 
-            sim_results = monte_carlo_prop_simulation(
-                player_df=player_data.sort_values('GAME_DATE'),
-                modelPred=pred['predicted_stat'],
-                prop_line=line,
-                std_dev=std_dev,
-                num_simulations=10000
-            )
-
-            prob_over = sim_results['prob_over']
-
-            # EV calculation
-            stake = 100
-            profit = (odds / 100) * stake if odds > 0 else (100 / abs(odds)) * stake
-            payout = stake + profit
-            ev = (prob_over * profit) - ((1 - prob_over) * stake)
-
-            kelly = kelly_criterion(prob_over, payout, stake)
-
-            # Calculate fair odds
-            try:
-                fair_odds = fairProb(bookmakers, name, line, category, over_under)
-            except ValueError as e:
-                fair_odds = None
-
-            results.append({
-                'NAME': name,
-                'TEAM': player_team,
-                'OPPONENT': opponent,
-                'BOOKMAKER': bookmaker,
-                'CATEGORY': category,
-                'LINE': line,
-                'OVER/UNDER': over_under,
-                'ODDS': odds,
-                'FAIR ODDS': fair_odds,
-                'MODEL_PREDICTION': round(pred['predicted_stat']),
-                'SIM_PROB': round(prob_over, 3),
-                'EV': round(ev, 2),
-                'KELLY CRITERION': kelly,
-            })
-        except Exception as e:
-            print(f"Error processing {name}: {e}")
-            continue
+        results.append({
+            'NAME': name,
+            'BOOKMAKER': bookmaker,
+            'CATEGORY': category,
+            'LINE': line,
+            'ODDS': odds,
+            'PREDICTION': round(pred['predicted_stat']),
+            'OVER%': round(prob_over, 2),
+            'UNDER%': 1 - round(prob_over,2),
+            'EV': round(ev, 2),
+            'KELLY CRITERION': kelly,
+            'CONFIDENCE_INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})",
+        })
 
     return pd.DataFrame(results)
-
+    
 def prizePicksPairsEV(prizePicks, propDict, models, games, current_datasets=None, simulations=10000, stake=100, payout=300):
     print("Loading datasets and generating valid combinations...")
     valid_combinations = []
