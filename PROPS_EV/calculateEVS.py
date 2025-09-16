@@ -94,8 +94,8 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     }
 
 
-def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stake = 100,
-               simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_line='PTS'):
+def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stake=100,
+               simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
 
     print("Processing single bets...")
     date_obj = datetime.strptime(todayDate, "%Y%m%d")
@@ -111,23 +111,28 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             sd = 5.0
         return float(np.clip(sd, min_std, max_std))
 
+    def american_to_decimal(odds):
+        return 1 + (odds / 100.0) if odds > 0 else 1 + (100.0 / abs(odds))
+
     results = []
-    bookmakers = bookmakers.drop_duplicates(subset=['NAME'])
+    # bookmakers = bookmakers.drop_duplicates(subset=['NAME'])
 
     for _, row in bookmakers.iterrows():
         name = row['NAME']
         bookmaker = row['BOOKMAKER']
         category = row['CATEGORY']
-        line = row['LINE']
-        over_under = row['OVER/UNDER']
-        odds = row['PRICE']
+        line = float(row['LINE'])
+        side = row.get('OVER/UNDER', 'over')
+        odds = int(row['PRICE'])
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
-        if player_df.empty:
+        if player_df.empty or stat_col not in player_df.columns:
             continue
 
-        player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
-        game_id = int(player_df['GAME_ID'].iloc[-1])
+        # use most recent game row
+        player_team = player_df['TEAM_ABBREVIATION'].iloc[0]
+        game_id = int(player_df['GAME_ID'].iloc[0])
+
         starters = getStarters(game_id, player_team, data)
         opponent, _ = findOppTeam(name, data, gamesSchedule)
         if opponent is None:
@@ -140,7 +145,7 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'LINE': [line],
             'CATEGORY': [category]
         })
-    # Team odds
+
         features_list = features
         if features_list is None:
             fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
@@ -159,24 +164,38 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             n_games=3
         )
 
-        std_dev = get_player_std(player_df, stat_line)
-        
-        # Use the monte_carlo_prop_simulation function instead of inline simulation
+        std_dev = get_player_std(player_df, stat_col)
+
         sim_results = monteCarloSim(
             player_df=player_df,
-            modelPred=pred['predicted_stat'],
+            modelPred=float(pred['predicted_stat']),
             prop_line=line,
             std_dev=std_dev,
             num_simulations=simulations
         )
-        
-        prob_over = sim_results['prob_over'] #find prob_under and best prob you use to find the EV
-        
-        
-        profit = (odds / 100) * stake if odds > 0 else (100 / abs(odds)) * stake
-        payout = stake + profit
-        ev = (prob_over * profit) - ((1 - prob_over) * stake)
-        kelly = kelly_criterion(prob_over, payout, stake)
+
+        p_over = float(sim_results['prob_over'])
+        p_under = 1.0 - p_over
+
+        # choose probability based on the offered side
+        if str(side).upper().startswith('O'):
+            p = p_over
+        else:
+            p = p_under
+
+        # odds and returns
+        dec_odds = american_to_decimal(odds)            # includes stake
+        b = dec_odds - 1.0                              # net profit per 1 staked
+        profit_if_win = stake * b
+        loss_if_lose = stake
+
+        # EV in dollars and percent
+        ev_per_unit = p * b - (1 - p)
+        ev_dollars = stake * ev_per_unit
+        ev_percent = ev_per_unit
+
+        # Kelly fraction
+        kelly_full = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
 
         results.append({
             'NAME': name,
@@ -184,15 +203,20 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'CATEGORY': category,
             'LINE': line,
             'ODDS': odds,
-            'PREDICTION': round(pred['predicted_stat']),
-            'OVER%': round(prob_over, 2),
-            'UNDER%': 1 - round(prob_over,2),
-            'EV': round(ev, 2),
-            'KELLY CRITERION': kelly,
-            'CONFIDENCE_INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})",
+            'SIDE': side,
+            'PREDICTION': float(pred['predicted_stat']),
+            'OVER%': round(p_over, 3),
+            'UNDER%': round(p_under, 3),
+            'EV$': round(ev_dollars, 2),
+            'EV%': round(ev_percent,2),
+            'KELLY_FULL': round(kelly_full, 2),
+            'KELLY_HALF': round(0.5 * kelly_full, 2),
+            'KELLY_QUARTER': round(0.25 * kelly_full, 2),
+            'CONFIDENCE_INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})"
         })
 
     return pd.DataFrame(results)
+
     
 def prizePicksPairsEV(prizePicks, propDict, models, games, current_datasets=None, simulations=10000, stake=100, payout=300):
     print("Loading datasets and generating valid combinations...")
