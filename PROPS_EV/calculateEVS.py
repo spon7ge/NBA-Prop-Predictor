@@ -209,10 +209,10 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'UNDER%': round(p_under, 3),
             'EV$': round(ev_dollars, 2),
             'EV%': round(ev_percent,2),
-            'KELLY_FULL': round(kelly_full, 2),
-            'KELLY_HALF': round(0.5 * kelly_full, 2),
-            'KELLY_QUARTER': round(0.25 * kelly_full, 2),
-            'CONFIDENCE_INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})"
+            'KELLY FULL': round(kelly_full, 2),
+            'KELLY HALF': round(0.5 * kelly_full, 2),
+            'KELLY QUARTER': round(0.25 * kelly_full, 2),
+            'CONFIDENCE INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})"
         })
 
     return pd.DataFrame(results)

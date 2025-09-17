@@ -787,7 +787,7 @@ def pace_expectation(df):
     
     return df
 
-def process_star_players_data(df, all_nba_players, min_minutes=1):
+def process_star_players_data(df, all_nba_players, min_minutes=10):
     df = df.copy()
     # Create ACTIVE column based on minutes played
     df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
@@ -1195,9 +1195,29 @@ def fill_na_with_similar_teams(df, team_stats_cols, team_id_col='TEAM_ID'):
 def add_performance_without_stars_columns(df, min_games=2):
     """
     Add columns showing player averages when star teammates are out.
-    
+    Also adds the number of All-NBA players on each team.
     """
     df = df.copy()
+    
+    # Add number of All-NBA players per team
+    all_nba_count_per_team = (
+        df.groupby(['TEAM_ID'])['PLAYER_IS_ALL_NBA']
+        .max()  # Get unique players per team
+        .reset_index()
+    )
+    
+    # Get actual count by summing unique All-NBA players per team
+    all_nba_per_team = (
+        df[df['PLAYER_IS_ALL_NBA'] == 1]
+        .groupby('TEAM_ID')['PLAYER_NAME']
+        .nunique()
+        .reset_index()
+        .rename(columns={'PLAYER_NAME': 'NUM_ALL_NBA_ON_TEAM'})
+    )
+    
+    # Merge back to main dataframe
+    df = df.merge(all_nba_per_team, on='TEAM_ID', how='left')
+    df['NUM_ALL_NBA_ON_TEAM'] = df['NUM_ALL_NBA_ON_TEAM'].fillna(0).astype(int)
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1234,6 +1254,7 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['TS_PCT_WITHOUT_STAR'] = 0
             player_group['AST_WITHOUT_STAR'] = 0
             player_group['REB_WITHOUT_STAR'] = 0
+            player_group['TOV_WITHOUT_STAR'] = 0
             player_group['PTS_PER_36_WITHOUT_STAR'] = 0
             player_group['GAMES_WITHOUT_STAR'] = 0
         
@@ -1250,6 +1271,7 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['TS_PCT_WITHOUT_ALL_NBA'] = round(all_nba_out_data['TS_PCT'].mean(), 2)
             player_group['AST_WITHOUT_ALL_NBA'] = round(all_nba_out_data['AST'].mean(), 2)
             player_group['REB_WITHOUT_ALL_NBA'] = round(all_nba_out_data['REB'].mean(), 2)
+            player_group['TOV_WITHOUT_ALL_NBA'] = round(all_nba_out_data['TOV'].mean(), 2)
             player_group['PTS_PER_36_WITHOUT_ALL_NBA'] = round((all_nba_out_data['PTS'] * 36 / all_nba_out_data['MIN']).mean(), 2)
             player_group['GAMES_WITHOUT_ALL_NBA'] = all_nba_out_mask.sum()
         else:
@@ -1263,6 +1285,7 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['TS_PCT_WITHOUT_ALL_NBA'] = 0
             player_group['AST_WITHOUT_ALL_NBA'] = 0
             player_group['REB_WITHOUT_ALL_NBA'] = 0
+            player_group['TOV_WITHOUT_ALL_NBA'] = 0
             player_group['PTS_PER_36_WITHOUT_ALL_NBA'] = 0
             player_group['GAMES_WITHOUT_ALL_NBA'] = 0
         
@@ -1279,6 +1302,7 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['TS_PCT_WITHOUT_BOTH_STARS'] = round(both_out_data['TS_PCT'].mean(), 2)
             player_group['AST_WITHOUT_BOTH_STARS'] = round(both_out_data['AST'].mean(), 2)
             player_group['REB_WITHOUT_BOTH_STARS'] = round(both_out_data['REB'].mean(), 2)
+            player_group['TOV_WITHOUT_BOTH_STARS'] = round(both_out_data['TOV'].mean(), 2)
             player_group['PTS_PER_36_WITHOUT_BOTH_STARS'] = round((both_out_data['PTS'] * 36 / both_out_data['MIN']).mean(), 2)
             player_group['GAMES_WITHOUT_BOTH_STARS'] = both_out_mask.sum()
         else:
@@ -1292,6 +1316,7 @@ def add_performance_without_stars_columns(df, min_games=2):
             player_group['TS_PCT_WITHOUT_BOTH_STARS'] = 0
             player_group['AST_WITHOUT_BOTH_STARS'] = 0
             player_group['REB_WITHOUT_BOTH_STARS'] = 0
+            player_group['TOV_WITHOUT_BOTH_STARS'] = 0
             player_group['PTS_PER_36_WITHOUT_BOTH_STARS'] = 0
             player_group['GAMES_WITHOUT_BOTH_STARS'] = 0
         
@@ -1575,3 +1600,69 @@ def distance_and_time(playerTeam, homeTeam, speed=500):
         "miles": round(distance, 1),
         "hours": round(time_hours, 2)
     }
+
+def add_travel_features(df):
+    """Add travel distance and time features using GAME_ID approach"""
+    df = df.copy()
+    
+    # Initialize travel columns
+    df['TRAVEL_DISTANCE_MILES'] = 0.0
+    df['TRAVEL_TIME_HOURS'] = 0.0
+    
+    # Check required columns
+    required_cols = ['GAME_ID', 'TEAM_ABBREVIATION', 'OPP_ABBREVIATION', 'HOME_GAME', 'GAME_DATE']
+    missing_cols = [col for col in required_cols if col not in df.columns]
+    if missing_cols:
+        print(f"Missing required columns: {missing_cols}")
+        return df
+    
+    # Sort by team and date for proper chronological order
+    df = df.sort_values(['TEAM_ABBREVIATION', 'GAME_DATE']).reset_index(drop=True)
+    
+    # For each team, calculate travel distance for away games
+    for team in df['TEAM_ABBREVIATION'].unique():
+        team_games = df[df['TEAM_ABBREVIATION'] == team].copy()
+        
+        for i in range(1, len(team_games)):
+            current_game = team_games.iloc[i]
+            prev_game = team_games.iloc[i-1]
+            
+            # Only calculate travel for away games
+            if current_game['HOME_GAME'] == 0:
+                # Determine previous location
+                if prev_game['HOME_GAME'] == 1:
+                    # Previous game was at home
+                    prev_location = prev_game['TEAM_ABBREVIATION']
+                else:
+                    # Previous game was away
+                    prev_location = prev_game['OPP_ABBREVIATION']
+                
+                # Current away game location
+                current_location = current_game['OPP_ABBREVIATION']
+                
+                # Calculate travel distance
+                try:
+                    if prev_location in TEAM_COORDS and current_location in TEAM_COORDS:
+                        travel_info = distance_and_time(prev_location, current_location)
+                        
+                        # Update the main dataframe using the index
+                        df.loc[current_game.name, 'TRAVEL_DISTANCE_MILES'] = travel_info['miles']
+                        df.loc[current_game.name, 'TRAVEL_TIME_HOURS'] = travel_info['hours']
+                        
+                except Exception as e:
+                    continue
+    
+    return df
+
+def sort_data_for_features(df):
+    """
+    Sort data optimally for feature engineering pipeline
+    """
+    # Convert GAME_DATE to datetime if needed
+    if not pd.api.types.is_datetime64_any_dtype(df['GAME_DATE']):
+        df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+    
+    # Primary sort: Player chronological order
+    df = df.sort_values(['PLAYER_ID', 'GAME_DATE']).reset_index(drop=True)
+    
+    return df

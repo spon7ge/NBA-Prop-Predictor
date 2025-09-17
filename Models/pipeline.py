@@ -127,36 +127,32 @@ def getStarters(game_id, team, data): # temporary until i find a better way to g
     
     return starters
 
-# teamStars = {'ATL': 'Trae Young', 'BKN': 'Cam Thomas', 'BOS':'Jayson Tatum',
-#              'CHA': 'LaMelo Ball', 'CHI':'Nikola Vučević', 'CLE': 'Donovan Mitchell', 'DAL':'Luka Dončić',
-#              'DEN': 'Nikola Jokić', 'DET': 'Cade Cunningham', 'GSW': 'Stephen Curry', 'HOU': 'Jalen Green',
-#              'IND': 'Pascal Siakam', 'LAC': 'James Harden', 'LAL':'LeBron James', 'MEM':'Ja Morant', 'MIA':'Tyler Herro',
-#              'MIL': 'Giannis Antetokounmpo', 'MIN': 'Anthony Edwards', 'NOP':'Zion Williamson', 'NYK': 'Jalen Brunson',
-#              'OKC': 'Shai Gilgeous-Alexander', 'ORL': 'Paolo Banchero', 'PHI': 'Joel Embiid', 'PHX': 'Devin Booker', 'POR': 'Shaedon Sharpe',
-#              'SAC': 'De\'Aaron Fox', 'SAS': 'Victor Wembanyama', 'TOR': 'RJ Barrett', 'UTA': 'Jordan Clarkson', 'WAS': 'Jordan Poole'}
+# teamStars = [ 'Shai Gilgeous-Alexander', 'Nikola Jokić', 'Giannis Antetokounmpo', 'Jayson Tatum', 'Donovan Mitchell',
+#         'Anthony Edwards', 'LeBron James', 'Stephen Curry', 'Evan Mobley', 'Jalen Brunson', 'Kevin Durant', 
+#         'Cade Cunningham', 'Karl-Anthony Towns', 'Tyrese Haliburton', 'Jalen Williams', 'James Harden',
+#         'Darius Garland', 'Damian Lillard', 'Anthony Davis', 'Kyrie Irving', 'Jaylen Brown', 'Tyler Herro', 'Jaren Jackson Jr.', 
+#         'Pascal Siakam', 'Victor Wembanyama', 'Alperen Sengun', 'Trae Young', 'LaMelo Ball', 'Devin Booker', 'Joel Embiid', 'Luka Doncic'
+# ]
 
-# def getPlayerStarInformation(player, data, teamStar, starters, teamAbv):
-#     player_id = findPlayerID(player, data)
+# def getAllNBAPlayers(player, data, teamStars, starters, game_id):   
+#     player_id, player_team = findPlayerID(player, data)
 #     player_data = data[data['PLAYER_ID'] == player_id].copy()
+#     player_data = player_data[player_data['GAME_ID'] == game_id].copy()
 #     res = []
+#     starCount = 0
     
-#     # PLAYER_IS_TEAM_STAR
-#     if player in teamStar[teamAbv]:
+#     if player_data['PLAYER_NAME'].isin(teamStars).any():
 #         res.append(1)
 #     else:
 #         res.append(0)
+#     starters = data[data['GAME_ID'] == game_id][data['STARTING'] == 1]['PLAYER_NAME'].tolist()
     
-#     # Team star out
-#     if teamStars[teamAbv] in starters:
-#         res.append(1)
-#     else:
-#         res.append(0)
-    
-#     cols = ['PTS_WITHOUT_STAR', 'MIN_WITHOUT_STAR', 'USG_PCT_WITHOUT_STAR', 'FGA_WITHOUT_STAR', 'FG3A_WITHOUT_STAR', 'FTA_WITHOUT_STAR', 
-#     'EFG_PCT_WITHOUT_STAR', 'TS_PCT_WITHOUT_STAR', 'AST_WITHOUT_STAR', 'REB_WITHOUT_STAR', 'PTS_PER_36_WITHOUT_STAR']
-#     for col in cols:
-#         res.append(player_data[col].iloc[-1])
+#     for starter in starters:
+#         if starter in teamStars:
+#             starCount += 1
+#     res.append(starCount)
 #     return res
+    
 
 def getPlayerSeasonAverages(player, data):
     player_id, player_team = findPlayerID(player, data)
