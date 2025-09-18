@@ -86,7 +86,9 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     ci = np.percentile(simulated_points, [2.5, 97.5])
     
     return {
-        'mean_prediction': modelPred,
+        'model_prediction': modelPred,
+        'simulated_mean': simulated_points.mean(),
+        'simulated_std': simulated_points.std(),
         'std_used': std_dev,
         'prob_over': prob_over,
         'prob_under': prob_under,
@@ -122,8 +124,8 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
         bookmaker = row['BOOKMAKER']
         category = row['CATEGORY']
         line = float(row['LINE'])
-        side = row.get('OVER/UNDER', 'over')
-        odds = int(row['PRICE'])
+        side = row.get('SIDE', 'over')
+        odds = int(row['ODDS'])
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -192,10 +194,26 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
         # EV in dollars and percent
         ev_per_unit = p * b - (1 - p)
         ev_dollars = stake * ev_per_unit
-        ev_percent = ev_per_unit
+        ev_percent = ev_per_unit * 100
 
         # Kelly fraction
         kelly_full = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
+
+        # Break-even probability and edge
+        breakeven_prob = 1.0 / dec_odds
+        edge = p - breakeven_prob
+
+        # Debug: Print the actual values
+        print(f"\nDEBUG - {name}:")
+        print(f"  Odds: {odds} ({side})")
+        print(f"  Line: {line}")
+        print(f"  Prediction: {float(pred['predicted_stat'])}")
+        print(f"  Std Dev: {std_dev}")
+        print(f"  Prob Over: {p_over:.3f}")
+        print(f"  Decimal Odds: {dec_odds:.2f}")
+        print(f"  Breakeven: {breakeven_prob:.3f}")
+        print(f"  Simulated Mean: {sim_results['simulated_mean']:.2f}")
+        print(f"  Model Prediction: {sim_results['model_prediction']:.2f}")
 
         results.append({
             'NAME': name,
@@ -207,6 +225,8 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'PREDICTION': float(pred['predicted_stat']),
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
+            'BREAKEVEN%': round(breakeven_prob * 100, 1),
+            'EDGE%': round(edge * 100, 1),
             'EV$': round(ev_dollars, 2),
             'EV%': round(ev_percent,2),
             'KELLY FULL': round(kelly_full, 2),
