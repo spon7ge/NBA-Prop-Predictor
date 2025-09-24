@@ -163,7 +163,6 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             starters=starters,
             game_id=game_id,
             features=features_list,
-            n_games=3
         )
 
         std_dev = get_player_std(player_df, stat_col)
@@ -225,8 +224,7 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'PREDICTION': float(pred['predicted_stat']),
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
-            'BREAKEVEN%': round(breakeven_prob * 100, 1),
-            'EDGE%': round(edge * 100, 1),
+            'IMPLIED PROB': round(impliedProb(odds), 3),
             'EV$': round(ev_dollars, 2),
             'EV%': round(ev_percent,2),
             'KELLY FULL': round(kelly_full, 2),
@@ -239,7 +237,7 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
 
     
 def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDate, stake=100,
-                      simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
+                      simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS', prevData=None):
     print("Processing PrizePicks pairs...")
     date_obj = datetime.strptime(todayDate, "%Y%m%d")
     _game_date = date_obj.strftime("%Y-%m-%d")
@@ -283,7 +281,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
 
         features_list = features
         if features_list is None:
-            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
+            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id, prevData)
             features_list = [f'f{i}' for i in range(len(fv))]
 
         pred = makePredictionCatBoost(
@@ -296,7 +294,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
             starters=starters,
             game_id=game_id,
             features=features_list,
-            n_games=3
+            prevData=prevData  # Add previous season data support
         )
 
         std_dev = get_player_std(player_df, stat_col)
