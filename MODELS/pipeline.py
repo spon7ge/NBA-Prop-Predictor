@@ -157,8 +157,8 @@ def getStarters(game_id, team, data): # temporary until i find a better way to g
 def getPlayerSeasonAverages(player, data):
     player_id, player_team = findPlayerID(player, data)
     player_data = data[data['PLAYER_ID'] == player_id].copy()
-    cols = ['MIN', 'PTS', 'FGA', 'FG3A', 'FTA', 'USG_PCT', 'TS_PCT', 
-            'EFG_PCT', 'AST', 'REB', 'TOV']
+    cols = ['PTS','MIN','FGA','FG3A','FTA','FG_PCT','FG3_PCT','FT_PCT',
+    'USG_PCT','TS_PCT','EFG_PCT','POSS','TCHS','AST','REB','TOV']
     res = []
     for col in cols:
         res.append(round(player_data[col].mean(), 2))
@@ -167,11 +167,32 @@ def getPlayerSeasonAverages(player, data):
 def getPlayerLags(player, data):
     player_id, player_team = findPlayerID(player, data)
     player_data = data[data['PLAYER_ID'] == player_id].copy()
+    player_data.sort_values(by='GAME_DATE', inplace=True, ascending=False)
     lags = []
-    cols = ['PTS', 'FGA', 'MIN', 'USG_PCT']
-    for col in cols:
-        lags.append(player_data[col].iloc[-1])
-        lags.append(player_data[col].iloc[-2])
+    cols = ['PTS','MIN','FGA','FG3A','FTA','FG_PCT','FG3_PCT','FT_PCT',
+    'USG_PCT','TS_PCT','EFG_PCT','POSS','TCHS','AST','REB','TOV']
+    
+    # Check if player has at least 2 games played
+    if len(player_data) < 2:
+        league_averages = {}
+        for col in cols:
+            league_averages[col] = data[col].mean()
+        for col in cols:
+            if len(player_data) >= 1:
+                # Use most recent game for lag 1
+                lags.append(player_data[col].iloc[-1])
+                # Use league average for lag 2
+                lags.append(league_averages[col])
+            else:
+                # Use league averages for both lags if no games played
+                lags.append(league_averages[col])
+                lags.append(league_averages[col])
+    else:
+        # Player has at least 2 games, use normal lag features
+        for col in cols:
+            lags.append(player_data[col].iloc[-1])
+            lags.append(player_data[col].iloc[-2])
+    
     return lags
 
 def getPlayerRollingAVG(player, data):
@@ -180,21 +201,29 @@ def getPlayerRollingAVG(player, data):
     res = []
 
     include = [
-    'MIN_ROLLING_AVG_5', 'PTS_ROLLING_AVG_5', 'FGA_ROLLING_AVG_5',
-    'FG3A_ROLLING_AVG_5', 'FTA_ROLLING_AVG_5', 'USG_PCT_ROLLING_AVG_5',
-    'TS_PCT_ROLLING_AVG_5', 'EFG_PCT_ROLLING_AVG_5', 'AST_ROLLING_AVG_5', 
-    'REB_ROLLING_AVG_5', 'TOV_ROLLING_AVG_5',
+    'PTS_ROLLING_AVG_3', 'MIN_ROLLING_AVG_3', 'FGA_ROLLING_AVG_3', 'FTA_ROLLING_AVG_3', 'FG3A_ROLLING_AVG_3', 'FG_PCT_ROLLING_AVG_3', 
+    'FG3_PCT_ROLLING_AVG_3', 'FT_PCT_ROLLING_AVG_3', 'USG_PCT_ROLLING_AVG_3', 'TS_PCT_ROLLING_AVG_3', 'EFG_PCT_ROLLING_AVG_3', 
+    'POSS_ROLLING_AVG_3', 'TCHS_ROLLING_AVG_3', 'AST_ROLLING_AVG_3', 'REB_ROLLING_AVG_3', 'TOV_ROLLING_AVG_3',
+
+    # Short-term form (5-game rolling averages)
+    'PTS_ROLLING_AVG_5', 'MIN_ROLLING_AVG_5', 'FGA_ROLLING_AVG_5', 'FTA_ROLLING_AVG_5', 'FG3A_ROLLING_AVG_5', 'FG_PCT_ROLLING_AVG_5', 
+    'FG3_PCT_ROLLING_AVG_5', 'FT_PCT_ROLLING_AVG_5', 'USG_PCT_ROLLING_AVG_5', 'TS_PCT_ROLLING_AVG_5', 'EFG_PCT_ROLLING_AVG_5', 
+    'POSS_ROLLING_AVG_5', 'TCHS_ROLLING_AVG_5', 'AST_ROLLING_AVG_5', 'REB_ROLLING_AVG_5', 'TOV_ROLLING_AVG_5',
     
+    # 7 game rolling averages
+    'PTS_ROLLING_AVG_7', 'MIN_ROLLING_AVG_7', 'FGA_ROLLING_AVG_7', 'FTA_ROLLING_AVG_7', 'FG3A_ROLLING_AVG_7', 'FG_PCT_ROLLING_AVG_7', 
+    'FG3_PCT_ROLLING_AVG_7', 'FT_PCT_ROLLING_AVG_7', 'USG_PCT_ROLLING_AVG_7', 'TS_PCT_ROLLING_AVG_7', 'EFG_PCT_ROLLING_AVG_7', 
+    'POSS_ROLLING_AVG_7', 'TCHS_ROLLING_AVG_7', 'AST_ROLLING_AVG_7', 'REB_ROLLING_AVG_7', 'TOV_ROLLING_AVG_7',
+
     # Medium-term form (15-game rolling averages)
-    'MIN_ROLLING_AVG_15', 'PTS_ROLLING_AVG_15', 'FGA_ROLLING_AVG_15',
-    'FG3A_ROLLING_AVG_15', 'FTA_ROLLING_AVG_15', 'USG_PCT_ROLLING_AVG_15',
-    'TS_PCT_ROLLING_AVG_15', 'EFG_PCT_ROLLING_AVG_15', 'AST_ROLLING_AVG_15', 
-    'REB_ROLLING_AVG_15', 'TOV_ROLLING_AVG_15',
+    'PTS_ROLLING_AVG_15', 'MIN_ROLLING_AVG_15', 'FGA_ROLLING_AVG_15', 'FTA_ROLLING_AVG_15', 'FG3A_ROLLING_AVG_15', 'FG_PCT_ROLLING_AVG_15', 
+    'FG3_PCT_ROLLING_AVG_15', 'FT_PCT_ROLLING_AVG_15', 'USG_PCT_ROLLING_AVG_15', 'TS_PCT_ROLLING_AVG_15', 'EFG_PCT_ROLLING_AVG_15', 
+    'POSS_ROLLING_AVG_15', 'TCHS_ROLLING_AVG_15', 'AST_ROLLING_AVG_15', 'REB_ROLLING_AVG_15', 'TOV_ROLLING_AVG_15',
     
     # Long-term form (40-game rolling averages)
-    'MIN_ROLLING_AVG_40', 'PTS_ROLLING_AVG_40', 'FGA_ROLLING_AVG_40', 'FG3A_ROLLING_AVG_40', 'FTA_ROLLING_AVG_40',
-    'USG_PCT_ROLLING_AVG_40', 'TS_PCT_ROLLING_AVG_40', 'EFG_PCT_ROLLING_AVG_40', 'AST_ROLLING_AVG_40', 
-    'REB_ROLLING_AVG_40', 'TOV_ROLLING_AVG_40',
+    'PTS_ROLLING_AVG_40', 'MIN_ROLLING_AVG_40', 'FGA_ROLLING_AVG_40', 'FTA_ROLLING_AVG_40', 'FG3A_ROLLING_AVG_40', 'FG_PCT_ROLLING_AVG_40', 
+    'FG3_PCT_ROLLING_AVG_40', 'FT_PCT_ROLLING_AVG_40', 'USG_PCT_ROLLING_AVG_40', 'TS_PCT_ROLLING_AVG_40', 'EFG_PCT_ROLLING_AVG_40', 
+    'POSS_ROLLING_AVG_40', 'TCHS_ROLLING_AVG_40', 'AST_ROLLING_AVG_40', 'REB_ROLLING_AVG_40', 'TOV_ROLLING_AVG_40',
     ]
 
     for col in include:
@@ -250,29 +279,6 @@ def getTeamStats(player, data):
     ]
     return [round(stat, 2) for stat in stats]
 
-def getMatchupStats(player, data, games,n_games=3): #still needs fixing
-    player_id, player_team = findPlayerID(player, data)
-    opponent_team, homeGame = findOppTeam(player, data, games)
-    opp_id = findTeamID(opponent_team, data)
-    include = ['MIN', 'FGA', 'FG3A', 'FTA', 'PTS', 'USG_PCT',
-            'EFG_PCT', 'TS_PCT', 'AST', 'REB', 'TOV']
-
-    df = data[(data['PLAYER_ID'] == player_id) & (data['OPP_TEAM_ID'] == opp_id)].copy()
-    if df.empty:
-        return [None] * len(include)
-
-    if 'GAME_DATE' in df.columns:
-        # ensure proper sorting by date
-        df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'], errors='coerce')
-        df = df.sort_values('GAME_DATE')
-    elif 'GAME_ID' in df.columns:
-        df = df.sort_values('GAME_ID')
-
-    last = df.tail(n_games)
-    means = round(last[include].mean(numeric_only=True), 1)
-
-    return [means.get(col, None) for col in include]
-
 def getTeamOdds(player, data, game_id):
     player_id, player_team = findPlayerID(player, data)
     game_data = data[
@@ -297,23 +303,22 @@ def getTeamOdds(player, data, game_id):
     return odds_features
     
 #--------------------------------------------------------------------------------------------------------------------------------
-def buildFeatureVector(player, data, games, todayDate, starters, game_id, n_games=3):
+def buildFeatureVector(player, data, games, todayDate, starters, game_id):
     features = (getPlayerSpecificFeatures(player, data, starters, games, todayDate) +
                 getPlayerSeasonAverages(player, data) +
                 getPlayerLags(player, data) +
                 getPlayerRollingAVG(player, data) +
                 getOppStats(player, data, games) +
                 getTeamStats(player, data) +
-                getMatchupStats(player, data, games, n_games=n_games) +
                 getTeamOdds(player, data, game_id))
     return features
 
-def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDate, starters, game_id, features, n_games=3):
+def makePredictionCatBoost(player_name, data, model, bookmakers, games, todayDate, starters, game_id, features):
     from catboost import Pool
     import pandas as pd
     
     # Get feature vector
-    feature_vector = buildFeatureVector(player_name, data, games, todayDate, starters, game_id, n_games=n_games)
+    feature_vector = buildFeatureVector(player_name, data, games, todayDate, starters, game_id)
     
     # Convert to DataFrame with proper feature names
     X = pd.DataFrame([feature_vector], columns=features)
