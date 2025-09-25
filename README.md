@@ -47,8 +47,11 @@ If you want the odds from below use region='us'
 - SuperBook
 - Wind Creek (Betfred PA)
 
-## Example of what you get for a 2 leg w/ a $100 stake and a payout of $300 and odds at -137
-<img width="1180" alt="Screenshot 2025-06-29 at 9 08 23 AM" src="https://github.com/user-attachments/assets/daa9366d-6d61-4f75-8a68-90100f576237" />
+## Example of what you get for a 2-leg parlays
+<img width="1326" height="303" alt="Screenshot 2025-09-25 at 4 37 12 PM" src="https://github.com/user-attachments/assets/62110db1-e23b-4c2b-9305-fb4017a0be5f" />
+
+## Example of what you get for a single bet
+<img width="1397" height="272" alt="Screenshot 2025-09-25 at 4 38 53 PM" src="https://github.com/user-attachments/assets/17db00eb-902d-4120-9ad5-e8602324e930" />
 
 ## Disclaimer
 This project was created as a personal learning exercise and is intended for educational purposes only. The predictive models implemented here are experimental and have not demonstrated high accuracy in forecasting player performance. As such, the results should not be considered reliable for decision-making or betting purposes.
