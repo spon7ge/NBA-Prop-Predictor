@@ -225,7 +225,6 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
             'IMPLIED PROB': round(impliedProb(odds), 3),
-            'EV$': round(ev_dollars, 2),
             'EV%': round(ev_percent,2),
             'KELLY FULL': round(kelly_full, 2),
             'KELLY HALF': round(0.5 * kelly_full, 2),
@@ -238,6 +237,7 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
     
 def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDate, stake=100,
                       simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS', prevData=None):
+    
     print("Processing PrizePicks pairs...")
     date_obj = datetime.strptime(todayDate, "%Y%m%d")
     _game_date = date_obj.strftime("%Y-%m-%d")
@@ -253,11 +253,19 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
         return float(np.clip(sd, min_std, max_std))
 
     legs = []
+    processed_players = set()  # Track processed players to avoid duplicates
+    
     for _, row in bookmakers.iterrows():
         name = row['NAME']
         category = row['CATEGORY']
         line = float(row['LINE'])
-        side = row.get('OVER/UNDER', 'over')
+        side = row.get('SIDE', 'over')  # Updated to use 'SIDE' column
+
+        # Skip if we've already processed this player
+        if name in processed_players:
+            continue
+        
+        processed_players.add(name)
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -281,7 +289,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
 
         features_list = features
         if features_list is None:
-            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id, prevData)
+            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
             features_list = [f'f{i}' for i in range(len(fv))]
 
         pred = makePredictionCatBoost(
@@ -294,7 +302,6 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
             starters=starters,
             game_id=game_id,
             features=features_list,
-            prevData=prevData  # Add previous season data support
         )
 
         std_dev = get_player_std(player_df, stat_col)
@@ -309,6 +316,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
 
         legs.append({
             'NAME': name,
+            'TEAM': player_team,  # Store team for easier comparison
             'CATEGORY': category,
             'LINE': line,
             'SIDE': side,
@@ -332,9 +340,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
                 continue
             
             # Skip if players from same team
-            player1_team = data[data['PLAYER_NAME'] == leg1['NAME']]['TEAM_ABBREVIATION'].iloc[0]
-            player2_team = data[data['PLAYER_NAME'] == leg2['NAME']]['TEAM_ABBREVIATION'].iloc[0]
-            if player1_team == player2_team:
+            if leg1['TEAM'] == leg2['TEAM']:
                 continue
 
             p1 = leg1['OVER%'] if str(leg1['SIDE']).upper().startswith('O') else leg1['UNDER%']
@@ -342,7 +348,6 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
             p_both = p1 * p2
 
             ev_per_unit = p_both * b - (1 - p_both)
-            ev_dollars = stake * ev_per_unit
             ev_percent = ev_per_unit
 
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
@@ -367,7 +372,6 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
                 'TYPE': f"{'OVER' if str(leg1['SIDE']).upper().startswith('O') else 'UNDER'}/"
                         f"{'OVER' if str(leg2['SIDE']).upper().startswith('O') else 'UNDER'}",
                 'PROBABILITY': round(p_both, 4),
-                'EV$': round(ev_dollars, 2),
                 'EV%': round(ev_percent, 3),
                 'KELLY FULL': round(kelly_full, 2),
                 'KELLY HALF': round(0.5 * kelly_full, 2),

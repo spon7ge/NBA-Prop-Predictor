@@ -778,30 +778,6 @@ def add_game_pace_adjustment(df):
 # UTILITY AND HELPER FUNCTIONS
 # ================================================================================================
 
-def fill_na_with_similar_teams(df, team_stats_cols, team_id_col='TEAM_ID'):
-    """Fill missing team stats using nearest neighbors approach."""
-    team_stats = df.groupby(team_id_col)[team_stats_cols].mean().reset_index()
-
-    # Fit Nearest Neighbors model
-    nn_model = NearestNeighbors(n_neighbors=3, metric='euclidean')
-    nn_model.fit(team_stats[team_stats_cols])
-
-    # For teams with NaNs, find nearest teams and fill with their averages
-    for index, row in team_stats.iterrows():
-        team_id = row[team_id_col]
-        if row[team_stats_cols].isnull().any():
-            distances, indices = nn_model.kneighbors([row[team_stats_cols].fillna(0)], return_distance=True)
-            neighbor_stats = team_stats.iloc[indices[0]][team_stats_cols]
-            team_stats.loc[index, team_stats_cols] = neighbor_stats.mean()
-
-    # Map back to main df
-    filled_stats = team_stats.set_index(team_id_col).to_dict('index')
-    for stat in team_stats_cols:
-        df[stat] = df.apply(lambda x: filled_stats[x[team_id_col]][stat] if pd.isna(x[stat]) else x[stat], axis=1)
-        df[stat] = df[stat].round(2)
-
-    return df
-
 def add_performance_without_stars_columns(df, min_games=2):
     """
     Add columns showing player averages when star teammates are out.
