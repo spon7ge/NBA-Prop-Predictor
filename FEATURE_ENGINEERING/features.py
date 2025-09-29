@@ -1085,3 +1085,234 @@ def sort_data_for_features(df):
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE']).reset_index(drop=True)
     
     return df
+
+##############################################################################################################
+def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15]):
+    """
+    Calculate volatility features for player performance metrics.
+    Uses standard deviation, coefficient of variation, and consistency metrics.
+    """
+    # Create copy and sort data
+    df = df.copy()
+    df.sort_values([player_id_col, date_col], inplace=True)
+    
+    # Define stats to calculate volatility for
+    volatility_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 
+                       'EFG_PCT', 'OFF_RATING', 'AST', 'REB', 'TOV']
+    
+    # Filter to only available columns
+    available_stats = [stat for stat in volatility_stats if stat in df.columns]
+    
+    if not available_stats:
+        print("Warning: No volatility stats found in dataframe")
+        return df
+    
+    # Calculate volatility metrics for each window
+    for window in windows:
+        for stat in available_stats:
+            # Rolling standard deviation (shifted to prevent leakage)
+            volatility_col = f'{stat}_VOLATILITY_{window}_TO_DATE'
+            df[volatility_col] = (
+                df.groupby(player_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
+                .round(3)
+            )
+            
+            # Coefficient of variation (volatility relative to mean)
+            cv_col = f'{stat}_CV_{window}_TO_DATE'
+            rolling_mean = (
+                df.groupby(player_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).mean())
+            )
+            rolling_std = (
+                df.groupby(player_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
+            )
+            
+            # Calculate CV, handling division by zero
+            df[cv_col] = np.where(
+                rolling_mean != 0,
+                (rolling_std / rolling_mean).round(3),
+                0
+            )
+            
+            # Consistency score (inverse of CV, capped at reasonable values)
+            consistency_col = f'{stat}_CONSISTENCY_{window}_TO_DATE'
+            df[consistency_col] = np.where(
+                df[cv_col] > 0,
+                np.minimum(1 / df[cv_col], 10),  # Cap at 10 for extreme consistency
+                10  # Perfect consistency when CV is 0
+            ).round(3)
+    
+    # Add expanding volatility metrics (season-long volatility)
+    for stat in available_stats:
+        # Expanding standard deviation
+        expanding_vol_col = f'{stat}_EXPANDING_VOLATILITY_TO_DATE'
+        df[expanding_vol_col] = (
+            df.groupby(player_id_col)[stat]
+            .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
+            .round(3)
+        )
+        
+        # Expanding coefficient of variation
+        expanding_cv_col = f'{stat}_EXPANDING_CV_TO_DATE'
+        expanding_mean = (
+            df.groupby(player_id_col)[stat]
+            .transform(lambda x: x.shift(1).expanding(min_periods=2).mean())
+        )
+        expanding_std = (
+            df.groupby(player_id_col)[stat]
+            .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
+        )
+        
+        df[expanding_cv_col] = np.where(
+            expanding_mean != 0,
+            (expanding_std / expanding_mean).round(3),
+            0
+        )
+    
+    # Add volatility trend features (is player becoming more/less volatile?)
+    for stat in available_stats:
+        if len(windows) >= 2:
+            short_window = min(windows)
+            long_window = max(windows)
+            
+            short_vol_col = f'{stat}_VOLATILITY_{short_window}_TO_DATE'
+            long_vol_col = f'{stat}_VOLATILITY_{long_window}_TO_DATE'
+            
+            # Volatility trend (positive = becoming more volatile)
+            trend_col = f'{stat}_VOLATILITY_TREND_TO_DATE'
+            df[trend_col] = (
+                df[short_vol_col] - df[long_vol_col]
+            ).round(3)
+            
+            # Volatility ratio (short-term vs long-term volatility)
+            ratio_col = f'{stat}_VOLATILITY_RATIO_TO_DATE'
+            df[ratio_col] = np.where(
+                df[long_vol_col] != 0,
+                (df[short_vol_col] / df[long_vol_col]).round(3),
+                1.0  # Default ratio when long-term volatility is 0
+            )
+    
+    # Add game-to-game change features
+    for stat in available_stats:
+        # Absolute change from previous game
+        change_col = f'{stat}_GAME_CHANGE_TO_DATE'
+        df[change_col] = (
+            df.groupby(player_id_col)[stat].diff().abs().round(2)
+        )
+        
+        # Percentage change from previous game
+        pct_change_col = f'{stat}_GAME_PCT_CHANGE_TO_DATE'
+        prev_value = df.groupby(player_id_col)[stat].shift(1)
+        df[pct_change_col] = np.where(
+            prev_value != 0,
+            ((df[stat] - prev_value) / prev_value * 100).round(2),
+            0
+        )
+    
+    # Add streak-based volatility features
+    for stat in available_stats:
+        # Count consecutive games above/below season average
+        season_avg_col = f'{stat}_SEASON_AVG_TO_DATE'
+        if season_avg_col in df.columns:
+            # Above average streak
+            above_avg = (df[stat] > df[season_avg_col]).astype(int)
+            above_streak_col = f'{stat}_ABOVE_AVG_STREAK_TO_DATE'
+            df[above_streak_col] = (
+                above_avg.groupby([df[player_id_col], (above_avg != above_avg.shift()).cumsum()])
+                .cumsum()
+                .where(above_avg == 1, 0)
+            )
+            
+            # Below average streak
+            below_avg = (df[stat] < df[season_avg_col]).astype(int)
+            below_streak_col = f'{stat}_BELOW_AVG_STREAK_TO_DATE'
+            df[below_streak_col] = (
+                below_avg.groupby([df[player_id_col], (below_avg != below_avg.shift()).cumsum()])
+                .cumsum()
+                .where(below_avg == 1, 0)
+            )
+    
+    # Fill NaN values with appropriate defaults
+    volatility_cols = [col for col in df.columns if any(x in col for x in ['VOLATILITY', 'CV', 'CONSISTENCY', 'CHANGE', 'STREAK'])]
+    
+    for col in volatility_cols:
+        if 'CV' in col or 'VOLATILITY' in col:
+            df[col] = df[col].fillna(0)  # No volatility for first games
+        elif 'CONSISTENCY' in col:
+            df[col] = df[col].fillna(10)  # Perfect consistency for first games
+        elif 'CHANGE' in col:
+            df[col] = df[col].fillna(0)  # No change for first games
+        elif 'STREAK' in col:
+            df[col] = df[col].fillna(0)  # No streak for first games
+    
+    # Convert to appropriate data types to save memory
+    for col in volatility_cols:
+        if df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
+    
+    return df
+
+
+def add_performance_volatility_categories(df, player_id_col='PLAYER_ID'):
+    """
+    Add categorical volatility features based on percentiles.
+    Categorizes players as Low, Medium, or High volatility.
+    """
+    df = df.copy()
+    
+    # Define key volatility metrics to categorize
+    key_metrics = ['PTS_EXPANDING_CV_TO_DATE', 'MIN_EXPANDING_CV_TO_DATE', 'USG_PCT_EXPANDING_CV_TO_DATE']
+    
+    for metric in key_metrics:
+        if metric in df.columns:
+            # Calculate percentiles for categorization
+            p33 = df[metric].quantile(0.33)
+            p67 = df[metric].quantile(0.67)
+            
+            # Create categorical column
+            category_col = metric.replace('_EXPANDING_CV_TO_DATE', '_VOLATILITY_CATEGORY')
+            df[category_col] = pd.cut(
+                df[metric],
+                bins=[-np.inf, p33, p67, np.inf],
+                labels=['Low', 'Medium', 'High']
+            )
+            
+            # Create binary flags for each category
+            for category in ['Low', 'Medium', 'High']:
+                flag_col = f"{metric.replace('_EXPANDING_CV_TO_DATE', '')}_{category.upper()}_VOLATILITY"
+                df[flag_col] = (df[category_col] == category).astype(int)
+    
+    return df
+
+
+def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', lookback_games=5):
+    """
+    Add features that capture recent form and hot/cold streaks.
+    Focuses on whether a player is in a volatile period recently.
+    """
+    df = df.copy()
+    df.sort_values([player_id_col, date_col], inplace=True)
+    
+    key_stats = ['PTS', 'FGA', 'USG_PCT', 'TS_PCT']
+    available_stats = [stat for stat in key_stats if stat in df.columns]
+    
+    for stat in available_stats:
+        # Recent volatility vs season volatility
+        recent_vol_col = f'{stat}_VOLATILITY_{lookback_games}_TO_DATE'
+        season_vol_col = f'{stat}_EXPANDING_VOLATILITY_TO_DATE'
+        
+        if recent_vol_col in df.columns and season_vol_col in df.columns:
+            # Is player more volatile recently than usual?
+            hot_cold_col = f'{stat}_RECENT_HIGH_VOLATILITY'
+            df[hot_cold_col] = (
+                df[recent_vol_col] > df[season_vol_col] * 1.2  # 20% more volatile than season average
+            ).astype(int)
+            
+            # Extreme volatility flag
+            extreme_vol_col = f'{stat}_EXTREME_VOLATILITY'
+            volatility_95th = df[recent_vol_col].quantile(0.95)
+            df[extreme_vol_col] = (df[recent_vol_col] > volatility_95th).astype(int)
+    
+    return df
