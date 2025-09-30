@@ -37,18 +37,6 @@ class FetchPlayersStats:
         return df[cols]
 
     def fetchAdvancedStats(self, game_id, sleep_time=None, max_retries=5, timeout=60):
-        """
-        Fetches advanced stats for a specific game with retry logic.
-        
-        Args:
-            game_id (str): NBA game ID
-            sleep_time (float, optional): Time to sleep between API calls
-            max_retries (int, optional): Maximum number of retry attempts
-            timeout (int, optional): Timeout for the API request in seconds
-            
-        Returns:
-            pd.DataFrame: Advanced statistics
-        """
         sleep_time = sleep_time or self.sleep_time
         for attempt in range(max_retries):
             try:
@@ -97,16 +85,6 @@ class FetchPlayersStats:
                     return pd.DataFrame()
 
     def fetchBoxScoreMisc(self, game_id, sleep_time=None):
-        """
-        Fetches miscellaneous boxscore stats for a specific game.
-        
-        Args:
-            game_id (str): NBA game ID
-            sleep_time (float, optional): Time to sleep between API calls
-            
-        Returns:
-            pd.DataFrame: Miscellaneous boxscore statistics
-        """
         sleep_time = sleep_time or self.sleep_time
         try:
             time.sleep(sleep_time)
@@ -123,18 +101,6 @@ class FetchPlayersStats:
             return pd.DataFrame()
 
     def getMiscStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
-        """
-        Gets miscellaneous stats for all games in player_data.
-        
-        Args:
-            player_data (pd.DataFrame): Player statistics data
-            sleep_time (float, optional): Time to sleep between API calls
-            max_workers (int, optional): Maximum number of concurrent workers
-            cache_file (str, optional): Path to cache file
-            
-        Returns:
-            pd.DataFrame: Combined miscellaneous statistics
-        """
         sleep_time = sleep_time or self.sleep_time
         max_workers = max_workers or min(10, os.cpu_count() or 4)
         game_ids = player_data['GAME_ID'].unique()
@@ -350,17 +316,6 @@ class FetchPlayersStats:
                 how='left'
             )
 
-        
-        # Remove getTeamData, addOpponentStats, addOffensiveRating, add_pace_stats, and all team_data usage
-        # Remove getTeamData
-        # Remove addOpponentStats
-        # Remove addOffensiveRating
-        # Remove add_pace_stats
-        # Remove all lines assigning or using team_data in getCompleteStats and elsewhere
-        # Remove merging with team_data
-        # Remove any references to these functions in the file
-        # The rest of the code remains unchanged
-
         # Combine with existing cache and save
         combined = pd.concat([cache, merged_player], ignore_index=True)
         combined.to_csv(complete_cache_file, index=False)
@@ -369,9 +324,6 @@ class FetchPlayersStats:
         return combined
 
     def mergeData(self, player_data, advanced_stats):
-        """
-        Merges basic player data with advanced stats.
-        """
         player_data['GAME_ID'] = player_data['GAME_ID'].astype(str)
         advanced_stats['GAME_ID'] = advanced_stats['GAME_ID'].astype(str)
         advanced_stats['PLAYER_ID'] = advanced_stats['PLAYER_ID'].astype(int)
