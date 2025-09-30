@@ -70,7 +70,6 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
         return round(-100 / (odds_to_decimal - 1))
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 #monte carlo simulation using my model to calculate the probability of the prop
 def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
     """
@@ -185,8 +184,8 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             p = p_under
 
         # odds and returns
-        dec_odds = american_to_decimal(odds)            # includes stake
-        b = dec_odds - 1.0                              # net profit per 1 staked
+        dec_odds = american_to_decimal(odds)          
+        b = dec_odds - 1.0                             
         profit_if_win = stake * b
         loss_if_lose = stake
 

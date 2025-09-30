@@ -222,7 +222,7 @@ def getPlayerRollingAVG(player, data):
     
     # Long-term form (40-game rolling averages)
     'PTS_ROLLING_AVG_40', 'MIN_ROLLING_AVG_40', 'FGA_ROLLING_AVG_40', 'FTA_ROLLING_AVG_40', 'FG3A_ROLLING_AVG_40', 'FG_PCT_ROLLING_AVG_40', 
-    'FG3_PCT_ROLLING_AVG_40', 'FT_PCT_ROLLING_AVG_40', 'USG_PCT_ROLLING_AVG_40', 'TS_PCT_ROLLING_AVG_40', 'EFG_PCT_ROLLING_AVG_40', 
+    'FG3_PCT_ROLLING_AVG_40', 'FT_PCT_ROLLING_AVG_40', 'USG_PCT_ROLLING_AVG_40', 'TS_PCT_ROLLING_AVG_40', 'EFG_PCT_ROLLING_AVG_40',
     'POSS_ROLLING_AVG_40', 'TCHS_ROLLING_AVG_40', 'AST_ROLLING_AVG_40', 'REB_ROLLING_AVG_40', 'TOV_ROLLING_AVG_40',
     ]
 
@@ -236,7 +236,7 @@ def getOppStats(player, data, games):
     oppTeamID = findTeamID(opponent_team, data)
     
     if oppTeamID is None:
-        return [0] * 7
+        return [0] * 9
     
     # Filter by opponent team ID
     opp_data = data[data['OPP_TEAM_ID'] == oppTeamID]
