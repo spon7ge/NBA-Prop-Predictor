@@ -1,10 +1,10 @@
 # 🏀 NBA Player Prop Prediction
 ## Project Overview
-Im building an end-to-end pipeline that predicts NBA player performance using features from players historical data and advanced stats to create ML models for points prop. Then grabbing the expected value (EV) and bet sizing using the Kelly Criterion for only single bets or 2 leg parlays
+Im building an end-to-end pipeline that predicts NBA player performance using features from players historical data and advanced stats to create a catboost/xgboost model for points. Then grabbing the expected value (EV) and bet sizing using the Kelly Criterion for only single bets or 2 leg parlays to find the best bets.
 .
 ## Goals
 ### Predict NBA Player Prop Outcomes
-Train machine a catboost model to forecast player stat lines like points based on historical and contextual data.
+Training a catboost and xgboost model to predict a players stat line like points based on historical and contextual data.
 
 ### Build a Scalable Data Pipeline
 - Create an automated pipeline to collect, clean, and store
