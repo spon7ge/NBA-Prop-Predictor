@@ -277,7 +277,8 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'USG_PCT', 'POSS', 'PACE', 'OFF_RATING']
+    metrics = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 
+                'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV']
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
         return df
