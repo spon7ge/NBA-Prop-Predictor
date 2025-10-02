@@ -2,7 +2,6 @@ import requests
 from datetime import datetime
 import pytz
 import pandas as pd
-from MODELS.model import *
 from catboost import Pool
 
 
