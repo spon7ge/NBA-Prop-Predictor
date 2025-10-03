@@ -190,7 +190,7 @@ def getPlayerAvgToDate(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     
     # Define the stats we want to calculate averages for
     stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 
-                        'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV']
+                        'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV', 'PASS', 'SAST', 'FTAST', 'PLUS_MINUS', 'DIST', 'SPD']
     
     # Initialize the new columns
     for stat in stats_to_average:

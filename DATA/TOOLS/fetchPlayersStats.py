@@ -3,7 +3,7 @@ import numpy as np
 import time
 import os
 from datetime import datetime
-from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv2, teamgamelog, boxscoreplayertrackv2
+from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv2, teamgamelog, boxscoreplayertrackv3
 from nba_api.stats.static import teams
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -67,16 +67,50 @@ class FetchPlayersStats:
         for attempt in range(max_retries):
             try:
                 time.sleep(sleep_time * (attempt + 1))
-                df = boxscoreplayertrackv2.BoxScorePlayerTrackV2(
+                df = boxscoreplayertrackv3.BoxScorePlayerTrackV3(
                     game_id=game_id,
                     timeout=timeout
                 ).get_data_frames()[0]
+                
+                # Map new column names to old column names
+                column_mapping = {
+                    'gameId': 'GAME_ID',
+                    'personId': 'PLAYER_ID',
+                    'minutes': 'MIN',
+                    'speed': 'SPD',
+                    'distance': 'DIST',
+                    'reboundChancesOffensive': 'ORBC',
+                    'reboundChancesDefensive': 'DRBC',
+                    'reboundChancesTotal': 'RBC',
+                    'touches': 'TCHS',
+                    'secondaryAssists': 'SAST',
+                    'freeThrowAssists': 'FTAST',
+                    'passes': 'PASS',
+                    'contestedFieldGoalsMade': 'CFGM',
+                    'contestedFieldGoalsAttempted': 'CFGA',
+                    'contestedFieldGoalPercentage': 'CFG_PCT',
+                    'uncontestedFieldGoalsMade': 'UFGM',
+                    'uncontestedFieldGoalsAttempted': 'UFGA',
+                    'uncontestedFieldGoalsPercentage': 'UFG_PCT',
+                    'defendedAtRimFieldGoalsMade': 'DFGM',
+                    'defendedAtRimFieldGoalsAttempted': 'DFGA',
+                    'defendedAtRimFieldGoalPercentage': 'DFG_PCT'
+                }
+                
+                # Rename columns to match old format
+                df = df.rename(columns=column_mapping)
+                
+                # Select the columns we want to keep
                 cols = [
                     'GAME_ID', 'PLAYER_ID', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC',
                     'TCHS', 'SAST', 'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT',
                     'UFGM', 'UFGA', 'UFG_PCT', 'DFGM', 'DFGA', 'DFG_PCT'
                 ]
-                return df[cols]
+                
+                # Only select columns that exist in the dataframe
+                existing_cols = [col for col in cols if col in df.columns]
+                return df[existing_cols]
+                
             except Exception as e:
                 if attempt < max_retries - 1:
                     print(f"[RETRY {attempt+1}] Tracking stats for {game_id}: {e}")
