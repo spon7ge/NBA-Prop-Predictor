@@ -10,6 +10,7 @@ Training a catboost and xgboost model to predict a players stat line like points
 - Create an automated pipeline to collect, clean, and store
 - Historical player stats
 - Opponent and team metrics
+- Feature Engineering
 - Betting lines (PrizePicks, Underdog, other US sportbooks)
 
 ### Calculate Smart Bets Using EV and proper risk management
@@ -50,7 +51,7 @@ If you want the odds from below use region='us'
 ## Example of what you get for a single bet only using bookmakers that allow single bets
 <img width="1326" height="303" alt="Screenshot 2025-09-25 at 4 37 12 PM" src="https://github.com/user-attachments/assets/62110db1-e23b-4c2b-9305-fb4017a0be5f" />
 
-## Example of what you get for a 2-leg parlays only using DFS bookmakers (example uses lines from underdog)
+## Example of what you get for a 2-leg parlay only using DFS bookmakers (The lines below are from underdog)
 <img width="1397" height="272" alt="Screenshot 2025-09-25 at 4 38 53 PM" src="https://github.com/user-attachments/assets/17db00eb-902d-4120-9ad5-e8602324e930" />
 
 ## Disclaimer
