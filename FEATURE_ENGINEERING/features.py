@@ -91,8 +91,8 @@ def encode_teams(df):
 # ROLLING AVERAGES AND TIME SERIES FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
 
-def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,10]):
-    """Calculate rolling averages for key player statistics with emphasis on recent form."""
+def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,10,15,40]):
+    """Calculate rolling averages for key player statistics only."""
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
 
@@ -100,52 +100,16 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
                   'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV'
     ]
 
-    # First compute expanding averages as baseline for stability
-    for col in stats_cols:
-        if col in df.columns:
-            expanding_col = f'{col}_EXPANDING_AVG'
-            df[expanding_col] = df.groupby(player_id_col)[col].transform(
-                lambda x: x.shift(1).expanding(min_periods=1).mean().round(2)
-            )
-
-    # Compute rolling averages - FIXED: Always shift by 1 to prevent leakage
+    # Compute rolling averages only - FIXED: Always shift by 1 to prevent leakage
     for window in windows:
         for col in stats_cols:
             if col in df.columns:
                 rolling_col_name = f'{col}_ROLLING_AVG_{window}'
-                expanding_col = f'{col}_EXPANDING_AVG'
                 
                 # Calculate rolling average
-                rolling_avg = df.groupby(player_id_col)[col].transform(
+                df[rolling_col_name] = df.groupby(player_id_col)[col].transform(
                     lambda x: x.shift(1).rolling(window=window, min_periods=1).mean().round(2)
                 )
-                
-                # Use expanding average as fallback when rolling window isn't full
-                df[rolling_col_name] = rolling_avg.fillna(df[expanding_col])
-
-    # Add longer rolling windows for recent form comparison (15, 25, 40 games)
-    recent_windows = [15, 25, 40]
-    for window in recent_windows:
-        for col in stats_cols:
-            if col in df.columns:
-                rolling_col_name = f'{col}_ROLLING_AVG_{window}'
-                expanding_col = f'{col}_EXPANDING_AVG'
-                
-                # Calculate rolling average with min_periods=5 for longer windows
-                rolling_avg = df.groupby(player_id_col)[col].transform(
-                    lambda x: x.shift(1).rolling(window=window, min_periods=5).mean().round(2)
-                )
-                
-                # Use expanding average as fallback when rolling window isn't available
-                df[rolling_col_name] = rolling_avg.fillna(df[expanding_col])
-
-    # Compute Season Average up to Previous Game - FIXED: Use shift(1) to prevent leakage
-    for col in stats_cols:
-        if col in df.columns:
-            season_avg_col = f'{col}_SEASON_AVG_TO_DATE'  # RENAMED with _TO_DATE suffix
-            df[season_avg_col] = df.groupby(player_id_col)[col].transform(
-                lambda x: x.shift(1).expanding(min_periods=1).mean().round(2)
-            )
 
     return df
 
