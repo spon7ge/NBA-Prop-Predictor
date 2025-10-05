@@ -3,12 +3,13 @@
 .env
 venv310/
 
+**/matchup_cache/
 # text files
 .txt 
 
 # python cache
 __pycache__/
-*./__pycache__/
+**/__pycache__/
 
 # os files
 .DS_Store
