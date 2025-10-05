@@ -1,24 +1,21 @@
 from collections import defaultdict
 from NBAPropFinder.Odds_Scraper import Odds_Scraper
-from NBAPropFinder.PrizePicks_Scraper import PrizePicks_Scraper
 import pandas as pd
+import os
+from datetime import datetime
 
 class NBAPropFinder():
     def __init__(self, region='us_dfs'):
-        # Get data from both scrapers
+        # Get data only from Odds API
         print("Scraping Odds API...")
         self.odds_data = Odds_Scraper(region=region)
-        # print("Scraping PrizePicks...")
-        self.prizepicks_data = PrizePicks_Scraper().lines
         print("Organizing Data...")
         self.organizeData()
         self.dataframe = self.getDataFrame()
-
+        self.save_data()
+        
     def organizeData(self):
-        temp = set()
-        for item in self.prizepicks_data: # (player_name, stat_type, line_score, flash_sale, formatted_date)
-            temp.add(item[1])
-        self.categories = temp
+        # Create maps for all the different prop types
         self.points_map = self.create_map(self.odds_data.points)
         self.rebounds_map = self.create_map(self.odds_data.rebounds)
         self.assists_map = self.create_map(self.odds_data.assists)
@@ -39,15 +36,15 @@ class NBAPropFinder():
         result = defaultdict(list)
         for game_data in data:
             for prop in game_data:
-                if len(prop) >= 6:
-                    # From the example: ('player_points', 'PrizePicks', 'Jamal Murray', 'Over', 20.5, -137)
-                    market_key, bookmaker, player_name, over_under, line_score, price = prop
+                if len(prop) >= 8:  # Updated to check for 8 elements instead of 6
+                    # From the odds API: (market_key, bookmaker, player_name, over_under, line_score, price, commence_time, last_update)
+                    market_key, bookmaker, player_name, over_under, line_score, price, commence_time, last_update = prop
                     key = (market_key, bookmaker)
-                    result[key].append((player_name, over_under, line_score, price))
+                    result[key].append((player_name, over_under, line_score, price, commence_time, last_update))
         return result
 
     def getDataFrame(self):
-        # list out all of the maps you created in organizeData()
+        # List all the maps created in organizeData()
         maps = [
             self.points_map,
             self.rebounds_map,
@@ -69,17 +66,34 @@ class NBAPropFinder():
         odds_records = []
         for market_map in maps:
             for (market_key, bookmaker), props in market_map.items():
-                for player_name, over_under, line_score, price in props:
+                for player_name, over_under, line_score, price, commence_time, last_update in props:
                     odds_records.append({
-                        'BOOKMAKER':   bookmaker,
-                        'CATEGORY':  market_key,
+                        'BOOKMAKER': bookmaker,
+                        'CATEGORY': market_key,
                         'NAME': player_name,
-                        'OVER/UNDER':  over_under,
-                        'LINE':  line_score,
-                        'ODDS':       price
+                        'OVER/UNDER': over_under,
+                        'LINE': line_score,
+                        'ODDS': price,
+                        'COMMENCE_TIME': commence_time,
+                        'LAST_UPDATE': last_update
                     })
 
-        # turn it into a DataFrame and return
+        # Turn it into a DataFrame and return
         return pd.DataFrame(odds_records)
+    
+    def save_data(self):
+        save_dir = "/Users/alexg/Documents/Documents/Prize-Picks-Prop-Predictor/DATA/CSV_FILES/PROP_DATA"
+        timestamp = datetime.now().strftime("%Y%m%d")
+        
 
+        filename = f"NBA_{timestamp}.csv"
+        filepath = os.path.join(save_dir, filename)
+        
+        # Save DataFrame to CSV
+        if not self.dataframe.empty:
+            self.dataframe.to_csv(filepath, index=False)
+            print(f"NBA prop data saved to: {filepath}")
+            print(f"Total records: {len(self.dataframe)}")
+        else:
+            print("No NBA data to save (likely off-season)")
     

@@ -46,9 +46,12 @@ class Odds_Scraper():
             if response.status_code == 200:
                 data = response.json()
                 props = []
+                commence_time = data.get('commence_time', '')
+                
                 for bookmaker in data['bookmakers']:
                     for market in bookmaker['markets']:
                         if market['key'] == market_type:
+                            last_update = market.get('last_update', '')
                             for outcome in market['outcomes']:
                                 props.append((
                                     market['key'],
@@ -57,6 +60,8 @@ class Odds_Scraper():
                                     outcome['name'],
                                     outcome['point'],
                                     outcome['price'],
+                                    commence_time,
+                                    last_update
                                 ))
                 # Save the last response
                 self.last_response = response
