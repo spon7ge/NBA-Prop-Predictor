@@ -159,10 +159,14 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats
-    stats_to_average = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 
-                        'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV']
+    stats_cols = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
+                  'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+                  'percentageUnassisted3pt'
+    ]
 
-    for stat in stats_to_average:
+    for stat in stats_cols:
         if stat in df_enhanced.columns:
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
                 df_enhanced.groupby(player_id_col)[stat]
@@ -192,8 +196,12 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 
-                'EFG_PCT','POSS', 'TCHS','AST', 'REB', 'TOV']
+    metrics = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
+                  'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+                  'percentageUnassisted3pt'
+    ]
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
         return df
@@ -341,6 +349,133 @@ def assign_team_opp_def_by_position(df):
         **{col: col.replace('TEAM_', 'OPP_') for col in team_def.columns if col not in ['TEAM_ID', 'GAME_ID']}
     })
     df = df.merge(opp_def, on=['OPP_TEAM_ID', 'GAME_ID'], how='left')
+    return df
+
+def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[5,10,15]):
+    """Calculate rolling team defensive averages by position over fixed windows."""
+    data = df.copy()
+    data.sort_values([team_id_col, date_col], inplace=True)
+
+    def_cols = [
+        'DEF_FG_PCT_ALLOWED',
+        'DEF_3PT_PCT_ALLOWED',
+        'PTS_ALLOWED_PER_MIN'
+    ]
+    positions = ['GUARD', 'FORWARD', 'CENTER']
+
+    team_def_list = []
+
+    for pos in positions:
+        # Compute team-level defense per game for this position
+        team_pos_def = (
+            data[data[pos] == 1]
+            .groupby([team_id_col, 'GAME_ID'])[def_cols]
+            .mean()
+            .reset_index()
+        )
+
+        # Calculate rolling averages by team for this position
+        for window in windows:
+            for col in def_cols:
+                roll_col = f'TEAM_{pos}_{col}_ROLLING_AVG_{window}'
+                team_pos_def[roll_col] = team_pos_def.groupby(team_id_col)[col].transform(
+                    lambda x: x.shift(1).rolling(window=window, min_periods=window).mean().round(3)
+                )
+
+        # Keep only the rolling average columns and the merge keys
+        rolling_cols = [col for col in team_pos_def.columns if 'ROLLING_AVG' in col]
+        team_pos_def = team_pos_def[[team_id_col, 'GAME_ID'] + rolling_cols]
+        team_def_list.append(team_pos_def)
+
+    # Merge position-level results together
+    team_def = team_def_list[0]
+    for tmp in team_def_list[1:]:
+        team_def = team_def.merge(tmp, on=[team_id_col, 'GAME_ID'], how='outer')
+
+    # Merge back to player-level data
+    data = data.merge(team_def, on=[team_id_col, 'GAME_ID'], how='left')
+    
+    # Calculate OPPONENT rolling averages properly
+    # First, we need to create opponent-specific rolling averages
+    opp_def_list = []
+    
+    for pos in positions:
+        # Compute opponent team-level defense per game for this position
+        opp_pos_def = (
+            data[data[pos] == 1]
+            .groupby(['OPP_TEAM_ID', 'GAME_ID', date_col])[def_cols]
+            .mean()
+            .reset_index()
+        )
+        
+        # Sort by opponent team and date to ensure proper rolling calculation
+        opp_pos_def = opp_pos_def.sort_values(['OPP_TEAM_ID', date_col])
+        
+        # Calculate rolling averages by opponent team for this position
+        for window in windows:
+            for col in def_cols:
+                roll_col = f'OPP_{pos}_{col}_ROLLING_AVG_{window}'
+                opp_pos_def[roll_col] = opp_pos_def.groupby('OPP_TEAM_ID')[col].transform(
+                    lambda x: x.shift(1).rolling(window=window, min_periods=window).mean().round(3)
+                )
+        
+        # Keep only the rolling average columns and the merge keys
+        rolling_cols = [col for col in opp_pos_def.columns if 'ROLLING_AVG' in col]
+        opp_pos_def = opp_pos_def[['OPP_TEAM_ID', 'GAME_ID'] + rolling_cols]
+        opp_def_list.append(opp_pos_def)
+    
+    # Merge opponent position-level results together
+    opp_def = opp_def_list[0]
+    for tmp in opp_def_list[1:]:
+        opp_def = opp_def.merge(tmp, on=['OPP_TEAM_ID', 'GAME_ID'], how='outer')
+    
+    # Merge opponent rolling averages back to player-level data
+    data = data.merge(opp_def, on=['OPP_TEAM_ID', 'GAME_ID'], how='left')
+    
+    return data
+
+def assign_team_opp_zone_by_position(df):
+    """Calculate team and opponent zone shooting statistics by position."""
+    zone_cols = [
+        'FREQ_FG3','FG3_PCT_main', 'NS_FG3_PCT', 'PLUS_MINUS_FG3',
+        'FREQ_FG2', 'FG2_PCT', 'NS_FG2_PCT', 'PLUS_MINUS_FG2',
+        'FREQ_LT_06', 'LT_06_PCT', 'NS_LT_06_PCT', 'PLUS_MINUS_LT_06',
+        'FREQ_LT_10', 'LT_10_PCT', 'NS_LT_10_PCT', 'PLUS_MINUS_LT_10',
+        'FREQ_GT_15', 'GT_15_PCT', 'NS_GT_15_PCT', 'PLUS_MINUS_GT_15'
+    ]
+    positions = ['GUARD', 'FORWARD', 'CENTER']
+    team_zone_list = []
+
+    for pos in positions:
+        tmp = (
+            df[df[pos] == 1]
+            .groupby(['TEAM_ID', 'GAME_ID'])[zone_cols]
+            .mean()
+            .round(3)
+            .reset_index()
+            .rename(columns={
+                col: f'TEAM_{pos}_{col}' for col in zone_cols
+            })
+        )
+        team_zone_list.append(tmp)
+
+    # Merge all position-based team zone stats
+    team_zone = team_zone_list[0]
+    for tmp in team_zone_list[1:]:
+        team_zone = team_zone.merge(tmp, on=['TEAM_ID', 'GAME_ID'], how='outer')
+    
+    # Merge team zone stats to main dataframe
+    df = df.merge(team_zone, on=['TEAM_ID', 'GAME_ID'], how='left')
+    
+    # Create opponent zone stats by renaming team columns
+    opp_zone = team_zone.rename(columns={
+        'TEAM_ID': 'OPP_TEAM_ID',
+        **{col: col.replace('TEAM_', 'OPP_') for col in team_zone.columns if col not in ['TEAM_ID', 'GAME_ID']}
+    })
+    
+    # Merge opponent zone stats to main dataframe
+    df = df.merge(opp_zone, on=['OPP_TEAM_ID', 'GAME_ID'], how='left')
+    
     return df
 # ================================================================================================
 # OPPONENT AND DEFENSIVE FEATURES - FIXED FOR DATA LEAKAGE
