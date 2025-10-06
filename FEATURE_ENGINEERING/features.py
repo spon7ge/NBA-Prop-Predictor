@@ -103,13 +103,15 @@ def encode_teams(df):
 # ROLLING AVERAGES AND TIME SERIES FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
 
-def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,10,15,40]):
+def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[10,15,25,40]):
     """Calculate rolling averages for key player statistics only."""
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
+                  
+                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
                   'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
                   'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
                   'percentageUnassisted3pt'
@@ -160,7 +162,9 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
+                  
+                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
                   'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
                   'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
                   'percentageUnassisted3pt'
@@ -197,7 +201,9 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
         return df
 
     metrics = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
+                  
+                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
                   'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
                   'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
                   'percentageUnassisted3pt'
@@ -265,10 +271,32 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
         'USG_PCT': [3],
         'EFG_PCT': [3],
         'TS_PCT': [3],
-        'OFF_RATING': [3],
-        'AST': [3],
-        'REB': [3],
-        'TOV': [3]
+        'POSS': [3],
+        'TCHS': [3],
+        'PASS': [3],
+        'SAST': [3],
+        'FTAST': [3],
+        'TOV': [3],
+        'POINT_PER_SHOT': [3],
+        'PLUS_MINUS': [3],
+        'NET_RATING': [3],
+        'PIE': [3],
+        'SPD': [3],
+        'DIST': [3],
+        'percentageFieldGoalsAttempted3pt': [3],
+        'percentageFieldGoalsAttempted2pt': [3],
+        'percentagePoints2pt': [3],
+        'percentagePointsMidrange2pt': [3],
+        'percentagePoints3pt': [3],
+        'percentagePointsFastBreak': [3],
+        'percentagePointsFreeThrow': [3],
+        'percentagePointsOffTurnovers': [3],
+        'percentagePointsPaint': [3],
+        'percentageAssisted2pt': [3],
+        'percentageUnassisted2pt': [3],
+        'percentageAssisted3pt': [3],
+        'percentageUnassisted3pt': [3],
+        
     }
     
     # Calculate games against opponent count efficiently
@@ -602,6 +630,114 @@ def teamContext(df):
     )
     return df
 
+def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[10, 15, 25]):
+    """
+    Add rolling averages for opponent team statistics over specified windows.
+    Shows how the opposing team has been performing in their recent games.
+    """
+    df = df.copy()
+    df = df.sort_values([team_id_col, date_col]).reset_index(drop=True)
+    
+    # Define team stats to calculate rolling averages for
+    team_stats = [
+        'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_PTS', 
+        'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
+    ]
+    
+    # Filter to only available columns
+    available_stats = [stat for stat in team_stats if stat in df.columns]
+    
+    if not available_stats:
+        print("Warning: No team stats found in dataframe for rolling averages")
+        return df
+    
+    # Calculate rolling averages for each window
+    for window in windows:
+        for stat in available_stats:
+            # Rolling average (shifted to prevent leakage)
+            rolling_col = f'{stat}_ROLLING_AVG_{window}'
+            df[rolling_col] = (
+                df.groupby(team_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean())
+                .round(2)
+            )
+    
+    # Now create opponent versions by mapping team stats to opponent team stats
+    # First, create a mapping of team rolling stats per game
+    team_rolling_stats = {}
+    
+    for window in windows:
+        for stat in available_stats:
+            rolling_col = f'{stat}_ROLLING_AVG_{window}'
+            opp_rolling_col = f'OPP_{stat}_ROLLING_AVG_{window}'
+            
+            # Create mapping: (GAME_ID, TEAM_ID) -> rolling stat value
+            team_game_stats = df.groupby(['GAME_ID', team_id_col])[rolling_col].first().to_dict()
+            
+            # Map opponent team rolling stats
+            df[opp_rolling_col] = df.apply(
+                lambda row: team_game_stats.get((row['GAME_ID'], row['OPP_TEAM_ID']), np.nan), 
+                axis=1
+            )
+    
+    # Fill NaN values with expanding averages as fallback
+    opp_rolling_cols = [col for col in df.columns if col.startswith('OPP_') and '_ROLLING_AVG_' in col]
+    
+    for col in opp_rolling_cols:
+        # Extract the base stat name
+        base_stat = col.replace('OPP_', '').replace('_ROLLING_AVG_5', '').replace('_ROLLING_AVG_10', '').replace('_ROLLING_AVG_15', '')
+        base_stat_col = f'OPP_{base_stat}_AVG_TO_DATE'
+        
+        # Fill NaN with expanding average if available
+        if base_stat_col in df.columns:
+            df[col] = df[col].fillna(df[base_stat_col])
+        else:
+            # Fill with overall mean as last resort
+            df[col] = df[col].fillna(df[col].mean())
+    
+    # Convert to appropriate data types to save memory
+    for col in opp_rolling_cols:
+        if df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
+    
+    return df
+
+
+def add_opponent_team_form_indicators(df, windows=[10, 15, 25]):
+    """
+    Add indicators showing if opponent team is in good/bad form recently.
+    Compares recent performance to season averages.
+    """
+    df = df.copy()
+    
+    # Key stats to analyze for team form
+    form_stats = ['TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PTS']
+    
+    for window in windows:
+        for stat in form_stats:
+            rolling_col = f'OPP_{stat}_ROLLING_AVG_{window}'
+            season_col = f'OPP_{stat}_AVG_TO_DATE'
+            
+            if rolling_col in df.columns and season_col in df.columns:
+                # Form indicator: 1 if recent form is better than season average
+                form_col = f'OPP_{stat}_GOOD_FORM_{window}'
+                
+                if 'DEF_RATING' in stat:
+                    # For defense, lower is better
+                    df[form_col] = (df[rolling_col] < df[season_col] * 0.98).astype(int)
+                else:
+                    # For offense/points, higher is better
+                    df[form_col] = (df[rolling_col] > df[season_col] * 1.02).astype(int)
+                
+                # Strength of form (percentage difference)
+                form_strength_col = f'OPP_{stat}_FORM_STRENGTH_{window}'
+                if 'DEF_RATING' in stat:
+                    df[form_strength_col] = ((df[season_col] - df[rolling_col]) / df[season_col] * 100).round(2)
+                else:
+                    df[form_strength_col] = ((df[rolling_col] - df[season_col]) / df[season_col] * 100).round(2)
+    
+    return df
+
 def expectedPace(df):
     df = df.copy()
     required_cols = ['TEAM_PACE_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE']
@@ -807,17 +943,12 @@ def add_performance_without_stars_columns(df, min_games=2):
     """
     Add columns showing player averages when star teammates are out.
     Also adds the number of All-NBA players on each team.
+    FIXED: Now uses shift(1) to prevent data leakage.
     """
     df = df.copy()
+    df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
     # Add number of All-NBA players per team
-    all_nba_count_per_team = (
-        df.groupby(['TEAM_ID'])['PLAYER_IS_ALL_NBA']
-        .max()  # Get unique players per team
-        .reset_index()
-    )
-    
-    # Get actual count by summing unique All-NBA players per team
     all_nba_per_team = (
         df[df['PLAYER_IS_ALL_NBA'] == 1]
         .groupby('TEAM_ID')['PLAYER_NAME']
@@ -833,49 +964,65 @@ def add_performance_without_stars_columns(df, min_games=2):
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
         
-        # Only team star out scenario
-        star_out_mask = player_group['TEAM_STAR_OUT'] == 1
+        # FIXED: Shift TEAM_STAR_OUT to prevent leakage
+        player_group['TEAM_STAR_OUT_SHIFTED'] = player_group['TEAM_STAR_OUT'].shift(1)
         
-        # Team star out stats
+        # Only team star out scenario - using SHIFTED values
+        star_out_mask = player_group['TEAM_STAR_OUT_SHIFTED'] == 1
+        
+        # FIXED: Use shifted values for all statistics
         if star_out_mask.sum() >= min_games:
             star_out_data = player_group[star_out_mask]
-            player_group['PTS_WITHOUT_STAR'] = round(star_out_data['PTS'].mean(), 2)
-            player_group['MIN_WITHOUT_STAR'] = round(star_out_data['MIN'].mean(), 2)
-            player_group['USG_PCT_WITHOUT_STAR'] = round(star_out_data['USG_PCT'].mean(), 2)
-            player_group['FGA_WITHOUT_STAR'] = round(star_out_data['FGA'].mean(), 2)
-            player_group['FG3A_WITHOUT_STAR'] = round(star_out_data['FG3A'].mean(), 2)
-            player_group['FTA_WITHOUT_STAR'] = round(star_out_data['FTA'].mean(), 2)
-            player_group['FG_PCT_WITHOUT_STAR'] = round(star_out_data['FG_PCT'].mean(), 2)
-            player_group['FG3_PCT_WITHOUT_STAR'] = round(star_out_data['FG3_PCT'].mean(), 2)
-            player_group['FT_PCT_WITHOUT_STAR'] = round(star_out_data['FT_PCT'].mean(), 2)
-            player_group['EFG_PCT_WITHOUT_STAR'] = round(star_out_data['EFG_PCT'].mean(), 2)
-            player_group['TS_PCT_WITHOUT_STAR'] = round(star_out_data['TS_PCT'].mean(), 2)
-            player_group['AST_WITHOUT_STAR'] = round(star_out_data['AST'].mean(), 2)
-            player_group['POSS_WITHOUT_STAR'] = round(star_out_data['POSS'].mean(), 2)
-            player_group['TCHS_WITHOUT_STAR'] = round(star_out_data['TCHS'].mean(), 2)
-            player_group['REB_WITHOUT_STAR'] = round(star_out_data['REB'].mean(), 2)
-            player_group['TOV_WITHOUT_STAR'] = round(star_out_data['TOV'].mean(), 2)
-            player_group['PTS_PER_36_WITHOUT_STAR'] = round((star_out_data['PTS'] * 36 / star_out_data['MIN']).mean(), 2)
+            
+            # Calculate averages using SHIFTED data only
+            player_group['PTS_WITHOUT_STAR'] = round(star_out_data['PTS'].shift(1).mean(), 2)
+            player_group['MIN_WITHOUT_STAR'] = round(star_out_data['MIN'].shift(1).mean(), 2)
+            player_group['USG_PCT_WITHOUT_STAR'] = round(star_out_data['USG_PCT'].shift(1).mean(), 2)
+            player_group['FGA_WITHOUT_STAR'] = round(star_out_data['FGA'].shift(1).mean(), 2)
+            player_group['FG3A_WITHOUT_STAR'] = round(star_out_data['FG3A'].shift(1).mean(), 2)
+            player_group['FTA_WITHOUT_STAR'] = round(star_out_data['FTA'].shift(1).mean(), 2)
+            player_group['FG_PCT_WITHOUT_STAR'] = round(star_out_data['FG_PCT'].shift(1).mean(), 2)
+            player_group['FG3_PCT_WITHOUT_STAR'] = round(star_out_data['FG3_PCT'].shift(1).mean(), 2)
+            player_group['FT_PCT_WITHOUT_STAR'] = round(star_out_data['FT_PCT'].shift(1).mean(), 2)
+            player_group['EFG_PCT_WITHOUT_STAR'] = round(star_out_data['EFG_PCT'].shift(1).mean(), 2)
+            player_group['TS_PCT_WITHOUT_STAR'] = round(star_out_data['TS_PCT'].shift(1).mean(), 2)
+            player_group['AST_WITHOUT_STAR'] = round(star_out_data['AST'].shift(1).mean(), 2)
+            player_group['POSS_WITHOUT_STAR'] = round(star_out_data['POSS'].shift(1).mean(), 2)
+            player_group['TCHS_WITHOUT_STAR'] = round(star_out_data['TCHS'].shift(1).mean(), 2)
+            player_group['REB_WITHOUT_STAR'] = round(star_out_data['REB'].shift(1).mean(), 2)
+            player_group['TOV_WITHOUT_STAR'] = round(star_out_data['TOV'].shift(1).mean(), 2)
+            
+            # FIXED: PTS_PER_36 calculation with shifted data
+            pts_shifted = star_out_data['PTS'].shift(1)
+            min_shifted = star_out_data['MIN'].shift(1)
+            player_group['PTS_PER_36_WITHOUT_STAR'] = round(
+                (pts_shifted * 36 / (min_shifted + 1e-8)).mean(), 2
+            )
+            
             player_group['GAMES_WITHOUT_STAR'] = star_out_mask.sum()
         else:
-            player_group['PTS_WITHOUT_STAR'] = 0
-            player_group['MIN_WITHOUT_STAR'] = 0
-            player_group['USG_PCT_WITHOUT_STAR'] = 0
-            player_group['FGA_WITHOUT_STAR'] = 0
-            player_group['FG3A_WITHOUT_STAR'] = 0
-            player_group['FTA_WITHOUT_STAR'] = 0
-            player_group['FG_PCT_WITHOUT_STAR'] = 0
-            player_group['FG3_PCT_WITHOUT_STAR'] = 0
-            player_group['FT_PCT_WITHOUT_STAR'] = 0
-            player_group['EFG_PCT_WITHOUT_STAR'] = 0
-            player_group['TS_PCT_WITHOUT_STAR'] = 0
-            player_group['AST_WITHOUT_STAR'] = 0
-            player_group['POSS_WITHOUT_STAR'] = 0
-            player_group['TCHS_WITHOUT_STAR'] = 0
-            player_group['REB_WITHOUT_STAR'] = 0
-            player_group['TOV_WITHOUT_STAR'] = 0
-            player_group['PTS_PER_36_WITHOUT_STAR'] = 0
+            # Set to NaN instead of 0 for better model understanding
+            player_group['PTS_WITHOUT_STAR'] = np.nan
+            player_group['MIN_WITHOUT_STAR'] = np.nan
+            player_group['USG_PCT_WITHOUT_STAR'] = np.nan
+            player_group['FGA_WITHOUT_STAR'] = np.nan
+            player_group['FG3A_WITHOUT_STAR'] = np.nan
+            player_group['FTA_WITHOUT_STAR'] = np.nan
+            player_group['FG_PCT_WITHOUT_STAR'] = np.nan
+            player_group['FG3_PCT_WITHOUT_STAR'] = np.nan
+            player_group['FT_PCT_WITHOUT_STAR'] = np.nan
+            player_group['EFG_PCT_WITHOUT_STAR'] = np.nan
+            player_group['TS_PCT_WITHOUT_STAR'] = np.nan
+            player_group['AST_WITHOUT_STAR'] = np.nan
+            player_group['POSS_WITHOUT_STAR'] = np.nan
+            player_group['TCHS_WITHOUT_STAR'] = np.nan
+            player_group['REB_WITHOUT_STAR'] = np.nan
+            player_group['TOV_WITHOUT_STAR'] = np.nan
+            player_group['PTS_PER_36_WITHOUT_STAR'] = np.nan
             player_group['GAMES_WITHOUT_STAR'] = 0
+        
+        # Drop temporary column
+        player_group = player_group.drop('TEAM_STAR_OUT_SHIFTED', axis=1)
         
         return player_group
     
@@ -966,18 +1113,22 @@ team_dict = {
 ##############################################################################################################
 # VOLATILITY FEATURES
 ##############################################################################################################
-def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15]):
+def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 15, 40]):
     """
     Calculate volatility features for player performance metrics.
-    Uses standard deviation, coefficient of variation, and consistency metrics.
+    Only calculates rolling standard deviation for specified windows.
     """
     # Create copy and sort data
     df = df.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate volatility for
-    volatility_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 
-                       'EFG_PCT', 'OFF_RATING', 'AST', 'REB', 'TOV']
+    volatility_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
+                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
+                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak',
+                  'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+                  'percentageUnassisted3pt'
+    ]
     
     # Filter to only available columns
     available_stats = [stat for stat in volatility_stats if stat in df.columns]
@@ -996,32 +1147,6 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
                 .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
                 .round(3)
             )
-            
-            # Coefficient of variation (volatility relative to mean)
-            cv_col = f'{stat}_CV_{window}_TO_DATE'
-            rolling_mean = (
-                df.groupby(player_id_col)[stat]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).mean())
-            )
-            rolling_std = (
-                df.groupby(player_id_col)[stat]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
-            )
-            
-            # Calculate CV, handling division by zero
-            df[cv_col] = np.where(
-                rolling_mean != 0,
-                (rolling_std / rolling_mean).round(3),
-                0
-            )
-            
-            # Consistency score (inverse of CV, capped at reasonable values)
-            consistency_col = f'{stat}_CONSISTENCY_{window}_TO_DATE'
-            df[consistency_col] = np.where(
-                df[cv_col] > 0,
-                np.minimum(1 / df[cv_col], 10),  # Cap at 10 for extreme consistency
-                10  # Perfect consistency when CV is 0
-            ).round(3)
     
     # Add expanding volatility metrics (season-long volatility)
     for stat in available_stats:
@@ -1032,102 +1157,60 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
             .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
             .round(3)
         )
-        
-        # Expanding coefficient of variation
-        expanding_cv_col = f'{stat}_EXPANDING_CV_TO_DATE'
-        expanding_mean = (
-            df.groupby(player_id_col)[stat]
-            .transform(lambda x: x.shift(1).expanding(min_periods=2).mean())
-        )
-        expanding_std = (
-            df.groupby(player_id_col)[stat]
-            .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
-        )
-        
-        df[expanding_cv_col] = np.where(
-            expanding_mean != 0,
-            (expanding_std / expanding_mean).round(3),
-            0
-        )
-    
-    # Add volatility trend features (is player becoming more/less volatile?)
-    for stat in available_stats:
-        if len(windows) >= 2:
-            short_window = min(windows)
-            long_window = max(windows)
-            
-            short_vol_col = f'{stat}_VOLATILITY_{short_window}_TO_DATE'
-            long_vol_col = f'{stat}_VOLATILITY_{long_window}_TO_DATE'
-            
-            # Volatility trend (positive = becoming more volatile)
-            trend_col = f'{stat}_VOLATILITY_TREND_TO_DATE'
-            df[trend_col] = (
-                df[short_vol_col] - df[long_vol_col]
-            ).round(3)
-            
-            # Volatility ratio (short-term vs long-term volatility)
-            ratio_col = f'{stat}_VOLATILITY_RATIO_TO_DATE'
-            df[ratio_col] = np.where(
-                df[long_vol_col] != 0,
-                (df[short_vol_col] / df[long_vol_col]).round(3),
-                1.0  # Default ratio when long-term volatility is 0
-            )
-    
-    # Add game-to-game change features
-    for stat in available_stats:
-        # Absolute change from previous game
-        change_col = f'{stat}_GAME_CHANGE_TO_DATE'
-        df[change_col] = (
-            df.groupby(player_id_col)[stat].diff().abs().round(2)
-        )
-        
-        # Percentage change from previous game
-        pct_change_col = f'{stat}_GAME_PCT_CHANGE_TO_DATE'
-        prev_value = df.groupby(player_id_col)[stat].shift(1)
-        df[pct_change_col] = np.where(
-            prev_value != 0,
-            ((df[stat] - prev_value) / prev_value * 100).round(2),
-            0
-        )
-    
-    # Add streak-based volatility features
-    for stat in available_stats:
-        # Count consecutive games above/below season average
-        season_avg_col = f'{stat}_SEASON_AVG_TO_DATE'
-        if season_avg_col in df.columns:
-            # Above average streak
-            above_avg = (df[stat] > df[season_avg_col]).astype(int)
-            above_streak_col = f'{stat}_ABOVE_AVG_STREAK_TO_DATE'
-            df[above_streak_col] = (
-                above_avg.groupby([df[player_id_col], (above_avg != above_avg.shift()).cumsum()])
-                .cumsum()
-                .where(above_avg == 1, 0)
-            )
-            
-            # Below average streak
-            below_avg = (df[stat] < df[season_avg_col]).astype(int)
-            below_streak_col = f'{stat}_BELOW_AVG_STREAK_TO_DATE'
-            df[below_streak_col] = (
-                below_avg.groupby([df[player_id_col], (below_avg != below_avg.shift()).cumsum()])
-                .cumsum()
-                .where(below_avg == 1, 0)
-            )
     
     # Fill NaN values with appropriate defaults
-    volatility_cols = [col for col in df.columns if any(x in col for x in ['VOLATILITY', 'CV', 'CONSISTENCY', 'CHANGE', 'STREAK'])]
+    volatility_cols = [col for col in df.columns if 'VOLATILITY' in col]
     
     for col in volatility_cols:
-        if 'CV' in col or 'VOLATILITY' in col:
-            df[col] = df[col].fillna(0)  # No volatility for first games
-        elif 'CONSISTENCY' in col:
-            df[col] = df[col].fillna(10)  # Perfect consistency for first games
-        elif 'CHANGE' in col:
-            df[col] = df[col].fillna(0)  # No change for first games
-        elif 'STREAK' in col:
-            df[col] = df[col].fillna(0)  # No streak for first games
+        df[col] = df[col].fillna(0)  # No volatility for first games
     
     # Convert to appropriate data types to save memory
     for col in volatility_cols:
+        if df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
+    
+    return df
+
+
+def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 15, 40]):
+    """
+    Calculate standard deviation features for player performance metrics.
+    Calculates rolling standard deviation for specified windows (last 5, 15, 40 games).
+    """
+    # Create copy and sort data
+    df = df.copy()
+    df.sort_values([player_id_col, date_col], inplace=True)
+    
+    # Define stats to calculate standard deviation for
+    std_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 
+                 'EFG_PCT', 'OFF_RATING', 'AST', 'REB', 'TOV']
+    
+    # Filter to only available columns
+    available_stats = [stat for stat in std_stats if stat in df.columns]
+    
+    if not available_stats:
+        print("Warning: No stats found in dataframe for standard deviation calculation")
+        return df
+    
+    # Calculate standard deviation for each window
+    for window in windows:
+        for stat in available_stats:
+            # Rolling standard deviation (shifted to prevent leakage)
+            std_col = f'{stat}_STD_LAST_{window}'
+            df[std_col] = (
+                df.groupby(player_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
+                .round(3)
+            )
+    
+    # Fill NaN values with appropriate defaults
+    std_cols = [col for col in df.columns if '_STD_LAST_' in col]
+    
+    for col in std_cols:
+        df[col] = df[col].fillna(0)  # No standard deviation for first games
+    
+    # Convert to appropriate data types to save memory
+    for col in std_cols:
         if df[col].dtype == 'float64':
             df[col] = df[col].astype('float32')
     
@@ -1194,4 +1277,63 @@ def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DAT
             volatility_95th = df[recent_vol_col].quantile(0.95)
             df[extreme_vol_col] = (df[recent_vol_col] > volatility_95th).astype(int)
     
+    return df
+
+def add_interaction_features(df):
+    eplison = 1e-8
+    df = df.copy()
+    # Relative strength interactions
+    df['TEAM_OFF_MINUS_OPP_DEF'] = df['TEAM_OFF_RATING_AVG_TO_DATE'] - df['OPP_DEF_RATING_AVG_TO_DATE']
+    df['TEAM_PACE_MINUS_OPP_PACE'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']
+    df['TEAM_PTS_MINUS_OPP_PTS'] = df['TEAM_PTS_AVG_TO_DATE'] - df['OPP_PTS_AVG_TO_DATE']
+
+    # Player context x environment
+    df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
+    df['USG_X_TEAM_OFF'] = df['USG_PCT_AVG_TO_DATE'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
+    df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
+    df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
+                                                              df['TEAM_IMPLIED_PTS_FAV'], 
+                                                              df['TEAM_IMPLIED_PTS_UND'])
+
+    # Shooting style x matchup fit
+    df['PLAYER_3PT_X_OPP_3PT_DEF'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+    df['PLAYER_PAINT_X_OPP_PAINT_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_PTS_PAINT']
+    df['PLAYER_MID_X_OPP_MID_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+    df['PLAYER_3PT_X_OPP_3PT_DEF_RECENT'] = df['percentageFieldGoalsAttempted3pt_ROLLING_AVG_5'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+    df['PLAYER_PAINT_X_OPP_PAINT_DEF_RECENT'] = df['percentagePointsPaint_ROLLING_AVG_5'] * df['OPP_PTS_PAINT']
+    df['PLAYER_MID_X_OPP_MID_DEF_RECENT'] = df['percentagePointsMidrange2pt_ROLLING_AVG_5'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+
+    # Form x environment
+    df['ROLLING_PTS5_X_PACE'] = df['PTS_ROLLING_AVG_5'] * df['EXPECTED_PACE']
+    df['ROLLING_PTS5_X_TEAM_OFF'] = df['PTS_ROLLING_AVG_5'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
+    df['ROLLING_MIN5_X_TEAM_PTS'] = df['MIN_ROLLING_AVG_5'] * df['TEAM_PTS_AVG_TO_DATE']
+
+    # Fatigue context
+    df['REST_X_PACE'] = df['PLAYER_DAYS_REST'] * df['EXPECTED_PACE']
+    df['B2B_X_PACE'] = df['IS_BACK_TO_BACK'] * df['EXPECTED_PACE']
+
+    # Role and status interactions
+    df['STARTER_X_PACE'] = df['STARTING'] * df['EXPECTED_PACE']
+    df['TEAM_STAR_OUT_X_USG'] = df['TEAM_STAR_OUT'] * df['USG_PCT_AVG_TO_DATE']
+    df['TEAM_STAR_OUT_X_MIN'] = df['TEAM_STAR_OUT'] * df['MIN_AVG_TO_DATE']
+    df['TEAM_STAR_OUT_X_PTS'] = df['TEAM_STAR_OUT'] * df['PTS_AVG_TO_DATE']
+
+    # Home effect interactions
+    df['HOME_X_MIN'] = df['HOME_GAME'] * df['MIN_AVG_TO_DATE']
+    df['HOME_X_PTS'] = df['HOME_GAME'] * df['PTS_AVG_TO_DATE']
+    df['HOME_X_PACE'] = df['HOME_GAME'] * df['EXPECTED_PACE']
+
+    # Efficiency x volume
+    df['EFG_X_FGA'] = df['EFG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE']
+    df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
+    df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
+
+    # Points per minute interactions
+    df['PTS_PER_MIN'] = round(df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison), 3)
+    df['PTS_PER_36'] = round(df['PTS_AVG_TO_DATE'] * 36 / (df['MIN_AVG_TO_DATE'] + eplison), 3)
+    df['PTS_PER_MIN_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_5'] + eplison), 3)
+    df['PTS_PER_MIN_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['MIN_ROLLING_AVG_15'] + eplison), 3)   
+    df['PTS_PER_MIN_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['MIN_ROLLING_AVG_40'] + eplison), 3)
+    df['PTS_PER_MIN_X_PACE'] = round(df['PTS_PER_MIN'] * df['EXPECTED_PACE'], 3)
+
     return df
