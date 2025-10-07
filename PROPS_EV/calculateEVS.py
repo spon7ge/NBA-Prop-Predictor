@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from scipy.stats import norm
 import scipy.stats as stats
-from MODELS.pipeline import *
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
@@ -112,7 +111,7 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
 
 
 def single_bet(data, bookmakers, model, features, stake=100, simulations=10000, 
-               std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
+               std_window=20, min_std=2.0, max_std=8.5, stat_col='PTS'):
 
     print("Processing single bets...")
 
@@ -214,7 +213,7 @@ def single_bet(data, bookmakers, model, features, stake=100, simulations=10000,
 
     
 def prizepickspairsEV(data, bookmakers, model, features, stake=100,
-                      simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
+                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing PrizePicks pairs...")
 
@@ -233,6 +232,8 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
     for _, row in bookmakers.iterrows():
         name = row['NAME']
         category = row['CATEGORY']
+        bookmaker = row['BOOKMAKER']
+        odds = int(row['ODDS'])
         line = float(row['LINE'])
         side = row.get('SIDE', 'over')  # Updated to use 'SIDE' column
 
@@ -269,6 +270,8 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             'NAME': name,
             'TEAM': player_team,  # Store team for easier comparison
             'CATEGORY': category,
+            'BOOKMAKER': bookmaker,
+            'ODDS': odds,
             'LINE': line,
             'SIDE': side,
             'PREDICTION': float(prediction),
@@ -306,16 +309,20 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             pair_results.append({
                 'PLAYER 1': leg1['NAME'],
                 'CATEGORY 1': leg1['CATEGORY'],
+                'BOOKMAKER 1': leg1['BOOKMAKER'],
+                'ODDS 1': leg1['ODDS'],
                 'LINE 1': leg1['LINE'],
-                'SIDE 1': leg1['SIDE'],
+                # 'SIDE 1': leg1['SIDE'],
                 'PREDICTION 1': round(leg1['PREDICTION'], 2),
                 'OVER% 1': round(leg1['OVER%'], 3),
                 'UNDER% 1': round(leg1['UNDER%'], 3),
                 'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
                 'PLAYER 2': leg2['NAME'],
                 'CATEGORY 2': leg2['CATEGORY'],
+                'BOOKMAKER 2': leg2['BOOKMAKER'],
+                'ODDS 2': leg2['ODDS'],
                 'LINE 2': leg2['LINE'],
-                'SIDE 2': leg2['SIDE'],
+                # 'SIDE 2': leg2['SIDE'],
                 'PREDICTION 2': round(leg2['PREDICTION'], 2),
                 'OVER% 2': round(leg2['OVER%'], 3),
                 'UNDER% 2': round(leg2['UNDER%'], 3),
@@ -324,9 +331,6 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
                         f"{'OVER' if str(leg2['SIDE']).upper().startswith('O') else 'UNDER'}",
                 'PROBABILITY': round(p_both, 4),
                 'EV%': round(ev_percent, 3),
-                'KELLY FULL': round(kelly_full, 2),
-                'KELLY HALF': round(0.5 * kelly_full, 2),
-                'KELLY QUARTER': round(0.25 * kelly_full, 2)
             })
 
     return pd.DataFrame(pair_results)
