@@ -226,22 +226,23 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             sd = 5.0
         return float(np.clip(sd, min_std, max_std))
 
-    legs = []
-    processed_players = set()  # Track processed players to avoid duplicates
+    # Group bookmakers data by NAME and LINE to handle multiple entries
+    grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
+        'CATEGORY': 'first',
+        'BOOKMAKER': 'first',
+        'ODDS': 'first',
+        'SIDE': 'first'
+    }).reset_index()
     
-    for _, row in bookmakers.iterrows():
+    legs = []
+    
+    for _, row in grouped_bookmakers.iterrows():
         name = row['NAME']
         category = row['CATEGORY']
         bookmaker = row['BOOKMAKER']
         odds = int(row['ODDS'])
         line = float(row['LINE'])
-        side = row.get('SIDE', 'over')  # Updated to use 'SIDE' column
-
-        # Skip if we've already processed this player
-        if name in processed_players:
-            continue
-        
-        processed_players.add(name)
+        side = row.get('SIDE', 'over')
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -266,15 +267,28 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             num_simulations=simulations
         )
 
+        # Determine over/under based on prediction vs line
+        if prediction > line:
+            model_side = 'OVER'
+            model_prob = float(sim_results['prob_over'])
+            model_opposite_prob = float(sim_results['prob_under'])
+        else:
+            model_side = 'UNDER'
+            model_prob = float(sim_results['prob_under'])
+            model_opposite_prob = float(sim_results['prob_over'])
+
         legs.append({
             'NAME': name,
-            'TEAM': player_team,  # Store team for easier comparison
+            'TEAM': player_team,
             'CATEGORY': category,
             'BOOKMAKER': bookmaker,
             'ODDS': odds,
             'LINE': line,
-            'SIDE': side,
+            'SIDE': side,  # Keep original bookmaker side for backtest compatibility
             'PREDICTION': float(prediction),
+            'MODEL_SIDE': model_side,
+            'MODEL_PROB': model_prob,
+            'MODEL_OPPOSITE_PROB': model_opposite_prob,
             'OVER%': float(sim_results['prob_over']),
             'UNDER%': float(sim_results['prob_under']),
             'CI': sim_results['confidence_interval']
@@ -285,7 +299,7 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
 
     pair_results = []
     for i in range(len(legs)):
-        for j in range(i + 1, len(legs)):  # i + 1 prevents duplicate combos (a,b vs b,a)
+        for j in range(i + 1, len(legs)):
             leg1 = legs[i]
             leg2 = legs[j]
             
@@ -297,8 +311,9 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             if leg1['TEAM'] == leg2['TEAM']:
                 continue
 
-            p1 = leg1['OVER%'] if str(leg1['SIDE']).upper().startswith('O') else leg1['UNDER%']
-            p2 = leg2['OVER%'] if str(leg2['SIDE']).upper().startswith('O') else leg2['UNDER%']
+            # Use the model's recommended side and probability
+            p1 = leg1['MODEL_PROB']
+            p2 = leg2['MODEL_PROB']
             p_both = p1 * p2
 
             ev_per_unit = p_both * b - (1 - p_both)
@@ -312,8 +327,9 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
                 'BOOKMAKER 1': leg1['BOOKMAKER'],
                 'ODDS 1': leg1['ODDS'],
                 'LINE 1': leg1['LINE'],
-                # 'SIDE 1': leg1['SIDE'],
+                'SIDE 1': leg1['SIDE'],  # Keep for backtest compatibility
                 'PREDICTION 1': round(leg1['PREDICTION'], 2),
+                'MODEL_SIDE 1': leg1['MODEL_SIDE'],
                 'OVER% 1': round(leg1['OVER%'], 3),
                 'UNDER% 1': round(leg1['UNDER%'], 3),
                 'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
@@ -322,15 +338,17 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
                 'BOOKMAKER 2': leg2['BOOKMAKER'],
                 'ODDS 2': leg2['ODDS'],
                 'LINE 2': leg2['LINE'],
-                # 'SIDE 2': leg2['SIDE'],
+                'SIDE 2': leg2['SIDE'],  # Keep for backtest compatibility
                 'PREDICTION 2': round(leg2['PREDICTION'], 2),
+                'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                 'OVER% 2': round(leg2['OVER%'], 3),
                 'UNDER% 2': round(leg2['UNDER%'], 3),
                 'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
-                'TYPE': f"{'OVER' if str(leg1['SIDE']).upper().startswith('O') else 'UNDER'}/"
-                        f"{'OVER' if str(leg2['SIDE']).upper().startswith('O') else 'UNDER'}",
+                'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}",
                 'PROBABILITY': round(p_both, 4),
                 'EV%': round(ev_percent, 3),
+                'KELLY': round(kelly_full, 3),
+                'KELLY FULL': round(kelly_full, 3),  # Keep for backtest compatibility
             })
 
     return pd.DataFrame(pair_results)
