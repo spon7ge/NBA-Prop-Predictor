@@ -1327,6 +1327,7 @@ def add_interaction_features(df):
     df['EFG_X_FGA'] = df['EFG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE']
     df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
     df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
+    df['EXPECTED_USAGE_MIN'] = df['USG_PCT_ROLLING_AVG_5'] * (df['MIN_ROLLING_AVG_5'] + eplison)
 
     # Points per minute interactions
     df['PTS_PER_MIN'] = round(df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison), 3)

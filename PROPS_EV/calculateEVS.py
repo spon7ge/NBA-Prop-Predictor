@@ -3,7 +3,6 @@ import numpy as np
 from scipy.stats import norm
 import scipy.stats as stats
 from MODELS.pipeline import *
-from MODELS.model import *
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
@@ -69,6 +68,23 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
     else:
         return round(-100 / (odds_to_decimal - 1))
 
+def predictPTS(playerName, data, model, features):
+    playerData = data[data['PLAYER_NAME'] == playerName]
+    latestRow = playerData.sort_values(by='GAME_DATE').iloc[-1]
+    available_features = [f for f in features if f in data.columns] 
+    playerInput = latestRow[available_features]
+    
+    playerInput_df = pd.DataFrame([playerInput.values], columns=available_features)
+    
+    for col in playerInput_df.columns:
+        if playerInput_df[col].dtype == 'object':
+            playerInput_df[col] = pd.to_numeric(playerInput_df[col], errors='coerce').fillna(0)
+        elif playerInput_df[col].dtype == 'bool':
+            playerInput_df[col] = playerInput_df[col].astype(int)
+    
+    pred = model.predict(playerInput_df)[0]
+    return float(pred)
+    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #monte carlo simulation using my model to calculate the probability of the prop
 def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
@@ -95,13 +111,10 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     }
 
 
-def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stake=100,
-               simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
+def single_bet(data, bookmakers, model, features, stake=100, simulations=10000, 
+               std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
 
     print("Processing single bets...")
-    date_obj = datetime.strptime(todayDate, "%Y%m%d")
-    game_date = date_obj.strftime("%Y-%m-%d")
-    todayDate = str(todayDate)
 
     def get_player_std(player_df, stat_col):
         s = player_df[stat_col].dropna()
@@ -115,8 +128,13 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
     def american_to_decimal(odds):
         return 1 + (odds / 100.0) if odds > 0 else 1 + (100.0 / abs(odds))
 
+    def impliedProb(odds):
+        if odds > 0:
+            return 100 / (odds + 100)
+        else:
+            return abs(odds) / (abs(odds) + 100)
+
     results = []
-    # bookmakers = bookmakers.drop_duplicates(subset=['NAME'])
 
     for _, row in bookmakers.iterrows():
         name = row['NAME']
@@ -130,45 +148,18 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
         if player_df.empty or stat_col not in player_df.columns:
             continue
 
-        # use most recent game row
-        player_team = player_df['TEAM_ABBREVIATION'].iloc[0]
-        game_id = int(player_df['GAME_ID'].iloc[0])
-
-        starters = getStarters(game_id, player_team, data)
-        opponent, _ = findOppTeam(name, data, gamesSchedule)
-        if opponent is None:
+        # Get prediction using your predictPTS function
+        try:
+            prediction = predictPTS(name, data, model, features)
+        except Exception as e:
+            print(f"Error getting prediction for {name}: {e}")
             continue
-
-        temp_props = pd.DataFrame({
-            'player': [name],
-            'line': [line],
-            'NAME': [name],
-            'LINE': [line],
-            'CATEGORY': [category]
-        })
-
-        features_list = features
-        if features_list is None:
-            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
-            features_list = [f'f{i}' for i in range(len(fv))]
-
-        pred = makePredictionCatBoost(
-            player_name=name,
-            data=data,
-            model=model,
-            bookmakers=temp_props,
-            games=gamesSchedule,
-            todayDate=todayDate,
-            starters=starters,
-            game_id=game_id,
-            features=features_list,
-        )
 
         std_dev = get_player_std(player_df, stat_col)
 
         sim_results = monteCarloSim(
             player_df=player_df,
-            modelPred=float(pred['predicted_stat']),
+            modelPred=float(prediction),
             prop_line=line,
             std_dev=std_dev,
             num_simulations=simulations
@@ -201,18 +192,6 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
         breakeven_prob = 1.0 / dec_odds
         edge = p - breakeven_prob
 
-        # Debug: Print the actual values
-        print(f"\nDEBUG - {name}:")
-        print(f"  Odds: {odds} ({side})")
-        print(f"  Line: {line}")
-        print(f"  Prediction: {float(pred['predicted_stat'])}")
-        print(f"  Std Dev: {std_dev}")
-        print(f"  Prob Over: {p_over:.3f}")
-        print(f"  Decimal Odds: {dec_odds:.2f}")
-        print(f"  Breakeven: {breakeven_prob:.3f}")
-        print(f"  Simulated Mean: {sim_results['simulated_mean']:.2f}")
-        print(f"  Model Prediction: {sim_results['model_prediction']:.2f}")
-
         results.append({
             'NAME': name,
             'BOOKMAKER': bookmaker,
@@ -220,11 +199,11 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
             'LINE': line,
             'ODDS': odds,
             'SIDE': side,
-            'PREDICTION': float(pred['predicted_stat']),
+            'PREDICTION': float(prediction),
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
             'IMPLIED PROB': round(impliedProb(odds), 3),
-            'EV%': round(ev_percent,2),
+            'EV%': round(ev_percent, 2),
             'KELLY FULL': round(kelly_full, 2),
             'KELLY HALF': round(0.5 * kelly_full, 2),
             'KELLY QUARTER': round(0.25 * kelly_full, 2),
@@ -234,13 +213,10 @@ def single_bet(data, bookmakers, model, gamesSchedule, features, todayDate, stak
     return pd.DataFrame(results)
 
     
-def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDate, stake=100,
-                      simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS', prevData=None):
+def prizepickspairsEV(data, bookmakers, model, features, stake=100,
+                      simulations=10000, std_window=10, min_std=2.0, max_std=9.5, stat_col='PTS'):
     
     print("Processing PrizePicks pairs...")
-    date_obj = datetime.strptime(todayDate, "%Y%m%d")
-    _game_date = date_obj.strftime("%Y-%m-%d")
-    todayDate = str(todayDate)
 
     def get_player_std(player_df, stat_col):
         s = player_df[stat_col].dropna()
@@ -271,43 +247,19 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
             continue
 
         player_team = player_df['TEAM_ABBREVIATION'].iloc[0]
-        game_id = int(player_df['GAME_ID'].iloc[0])
 
-        starters = getStarters(game_id, player_team, data)
-        opponent, _ = findOppTeam(name, data, gamesSchedule)
-        if opponent is None:
+        # Get prediction using your predictPTS function
+        try:
+            prediction = predictPTS(name, data, model, features)
+        except Exception as e:
+            print(f"Error getting prediction for {name}: {e}")
             continue
-
-        temp_props = pd.DataFrame({
-            'player': [name],
-            'line': [line],
-            'NAME': [name],
-            'LINE': [line],
-            'CATEGORY': [category]
-        })
-
-        features_list = features
-        if features_list is None:
-            fv = buildFeatureVector(name, data, gamesSchedule, todayDate, starters, game_id)
-            features_list = [f'f{i}' for i in range(len(fv))]
-
-        pred = makePredictionCatBoost(
-            player_name=name,
-            data=data,
-            model=model,
-            bookmakers=temp_props,
-            games=gamesSchedule,
-            todayDate=todayDate,
-            starters=starters,
-            game_id=game_id,
-            features=features_list,
-        )
 
         std_dev = get_player_std(player_df, stat_col)
 
         sim_results = monteCarloSim(
             player_df=player_df,
-            modelPred=float(pred['predicted_stat']),
+            modelPred=float(prediction),
             prop_line=line,
             std_dev=std_dev,
             num_simulations=simulations
@@ -319,7 +271,7 @@ def prizepickspairsEV(data, bookmakers, model, gamesSchedule, features, todayDat
             'CATEGORY': category,
             'LINE': line,
             'SIDE': side,
-            'PREDICTION': float(pred['predicted_stat']),
+            'PREDICTION': float(prediction),
             'OVER%': float(sim_results['prob_over']),
             'UNDER%': float(sim_results['prob_under']),
             'CI': sim_results['confidence_interval']
