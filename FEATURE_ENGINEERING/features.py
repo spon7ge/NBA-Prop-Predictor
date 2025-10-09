@@ -1291,9 +1291,9 @@ def add_interaction_features(df):
     df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['USG_X_TEAM_OFF'] = df['USG_PCT_AVG_TO_DATE'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
-                                                              df['TEAM_IMPLIED_PTS_FAV'], 
-                                                              df['TEAM_IMPLIED_PTS_UND'])
+    # df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
+    #                                                           df['TEAM_IMPLIED_PTS_FAV'], 
+    #                                                           df['TEAM_IMPLIED_PTS_UND'])
 
     # Shooting style x matchup fit
     df['PLAYER_3PT_X_OPP_3PT_DEF'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']

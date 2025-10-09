@@ -215,7 +215,7 @@ def single_bet(data, bookmakers, model, features, stake=100, simulations=10000,
 def prizepickspairsEV(data, bookmakers, model, features, stake=100,
                       simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
-    print("Processing PrizePicks pairs...")
+    print("Processing pairs...")
 
     def get_player_std(player_df, stat_col):
         s = player_df[stat_col].dropna()

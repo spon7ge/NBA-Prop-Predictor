@@ -15,7 +15,7 @@ Training a catboost and xgboost model to predict a players stat line like points
 
 ### Calculate Smart Bets Using EV and proper risk management
 Evaluate bets using:
-- Monte Carlo Simulation to get the probability of it hitting 
+- Monte Carlo Simulation 
 - Expected Value (EV)
 - Kelly Criterion
 

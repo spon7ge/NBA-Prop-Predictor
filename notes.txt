@@ -30,3 +30,7 @@ Hit rate = (Number of winning bets) ÷ (Total bets)
 Volatility = Standard deviation of daily P&L
 Max drawdown = Largest peak-to-trough loss
 Sharpe ratio = (Average daily return ÷ Std. dev. of daily returns) × √252
+
+
+make a function that grabs teams: total and spread
+make a function that grabs starters for starting column
