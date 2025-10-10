@@ -85,33 +85,49 @@ def predictPTS(playerName, data, model, features):
     return float(pred)
     
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-#monte carlo simulation using my model to calculate the probability of the prop
-def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000):
-    """
-    Simulates player performance using truncated normal distribution to prevent negative values.
-    """
-    # Create truncated normal distribution (lower bound = 0)
-    a = -modelPred / std_dev  # Lower bound in standard deviations
-    b = np.inf  # No upper bound
+
+def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000, min_std=2.0, max_std=8.5):
+    baseSTD = std_dev
+    volAdj = 1.0  
     
-    simulated_points = truncnorm.rvs(a, b, loc=modelPred, scale=std_dev, size=num_simulations)
+    if 'PTS_EXPANDING_VOLATILITY_TO_DATE' in player_df.columns and len(player_df) >= 5:
+        recent_vol = player_df['PTS'].tail(5).std()  
+        season_vol = player_df['PTS_EXPANDING_VOLATILITY_TO_DATE'].iloc[-1]  
+
+        if season_vol > 0 and not pd.isna(season_vol) and not pd.isna(recent_vol):
+            volAdj = recent_vol / season_vol  
+            volAdj = 1 + (volAdj - 1) * 0.3  # Dampen adjustment (use 30% of the difference)
+            volAdj = np.clip(volAdj, 0.7, 1.5)  # Limit to reasonable range
+        
+        stdDev = baseSTD * volAdj
+    else:
+        stdDev = baseSTD
+    
+    stdDev = float(np.clip(stdDev, min_std, max_std))  
+    
+    # Create truncated normal distribution (lower bound = 0)
+    a = -modelPred / stdDev if stdDev > 0 else 0
+    b = np.inf
+    simulated_points = truncnorm.rvs(a, b, loc=modelPred, scale=stdDev, size=num_simulations)
+    
     prob_over = np.mean(simulated_points > prop_line)
     prob_under = 1 - prob_over
     ci = np.percentile(simulated_points, [2.5, 97.5])
     
-    return {
-        'model_prediction': modelPred,
-        'simulated_mean': simulated_points.mean(),
-        'simulated_std': simulated_points.std(),
-        'std_used': std_dev,
-        'prob_over': prob_over,
-        'prob_under': prob_under,
-        'confidence_interval': (ci[0], ci[1])
+    return { 
+        'model_prediction': modelPred, 
+        'simulated_mean': simulated_points.mean(), 
+        'simulated_std': simulated_points.std(), 
+        'std_used': stdDev, 
+        'vol_adjustment': volAdj,
+        'prob_over': prob_over, 
+        'prob_under': prob_under, 
+        'confidence_interval': (ci[0], ci[1]) 
     }
 
 
-def single_bet(data, bookmakers, model, features, stake=100, simulations=10000, 
-               std_window=20, min_std=2.0, max_std=8.5, stat_col='PTS'):
+def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100, simulations=10000, 
+               std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
 
     print("Processing single bets...")
 
@@ -181,15 +197,16 @@ def single_bet(data, bookmakers, model, features, stake=100, simulations=10000,
 
         # EV in dollars and percent
         ev_per_unit = p * b - (1 - p)
-        ev_dollars = stake * ev_per_unit
         ev_percent = ev_per_unit * 100
 
         # Kelly fraction
         kelly_full = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
 
-        # Break-even probability and edge
-        breakeven_prob = 1.0 / dec_odds
-        edge = p - breakeven_prob
+        edge = abs(prediction - line)
+        if abs(edge) > edge_threshold:
+            recommendation = 1
+        else:
+            recommendation = 0
 
         results.append({
             'NAME': name,
@@ -199,6 +216,7 @@ def single_bet(data, bookmakers, model, features, stake=100, simulations=10000,
             'ODDS': odds,
             'SIDE': side,
             'PREDICTION': float(prediction),
+            'RECOMMENDATION': recommendation,
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
             'IMPLIED PROB': round(impliedProb(odds), 3),
@@ -212,7 +230,7 @@ def single_bet(data, bookmakers, model, features, stake=100, simulations=10000,
     return pd.DataFrame(results)
 
     
-def prizepickspairsEV(data, bookmakers, model, features, stake=100,
+def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
                       simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing pairs...")
@@ -226,7 +244,6 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             sd = 5.0
         return float(np.clip(sd, min_std, max_std))
 
-    # Group bookmakers data by NAME and LINE to handle multiple entries
     grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
         'CATEGORY': 'first',
         'BOOKMAKER': 'first',
@@ -277,6 +294,12 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             model_prob = float(sim_results['prob_under'])
             model_opposite_prob = float(sim_results['prob_over'])
 
+        edge = model_prob - line
+        if abs(edge) > edge_threshold:
+            recommendation = 1
+        else:
+            recommendation = 0
+
         legs.append({
             'NAME': name,
             'TEAM': player_team,
@@ -284,7 +307,7 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
             'BOOKMAKER': bookmaker,
             'ODDS': odds,
             'LINE': line,
-            'SIDE': side,  # Keep original bookmaker side for backtest compatibility
+            'SIDE': side,  
             'PREDICTION': float(prediction),
             'MODEL_SIDE': model_side,
             'MODEL_PROB': model_prob,
@@ -321,13 +344,20 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
 
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
 
+            edge1 = abs(leg1['PREDICTION'] - leg1['LINE'])
+            edge2 = abs(leg2['PREDICTION'] - leg2['LINE'])
+            if abs(edge1) > edge_threshold and abs(edge2) > edge_threshold:
+                recommendation = 1
+            else:
+                recommendation = 0
+
             pair_results.append({
                 'PLAYER 1': leg1['NAME'],
                 'CATEGORY 1': leg1['CATEGORY'],
                 'BOOKMAKER 1': leg1['BOOKMAKER'],
                 'ODDS 1': leg1['ODDS'],
                 'LINE 1': leg1['LINE'],
-                'SIDE 1': leg1['SIDE'],  # Keep for backtest compatibility
+                'SIDE 1': leg1['SIDE'],  
                 'PREDICTION 1': round(leg1['PREDICTION'], 2),
                 'MODEL_SIDE 1': leg1['MODEL_SIDE'],
                 'OVER% 1': round(leg1['OVER%'], 3),
@@ -338,17 +368,17 @@ def prizepickspairsEV(data, bookmakers, model, features, stake=100,
                 'BOOKMAKER 2': leg2['BOOKMAKER'],
                 'ODDS 2': leg2['ODDS'],
                 'LINE 2': leg2['LINE'],
-                'SIDE 2': leg2['SIDE'],  # Keep for backtest compatibility
+                'SIDE 2': leg2['SIDE'],  
                 'PREDICTION 2': round(leg2['PREDICTION'], 2),
                 'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                 'OVER% 2': round(leg2['OVER%'], 3),
                 'UNDER% 2': round(leg2['UNDER%'], 3),
                 'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
                 'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}",
+                'RECOMMENDATION': recommendation,
                 'PROBABILITY': round(p_both, 4),
                 'EV%': round(ev_percent, 3),
                 'KELLY': round(kelly_full, 3),
-                'KELLY FULL': round(kelly_full, 3),  # Keep for backtest compatibility
             })
 
     return pd.DataFrame(pair_results)
