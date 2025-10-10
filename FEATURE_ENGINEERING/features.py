@@ -108,14 +108,25 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
 
-    stats_cols = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
-                  
-                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
-                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
-                  'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-                  'percentageUnassisted3pt'
-    ]
+    stats_cols = [
+    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
+    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
+    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',
+    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
+    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
+    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
+    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
+    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
+    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
+    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
+    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
+    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
+    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
+    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
+    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
+    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+]
 
     for window in windows:
         for col in stats_cols:
@@ -161,14 +172,25 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats
-    stats_cols = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
-                  
-                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
-                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
-                  'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-                  'percentageUnassisted3pt'
-    ]
+    stats_cols = [
+    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
+    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
+    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG', 
+    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
+    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
+    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
+    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
+    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
+    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
+    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
+    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
+    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
+    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
+    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
+    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
+    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+]
 
     for stat in stats_cols:
         if stat in df_enhanced.columns:
@@ -200,14 +222,24 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'POINT_PER_SHOT', 'PLUS_MINUS', 'NET_RATING', 'PIE', 'SPD', 'DIST',
-                  
-                  'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
-                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow',
-                  'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-                  'percentageUnassisted3pt'
-    ]
+    metrics = ['PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
+    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
+    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',
+    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
+    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
+    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
+    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
+    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
+    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
+    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
+    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
+    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
+    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
+    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
+    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
+    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+]
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
         return df
@@ -519,7 +551,7 @@ def dynamic_defense_ranking(df, game_date_col='GAME_DATE'):
         
         if len(historical_data) > 0:
             # Calculate defensive strength up to this date
-            team_strength = historical_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING'].mean()
+            team_strength = historical_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING_AVG_TO_DATE'].mean()
             rankings = team_strength.rank(ascending=True, method='min')
             
             # Apply rankings to games on this date
@@ -1123,12 +1155,25 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate volatility for
-    volatility_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'OFF_RATING', 'EFG_PCT', 'PACE',
-                  'POSS', 'TCHS', 'PASS', 'SAST', 'FTAST', 'TOV', 'percentageFieldGoalsAttempted3pt', 'percentageFieldGoalsAttempted2pt',
-                  'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak',
-                  'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-                  'percentageUnassisted3pt'
-    ]
+    volatility_stats  = [
+    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
+    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
+    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG', 
+    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
+    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
+    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
+    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
+    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
+    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
+    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
+    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
+    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
+    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
+    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
+    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
+    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+]
     
     # Filter to only available columns
     available_stats = [stat for stat in volatility_stats if stat in df.columns]
@@ -1182,8 +1227,25 @@ def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAM
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate standard deviation for
-    std_stats = ['PTS', 'MIN', 'FGA', 'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 
-                 'EFG_PCT', 'OFF_RATING', 'AST', 'REB', 'TOV']
+    std_stats =[
+    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
+    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
+    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',  
+    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
+    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
+    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
+    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
+    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
+    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
+    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
+    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
+    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
+    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
+    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
+    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
+    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+]
     
     # Filter to only available columns
     available_stats = [stat for stat in std_stats if stat in df.columns]
@@ -1291,9 +1353,9 @@ def add_interaction_features(df):
     df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['USG_X_TEAM_OFF'] = df['USG_PCT_AVG_TO_DATE'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    # df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
-    #                                                           df['TEAM_IMPLIED_PTS_FAV'], 
-    #                                                           df['TEAM_IMPLIED_PTS_UND'])
+    df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
+                                                              df['TEAM_IMPLIED_PTS_FAV'], 
+                                                              df['TEAM_IMPLIED_PTS_UND'])
 
     # Shooting style x matchup fit
     df['PLAYER_3PT_X_OPP_3PT_DEF'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']

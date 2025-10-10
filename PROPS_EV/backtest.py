@@ -5,7 +5,7 @@ from PROPS_EV.calculateEVS import *
 model = joblib.load('Models/xgbModel.pkl')
 features = joblib.load('Models/top_features.pkl')
 
-def backtestSingle(data, backtestData, gameDate, edge_threshold=4.5, top_n=10):
+def backtestSingle(data, backtestData, gameDate, edge_threshold=4.5, top_n=10, simulations=10000):
     data = data[data['GAME_DATE'] <= gameDate]
     backtestData = backtestData[(backtestData['CATEGORY'] == 'points') & (backtestData['GAME_DATE'] == gameDate)]
     if backtestData.empty:
@@ -18,7 +18,7 @@ def backtestSingle(data, backtestData, gameDate, edge_threshold=4.5, top_n=10):
     model=model,
     features=features,
     stake=100,
-    simulations=10000)
+    simulations=simulations)
     evData = results.sort_values(by='EV%', ascending=False).head(top_n)
     results = []
 
