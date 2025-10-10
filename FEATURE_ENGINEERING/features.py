@@ -109,23 +109,32 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = [
-    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
-    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
-    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',
-    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
-    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
-    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
-    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
-    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
-    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
-    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
-    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
-    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
-    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
-    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
-    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
-    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+    # Core stats that made top 150
+    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
+    'FG_PCT', 'EFG_PCT', 'TS_PCT',
+    
+    # Usage and pace metrics
+    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
+    
+    # Shooting percentages that appear in top 150
+    'percentagePointsPaint', 'percentagePointsFreeThrow', 
+    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentagePointsMidrange2pt',
+    'percentageAssisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
+    'percentagePointsOffTurnovers',
+    
+    # Defensive and advanced stats
+    'UFGA', 'DFGM', 'DFGA',
+    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
+    
+    # Passing and touches
+    'SAST', 'CFGM', 'CFGA', 
+    
+    # Other advanced metrics
+    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
+    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
 ]
 
     for window in windows:
@@ -173,23 +182,32 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = [
-    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
-    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
-    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG', 
-    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
-    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
-    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
-    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
-    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
-    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
-    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
-    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
-    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
-    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
-    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
-    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
-    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+    # Core stats that made top 150
+    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
+    'FG_PCT', 'EFG_PCT', 'TS_PCT',
+    
+    # Usage and pace metrics
+    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
+    
+    # Shooting percentages that appear in top 150
+    'percentagePointsPaint', 'percentagePointsFreeThrow', 
+    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentagePointsMidrange2pt',
+    'percentageAssisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
+    'percentagePointsOffTurnovers',
+    
+    # Defensive and advanced stats
+    'UFGA', 'DFGM', 'DFGA',
+    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
+    
+    # Passing and touches
+    'SAST', 'CFGM', 'CFGA', 
+    
+    # Other advanced metrics
+    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
+    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
 ]
 
     for stat in stats_cols:
@@ -222,23 +240,33 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
-    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
-    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',
-    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
-    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
-    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
-    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
-    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
-    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
-    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
-    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
-    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
-    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
-    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
-    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
-    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+    metrics = [
+    # Core stats that made top 150
+    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
+    'FG_PCT', 'EFG_PCT', 'TS_PCT',
+    
+    # Usage and pace metrics
+    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
+    
+    # Shooting percentages that appear in top 150
+    'percentagePointsPaint', 'percentagePointsFreeThrow', 
+    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentagePointsMidrange2pt',
+    'percentageAssisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
+    'percentagePointsOffTurnovers',
+    
+    # Defensive and advanced stats
+    'UFGA', 'DFGM', 'DFGA',
+    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
+    
+    # Passing and touches
+    'SAST', 'CFGM', 'CFGA', 
+    
+    # Other advanced metrics
+    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
+    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
 ]
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -1155,24 +1183,33 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate volatility for
-    volatility_stats  = [
-    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
-    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
-    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG', 
-    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
-    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
-    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
-    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
-    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
-    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
-    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
-    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
-    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
-    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
-    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
-    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
-    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+    volatility_stats = [
+    # Core stats that made top 150
+    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
+    'FG_PCT', 'EFG_PCT', 'TS_PCT',
+    
+    # Usage and pace metrics
+    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
+    
+    # Shooting percentages that appear in top 150
+    'percentagePointsPaint', 'percentagePointsFreeThrow', 
+    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentagePointsMidrange2pt',
+    'percentageAssisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
+    'percentagePointsOffTurnovers',
+    
+    # Defensive and advanced stats
+    'UFGA', 'DFGM', 'DFGA',
+    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
+    
+    # Passing and touches
+    'SAST', 'CFGM', 'CFGA', 
+    
+    # Other advanced metrics
+    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
+    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
 ]
     
     # Filter to only available columns
@@ -1227,24 +1264,33 @@ def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAM
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate standard deviation for
-    std_stats =[
-    'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 
-    'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'STL', 'BLK', 'TOV', 'PLUS_MINUS', 
-    'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG',  
-    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING', 'E_DEF_RATING', 'NET_RATING', 
-    'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 
-    'USG_PCT', 'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS', 'PACE_PER40', 
-    'E_USG_PCT', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC', 'TCHS', 'SAST', 
-    'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT', 'UFGM', 'UFGA', 'UFG_PCT', 
-    'DFGM', 'DFGA', 'DFG_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 
-    'PTS_PAINT', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'OPP_PTS_FB', 
-    'OPP_PTS_PAINT', 'BLKA', 'PF', 'PFD', 'percentageFieldGoalsAttempted2pt', 
-    'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 
-    'percentagePointsMidrange2pt', 'percentagePoints3pt', 
-    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 
-    'percentagePointsOffTurnovers', 'percentagePointsPaint', 
-    'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM'
+    std_stats = [
+    # Core stats that made top 150
+    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
+    'FG_PCT', 'EFG_PCT', 'TS_PCT',
+    
+    # Usage and pace metrics
+    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
+    
+    # Shooting percentages that appear in top 150
+    'percentagePointsPaint', 'percentagePointsFreeThrow', 
+    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentagePointsMidrange2pt',
+    'percentageAssisted2pt', 'percentageAssisted3pt', 
+    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
+    'percentagePointsOffTurnovers',
+    
+    # Defensive and advanced stats
+    'UFGA', 'DFGM', 'DFGA',
+    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
+    
+    # Passing and touches
+    'SAST', 'CFGM', 'CFGA', 
+    
+    # Other advanced metrics
+    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
+    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
 ]
     
     # Filter to only available columns
