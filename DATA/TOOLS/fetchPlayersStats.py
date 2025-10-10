@@ -134,6 +134,158 @@ class FetchPlayersStats:
             print(f"[ERROR] Misc stats for game {game_id}: {e}")
             return pd.DataFrame()
 
+    def fetchBoxScoreScoring(self, game_id, sleep_time=None, max_retries=3, timeout=60):
+        """Fetch BoxScoreScoringV3 data for a single game"""
+        sleep_time = sleep_time or self.sleep_time
+        for attempt in range(max_retries):
+            try:
+                time.sleep(sleep_time * (attempt + 1))
+                from nba_api.stats.endpoints import boxscorescoringv3
+                df = boxscorescoringv3.BoxScoreScoringV3(
+                    game_id=game_id,
+                    timeout=timeout
+                ).get_data_frames()[0]
+                
+                # Map new column names to standardized names
+                column_mapping = {
+                    'gameId': 'GAME_ID',
+                    'personId': 'PLAYER_ID'
+                }
+                
+                # Rename columns to match old format
+                df = df.rename(columns=column_mapping)
+                
+                # Select the columns we want to keep
+                cols = [
+                    'GAME_ID', 'PLAYER_ID',
+                    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
+                    'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt',
+                    'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers',
+                    'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt',
+                    'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM',
+                    'percentageUnassistedFGM'
+                ]
+                
+                # Only select columns that exist in the dataframe
+                existing_cols = [col for col in cols if col in df.columns]
+                return df[existing_cols]
+                
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"[RETRY {attempt+1}] Scoring stats for {game_id}: {e}")
+                else:
+                    print(f"[ERROR] Failed fetching scoring for {game_id}: {e}")
+                    return pd.DataFrame()
+
+    def fetchBoxScoreMatchups(self, game_id, sleep_time=None, max_retries=3, timeout=60):
+        """Fetch BoxScoreMatchupsV3 data for a single game with defensive aggregations"""
+        sleep_time = sleep_time or self.sleep_time
+        for attempt in range(max_retries):
+            try:
+                time.sleep(sleep_time * (attempt + 1))
+                from nba_api.stats.endpoints import boxscorematchupsv3
+                df = boxscorematchupsv3.BoxScoreMatchupsV3(
+                    game_id=game_id,
+                    timeout=timeout
+                ).get_data_frames()[0]
+                
+                if df.empty:
+                    return pd.DataFrame()
+                
+                # Convert minutes from seconds to decimal format
+                df['matchupMinutes'] = round(df['matchupMinutesSort'] / 60, 2)
+                
+                # Group by defender (personIdDef) to get defensive stats
+                def_df = (
+                    df.groupby('personIdDef')
+                    .agg({
+                        'gameId': 'first',
+                        'teamId': 'first',
+                        'matchupFieldGoalsMade': 'sum',
+                        'matchupFieldGoalsAttempted': 'sum',
+                        'matchupThreePointersMade': 'sum',
+                        'matchupThreePointersAttempted': 'sum',
+                        'playerPoints': 'sum',
+                        'matchupMinutes': 'sum',
+                        'matchupTurnovers': 'sum',
+                        'matchupBlocks': 'sum',
+                        'shootingFouls': 'sum',
+                        'matchupAssists': 'sum'
+                    })
+                    .reset_index()
+                )
+                
+                # Calculate defensive percentages and per-minute stats
+                def_df['DEF_FG_PCT_ALLOWED'] = def_df.apply(
+                    lambda row: round(row['matchupFieldGoalsMade'] / row['matchupFieldGoalsAttempted'], 3) 
+                    if row['matchupFieldGoalsAttempted'] > 0 else 0, axis=1
+                )
+                def_df['DEF_3PT_PCT_ALLOWED'] = def_df.apply(
+                    lambda row: round(row['matchupThreePointersMade'] / row['matchupThreePointersAttempted'], 3) 
+                    if row['matchupThreePointersAttempted'] > 0 else 0, axis=1
+                )
+                def_df['PTS_ALLOWED_PER_MIN'] = def_df.apply(
+                    lambda row: round(row['playerPoints'] / row['matchupMinutes'], 2) 
+                    if row['matchupMinutes'] > 0 else 0, axis=1
+                )
+                def_df['DEF_TOV_FORCED_PER_MIN'] = def_df.apply(
+                    lambda row: round(row['matchupTurnovers'] / row['matchupMinutes'], 2) 
+                    if row['matchupMinutes'] > 0 else 0, axis=1
+                )
+                def_df['DEF_BLOCKS_PER_MIN'] = def_df.apply(
+                    lambda row: round(row['matchupBlocks'] / row['matchupMinutes'], 2) 
+                    if row['matchupMinutes'] > 0 else 0, axis=1
+                )
+                def_df['DEF_SHOOTING_FOULS_PER_MIN'] = def_df.apply(
+                    lambda row: round(row['shootingFouls'] / row['matchupMinutes'], 2) 
+                    if row['matchupMinutes'] > 0 else 0, axis=1
+                )
+                def_df['DEF_AST_ALLOWED_PER_MIN'] = def_df.apply(
+                    lambda row: round(row['matchupAssists'] / row['matchupMinutes'], 2) 
+                    if row['matchupMinutes'] > 0 else 0, axis=1
+                )
+                
+                # Rename columns to match standard naming convention
+                column_mapping = {
+                    'gameId': 'GAME_ID',
+                    'personIdDef': 'PLAYER_ID',
+                    'teamId': 'TEAM_ID'
+                }
+                def_df = def_df.rename(columns=column_mapping)
+                
+                # Also calculate matchup field goal and 3pt percentages
+                def_df['matchupFieldGoalsPercentage'] = def_df.apply(
+                    lambda row: round(row['matchupFieldGoalsMade'] / row['matchupFieldGoalsAttempted'], 3) 
+                    if row['matchupFieldGoalsAttempted'] > 0 else 0, axis=1
+                )
+                def_df['matchupThreePointersPercentage'] = def_df.apply(
+                    lambda row: round(row['matchupThreePointersMade'] / row['matchupThreePointersAttempted'], 3) 
+                    if row['matchupThreePointersAttempted'] > 0 else 0, axis=1
+                )
+                
+                # Select the columns we want to keep
+                cols = [
+                    'GAME_ID', 'PLAYER_ID',
+                    'matchupFieldGoalsMade', 'matchupFieldGoalsAttempted',
+                    'matchupThreePointersMade', 'matchupThreePointersAttempted',
+                    'playerPoints', 'matchupMinutes', 'matchupFieldGoalsPercentage',
+                    'matchupThreePointersPercentage', 'DEF_FG_PCT_ALLOWED',
+                    'DEF_3PT_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN',
+                    'DEF_TOV_FORCED_PER_MIN', 'DEF_BLOCKS_PER_MIN', 
+                    'DEF_SHOOTING_FOULS_PER_MIN', 'DEF_AST_ALLOWED_PER_MIN'
+                ]
+                
+                # Only select columns that exist in the dataframe
+                existing_cols = [col for col in cols if col in def_df.columns]
+                return def_df[existing_cols]
+                
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"[RETRY {attempt+1}] Matchup stats for {game_id}: {e}")
+                else:
+                    print(f"[ERROR] Failed fetching matchup for {game_id}: {e}")
+                    return pd.DataFrame()
+
     def getMiscStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
         sleep_time = sleep_time or self.sleep_time
         max_workers = max_workers or min(10, os.cpu_count() or 4)
@@ -254,6 +406,94 @@ class FetchPlayersStats:
         combined.to_csv(cache_file, index=False)
         return combined
 
+    def getScoringStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
+        """Fetch BoxScoreScoringV3 stats for multiple games with caching and threading"""
+        sleep_time = sleep_time or self.sleep_time
+        max_workers = max_workers or min(10, os.cpu_count() or 4)
+        game_ids = player_data['GAME_ID'].unique()
+        total_games = len(game_ids)
+        
+        # Key scoring stats columns that should be present
+        scoring_cols = ['percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 
+                       'percentagePoints2pt', 'percentagePoints3pt', 'percentagePointsPaint']
+        
+        if os.path.exists(cache_file):
+            cached = pd.read_csv(cache_file, dtype={'GAME_ID': str})
+            # Check if all required columns exist and have data
+            if all(col in cached.columns for col in scoring_cols):
+                cached = cached[cached[scoring_cols].notna().any(axis=1)]
+                cached_ids = cached['GAME_ID'].unique()
+            else:
+                cached, cached_ids = pd.DataFrame(), []
+        else:
+            cached, cached_ids = pd.DataFrame(), []
+            
+        missing = [gid for gid in game_ids if gid not in cached_ids]
+        stats = [cached]
+        
+        if missing:
+            print(f"\nFetching scoring stats for {len(missing)} out of {total_games} games...")
+            completed = 0
+            with ThreadPoolExecutor(max_workers=max_workers) as ex:
+                futures = {ex.submit(self.fetchBoxScoreScoring, gid, sleep_time): gid for gid in missing}
+                for f in as_completed(futures):
+                    df = f.result()
+                    if not df.empty: 
+                        stats.append(df)
+                    completed += 1
+                    print(f"\rProgress: {completed}/{len(missing)} games processed", end="", flush=True)
+            print("\nFinished fetching scoring stats.")
+        else:
+            print(f"\nAll {total_games} scoring stats found in cache.")
+            
+        combined = pd.concat(stats, ignore_index=True).drop_duplicates(subset=['GAME_ID','PLAYER_ID'])
+        combined.to_csv(cache_file, index=False)
+        return combined
+
+    def getMatchupStats(self, player_data, sleep_time=None, max_workers=None, cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
+        """Fetch BoxScoreMatchupsV3 stats for multiple games with caching and threading"""
+        sleep_time = sleep_time or self.sleep_time
+        max_workers = max_workers or min(10, os.cpu_count() or 4)
+        game_ids = player_data['GAME_ID'].unique()
+        total_games = len(game_ids)
+        
+        # Key matchup stats columns that should be present
+        matchup_cols = ['matchupFieldGoalsMade', 'matchupFieldGoalsAttempted', 
+                       'DEF_FG_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN', 'DEF_BLOCKS_PER_MIN']
+        
+        if os.path.exists(cache_file):
+            cached = pd.read_csv(cache_file, dtype={'GAME_ID': str})
+            # Check if all required columns exist and have data
+            if all(col in cached.columns for col in matchup_cols):
+                cached = cached[cached[matchup_cols].notna().any(axis=1)]
+                cached_ids = cached['GAME_ID'].unique()
+            else:
+                cached, cached_ids = pd.DataFrame(), []
+        else:
+            cached, cached_ids = pd.DataFrame(), []
+            
+        missing = [gid for gid in game_ids if gid not in cached_ids]
+        stats = [cached]
+        
+        if missing:
+            print(f"\nFetching matchup stats for {len(missing)} out of {total_games} games...")
+            completed = 0
+            with ThreadPoolExecutor(max_workers=max_workers) as ex:
+                futures = {ex.submit(self.fetchBoxScoreMatchups, gid, sleep_time): gid for gid in missing}
+                for f in as_completed(futures):
+                    df = f.result()
+                    if not df.empty: 
+                        stats.append(df)
+                    completed += 1
+                    print(f"\rProgress: {completed}/{len(missing)} games processed", end="", flush=True)
+            print("\nFinished fetching matchup stats.")
+        else:
+            print(f"\nAll {total_games} matchup stats found in cache.")
+            
+        combined = pd.concat(stats, ignore_index=True).drop_duplicates(subset=['GAME_ID','PLAYER_ID'])
+        combined.to_csv(cache_file, index=False)
+        return combined
+
     def getCompleteStats(self, season=None, season_type='Regular Season',
                          sleep_time=2, max_workers=3, batch_limit=None,
                          complete_cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA.csv'):
@@ -291,6 +531,8 @@ class FetchPlayersStats:
         all_advanced = []
         all_tracking = []
         all_misc = []
+        all_scoring = []
+        all_matchups = []  # Add this line
 
         total_batches = len(game_batches)
         for batch_idx, game_batch in enumerate(game_batches, 1):
@@ -304,6 +546,8 @@ class FetchPlayersStats:
                         'advanced': executor.submit(self.fetchAdvancedStats, game_id, sleep_time),
                         'tracking': executor.submit(self.fetchTrackingStats, game_id, sleep_time),
                         'misc': executor.submit(self.fetchBoxScoreMisc, game_id, sleep_time),
+                        'scoring': executor.submit(self.fetchBoxScoreScoring, game_id, sleep_time),
+                        'matchups': executor.submit(self.fetchBoxScoreMatchups, game_id, sleep_time),  # Add this line
                     }
                     
                     # Collect results
@@ -315,6 +559,8 @@ class FetchPlayersStats:
                                 if stat_type == 'advanced': all_advanced.append(result)
                                 elif stat_type == 'tracking': all_tracking.append(result)
                                 elif stat_type == 'misc': all_misc.append(result)
+                                elif stat_type == 'scoring': all_scoring.append(result)
+                                elif stat_type == 'matchups': all_matchups.append(result)  # Add this line
                         except Exception as e:
                             print(f"Error fetching {stat_type} stats for game {game_id}: {e}")
 
@@ -346,6 +592,25 @@ class FetchPlayersStats:
             merged_player = pd.merge(
                 merged_player, 
                 misc_stats, 
+                on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        if all_scoring:
+            scoring_stats = pd.concat(all_scoring, ignore_index=True)
+            merged_player = pd.merge(
+                merged_player, 
+                scoring_stats, 
+                on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        # Add this new section for matchup stats
+        if all_matchups:
+            matchup_stats = pd.concat(all_matchups, ignore_index=True)
+            merged_player = pd.merge(
+                merged_player, 
+                matchup_stats, 
                 on=['GAME_ID', 'PLAYER_ID'], 
                 how='left'
             )
