@@ -1,5 +1,10 @@
 import pandas as pd
 import numpy as np
+import warnings
+
+# Suppress performance and future warnings
+warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
+warnings.filterwarnings('ignore', category=FutureWarning)
 
 
 # ================================================================================================
@@ -118,7 +123,8 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     
     # Shooting percentages that appear in top 150
     'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
+    'percentagePoints2pt', 'percentagePoints3pt',
     'percentagePointsMidrange2pt',
     'percentageAssisted2pt', 'percentageAssisted3pt', 
     'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
@@ -149,10 +155,9 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
 
     return df
 
-def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', stat_lines=['PTS']):
+def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     player_data = player_data.sort_values([player_id_col, date_col])
-    if isinstance(stat_lines, str):
-        stat_lines = [stat_lines]
+    stat_lines = ['PTS', 'MIN', 'FGA', 'FG3A', 'FTA', 'FGM', 'FG3M', 'FTM', 'FG_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE', 'percentagePointsPaint', 'percentagePointsFreeThrow', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePoints3pt', 'percentagePointsMidrange2pt', 'percentageAssisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'percentagePointsOffTurnovers', 'UFGA', 'DFGM', 'DFGA', 'ORBC', 'DRBC', 'RBC', 'DREB_PCT', 'SAST', 'CFGM', 'CFGA', 'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',  'PTS_2ND_CHANCE', 'PTS_PAINT', 'TOV', 'PF']
     
     for stat_line in stat_lines:
         if stat_line not in player_data.columns:
@@ -191,7 +196,8 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Shooting percentages that appear in top 150
     'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
+    'percentagePoints2pt', 'percentagePoints3pt',
     'percentagePointsMidrange2pt',
     'percentageAssisted2pt', 'percentageAssisted3pt', 
     'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
@@ -250,7 +256,8 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     
     # Shooting percentages that appear in top 150
     'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
+    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
+    'percentagePoints2pt', 'percentagePoints3pt',
     'percentagePointsMidrange2pt',
     'percentageAssisted2pt', 'percentageAssisted3pt', 
     'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
@@ -323,39 +330,26 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     
     # Define metrics to track with their windows
     metrics = {
-        'MIN': [3],
-        'FGA': [3],
-        'FG3A': [3],
-        'FTA': [3],
-        'PTS': [3],
-        'USG_PCT': [3],
-        'EFG_PCT': [3],
-        'TS_PCT': [3],
-        'POSS': [3],
-        'TCHS': [3],
-        'PASS': [3],
-        'SAST': [3],
-        'FTAST': [3],
-        'TOV': [3],
-        'POINT_PER_SHOT': [3],
-        'PLUS_MINUS': [3],
-        'NET_RATING': [3],
-        'PIE': [3],
-        'SPD': [3],
-        'DIST': [3],
-        'percentageFieldGoalsAttempted3pt': [3],
-        'percentageFieldGoalsAttempted2pt': [3],
-        'percentagePoints2pt': [3],
-        'percentagePointsMidrange2pt': [3],
-        'percentagePoints3pt': [3],
-        'percentagePointsFastBreak': [3],
-        'percentagePointsFreeThrow': [3],
-        'percentagePointsOffTurnovers': [3],
-        'percentagePointsPaint': [3],
-        'percentageAssisted2pt': [3],
-        'percentageUnassisted2pt': [3],
-        'percentageAssisted3pt': [3],
-        'percentageUnassisted3pt': [3],
+        'MIN': [3,5,10,15],
+        'FGA': [3,5,10,15],
+        'FG3A': [3,5,10,15],
+        'FTA': [3,5,10,15],
+        'PTS': [3,5,10,15],
+        'USG_PCT': [3,5,10,15],
+        'EFG_PCT': [3,5,10,15],
+        'TS_PCT': [3,5,10,15],
+        'POSS': [3,5,10,15],
+        'TCHS': [3,5,10,15],
+        'PASS': [3,5,10,15],
+        'SAST': [3,5,10,15],
+        'FTAST': [3,5,10,15],
+        'TOV': [3,5,10,15],
+        'POINT_PER_SHOT': [3,5,10,15],
+        'PLUS_MINUS': [3,5,10,15],
+        'NET_RATING': [3,5,10,15],
+        'PIE': [3,5,10,15],
+        'SPD': [3,5,10,15],
+        'DIST': [3,5,10,15],
         
     }
     
@@ -800,17 +794,24 @@ def add_opponent_team_form_indicators(df, windows=[10, 15, 25]):
 
 def expectedPace(df):
     df = df.copy()
-    required_cols = ['TEAM_PACE_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE']
+    required_cols = ['TEAM_PACE_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'TEAM_PACE_ROLLING_AVG_5', 'OPP_PACE_ROLLING_AVG_5', 'TEAM_PACE_ROLLING_AVG_10', 'OPP_PACE_ROLLING_AVG_10', 'TEAM_PACE_ROLLING_AVG_15', 'OPP_PACE_ROLLING_AVG_15']
     missing_cols = [col for col in required_cols if col not in df.columns]
     
     if missing_cols:
-        print(f"Warning: Missing columns {missing_cols}. Setting EXPECTED_PACE to 0.")
+        # Silently handle missing columns
         df['EXPECTED_PACE'] = np.nan
+        df['EXPECTED_PACE_DIFF'] = np.nan
+        df['EXPECTED_PACE_DIFF_ROLLING_AVG_5'] = np.nan
+        df['EXPECTED_PACE_DIFF_ROLLING_AVG_10'] = np.nan
+        df['EXPECTED_PACE_DIFF_ROLLING_AVG_15'] = np.nan
         return df
     
     # Calculate expected pace by multiplying team and opponent pace averages
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_AVG_TO_DATE'] + df['OPP_PACE_AVG_TO_DATE']) / 2).round(2)
-    
+    df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']
+    df['EXPECTED_PACE_DIFF_ROLLING_AVG_5'] = df['TEAM_PACE_ROLLING_AVG_5'] - df['OPP_PACE_ROLLING_AVG_5']
+    df['EXPECTED_PACE_DIFF_ROLLING_AVG_10'] = df['TEAM_PACE_ROLLING_AVG_10'] - df['OPP_PACE_ROLLING_AVG_10']
+    df['EXPECTED_PACE_DIFF_ROLLING_AVG_15'] = df['TEAM_PACE_ROLLING_AVG_15'] - df['OPP_PACE_ROLLING_AVG_15']
     # Handle any NaN values that might result from missing data
     df['EXPECTED_PACE'] = df['EXPECTED_PACE'].fillna(np.nan)
     return df
@@ -928,32 +929,59 @@ def sort_data_for_features(df):
 # ================================================================================================
 # LINEUP AND STARTER FEATURES
 # ================================================================================================
-
-
-
-def process_star_players_data(df, all_nba_players, min_minutes=10):
+def process_star_players_data(df, min_minutes=10):
     df = df.copy()
     # Create ACTIVE column based on minutes played
     df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
 
-    # Flags for All-NBA
-    df['PLAYER_IS_ALL_NBA'] = df['PLAYER_NAME'].isin(all_nba_players).astype(int)
-
-    # Season-long team star by highest average USG_PCT (only among active players)
-    # Handle cases where a player changes teams by grouping on TEAM_ID
+    # Season-long team star by composite score (only among active players)
     active_players = df[df['ACTIVE'] == 1].copy()
-    usg_means = (
-        active_players.groupby(['TEAM_ID', 'PLAYER_NAME'], dropna=False)['USG_PCT']
-          .mean()
-          .reset_index()
+    
+    # Calculate mean stats per player per team
+    player_stats = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME'], dropna=False)
+        .agg({
+            'USG_PCT': 'mean',
+            'TS_PCT': 'mean',
+            'EFG_PCT': 'mean',
+            'PTS': 'mean',
+            'PIE': 'mean',  # Player Impact Estimate
+            'NET_RATING': 'mean',
+        })
+        .reset_index()
     )
-
-    # Resolve star per team
+    
+    # Fill NaN values with 0 for missing metrics
+    player_stats = player_stats.fillna(0)
+    
+    # Normalize metrics within each team (0-1 scale per team)
+    normalized_stats = player_stats.copy()
+    
+    for stat in ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']:
+        # Group by team and normalize
+        normalized_stats[f'{stat}_NORM'] = (
+            player_stats.groupby('TEAM_ID')[stat]
+            .transform(lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else 0)
+        )
+    
+    # Calculate composite star score with weighted metrics
+    # Weights prioritize usage, efficiency, and scoring
+    normalized_stats['STAR_SCORE'] = (
+        0.25 * normalized_stats['USG_PCT_NORM'] +      # Usage - how involved they are
+        0.20 * normalized_stats['TS_PCT_NORM'] +       # True shooting - efficiency
+        0.15 * normalized_stats['EFG_PCT_NORM'] +      # Effective FG% - shooting efficiency
+        0.20 * normalized_stats['PTS_NORM'] +          # Points - scoring volume
+        0.15 * normalized_stats['PIE_NORM'] +          # Player impact
+        0.05 * normalized_stats['NET_RATING_NORM']     # Net rating
+    )
+    
+    # Select highest scoring player per team as star
     star_rows = (
-        usg_means.sort_values(['TEAM_ID', 'USG_PCT'], ascending=[True, False])
-                 .groupby(['TEAM_ID'], as_index=False)
-                 .first()
+        normalized_stats.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
+        .groupby(['TEAM_ID'], as_index=False)
+        .first()
     )
+    
     star_by_team = {
         row.TEAM_ID: row.PLAYER_NAME
         for _, row in star_rows.iterrows()
@@ -975,22 +1003,8 @@ def process_star_players_data(df, all_nba_players, min_minutes=10):
     # TEAM_STAR_OUT for non-star rows only
     df['TEAM_STAR_OUT'] = ((df['PLAYER_IS_TEAM_STAR'] == 0) & (df['STAR_ACTIVE'] == 0)).astype(int)
 
-    # All-NBA teammate out per game
-    df['ALL_NBA_AND_OUT'] = ((df['PLAYER_IS_ALL_NBA'] == 1) & (df['ACTIVE'] == 0)).astype(int)
-    all_nba_out_per_game = (
-        df.groupby(['GAME_ID', 'TEAM_ID'], as_index=False)['ALL_NBA_AND_OUT']
-          .sum()
-          .rename(columns={'ALL_NBA_AND_OUT': 'NUM_ALL_NBA_OUT'})
-    )
-    df = df.merge(all_nba_out_per_game, on=['GAME_ID', 'TEAM_ID'], how='left')
-    df['NUM_ALL_NBA_OUT'] = df['NUM_ALL_NBA_OUT'].fillna(0).astype(int)
-
-    # Exclude self if self is All-NBA and out
-    self_is_all_nba_out = ((df['PLAYER_IS_ALL_NBA'] == 1) & (df['ACTIVE'] == 0)).astype(int)
-    df['ALL_NBA_TEAMMATE_OUT'] = (df['NUM_ALL_NBA_OUT'] - self_is_all_nba_out > 0).astype(int)
-
     # Cleanup helpers
-    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ALL_NBA_AND_OUT', 'NUM_ALL_NBA_OUT', 'ACTIVE'])
+    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE'])
 
     return df
 
@@ -1002,24 +1016,17 @@ def process_star_players_data(df, all_nba_players, min_minutes=10):
 def add_performance_without_stars_columns(df, min_games=2):
     """
     Add columns showing player averages when star teammates are out.
-    Also adds the number of All-NBA players on each team.
     FIXED: Now uses shift(1) to prevent data leakage.
     """
     df = df.copy()
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
-    # Add number of All-NBA players per team
-    all_nba_per_team = (
-        df[df['PLAYER_IS_ALL_NBA'] == 1]
-        .groupby('TEAM_ID')['PLAYER_NAME']
-        .nunique()
-        .reset_index()
-        .rename(columns={'PLAYER_NAME': 'NUM_ALL_NBA_ON_TEAM'})
-    )
-    
-    # Merge back to main dataframe
-    df = df.merge(all_nba_per_team, on='TEAM_ID', how='left')
-    df['NUM_ALL_NBA_ON_TEAM'] = df['NUM_ALL_NBA_ON_TEAM'].fillna(0).astype(int)
+    # Define metrics to track when star is out
+    metrics = [
+        'PTS', 'MIN', 'USG_PCT', 'FGA', 'FG3A', 'FTA',
+        'FG_PCT', 'FG3_PCT', 'FT_PCT', 'EFG_PCT', 'TS_PCT',
+        'AST', 'POSS', 'TCHS', 'REB', 'TOV', 'NET_RATING', 'PIE', 'PLUS_MINUS',
+    ]
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1034,25 +1041,16 @@ def add_performance_without_stars_columns(df, min_games=2):
         if star_out_mask.sum() >= min_games:
             star_out_data = player_group[star_out_mask]
             
-            # Calculate averages using SHIFTED data only
-            player_group['PTS_WITHOUT_STAR'] = round(star_out_data['PTS'].shift(1).mean(), 2)
-            player_group['MIN_WITHOUT_STAR'] = round(star_out_data['MIN'].shift(1).mean(), 2)
-            player_group['USG_PCT_WITHOUT_STAR'] = round(star_out_data['USG_PCT'].shift(1).mean(), 2)
-            player_group['FGA_WITHOUT_STAR'] = round(star_out_data['FGA'].shift(1).mean(), 2)
-            player_group['FG3A_WITHOUT_STAR'] = round(star_out_data['FG3A'].shift(1).mean(), 2)
-            player_group['FTA_WITHOUT_STAR'] = round(star_out_data['FTA'].shift(1).mean(), 2)
-            player_group['FG_PCT_WITHOUT_STAR'] = round(star_out_data['FG_PCT'].shift(1).mean(), 2)
-            player_group['FG3_PCT_WITHOUT_STAR'] = round(star_out_data['FG3_PCT'].shift(1).mean(), 2)
-            player_group['FT_PCT_WITHOUT_STAR'] = round(star_out_data['FT_PCT'].shift(1).mean(), 2)
-            player_group['EFG_PCT_WITHOUT_STAR'] = round(star_out_data['EFG_PCT'].shift(1).mean(), 2)
-            player_group['TS_PCT_WITHOUT_STAR'] = round(star_out_data['TS_PCT'].shift(1).mean(), 2)
-            player_group['AST_WITHOUT_STAR'] = round(star_out_data['AST'].shift(1).mean(), 2)
-            player_group['POSS_WITHOUT_STAR'] = round(star_out_data['POSS'].shift(1).mean(), 2)
-            player_group['TCHS_WITHOUT_STAR'] = round(star_out_data['TCHS'].shift(1).mean(), 2)
-            player_group['REB_WITHOUT_STAR'] = round(star_out_data['REB'].shift(1).mean(), 2)
-            player_group['TOV_WITHOUT_STAR'] = round(star_out_data['TOV'].shift(1).mean(), 2)
+            # Calculate averages using SHIFTED data for all metrics
+            for metric in metrics:
+                if metric in player_group.columns:
+                    player_group[f'{metric}_WITHOUT_STAR'] = round(
+                        star_out_data[metric].shift(1).mean(), 2
+                    )
+                else:
+                    player_group[f'{metric}_WITHOUT_STAR'] = np.nan
             
-            # FIXED: PTS_PER_36 calculation with shifted data
+            # Special calculation: PTS_PER_36 with shifted data
             pts_shifted = star_out_data['PTS'].shift(1)
             min_shifted = star_out_data['MIN'].shift(1)
             player_group['PTS_PER_36_WITHOUT_STAR'] = round(
@@ -1061,23 +1059,10 @@ def add_performance_without_stars_columns(df, min_games=2):
             
             player_group['GAMES_WITHOUT_STAR'] = star_out_mask.sum()
         else:
-            # Set to NaN instead of 0 for better model understanding
-            player_group['PTS_WITHOUT_STAR'] = np.nan
-            player_group['MIN_WITHOUT_STAR'] = np.nan
-            player_group['USG_PCT_WITHOUT_STAR'] = np.nan
-            player_group['FGA_WITHOUT_STAR'] = np.nan
-            player_group['FG3A_WITHOUT_STAR'] = np.nan
-            player_group['FTA_WITHOUT_STAR'] = np.nan
-            player_group['FG_PCT_WITHOUT_STAR'] = np.nan
-            player_group['FG3_PCT_WITHOUT_STAR'] = np.nan
-            player_group['FT_PCT_WITHOUT_STAR'] = np.nan
-            player_group['EFG_PCT_WITHOUT_STAR'] = np.nan
-            player_group['TS_PCT_WITHOUT_STAR'] = np.nan
-            player_group['AST_WITHOUT_STAR'] = np.nan
-            player_group['POSS_WITHOUT_STAR'] = np.nan
-            player_group['TCHS_WITHOUT_STAR'] = np.nan
-            player_group['REB_WITHOUT_STAR'] = np.nan
-            player_group['TOV_WITHOUT_STAR'] = np.nan
+            # Set to NaN for all metrics if insufficient games
+            for metric in metrics:
+                player_group[f'{metric}_WITHOUT_STAR'] = np.nan
+            
             player_group['PTS_PER_36_WITHOUT_STAR'] = np.nan
             player_group['GAMES_WITHOUT_STAR'] = 0
         

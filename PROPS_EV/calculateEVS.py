@@ -5,6 +5,7 @@ import scipy.stats as stats
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
+from nba_api.stats.endpoints import scoreboardv2
 
 
 # Convert UTC to ET and create game_date column
@@ -66,6 +67,191 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
         return round((odds_to_decimal - 1) * 100)
     else:
         return round(-100 / (odds_to_decimal - 1))
+
+def findOpp(playerName, players_df, gameDate):
+    player_team_id = players_df.loc[
+        players_df['PLAYER_NAME'] == playerName, 'TEAM_ID'
+    ].iloc[-1]
+    
+    scoreboard = scoreboardv2.ScoreboardV2(
+    game_date=gameDate,
+    league_id='00').get_data_frames()[2]
+    
+    row = scoreboard[
+        (scoreboard['HOME_TEAM_ID'] == player_team_id) |
+        (scoreboard['VISITOR_TEAM_ID'] == player_team_id)]
+    
+    if row.empty:
+        print(f"No game found for {playerName} on {gameDate}")
+        return None
+    
+    row = row.iloc[0]
+    
+    if player_team_id == row['HOME_TEAM_ID']:
+        opp_team_id = row['VISITOR_TEAM_ID']
+    else:
+        opp_team_id = row['HOME_TEAM_ID']
+    
+    return int(opp_team_id)
+
+def calculate_opponent_features(player_name, game_date, historical_data, player_data_row):    
+    # Get opponent team ID
+    opp_team_id = findOpp(player_name, historical_data, game_date)
+    if opp_team_id is None:
+        print(f"Could not find opponent for {player_name} on {game_date}")
+        return player_data_row
+    
+    # Filter opponent's historical data (games before the prediction date)
+    opp_history = historical_data[
+        (historical_data['TEAM_ID'] == opp_team_id) & 
+        (historical_data['GAME_DATE'] < game_date)
+    ].copy()
+    
+    if opp_history.empty:
+        print(f"No historical data for opponent team {opp_team_id}")
+        return player_data_row
+    
+    updated_row = player_data_row.copy()
+    
+    # ==========================================
+    # 1. OPPONENT POSITION-SPECIFIC DEFENSE
+    # ==========================================
+    positions = ['GUARD', 'FORWARD', 'CENTER']
+    def_metrics = ['DEF_FG_PCT_ALLOWED', 'DEF_3PT_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN']
+    
+    for pos in positions:
+        pos_players = opp_history[opp_history[pos] == 1]
+        
+        for metric in def_metrics:
+            if metric in pos_players.columns:
+                # Calculate mean from all available games
+                avg_val = pos_players[metric].mean()
+                feature_name = f'OPP_{pos}_{metric}'
+                updated_row[feature_name] = round(avg_val, 3) if not pd.isna(avg_val) else updated_row.get(feature_name, 0)
+    
+    # ==========================================
+    # 2. OPPONENT TEAM AGGREGATED STATS
+    # ==========================================
+    team_stats = {
+        'OPP_DEF_RATING_AVG_TO_DATE': 'TEAM_DEF_RATING',
+        'OPP_PACE_AVG_TO_DATE': 'TEAM_PACE',
+        'OPP_PTS_AVG_TO_DATE': 'TEAM_PTS',
+        'OPP_PTS_PAINT_AVG_TO_DATE': 'PTS_PAINT',
+        'OPP_FGA_AVG_TO_DATE': 'TEAM_FGA',
+        'OPP_REB_AVG_TO_DATE': 'TEAM_REB',
+        'OPP_AST_AVG_TO_DATE': 'TEAM_AST',
+        'OPP_TOV_AVG_TO_DATE': 'TEAM_TOV',
+        'OPP_BLK_AVG_TO_DATE': 'TEAM_BLK',
+        'OPP_STL_AVG_TO_DATE': 'TEAM_STL'
+    }
+    
+    # Get unique games for the opponent team
+    opp_games = opp_history.drop_duplicates(subset=['GAME_ID']).sort_values('GAME_DATE')
+    
+    for feature_name, source_col in team_stats.items():
+        if source_col in opp_games.columns:
+            avg_val = opp_games[source_col].mean()
+            updated_row[feature_name] = round(avg_val, 2) if not pd.isna(avg_val) else updated_row.get(feature_name, 0)
+    
+    # Paint defense specifically (average of all opponent players)
+    if 'OPP_PTS_PAINT' in opp_history.columns:
+        updated_row['OPP_PTS_PAINT'] = round(opp_history['OPP_PTS_PAINT'].mean(), 2)
+    
+    # ==========================================
+    # 3. OPPONENT MATCHUP-SPECIFIC FEATURES
+    # ==========================================
+    # Get player's previous games against this opponent
+    player_vs_opp = historical_data[
+        (historical_data['PLAYER_NAME'] == player_name) &
+        (historical_data['OPP_TEAM_ID'] == opp_team_id) &
+        (historical_data['GAME_DATE'] < game_date)
+    ].sort_values('GAME_DATE')
+    
+    if not player_vs_opp.empty:
+        # Last 3 games USG_PCT average
+        last_3 = player_vs_opp.tail(3)
+        if 'USG_PCT' in last_3.columns:
+            updated_row['MATCHUP_AVG_USG_PCT_LAST_3_TO_DATE'] = round(last_3['USG_PCT'].mean(), 2)
+        
+        # Last 5 games USG_PCT average
+        last_5 = player_vs_opp.tail(5)
+        if 'USG_PCT' in last_5.columns:
+            updated_row['MATCHUP_AVG_USG_PCT_LAST_5_TO_DATE'] = round(last_5['USG_PCT'].mean(), 2)
+    
+    # ==========================================
+    # 4. INTERACTION FEATURES
+    # ==========================================
+    # Recalculate interaction features using new opponent stats
+    if 'percentageFieldGoalsAttempted3pt_AVG_TO_DATE' in updated_row.index and 'OPP_GUARD_DEF_3PT_PCT_ALLOWED' in updated_row.index:
+        updated_row['PLAYER_3PT_X_OPP_3PT_DEF'] = (
+            updated_row['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * 
+            updated_row['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+        )
+    
+    if 'percentageFieldGoalsAttempted3pt_ROLLING_AVG_5' in updated_row.index and 'OPP_GUARD_DEF_3PT_PCT_ALLOWED' in updated_row.index:
+        updated_row['PLAYER_3PT_X_OPP_3PT_DEF_RECENT'] = (
+            updated_row['percentageFieldGoalsAttempted3pt_ROLLING_AVG_5'] * 
+            updated_row['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+        )
+    
+    if 'percentagePointsPaint_AVG_TO_DATE' in updated_row.index and 'OPP_PTS_PAINT' in updated_row.index:
+        updated_row['PLAYER_PAINT_X_OPP_PAINT_DEF'] = (
+            updated_row['percentagePointsPaint_AVG_TO_DATE'] * 
+            updated_row['OPP_PTS_PAINT']
+        )
+    
+    if 'percentagePointsPaint_ROLLING_AVG_5' in updated_row.index and 'OPP_PTS_PAINT' in updated_row.index:
+        updated_row['PLAYER_PAINT_X_OPP_PAINT_DEF_RECENT'] = (
+            updated_row['percentagePointsPaint_ROLLING_AVG_5'] * 
+            updated_row['OPP_PTS_PAINT']
+        )
+    
+    if 'percentagePointsMidrange2pt_AVG_TO_DATE' in updated_row.index and 'OPP_FORWARD_DEF_FG_PCT_ALLOWED' in updated_row.index:
+        updated_row['PLAYER_MID_X_OPP_MID_DEF'] = (
+            updated_row['percentagePointsMidrange2pt_AVG_TO_DATE'] * 
+            updated_row['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+        )
+    
+    # Team offensive vs opponent defensive rating
+    if 'TEAM_OFF_RATING_AVG_TO_DATE' in updated_row.index and 'OPP_DEF_RATING_AVG_TO_DATE' in updated_row.index:
+        updated_row['TEAM_OFF_MINUS_OPP_DEF'] = (
+            updated_row['TEAM_OFF_RATING_AVG_TO_DATE'] - 
+            updated_row['OPP_DEF_RATING_AVG_TO_DATE']
+        )
+    
+    return updated_row
+
+
+def predictPTS(playerName, data, model, features, gameDate):
+    # Get player's most recent data
+    playerData = data[data['PLAYER_NAME'] == playerName].copy()
+    latestRow = playerData.sort_values(by='GAME_DATE').iloc[-1]
+    
+    # Recalculate opponent features for the upcoming game
+    updated_row = calculate_opponent_features(
+        player_name=playerName,
+        game_date=gameDate,
+        historical_data=data,
+        player_data_row=latestRow
+    )
+    
+    # Filter to only the features needed by the model
+    available_features = [f for f in features if f in updated_row.index]
+    playerInput = updated_row[available_features]
+    
+    # Convert to DataFrame for prediction
+    playerInput_df = pd.DataFrame([playerInput.values], columns=available_features)
+    
+    # Handle data types
+    for col in playerInput_df.columns:
+        if playerInput_df[col].dtype == 'object':
+            playerInput_df[col] = pd.to_numeric(playerInput_df[col], errors='coerce').fillna(0)
+        elif playerInput_df[col].dtype == 'bool':
+            playerInput_df[col] = playerInput_df[col].astype(int)
+    
+    # Make prediction
+    pred = model.predict(playerInput_df)[0]
+    return round(float(pred), 3)
 
 def predictPTS(playerName, data, model, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
