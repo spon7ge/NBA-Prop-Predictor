@@ -19,7 +19,7 @@ Evaluate bets using:
 - Expected Value (EV)
 - Kelly Criterion
 
-### Deploy a Streamlit Dashboard
+### Deploy a Streamlit Dashboard (End Goal)
 - Display the best bets of the day, including:
 - Predicted player stats from the model
 - Over/Under recommendation
@@ -47,6 +47,11 @@ If you want the odds from below use region='us'
 - Tipico
 - SuperBook
 - Wind Creek (Betfred PA)
+
+## Current problems and changes coming:
+- grabing team spreads and total per bookmakers and assigning the average to the current team
+- assigning the current opponent when I run the predict function
+- changing player positions from G,F,C to PG,SG,SF,PF,C
 
 ## Example of what you get for a single bet only using bookmakers that allow single bets
 <img width="1326" height="303" alt="Screenshot 2025-09-25 at 4 37 12 PM" src="https://github.com/user-attachments/assets/62110db1-e23b-4c2b-9305-fb4017a0be5f" />

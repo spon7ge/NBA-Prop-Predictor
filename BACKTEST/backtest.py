@@ -1,6 +1,7 @@
 import pandas as pd
 import joblib
 from PROPS_EV.calculateEVS import *
+from MODELS.pipeline import *
 
 def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000):
     data = data[data['GAME_DATE'] < gameDate]
