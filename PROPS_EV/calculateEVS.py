@@ -69,7 +69,7 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
     else:
         return round(-100 / (odds_to_decimal - 1))
 
-def predictPTS(playerName, data, model, features):
+def predictStats(playerName, data, model, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
     latestRow = playerData.sort_values(by='GAME_DATE').iloc[-1]
     available_features = [f for f in features if f in data.columns] 
@@ -88,13 +88,15 @@ def predictPTS(playerName, data, model, features):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000, min_std=2.0, max_std=8.5):
+def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=10000, min_std=2.0, max_std=10.0, stat_col='PTS'):
     baseSTD = std_dev
     volAdj = 1.0  
-    
-    if 'PTS_EXPANDING_VOLATILITY_TO_DATE' in player_df.columns and len(player_df) >= 5:
-        recent_vol = player_df['PTS'].tail(5).std()  
-        season_vol = player_df['PTS_EXPANDING_VOLATILITY_TO_DATE'].iloc[-1]  
+    vol_col = f'{stat_col}_EXPANDING_VOLATILITY_TO_DATE'
+    stat_col_actual = stat_col
+
+    if vol_col in player_df.columns and len(player_df) >= 7:
+        recent_vol = player_df[stat_col_actual].tail(7).std()  
+        season_vol = player_df[vol_col].iloc[-1]  
 
         if season_vol > 0 and not pd.isna(season_vol) and not pd.isna(recent_vol):
             volAdj = recent_vol / season_vol  
@@ -167,7 +169,7 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
 
         # Get prediction using your predictPTS function
         try:
-            prediction = predictPTS(name, data, model, features)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -271,7 +273,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
 
         # Get prediction using your predictPTS function
         try:
-            prediction = predictPTS(name, data, model, features)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -423,7 +425,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
 
         # Get prediction
         try:
-            prediction = predictPTS(name, data, model, features)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
