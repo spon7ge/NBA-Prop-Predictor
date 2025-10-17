@@ -21,6 +21,9 @@ def impliedProb(odds):
     else:
         return abs(odds) / (abs(odds) + 100)
 
+def american_to_decimal(odds):
+    return 1 + (odds / 100.0) if odds > 0 else 1 + (100.0 / abs(odds))
+
 def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     netProfit = payout - stake
     probabilityOfLoss = 1 - probability
@@ -68,6 +71,15 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
         return round((odds_to_decimal - 1) * 100)
     else:
         return round(-100 / (odds_to_decimal - 1))
+
+def get_player_std(player_df, stat_col, std_window=10, min_std=2.0, max_std=8.5):
+    s = player_df[stat_col].dropna()
+    if s.empty:
+        return 5.0
+    sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
+    if pd.isna(sd) or sd == 0:
+        sd = 5.0
+    return float(np.clip(sd, min_std, max_std))
 
 def predictStats(playerName, data, model, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
@@ -135,24 +147,6 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
 
     print("Processing single bets...")
 
-    def get_player_std(player_df, stat_col):
-        s = player_df[stat_col].dropna()
-        if s.empty:
-            return 5.0
-        sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
-        if pd.isna(sd) or sd == 0:
-            sd = 5.0
-        return float(np.clip(sd, min_std, max_std))
-
-    def american_to_decimal(odds):
-        return 1 + (odds / 100.0) if odds > 0 else 1 + (100.0 / abs(odds))
-
-    def impliedProb(odds):
-        if odds > 0:
-            return 100 / (odds + 100)
-        else:
-            return abs(odds) / (abs(odds) + 100)
-
     results = []
 
     for _, row in bookmakers.iterrows():
@@ -174,7 +168,7 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
             print(f"Error getting prediction for {name}: {e}")
             continue
 
-        std_dev = get_player_std(player_df, stat_col)
+        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
 
         sim_results = monteCarloSim(
             player_df=player_df,
@@ -239,15 +233,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
     
     print("Processing pairs...")
 
-    def get_player_std(player_df, stat_col):
-        s = player_df[stat_col].dropna()
-        if s.empty:
-            return 5.0
-        sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
-        if pd.isna(sd) or sd == 0:
-            sd = 5.0
-        return float(np.clip(sd, min_std, max_std))
-
     grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
         'CATEGORY': 'first',
         'BOOKMAKER': 'first',
@@ -278,7 +263,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             print(f"Error getting prediction for {name}: {e}")
             continue
 
-        std_dev = get_player_std(player_df, stat_col)
+        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
         sim_results = monteCarloSim(
             player_df=player_df,
             modelPred=float(prediction),
@@ -287,7 +272,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             num_simulations=simulations
         )
 
-        # Determine over/under based on prediction vs line
         if prediction > line:
             model_side = 'OVER'
             model_prob = float(sim_results['prob_over'])
@@ -310,7 +294,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             'BOOKMAKER': bookmaker,
             'ODDS': odds,
             'LINE': line,
-            'SIDE': side,  
             'PREDICTION': float(prediction),
             'MODEL_SIDE': model_side,
             'MODEL_PROB': model_prob,
@@ -360,7 +343,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
                 'BOOKMAKER 1': leg1['BOOKMAKER'],
                 'ODDS 1': leg1['ODDS'],
                 'LINE 1': leg1['LINE'],
-                'SIDE 1': leg1['SIDE'],  
                 'PREDICTION 1': round(leg1['PREDICTION'], 2),
                 'MODEL_SIDE 1': leg1['MODEL_SIDE'],
                 'OVER% 1': round(leg1['OVER%'], 3),
@@ -371,7 +353,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
                 'BOOKMAKER 2': leg2['BOOKMAKER'],
                 'ODDS 2': leg2['ODDS'],
                 'LINE 2': leg2['LINE'],
-                'SIDE 2': leg2['SIDE'],  
                 'PREDICTION 2': round(leg2['PREDICTION'], 2),
                 'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                 'OVER% 2': round(leg2['OVER%'], 3),
@@ -390,15 +371,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing 3-leg parlays...")
-
-    def get_player_std(player_df, stat_col):
-        s = player_df[stat_col].dropna()
-        if s.empty:
-            return 5.0
-        sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
-        if pd.isna(sd) or sd == 0:
-            sd = 5.0
-        return float(np.clip(sd, min_std, max_std))
 
     grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
         'CATEGORY': 'first',
@@ -430,7 +402,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
             print(f"Error getting prediction for {name}: {e}")
             continue
 
-        std_dev = get_player_std(player_df, stat_col)
+        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
         sim_results = monteCarloSim(
             player_df=player_df,
             modelPred=float(prediction),
@@ -457,7 +429,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
             'BOOKMAKER': bookmaker,
             'ODDS': odds,
             'LINE': line,
-            'SIDE': side,  
             'PREDICTION': float(prediction),
             'MODEL_SIDE': model_side,
             'MODEL_PROB': model_prob,
@@ -522,7 +493,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                     'BOOKMAKER 1': leg1['BOOKMAKER'],
                     'ODDS 1': leg1['ODDS'],
                     'LINE 1': leg1['LINE'],
-                    'SIDE 1': leg1['SIDE'],
                     'PREDICTION 1': round(leg1['PREDICTION'], 2),
                     'MODEL_SIDE 1': leg1['MODEL_SIDE'],
                     'OVER% 1': round(leg1['OVER%'], 3),
@@ -534,7 +504,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                     'BOOKMAKER 2': leg2['BOOKMAKER'],
                     'ODDS 2': leg2['ODDS'],
                     'LINE 2': leg2['LINE'],
-                    'SIDE 2': leg2['SIDE'],
                     'PREDICTION 2': round(leg2['PREDICTION'], 2),
                     'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                     'OVER% 2': round(leg2['OVER%'], 3),
@@ -546,7 +515,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                     'BOOKMAKER 3': leg3['BOOKMAKER'],
                     'ODDS 3': leg3['ODDS'],
                     'LINE 3': leg3['LINE'],
-                    'SIDE 3': leg3['SIDE'],
                     'PREDICTION 3': round(leg3['PREDICTION'], 2),
                     'MODEL_SIDE 3': leg3['MODEL_SIDE'],
                     'OVER% 3': round(leg3['OVER%'], 3),

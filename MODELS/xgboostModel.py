@@ -35,7 +35,7 @@ def xgb_params(base=None, use_gpu=False):
         n_estimators=5000,
         learning_rate=0.01412139968434072, 
         max_depth=9,
-        min_child_weight=3, #help balance overfitting vs underfitting   
+        min_child_weight=3, 
         
         subsample=0.73338144662399,
         colsample_bytree=0.6460723242676091,
@@ -193,7 +193,7 @@ def evaluate_test(model, test_df, features, target_col, cat_cols):
     })
     
     # Join back some useful context for grouping
-    context_cols = ["PLAYER_NAME", "MATCHUP", "TEAM_PTS", "OPP_PTS", "STARTING","PLAYER_IS_TEAM_STAR", "TEAM_STAR_OUT",'HOME_GAME', 'MIN']
+    context_cols = ["PLAYER_NAME", "MATCHUP", "TEAM_PTS", "OPP_PTS", "STARTING",'MIN']
     available_cols = [c for c in context_cols if c in test_df.columns]
     residuals_df = residuals_df.join(test_df[available_cols])
     

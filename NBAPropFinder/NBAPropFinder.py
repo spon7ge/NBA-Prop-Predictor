@@ -82,7 +82,7 @@ class NBAPropFinder():
         return pd.DataFrame(odds_records)
     
     def save_data(self):
-        save_dir = "/Users/alexg/Documents/Documents/Prize-Picks-Prop-Predictor/DATA/CSV_FILES/PROP_DATA"
+        save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "DATA", "CSV_FILES", "PROP_DATA", "PLAYER_LINES")
         timestamp = datetime.now().strftime("%Y%m%d")
         
 

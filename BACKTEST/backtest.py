@@ -3,9 +3,16 @@ import joblib
 from PROPS_EV.calculateEVS import *
 from MODELS.pipeline import *
 
-def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000):
+def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
-    backtestData = backtestData[(backtestData['CATEGORY'] == 'points') & (backtestData['GAME_DATE'] == gameDate)]
+    if stat_col == 'PTS':
+        category = 'player_points'
+    elif stat_col == 'REB':
+        category = 'player_rebounds'
+    else:
+        print(f"Invalid stat column: {stat_col}")
+        return pd.DataFrame()
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
     if backtestData.empty:
         print(f"No bets found for {gameDate}")
         return pd.DataFrame()
@@ -16,7 +23,8 @@ def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold
     model=model,
     features=features,
     stake=100,
-    simulations=simulations)
+    simulations=simulations,
+    stat_col=stat_col)
     evData = results.sort_values(by='EV%', ascending=False).head(top_n)
     results = []
 
@@ -68,9 +76,16 @@ def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold
     return pd.DataFrame(results)
 
 
-def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000):
+def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
-    backtestData = backtestData[(backtestData['CATEGORY'] == 'player_points') & (backtestData['GAME_DATE'] == gameDate)]
+    if stat_col == 'PTS':
+        category = 'player_points'
+    elif stat_col == 'REB':
+        category = 'player_rebounds'
+    else:
+        print(f"Invalid stat column: {stat_col}")
+        return pd.DataFrame()
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
     
     if backtestData.empty:
         print(f"No bets found for {gameDate}")
@@ -83,7 +98,8 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
         model=model,
         features=features,
         stake=100,
-        simulations=simulations
+        simulations=simulations,
+        stat_col=stat_col
     )
     
     # Sort by EV% and take top pairs
@@ -101,8 +117,6 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
         
         line1 = row['LINE 1']
         line2 = row['LINE 2']
-        side1 = row['SIDE 1']  # Original bookmaker side
-        side2 = row['SIDE 2']  # Original bookmaker side
         
         pred1 = row['PREDICTION 1']
         pred2 = row['PREDICTION 2']
@@ -118,9 +132,16 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
         if player1Data.empty or player2Data.empty:
             print(f"Player data not found for {player1} or {player2} on {gameDate}")
             continue
-
-        actual1 = player1Data['PTS'].iloc[-1]
-        actual2 = player2Data['PTS'].iloc[-1]
+        
+        if stat_col == 'PTS':
+            actual1 = player1Data['PTS'].iloc[-1]
+            actual2 = player2Data['PTS'].iloc[-1]
+        elif stat_col == 'REB':
+            actual1 = player1Data['REB'].iloc[-1]
+            actual2 = player2Data['REB'].iloc[-1]
+        else:
+            print(f"Invalid stat column: {stat_col}")
+            continue
         
         # Calculate edges for each leg
         edge1 = pred1 - line1
@@ -154,8 +175,6 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
         backtest_results.append({
             'player1': player1,
             'player2': player2,
-            'side1': side1,  # Original bookmaker side
-            'side2': side2,  # Original bookmaker side
             'model_side1': model_side1,  # Model's recommendation
             'model_side2': model_side2,  # Model's recommendation
             'line1': line1,
@@ -177,12 +196,17 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
 
     return pd.DataFrame(backtest_results)
 
-def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000):
-    """
-    Backtest 3-leg PrizePicks parlays for a specific game date
-    """
+def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
-    backtestData = backtestData[(backtestData['CATEGORY'] == 'player_points') & (backtestData['GAME_DATE'] == gameDate)]
+    if stat_col == 'PTS':
+        category = 'player_points'
+    elif stat_col == 'REB':
+        category = 'player_rebounds'
+    else:
+        print(f"Invalid stat column: {stat_col}")
+        return pd.DataFrame()
+        
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
     
     if backtestData.empty:
         print(f"No bets found for {gameDate}")
@@ -195,7 +219,8 @@ def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_
         model=model,
         features=features,
         stake=100,
-        simulations=simulations
+        simulations=simulations,
+        stat_col=stat_col
     )
     
     # Sort by EV% and take top parlays
@@ -216,10 +241,6 @@ def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_
         line2 = row['LINE 2']
         line3 = row['LINE 3']
         
-        side1 = row['SIDE 1']  # Original bookmaker side
-        side2 = row['SIDE 2']
-        side3 = row['SIDE 3']
-        
         pred1 = row['PREDICTION 1']
         pred2 = row['PREDICTION 2']
         pred3 = row['PREDICTION 3']
@@ -238,9 +259,17 @@ def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_
             print(f"Player data not found for {player1}, {player2}, or {player3} on {gameDate}")
             continue
 
-        actual1 = player1Data['PTS'].iloc[-1]
-        actual2 = player2Data['PTS'].iloc[-1]
-        actual3 = player3Data['PTS'].iloc[-1]
+        if stat_col == 'PTS':
+            actual1 = player1Data['PTS'].iloc[-1]
+            actual2 = player2Data['PTS'].iloc[-1]
+            actual3 = player3Data['PTS'].iloc[-1]
+        elif stat_col == 'REB':
+            actual1 = player1Data['REB'].iloc[-1]
+            actual2 = player2Data['REB'].iloc[-1]
+            actual3 = player3Data['REB'].iloc[-1]
+        else:
+            print(f"Invalid stat column: {stat_col}")
+            continue
         
         # Calculate edges for each leg
         edge1 = pred1 - line1
@@ -285,9 +314,6 @@ def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_
             'player1': player1,
             'player2': player2,
             'player3': player3,
-            'side1': side1,
-            'side2': side2,
-            'side3': side3,
             'model_side1': model_side1,
             'model_side2': model_side2,
             'model_side3': model_side3,
