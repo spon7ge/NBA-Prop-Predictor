@@ -107,8 +107,8 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     stat_col_actual = stat_col
 
     # Volatility adjustment using recent vs season volatility
-    if vol_col in player_df.columns and len(player_df) >= 7:
-        recent_vol = player_df[stat_col_actual].tail(7).std()
+    if vol_col in player_df.columns and len(player_df) >= 10:
+        recent_vol = player_df[stat_col_actual].tail(10).std()
         season_vol = player_df[vol_col].iloc[-1]
 
         if season_vol > 0 and not pd.isna(season_vol) and not pd.isna(recent_vol):
@@ -322,7 +322,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             p1 = leg1['MODEL_PROB']
             p2 = leg2['MODEL_PROB']
             p_both = p1 * p2
-            ev = 3 * p_both - 1
+            ev = payout_multiple * p_both - 1
 
 
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
@@ -463,7 +463,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                 p2 = leg2['MODEL_PROB']
                 p3 = leg3['MODEL_PROB']
                 p_all_three = p1 * p2 * p3
-                ev = 6 * p_all_three - 1
+                ev = payout_multiple * p_all_three - 1
 
                 # Kelly criterion
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
