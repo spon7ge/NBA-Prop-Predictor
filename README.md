@@ -20,11 +20,11 @@ Evaluate bets using:
 - Kelly Criterion
 
 ### Deploy a Streamlit Dashboard (End Goal)
-- Display the best bets of the day, including:
+- Display the top 10 EVs for the day:
 - Predicted player stats from the model
 - Over/Under recommendation
 - EV rankings
-- Parlay builder (1-leg, 2-leg)
+- Parlay builder (1-leg, 2-leg, 3-leg)
 
 If you want the odds from below use region='us'
 ### Supported Sportsbooks from The Odds API

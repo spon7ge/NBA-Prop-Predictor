@@ -102,43 +102,47 @@ def predictStats(playerName, data, model, features):
 
 def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=10000, min_std=2.0, max_std=10.0, stat_col='PTS'):
     baseSTD = std_dev
-    volAdj = 1.0  
+    volAdj = 1.0
     vol_col = f'{stat_col}_EXPANDING_VOLATILITY_TO_DATE'
     stat_col_actual = stat_col
 
+    # Volatility adjustment using recent vs season volatility
     if vol_col in player_df.columns and len(player_df) >= 7:
-        recent_vol = player_df[stat_col_actual].tail(7).std()  
-        season_vol = player_df[vol_col].iloc[-1]  
+        recent_vol = player_df[stat_col_actual].tail(7).std()
+        season_vol = player_df[vol_col].iloc[-1]
 
         if season_vol > 0 and not pd.isna(season_vol) and not pd.isna(recent_vol):
-            volAdj = recent_vol / season_vol  
-            volAdj = 1 + (volAdj - 1) * 0.3 
-            volAdj = np.clip(volAdj, 0.7, 2.0)  
-        
+            volAdj = recent_vol / season_vol
+            volAdj = 1 + (volAdj - 1) * 0.3
+            volAdj = np.clip(volAdj, 0.7, 2.0)
+
         stdDev = baseSTD * volAdj
     else:
         stdDev = baseSTD
-    
-    stdDev = float(np.clip(stdDev, min_std, max_std))  
-    
-    # Create truncated normal distribution (lower bound = 0)
-    a = -modelPred / stdDev if stdDev > 0 else 0
-    b = np.inf
-    simulated_points = truncnorm.rvs(a, b, loc=modelPred, scale=stdDev, size=num_simulations)
-    
+
+    # Scale variance relative to mean
+    stdDev = max(stdDev, 0.15 * modelPred)
+    stdDev = float(np.clip(stdDev, min_std, max_std * 1.5))
+
+    # Simulate outcomes (non-negative)
+    simulated_points = np.random.normal(modelPred, stdDev, num_simulations)
+    simulated_points = np.clip(simulated_points, 0, None)
+
+    # Compute probabilities and confidence interval
     prob_over = np.mean(simulated_points > prop_line)
+    prob_over = float(np.clip(prob_over, 0.05, 0.95))
     prob_under = 1 - prob_over
     ci = np.percentile(simulated_points, [2.5, 97.5])
-    
-    return { 
-        'model_prediction': modelPred, 
-        'simulated_mean': simulated_points.mean(), 
-        'simulated_std': simulated_points.std(), 
-        'std_used': stdDev, 
+
+    return {
+        'model_prediction': modelPred,
+        'simulated_mean': simulated_points.mean(),
+        'simulated_std': simulated_points.std(),
+        'std_used': stdDev,
         'vol_adjustment': volAdj,
-        'prob_over': prob_over, 
-        'prob_under': prob_under, 
-        'confidence_interval': (ci[0], ci[1]) 
+        'prob_over': prob_over,
+        'prob_under': prob_under,
+        'confidence_interval': (ci[0], ci[1])
     }
 
 
@@ -281,12 +285,6 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             model_prob = float(sim_results['prob_under'])
             model_opposite_prob = float(sim_results['prob_over'])
 
-        edge = model_prob - line
-        if abs(edge) > edge_threshold:
-            recommendation = 1
-        else:
-            recommendation = 0
-
         legs.append({
             'NAME': name,
             'TEAM': player_team,
@@ -324,9 +322,8 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
             p1 = leg1['MODEL_PROB']
             p2 = leg2['MODEL_PROB']
             p_both = p1 * p2
+            ev = 3 * p_both - 1
 
-            ev_per_unit = p_both * b - (1 - p_both)
-            ev_percent = ev_per_unit
 
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
 
@@ -361,7 +358,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
                 'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}",
                 'RECOMMENDATION': recommendation,
                 'PROBABILITY': round(p_both, 4),
-                'EV%': round(ev_percent, 3),
+                'EV%': round(ev, 3),
                 'KELLY': round(kelly_full, 3),
             })
 
@@ -421,7 +418,6 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
             model_prob = float(sim_results['prob_under'])
             model_opposite_prob = float(sim_results['prob_over'])
 
-        edge = model_prob - line
         legs.append({
             'NAME': name,
             'TEAM': player_team,
@@ -467,10 +463,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                 p2 = leg2['MODEL_PROB']
                 p3 = leg3['MODEL_PROB']
                 p_all_three = p1 * p2 * p3
-
-                # Expected value calculation
-                ev_per_unit = p_all_three * b - (1 - p_all_three)
-                ev_percent = ev_per_unit
+                ev = 6 * p_all_three - 1
 
                 # Kelly criterion
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
@@ -524,7 +517,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
                     'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}/{leg3['MODEL_SIDE']}",
                     'RECOMMENDATION': recommendation,
                     'PROBABILITY': round(p_all_three, 4),
-                    'EV%': round(ev_percent, 3),
+                    'EV%': round(ev, 3),
                     'KELLY': round(kelly_full, 3),
                 })
 
