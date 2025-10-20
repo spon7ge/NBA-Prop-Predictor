@@ -16,12 +16,13 @@ def build_recent_weights(df, player_col, recent_n=15, recent_weight=5.0):
 def clean_feature_dtypes(X, cat_cols):
     Xc = X.copy()
     for c in Xc.columns:
+        col = Xc[c] 
         if c in cat_cols:
             continue
-        if Xc[c].dtype == "bool":
-            Xc[c] = Xc[c].astype(int)
-        elif not np.issubdtype(Xc[c].dtype, np.number):
-            Xc[c] = pd.to_numeric(Xc[c], errors="coerce")
+        if col.dtype == bool:
+            Xc[c] = col.astype(int)
+        elif not np.issubdtype(col.dtype, np.number):
+            Xc[c] = pd.to_numeric(col, errors="coerce")
     return Xc
 
 def xgb_params(base=None, use_gpu=False):

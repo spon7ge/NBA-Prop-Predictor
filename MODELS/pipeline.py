@@ -1,10 +1,10 @@
 import requests 
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import pandas as pd
 from catboost import Pool
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2
-from teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive
+from MODELS.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive
 
 
 today = datetime.today().strftime('%Y-%m-%d')
@@ -45,32 +45,34 @@ def getUpcomingGames(date):
     awayTeams = schedule['awayTeam_teamTricode'].unique().tolist()
     return homeTeams, awayTeams
 
-def findOpp(playerName, players_df, gameDate):
+def findOpp(playerName, players_df, gameDate, max_days_ahead=3):
     player_team = players_df.loc[
         players_df['PLAYER_NAME'] == playerName, 'TEAM_ABBREVIATION'
     ].iloc[-1]
     
-    homeTeams, awayTeams = getUpcomingGames(gameDate)
+    # Check original date and up to max_days_ahead days forward
+    base_date = datetime.strptime(gameDate, '%Y-%m-%d')
+    dates_to_check = [(base_date + timedelta(days=i)).strftime('%Y-%m-%d') 
+                      for i in range(max_days_ahead + 1)]
     
-    # Convert to lists for easier handling
-    homeTeams = list(homeTeams)
-    awayTeams = list(awayTeams)
-    
-    home = 0
-    if player_team in homeTeams:
-        # Player's team is at home, opponent is away
-        opp_team = awayTeams[homeTeams.index(player_team)]
-        home = 1
-    elif player_team in awayTeams:
-        # Player's team is away, opponent is home
-        opp_team = homeTeams[awayTeams.index(player_team)]
+    for check_date in dates_to_check:
+        homeTeams, awayTeams = getUpcomingGames(check_date)
+        
+        homeTeams = list(homeTeams)
+        awayTeams = list(awayTeams)
+        
         home = 0
-    else:
-        # No game found for this team on this date
-        print(f"No game found for {player_team} on {gameDate}")
-        return None, None
+        if player_team in homeTeams:
+            opp_team = awayTeams[homeTeams.index(player_team)]
+            home = 1
+            return opp_team, home
+        elif player_team in awayTeams:
+            opp_team = homeTeams[awayTeams.index(player_team)]
+            home = 0
+            return opp_team, home
     
-    return opp_team, home
+    print(f"No game found for {player_team} within {max_days_ahead} days from {gameDate}")
+    return None, None
 
 def playerContext(player_name, data, current_date, projectedStartingFive, teamStarPlayer, mainStartingFive):
     player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
@@ -123,37 +125,66 @@ def playerContext(player_name, data, current_date, projectedStartingFive, teamSt
     return res
 
 def playerScoring(player_name, data):
-    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
+    player_df = data[data['PLAYER_NAME'] == player_name].sort_values(by='GAME_DATE')
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
 
     res = []
-    
-    # Features from your new list
+
+    # Player scoring features
     res.append(player_df['PTS_ROLLING_AVG_40'].iloc[-1])
-    res.append(player_df['PTS_ROLLING_AVG_15'].iloc[-1])
-    res.append(player_df['FGA_ROLLING_AVG_7'].iloc[-1])
-    res.append(player_df['EXPECTED_USAGE_MIN'].iloc[-1])
-    res.append(player_df['PTS_ROLLING_AVG_10'].iloc[-1])
     res.append(player_df['PTS_ROLLING_AVG_25'].iloc[-1])
-    res.append(player_df['USG_X_POSS'].iloc[-1])
-    res.append(player_df['FGA_ROLLING_AVG_10'].iloc[-1])
-    res.append(player_df['FGA_ROLLING_AVG_5'].iloc[-1])
-    res.append(player_df['FG3A_ROLLING_AVG_5'].iloc[-1])
+    res.append(player_df['PTS_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['PTS_ROLLING_AVG_10'].iloc[-1])
+    res.append(player_df['PTS_ROLLING_AVG_7'].iloc[-1])                     # NEW
+    res.append(player_df['PTS_AVG_TO_DATE'].iloc[-1])                       # NEW
     res.append(player_df['PTS_WITHOUT_STAR'].iloc[-1])
-    res.append(player_df['FG3A_WITHOUT_STAR'].iloc[-1])
     res.append(player_df['PTS_PER_36_WITHOUT_STAR'].iloc[-1])
-    res.append(player_df['E_USG_PCT_ROLLING_AVG_5'].iloc[-1])
-    res.append(player_df['UFGA_ROLLING_AVG_15'].iloc[-1])
-    res.append(player_df['FGA_LAG_1'].iloc[-1])
-    res.append(player_df['USG_X_TEAM_OFF'].iloc[-1])
-    res.append(player_df['E_USG_PCT_ROLLING_AVG_15'].iloc[-1])
-    res.append(player_df['USG_PCT_WITHOUT_STAR'].iloc[-1])
-    res.append(player_df['USG_PCT_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['PTS_PER_MIN_X_USG'].iloc[-1])                     # NEW
+    res.append(player_df['EXPECTED_USAGE_MIN'].iloc[-1])
+    res.append(player_df['FGA_ROLLING_AVG_40'].iloc[-1])                    # NEW
     res.append(player_df['FGA_ROLLING_AVG_25'].iloc[-1])
+    res.append(player_df['FGA_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['FGA_ROLLING_AVG_10'].iloc[-1])
+    res.append(player_df['FGA_ROLLING_AVG_7'].iloc[-1])                     # NEW
+    res.append(player_df['FGA_ROLLING_AVG_5'].iloc[-1])
+    res.append(player_df['FGA_LAG_1'].iloc[-1])
+    res.append(player_df['FGA_WITHOUT_STAR'].iloc[-1])                      # NEW
+    res.append(player_df['FG3A_ROLLING_AVG_5'].iloc[-1])
+    res.append(player_df['FG3A_ROLLING_AVG_7'].iloc[-1])                    # NEW
+    res.append(player_df['FG3A_ROLLING_AVG_10'].iloc[-1])                   # NEW
+    res.append(player_df['FG3A_ROLLING_AVG_15'].iloc[-1])                   # NEW
+    res.append(player_df['FG3A_WITHOUT_STAR'].iloc[-1])
+    res.append(player_df['UFGA_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['UFGA_ROLLING_AVG_7'].iloc[-1])                    # NEW
+    res.append(player_df['FTM_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['FTM_ROLLING_AVG_10'].iloc[-1])                    # NEW
+    res.append(player_df['FTM_ROLLING_AVG_25'].iloc[-1])                    # NEW
+    res.append(player_df['E_USG_PCT_ROLLING_AVG_5'].iloc[-1])
+    res.append(player_df['E_USG_PCT_ROLLING_AVG_7'].iloc[-1])               # NEW
+    res.append(player_df['E_USG_PCT_ROLLING_AVG_10'].iloc[-1])              # NEW
+    res.append(player_df['E_USG_PCT_ROLLING_AVG_25'].iloc[-1])              # NEW
+    res.append(player_df['E_USG_PCT_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['USG_PCT_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['USG_PCT_ROLLING_AVG_10'].iloc[-1])                # NEW
+    res.append(player_df['USG_PCT_ROLLING_AVG_7'].iloc[-1])                 # NEW
+    res.append(player_df['USG_PCT_WITHOUT_STAR'].iloc[-1])
+    res.append(player_df['USG_PCT_AVG_TO_DATE'].iloc[-1])                   # NEW
+    res.append(player_df['USG_X_POSS'].iloc[-1])
+    res.append(player_df['USG_X_TEAM_OFF'].iloc[-1])
+    res.append(player_df['TS_PCT_ROLLING_AVG_10'].iloc[-1])
+    res.append(player_df['PIE_WITHOUT_STAR'].iloc[-1])
+    res.append(player_df['PLAYER_PAINT_X_OPP_PAINT_DEF_RECENT'].iloc[-1])   # NEW
+    res.append(player_df['MIN_LAG_1'].iloc[-1])                             # NEW
+    res.append(player_df['MIN_LAG_2'].iloc[-1])                             # NEW
+    res.append(player_df['MIN_AVG_TO_DATE'].iloc[-1])                       # NEW
+    res.append(player_df['MIN_ROLLING_AVG_10'].iloc[-1])                    # NEW
+    res.append(player_df['MIN_VOLATILITY_10_TO_DATE'].iloc[-1])             # NEW
+    res.append(player_df['PTS_STD_LAST_40'].iloc[-1])                       # NEW
 
     return res
+
 
 def teamContext(player_name, data, teamStarPlayer, projectedStartingFive): 
     player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
@@ -176,6 +207,11 @@ def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     else:
         res.append(0 * player_df['USG_PCT_AVG_TO_DATE'].iloc[-1])
         res.append(0 * player_df['PTS_AVG_TO_DATE'].iloc[-1])
+
+    if player_df['PLAYER_NAME'].iloc[-1] in projectedStartingFive[player_team]:
+        res.append(1 * player_df['TEAM_OFF_RATING_AVG_TO_DATE'].iloc[-1])
+    else:
+        res.append(0 * player_df['TEAM_OFF_RATING_AVG_TO_DATE'].iloc[-1])
     return res
 
 def playerVsOpp(player_name, data, current_date):
@@ -199,7 +235,7 @@ def playerVsOpp(player_name, data, current_date):
     res.append(player_df['PLAYER_PAINT_X_OPP_PAINT_DEF'].iloc[-1])
     res.append(player_df['PTS_PER_MIN'].iloc[-1] * opp_df['OPP_DEF_RATING_AVG_TO_DATE'].iloc[-1])  # Get last value first
     res.append(player_df['USG_PCT_AVG_TO_DATE'].iloc[-1] * opp_df['OPP_DEF_RATING_AVG_TO_DATE'].iloc[-1])  # Get last value first
-    
+        
     return res
 
 def playerZones(player_name, data):
@@ -209,15 +245,15 @@ def playerZones(player_name, data):
         return None
     res = []
     
-    # KEEP - these are in your new feature list
     res.append(player_df['percentagePointsPaint_AVG_TO_DATE'].iloc[-1])
+    res.append(player_df['percentagePointsPaint_ROLLING_AVG_25'].iloc[-1])
     res.append(player_df['percentagePointsPaint_ROLLING_AVG_40'].iloc[-1])
-    res.append(player_df['FTM_ROLLING_AVG_15'].iloc[-1])
-    res.append(player_df['PIE_WITHOUT_STAR'].iloc[-1])
+    res.append(player_df['percentagePointsPaint_ROLLING_AVG_5'].iloc[-1])
     res.append(player_df['percentagePointsPaint_STD_LAST_40'].iloc[-1])
     res.append(player_df['percentagePoints2pt_ROLLING_AVG_15'].iloc[-1])
+    res.append(player_df['percentagePointsPaint_EXPANDING_VOLATILITY_TO_DATE'].iloc[-1])
     res.append(player_df['FTM_AVG_TO_DATE'].iloc[-1])
-    
+
     return res
 
 def playerHomeAway(player_name, data):
@@ -226,10 +262,9 @@ def playerHomeAway(player_name, data):
         print(f"No data found for {player_name}")
         return None
     res = []
-    
-    # KEEP - this is in your new feature list
     res.append(player_df['PLAYER_AWAY_AVG_percentagePointsPaint_TO_DATE'].iloc[-1])
-    
+    res.append(player_df['PLAYER_AWAY_AVG_PTS_TO_DATE'].iloc[-1])
+
     return res
 
 def playerMatchup(player_name, data, current_date):
@@ -237,9 +272,13 @@ def playerMatchup(player_name, data, current_date):
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
+    opp_team, _ = findOpp(player_name, data, current_date)
+    oppData = player_df[player_df['OPP_ABBREVIATION'] == opp_team]
     res = []
     
     # Features from your new list
+    res.append(oppData['PTS'].tail(5).mean())
+    res.append(oppData['USG_PCT'].tail(5).mean())
     res.append(player_df['PFD_ROLLING_AVG_10'].iloc[-1])
     res.append(player_df['RBC_ROLLING_AVG_40'].iloc[-1])
     
