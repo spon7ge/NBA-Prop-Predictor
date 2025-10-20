@@ -146,7 +146,7 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     }
 
 
-def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100, simulations=10000, 
+def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, simulations=10000, 
                std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
 
     print("Processing single bets...")
@@ -167,7 +167,7 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
 
         # Get prediction using your predictPTS function
         try:
-            prediction = predictStats(name, data, model, features)
+            prediction = makePrediction(name, data, model, features, current_date)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -232,7 +232,7 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
     return pd.DataFrame(results)
 
     
-def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, stake=100, 
+def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, 
                       simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing pairs...")
@@ -262,7 +262,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
 
         # Get prediction using your predictPTS function
         try:
-            prediction = predictStats(name, data, model, features)
+            prediction = makePrediction(name, data, model, features, current_date)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -364,7 +364,7 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
 
     return pd.DataFrame(pair_results)
 
-def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
+def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100,
                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing 3-leg parlays...")
@@ -394,7 +394,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
 
         # Get prediction
         try:
-            prediction = predictStats(name, data, model, features)
+            prediction = makePrediction(name, data, model, features, current_date)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue

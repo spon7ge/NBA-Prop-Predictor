@@ -6,9 +6,10 @@ from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import uniform, randint
 
 
-def build_recent_weights(df, player_col, recent_n=30, recent_weight=3.0):
+def build_recent_weights(df, player_col, recent_n=15, recent_weight=5.0):
     w = np.ones(len(df), dtype=float)
-    idx = df.groupby(player_col, sort=False).tail(recent_n).index
+    df_reset = df.reset_index(drop=True)
+    idx = df_reset.groupby(player_col, sort=False).tail(recent_n).index
     w[idx] = recent_weight
     return w
 
@@ -107,6 +108,10 @@ def fit_train_val(
 
     train_df = train_df.sort_values(date_col).reset_index(drop=True)
     val_df = val_df.sort_values(date_col).reset_index(drop=True)
+    
+    rolling_avg_cols = ['PTS_ROLLING_AVG_40', 'PTS_ROLLING_AVG_15', 'PTS_ROLLING_AVG_10']
+    train_df = train_df.dropna(subset=rolling_avg_cols)
+    val_df = val_df.dropna(subset=rolling_avg_cols)
 
     X_tr = train_df[features]
     y_tr = train_df[target_col].to_numpy()

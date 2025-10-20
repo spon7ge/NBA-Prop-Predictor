@@ -8,7 +8,7 @@ from nba_api.stats.static import teams
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
-from FEATURES.featuresV2 import engineerPlayerPlaybyPlayBasics, quarterStatsDiff
+from FEATURES.featuresV2 import engineerPlayerPlaybyPlayBasics, quarterStatsDiff, cleanPlaybyPlay
 
 class FetchPlayersStatsV2:
     def __init__(self, default_season='2024-25', sleep_time=0.1):
@@ -25,9 +25,6 @@ class FetchPlayersStatsV2:
 
         df['OPP_ABBREVIATION'] = df['MATCHUP'].str.extract(r'(?:vs\.|@) ([A-Z]+)')
         df['HOME_GAME'] = df['MATCHUP'].str.contains(r'vs\.').astype(int)
-        fga, fta, pts, fgm, fg3m = df['FGA'], df['FTA'], df['PTS'], df['FGM'], df['FG3M']
-        df['POINT_PER_SHOT'] = np.where(fga == 0, 0.0, pts / (fga + 0.44 * fta)).round(3)
-        df['EFG'] = (fgm + 0.5 * fg3m) / fga
 
         cols = [
             'PLAYER_NAME', 'PLAYER_ID', 'MATCHUP', 'TEAM_ABBREVIATION', 'TEAM_ID',
@@ -35,7 +32,7 @@ class FetchPlayersStatsV2:
             'PTS', 'AST', 'REB', 'FGM', 'FGA', 'FG_PCT',
             'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT',
             'OREB', 'DREB', 'STL', 'BLK', 'TOV', 
-            'PLUS_MINUS', 'FANTASY_PTS', 'POINT_PER_SHOT', 'EFG'
+            'PLUS_MINUS', 'FANTASY_PTS'
         ]
         return df[cols]
 
@@ -125,14 +122,23 @@ class FetchPlayersStatsV2:
             try:
                 time.sleep(sleep_time * (attempt + 1))
                 
+                # Fetch play-by-play data ONCE per game
+                try:
+                    game_pbp_data = cleanPlaybyPlay(game_id)
+                    print(f"[SUCCESS] Fetched play-by-play data for game {game_id}")
+                except Exception as e:
+                    print(f"[ERROR] Failed to fetch play-by-play data for game {game_id}: {e}")
+                    return pd.DataFrame()
+                
+                # Process each player using the same game data
                 for player_id in player_ids:
                     try:
-                        # Get play-by-play features
-                        pbp_data = engineerPlayerPlaybyPlayBasics(game_id, player_id)
+                        # Pass the pre-fetched data to avoid redundant API calls
+                        pbp_data = engineerPlayerPlaybyPlayBasics(game_id, player_id, game_pbp_data)
                         pbp_data = quarterStatsDiff(pbp_data)
                         all_pbp_stats.append(pbp_data)
                     except Exception as e:
-                        print(f"[ERROR] Play-by-play for player {player_id} in game {game_id}: {e}")
+                        print(f"[ERROR] Processing player {player_id} in game {game_id}: {e}")
                         continue
                 
                 if all_pbp_stats:
