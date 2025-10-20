@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 import joblib
-from PROPS_EV.calculateEVS import *
 from MODELS.pipeline import *
+from BACKTEST.backtestCalculateEVS import backtest2legs as calculatePairs
+from BACKTEST.backtestCalculateEVS import backtestSingleBet as calculateSingleBet
+from BACKTEST.backtestCalculateEVS import backtest3Legs as calculate3Legs
 
 def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
@@ -17,11 +20,12 @@ def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold
         print(f"No bets found for {gameDate}")
         return pd.DataFrame()
 
-    results = single_bet(
+    results = calculateSingleBet(
     data=data,
     bookmakers=backtestData,
     model=model,
     features=features,
+    edge_threshold=edge_threshold,
     stake=100,
     simulations=simulations,
     stat_col=stat_col)
@@ -76,7 +80,7 @@ def backtestSingle(data, backtestData, gameDate, model, features, edge_threshold
     return pd.DataFrame(results)
 
 
-def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
+def backtestPairs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
     if stat_col == 'PTS':
         category = 'player_points'
@@ -92,11 +96,12 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
         return pd.DataFrame()
 
     # Get PrizePicks pairs EV calculations
-    results = prizepickspairsEV(
+    results = calculatePairs(
         data=data,
         bookmakers=backtestData,
         model=model,
         features=features,
+        edge_threshold=edge_threshold,
         stake=100,
         simulations=simulations,
         stat_col=stat_col
@@ -196,7 +201,7 @@ def backtestPrizePicksPairs(data, backtestData, gameDate, model, features, edge_
 
     return pd.DataFrame(backtest_results)
 
-def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
+def backtestTrios(data, backtestData, gameDate, model, features, edge_threshold=4.5, top_n=10, simulations=10000, stat_col='PTS'):
     data = data[data['GAME_DATE'] < gameDate]
     if stat_col == 'PTS':
         category = 'player_points'
@@ -213,11 +218,12 @@ def backtestPrizePicks3Legs(data, backtestData, gameDate, model, features, edge_
         return pd.DataFrame()
 
     # Get PrizePicks 3-leg EV calculations
-    results = prizepicks3LegEV(
+    results = calculate3Legs(
         data=data,
         bookmakers=backtestData,
         model=model,
         features=features,
+        edge_threshold=edge_threshold,
         stake=100,
         simulations=simulations,
         stat_col=stat_col

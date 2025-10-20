@@ -6,7 +6,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from nba_api.stats.endpoints import scoreboardv2
-from MODELS.pipeline import *
+from MODELS.teamInfo import *
 
 
 # Convert UTC to ET and create game_date column
@@ -146,7 +146,7 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     }
 
 
-def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, simulations=10000, 
+def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, stake=100, simulations=10000, 
                std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
 
     print("Processing single bets...")
@@ -165,9 +165,9 @@ def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4
         if player_df.empty or stat_col not in player_df.columns:
             continue
 
-        # Get prediction using your predictPTS function
+        # Get prediction using original function
         try:
-            prediction = makePrediction(name, data, model, features, current_date)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -232,7 +232,7 @@ def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4
     return pd.DataFrame(results)
 
     
-def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, 
+def backtest2legs(data, bookmakers, model, features, edge_threshold=4.5, stake=100, 
                       simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing pairs...")
@@ -263,7 +263,7 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
 
         if name not in prediction_cache:
             try:
-                prediction_cache[name] = makePrediction(name, data, model, features, current_date)
+                prediction_cache[name] = predictStats(name, data, model, features)
             except Exception as e:
                 print(f"Error getting prediction for {name}: {e}")
                 continue
@@ -366,7 +366,7 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
 
     return pd.DataFrame(pair_results)
 
-def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100,
+def backtest3Legs(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing 3-leg parlays...")
@@ -396,7 +396,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_thres
 
         # Get prediction
         try:
-            prediction = makePrediction(name, data, model, features, current_date)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue

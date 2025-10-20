@@ -46,7 +46,9 @@ class Odds_Scraper():
             if response.status_code == 200:
                 data = response.json()
                 props = []
-                commence_time = data.get('commence_time', '')
+                # Extract just the date portion (YYYY-MM-DD) from the ISO timestamp
+                commence_time_raw = data.get('commence_time', '')
+                commence_time = commence_time_raw.split('T')[0] if commence_time_raw else ''
                 
                 for bookmaker in data['bookmakers']:
                     for market in bookmaker['markets']:
