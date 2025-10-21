@@ -107,8 +107,12 @@ def backtestPairs(data, backtestData, gameDate, model, features, edge_threshold=
         stat_col=stat_col
     )
     
-    # Sort by EV% and take top pairs
-    evData = results.sort_values(by='EV%', ascending=False).head(top_n)
+    results = results.assign(min_edge=results.apply(lambda row: min(
+        abs(row['PREDICTION 1'] - row['LINE 1']),
+        abs(row['PREDICTION 2'] - row['LINE 2'])
+    ), axis=1))
+
+    evData = results.sort_values(by='min_edge', ascending=False).head(top_n)
     
     if evData.empty:
         print(f"No valid pairs found for {gameDate}")
@@ -196,6 +200,7 @@ def backtestPairs(data, backtestData, gameDate, model, features, edge_threshold=
             'pair_won': pair_won,
             'ev_percent': row['EV%'],
             'probability': row['PROBABILITY'],
+            'min_edge': row['min_edge'],
             'date': gameDate
         })
 
@@ -229,8 +234,13 @@ def backtestTrios(data, backtestData, gameDate, model, features, edge_threshold=
         stat_col=stat_col
     )
     
-    # Sort by EV% and take top parlays
-    evData = results.sort_values(by='EV%', ascending=False).head(top_n)
+    results = results.assign(min_edge=results.apply(lambda row: min(
+        abs(row['PREDICTION 1'] - row['LINE 1']),
+        abs(row['PREDICTION 2'] - row['LINE 2']),
+        abs(row['PREDICTION 3'] - row['LINE 3'])
+    ), axis=1))
+
+    evData = results.sort_values(by='min_edge', ascending=False).head(top_n)
     
     if evData.empty:
         print(f"No valid 3-leg parlays found for {gameDate}")
@@ -342,6 +352,7 @@ def backtestTrios(data, backtestData, gameDate, model, features, edge_threshold=
             'parlay_won': parlay_won,
             'ev_percent': row['EV%'],
             'probability': row['PROBABILITY'],
+            'min_edge': row['min_edge'],
             'date': gameDate
         })
 

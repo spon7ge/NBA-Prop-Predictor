@@ -146,7 +146,7 @@ def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=1000
     }
 
 
-def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, simulations=10000, 
+def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100, simulations=10000, 
                std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
 
     print("Processing single bets...")
@@ -167,7 +167,7 @@ def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4
 
         # Get prediction using your predictPTS function
         try:
-            prediction = makePrediction(name, data, model, features, current_date)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
@@ -232,7 +232,7 @@ def single_bet(data, bookmakers, model, features, current_date, edge_threshold=4
     return pd.DataFrame(results)
 
     
-def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100, 
+def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, stake=100, 
                       simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing pairs...")
@@ -241,7 +241,7 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
         'CATEGORY': 'first',
         'BOOKMAKER': 'first',
         'ODDS': 'first',
-        'SIDE': 'first'
+        'OVER/UNDER': 'first'
     }).reset_index()
     
     prediction_cache = {}
@@ -253,7 +253,7 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
         bookmaker = row['BOOKMAKER']
         odds = int(row['ODDS'])
         line = float(row['LINE'])
-        side = row.get('SIDE', 'over')
+        side = row.get('OVER/UNDER', 'over')
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -263,7 +263,7 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
 
         if name not in prediction_cache:
             try:
-                prediction_cache[name] = makePrediction(name, data, model, features, current_date)
+                prediction_cache[name] = predictStats(name, data, model, features)
             except Exception as e:
                 print(f"Error getting prediction for {name}: {e}")
                 continue
@@ -364,9 +364,9 @@ def prizepickspairsEV(data, bookmakers, model, features, current_date, edge_thre
                 'KELLY': round(kelly_full, 3),
             })
 
-    return pd.DataFrame(pair_results)
+        return pd.DataFrame(pair_results)
 
-def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_threshold=4.5, stake=100,
+def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
     print("Processing 3-leg parlays...")
@@ -375,7 +375,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_thres
         'CATEGORY': 'first',
         'BOOKMAKER': 'first',
         'ODDS': 'first',
-        'SIDE': 'first'
+        'OVER/UNDER': 'first'
     }).reset_index()
     
     legs = []
@@ -386,7 +386,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_thres
         bookmaker = row['BOOKMAKER']
         odds = int(row['ODDS'])
         line = float(row['LINE'])
-        side = row.get('SIDE', 'over')
+        side = row.get('OVER/UNDER', 'over')
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -396,7 +396,7 @@ def prizepicks3LegEV(data, bookmakers, model, features, current_date, edge_thres
 
         # Get prediction
         try:
-            prediction = makePrediction(name, data, model, features, current_date)
+            prediction = predictStats(name, data, model, features)
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
