@@ -161,6 +161,17 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
         side = row.get('SIDE', 'over')
         odds = int(row['ODDS'])
 
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
+
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
             continue
@@ -217,7 +228,7 @@ def single_bet(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
             'LINE': line,
             'ODDS': odds,
             'SIDE': side,
-            'PREDICTION': float(prediction),
+            'PREDICTION': float(round(prediction, 2)),
             'RECOMMENDATION': recommendation,
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
@@ -254,6 +265,17 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
         odds = int(row['ODDS'])
         line = float(row['LINE'])
         side = row.get('OVER/UNDER', 'over')
+
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -338,24 +360,23 @@ def prizepickspairsEV(data, bookmakers, model, features, edge_threshold=4.5, sta
 
             pair_results.append({
                 'PLAYER 1': leg1['NAME'],
-                'CATEGORY 1': leg1['CATEGORY'],
-                'BOOKMAKER 1': leg1['BOOKMAKER'],
-                'ODDS 1': leg1['ODDS'],
+                'PLAYER 2': leg2['NAME'],
+                'CATEGORY': leg1['CATEGORY'],
+                # 'BOOKMAKER 1': leg1['BOOKMAKER'],
+                # 'ODDS 1': leg1['ODDS'],
                 'LINE 1': leg1['LINE'],
+                'LINE 2': leg2['LINE'],
                 'PREDICTION 1': round(leg1['PREDICTION'], 2),
+                'PREDICTION 2': round(leg2['PREDICTION'], 2),
                 'MODEL_SIDE 1': leg1['MODEL_SIDE'],
+                'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                 'OVER% 1': round(leg1['OVER%'], 3),
                 'UNDER% 1': round(leg1['UNDER%'], 3),
-                'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
-                'PLAYER 2': leg2['NAME'],
-                'CATEGORY 2': leg2['CATEGORY'],
-                'BOOKMAKER 2': leg2['BOOKMAKER'],
-                'ODDS 2': leg2['ODDS'],
-                'LINE 2': leg2['LINE'],
-                'PREDICTION 2': round(leg2['PREDICTION'], 2),
-                'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                 'OVER% 2': round(leg2['OVER%'], 3),
                 'UNDER% 2': round(leg2['UNDER%'], 3),
+                'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
+                # 'BOOKMAKER 2': leg2['BOOKMAKER'],
+                # 'ODDS 2': leg2['ODDS'],
                 'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
                 'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}",
                 'RECOMMENDATION': recommendation,
@@ -388,6 +409,17 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
         line = float(row['LINE'])
         side = row.get('OVER/UNDER', 'over')
 
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
+            
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
             continue
@@ -484,38 +516,27 @@ def prizepicks3LegEV(data, bookmakers, model, features, edge_threshold=4.5, stak
 
                 parlay_results.append({
                     'PLAYER 1': leg1['NAME'],
-                    'CATEGORY 1': leg1['CATEGORY'],
-                    'BOOKMAKER 1': leg1['BOOKMAKER'],
-                    'ODDS 1': leg1['ODDS'],
+                    'PLAYER 2': leg2['NAME'],
+                    'PLAYER 3': leg3['NAME'],
+                    'CATEGORY': leg1['CATEGORY'],
                     'LINE 1': leg1['LINE'],
+                    'LINE 2': leg2['LINE'],
+                    'LINE 3': leg3['LINE'],
                     'PREDICTION 1': round(leg1['PREDICTION'], 2),
+                    'PREDICTION 2': round(leg2['PREDICTION'], 2),
+                    'PREDICTION 3': round(leg3['PREDICTION'], 2),
                     'MODEL_SIDE 1': leg1['MODEL_SIDE'],
+                    'MODEL_SIDE 2': leg2['MODEL_SIDE'],
+                    'MODEL_SIDE 3': leg3['MODEL_SIDE'],
                     'OVER% 1': round(leg1['OVER%'], 3),
                     'UNDER% 1': round(leg1['UNDER%'], 3),
-                    'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
-                    
-                    'PLAYER 2': leg2['NAME'],
-                    'CATEGORY 2': leg2['CATEGORY'],
-                    'BOOKMAKER 2': leg2['BOOKMAKER'],
-                    'ODDS 2': leg2['ODDS'],
-                    'LINE 2': leg2['LINE'],
-                    'PREDICTION 2': round(leg2['PREDICTION'], 2),
-                    'MODEL_SIDE 2': leg2['MODEL_SIDE'],
                     'OVER% 2': round(leg2['OVER%'], 3),
                     'UNDER% 2': round(leg2['UNDER%'], 3),
-                    'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
-                    
-                    'PLAYER 3': leg3['NAME'],
-                    'CATEGORY 3': leg3['CATEGORY'],
-                    'BOOKMAKER 3': leg3['BOOKMAKER'],
-                    'ODDS 3': leg3['ODDS'],
-                    'LINE 3': leg3['LINE'],
-                    'PREDICTION 3': round(leg3['PREDICTION'], 2),
-                    'MODEL_SIDE 3': leg3['MODEL_SIDE'],
                     'OVER% 3': round(leg3['OVER%'], 3),
                     'UNDER% 3': round(leg3['UNDER%'], 3),
+                    'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
+                    'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
                     'CONFIDENCE INTERVAL 3': f"({leg3['CI'][0]:.1f}, {leg3['CI'][1]:.1f})",
-                    
                     'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}/{leg3['MODEL_SIDE']}",
                     'RECOMMENDATION': recommendation,
                     'PROBABILITY': round(p_all_three, 4),

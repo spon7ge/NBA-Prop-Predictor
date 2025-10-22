@@ -4,6 +4,6 @@ from NBAPropFinder.TeamLines import fetchTeamLines
 from datetime import datetime
 
 # recomend using one of these at a time
-nba_props = NBAPropFinder(region='us_dfs')
+nba_props = NBAPropFinder(region='us')
 # nba_team_lines = fetchTeamLines(date=datetime.now().strftime("%Y-%m-%d"))
 # wnba_props = WNBAPropFinder(region='us')
