@@ -74,13 +74,16 @@ def tune_xgb_hyperparams(X_train, y_train, X_val, y_val, sample_weight=None, use
         "learning_rate": uniform(0.005, 0.02)
     }
 
+    # GPU-optimized search
+    n_jobs = 1 if use_gpu else -1  # Use 1 job when GPU is enabled
+    
     search = RandomizedSearchCV(
         estimator=xgb,
         param_distributions=param_dist,
         n_iter=n_iter,
-        scoring="r2",
-        n_jobs=-1,
-        cv=[(range(len(y_train)), range(len(y_val)))],  # train/val split manually defined
+        scoring="neg_root_mean_squared_error",
+        n_jobs=n_jobs,  # Updated for GPU
+        cv=[(range(len(y_train)), range(len(y_val)))],
         verbose=1,
         random_state=42
     )
