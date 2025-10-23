@@ -100,7 +100,7 @@ with st.expander("Betting Metrics Explained", expanded=False):
 
 # Add metric explanations in sidebar
 with st.sidebar:
-    st.header("📊 Quick Reference")
+    st.header("Quick Reference")
     
     st.markdown("### EV% Guide")
     st.markdown("""
@@ -117,7 +117,7 @@ with st.sidebar:
     - **Quarter**: Safest
     """)
     
-    st.markdown("### 💡 Pro Tips")
+    st.markdown("### Pro Tips")
     st.markdown("""
     1. Focus on green highlighted bets
     2. Start with Kelly Half sizing

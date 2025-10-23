@@ -113,34 +113,8 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
 
-    stats_cols = [
-    # Core stats that made top 150
-    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
-    'FG_PCT', 'EFG_PCT', 'TS_PCT',
-    
-    # Usage and pace metrics
-    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
-    
-    # Shooting percentages that appear in top 150
-    'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
-    'percentagePoints2pt', 'percentagePoints3pt',
-    'percentagePointsMidrange2pt',
-    'percentageAssisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
-    'percentagePointsOffTurnovers',
-    
-    # Defensive and advanced stats
-    'UFGA', 'DFGM', 'DFGA',
-    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
-    
-    # Passing and touches
-    'SAST', 'CFGM', 'CFGA', 
-    
-    # Other advanced metrics
-    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
-    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
+    stats_cols = [ 'PTS', 'FGA', 'FG3A', 'FTM', 'FG_PCT', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'TCHS', 'POSS', 'EFG_PCT',
+                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow'
 ]
 
     for window in windows:
@@ -157,7 +131,8 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
 
 def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     player_data = player_data.sort_values([player_id_col, date_col])
-    stat_lines = ['PTS', 'MIN', 'FGA', 'FG3A', 'FTA', 'FGM', 'FG3M', 'FTM', 'FG_PCT', 'EFG_PCT', 'TS_PCT', 'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE', 'percentagePointsPaint', 'percentagePointsFreeThrow', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePoints3pt', 'percentagePointsMidrange2pt', 'percentageAssisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'percentagePointsOffTurnovers', 'UFGA', 'DFGM', 'DFGA', 'ORBC', 'DRBC', 'RBC', 'DREB_PCT', 'SAST', 'CFGM', 'CFGA', 'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',  'PTS_2ND_CHANCE', 'PTS_PAINT', 'TOV', 'PF']
+    stat_lines = ['PTS', 'FGA', 'FG3A', 'FTM', 'FG_PCT', 'TS_PCT', 'POSS',
+ 'USG_PCT', 'MIN', 'PACE', 'EFG_PCT', 'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow']
     
     for stat_line in stat_lines:
         if stat_line not in player_data.columns:
@@ -186,43 +161,19 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats
-    stats_cols = [
-    # Core stats that made top 150
-    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
-    'FG_PCT', 'EFG_PCT', 'TS_PCT',
-    
-    # Usage and pace metrics
-    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
-    
-    # Shooting percentages that appear in top 150
-    'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
-    'percentagePoints2pt', 'percentagePoints3pt',
-    'percentagePointsMidrange2pt',
-    'percentageAssisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
-    'percentagePointsOffTurnovers',
-    
-    # Defensive and advanced stats
-    'UFGA', 'DFGM', 'DFGA',
-    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
-    
-    # Passing and touches
-    'SAST', 'CFGM', 'CFGA', 
-    
-    # Other advanced metrics
-    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
-    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
-]
+    stats_cols = ['PTS', 'FGA', 'FG3A', 'FTM', 'FG_PCT', 'TS_PCT', 'POSS',
+                'USG_PCT', 'MIN', 'PACE', 'TCHS', 'EFG_PCT', 'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow']
 
     for stat in stats_cols:
         if stat in df_enhanced.columns:
+            print(f"Creating {stat}_AVG_TO_DATE")
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
                 df_enhanced.groupby(player_id_col)[stat]
                 .transform(lambda x: x.shift(1).expanding().mean())
                 .round(2)
             )
+        else:
+            print(f"Column {stat} not found in dataframe")
     
     # Add games played counter
     df_enhanced['GAMES_PLAYED_TO_DATE'] = (
@@ -246,35 +197,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = [
-    # Core stats that made top 150
-    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
-    'FG_PCT', 'EFG_PCT', 'TS_PCT',
-    
-    # Usage and pace metrics
-    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
-    
-    # Shooting percentages that appear in top 150
-    'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt',
-    'percentagePoints2pt', 'percentagePoints3pt',
-    'percentagePointsMidrange2pt',
-    'percentageAssisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
-    'percentagePointsOffTurnovers',
-    
-    # Defensive and advanced stats
-    'UFGA', 'DFGM', 'DFGA',
-    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
-    
-    # Passing and touches
-    'SAST', 'CFGM', 'CFGA', 
-    
-    # Other advanced metrics
-    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
-    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
-]
+    metrics = ['PTS', 'FGA', 'FG3A', 'FTM', 'FG_PCT', 'TS_PCT', 'USG_PCT', 'MIN', 'EFG_PCT']
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
         return df
@@ -330,26 +253,15 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     
     # Define metrics to track with their windows
     metrics = {
-        'MIN': [3,5,10,15],
-        'FGA': [3,5,10,15],
-        'FG3A': [3,5,10,15],
-        'FTA': [3,5,10,15],
-        'PTS': [3,5,10,15],
-        'USG_PCT': [3,5,10,15],
-        'EFG_PCT': [3,5,10,15],
-        'TS_PCT': [3,5,10,15],
-        'POSS': [3,5,10,15],
-        'TCHS': [3,5,10,15],
-        'PASS': [3,5,10,15],
-        'SAST': [3,5,10,15],
-        'FTAST': [3,5,10,15],
-        'TOV': [3,5,10,15],
-        'POINT_PER_SHOT': [3,5,10,15],
-        'PLUS_MINUS': [3,5,10,15],
-        'NET_RATING': [3,5,10,15],
-        'PIE': [3,5,10,15],
-        'SPD': [3,5,10,15],
-        'DIST': [3,5,10,15],
+        'MIN': [3,5],
+        'FGA': [3,5],
+        'FG3A': [3,5],
+        'FTA': [3,5],
+        'PTS': [3,5],
+        'USG_PCT': [3,5],
+        'EFG_PCT': [3,5],
+        'TS_PCT': [3,5],
+        'TCHS': [3,5],
         
     }
     
@@ -801,18 +713,11 @@ def expectedPace(df):
         # Silently handle missing columns
         df['EXPECTED_PACE'] = np.nan
         df['EXPECTED_PACE_DIFF'] = np.nan
-        df['EXPECTED_PACE_DIFF_ROLLING_AVG_5'] = np.nan
-        df['EXPECTED_PACE_DIFF_ROLLING_AVG_10'] = np.nan
-        df['EXPECTED_PACE_DIFF_ROLLING_AVG_15'] = np.nan
         return df
     
     # Calculate expected pace by multiplying team and opponent pace averages
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_AVG_TO_DATE'] + df['OPP_PACE_AVG_TO_DATE']) / 2).round(2)
     df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']
-    df['EXPECTED_PACE_DIFF_ROLLING_AVG_5'] = df['TEAM_PACE_ROLLING_AVG_5'] - df['OPP_PACE_ROLLING_AVG_5']
-    df['EXPECTED_PACE_DIFF_ROLLING_AVG_10'] = df['TEAM_PACE_ROLLING_AVG_10'] - df['OPP_PACE_ROLLING_AVG_10']
-    df['EXPECTED_PACE_DIFF_ROLLING_AVG_15'] = df['TEAM_PACE_ROLLING_AVG_15'] - df['OPP_PACE_ROLLING_AVG_15']
-    # Handle any NaN values that might result from missing data
     df['EXPECTED_PACE'] = df['EXPECTED_PACE'].fillna(np.nan)
     return df
 
@@ -1022,11 +927,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
     # Define metrics to track when star is out
-    metrics = [
-        'PTS', 'MIN', 'USG_PCT', 'FGA', 'FG3A', 'FTA',
-        'FG_PCT', 'FG3_PCT', 'FT_PCT', 'EFG_PCT', 'TS_PCT',
-        'AST', 'POSS', 'TCHS', 'REB', 'TOV', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    ]
+    metrics = ['PTS']
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1158,7 +1059,7 @@ team_dict = {
 ##############################################################################################################
 # VOLATILITY FEATURES
 ##############################################################################################################
-def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 15, 40]):
+def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3, 5, 7,10, 15, 25, 40]):
     """
     Calculate volatility features for player performance metrics.
     Only calculates rolling standard deviation for specified windows.
@@ -1168,33 +1069,7 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate volatility for
-    volatility_stats = [
-    # Core stats that made top 150
-    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
-    'FG_PCT', 'EFG_PCT', 'TS_PCT',
-    
-    # Usage and pace metrics
-    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
-    
-    # Shooting percentages that appear in top 150
-    'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
-    'percentagePointsMidrange2pt',
-    'percentageAssisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
-    'percentagePointsOffTurnovers',
-    
-    # Defensive and advanced stats
-    'UFGA', 'DFGM', 'DFGA',
-    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
-    
-    # Passing and touches
-    'SAST', 'CFGM', 'CFGA', 
-    
-    # Other advanced metrics
-    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
-    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
+    volatility_stats = ['PTS', 'FGA', 'FG_PCT', 'TS_PCT', 'USG_PCT', 'MIN'
 ]
     
     # Filter to only available columns
@@ -1239,43 +1114,12 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
     return df
 
 
-def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 15, 40]):
-    """
-    Calculate standard deviation features for player performance metrics.
-    Calculates rolling standard deviation for specified windows (last 5, 15, 40 games).
-    """
-    # Create copy and sort data
+def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15, 25, 40]):
     df = df.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Define stats to calculate standard deviation for
-    std_stats = [
-    # Core stats that made top 150
-    'PTS', 'FGA', 'FG3A', 'FTM', 'FGM', 'FG3M',
-    'FG_PCT', 'EFG_PCT', 'TS_PCT',
-    
-    # Usage and pace metrics
-    'USG_PCT', 'E_USG_PCT', 'MIN', 'POSS', 'PACE', 'E_PACE',
-    
-    # Shooting percentages that appear in top 150
-    'percentagePointsPaint', 'percentagePointsFreeThrow', 
-    'percentageFieldGoalsAttempted2pt', 'percentagePoints2pt',
-    'percentagePointsMidrange2pt',
-    'percentageAssisted2pt', 'percentageAssisted3pt', 
-    'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM',
-    'percentagePointsOffTurnovers',
-    
-    # Defensive and advanced stats
-    'UFGA', 'DFGM', 'DFGA',
-    'ORBC', 'DRBC', 'RBC', 'DREB_PCT',
-    
-    # Passing and touches
-    'SAST', 'CFGM', 'CFGA', 
-    
-    # Other advanced metrics
-    'SPD', 'DIST', 'AST_PCT', 'NET_RATING', 'PIE', 'PLUS_MINUS',
-    'FANTASY_PTS', 'PTS_2ND_CHANCE', 'PTS_PAINT', 
-    'OPP_PTS_PAINT', 'PFD', 'STL', 'BLK', 'TOV', 'PF'
+    std_stats = ['PTS', 'FGA', 'FG3A', 'TS_PCT', 'USG_PCT', 'MIN'
 ]
     
     # Filter to only available columns
@@ -1377,13 +1221,11 @@ def add_interaction_features(df):
     df = df.copy()
     # Relative strength interactions
     df['TEAM_OFF_MINUS_OPP_DEF'] = df['TEAM_OFF_RATING_AVG_TO_DATE'] - df['OPP_DEF_RATING_AVG_TO_DATE']
-    df['TEAM_PACE_MINUS_OPP_PACE'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']
-    df['TEAM_PTS_MINUS_OPP_PTS'] = df['TEAM_PTS_AVG_TO_DATE'] - df['OPP_PTS_AVG_TO_DATE']
 
     # Player context x environment
     df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['USG_X_POSS'] = df['USG_PCT_AVG_TO_DATE'] * df['POSS_AVG_TO_DATE']
-    df['USG_X_OPP_DEF_RATING'] = df['USG_PCT_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
+    # df['USG_X_OPP_DEF_RATING'] = df['USG_PCT_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
     df['USG_X_TEAM_OFF'] = df['USG_PCT_AVG_TO_DATE'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
@@ -1391,40 +1233,25 @@ def add_interaction_features(df):
                                                               df['TEAM_IMPLIED_PTS_UND'])
 
     # Shooting style x matchup fit
-    df['PLAYER_3PT_X_OPP_3PT_DEF_GUARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_3PT_X_OPP_3PT_DEF_FORWARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_3PT_X_OPP_3PT_DEF_CENTER'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
+    # df['PLAYER_3PT_X_OPP_3PT_DEF_GUARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+    # df['PLAYER_3PT_X_OPP_3PT_DEF_FORWARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
+    # df['PLAYER_3PT_X_OPP_3PT_DEF_CENTER'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
     df['PLAYER_PAINT_X_OPP_PAINT_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_PTS_PAINT']
 
     df['PLAYER_PAINT_X_OPP_PAINT_DEF_GUARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
     df['PLAYER_PAINT_X_OPP_PAINT_DEF_FORWARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
     df['PLAYER_PAINT_X_OPP_PAINT_DEF_CENTER'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_MID_X_OPP_MID_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
 
-    df['PLAYER_3PT_X_OPP_3PT_DEF_GUARD_RECENT'] = df['percentageFieldGoalsAttempted3pt_ROLLING_AVG_5'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_3PT_X_OPP_3PT_DEF_FORWARD_RECENT'] = df['percentageFieldGoalsAttempted3pt_ROLLING_AVG_5'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_3PT_X_OPP_3PT_DEF_CENTER_RECENT'] = df['percentageFieldGoalsAttempted3pt_ROLLING_AVG_5'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_RECENT'] = df['percentagePointsPaint_ROLLING_AVG_5'] * df['OPP_PTS_PAINT']
+    df['PLAYER_MID_X_FORWARD_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+    df['PLAYER_MID_X_GUARD_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
 
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_FORWARD_RECENT'] = df['percentagePointsPaint_ROLLING_AVG_5'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_CENTER_RECENT'] = df['percentagePointsPaint_ROLLING_AVG_5'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_MID_X_OPP_MID_DEF_RECENT'] = df['percentagePointsMidrange2pt_ROLLING_AVG_5'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-
-    df['OPP_GUARD_DEF_RATING'] = df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
-    df['OPP_FORWARD_DEF_RATING'] = df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    df['OPP_CENTER_DEF_RATING'] = df['OPP_CENTER_DEF_3PT_PCT_ALLOWED'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
+    df['PLAYER_3_X_FORWARD_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+    df['PLAYER_3_X_GUARD_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
 
     # Form x environment
     df['ROLLING_PTS5_X_PACE'] = df['PTS_ROLLING_AVG_5'] * df['EXPECTED_PACE']
     df['ROLLING_PTS5_X_TEAM_OFF'] = df['PTS_ROLLING_AVG_5'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['ROLLING_MIN5_X_TEAM_PTS'] = df['MIN_ROLLING_AVG_5'] * df['TEAM_PTS_AVG_TO_DATE']
-
-    # Fatigue context
-    df['REST_X_PACE'] = df['PLAYER_DAYS_REST'] * df['EXPECTED_PACE']
-    df['B2B_X_PACE'] = df['IS_BACK_TO_BACK'] * df['EXPECTED_PACE']
-    df['ROLLING_MIN_STD_X_REST'] = df['MIN_STD_LAST_5'] * df['PLAYER_DAYS_REST']
-    df['ROLLING_MIN_STD_X_B2B'] = df['MIN_STD_LAST_5'] * df['IS_BACK_TO_BACK']
-    df['ROLLING_PTS_STD_X_REST'] = df['PTS_STD_LAST_5'] * df['PLAYER_DAYS_REST']
 
     # Role and status interactions
     df['STARTER_X_PACE'] = df['STARTING'] * df['EXPECTED_PACE']
@@ -1440,6 +1267,13 @@ def add_interaction_features(df):
 
     # Efficiency x volume
     df['EFG_X_FGA'] = df['EFG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE']
+    df['FGA_PER_TCHS'] = round(df['FGA_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison), 3)
+    df['FGA_PER_TCHS_ROLLING_AVG_5'] = round(df['FGA_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_5'] + eplison), 3)
+    df['FGA_PER_TCHS_ROLLING_AVG_15'] = round(df['FGA_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
+    df['FGA_PER_TCHS_ROLLING_AVG_40'] = round(df['FGA_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
+    df['FGA_PER_TCHS_X_PACE'] = round(df['FGA_PER_TCHS'] * df['EXPECTED_PACE'], 3)
+    df['FGA_PER_TCHS_X_USG'] = round(df['FGA_PER_TCHS'] * df['USG_PCT_AVG_TO_DATE'], 3)
+    df['FGA_PER_TCHS_X_TEAM_OFF'] = round(df['FGA_PER_TCHS'] * df['TEAM_OFF_RATING_AVG_TO_DATE'], 3)
     df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
     df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
     df['EXPECTED_USAGE_MIN'] = df['USG_PCT_ROLLING_AVG_5'] * (df['MIN_ROLLING_AVG_5'] + eplison)
@@ -1447,6 +1281,11 @@ def add_interaction_features(df):
     # Points per minute interactions
     df['PTS_PER_MIN'] = round(df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison), 3)
     df['PTS_PER_36'] = round(df['PTS_AVG_TO_DATE'] * 36 / (df['MIN_AVG_TO_DATE'] + eplison), 3)
+    df['PTS_PER_TCHS'] = round(df['PTS_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison), 3)
+    df['PTS_PER_TCHS_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_5'] + eplison), 3)
+    df['PTS_PER_TCHS_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
+    df['PTS_PER_TCHS_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
+    df['PTS_PER_TCHS_X_USG'] = round(df['PTS_PER_TCHS'] * df['USG_PCT_AVG_TO_DATE'], 3)
     df['PTS_PER_MIN_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_5'] + eplison), 3)
     df['PTS_PER_MIN_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['MIN_ROLLING_AVG_15'] + eplison), 3)   
     df['PTS_PER_MIN_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['MIN_ROLLING_AVG_40'] + eplison), 3)
