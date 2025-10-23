@@ -161,6 +161,17 @@ def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, sta
         side = row.get('SIDE', 'over')
         odds = int(row['ODDS'])
 
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
+
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
             continue
@@ -254,6 +265,17 @@ def backtest2legs(data, bookmakers, model, features, edge_threshold=4.5, stake=1
         odds = int(row['ODDS'])
         line = float(row['LINE'])
         side = row.get('SIDE', 'over')
+
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
@@ -387,6 +409,17 @@ def backtest3Legs(data, bookmakers, model, features, edge_threshold=4.5, stake=1
         odds = int(row['ODDS'])
         line = float(row['LINE'])
         side = row.get('SIDE', 'over')
+
+        if name == 'Nikola Jokic':
+            name = 'Nikola Jokić'
+        elif name == 'Luka Doncic':
+            name = 'Luka Dončić'
+        elif name == 'Kristaps Porzingis':
+            name = 'Kristaps Porziņģis'
+        elif name == 'Alperen Sengun':
+            name = 'Alperen Şengün'
+        elif name == 'Nikola Vucevic':
+            name = 'Nikola Vučević'
 
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
