@@ -72,22 +72,45 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
     else:
         return round(-100 / (odds_to_decimal - 1))
 
-def get_player_std(player_df, stat_col, std_window=10, min_std=2.0, max_std=8.5):
-    s = player_df[stat_col].dropna()
-    if s.empty:
-        return 5.0
-    sd = s.tail(std_window).std(ddof=1) if len(s) >= std_window else s.std(ddof=1)
-    if pd.isna(sd) or sd == 0:
-        sd = 5.0
-    return float(np.clip(sd, min_std, max_std))
-
-def predictStats(playerName, data, model, features):
+def predictStats(playerName, data, models, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
-    latestRow = playerData.sort_values(by='GAME_DATE').iloc[-1]
-    available_features = [f for f in features if f in data.columns] 
-    playerInput = latestRow[available_features]
+    sorted_data = playerData.sort_values(by='GAME_DATE')
     
-    playerInput_df = pd.DataFrame([playerInput.values], columns=available_features)
+    # Get latest row for game context and opponent context
+    latestRow = sorted_data.iloc[-1]
+    
+    # Get second-to-latest row for all other features
+    secondLatestRow = sorted_data.iloc[-2] if len(sorted_data) > 1 else latestRow
+    
+    # Define feature categories
+    game_context_features = [
+        'HOME_GAME', 'STARTING', 'PLAYER_IS_TEAM_STAR', 'STAR_SAT_OUT', 
+        'IS_BACK_TO_BACK', 'PLAYER_DAYS_REST', 'spread', 'TEAM_IMPLIED_PTS'
+    ]
+    
+    opponent_context_features = [
+        'OPP_DEF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 
+        'OPP_TOV_AVG_TO_DATE', 'OPP_GUARD_DEF_RATING', 'OPP_GUARD_DEF_FG_PCT_ALLOWED',
+        'OPP_GUARD_DEF_3PT_PCT_ALLOWED', 'OPP_GUARD_PTS_ALLOWED_PER_MIN',
+        'OPP_FORWARD_DEF_RATING', 'OPP_FORWARD_DEF_FG_PCT_ALLOWED',
+        'OPP_FORWARD_DEF_3PT_PCT_ALLOWED', 'OPP_FORWARD_PTS_ALLOWED_PER_MIN',
+        'OPP_CENTER_DEF_RATING', 'OPP_CENTER_DEF_FG_PCT_ALLOWED',
+        'OPP_CENTER_DEF_3PT_PCT_ALLOWED', 'OPP_CENTER_PTS_ALLOWED_PER_MIN',
+        'PTS_PER_MIN_X_OPP_DEF_RATING'
+    ]
+    
+    available_features = [f for f in features if f in data.columns]
+    playerInput = {}
+    
+    # Use latest row for game context and opponent context
+    for feature in available_features:
+        if feature in game_context_features or feature in opponent_context_features:
+            playerInput[feature] = latestRow[feature]
+        else:
+            # Use second-to-latest row for all other features
+            playerInput[feature] = secondLatestRow[feature]
+    
+    playerInput_df = pd.DataFrame([list(playerInput.values())], columns=list(playerInput.keys()))
     
     for col in playerInput_df.columns:
         if playerInput_df[col].dtype == 'object':
@@ -95,64 +118,22 @@ def predictStats(playerName, data, model, features):
         elif playerInput_df[col].dtype == 'bool':
             playerInput_df[col] = playerInput_df[col].astype(int)
     
-    pred = model.predict(playerInput_df)[0]
-    return float(pred)
+    # Get predictions from all quantile models
+    predictions = {}
+    for quantile_name, model in models.items():
+        pred = model.predict(playerInput_df)[0]
+        predictions[quantile_name] = float(pred)
+    
+    return predictions
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def monteCarloSim(player_df, modelPred, prop_line, std_dev, num_simulations=10000, min_std=2.0, max_std=10.0, stat_col='PTS'):
-    baseSTD = std_dev
-    volAdj = 1.0
-    vol_col = f'{stat_col}_EXPANDING_VOLATILITY_TO_DATE'
-    stat_col_actual = stat_col
-
-    # Volatility adjustment using recent vs season volatility
-    if vol_col in player_df.columns and len(player_df) >= 10:
-        recent_vol = player_df[stat_col_actual].tail(10).std()
-        season_vol = player_df[vol_col].iloc[-1]
-
-        if season_vol > 0 and not pd.isna(season_vol) and not pd.isna(recent_vol):
-            volAdj = recent_vol / season_vol
-            volAdj = 1 + (volAdj - 1) * 0.3
-            volAdj = np.clip(volAdj, 0.7, 2.0)
-
-        stdDev = baseSTD * volAdj
-    else:
-        stdDev = baseSTD
-
-    # Scale variance relative to mean
-    stdDev = max(stdDev, 0.15 * modelPred)
-    stdDev = float(np.clip(stdDev, min_std, max_std * 1.5))
-
-    # Simulate outcomes (non-negative)
-    simulated_points = np.random.normal(modelPred, stdDev, num_simulations)
-    simulated_points = np.clip(simulated_points, 0, None)
-
-    # Compute probabilities and confidence interval
-    prob_over = np.mean(simulated_points > prop_line)
-    prob_over = float(np.clip(prob_over, 0.05, 0.95))
-    prob_under = 1 - prob_over
-    ci = np.percentile(simulated_points, [2.5, 97.5])
-
-    return {
-        'model_prediction': modelPred,
-        'simulated_mean': simulated_points.mean(),
-        'simulated_std': simulated_points.std(),
-        'std_used': stdDev,
-        'vol_adjustment': volAdj,
-        'prob_over': prob_over,
-        'prob_under': prob_under,
-        'confidence_interval': (ci[0], ci[1])
-    }
-
-
-def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, stake=100, simulations=10000, 
-               std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
-
-    print("Processing single bets...")
-
+def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
+                     variance_inflation=1.1, distribution_type='normal', stat_col='PTS'):
+    print("Processing single bets with quantile models...")
+    
     results = []
-
+    
     for _, row in bookmakers.iterrows():
         name = row['NAME']
         bookmaker = row['BOOKMAKER']
@@ -160,7 +141,8 @@ def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, sta
         line = float(row['LINE'])
         side = row.get('SIDE', 'over')
         odds = int(row['ODDS'])
-
+        
+        # Handle name variations
         if name == 'Nikola Jokic':
             name = 'Nikola Jokić'
         elif name == 'Luka Doncic':
@@ -171,56 +153,72 @@ def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, sta
             name = 'Alperen Şengün'
         elif name == 'Nikola Vucevic':
             name = 'Nikola Vučević'
-
+        
+        # Get player data
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
             continue
-
-        # Get prediction using original function
+        
+        # Get quantile predictions using updated function
         try:
-            prediction = predictStats(name, data, model, features)
+            predictions = predictStats(name, data, models, features)
+            q10_pred = predictions['q10']
+            q50_pred = predictions['q50']
+            q90_pred = predictions['q90']
+            
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
-
-        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
-
-        sim_results = monteCarloSim(
-            player_df=player_df,
-            modelPred=float(prediction),
-            prop_line=line,
-            std_dev=std_dev,
-            num_simulations=simulations
-        )
-
-        p_over = float(sim_results['prob_over'])
+        
+        # Convert quantiles to distribution parameters
+        mu = q50_pred  # Median as mean
+        sigma_raw = (q90_pred - q10_pred) / 2.56  # 80% interval to std dev
+        sigma = sigma_raw * variance_inflation  # Apply variance inflation
+        
+        # Calculate probabilities using the distribution
+        if distribution_type == 'normal':
+            from scipy.stats import norm
+            p_over = 1 - norm.cdf(line, mu, sigma)
+        elif distribution_type == 't':
+            from scipy.stats import t
+            df = max(3, 2 * sigma**2 / (sigma**2 - 1))  # Rough estimate
+            p_over = 1 - t.cdf(line, df, mu, sigma)
+        else:
+            raise ValueError("distribution_type must be 'normal' or 't'")
+        
         p_under = 1.0 - p_over
-
-        # choose probability based on the offered side
+        
+        # Choose probability based on the offered side
         if str(side).upper().startswith('O'):
             p = p_over
         else:
             p = p_under
-
-        # odds and returns
-        dec_odds = american_to_decimal(odds)          
-        b = dec_odds - 1.0                             
-        profit_if_win = stake * b
-        loss_if_lose = stake
-
-        # EV in dollars and percent
+        
+        # Convert odds to decimal and calculate EV
+        dec_odds = american_to_decimal(odds)
+        b = dec_odds - 1.0
+        
+        # EV calculations
         ev_per_unit = p * b - (1 - p)
         ev_percent = ev_per_unit * 100
-
+        
         # Kelly fraction
         kelly_full = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
-
-        edge = abs(prediction - line)
-        if abs(edge) > edge_threshold:
+        
+        # Edge calculation (difference between model and market probabilities)
+        market_prob = impliedProb(odds)
+        model_prob = p_over if str(side).upper().startswith('O') else p_under
+        edge = model_prob - market_prob
+        
+        # Recommendation based on edge threshold
+        if edge > edge_threshold:
             recommendation = 1
         else:
             recommendation = 0
-
+        
+        # Confidence interval (using quantiles)
+        confidence_interval = (q10_pred, q90_pred)
+        
         results.append({
             'NAME': name,
             'BOOKMAKER': bookmaker,
@@ -228,332 +226,366 @@ def backtestSingleBet(data, bookmakers, model, features, edge_threshold=4.5, sta
             'LINE': line,
             'ODDS': odds,
             'SIDE': side,
-            'PREDICTION': float(prediction),
+            'PREDICTION': round(q50_pred, 2),
+            'Q10': round(q10_pred, 2),
+            'Q90': round(q90_pred, 2),
             'RECOMMENDATION': recommendation,
             'OVER%': round(p_over, 3),
             'UNDER%': round(p_under, 3),
-            'IMPLIED PROB': round(impliedProb(odds), 3),
+            'IMPLIED PROB': round(market_prob, 3),
+            'MODEL PROB': round(model_prob, 3),
+            'EDGE': round(edge, 3),
             'EV%': round(ev_percent, 2),
             'KELLY FULL': round(kelly_full, 2),
             'KELLY HALF': round(0.5 * kelly_full, 2),
             'KELLY QUARTER': round(0.25 * kelly_full, 2),
-            'CONFIDENCE INTERVAL': f"({sim_results['confidence_interval'][0]:.1f}, {sim_results['confidence_interval'][1]:.1f})"
+            'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
+            'SIGMA': round(sigma, 2)
         })
-
+    
     return pd.DataFrame(results)
-
     
-def backtest2legs(data, bookmakers, model, features, edge_threshold=4.5, stake=100, 
-                      simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
+def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
+                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS'):
+    data = data[data['GAME_DATE'] <= gameDate]
+    category = 'player_points'
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
+    if backtestData.empty:
+        print(f"No bets found for {gameDate}")
+        return pd.DataFrame()
+
+    # Get all available players for 2-leg combinations
+    available_players = backtestData['NAME'].unique()
+    if len(available_players) < 2:
+        print("Not enough players for 2-leg bets")
+        return pd.DataFrame()
+
+    results = []
     
-    print("Processing pairs...")
-
-    grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
-        'CATEGORY': 'first',
-        'BOOKMAKER': 'first',
-        'ODDS': 'first',
-        'SIDE': 'first'
-    }).reset_index()
-    
-    prediction_cache = {}
-    legs = []
-    
-    for _, row in grouped_bookmakers.iterrows():
-        name = row['NAME']
-        category = row['CATEGORY']
-        bookmaker = row['BOOKMAKER']
-        odds = int(row['ODDS'])
-        line = float(row['LINE'])
-        side = row.get('SIDE', 'over')
-
-        if name == 'Nikola Jokic':
-            name = 'Nikola Jokić'
-        elif name == 'Luka Doncic':
-            name = 'Luka Dončić'
-        elif name == 'Kristaps Porzingis':
-            name = 'Kristaps Porziņģis'
-        elif name == 'Alperen Sengun':
-            name = 'Alperen Şengün'
-        elif name == 'Nikola Vucevic':
-            name = 'Nikola Vučević'
-
-        player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
-        if player_df.empty or stat_col not in player_df.columns:
-            continue
-
-        player_team = player_df['TEAM_ABBREVIATION'].iloc[0]
-
-        if name not in prediction_cache:
+    # Generate all 2-leg combinations
+    for i in range(len(available_players)):
+        for j in range(i + 1, len(available_players)):
+            player1 = available_players[i]
+            player2 = available_players[j]
+            
+            # Get player data
+            player1_data = data[data['PLAYER_NAME'] == player1]
+            player2_data = data[data['PLAYER_NAME'] == player2]
+            
+            if player1_data.empty or player2_data.empty:
+                continue
+                
+            # Get betting lines for both players
+            player1_bets = backtestData[backtestData['NAME'] == player1]
+            player2_bets = backtestData[backtestData['NAME'] == player2]
+            
+            if player1_bets.empty or player2_bets.empty:
+                continue
+            
+            # Use the first available line for each player
+            player1_line = player1_bets.iloc[0]
+            player2_line = player2_bets.iloc[0]
+            
+            # Get quantile predictions for both players
             try:
-                prediction_cache[name] = predictStats(name, data, model, features)
+                pred1 = predictStats(player1, data, models, features)
+                pred2 = predictStats(player2, data, models, features)
+                
+                q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
+                q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
+                
             except Exception as e:
-                print(f"Error getting prediction for {name}: {e}")
-                continue
-        prediction = prediction_cache[name]
-
-        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
-        sim_results = monteCarloSim(
-            player_df=player_df,
-            modelPred=float(prediction),
-            prop_line=line,
-            std_dev=std_dev,
-            num_simulations=simulations
-        )
-
-        if prediction > line:
-            model_side = 'OVER'
-            model_prob = float(sim_results['prob_over'])
-            model_opposite_prob = float(sim_results['prob_under'])
-        else:
-            model_side = 'UNDER'
-            model_prob = float(sim_results['prob_under'])
-            model_opposite_prob = float(sim_results['prob_over'])
-
-        legs.append({
-            'NAME': name,
-            'TEAM': player_team,
-            'CATEGORY': category,
-            'BOOKMAKER': bookmaker,
-            'ODDS': odds,
-            'LINE': line,
-            'PREDICTION': float(prediction),
-            'MODEL_SIDE': model_side,
-            'MODEL_PROB': model_prob,
-            'MODEL_OPPOSITE_PROB': model_opposite_prob,
-            'OVER%': float(sim_results['prob_over']),
-            'UNDER%': float(sim_results['prob_under']),
-            'CI': sim_results['confidence_interval']
-        })
-
-    payout_multiple = 3.0
-    b = payout_multiple - 1.0
-
-    pair_results = []
-    for i in range(len(legs)):
-        for j in range(i + 1, len(legs)):
-            leg1 = legs[i]
-            leg2 = legs[j]
-            
-            # Skip if same player (no duplicates)
-            if leg1['NAME'] == leg2['NAME']:
+                print(f"Error getting predictions for {player1} or {player2}: {e}")
                 continue
             
-            # Skip if players from same team
-            if leg1['TEAM'] == leg2['TEAM']:
-                continue
-
-            # Use the model's recommended side and probability
-            p1 = leg1['MODEL_PROB']
-            p2 = leg2['MODEL_PROB']
-            p_both = p1 * p2
-            ev = payout_multiple * p_both - 1
-
-
-            kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
-
-            edge1 = abs(leg1['PREDICTION'] - leg1['LINE'])
-            edge2 = abs(leg2['PREDICTION'] - leg2['LINE'])
-            if abs(edge1) > edge_threshold and abs(edge2) > edge_threshold:
-                recommendation = 1
+            # Convert quantiles to distribution parameters for both players
+            mu1 = q50_1
+            sigma1_raw = (q90_1 - q10_1) / 2.56
+            sigma1 = sigma1_raw * variance_inflation
+            
+            mu2 = q50_2
+            sigma2_raw = (q90_2 - q10_2) / 2.56
+            sigma2 = sigma2_raw * variance_inflation
+            
+            # Calculate probabilities for both players
+            if distribution_type == 'normal':
+                from scipy.stats import norm
+                p1_over = 1 - norm.cdf(player1_line['LINE'], mu1, sigma1)
+                p2_over = 1 - norm.cdf(player2_line['LINE'], mu2, sigma2)
+            elif distribution_type == 't':
+                from scipy.stats import t
+                df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
+                df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
+                p1_over = 1 - t.cdf(player1_line['LINE'], df1, mu1, sigma1)
+                p2_over = 1 - t.cdf(player2_line['LINE'], df2, mu2, sigma2)
             else:
-                recommendation = 0
-
-            pair_results.append({
-                'PLAYER 1': leg1['NAME'],
-                'CATEGORY 1': leg1['CATEGORY'],
-                'BOOKMAKER 1': leg1['BOOKMAKER'],
-                'ODDS 1': leg1['ODDS'],
-                'LINE 1': leg1['LINE'],
-                'PREDICTION 1': round(leg1['PREDICTION'], 2),
-                'MODEL_SIDE 1': leg1['MODEL_SIDE'],
-                'OVER% 1': round(leg1['OVER%'], 3),
-                'UNDER% 1': round(leg1['UNDER%'], 3),
-                'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
-                'PLAYER 2': leg2['NAME'],
-                'CATEGORY 2': leg2['CATEGORY'],
-                'BOOKMAKER 2': leg2['BOOKMAKER'],
-                'ODDS 2': leg2['ODDS'],
-                'LINE 2': leg2['LINE'],
-                'PREDICTION 2': round(leg2['PREDICTION'], 2),
-                'MODEL_SIDE 2': leg2['MODEL_SIDE'],
-                'OVER% 2': round(leg2['OVER%'], 3),
-                'UNDER% 2': round(leg2['UNDER%'], 3),
-                'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
-                'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}",
-                'RECOMMENDATION': recommendation,
-                'PROBABILITY': round(p_both, 4),
-                'EV%': round(ev, 3),
-                'KELLY': round(kelly_full, 3),
+                raise ValueError("distribution_type must be 'normal' or 't'")
+            
+            # Determine model sides based on predictions vs lines
+            if q50_1 > player1_line['LINE']:
+                model_side1 = 'over'
+                p1 = p1_over
+            else:
+                model_side1 = 'under'
+                p1 = 1 - p1_over
+                
+            if q50_2 > player2_line['LINE']:
+                model_side2 = 'over'
+                p2 = p2_over
+            else:
+                model_side2 = 'under'
+                p2 = 1 - p2_over
+            
+            # Calculate combined probability and EV
+            p_both = p1 * p2
+            payout_multiple = 3.0  # 3x payout
+            ev = payout_multiple * p_both - 1
+            
+            # Kelly criterion
+            b = payout_multiple - 1.0  # b = 2.0
+            kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
+            
+            # Edge calculation (probability edge for both players)
+            market_prob1 = impliedProb(-137)  # Fixed odds
+            market_prob2 = impliedProb(-137)  # Fixed odds
+            edge1 = p1 - market_prob1
+            edge2 = p2 - market_prob2
+            combined_edge = (edge1 + edge2) / 2  # Average edge
+            
+            # Recommendation based on edge threshold
+            recommendation = 1 if combined_edge > edge_threshold else 0
+            
+            # Get actual results
+            actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
+            actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
+            
+            if actual1 is None or actual2 is None:
+                continue
+            
+            # Determine if bet won
+            won1 = (actual1 > player1_line['LINE']) if model_side1 == 'over' else (actual1 < player1_line['LINE'])
+            won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
+            won_both = won1 and won2
+            
+            results.append({
+                'player1': player1,
+                'player2': player2,
+                'line1': player1_line['LINE'],
+                'line2': player2_line['LINE'],
+                'pred1': round(q50_1, 2),
+                'pred2': round(q50_2, 2),
+                'q10_1': round(q10_1, 2),
+                'q90_1': round(q90_1, 2),
+                'q10_2': round(q10_2, 2),
+                'q90_2': round(q90_2, 2),
+                'model_side1': model_side1,
+                'model_side2': model_side2,
+                'prob1': round(p1, 3),
+                'prob2': round(p2, 3),
+                'prob_both': round(p_both, 4),
+                'edge1': round(edge1, 3),
+                'edge2': round(edge2, 3),
+                'combined_edge': round(combined_edge, 3),
+                'ev_percent': round(ev * 100, 2),
+                'kelly_full': round(kelly_full, 3),
+                'recommendation': recommendation,
+                'actual1': actual1,
+                'actual2': actual2,
+                'won1': won1,
+                'won2': won2,
+                'won_both': won_both,
+                'date': gameDate
             })
-
-    return pd.DataFrame(pair_results)
-
-def backtest3Legs(data, bookmakers, model, features, edge_threshold=4.5, stake=100,
-                     simulations=10000, std_window=10, min_std=2.0, max_std=8.5, stat_col='PTS'):
     
-    print("Processing 3-leg parlays...")
+    results_df = pd.DataFrame(results)
+    return results_df
 
-    grouped_bookmakers = bookmakers.groupby(['NAME', 'LINE']).agg({
-        'CATEGORY': 'first',
-        'BOOKMAKER': 'first',
-        'ODDS': 'first',
-        'SIDE': 'first'
-    }).reset_index()
+def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
+                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS'):
+    data = data[data['GAME_DATE'] <= gameDate]
+    category = 'player_points'
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
+    if backtestData.empty:
+        print(f"No bets found for {gameDate}")
+        return pd.DataFrame()
+
+    # Get all available players for 3-leg combinations
+    available_players = backtestData['NAME'].unique()
+    if len(available_players) < 3:
+        print("Not enough players for 3-leg bets")
+        return pd.DataFrame()
+
+    results = []
     
-    legs = []
-    
-    for _, row in grouped_bookmakers.iterrows():
-        name = row['NAME']
-        category = row['CATEGORY']
-        bookmaker = row['BOOKMAKER']
-        odds = int(row['ODDS'])
-        line = float(row['LINE'])
-        side = row.get('SIDE', 'over')
-
-        if name == 'Nikola Jokic':
-            name = 'Nikola Jokić'
-        elif name == 'Luka Doncic':
-            name = 'Luka Dončić'
-        elif name == 'Kristaps Porzingis':
-            name = 'Kristaps Porziņģis'
-        elif name == 'Alperen Sengun':
-            name = 'Alperen Şengün'
-        elif name == 'Nikola Vucevic':
-            name = 'Nikola Vučević'
-
-        player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
-        if player_df.empty or stat_col not in player_df.columns:
-            continue
-
-        player_team = player_df['TEAM_ABBREVIATION'].iloc[0]
-
-        # Get prediction
-        try:
-            prediction = predictStats(name, data, model, features)
-        except Exception as e:
-            print(f"Error getting prediction for {name}: {e}")
-            continue
-
-        std_dev = get_player_std(player_df, stat_col, std_window, min_std, max_std)
-        sim_results = monteCarloSim(
-            player_df=player_df,
-            modelPred=float(prediction),
-            prop_line=line,
-            std_dev=std_dev,
-            num_simulations=simulations
-        )
-
-        # Determine over/under based on prediction vs line
-        if prediction > line:
-            model_side = 'OVER'
-            model_prob = float(sim_results['prob_over'])
-            model_opposite_prob = float(sim_results['prob_under'])
-        else:
-            model_side = 'UNDER'
-            model_prob = float(sim_results['prob_under'])
-            model_opposite_prob = float(sim_results['prob_over'])
-
-        legs.append({
-            'NAME': name,
-            'TEAM': player_team,
-            'CATEGORY': category,
-            'BOOKMAKER': bookmaker,
-            'ODDS': odds,
-            'LINE': line,
-            'PREDICTION': float(prediction),
-            'MODEL_SIDE': model_side,
-            'MODEL_PROB': model_prob,
-            'MODEL_OPPOSITE_PROB': model_opposite_prob,
-            'OVER%': float(sim_results['prob_over']),
-            'UNDER%': float(sim_results['prob_under']),
-            'CI': sim_results['confidence_interval']
-        })
-
-    # 3-leg parlay pays 6x (profit = 5x stake)
-    payout_multiple = 6.0
-    b = payout_multiple - 1.0  # b = 5.0
-
-    parlay_results = []
-    
-    # Triple nested loop for 3-leg combinations
-    for i in range(len(legs)):
-        for j in range(i + 1, len(legs)):
-            for k in range(j + 1, len(legs)):
-                leg1 = legs[i]
-                leg2 = legs[j]
-                leg3 = legs[k]
+    # Generate all 3-leg combinations
+    for i in range(len(available_players)):
+        for j in range(i + 1, len(available_players)):
+            for k in range(j + 1, len(available_players)):
+                player1 = available_players[i]
+                player2 = available_players[j]
+                player3 = available_players[k]
                 
-                # No duplicate players (should be automatic with i < j < k, but double-check)
-                players = [leg1['NAME'], leg2['NAME'], leg3['NAME']]
-                if len(set(players)) != 3:
+                # Get player data
+                player1_data = data[data['PLAYER_NAME'] == player1]
+                player2_data = data[data['PLAYER_NAME'] == player2]
+                player3_data = data[data['PLAYER_NAME'] == player3]
+                
+                if player1_data.empty or player2_data.empty or player3_data.empty:
+                    continue
+                    
+                # Get betting lines for all three players
+                player1_bets = backtestData[backtestData['NAME'] == player1]
+                player2_bets = backtestData[backtestData['NAME'] == player2]
+                player3_bets = backtestData[backtestData['NAME'] == player3]
+                
+                if player1_bets.empty or player2_bets.empty or player3_bets.empty:
                     continue
                 
-                # Check team constraint: not all 3 from same team (but 2 is OK)
-                teams = [leg1['TEAM'], leg2['TEAM'], leg3['TEAM']]
-                if len(set(teams)) == 1:  # All 3 same team - skip
-                    continue
-
-                # Calculate combined probability
-                p1 = leg1['MODEL_PROB']
-                p2 = leg2['MODEL_PROB']
-                p3 = leg3['MODEL_PROB']
-                p_all_three = p1 * p2 * p3
-                ev = payout_multiple * p_all_three - 1
-
-                # Kelly criterion
-                kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
-
-                # Recommendation: all 3 legs must have edge > threshold
-                edge1 = abs(leg1['PREDICTION'] - leg1['LINE'])
-                edge2 = abs(leg2['PREDICTION'] - leg2['LINE'])
-                edge3 = abs(leg3['PREDICTION'] - leg3['LINE'])
+                # Use the first available line for each player
+                player1_line = player1_bets.iloc[0]
+                player2_line = player2_bets.iloc[0]
+                player3_line = player3_bets.iloc[0]
                 
-                if (abs(edge1) > edge_threshold and 
-                    abs(edge2) > edge_threshold and 
-                    abs(edge3) > edge_threshold):
-                    recommendation = 1
+                # Get quantile predictions for all three players
+                try:
+                    pred1 = predictStats(player1, data, models, features)
+                    pred2 = predictStats(player2, data, models, features)
+                    pred3 = predictStats(player3, data, models, features)
+                    
+                    q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
+                    q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
+                    q10_3, q50_3, q90_3 = pred3['q10'], pred3['q50'], pred3['q90']
+                    
+                except Exception as e:
+                    print(f"Error getting predictions for {player1}, {player2}, or {player3}: {e}")
+                    continue
+                
+                # Convert quantiles to distribution parameters for all three players
+                mu1 = q50_1
+                sigma1_raw = (q90_1 - q10_1) / 2.56
+                sigma1 = sigma1_raw * variance_inflation
+                
+                mu2 = q50_2
+                sigma2_raw = (q90_2 - q10_2) / 2.56
+                sigma2 = sigma2_raw * variance_inflation
+                
+                mu3 = q50_3
+                sigma3_raw = (q90_3 - q10_3) / 2.56
+                sigma3 = sigma3_raw * variance_inflation
+                
+                # Calculate probabilities for all three players
+                if distribution_type == 'normal':
+                    from scipy.stats import norm
+                    p1_over = 1 - norm.cdf(player1_line['LINE'], mu1, sigma1)
+                    p2_over = 1 - norm.cdf(player2_line['LINE'], mu2, sigma2)
+                    p3_over = 1 - norm.cdf(player3_line['LINE'], mu3, sigma3)
+                elif distribution_type == 't':
+                    from scipy.stats import t
+                    df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
+                    df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
+                    df3 = max(3, 2 * sigma3**2 / (sigma3**2 - 1))
+                    p1_over = 1 - t.cdf(player1_line['LINE'], df1, mu1, sigma1)
+                    p2_over = 1 - t.cdf(player2_line['LINE'], df2, mu2, sigma2)
+                    p3_over = 1 - t.cdf(player3_line['LINE'], df3, mu3, sigma3)
                 else:
-                    recommendation = 0
-
-                parlay_results.append({
-                    'PLAYER 1': leg1['NAME'],
-                    'CATEGORY 1': leg1['CATEGORY'],
-                    'BOOKMAKER 1': leg1['BOOKMAKER'],
-                    'ODDS 1': leg1['ODDS'],
-                    'LINE 1': leg1['LINE'],
-                    'PREDICTION 1': round(leg1['PREDICTION'], 2),
-                    'MODEL_SIDE 1': leg1['MODEL_SIDE'],
-                    'OVER% 1': round(leg1['OVER%'], 3),
-                    'UNDER% 1': round(leg1['UNDER%'], 3),
-                    'CONFIDENCE INTERVAL 1': f"({leg1['CI'][0]:.1f}, {leg1['CI'][1]:.1f})",
+                    raise ValueError("distribution_type must be 'normal' or 't'")
+                
+                # Determine model sides based on predictions vs lines
+                if q50_1 > player1_line['LINE']:
+                    model_side1 = 'over'
+                    p1 = p1_over
+                else:
+                    model_side1 = 'under'
+                    p1 = 1 - p1_over
                     
-                    'PLAYER 2': leg2['NAME'],
-                    'CATEGORY 2': leg2['CATEGORY'],
-                    'BOOKMAKER 2': leg2['BOOKMAKER'],
-                    'ODDS 2': leg2['ODDS'],
-                    'LINE 2': leg2['LINE'],
-                    'PREDICTION 2': round(leg2['PREDICTION'], 2),
-                    'MODEL_SIDE 2': leg2['MODEL_SIDE'],
-                    'OVER% 2': round(leg2['OVER%'], 3),
-                    'UNDER% 2': round(leg2['UNDER%'], 3),
-                    'CONFIDENCE INTERVAL 2': f"({leg2['CI'][0]:.1f}, {leg2['CI'][1]:.1f})",
+                if q50_2 > player2_line['LINE']:
+                    model_side2 = 'over'
+                    p2 = p2_over
+                else:
+                    model_side2 = 'under'
+                    p2 = 1 - p2_over
                     
-                    'PLAYER 3': leg3['NAME'],
-                    'CATEGORY 3': leg3['CATEGORY'],
-                    'BOOKMAKER 3': leg3['BOOKMAKER'],
-                    'ODDS 3': leg3['ODDS'],
-                    'LINE 3': leg3['LINE'],
-                    'PREDICTION 3': round(leg3['PREDICTION'], 2),
-                    'MODEL_SIDE 3': leg3['MODEL_SIDE'],
-                    'OVER% 3': round(leg3['OVER%'], 3),
-                    'UNDER% 3': round(leg3['UNDER%'], 3),
-                    'CONFIDENCE INTERVAL 3': f"({leg3['CI'][0]:.1f}, {leg3['CI'][1]:.1f})",
-                    
-                    'RECOMMENDED_TYPE': f"{leg1['MODEL_SIDE']}/{leg2['MODEL_SIDE']}/{leg3['MODEL_SIDE']}",
-                    'RECOMMENDATION': recommendation,
-                    'PROBABILITY': round(p_all_three, 4),
-                    'EV%': round(ev, 3),
-                    'KELLY': round(kelly_full, 3),
+                if q50_3 > player3_line['LINE']:
+                    model_side3 = 'over'
+                    p3 = p3_over
+                else:
+                    model_side3 = 'under'
+                    p3 = 1 - p3_over
+                
+                # Calculate combined probability and EV
+                p_all_three = p1 * p2 * p3
+                payout_multiple = 6.0  # 6x payout for 3-leg parlay
+                ev = payout_multiple * p_all_three - 1
+                
+                # Kelly criterion
+                b = payout_multiple - 1.0  # b = 5.0
+                kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
+                
+                # Edge calculation (probability edge for all three players)
+                market_prob1 = impliedProb(-137)  # Fixed odds
+                market_prob2 = impliedProb(-137)  # Fixed odds
+                market_prob3 = impliedProb(-137)  # Fixed odds
+                edge1 = p1 - market_prob1
+                edge2 = p2 - market_prob2
+                edge3 = p3 - market_prob3
+                combined_edge = (edge1 + edge2 + edge3) / 3  # Average edge
+                
+                # Recommendation based on edge threshold
+                recommendation = 1 if combined_edge > edge_threshold else 0
+                
+                # Get actual results
+                actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
+                actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
+                actual3 = player3_data[player3_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player3_data[player3_data['GAME_DATE'] == gameDate]) > 0 else None
+                
+                if actual1 is None or actual2 is None or actual3 is None:
+                    continue
+                
+                # Determine if bet won
+                won1 = (actual1 > player1_line['LINE']) if model_side1 == 'over' else (actual1 < player1_line['LINE'])
+                won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
+                won3 = (actual3 > player3_line['LINE']) if model_side3 == 'over' else (actual3 < player3_line['LINE'])
+                won_all_three = won1 and won2 and won3
+                
+                results.append({
+                    'player1': player1,
+                    'player2': player2,
+                    'player3': player3,
+                    'line1': player1_line['LINE'],
+                    'line2': player2_line['LINE'],
+                    'line3': player3_line['LINE'],
+                    'pred1': round(q50_1, 2),
+                    'pred2': round(q50_2, 2),
+                    'pred3': round(q50_3, 2),
+                    'q10_1': round(q10_1, 2),
+                    'q90_1': round(q90_1, 2),
+                    'q10_2': round(q10_2, 2),
+                    'q90_2': round(q90_2, 2),
+                    'q10_3': round(q10_3, 2),
+                    'q90_3': round(q90_3, 2),
+                    'model_side1': model_side1,
+                    'model_side2': model_side2,
+                    'model_side3': model_side3,
+                    'prob1': round(p1, 3),
+                    'prob2': round(p2, 3),
+                    'prob3': round(p3, 3),
+                    'prob_all_three': round(p_all_three, 4),
+                    'edge1': round(edge1, 3),
+                    'edge2': round(edge2, 3),
+                    'edge3': round(edge3, 3),
+                    'combined_edge': round(combined_edge, 3),
+                    'ev_percent': round(ev * 100, 2),
+                    'kelly_full': round(kelly_full, 3),
+                    'recommendation': recommendation,
+                    'actual1': actual1,
+                    'actual2': actual2,
+                    'actual3': actual3,
+                    'won1': won1,
+                    'won2': won2,
+                    'won3': won3,
+                    'won_all_three': won_all_three,
+                    'date': gameDate
                 })
-
-    return pd.DataFrame(parlay_results)
+    
+    results_df = pd.DataFrame(results)
+    return results_df
