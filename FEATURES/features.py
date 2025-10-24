@@ -47,7 +47,24 @@ def convert_height_to_inches(height_str):
     # Convert to total inches
     return round((feet * 12) + inches, 2)
 
-
+def encode_teams_label(df):
+    """Label encode teams for XGBoost - RECOMMENDED"""
+    df_encoded = df.copy()
+    
+    # Create consistent encoding across all data
+    all_teams = sorted(set(df['TEAM_ABBREVIATION'].unique()) | set(df['OPP_ABBREVIATION'].unique()))
+    
+    # Create mapping dictionaries
+    team_to_label = {team: idx for idx, team in enumerate(all_teams)}
+    
+    # Apply encoding
+    df_encoded['TEAM_ENCODED'] = df_encoded['TEAM_ABBREVIATION'].map(team_to_label)
+    df_encoded['OPP_ENCODED'] = df_encoded['OPP_ABBREVIATION'].map(team_to_label)
+    
+    # Drop original columns
+    df_encoded = df_encoded.drop(['TEAM_ABBREVIATION', 'OPP_ABBREVIATION'], axis=1)
+    
+    return df_encoded, team_to_label
 # ================================================================================================
 # BASIC FEATURE ENGINEERING
 # ================================================================================================
@@ -108,7 +125,7 @@ def encode_teams(df):
 # ROLLING AVERAGES AND TIME SERIES FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
 
-def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[10,15,25,40]):
+def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7,10,15,25,40]):
     """Calculate rolling averages for key player statistics only."""
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
@@ -309,43 +326,131 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     
     return df
 
-def assign_team_opp_def_by_position(df):
-    def_cols = ['DEF_FG_PCT_ALLOWED', 'DEF_3PT_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN']
+def assign_team_opp_def_by_position(df, min_minutes=15):
+    # Define defensive columns that actually exist in your dataset
+    def_cols = [
+        'E_DEF_RATING',
+        'DEF_FG_PCT_ALLOWED', 
+        'DEF_3PT_PCT_ALLOWED', 
+        'PTS_ALLOWED_PER_MIN'
+    ]
+    
+    # Check which columns actually exist
+    available_def_cols = [col for col in def_cols if col in df.columns]
+    
+    if not available_def_cols:
+        print("Warning: No defensive columns found in dataset")
+        return df
+    
     positions = ['GUARD', 'FORWARD', 'CENTER']
     team_def_list = []
 
+    # Filter for players with sufficient minutes
+    df_filtered = df[df['MIN'] >= min_minutes].copy()
+    df_filtered = df_filtered.sort_values(['TEAM_ID', 'GAME_DATE'])
+
     for pos in positions:
-        df_shifted = df.copy()
-        df_shifted = df_shifted.sort_values(['PLAYER_ID', 'GAME_DATE'])
-        df_shifted[def_cols] = df_shifted.groupby('PLAYER_ID')[def_cols].shift(1)
+        # Get players at this position
+        pos_data = df_filtered[df_filtered[pos] == 1].copy()
         
+        if pos_data.empty:
+            continue
+            
+        # Shift defensive stats to prevent data leakage
+        pos_data[available_def_cols] = pos_data.groupby('TEAM_ID')[available_def_cols].shift(1)
+        
+        # Calculate team defensive averages by position for each game
         tmp = (
-            df[df[pos] == 1]
-            .groupby(['TEAM_ID', 'GAME_ID'])[def_cols]
+            pos_data
+            .groupby(['TEAM_ID', 'GAME_ID'])[available_def_cols]
             .mean()
             .round(3)
             .reset_index()
-            .rename(columns={
-                'DEF_FG_PCT_ALLOWED': f'TEAM_{pos}_DEF_FG_PCT_ALLOWED',
-                'DEF_3PT_PCT_ALLOWED': f'TEAM_{pos}_DEF_3PT_PCT_ALLOWED',
-                'PTS_ALLOWED_PER_MIN': f'TEAM_{pos}_PTS_ALLOWED_PER_MIN'
-            })
         )
+        
+        # Rename columns dynamically based on what's available
+        rename_dict = {}
+        for col in available_def_cols:
+            if col == 'E_DEF_RATING':
+                rename_dict[col] = f'TEAM_{pos}_DEF_RATING'
+            elif col == 'DEF_FG_PCT_ALLOWED':
+                rename_dict[col] = f'TEAM_{pos}_DEF_FG_PCT_ALLOWED'
+            elif col == 'DEF_3PT_PCT_ALLOWED':
+                rename_dict[col] = f'TEAM_{pos}_DEF_3PT_PCT_ALLOWED'
+            elif col == 'PTS_ALLOWED_PER_MIN':
+                rename_dict[col] = f'TEAM_{pos}_PTS_ALLOWED_PER_MIN'
+        
+        tmp = tmp.rename(columns=rename_dict)
         team_def_list.append(tmp)
+
+    if not team_def_list:
+        return df
 
     # Merge all position-based team stats
     team_def = team_def_list[0]
     for tmp in team_def_list[1:]:
         team_def = team_def.merge(tmp, on=['TEAM_ID', 'GAME_ID'], how='outer')
+    
+    # Merge with main dataframe
     df = df.merge(team_def, on=['TEAM_ID', 'GAME_ID'], how='left')
+    
+    # Create opponent versions
     opp_def = team_def.rename(columns={
         'TEAM_ID': 'OPP_TEAM_ID',
         **{col: col.replace('TEAM_', 'OPP_') for col in team_def.columns if col not in ['TEAM_ID', 'GAME_ID']}
     })
     df = df.merge(opp_def, on=['OPP_TEAM_ID', 'GAME_ID'], how='left')
+    
     return df
 
-def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[5,10,15]):
+def get_rolling_opp_def_by_position(df, min_minutes=15, windows=[5, 10, 15]):
+    """
+    Calculate rolling opponent defensive ratings by position with proper shifting.
+    """
+    df_enhanced = df.copy()
+    
+    # Filter for players with sufficient minutes
+    df_filtered = df[df['MIN'] >= min_minutes].copy()
+    df_filtered = df_filtered.sort_values(['TEAM_ID', 'GAME_DATE'])
+    
+    # Define defensive columns
+    def_cols = [
+        'DEF_RATING',
+        'DEF_FG_PCT_ALLOWED', 
+        'DEF_3PT_PCT_ALLOWED', 
+        'PTS_ALLOWED_PER_MIN',
+        'DEF_TOV_FORCED_PER_MIN',
+        'DEF_BLOCKS_PER_MIN',
+        'DEF_SHOOTING_FOULS_PER_MIN',
+        'DEF_AST_ALLOWED_PER_MIN'
+    ]
+    
+    for pos in ['GUARD', 'FORWARD', 'CENTER']:
+        pos_data = df_filtered[df_filtered[pos] == 1].copy()
+        
+        if pos_data.empty:
+            continue
+            
+        # CRITICAL: Shift defensive stats first
+        pos_data[def_cols] = pos_data.groupby('TEAM_ID')[def_cols].shift(1)
+        
+        # Calculate rolling defensive averages
+        for window in windows:
+            rolling_stats = pos_data.groupby('TEAM_ID').rolling(
+                window=window, 
+                on='GAME_DATE'
+            )[def_cols].mean().reset_index()
+            
+            # Rename columns
+            rename_dict = {col: f'TEAM_{pos}_{col}_{window}G' for col in def_cols}
+            rolling_stats = rolling_stats.rename(columns=rename_dict)
+            
+            # Merge with main dataframe
+            df_enhanced = df_enhanced.merge(rolling_stats, on=['TEAM_ID', 'GAME_DATE'], how='left')
+    
+    return df_enhanced
+
+def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[3,5,7,10]):
     """Calculate rolling team defensive averages by position over fixed windows."""
     data = df.copy()
     data.sort_values([team_id_col, date_col], inplace=True)
@@ -428,49 +533,6 @@ def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE'
     
     return data
 
-def assign_team_opp_zone_by_position(df):
-    """Calculate team and opponent zone shooting statistics by position."""
-    zone_cols = [
-        'FREQ_FG3','FG3_PCT_main', 'NS_FG3_PCT', 'PLUS_MINUS_FG3',
-        'FREQ_FG2', 'FG2_PCT', 'NS_FG2_PCT', 'PLUS_MINUS_FG2',
-        'FREQ_LT_06', 'LT_06_PCT', 'NS_LT_06_PCT', 'PLUS_MINUS_LT_06',
-        'FREQ_LT_10', 'LT_10_PCT', 'NS_LT_10_PCT', 'PLUS_MINUS_LT_10',
-        'FREQ_GT_15', 'GT_15_PCT', 'NS_GT_15_PCT', 'PLUS_MINUS_GT_15'
-    ]
-    positions = ['GUARD', 'FORWARD', 'CENTER']
-    team_zone_list = []
-
-    for pos in positions:
-        tmp = (
-            df[df[pos] == 1]
-            .groupby(['TEAM_ID', 'GAME_ID'])[zone_cols]
-            .mean()
-            .round(3)
-            .reset_index()
-            .rename(columns={
-                col: f'TEAM_{pos}_{col}' for col in zone_cols
-            })
-        )
-        team_zone_list.append(tmp)
-
-    # Merge all position-based team zone stats
-    team_zone = team_zone_list[0]
-    for tmp in team_zone_list[1:]:
-        team_zone = team_zone.merge(tmp, on=['TEAM_ID', 'GAME_ID'], how='outer')
-    
-    # Merge team zone stats to main dataframe
-    df = df.merge(team_zone, on=['TEAM_ID', 'GAME_ID'], how='left')
-    
-    # Create opponent zone stats by renaming team columns
-    opp_zone = team_zone.rename(columns={
-        'TEAM_ID': 'OPP_TEAM_ID',
-        **{col: col.replace('TEAM_', 'OPP_') for col in team_zone.columns if col not in ['TEAM_ID', 'GAME_ID']}
-    })
-    
-    # Merge opponent zone stats to main dataframe
-    df = df.merge(opp_zone, on=['OPP_TEAM_ID', 'GAME_ID'], how='left')
-    
-    return df
 # ================================================================================================
 # OPPONENT AND DEFENSIVE FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
@@ -596,7 +658,7 @@ def teamContext(df):
     )
     return df
 
-def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[10, 15, 25]):
+def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[3,5,7,10]):
     """
     Add rolling averages for opponent team statistics over specified windows.
     Shows how the opposing team has been performing in their recent games.
@@ -669,7 +731,7 @@ def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DA
     return df
 
 
-def add_opponent_team_form_indicators(df, windows=[10, 15, 25]):
+def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
     """
     Add indicators showing if opponent team is in good/bad form recently.
     Compares recent performance to season averages.
@@ -721,102 +783,6 @@ def expectedPace(df):
     df['EXPECTED_PACE'] = df['EXPECTED_PACE'].fillna(np.nan)
     return df
 
-def teamUsualStarters(df):
-    """
-    Adds NUM_USUAL_STARTERS_PRESENT: number of usual starters present for own team
-    """
-    # 1) Compute usual starters: top 5 most frequent starters per team
-    player_starts = (
-        df[df['STARTING'] == 1]
-        .groupby(['TEAM_ID', 'PLAYER_ID'])
-        .size()
-        .reset_index(name='NUM_STARTS')
-    )
-    usual_starters = (
-        player_starts
-        .sort_values(['TEAM_ID', 'NUM_STARTS'], ascending=[True, False])
-        .groupby('TEAM_ID')
-        .head(5)
-    )
-    usual_starters_dict = (
-        usual_starters
-        .groupby('TEAM_ID')['PLAYER_ID']
-        .apply(set)
-        .to_dict()
-    )
-
-    # 2) Compute NUM_USUAL_STARTERS_PRESENT for each game-team
-    starters_per_game = (
-        df[df['STARTING'] == 1]
-        .groupby(['GAME_ID', 'TEAM_ID'])
-        .agg({'PLAYER_ID': list})
-        .reset_index()
-    )
-    def count_usual_starters(row):
-        team_id = row['TEAM_ID']
-        actual_starters = set(row['PLAYER_ID'])
-        usual_starters = usual_starters_dict.get(team_id, set())
-        return len(actual_starters & usual_starters)
-    
-    starters_per_game['NUM_USUAL_STARTERS_PRESENT'] = starters_per_game.apply(count_usual_starters, axis=1)
-    
-    # 3) Merge into main df
-    df = df.merge(
-        starters_per_game[['GAME_ID', 'TEAM_ID', 'NUM_USUAL_STARTERS_PRESENT']],
-        on=['GAME_ID', 'TEAM_ID'],
-        how='left'
-    )
-    
-    return df
-
-def oppTeamUsualStarters(df):
-    """
-    Adds NUM_USUAL_STARTERS_PRESENT_OPP: count of opponent usual starters present
-    """
-
-    # 1) Compute usual starters: top 5 most frequent starters per team
-    player_starts = (
-        df[df['STARTING'] == 1]
-        .groupby(['TEAM_ID', 'PLAYER_ID'])
-        .size()
-        .reset_index(name='NUM_STARTS')
-    )
-    usual_starters = (
-        player_starts
-        .sort_values(['TEAM_ID', 'NUM_STARTS'], ascending=[True, False])
-        .groupby('TEAM_ID')
-        .head(5)
-    )
-    usual_starters_dict = (
-        usual_starters
-        .groupby('TEAM_ID')['PLAYER_ID']
-        .apply(set)
-        .to_dict()
-    )
-
-    # 2) Compute NUM_USUAL_STARTERS_PRESENT for opponent team
-    opp_actual_starters_per_game = (
-        df[df['STARTING'] == 1]
-        .groupby(['GAME_ID', 'TEAM_ID'])
-        .agg({'PLAYER_ID': list})
-        .reset_index()
-    )
-    def count_opp_usual_starters(row):
-        team_id = row['TEAM_ID']
-        actual_starters = set(row['PLAYER_ID'])
-        usual_starters = usual_starters_dict.get(team_id, set())
-        return len(actual_starters & usual_starters)
-    
-    opp_actual_starters_per_game['NUM_USUAL_STARTERS_PRESENT'] = opp_actual_starters_per_game.apply(count_opp_usual_starters, axis=1)
-    df = df.merge(
-        opp_actual_starters_per_game[['GAME_ID', 'TEAM_ID', 'NUM_USUAL_STARTERS_PRESENT']],
-        left_on=['GAME_ID', 'OPP_TEAM_ID'],
-        right_on=['GAME_ID', 'TEAM_ID'],
-        how='left',
-        suffixes=('', '_OPP')
-    )
-
-    return df
 ########################################################
 def sort_data_for_features(df):
     """
@@ -1228,15 +1194,15 @@ def add_interaction_features(df):
     # df['USG_X_OPP_DEF_RATING'] = df['USG_PCT_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
     df['USG_X_TEAM_OFF'] = df['USG_PCT_AVG_TO_DATE'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
-                                                              df['TEAM_IMPLIED_PTS_FAV'], 
-                                                              df['TEAM_IMPLIED_PTS_UND'])
+    # df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
+    #                                                           df['TEAM_IMPLIED_PTS_FAV'], 
+    #                                                           df['TEAM_IMPLIED_PTS_UND'])
 
     # Shooting style x matchup fit
     # df['PLAYER_3PT_X_OPP_3PT_DEF_GUARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
     # df['PLAYER_3PT_X_OPP_3PT_DEF_FORWARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
     # df['PLAYER_3PT_X_OPP_3PT_DEF_CENTER'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_PTS_PAINT']
+    # df['PLAYER_PAINT_X_OPP_PAINT_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_PTS_PAINT']
 
     df['PLAYER_PAINT_X_OPP_PAINT_DEF_GUARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
     df['PLAYER_PAINT_X_OPP_PAINT_DEF_FORWARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']

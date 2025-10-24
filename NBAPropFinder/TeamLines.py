@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import os
 
-def fetchTeamLines(api_key, date=None, save_dir="../DATA/CSV_FILES/PROP_DATA/TEAM_LINES"):
+def fetchTeamLines(api_key, date=None, save_dir="DATA/CSV_FILES/PROP_DATA/TEAM_LINES"):
     # Use today's date if none provided
     if date is None:
         date = datetime.now().strftime("%Y%m%d")
