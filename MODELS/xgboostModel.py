@@ -7,7 +7,7 @@ from sklearn.inspection import permutation_importance
 from scipy.stats import uniform, randint
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import shap
 
 def build_recent_weights(df, player_col, recent_n=15, recent_weight=5.0):
     w = np.ones(len(df), dtype=float)
@@ -356,7 +356,7 @@ def evaluate_test(model, test_df, features, target_col, cat_cols):
     return dict(RMSE=rmse, MAE=mae, R2=r2), residuals_df
 
 
-def simple_correlation_analysis(df, features_list, target_col='PTS'):
+def correlation_analysis(df, features_list, target_col='PTS'):
     # Filter to only include features that exist in the dataframe
     available_features = [col for col in features_list if col in df.columns]
     
@@ -476,15 +476,6 @@ def select_features_xgb_importance(
     if include_context:
         context_features = [
 
-            'HOME_GAME', 'BACK_TO_BACK', 'PLAYER_DAYS_REST', 
-            'spread', 'TEAM_IMPLIED_PTS',
-            'GUARD', 'FORWARD', 'CENTER',
-            'TEAM_PACE_AVG_TO_DATE', 'TEAM_OFF_RATING_AVG_TO_DATE',
-            'OPP_DEF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_TOV_AVG_TO_DATE',
-            'OPP_FORWARD_DEF_RATING', 'OPP_CENTER_DEF_RATING', 'OPP_GUARD_DEF_RATING',
-            'MIN_ROLLING_AVG_5', 'MIN_ROLLING_AVG_10', 'MIN_LAG_1', 
-            'MIN_AVG_TO_DATE', 'MIN_VOLATILITY_10_TO_DATE', 'MIN_VOLATILITY_5_TO_DATE'
-            'MIN_STD_LAST_5'
         ]
         for f in context_features:
             if f in X.columns and f not in top_features:
@@ -511,3 +502,261 @@ def select_features_xgb_importance(
         print(f"{i+1}. {f}")
 
     return X[top_features], top_features
+
+
+def get_quantile_residuals(models, test_df, features, target_col='PTS'):
+    """
+    Get residuals analysis for quantile models.
+    """
+    import pandas as pd
+    import numpy as np
+    
+    X_test = test_df[features].copy()
+    y_test = test_df[target_col].values
+    
+    # Get predictions from all quantile models
+    preds_q10 = models['q10'].predict(X_test)
+    preds_q50 = models['q50'].predict(X_test)
+    preds_q90 = models['q90'].predict(X_test)
+    
+    # Create residuals DataFrame
+    residuals_df = pd.DataFrame({
+        'actual': y_test,
+        'pred_q10': preds_q10,
+        'pred_q50': preds_q50,
+        'pred_q90': preds_q90,
+        'residual_q10': y_test - preds_q10,
+        'residual_q50': y_test - preds_q50,
+        'residual_q90': y_test - preds_q90,
+    })
+    
+    # Add context columns
+    context_cols = ["PLAYER_NAME", "MATCHUP", "TEAM_PTS", "OPP_PTS", "STARTING", "MIN", "GUARD", "FORWARD", "CENTER"]
+    available_cols = [c for c in context_cols if c in test_df.columns]
+    residuals_df = residuals_df.join(test_df[available_cols])
+    
+    # Add prediction interval analysis
+    residuals_df['interval_width'] = preds_q90 - preds_q10
+    residuals_df['within_80_interval'] = (y_test >= preds_q10) & (y_test <= preds_q90)
+    residuals_df['within_50_interval'] = (y_test >= preds_q10) & (y_test <= preds_q50)
+    
+    return residuals_df
+
+def analyze_quantile_residuals(models, test_df, features, target_col='PTS'):
+    """
+    Analyze residuals for quantile models and show worst predictions.
+    """
+    
+    # Get residuals
+    residuals_df = get_quantile_residuals(models, test_df, features, target_col)
+    
+    print("QUANTILE MODEL RESIDUALS ANALYSIS")
+    print("=" * 60)
+    
+    # Overall residuals statistics
+    print(f"Q10 Residuals - Mean: {residuals_df['residual_q10'].mean():.3f}, Std: {residuals_df['residual_q10'].std():.3f}")
+    print(f"Q50 Residuals - Mean: {residuals_df['residual_q50'].mean():.3f}, Std: {residuals_df['residual_q50'].std():.3f}")
+    print(f"Q90 Residuals - Mean: {residuals_df['residual_q90'].mean():.3f}, Std: {residuals_df['residual_q90'].std():.3f}")
+    
+    # Coverage analysis
+    coverage_80 = residuals_df['within_80_interval'].mean()
+    coverage_50 = residuals_df['within_50_interval'].mean()
+    print(f"\nCoverage Analysis:")
+    print(f"80% Interval Coverage: {coverage_80:.3f} (target: 0.80)")
+    print(f"50% Interval Coverage: {coverage_50:.3f} (target: 0.50)")
+    
+    # Worst predictions (largest residuals)
+    print(f"\nWORST PREDICTIONS (Q50 - Median):")
+    print("-" * 50)
+    
+    # Sort by absolute residual for q50 (median)
+    worst_predictions = residuals_df.copy()
+    worst_predictions['abs_residual_q50'] = np.abs(worst_predictions['residual_q50'])
+    worst_predictions = worst_predictions.sort_values('abs_residual_q50', ascending=False)
+    
+    # Show top 20 worst predictions
+    top_errors = worst_predictions.head(20)[['PLAYER_NAME', 'MATCHUP', 'actual', 'pred_q50', 'residual_q50', 'MIN', 'GUARD', 'FORWARD', 'CENTER']]
+    print(top_errors.to_string(index=False))
+    
+    return residuals_df
+
+def analyze_quantile_shap(models, test_df, features, target_col='PTS'):
+    X_test = test_df[features].copy()
+    
+    # Define position columns
+    position_cols = ['GUARD', 'FORWARD', 'CENTER']
+    quantiles = ['q10', 'q50', 'q90']
+    for quantile in quantiles:
+        if quantile not in models:
+            continue
+            
+        print(f"\n{quantile.upper()} MODEL:")
+        print("-" * 30)
+        
+        # Create SHAP explainer
+        explainer = shap.TreeExplainer(models[quantile])
+        shap_values = explainer.shap_values(X_test)
+        
+        # Overall top features
+        mean_shap = np.abs(shap_values).mean(axis=0)
+        feature_importance = pd.DataFrame({
+            'feature': features,
+            'importance': mean_shap
+        }).sort_values('importance', ascending=False)
+        
+        print("Top 10 Features:")
+        for idx, row in feature_importance.head(15).iterrows():
+            print(f"  {row['feature']:30} {row['importance']:.4f}")
+        
+        # Position-specific analysis
+        print(f"\nBy Position:")
+        for pos_col in position_cols:
+            if pos_col in test_df.columns:
+                pos_mask = test_df[pos_col] == 1
+                if pos_mask.sum() > 0:
+                    pos_shap = shap_values[pos_mask]
+                    pos_mean_shap = np.abs(pos_shap).mean(axis=0)
+                    
+                    pos_importance = pd.DataFrame({
+                        'feature': features,
+                        'importance': pos_mean_shap
+                    }).sort_values('importance', ascending=False)
+                    
+                    print(f"  {pos_col} (n={pos_mask.sum()}): {pos_importance.iloc[0]['feature']} ({pos_importance.iloc[0]['importance']:.3f})")
+        
+        # Create summary plot
+        plt.figure(figsize=(12, 8))
+        shap.summary_plot(shap_values, X_test, max_display=15, show=False)
+        plt.title(f'SHAP Summary - {quantile.upper()} Model', fontsize=14, fontweight='bold')
+        plt.tight_layout()
+        plt.show()
+    
+    return models
+
+
+def validate_out_of_time_pinball_loss(models, test_df, features, target_col='PTS'):
+    X_test = test_df[features].copy()
+    y_test = test_df[target_col].values
+    
+    def pinball_loss(y_true, y_pred, quantile):
+        error = y_true - y_pred
+        return np.mean(np.maximum(quantile * error, (quantile - 1) * error))
+    
+    print("OUT-OF-TIME PINBALL LOSS VALIDATION")
+    print("=" * 60)
+    print(f"Test set size: {len(y_test)} samples")
+    print(f"Date range: {test_df['GAME_DATE'].min()} to {test_df['GAME_DATE'].max()}")
+    
+    results = {}
+    quantiles = [0.1, 0.5, 0.9]  # q10, q50, q90
+    
+    for q in quantiles:
+        quantile_name = f'q{int(q*100)}'
+        if quantile_name not in models:
+            continue
+            
+        # Get predictions
+        preds = models[quantile_name].predict(X_test)
+        
+        # Calculate pinball loss
+        pinball = pinball_loss(y_test, preds, q)
+        
+        # Calculate other metrics for comparison
+        mae = np.mean(np.abs(y_test - preds))
+        rmse = np.sqrt(np.mean((y_test - preds) ** 2))
+        
+        # Calculate coverage (for quantile validation)
+        if q == 0.1:
+            coverage = np.mean(y_test >= preds)
+        elif q == 0.9:
+            coverage = np.mean(y_test <= preds)
+        else:  # q50
+            coverage = None
+        
+        results[quantile_name] = {
+            'pinball_loss': pinball,
+            'mae': mae,
+            'rmse': rmse,
+            'coverage': coverage,
+            'quantile': q
+        }
+        
+        print(f"\n{quantile_name.upper()} Model:")
+        print(f"  Pinball Loss: {pinball:.4f}")
+        print(f"  MAE: {mae:.3f}")
+        print(f"  RMSE: {rmse:.3f}")
+        if coverage is not None:
+            print(f"  Coverage: {coverage:.3f} (target: {q:.1f})")
+    
+    # Calculate average pinball loss
+    avg_pinball = np.mean([results[f'q{int(q*100)}']['pinball_loss'] for q in quantiles])
+    print(f"\nAverage Pinball Loss: {avg_pinball:.4f}")
+    
+    # Model quality assessment
+    print(f"\nMODEL QUALITY ASSESSMENT:")
+    print("-" * 40)
+    if avg_pinball < 2.0:
+        print("EXCELLENT - Very reliable uncertainty estimates!")
+    elif avg_pinball < 3.0:
+        print("GOOD - Solid uncertainty estimates!")
+    elif avg_pinball < 4.0:
+        print("FAIR - Acceptable uncertainty estimates!")
+    else:
+        print("POOR - Uncertainty estimates need improvement!")
+    
+    # Additional validation metrics
+    print(f"\nADDITIONAL VALIDATION METRICS:")
+    print("-" * 40)
+    
+    # Check if q10 < q50 < q90 (monotonicity)
+    q10_preds = models['q10'].predict(X_test)
+    q50_preds = models['q50'].predict(X_test)
+    q90_preds = models['q90'].predict(X_test)
+    
+    monotonic_q10_q50 = np.mean(q10_preds <= q50_preds)
+    monotonic_q50_q90 = np.mean(q50_preds <= q90_preds)
+    
+    print(f"Monotonicity q10 ≤ q50: {monotonic_q10_q50:.3f} (should be ~1.0)")
+    print(f"Monotonicity q50 ≤ q90: {monotonic_q50_q90:.3f} (should be ~1.0)")
+    
+    # Prediction interval width analysis
+    interval_width = q90_preds - q10_preds
+    print(f"Average 80% interval width: {interval_width.mean():.2f}")
+    print(f"Median 80% interval width: {np.median(interval_width):.2f}")
+    
+    return results
+
+def validate_by_position_pinball_loss(models, test_df, features, target_col='PTS'):
+    """
+    Validate pinball loss by position to see if models work well for all positions.
+    """
+    import numpy as np
+    
+    X_test = test_df[features].copy()
+    y_test = test_df[target_col].values
+    
+    def pinball_loss(y_true, y_pred, quantile):
+        error = y_true - y_pred
+        return np.mean(np.maximum(quantile * error, (quantile - 1) * error))
+    
+    position_cols = ['GUARD', 'FORWARD', 'CENTER']
+    quantiles = [0.1, 0.5, 0.9]
+    
+    print("PINBALL LOSS BY POSITION")
+    print("=" * 50)
+    
+    for pos_col in position_cols:
+        if pos_col in test_df.columns:
+            pos_mask = test_df[pos_col] == 1
+            if pos_mask.sum() > 10:  # Only analyze if enough samples
+                print(f"\n{pos_col} (n={pos_mask.sum()}):")
+                
+                pos_X = X_test[pos_mask]
+                pos_y = y_test[pos_mask]
+                
+                for q in quantiles:
+                    quantile_name = f'q{int(q*100)}'
+                    if quantile_name in models:
+                        preds = models[quantile_name].predict(pos_X)
+                        pinball = pinball_loss(pos_y, preds, q)
+                        print(f"  {quantile_name}: {pinball:.4f}")
