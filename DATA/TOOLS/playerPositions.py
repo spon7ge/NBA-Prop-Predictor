@@ -5,23 +5,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing as mp
 from datetime import datetime
 
-def starters(data):
-    starters = ['G','F','C']
-    if data['START_POSITION'] in starters:
-        return 1
-    else:
-        return 0
     
 def assign_position(data, max_workers=4, delay_between_requests=0.5):
-    """
-    Optimized version with parallel processing and caching
-    
-    Parameters:
-    - data: DataFrame containing PLAYER_ID column
-    - max_workers: Number of parallel threads (keep low to respect API limits)
-    - delay_between_requests: Delay between requests to avoid rate limiting
-    """
-    
     print("Extracting unique player IDs...")
     unique_ids = data['PLAYER_ID'].unique()
     total_players = len(unique_ids)
@@ -88,11 +73,31 @@ def assign_position(data, max_workers=4, delay_between_requests=0.5):
     data['HEIGHT'] = data['PLAYER_ID'].map(lambda pid: position_cache.get(pid, (None, None, None))[1])
     data['WEIGHT'] = data['PLAYER_ID'].map(lambda pid: position_cache.get(pid, (None, None, None))[2])
     
-    # Create binary flags for simplified position types
+    # Create binary flags for simplified position types (only first position)
     print("Creating position flags...")
-    data['GUARD'] = data['POSITION'].str.contains('G', na=False).astype(int)
-    data['FORWARD'] = data['POSITION'].str.contains('F', na=False).astype(int)
-    data['CENTER'] = data['POSITION'].str.contains('C', na=False).astype(int)
+    
+    def assign_first_position(position):
+        """Assign position based on first position found in order: G, F, C"""
+        if pd.isna(position):
+            return 0, 0, 0
+        
+        position_str = str(position).upper()
+        
+        # Check in order: Guard first, then Forward, then Center
+        if 'G' in position_str:
+            return 1, 0, 0
+        elif 'F' in position_str:
+            return 0, 1, 0
+        elif 'C' in position_str:
+            return 0, 0, 1
+        else:
+            return 0, 0, 0
+    
+    # Apply the position assignment
+    position_flags = data['POSITION'].apply(assign_first_position)
+    data['GUARD'] = [flags[0] for flags in position_flags]
+    data['FORWARD'] = [flags[1] for flags in position_flags]
+    data['CENTER'] = [flags[2] for flags in position_flags]
     
     # Drop the original POSITION column
     data = data.drop('POSITION', axis=1)
@@ -104,16 +109,6 @@ def assign_position(data, max_workers=4, delay_between_requests=0.5):
     return data
 
 def assign_position_with_cache(data, cache_file='playerInfo.csv', max_workers=4, delay_between_requests=0.5):
-    """
-    Enhanced version with persistent caching to avoid re-fetching known players
-    
-    Parameters:
-    - data: DataFrame containing PLAYER_ID column
-    - cache_file: Path to CSV file for caching player positions
-    - max_workers: Number of parallel threads
-    - delay_between_requests: Delay between requests
-    """
-    
     print("Loading position cache...")
     
     # Try to load existing cache
@@ -186,11 +181,31 @@ def assign_position_with_cache(data, cache_file='playerInfo.csv', max_workers=4,
     data['HEIGHT'] = data['PLAYER_ID'].map(lambda pid: position_cache.get(pid, (None, None, None))[1])
     data['WEIGHT'] = data['PLAYER_ID'].map(lambda pid: position_cache.get(pid, (None, None, None))[2])
     
-    # Create binary flags for simplified position types
+    # Create binary flags for simplified position types (only first position)
     print("Creating position flags...")
-    data['GUARD'] = data['POSITION'].str.contains('G', na=False).astype(int)
-    data['FORWARD'] = data['POSITION'].str.contains('F', na=False).astype(int)
-    data['CENTER'] = data['POSITION'].str.contains('C', na=False).astype(int)
+    
+    def assign_first_position(position):
+        """Assign position based on first position found in order: G, F, C"""
+        if pd.isna(position):
+            return 0, 0, 0
+        
+        position_str = str(position).upper()
+        
+        # Check in order: Guard first, then Forward, then Center
+        if 'G' in position_str:
+            return 1, 0, 0
+        elif 'F' in position_str:
+            return 0, 1, 0
+        elif 'C' in position_str:
+            return 0, 0, 1
+        else:
+            return 0, 0, 0
+    
+    # Apply the position assignment
+    position_flags = data['POSITION'].apply(assign_first_position)
+    data['GUARD'] = [flags[0] for flags in position_flags]
+    data['FORWARD'] = [flags[1] for flags in position_flags]
+    data['CENTER'] = [flags[2] for flags in position_flags]
     
     data = data.drop('POSITION', axis=1)
     
