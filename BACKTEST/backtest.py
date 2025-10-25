@@ -7,7 +7,8 @@ from BACKTEST.backtestCalculateEVS import backtestSingleBet as calculateSingleBe
 from BACKTEST.backtestCalculateEVS import backtest3Legs as calculate3Legs
 
 def backtestSingle(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                  variance_inflation=1.1, distribution_type='normal'):
+                  variance_inflation=1.1, distribution_type='normal', use_monte_carlo=True, 
+                  n_simulations=10000, max_kelly=0.25, stake=100):
     
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'points'
@@ -22,9 +23,12 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
         models=models,
         features=features,
         edge_threshold=edge_threshold,
-        stake=100,
+        stake=stake,
         variance_inflation=variance_inflation,
-        distribution_type=distribution_type
+        distribution_type=distribution_type,
+        use_monte_carlo=use_monte_carlo,
+        n_simulations=n_simulations,
+        max_kelly=max_kelly
     )
     
     # Sort by edge and take top bets
@@ -48,8 +52,8 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
         actual = playerData['PTS'].iloc[-1]
         
-        # Recommendation based on edge threshold (probability edge, not point edge)
-        recommendation = 1 if edge > edge_threshold else 0
+        # Use the recommendation from the updated function (includes Kelly constraint)
+        recommendation = row['RECOMMENDATION']
 
         # Determine if bet won
         if side == 'over':
@@ -73,9 +77,15 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
             'model_prob': row['MODEL PROB'],  # Model probability for the side
             'market_prob': row['IMPLIED PROB'],  # Market implied probability
             'ev_percent': row['EV%'],  # Expected value percentage
-            'kelly_full': row['KELLY FULL'],  # Kelly criterion
+            'ev_total': row['EV_TOTAL'],  # Total EV in dollars
+            'kelly_fraction': row['KELLY_FRACTION'],  # Kelly as fraction
+            'kelly_dollars': row['KELLY_DOLLARS'],  # Kelly in dollars
+            'kelly_capped_fraction': row['KELLY_CAPPED_FRACTION'],  # Kelly fraction (capped)
+            'kelly_capped_dollars': row['KELLY_CAPPED_DOLLARS'],  # Kelly dollars (capped)
+            'stake': stake,  # Show the stake amount
             'recommendation': recommendation,
             'won': won,
+            'simulation_method': row['SIMULATION_METHOD'],  # Monte Carlo or Analytical
             'date': gameDate
         })
 
@@ -83,9 +93,17 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
 
 def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal'):
+                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
     data = data[data['GAME_DATE'] <= gameDate]
-    backtestData = backtestData[(backtestData['CATEGORY'] == 'player_points') & (backtestData['GAME_DATE'] == gameDate)]
+    if stat_col == 'PTS':
+        category = 'player_points'
+    elif stat_col == 'REB':
+        category = 'player_rebounds'
+    else:
+        print(f"Invalid stat column: {stat_col}")
+        return pd.DataFrame()
+    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
     
     if backtestData.empty:
         print(f"No bets found for {gameDate}")
@@ -101,7 +119,11 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
         edge_threshold=edge_threshold,
         top_n=top_n,
         variance_inflation=variance_inflation,
-        distribution_type=distribution_type
+        distribution_type=distribution_type,
+        stat_col=stat_col,
+        use_monte_carlo=use_monte_carlo,
+        n_simulations=n_simulations,
+        max_kelly=max_kelly
     )
     
     # Sort by combined edge and take top bets
@@ -135,9 +157,15 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
             print(f"Player data not found for {player1} or {player2} on {gameDate}")
             continue
         
-        actual1 = player1Data['PTS'].iloc[-1]
-        actual2 = player2Data['PTS'].iloc[-1]
-
+        if stat_col == 'PTS':
+            actual1 = player1Data['PTS'].iloc[-1]
+            actual2 = player2Data['PTS'].iloc[-1]
+        elif stat_col == 'REB':
+            actual1 = player1Data['REB'].iloc[-1]
+            actual2 = player2Data['REB'].iloc[-1]
+        else:
+            print(f"Invalid stat column: {stat_col}")
+            continue
         
         # Calculate edges for each leg
         edge1 = row['edge1']
@@ -191,17 +219,26 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
             'pair_won': pair_won,
             'ev_percent': row['ev_percent'],
             'kelly_full': row['kelly_full'],
+            'kelly_capped': row['kelly_capped'],
             'prob_both': row['prob_both'],
             'combined_edge': combined_edge,
+            'simulation_method': row['simulation_method'],
             'date': gameDate
         })
 
     return pd.DataFrame(backtest_results)
 
 def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal'):
+                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
     data = data[data['GAME_DATE'] <= gameDate]
-    category = 'player_points'
+    if stat_col == 'PTS':
+        category = 'player_points'
+    elif stat_col == 'REB':
+        category = 'player_rebounds'
+    else:
+        print(f"Invalid stat column: {stat_col}")
+        return pd.DataFrame()
         
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
     
@@ -220,7 +257,10 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
         top_n=top_n,
         variance_inflation=variance_inflation,
         distribution_type=distribution_type,
-        stat_col=stat_col
+        stat_col=stat_col,
+        use_monte_carlo=use_monte_carlo,
+        n_simulations=n_simulations,
+        max_kelly=max_kelly
     )
     
     # Sort by combined edge and take top bets
@@ -342,8 +382,10 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
             'parlay_won': parlay_won,
             'ev_percent': row['ev_percent'],
             'kelly_full': row['kelly_full'],
+            'kelly_capped': row['kelly_capped'],
             'prob_all_three': row['prob_all_three'],
             'combined_edge': combined_edge,
+            'simulation_method': row['simulation_method'],
             'date': gameDate
         })
 
