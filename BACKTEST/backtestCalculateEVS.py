@@ -236,8 +236,8 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         model_prob = p_over if str(side).upper().startswith('O') else p_under
         edge = model_prob - market_prob
         
-        # Recommendation based on edge threshold AND Kelly constraint
-        if edge > edge_threshold and kelly_dollars > 0:
+        # Recommendation based on edge threshold
+        if edge > edge_threshold:
             recommendation = 1
         else:
             recommendation = 0
@@ -277,7 +277,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
 
 def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -304,6 +304,13 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player2_data = data[data['PLAYER_NAME'] == player2]
             
             if player1_data.empty or player2_data.empty:
+                continue
+            
+            # Check if players are from the same team (prevent same-team combinations)
+            player1_team = player1_data['TEAM_ABBREVIATION'].iloc[-1]
+            player2_team = player2_data['TEAM_ABBREVIATION'].iloc[-1]
+            
+            if player1_team == player2_team:
                 continue
                 
             # Get betting lines for both players
@@ -404,6 +411,10 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
             kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
             
+            # Calculate Kelly bet size in dollars
+            kelly_bet_size = kelly_capped * stake
+            kelly_bet_size_full = kelly_full * stake
+            
             # Edge calculation (probability edge for both players)
             market_prob1 = impliedProb(-137)  # Fixed odds
             market_prob2 = impliedProb(-137)  # Fixed odds
@@ -411,8 +422,11 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             edge2 = p2 - market_prob2
             combined_edge = (edge1 + edge2) / 2  # Average edge
             
-            # Recommendation based on edge threshold AND Kelly constraint
-            if combined_edge > edge_threshold and kelly_capped > 0:
+            # Recommendation based on multiple criteria
+            if (combined_edge > edge_threshold and 
+                kelly_capped > 0 and
+                p_both > 0.60 and
+                ev > 1):
                 recommendation = 1
             else:
                 recommendation = 0
@@ -428,6 +442,12 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             won1 = (actual1 > player1_line['LINE']) if model_side1 == 'over' else (actual1 < player1_line['LINE'])
             won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
             won_both = won1 and won2
+            
+            # Calculate profit/loss based on stake
+            if won_both:
+                profit = (payout_multiple - 1) * stake  # Win: (3-1) * stake = 2 * stake
+            else:
+                profit = -stake  # Loss: lose the stake
             
             results.append({
                 'player1': player1,
@@ -448,9 +468,13 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 'edge1': round(edge1, 3),
                 'edge2': round(edge2, 3),
                 'combined_edge': round(combined_edge, 3),
-                'ev_percent': round(ev * 100, 2),
+                'ev_percent': round(ev, 2),
                 'kelly_full': round(kelly_full, 3),
                 'kelly_capped': round(kelly_capped, 3),
+                'kelly_bet_size': round(kelly_bet_size, 2),
+                'kelly_bet_size_full': round(kelly_bet_size_full, 2),
+                'stake': stake,
+                'profit': round(profit, 2),
                 'recommendation': recommendation,
                 'actual1': actual1,
                 'actual2': actual2,
@@ -466,7 +490,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
 
 def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -496,6 +520,17 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player3_data = data[data['PLAYER_NAME'] == player3]
                 
                 if player1_data.empty or player2_data.empty or player3_data.empty:
+                    continue
+                
+                # Check if any players are from the same team (prevent same-team combinations)
+                player1_team = player1_data['TEAM_ABBREVIATION'].iloc[-1]
+                player2_team = player2_data['TEAM_ABBREVIATION'].iloc[-1]
+                player3_team = player3_data['TEAM_ABBREVIATION'].iloc[-1]
+                
+                # Skip if any two players are from the same team
+                if (player1_team == player2_team or 
+                    player1_team == player3_team or 
+                    player2_team == player3_team):
                     continue
                     
                 # Get betting lines for all three players
@@ -620,6 +655,10 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
                 kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
                 
+                # Calculate Kelly bet size in dollars
+                kelly_bet_size = kelly_capped * stake
+                kelly_bet_size_full = kelly_full * stake
+                
                 # Edge calculation (probability edge for all three players)
                 market_prob1 = impliedProb(-137)  # Fixed odds
                 market_prob2 = impliedProb(-137)  # Fixed odds
@@ -629,8 +668,11 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 edge3 = p3 - market_prob3
                 combined_edge = (edge1 + edge2 + edge3) / 3  # Average edge
                 
-                # Recommendation based on edge threshold AND Kelly constraint
-                if combined_edge > edge_threshold and kelly_capped > 0:
+                # Recommendation based on multiple criteria
+                if (combined_edge > edge_threshold and 
+                    kelly_capped > 0 and
+                    p_all_three > 0.20 and
+                    ev > 0.75):
                     recommendation = 1
                 else:
                     recommendation = 0
@@ -648,6 +690,12 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
                 won3 = (actual3 > player3_line['LINE']) if model_side3 == 'over' else (actual3 < player3_line['LINE'])
                 won_all_three = won1 and won2 and won3
+                
+                # Calculate profit/loss based on stake
+                if won_all_three:
+                    profit = (payout_multiple - 1) * stake  # Win: (6-1) * stake = 5 * stake
+                else:
+                    profit = -stake  # Loss: lose the stake
                 
                 results.append({
                     'player1': player1,
@@ -676,9 +724,13 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     'edge2': round(edge2, 3),
                     'edge3': round(edge3, 3),
                     'combined_edge': round(combined_edge, 3),
-                    'ev_percent': round(ev * 100, 2),
+                    'ev_percent': round(ev, 2),
                     'kelly_full': round(kelly_full, 3),
                     'kelly_capped': round(kelly_capped, 3),
+                    'kelly_bet_size': round(kelly_bet_size, 2),
+                    'kelly_bet_size_full': round(kelly_bet_size_full, 2),
+                    'stake': stake,
+                    'profit': round(profit, 2),
                     'recommendation': recommendation,
                     'actual1': actual1,
                     'actual2': actual2,

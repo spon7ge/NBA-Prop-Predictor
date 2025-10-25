@@ -213,8 +213,59 @@ def fit_train_val(
 
     return final_model, dict(RMSE=val_rmse, MAE=val_mae, R2=val_r2, best_iteration=int(best_iter)), []
 
+def tune_quantile_hyperparams(X_train, y_train, X_val, y_val, quantile, 
+                              sample_weight=None, use_gpu=False, n_iter=50):
+    """
+    Tune hyperparameters for a specific quantile model.
+    """
+    base_params = xgb_quantile_params(quantile, use_gpu=use_gpu)
+    base_params.pop("early_stopping_rounds", None)
+
+    xgb = XGBRegressor(**base_params)
+
+    param_dist = {
+        "max_depth": randint(3, 10),
+        "min_child_weight": randint(1, 10),
+        "subsample": uniform(0.5, 0.5),
+        "colsample_bytree": uniform(0.5, 0.5),
+        "gamma": uniform(0, 2),
+        "reg_alpha": uniform(0, 9),
+        "reg_lambda": uniform(1, 50),
+        "learning_rate": uniform(0.005, 0.02)
+    }
+
+    n_jobs = 1 if use_gpu else -1  
+    
+    search = RandomizedSearchCV(
+        estimator=xgb,
+        param_distributions=param_dist,
+        n_iter=n_iter,
+        scoring="neg_root_mean_squared_error",
+        n_jobs=n_jobs,  
+        cv=[(range(len(y_train)), range(len(y_val)))],
+        verbose=1,
+        random_state=42
+    )
+
+    X = pd.concat([X_train, X_val], ignore_index=True)
+    y = np.concatenate([y_train, y_val])
+    
+    if sample_weight is not None:
+        val_weights = np.ones(len(y_val))
+        combined_sample_weight = np.concatenate([sample_weight, val_weights])
+    else:
+        combined_sample_weight = None
+    
+    search.fit(X, y, sample_weight=combined_sample_weight)
+
+    print(f"Best params for q{int(quantile*100)}: {search.best_params_}")
+    print(f"Best R² for q{int(quantile*100)}: {search.best_score_}")
+
+    return search.best_params_
+
 def fit_quantile_models(train_df, val_df, features, target_col, date_col, player_col,
-                       recent_n=30, recent_weight=3.0, use_gpu=False):  
+                       recent_n=30, recent_weight=3.0, use_gpu=False, 
+                       tune_hyperparams=False, tune_iters=50):  
     train_df = train_df.sort_values(date_col).reset_index(drop=True)
     val_df = val_df.sort_values(date_col).reset_index(drop=True)
     
@@ -238,7 +289,15 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
     for q in quantiles:
         print(f"\nTraining quantile model for q{int(q*100)}...")
         
-        p = xgb_quantile_params(q, use_gpu=use_gpu)
+        if tune_hyperparams:
+            print(f"Tuning hyperparameters for q{int(q*100)}...")
+            best_params = tune_quantile_hyperparams(
+                X_tr, y_tr, X_va, y_va, quantile=q,
+                sample_weight=w_tr, use_gpu=use_gpu, n_iter=tune_iters
+            )
+            p = xgb_quantile_params(q, best_params, use_gpu=use_gpu)
+        else:
+            p = xgb_quantile_params(q, use_gpu=use_gpu)
         
         model = XGBRegressor(**p)
         
@@ -251,7 +310,10 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
         
         best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
         
-        p_final = xgb_quantile_params(q, use_gpu=use_gpu)
+        if tune_hyperparams:
+            p_final = xgb_quantile_params(q, best_params, use_gpu=use_gpu)
+        else:
+            p_final = xgb_quantile_params(q, use_gpu=use_gpu)
         p_final["n_estimators"] = int(best_iter)
         p_final.pop("early_stopping_rounds", None)
         
