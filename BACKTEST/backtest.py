@@ -129,8 +129,18 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
     )
     
     # Sort by combined edge and take top bets
-    evData = results.sort_values(by='ev_percent', ascending=False).head(top_n)
+    top_ev = results.sort_values(by='ev_percent', ascending=False).head(top_n)
+    top_edge = results.sort_values(by='combined_edge', ascending=False).head(top_n)
+    top_kelly = results.sort_values(by='kelly_capped', ascending=False).head(top_n)
+    top_prob_both = results.sort_values(by='prob_both', ascending=False).head(top_n)
     
+    top_ev['selection'] = 'top_ev'
+    top_edge['selection'] = 'top_edge'
+    top_kelly['selection'] = 'top_kelly'
+    top_prob_both['selection'] = 'top_prob'
+    
+    all_results = pd.concat([top_ev, top_edge, top_kelly, top_prob_both]).drop_duplicates()
+    evData = all_results.sort_values(by='ev_percent', ascending=False)
     if evData.empty:
         print(f"No valid pairs found for {gameDate}")
         return pd.DataFrame()

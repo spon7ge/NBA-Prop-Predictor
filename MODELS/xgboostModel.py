@@ -28,37 +28,6 @@ def clean_feature_dtypes(X, cat_cols):
             Xc[c] = pd.to_numeric(col, errors="coerce")
     return Xc
 
-def xgb_params(base=None, use_gpu=False):
-    p = dict(
-        objective="reg:squarederror",
-        eval_metric="rmse",
-        tree_method='hist',
-        booster='gbtree',
-        random_state=42,
-        n_jobs=-1,
-        
-        n_estimators=5000,
-        learning_rate=0.01412139968434072, 
-        max_depth=9,
-        min_child_weight=3, 
-        
-        subsample=0.73338144662399,
-        colsample_bytree=0.6460723242676091,
-        
-        gamma=0.7327236865873834,
-        reg_alpha=3.4421579214044646,
-        reg_lambda=50.16154429033941,
-        
-        early_stopping_rounds=75, 
-        verbosity=1
-    )
-    if base:
-        p.update(base)
-    if use_gpu:
-        p["tree_method"] = "gpu_hist"
-        p["gpu_id"] = 0
-        p["n_jobs"] = 1
-    return p
 
 def xgb_quantile_params(quantile, base=None, use_gpu=False):
     p = dict(
@@ -94,131 +63,73 @@ def xgb_quantile_params(quantile, base=None, use_gpu=False):
         p["n_jobs"] = 1
     return p
 
-def tune_xgb_hyperparams(X_train, y_train, X_val, y_val, sample_weight=None, use_gpu=False, n_iter=50):
-    base_params = xgb_params(use_gpu=use_gpu)
-    base_params.pop("early_stopping_rounds", None)
-
-    xgb = XGBRegressor(**base_params)
-
-    param_dist = {
-        "max_depth": randint(3, 10),
-        "min_child_weight": randint(1, 10),
-        "subsample": uniform(0.5, 0.5),       # 0.5–1.0
-        "colsample_bytree": uniform(0.5, 0.5),
-        "gamma": uniform(0, 2),
-        "reg_alpha": uniform(0, 9),
-        "reg_lambda": uniform(1, 50),
-        "learning_rate": uniform(0.005, 0.02)
-    }
-
-    n_jobs = 1 if use_gpu else -1  
-    
-    search = RandomizedSearchCV(
-        estimator=xgb,
-        param_distributions=param_dist,
-        n_iter=n_iter,
-        scoring="neg_root_mean_squared_error",
-        n_jobs=n_jobs,  
-        cv=[(range(len(y_train)), range(len(y_val)))],
-        verbose=1,
-        random_state=42
-    )
-
-    X = pd.concat([X_train, X_val], ignore_index=True)
-    y = np.concatenate([y_train, y_val])
-    
-    if sample_weight is not None:
-        val_weights = np.ones(len(y_val))
-        combined_sample_weight = np.concatenate([sample_weight, val_weights])
+def adaptive_quantile_alpha(quantile):
+    """
+    Adaptive quantile alpha that adjusts based on the quantile value.
+    More extreme quantiles (closer to 0 or 1) get slightly adjusted alphas.
+    """
+    if quantile <= 0.1:
+        return max(0.05, quantile - 0.02)  # Slightly lower for very low quantiles
+    elif quantile >= 0.9:
+        return min(0.95, quantile + 0.02)  # Slightly higher for very high quantiles
     else:
-        combined_sample_weight = None
-    
-    search.fit(X, y, sample_weight=combined_sample_weight)
+        return quantile  # Keep original for median quantiles
 
-    print("Best params:", search.best_params_)
-    print("Best R²:", search.best_score_)
-
-    return search.best_params_
-
-def fit_train_val(
-    train_df, val_df,
-    features, target_col, date_col, player_col,
-    recent_n=30, recent_weight=3.0,
-    params=None, use_gpu=False, tune_hyperparams=False, tune_iters=50):
-
-    train_df = train_df.sort_values(date_col).reset_index(drop=True)
-    val_df = val_df.sort_values(date_col).reset_index(drop=True)
-    
-    rolling_avg_cols = ['PTS_ROLLING_AVG_40', 'PTS_ROLLING_AVG_15', 'PTS_ROLLING_AVG_10']
-    train_df = train_df.dropna(subset=rolling_avg_cols)
-    val_df = val_df.dropna(subset=rolling_avg_cols)
-
-    X_tr = train_df[features]
-    y_tr = train_df[target_col].to_numpy()
-    X_va = val_df[features]
-    y_va = val_df[target_col].to_numpy()
-
-    X_tr = clean_feature_dtypes(X_tr, set())
-    X_va = clean_feature_dtypes(X_va, set())
-    w_tr = build_recent_weights(train_df, player_col, recent_n, recent_weight)
-    
-    if tune_hyperparams:
-        best_params = tune_xgb_hyperparams(
-        X_tr, y_tr, X_va, y_va, sample_weight=w_tr,
-        use_gpu=use_gpu, n_iter=tune_iters
+def xgb_quantile_params_improved(quantile, base=None, use_gpu=False):
+    base_params = dict(
+        objective="reg:quantileerror",  
+        eval_metric="quantile",
+        tree_method='hist',
+        booster='gbtree',
+        random_state=42,
+        n_jobs=-1,
+        n_estimators=5000,
+        early_stopping_rounds=75, 
+        verbosity=1,
+        quantile_alpha=adaptive_quantile_alpha(quantile),
     )
-        p = xgb_params(best_params, use_gpu=use_gpu)
+    
+    if quantile in [0.1, 0.9]:
+        params = dict(
+            learning_rate=0.01,  # Lower learning rate for stability
+            max_depth=6,  # Shallower trees to prevent overfitting
+            min_child_weight=2,  # More conservative splitting
+            subsample=0.7,  # Less data to prevent overfitting
+            colsample_bytree=0.7,  # Fewer features
+            gamma=1.0,  # More pruning
+            reg_alpha=1.0,  # More L1 regularization
+            reg_lambda=10.0,  # More L2 regularization
+            max_delta_step=0,  # Smaller steps
+        )
     else:
-        p = xgb_params(params, use_gpu=use_gpu)
+        # Keep conservative settings for median
+        params = dict(
+            learning_rate=0.01412139968434072,
+            max_depth=9,
+            min_child_weight=3,
+            subsample=0.73338144662399,
+            colsample_bytree=0.6460723242676091,
+            gamma=0.7327236865873834,
+            reg_alpha=3.4421579214044646,
+            reg_lambda=50.16154429033941,
+        )
     
-    X_tr = clean_feature_dtypes(X_tr, set())
-    X_va = clean_feature_dtypes(X_va, set())
+    p = {**base_params, **params}
+    if base:
+        p.update(base)
+    if use_gpu:
+        p["tree_method"] = "gpu_hist"
+        p["gpu_id"] = 0
+        p["n_jobs"] = 1
+    return p
 
-    w_tr = build_recent_weights(train_df, player_col, recent_n, recent_weight)
-
-    p = xgb_params(params, use_gpu=use_gpu)
-    
-    model = XGBRegressor(**p)
-    
-    model.fit(
-        X_tr, y_tr,
-        sample_weight=w_tr,
-        eval_set=[(X_va, y_va)],
-        verbose=False
-    )
-
-    best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
-
-    p_final = xgb_params(params, use_gpu=use_gpu)
-    p_final["n_estimators"] = int(best_iter)
-    p_final.pop("early_stopping_rounds", None)
-    
-    full_df = pd.concat([train_df, val_df], ignore_index=True)
-    X_full = clean_feature_dtypes(full_df[features], set())
-    y_full = full_df[target_col].to_numpy()
-    
-    w_full = np.concatenate([
-        build_recent_weights(train_df, player_col, recent_n, recent_weight),
-        np.ones(len(val_df))
-    ])
-
-    final_model = XGBRegressor(**p_final)
-    final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
-
-    val_preds = model.predict(X_va)
-    diff = val_preds - y_va
-    val_rmse = float(np.sqrt(np.mean(diff**2)))
-    val_mae = float(np.mean(np.abs(diff)))
-    val_r2 = float(r2_score(y_va, val_preds))
-
-    return final_model, dict(RMSE=val_rmse, MAE=val_mae, R2=val_r2, best_iteration=int(best_iter)), []
 
 def tune_quantile_hyperparams(X_train, y_train, X_val, y_val, quantile, 
                               sample_weight=None, use_gpu=False, n_iter=50):
     """
     Tune hyperparameters for a specific quantile model.
     """
-    base_params = xgb_quantile_params(quantile, use_gpu=use_gpu)
+    base_params = xgb_quantile_params_improved(quantile, use_gpu=use_gpu)
     base_params.pop("early_stopping_rounds", None)
 
     xgb = XGBRegressor(**base_params)
@@ -295,9 +206,9 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
                 X_tr, y_tr, X_va, y_va, quantile=q,
                 sample_weight=w_tr, use_gpu=use_gpu, n_iter=tune_iters
             )
-            p = xgb_quantile_params(q, best_params, use_gpu=use_gpu)
+            p = xgb_quantile_params_improved(q, best_params, use_gpu=use_gpu)
         else:
-            p = xgb_quantile_params(q, use_gpu=use_gpu)
+            p = xgb_quantile_params_improved(q, use_gpu=use_gpu)
         
         model = XGBRegressor(**p)
         
@@ -311,9 +222,9 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
         best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
         
         if tune_hyperparams:
-            p_final = xgb_quantile_params(q, best_params, use_gpu=use_gpu)
+            p_final = xgb_quantile_params_improved(q, best_params, use_gpu=use_gpu)
         else:
-            p_final = xgb_quantile_params(q, use_gpu=use_gpu)
+            p_final = xgb_quantile_params_improved(q, use_gpu=use_gpu)
         p_final["n_estimators"] = int(best_iter)
         p_final.pop("early_stopping_rounds", None)
         
@@ -393,29 +304,6 @@ def evaluate_quantile_models(models, test_df, features, target_col):
     
     return results
 
-def evaluate_test(model, test_df, features, target_col, cat_cols):
-    X_te = clean_feature_dtypes(test_df[features], set())
-    y_te = test_df[target_col].to_numpy()
-    
-    preds = model.predict(X_te)
-    diff = preds - y_te
-
-    rmse = float(np.sqrt(np.mean(diff**2)))
-    mae = float(np.mean(np.abs(diff)))
-    r2 = float(r2_score(y_te, preds))
-
-    residuals_df = pd.DataFrame({
-        "actual": y_te,
-        "predicted": preds,
-        "residual": diff
-    })
-    
-    # Join back some useful context for grouping
-    context_cols = ["PLAYER_NAME", "MATCHUP", "TEAM_PTS", "OPP_PTS", "STARTING",'MIN']
-    available_cols = [c for c in context_cols if c in test_df.columns]
-    residuals_df = residuals_df.join(test_df[available_cols])
-    
-    return dict(RMSE=rmse, MAE=mae, R2=r2), residuals_df
 
 
 def correlation_analysis(df, features_list, target_col='PTS'):

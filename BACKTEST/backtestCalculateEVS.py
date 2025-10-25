@@ -9,6 +9,19 @@ from nba_api.stats.endpoints import scoreboardv2
 from MODELS.teamInfo import *
 
 
+nameDict = {
+    'Nikola Jokic': 'Nikola Jokić',
+    'Luka Doncic': 'Luka Dončić',
+    'Nikola Vucevic': 'Nikola Vučević',
+    'Jonas Valanciunas': 'Jonas Valančiūnas',
+    'Dennis Schroder': 'Dennis Schröder',
+    'Kristaps Porzingis': 'Kristaps Porziņģis',
+    'Bogdan Bogdanovic': 'Bogdan Bogdanović',
+    'Dario Saric': 'Dario Šarić',
+    'Nikola Jovic': 'Nikola Jović',
+    'Vlatko Cancar': 'Vlatko Čančar',
+}
+
 # Convert UTC to ET and create game_date column
 def convert_to_et(utc_time):
     utc_dt = datetime.fromisoformat(utc_time.replace('Z', '+00:00'))
@@ -144,16 +157,10 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         odds = int(row['ODDS'])
         
         # Handle name variations
-        if name == 'Nikola Jokic':
-            name = 'Nikola Jokić'
-        elif name == 'Luka Doncic':
-            name = 'Luka Dončić'
-        elif name == 'Kristaps Porzingis':
-            name = 'Kristaps Porziņģis'
-        elif name == 'Alperen Sengun':
-            name = 'Alperen Şengün'
-        elif name == 'Nikola Vucevic':
-            name = 'Nikola Vučević'
+        if name in nameDict:
+            name = nameDict[name]
+        else:
+            continue
         
         # Get player data
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
@@ -299,6 +306,12 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player1 = available_players[i]
             player2 = available_players[j]
             
+            # Handle name variations
+            if player1 in nameDict:
+                player1 = nameDict[player1]
+            if player2 in nameDict:
+                player2 = nameDict[player2]
+                
             # Get player data
             player1_data = data[data['PLAYER_NAME'] == player1]
             player2_data = data[data['PLAYER_NAME'] == player2]
@@ -424,9 +437,9 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             
             # Recommendation based on multiple criteria
             if (combined_edge > edge_threshold and 
-                kelly_capped > 0 and
-                p_both > 0.60 and
-                ev > 1):
+                kelly_capped > -0.02 and
+                p_both > 0.45 and 
+                ev > 0.4):
                 recommendation = 1
             else:
                 recommendation = 0
@@ -514,6 +527,14 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player2 = available_players[j]
                 player3 = available_players[k]
                 
+                # Handle name variations
+                if player1 in nameDict:
+                    player1 = nameDict[player1]
+                if player2 in nameDict:
+                    player2 = nameDict[player2]
+                if player3 in nameDict:
+                    player3 = nameDict[player3]
+                
                 # Get player data
                 player1_data = data[data['PLAYER_NAME'] == player1]
                 player2_data = data[data['PLAYER_NAME'] == player2]
@@ -528,8 +549,8 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player3_team = player3_data['TEAM_ABBREVIATION'].iloc[-1]
                 
                 # Skip if any two players are from the same team
-                if (player1_team == player2_team or 
-                    player1_team == player3_team or 
+                if (player1_team == player2_team and
+                    player1_team == player3_team and
                     player2_team == player3_team):
                     continue
                     

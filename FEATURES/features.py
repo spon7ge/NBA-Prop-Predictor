@@ -131,7 +131,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = [ 'PTS', 'AST', 'FGA', 'FG3A', 'FTA', 'TOV', 'FG_PCT', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow']
+                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'PF' ]
 
     for window in windows:
         for col in stats_cols:
@@ -148,7 +148,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
 def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     player_data = player_data.sort_values([player_id_col, date_col])
     stats_lines = [ 'PTS', 'AST', 'FGA', 'FG3A', 'FTA', 'TOV', 'FG_PCT', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow'] 
+                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'PF'] 
     for stat_line in stats_lines:
         if stat_line not in player_data.columns:
             continue
@@ -177,11 +177,10 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = [ 'PTS', 'AST', 'FGA', 'FG3A', 'FTA', 'TOV', 'FG_PCT', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow']
+                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'PF']
     
     for stat in stats_cols:
         if stat in df_enhanced.columns:
-            print(f"Creating {stat}_AVG_TO_DATE")
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
                 df_enhanced.groupby(player_id_col)[stat]
                 .transform(lambda x: x.shift(1).expanding().mean())
@@ -201,11 +200,6 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
 # ================================================================================================
 
 def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
-    """
-    Calculate home/away rolling averages (expanding) for key metrics,
-    prevent data leakage via shift(1), and fill missing values with the opposite location's current average.
-    All results are rounded to 2 decimal places.
-    """
     df = player_data.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
@@ -213,7 +207,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
         return df
 
     metrics = [ 'PTS', 'AST', 'FGA', 'FG3A', 'FTA', 'TOV', 'FG_PCT', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow']
+                    'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'PF']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -235,8 +229,12 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
         overall_avg = shifted_expanding_mean(df[metric], df[player_id_col])
         loc_avg = shifted_expanding_mean(df[metric], [df[player_id_col], df['HOME_GAME']])
 
-        home_col = f'PLAYER_HOME_AVG_{metric}_TO_DATE'  # RENAMED with _TO_DATE suffix
-        away_col = f'PLAYER_AWAY_AVG_{metric}_TO_DATE'  # RENAMED with _TO_DATE suffix
+        home_col = f'PLAYER_HOME_AVG_{metric}_TO_DATE'
+        away_col = f'PLAYER_AWAY_AVG_{metric}_TO_DATE'
+        
+        # Calculate deltas
+        home_delta_col = f'PLAYER_HOME_{metric}_DELTA'
+        away_delta_col = f'PLAYER_AWAY_{metric}_DELTA'
 
         df[home_col] = np.where(df['HOME_GAME'] == 1, loc_avg, np.nan)
         df[away_col] = np.where(df['HOME_GAME'] == 0, loc_avg, np.nan)
@@ -249,16 +247,20 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
 
         df[home_col] = df[home_col].fillna(global_means[metric]).astype('float32').round(2)
         df[away_col] = df[away_col].fillna(global_means[metric]).astype('float32').round(2)
+        
+        # Calculate deltas (home/away performance - overall performance)
+        df[home_delta_col] = (df[home_col] - overall_avg).round(2)
+        df[away_delta_col] = (df[away_col] - overall_avg).round(2)
+        
+        # Fill delta NaN values with 0 (no difference from average)
+        df[home_delta_col] = df[home_delta_col].fillna(0)
+        df[away_delta_col] = df[away_delta_col].fillna(0)
 
     return df
 
 
+
 def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION', stat_line='PTS'):
-    """
-    Calculate matchup-specific statistics with optimized performance and additional metrics.
-    Includes rolling averages for multiple windows with data leakage prevention.
-    FIXED: All features now use shift(1) to prevent leakage.
-    """
     # Create copy to avoid modifying original
     df = player_data.copy()
     
@@ -279,11 +281,20 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
         'EFG_PCT': [3,5],
         'TS_PCT': [3,5],
         'TCHS': [3,5],
-        
+        'PF': [3,5],
     }
     
     # Calculate games against opponent count efficiently
     df['GAMES_VS_OPP'] = player_opp_group.cumcount() + 1
+    
+    # First, calculate overall averages for each player
+    for metric in metrics:
+        if metric in df.columns:
+            df[f'{metric}_AVG_TO_DATE'] = (
+                df.groupby(player_id_col)[metric]
+                .transform(lambda x: x.shift(1).expanding().mean())
+                .round(2)
+            )
     
     # Vectorized operations for all rolling windows - FIXED: Always shift by 1
     for metric in metrics:
@@ -295,16 +306,24 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
         
         for window in metrics[metric]:
             # Calculate rolling average with shifted values
-            col_name = f'MATCHUP_AVG_{metric}_LAST_{window}_TO_DATE'  # RENAMED with _TO_DATE suffix
-            df[col_name] = (
+            matchup_avg_col = f'MATCHUP_AVG_{metric}_LAST_{window}_TO_DATE'
+            df[matchup_avg_col] = (
                 shifted_values
                 .rolling(window=window, min_periods=1)
                 .mean()
                 .round(2)
             )
+            
+            # Calculate delta (matchup performance - overall performance)
+            delta_col = f'MATCHUP_{metric}_DELTA_LAST_{window}'
+            df[delta_col] = (
+                df[matchup_avg_col] - df[f'{metric}_AVG_TO_DATE']
+            ).round(2)
     
     # Fill NaN values efficiently for all new columns at once
     rolling_cols = [col for col in df.columns if 'MATCHUP_AVG_' in col and '_TO_DATE' in col]
+    delta_cols = [col for col in df.columns if 'MATCHUP_' in col and '_DELTA_' in col]
+    
     if rolling_cols:
         # Calculate global means for each metric once
         global_means = df[rolling_cols].mean()
@@ -318,14 +337,17 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
             .round(2)
         )
     
+    # Fill delta columns with 0 (no difference from average)
+    if delta_cols:
+        df[delta_cols] = df[delta_cols].fillna(0).round(2)
+    
     # Convert memory types to save space
-    for col in rolling_cols:
-        df[col] = df[col].astype('float32')  # Use float32 instead of float64 to save memory
+    for col in rolling_cols + delta_cols:
+        df[col] = df[col].astype('float32')
     
     df['GAMES_VS_OPP'] = df['GAMES_VS_OPP'].astype('int8')
     
     return df
-
 def assign_team_opp_def_by_position(df, min_minutes=15):
     # Define defensive columns that actually exist in your dataset
     def_cols = [
@@ -774,25 +796,11 @@ def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
 
 def expectedPace(df):
     df = df.copy()
-    required_cols = ['TEAM_PACE_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'TEAM_PACE_ROLLING_AVG_5', 'OPP_PACE_ROLLING_AVG_5', 'TEAM_PACE_ROLLING_AVG_10', 'OPP_PACE_ROLLING_AVG_10', 'TEAM_PACE_ROLLING_AVG_15', 'OPP_PACE_ROLLING_AVG_15']
-    missing_cols = [col for col in required_cols if col not in df.columns]
-    
-    if missing_cols:
-        # Silently handle missing columns
-        df['EXPECTED_PACE'] = np.nan
-        df['EXPECTED_PACE_DIFF'] = np.nan
-        return df
-    
-    # Calculate expected pace by multiplying team and opponent pace averages
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_AVG_TO_DATE'] + df['OPP_PACE_AVG_TO_DATE']) / 2).round(2)
-    df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']
-    df['EXPECTED_PACE'] = df['EXPECTED_PACE'].fillna(np.nan)
+    df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']    
     return df
 
 def calculate_game_implied_pace(df):
-    """
-    Calculate GAME_IMPLIED_PACE using betting total and team pace history
-    """
     df = df.copy()
     
     # Use expected pace as base, adjust for total
