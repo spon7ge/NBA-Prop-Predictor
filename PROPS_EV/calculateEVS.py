@@ -275,18 +275,18 @@ def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05,
     
     return pd.DataFrame(results)    
 
-def calculate2LegBets(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
+def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
-    data = data[data['GAME_DATE'] <= gameDate]
+
     category = 'player_points'
-    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
-    if backtestData.empty:
-        print(f"No bets found for {gameDate}")
+    bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
+    if bookmakers.empty:
+        print(f"No bets found for {category}")
         return pd.DataFrame()
 
     # Get all available players for 2-leg combinations
-    available_players = backtestData['NAME'].unique()
+    available_players = bookmakers['NAME'].unique()
     if len(available_players) < 2:
         print("Not enough players for 2-leg bets")
         return pd.DataFrame()
@@ -314,8 +314,8 @@ def calculate2LegBets(data, backtestData, gameDate, models, features, edge_thres
                 continue
                 
             # Get betting lines for both players
-            player1_bets = backtestData[backtestData['NAME'] == player1]
-            player2_bets = backtestData[backtestData['NAME'] == player2]
+            player1_bets = bookmakers[bookmakers['NAME'] == player1]
+            player2_bets = bookmakers[bookmakers['NAME'] == player2]
             
             if player1_bets.empty or player2_bets.empty:
                 continue
@@ -431,24 +431,6 @@ def calculate2LegBets(data, backtestData, gameDate, models, features, edge_thres
             else:
                 recommendation = 0
             
-            # Get actual results
-            actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
-            actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
-            
-            if actual1 is None or actual2 is None:
-                continue
-            
-            # Determine if bet won
-            won1 = (actual1 > player1_line['LINE']) if model_side1 == 'over' else (actual1 < player1_line['LINE'])
-            won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
-            won_both = won1 and won2
-            
-            # Calculate profit/loss based on stake
-            if won_both:
-                profit = (payout_multiple - 1) * stake  # Win: (3-1) * stake = 2 * stake
-            else:
-                profit = -stake  # Loss: lose the stake
-            
             results.append({
                 'player1': player1,
                 'player2': player2,
@@ -474,32 +456,24 @@ def calculate2LegBets(data, backtestData, gameDate, models, features, edge_thres
                 'kelly_bet_size': round(kelly_bet_size, 2),
                 'kelly_bet_size_full': round(kelly_bet_size_full, 2),
                 'stake': stake,
-                'profit': round(profit, 2),
                 'recommendation': recommendation,
-                'actual1': actual1,
-                'actual2': actual2,
-                'won1': won1,
-                'won2': won2,
-                'won_both': won_both,
-                'date': gameDate,
                 'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
             })
     
     results_df = pd.DataFrame(results)
     return results_df
 
-def calculate3LegBets(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
+def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
-    data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
-    backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
-    if backtestData.empty:
-        print(f"No bets found for {gameDate}")
+    bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
+    if bookmakers.empty:
+        print(f"No bets found for {category}")
         return pd.DataFrame()
 
     # Get all available players for 3-leg combinations
-    available_players = backtestData['NAME'].unique()
+    available_players = bookmakers['NAME'].unique()
     if len(available_players) < 3:
         print("Not enough players for 3-leg bets")
         return pd.DataFrame()
@@ -534,9 +508,9 @@ def calculate3LegBets(data, backtestData, gameDate, models, features, edge_thres
                     continue
                     
                 # Get betting lines for all three players
-                player1_bets = backtestData[backtestData['NAME'] == player1]
-                player2_bets = backtestData[backtestData['NAME'] == player2]
-                player3_bets = backtestData[backtestData['NAME'] == player3]
+                player1_bets = bookmakers[bookmakers['NAME'] == player1]
+                player2_bets = bookmakers[bookmakers['NAME'] == player2]
+                player3_bets = bookmakers[bookmakers['NAME'] == player3]
                 
                 if player1_bets.empty or player2_bets.empty or player3_bets.empty:
                     continue
@@ -677,26 +651,6 @@ def calculate3LegBets(data, backtestData, gameDate, models, features, edge_thres
                 else:
                     recommendation = 0
                 
-                # Get actual results
-                actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
-                actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
-                actual3 = player3_data[player3_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player3_data[player3_data['GAME_DATE'] == gameDate]) > 0 else None
-                
-                if actual1 is None or actual2 is None or actual3 is None:
-                    continue
-                
-                # Determine if bet won
-                won1 = (actual1 > player1_line['LINE']) if model_side1 == 'over' else (actual1 < player1_line['LINE'])
-                won2 = (actual2 > player2_line['LINE']) if model_side2 == 'over' else (actual2 < player2_line['LINE'])
-                won3 = (actual3 > player3_line['LINE']) if model_side3 == 'over' else (actual3 < player3_line['LINE'])
-                won_all_three = won1 and won2 and won3
-                
-                # Calculate profit/loss based on stake
-                if won_all_three:
-                    profit = (payout_multiple - 1) * stake  # Win: (6-1) * stake = 5 * stake
-                else:
-                    profit = -stake  # Loss: lose the stake
-                
                 results.append({
                     'player1': player1,
                     'player2': player2,
@@ -730,16 +684,7 @@ def calculate3LegBets(data, backtestData, gameDate, models, features, edge_thres
                     'kelly_bet_size': round(kelly_bet_size, 2),
                     'kelly_bet_size_full': round(kelly_bet_size_full, 2),
                     'stake': stake,
-                    'profit': round(profit, 2),
                     'recommendation': recommendation,
-                    'actual1': actual1,
-                    'actual2': actual2,
-                    'actual3': actual3,
-                    'won1': won1,
-                    'won2': won2,
-                    'won3': won3,
-                    'won_all_three': won_all_three,
-                    'date': gameDate,
                     'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
                 })
     
