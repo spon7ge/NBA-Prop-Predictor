@@ -7,6 +7,9 @@ from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from nba_api.stats.endpoints import scoreboardv2
 from MODELS.teamInfo import *
+from MODELS.pipeline import *
+from itertools import combinations
+from collections import defaultdict
 
 nameDict = {
     'Nikola Jokic': 'Nikola Jokić',
@@ -84,69 +87,52 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
     else:
         return round(-100 / (odds_to_decimal - 1))
 
-def predictStats(playerName, data, models, features):
-    playerData = data[data['PLAYER_NAME'] == playerName]
-    sorted_data = playerData.sort_values(by='GAME_DATE')
-    
-    # Get latest row for game context and opponent context
-    latestRow = sorted_data.iloc[-1]
-    
-    # Get second-to-latest row for all other features
-    secondLatestRow = sorted_data.iloc[-2] if len(sorted_data) > 1 else latestRow
-    
-    # Define feature categories
-    game_context_features = [
-        'HOME_GAME', 'STARTING', 'PLAYER_IS_TEAM_STAR', 'STAR_SAT_OUT', 
-        'IS_BACK_TO_BACK', 'PLAYER_DAYS_REST', 'spread', 'TEAM_IMPLIED_PTS'
-    ]
-    
-    opponent_context_features = [
-        'OPP_DEF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 
-        'OPP_TOV_AVG_TO_DATE', 'OPP_GUARD_DEF_RATING', 'OPP_GUARD_DEF_FG_PCT_ALLOWED',
-        'OPP_GUARD_DEF_3PT_PCT_ALLOWED', 'OPP_GUARD_PTS_ALLOWED_PER_MIN',
-        'OPP_FORWARD_DEF_RATING', 'OPP_FORWARD_DEF_FG_PCT_ALLOWED',
-        'OPP_FORWARD_DEF_3PT_PCT_ALLOWED', 'OPP_FORWARD_PTS_ALLOWED_PER_MIN',
-        'OPP_CENTER_DEF_RATING', 'OPP_CENTER_DEF_FG_PCT_ALLOWED',
-        'OPP_CENTER_DEF_3PT_PCT_ALLOWED', 'OPP_CENTER_PTS_ALLOWED_PER_MIN',
-        'PTS_PER_MIN_X_OPP_DEF_RATING'
-    ]
-    
-    available_features = [f for f in features if f in data.columns]
-    playerInput = {}
-    
-    # Use latest row for game context and opponent context
-    for feature in available_features:
-        if feature in game_context_features or feature in opponent_context_features:
-            playerInput[feature] = latestRow[feature]
-        else:
-            # Use second-to-latest row for all other features
-            playerInput[feature] = secondLatestRow[feature]
-    
-    playerInput_df = pd.DataFrame([list(playerInput.values())], columns=list(playerInput.keys()))
-    
-    for col in playerInput_df.columns:
-        if playerInput_df[col].dtype == 'object':
-            playerInput_df[col] = pd.to_numeric(playerInput_df[col], errors='coerce').fillna(0)
-        elif playerInput_df[col].dtype == 'bool':
-            playerInput_df[col] = playerInput_df[col].astype(int)
-    
-    # Get predictions from all quantile models
-    predictions = {}
-    for quantile_name, model in models.items():
-        pred = model.predict(playerInput_df)[0]
-        predictions[quantile_name] = float(pred)
-    
-    return predictions
+_prediction_cache = {}
 
+def get_cached_prediction(player_name, data, models, features, current_date, projectedStartingFive, teamStarPlayer):
+    cache_key = f"{player_name}_{current_date}"
+    
+    if cache_key not in _prediction_cache:
+        try:
+            # Filter once
+            player_df = data[data['PLAYER_NAME'] == player_name].sort_values(by='GAME_DATE')
+            if player_df.empty:
+                return None
+            
+            # Build vector once
+            vector = buildVector(player_name, data, current_date, projectedStartingFive, teamStarPlayer)
+            vector = [item for sublist in vector for item in sublist]
+            vector = pd.DataFrame([vector], columns=features)
+            
+            for col in vector.columns:
+                vector[col] = pd.to_numeric(vector[col], errors='coerce')
+            
+            vector = vector.fillna(0)
+            
+            # Predict with all three models on same vector
+            q10_pred = round(float(models['q10'].predict(vector)[0]), 3)
+            q50_pred = round(float(models['q50'].predict(vector)[0]), 3)
+            q90_pred = round(float(models['q90'].predict(vector)[0]), 3)
+            
+            _prediction_cache[cache_key] = {
+                'q10': q10_pred,
+                'q50': q50_pred,
+                'q90': q90_pred
+            }
+        except Exception as e:
+            print(f"Error getting prediction for {player_name}: {e}")
+            return None
+    return _prediction_cache[cache_key]
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
+def calculateSingleBets(data, bookmakers, models, features, current_date, edge_threshold=0.05, stake=100, 
                      variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
                      use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
     print("Processing single bets with quantile models...")
     
     results = []
     
+    # Process each bet individually to capture all opportunities
     for _, row in bookmakers.iterrows():
         name = row['NAME']
         bookmaker = row['BOOKMAKER']
@@ -156,52 +142,48 @@ def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05,
         odds = int(row['ODDS'])
         
         # Handle name variations
+        original_name = name
         if name in nameDict:
             name = nameDict[name]
-        else:
-            continue
         
-        # Get player data
-        player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
-        if player_df.empty or stat_col not in player_df.columns:
-            continue
-        
-        # Get quantile predictions using updated function
+        # Get quantile predictions for this player
         try:
-            predictions = predictStats(name, data, models, features)
+            predictions = get_cached_prediction(name, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+            if predictions is None:
+                continue
             q10_pred = predictions['q10']
             q50_pred = predictions['q50']
             q90_pred = predictions['q90']
-            
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
         
-        # Convert quantiles to distribution parameters
-        mu = q50_pred  # Median as mean
-        sigma_raw = (q90_pred - q10_pred) / 2.56  # 80% interval to std dev
-        sigma = sigma_raw * variance_inflation  # Apply variance inflation
+        # Pre-calculate distribution parameters
+        mu = q50_pred
+        sigma_raw = (q90_pred - q10_pred) / 2.56
+        sigma = sigma_raw * variance_inflation
         
         # Calculate probabilities using Monte Carlo simulation or analytical method
-        if use_monte_carlo:
-            # Monte Carlo simulation (10k draws)
-            np.random.seed(42)  # For reproducibility
-            if distribution_type == 'normal':
-                simulations = np.random.normal(mu, sigma, n_simulations)
-            elif distribution_type == 't':
+        if use_monte_carlo and distribution_type == 'normal':
+            # Use faster analytical method for normal distributions
+            from scipy.stats import norm
+            p_over = 1 - norm.cdf(line, mu, sigma)
+        elif use_monte_carlo:
+            # Monte Carlo simulation for non-normal distributions
+            np.random.seed(hash(f"{name}_{line}") % 2**32)
+            if distribution_type == 't':
                 from scipy.stats import t
                 df = max(3, 2 * sigma**2 / (sigma**2 - 1))
                 simulations = t.rvs(df, loc=mu, scale=sigma, size=n_simulations, random_state=42)
             elif distribution_type == 'skew_t':
                 from scipy.stats import skewnorm
-                # Approximate skew-t with skew-normal (you can implement proper skew-t later)
                 simulations = skewnorm.rvs(0, loc=mu, scale=sigma, size=n_simulations, random_state=42)
             else:
                 raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
             
             p_over = np.mean(simulations > line)
         else:
-            # Analytical method (original)
+            # Analytical method
             if distribution_type == 'normal':
                 from scipy.stats import norm
                 p_over = 1 - norm.cdf(line, mu, sigma)
@@ -229,13 +211,12 @@ def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05,
         
         # EV calculations
         ev_per_dollar = p * b - (1 - p)
-        ev_total = ev_per_dollar * stake  # Total EV in dollars
-        ev_percent = ev_per_dollar * 100  # EV percentage
+        ev_total = ev_per_dollar * stake
         
         # Kelly criterion with variance-adjusted constraint
         kelly_fraction = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
-        kelly_capped_fraction = min(kelly_fraction, max_kelly)  
-        kelly_dollars = kelly_capped_fraction * stake * b  
+        kelly_capped_fraction = min(kelly_fraction, max_kelly)
+        kelly_dollars = kelly_capped_fraction * stake * b
         
         # Edge calculation (difference between model and market probabilities)
         market_prob = impliedProb(odds)
@@ -243,7 +224,10 @@ def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05,
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        if edge > edge_threshold:
+        if (edge > edge_threshold and 
+            kelly_capped_fraction > 0 and
+            p > 0.40 and 
+            ev_total > 1.00):
             recommendation = 1
         else:
             recommendation = 0
@@ -252,37 +236,33 @@ def calculateSingleBets(data, bookmakers, models, features, edge_threshold=0.05,
         confidence_interval = (q10_pred, q90_pred)
         
         results.append({
-        'NAME': name,
-        'BOOKMAKER': bookmaker,
-        'CATEGORY': category,
-        'LINE': line,
-        'ODDS': odds,
-        'SIDE': side,
-        'PREDICTION': round(q50_pred, 2),
-        'Q10': round(q10_pred, 2),
-        'Q90': round(q90_pred, 2),
-        'RECOMMENDATION': recommendation,
-        'OVER%': round(p_over, 3),
-        'UNDER%': round(p_under, 3),
-        'IMPLIED PROB': round(market_prob, 3),
-        'MODEL PROB': round(model_prob, 3),
-        'EDGE': round(edge, 3),
-        'EV%': round(ev_percent, 2),
-        'EV_TOTAL': round(ev_total, 2),  # Total EV in dollars
-        'KELLY_FRACTION': round(kelly_fraction, 3),  # Kelly as fraction
-        'KELLY_DOLLARS': round(kelly_dollars, 2),  # Kelly in dollars
-        'KELLY_CAPPED_FRACTION': round(kelly_capped_fraction, 3),
-        'KELLY_CAPPED_DOLLARS': round(kelly_capped_fraction * stake, 2),
-        'STAKE': stake,  # Show the stake amount
-        'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
-        'SIGMA': round(sigma, 2),
-        'SIMULATION_METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
-    })
+            'NAME': original_name,
+            'BOOKMAKER': bookmaker,
+            'CATEGORY': category,
+            'LINE': line,
+            'ODDS': odds,
+            'SIDE': side,
+            'PREDICTION': round(q50_pred, 2),
+            'Q10': round(q10_pred, 2),
+            'Q90': round(q90_pred, 2),
+            'RECOMMENDATION': recommendation,
+            'OVER%': round(p_over, 3),
+            'UNDER%': round(p_under, 3),
+            'IMPLIED PROB': round(market_prob, 3),
+            'MODEL PROB': round(model_prob, 3),
+            'EDGE': round(edge, 3),
+            'EV%': round(ev_total, 2),
+            'KELLY_FRACTION': round(kelly_fraction, 3),
+            'KELLY_DOLLARS': round(kelly_dollars, 2),
+            'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
+            'SIGMA': round(sigma, 2),
+            'SIMULATION_METHOD': 'Analytical' if not use_monte_carlo or distribution_type == 'normal' else 'Monte Carlo'
+        })
     
-    return pd.DataFrame(results)    
+    return pd.DataFrame(results)
 
-def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+def calculate2LegBets(data, bookmakers, models, features, current_date, edge_threshold=0.05, top_n=10, 
+                 variance_inflation=1.1, distribution_type='normal', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
 
     category = 'player_points'
@@ -298,13 +278,9 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
         return pd.DataFrame()
 
     results = []
-    
-    # Generate all 2-leg combinations
-    for i in range(len(available_players)):
-        for j in range(i + 1, len(available_players)):
-            player1 = available_players[i]
-            player2 = available_players[j]
-            
+    player_combinations = list(combinations(available_players, 2))
+
+    for player1, player2 in player_combinations:
             if player1 in nameDict:
                 player1 = nameDict[player1]
             if player2 in nameDict:
@@ -335,14 +311,17 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
             player1_line = player1_bets.iloc[0]
             player2_line = player2_bets.iloc[0]
             
-            # Get quantile predictions for both players
+            # Get quantile predictions for both players using cached function
             try:
-                pred1 = predictStats(player1, data, models, features)
-                pred2 = predictStats(player2, data, models, features)
+                pred1 = get_cached_prediction(player1, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+                pred2 = get_cached_prediction(player2, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+                
+                if pred1 is None or pred2 is None:
+                    continue
                 
                 q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
                 q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
-                
+
             except Exception as e:
                 print(f"Error getting predictions for {player1} or {player2}: {e}")
                 continue
@@ -420,11 +399,6 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
             # Kelly criterion with variance-adjusted constraint
             b = payout_multiple - 1.0  # b = 2.0
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
-            kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
-            
-            # Calculate Kelly bet size in dollars
-            kelly_bet_size = kelly_capped * stake
-            kelly_bet_size_full = kelly_full * stake
             
             # Edge calculation (probability edge for both players)
             market_prob1 = impliedProb(-137)  # Fixed odds
@@ -435,7 +409,7 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
             
             # Recommendation based on multiple criteria
             if (combined_edge > edge_threshold and 
-                kelly_capped > -0.02 and
+                kelly_full > -0.02 and
                 p_both > 0.40 and 
                 ev > 0.4):
                 recommendation = 1
@@ -463,10 +437,6 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
                 'combined_edge': round(combined_edge, 3),
                 'ev_percent': round(ev, 2),
                 'kelly_full': round(kelly_full, 3),
-                'kelly_capped': round(kelly_capped, 3),
-                'kelly_bet_size': round(kelly_bet_size, 2),
-                'kelly_bet_size_full': round(kelly_bet_size_full, 2),
-                'stake': stake,
                 'recommendation': recommendation,
                 'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
             })
@@ -474,8 +444,8 @@ def calculate2LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
     results_df = pd.DataFrame(results)
     return results_df
 
-def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+def calculate3LegBets(data, bookmakers, models, features, current_date, edge_threshold=0.05, top_n=10, 
+                 variance_inflation=1.1, distribution_type='normal', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
@@ -490,16 +460,10 @@ def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
         return pd.DataFrame()
 
     results = []
-    
+    player_combinations = list(combinations(available_players, 3))
     # Generate all 3-leg combinations
-    for i in range(len(available_players)):
-        for j in range(i + 1, len(available_players)):
-            for k in range(j + 1, len(available_players)):
-                player1 = available_players[i]
-                player2 = available_players[j]
-                player3 = available_players[k]
-                
-                # Handle name variations
+    for player1, player2, player3 in player_combinations:
+        
                 if player1 in nameDict:
                     player1 = nameDict[player1]
                 if player2 in nameDict:
@@ -537,11 +501,14 @@ def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
                 player2_line = player2_bets.iloc[0]
                 player3_line = player3_bets.iloc[0]
                 
-                # Get quantile predictions for all three players
+                # Get quantile predictions for all three players using cached function
                 try:
-                    pred1 = predictStats(player1, data, models, features)
-                    pred2 = predictStats(player2, data, models, features)
-                    pred3 = predictStats(player3, data, models, features)
+                    pred1 = get_cached_prediction(player1, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+                    pred2 = get_cached_prediction(player2, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+                    pred3 = get_cached_prediction(player3, data, models, features, current_date, projectedStartingFive, teamStarPlayer)
+                    
+                    if pred1 is None or pred2 is None or pred3 is None:
+                        continue
                     
                     q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
                     q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
@@ -644,11 +611,7 @@ def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
                 # Kelly criterion with variance-adjusted constraint
                 b = payout_multiple - 1.0  # b = 5.0
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
-                kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
                 
-                # Calculate Kelly bet size in dollars
-                kelly_bet_size = kelly_capped * stake
-                kelly_bet_size_full = kelly_full * stake
                 
                 # Edge calculation (probability edge for all three players)
                 market_prob1 = impliedProb(-137)  # Fixed odds
@@ -661,9 +624,9 @@ def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
                 
                 # Recommendation based on multiple criteria
                 if (combined_edge > edge_threshold and 
-                    kelly_capped > 0 and
-                    p_all_three > 0.20 and
-                    ev > 0.75):
+                    kelly_full > -0.02 and
+                    p_all_three > 0.40 and
+                    ev > 0.40):
                     recommendation = 1
                 else:
                     recommendation = 0
@@ -697,13 +660,9 @@ def calculate3LegBets(data, bookmakers, models, features, edge_threshold=0.05, t
                     'combined_edge': round(combined_edge, 3),
                     'ev_percent': round(ev, 2),
                     'kelly_full': round(kelly_full, 3),
-                    'kelly_capped': round(kelly_capped, 3),
-                    'kelly_bet_size': round(kelly_bet_size, 2),
-                    'kelly_bet_size_full': round(kelly_bet_size_full, 2),
-                    'stake': stake,
                     'recommendation': recommendation,
                     'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
                 })
-    
+
     results_df = pd.DataFrame(results)
     return results_df    
