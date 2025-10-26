@@ -1,6 +1,5 @@
 
 # virtual environment
-.env
 venv310/
 myenv312/
 
@@ -14,3 +13,5 @@ __pycache__/
 .DS_Store
 
 **/catboost_info/
+
+.env

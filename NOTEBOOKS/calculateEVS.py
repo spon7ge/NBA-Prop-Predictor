@@ -138,7 +138,7 @@ def calculateSingleBets(data, bookmakers, models, features, current_date, edge_t
         bookmaker = row['BOOKMAKER']
         category = row['CATEGORY']
         line = float(row['LINE'])
-        side = row.get('SIDE', 'over')
+        side = row.get('OVER/UNDER', 'over')
         odds = int(row['ODDS'])
         
         # Handle name variations
