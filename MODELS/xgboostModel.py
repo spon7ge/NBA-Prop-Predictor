@@ -118,8 +118,8 @@ def xgb_quantile_params_improved(quantile, base=None, use_gpu=False):
     if base:
         p.update(base)
     if use_gpu:
-        p["tree_method"] = "gpu_hist"
-        p["gpu_id"] = 0
+        p["tree_method"] = "hist"
+        p["device"] = "cuda"
         p["n_jobs"] = 1
     return p
 

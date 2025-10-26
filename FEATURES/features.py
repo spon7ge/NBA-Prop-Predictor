@@ -798,6 +798,7 @@ def expectedPace(df):
     df = df.copy()
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_AVG_TO_DATE'] + df['OPP_PACE_AVG_TO_DATE']) / 2).round(2)
     df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']    
+    df['EXPECTED_POINTS'] = (df['TEAM_PTS_AVG_TO_DATE'] + df['OPP_PTS_AVG_TO_DATE']) / 2
     return df
 
 def calculate_game_implied_pace(df):
@@ -1217,50 +1218,23 @@ def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DAT
 def add_interaction_features(df):
     eplison = 1e-8
     df = df.copy()
-    # Relative strength interactions
+    
     df['TEAM_OFF_MINUS_OPP_DEF'] = df['TEAM_OFF_RATING_AVG_TO_DATE'] - df['OPP_DEF_RATING_AVG_TO_DATE']
-
-    # Player context x environment
     df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    # df['PTS_X_TEAM_TOTAL'] = df['PTS_AVG_TO_DATE'] * np.where(df['team_is_favored'] == 1, 
-    #                                                           df['TEAM_IMPLIED_PTS_FAV'], 
-    #                                                           df['TEAM_IMPLIED_PTS_UND'])
-
-    # Shooting style x matchup fit
-    # df['PLAYER_3PT_X_OPP_3PT_DEF_GUARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
-    # df['PLAYER_3PT_X_OPP_3PT_DEF_FORWARD'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
-    # df['PLAYER_3PT_X_OPP_3PT_DEF_CENTER'] = df['percentageFieldGoalsAttempted3pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
-    # df['PLAYER_PAINT_X_OPP_PAINT_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_PTS_PAINT']
-
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_GUARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_FORWARD'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_PAINT_X_OPP_PAINT_DEF_CENTER'] = df['percentagePointsPaint_AVG_TO_DATE'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
-
-    df['PLAYER_MID_X_FORWARD_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_MID_X_GUARD_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_MID_X_CENTER_DEF'] = df['percentagePointsMidrange2pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
-    
-    df['PLAYER_3_X_FORWARD_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_3_X_GUARD_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * df['OPP_GUARD_DEF_FG_PCT_ALLOWED']
-    df['PLAYER_3_X_CENTER_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * df['OPP_CENTER_DEF_FG_PCT_ALLOWED']
-    
-    # Form x environment
-    df['ROLLING_PTS5_X_PACE'] = df['PTS_ROLLING_AVG_5'] * df['EXPECTED_PACE']
-    df['ROLLING_PTS5_X_TEAM_OFF'] = df['PTS_ROLLING_AVG_5'] * df['TEAM_OFF_RATING_AVG_TO_DATE']
-    df['ROLLING_MIN5_X_TEAM_PTS'] = df['MIN_ROLLING_AVG_5'] * df['TEAM_PTS_AVG_TO_DATE']
-
-    # Efficiency x volume
-    df['EFG_X_FGA'] = df['EFG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE']
-    df['FGA_PER_TCHS'] = round(df['FGA_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison), 3)
-    df['FGA_PER_TCHS_ROLLING_AVG_5'] = round(df['FGA_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_5'] + eplison), 3)
-    df['FGA_PER_TCHS_ROLLING_AVG_15'] = round(df['FGA_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
-    df['FGA_PER_TCHS_ROLLING_AVG_40'] = round(df['FGA_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
-    df['FGA_PER_TCHS_X_PACE'] = round(df['FGA_PER_TCHS'] * df['EXPECTED_PACE'], 3)
-    df['FGA_PER_TCHS_X_TEAM_OFF'] = round(df['FGA_PER_TCHS'] * df['TEAM_OFF_RATING_AVG_TO_DATE'], 3)
     df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
     df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
+    df['PLAYER_PAINT_X_OPP_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * (
+        df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] + df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
+    ) / 2
+    df['PLAYER_3PT_X_OPP_3PT_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * (
+        df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] + df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
+    ) / 2
+    df['FGA_PER_TCHS_X_TEAM_OFF'] = (
+        df['FGA_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison)
+    ) * df['TEAM_OFF_RATING_AVG_TO_DATE']
     df['EXPECTED_USAGE_MIN'] = df['USG_PCT_ROLLING_AVG_5'] * (df['MIN_ROLLING_AVG_5'] + eplison)
+    df['EFG_X_OPP_DEF'] = df['EFG_PCT_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
 
     # Points per minute interactions
     df['PTS_PER_MIN'] = round(df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison), 3)
@@ -1287,4 +1261,5 @@ def add_interaction_features(df):
     df['FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['FT_RATE_ROLLING_AVG_5'] = df['FTA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
     df['FT_RATE_ROLLING_AVG_10'] = df['FTA_ROLLING_AVG_10'] / (df['FGA_ROLLING_AVG_10'] + eplison)
+    
     return df
