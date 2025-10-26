@@ -1,6 +1,15 @@
 import pandas as pd
 import numpy as np
+import time
 import joblib
+import sys
+import os
+
+# Add parent directory to path to access MODELS module
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
 from MODELS.pipeline import *
 from BACKTEST.backtestCalculateEVS import backtest2legs as calculatePairs
 from BACKTEST.backtestCalculateEVS import backtestSingleBet as calculateSingleBet
@@ -32,7 +41,7 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
     )
     
     # Sort by edge and take top bets
-    evData = results.sort_values(by='ev_percent', ascending=False).head(top_n)
+    evData = results.sort_values(by='EV%', ascending=False).head(top_n)
     results = []
 
     for idx, row in evData.iterrows():
@@ -77,12 +86,8 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
             'model_prob': row['MODEL PROB'],  # Model probability for the side
             'market_prob': row['IMPLIED PROB'],  # Market implied probability
             'ev_percent': row['EV%'],  # Expected value percentage
-            'ev_total': row['EV_TOTAL'],  # Total EV in dollars
             'kelly_fraction': row['KELLY_FRACTION'],  # Kelly as fraction
             'kelly_dollars': row['KELLY_DOLLARS'],  # Kelly in dollars
-            'kelly_capped_fraction': row['KELLY_CAPPED_FRACTION'],  # Kelly fraction (capped)
-            'kelly_capped_dollars': row['KELLY_CAPPED_DOLLARS'],  # Kelly dollars (capped)
-            'stake': stake,  # Show the stake amount
             'recommendation': recommendation,
             'won': won,
             'simulation_method': row['SIMULATION_METHOD'],  # Monte Carlo or Analytical
@@ -95,7 +100,9 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
-                 
+    print(f"Starting backtest for pairs on {gameDate}")
+    total_start = time.time()
+
     data = data[data['GAME_DATE'] <= gameDate]
     if stat_col == 'PTS':
         category = 'player_points'
@@ -127,26 +134,25 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
         max_kelly=max_kelly,
         stake=stake
     )
-    
+    print(f"Time taken for pairs: {time.time() - total_start} seconds")
     # Sort by combined edge and take top bets
     top_ev = results.sort_values(by='ev_percent', ascending=False).head(top_n)
-    top_edge = results.sort_values(by='combined_edge', ascending=False).head(top_n)
     top_kelly = results.sort_values(by='kelly_capped', ascending=False).head(top_n)
-    top_prob_both = results.sort_values(by='prob_both', ascending=False).head(top_n)
-    
+
+    print(f"Time taken for sorting: {time.time() - total_start} seconds")
     top_ev['selection'] = 'top_ev'
-    top_edge['selection'] = 'top_edge'
     top_kelly['selection'] = 'top_kelly'
-    top_prob_both['selection'] = 'top_prob'
     
-    all_results = pd.concat([top_ev, top_edge, top_kelly, top_prob_both]).drop_duplicates()
-    evData = all_results.sort_values(by='ev_percent', ascending=False)
+    all_results = pd.concat([top_ev, top_kelly])
+    evData = all_results.drop_duplicates(subset=['player1', 'player2'], keep='first').sort_values(by='ev_percent', ascending=False)
+
+    print(f"Time taken for dropping duplicates: {time.time() - total_start} seconds")
     if evData.empty:
         print(f"No valid pairs found for {gameDate}")
         return pd.DataFrame()
     
     backtest_results = []
-
+    print(f"Time taken for iterating over evData: {time.time() - total_start} seconds")
     for idx, row in evData.iterrows():
         player1 = row['player1']
         player2 = row['player2']
@@ -230,9 +236,10 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
             'prob_both': row['prob_both'],
             'combined_edge': combined_edge,
             'simulation_method': row['simulation_method'],
+            'selection': row['selection'],
             'date': gameDate
         })
-
+    print(f"Time taken for backtest_results: {time.time() - total_start} seconds")
     return pd.DataFrame(backtest_results)
 
 def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 

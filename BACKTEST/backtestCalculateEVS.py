@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from nba_api.stats.endpoints import scoreboardv2
 from MODELS.teamInfo import *
+from itertools import combinations
 
 
 nameDict = {
@@ -85,6 +86,21 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
     else:
         return round(-100 / (odds_to_decimal - 1))
 
+# Global prediction cache
+_prediction_cache = {}
+
+def get_cached_prediction(player_name, data, models, features, stat_col='PTS', game_date=None):
+    """Get cached prediction for a player, computing if not already cached."""
+    cache_key = f"{player_name}_{stat_col}_{game_date}" if game_date else f"{player_name}_{stat_col}"
+    
+    if cache_key not in _prediction_cache:
+        try:
+            _prediction_cache[cache_key] = predictStats(player_name, data, models, features)
+        except Exception as e:
+            print(f"Error getting prediction for {player_name}: {e}")
+            return None
+    return _prediction_cache[cache_key]
+
 def predictStats(playerName, data, models, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
     sorted_data = playerData.sort_values(by='GAME_DATE')
@@ -159,17 +175,17 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         # Handle name variations
         if name in nameDict:
             name = nameDict[name]
-        else:
-            continue
         
         # Get player data
         player_df = data[data['PLAYER_NAME'] == name].sort_values(by='GAME_DATE', ascending=False)
         if player_df.empty or stat_col not in player_df.columns:
             continue
         
-        # Get quantile predictions using updated function
+        # Get quantile predictions using cached function
         try:
-            predictions = predictStats(name, data, models, features)
+            predictions = get_cached_prediction(name, data, models, features, stat_col)
+            if predictions is None:
+                continue
             q10_pred = predictions['q10']
             q50_pred = predictions['q50']
             q90_pred = predictions['q90']
@@ -231,7 +247,6 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         # EV calculations
         ev_per_dollar = p * b - (1 - p)
         ev_total = ev_per_dollar * stake  # Total EV in dollars
-        ev_percent = ev_per_dollar * 100  # EV percentage
         
         # Kelly criterion with variance-adjusted constraint
         kelly_fraction = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
@@ -244,7 +259,10 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        if edge > edge_threshold:
+        if (edge > edge_threshold and 
+            kelly_capped_fraction > -0.02 and
+            p > 0.40 and 
+            ev_total > 80.00):
             recommendation = 1
         else:
             recommendation = 0
@@ -268,13 +286,9 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         'IMPLIED PROB': round(market_prob, 3),
         'MODEL PROB': round(model_prob, 3),
         'EDGE': round(edge, 3),
-        'EV%': round(ev_percent, 2),
-        'EV_TOTAL': round(ev_total, 2),  # Total EV in dollars
+        'EV%': round(ev_total, 2),
         'KELLY_FRACTION': round(kelly_fraction, 3),  # Kelly as fraction
         'KELLY_DOLLARS': round(kelly_dollars, 2),  # Kelly in dollars
-        'KELLY_CAPPED_FRACTION': round(kelly_capped_fraction, 3),
-        'KELLY_CAPPED_DOLLARS': round(kelly_capped_fraction * stake, 2),
-        'STAKE': stake,  # Show the stake amount
         'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
         'SIGMA': round(sigma, 2),
         'SIMULATION_METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
@@ -299,13 +313,10 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
         return pd.DataFrame()
 
     results = []
-    
+    player_combinations = list(combinations(available_players, 2))
     # Generate all 2-leg combinations
-    for i in range(len(available_players)):
-        for j in range(i + 1, len(available_players)):
-            player1 = available_players[i]
-            player2 = available_players[j]
-            
+    for player1, player2 in player_combinations:
+        
             # Handle name variations
             if player1 in nameDict:
                 player1 = nameDict[player1]
@@ -337,10 +348,13 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player1_line = player1_bets.iloc[0]
             player2_line = player2_bets.iloc[0]
             
-            # Get quantile predictions for both players
+            # Get quantile predictions for both players using cached function
             try:
-                pred1 = predictStats(player1, data, models, features)
-                pred2 = predictStats(player2, data, models, features)
+                pred1 = get_cached_prediction(player1, data, models, features, stat_col, gameDate)
+                pred2 = get_cached_prediction(player2, data, models, features, stat_col, gameDate)
+                
+                if pred1 is None or pred2 is None:
+                    continue
                 
                 q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
                 q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
@@ -518,15 +532,10 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
         return pd.DataFrame()
 
     results = []
-    
+    player_combinations = list(combinations(available_players, 3))
     # Generate all 3-leg combinations
-    for i in range(len(available_players)):
-        for j in range(i + 1, len(available_players)):
-            for k in range(j + 1, len(available_players)):
-                player1 = available_players[i]
-                player2 = available_players[j]
-                player3 = available_players[k]
-                
+    for player1, player2, player3 in player_combinations:
+        
                 # Handle name variations
                 if player1 in nameDict:
                     player1 = nameDict[player1]
@@ -567,11 +576,14 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player2_line = player2_bets.iloc[0]
                 player3_line = player3_bets.iloc[0]
                 
-                # Get quantile predictions for all three players
+                # Get quantile predictions for all three players using cached function
                 try:
-                    pred1 = predictStats(player1, data, models, features)
-                    pred2 = predictStats(player2, data, models, features)
-                    pred3 = predictStats(player3, data, models, features)
+                    pred1 = get_cached_prediction(player1, data, models, features, stat_col, gameDate)
+                    pred2 = get_cached_prediction(player2, data, models, features, stat_col, gameDate)
+                    pred3 = get_cached_prediction(player3, data, models, features, stat_col, gameDate)
+                    
+                    if pred1 is None or pred2 is None or pred3 is None:
+                        continue
                     
                     q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
                     q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
@@ -691,9 +703,9 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 
                 # Recommendation based on multiple criteria
                 if (combined_edge > edge_threshold and 
-                    kelly_capped > 0 and
-                    p_all_three > 0.20 and
-                    ev > 0.75):
+                    kelly_capped > -0.02 and
+                    p_all_three > 0.45 and 
+                    ev > 0.5):
                     recommendation = 1
                 else:
                     recommendation = 0
