@@ -178,7 +178,14 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
                        recent_n=30, recent_weight=3.0, use_gpu=False, 
                        tune_hyperparams=False, tune_iters=50):  
     train_df = train_df.sort_values(date_col).reset_index(drop=True)
-    val_df = val_df.sort_values(date_col).reset_index(drop=True)
+    
+    if val_df is None or len(val_df) == 0:
+        print("No validation data provided - using training data for early stopping")
+        val_df = train_df.copy()
+        use_train_for_val = True
+    else:
+        val_df = val_df.sort_values(date_col).reset_index(drop=True)
+        use_train_for_val = False
     
     rolling_avg_cols = ['PTS_ROLLING_AVG_40', 'PTS_ROLLING_AVG_15', 'PTS_ROLLING_AVG_10']
     train_df = train_df.dropna(subset=rolling_avg_cols)
@@ -200,7 +207,7 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
     for q in quantiles:
         print(f"\nTraining quantile model for q{int(q*100)}...")
         
-        if tune_hyperparams:
+        if tune_hyperparams and not use_train_for_val:
             print(f"Tuning hyperparameters for q{int(q*100)}...")
             best_params = tune_quantile_hyperparams(
                 X_tr, y_tr, X_va, y_va, quantile=q,
@@ -212,40 +219,65 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
         
         model = XGBRegressor(**p)
         
-        model.fit(
-            X_tr, y_tr,
-            sample_weight=w_tr,
-            eval_set=[(X_va, y_va)],
-            verbose=False
-        )
+        # Use different fitting approach based on validation data availability
+        if use_train_for_val:
+            # Train without early stopping when using training data as validation
+            p_no_early_stop = p.copy()
+            p_no_early_stop.pop("early_stopping_rounds", None)
+            model = XGBRegressor(**p_no_early_stop)
+            model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
+            best_iter = p["n_estimators"]  # Use full number of estimators
+        else:
+            model.fit(
+                X_tr, y_tr,
+                sample_weight=w_tr,
+                eval_set=[(X_va, y_va)],
+                verbose=False
+            )
+            best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
         
-        best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
-        
-        if tune_hyperparams:
+        if tune_hyperparams and not use_train_for_val:
             p_final = xgb_quantile_params_improved(q, best_params, use_gpu=use_gpu)
         else:
             p_final = xgb_quantile_params_improved(q, use_gpu=use_gpu)
         p_final["n_estimators"] = int(best_iter)
         p_final.pop("early_stopping_rounds", None)
         
-        full_df = pd.concat([train_df, val_df], ignore_index=True)
-        X_full = clean_feature_dtypes(full_df[features], set())
-        y_full = full_df[target_col].to_numpy()
-        
-        w_full = np.concatenate([
-            build_recent_weights(train_df, player_col, recent_n, recent_weight),
-            np.ones(len(val_df))
-        ])
+        # Final model training
+        if use_train_for_val:
+            # Use all training data for final model
+            final_model = XGBRegressor(**p_final)
+            final_model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
+        else:
+            # Use combined training + validation data for final model
+            full_df = pd.concat([train_df, val_df], ignore_index=True)
+            X_full = clean_feature_dtypes(full_df[features], set())
+            y_full = full_df[target_col].to_numpy()
+            
+            w_full = np.concatenate([
+                build_recent_weights(train_df, player_col, recent_n, recent_weight),
+                np.ones(len(val_df))
+            ])
 
-        final_model = XGBRegressor(**p_final)
-        final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
+            final_model = XGBRegressor(**p_final)
+            final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
         
         # Validation metrics
-        val_preds = model.predict(X_va)
-        diff = val_preds - y_va
-        val_rmse = float(np.sqrt(np.mean(diff**2)))
-        val_mae = float(np.mean(np.abs(diff)))
-        val_r2 = float(r2_score(y_va, val_preds))
+        if use_train_for_val:
+            # Use training metrics when no validation data
+            val_preds = model.predict(X_tr)
+            diff = val_preds - y_tr
+            val_rmse = float(np.sqrt(np.mean(diff**2)))
+            val_mae = float(np.mean(np.abs(diff)))
+            val_r2 = float(r2_score(y_tr, val_preds))
+            print(f"q{int(q*100)} training RMSE: {val_rmse:.3f} (no validation data)")
+        else:
+            val_preds = model.predict(X_va)
+            diff = val_preds - y_va
+            val_rmse = float(np.sqrt(np.mean(diff**2)))
+            val_mae = float(np.mean(np.abs(diff)))
+            val_r2 = float(r2_score(y_va, val_preds))
+            print(f"q{int(q*100)} validation RMSE: {val_rmse:.3f}")
         
         models[f'q{int(q*100)}'] = final_model
         val_metrics[f'q{int(q*100)}'] = {
@@ -254,8 +286,6 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
             'R2': val_r2, 
             'best_iteration': int(best_iter)
         }
-        
-        print(f"q{int(q*100)} validation RMSE: {val_rmse:.3f}")
     
     return models, val_metrics
 
