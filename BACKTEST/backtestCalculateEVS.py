@@ -159,7 +159,7 @@ def predictStats(playerName, data, models, features):
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
                      variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                     use_monte_carlo=True, n_simulations=10000, max_kelly=0.25):
+                     use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, df_t=5, skew_a=-2.0):
     print("Processing single bets with quantile models...")
     
     results = []
@@ -199,23 +199,28 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         sigma_raw = (q90_pred - q10_pred) / 2.56  # 80% interval to std dev
         sigma = sigma_raw * variance_inflation  # Apply variance inflation
         
+        # Set random seed outside conditional for reproducibility across runs
+        np.random.seed(42)  # For reproducibility
+        
         # Calculate probabilities using Monte Carlo simulation or analytical method
         if use_monte_carlo:
             # Monte Carlo simulation (10k draws)
-            np.random.seed(42)  # For reproducibility
             if distribution_type == 'normal':
                 simulations = np.random.normal(mu, sigma, n_simulations)
             elif distribution_type == 't':
                 from scipy.stats import t
-                df = max(3, 2 * sigma**2 / (sigma**2 - 1))
-                simulations = t.rvs(df, loc=mu, scale=sigma, size=n_simulations, random_state=42)
+                df = df_t  # treat df as hyperparameter controlling tail thickness
+                scale = sigma * np.sqrt((df - 2) / df)
+                simulations = t.rvs(df, loc=mu, scale=scale, size=n_simulations, random_state=42)
             elif distribution_type == 'skew_t':
                 from scipy.stats import skewnorm
-                # Approximate skew-t with skew-normal (you can implement proper skew-t later)
-                simulations = skewnorm.rvs(0, loc=mu, scale=sigma, size=n_simulations, random_state=42)
+                # Approximate skew-t with skew-normal using configurable skew parameter
+                simulations = skewnorm.rvs(skew_a, loc=mu, scale=sigma, size=n_simulations, random_state=42)
             else:
                 raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
             
+            # Clip simulations at zero since points cannot be negative
+            simulations = np.maximum(simulations, 0)
             p_over = np.mean(simulations > line)
         else:
             # Analytical method (original)
@@ -224,11 +229,12 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
                 p_over = 1 - norm.cdf(line, mu, sigma)
             elif distribution_type == 't':
                 from scipy.stats import t
-                df = max(3, 2 * sigma**2 / (sigma**2 - 1))
-                p_over = 1 - t.cdf(line, df, mu, sigma)
+                df = df_t
+                scale = sigma * np.sqrt((df - 2) / df)
+                p_over = 1 - t.cdf(line, df, loc=mu, scale=scale)
             elif distribution_type == 'skew_t':
                 from scipy.stats import skewnorm
-                p_over = 1 - skewnorm.cdf(line, 0, loc=mu, scale=sigma)
+                p_over = 1 - skewnorm.cdf(line, skew_a, loc=mu, scale=sigma)
             else:
                 raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
         
@@ -298,7 +304,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
 
 def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, df_t=5, skew_a=-2.0):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -372,26 +378,33 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             sigma2_raw = (q90_2 - q10_2) / 2.56
             sigma2 = sigma2_raw * variance_inflation
             
+            # Set random seed outside conditional for reproducibility across runs
+            np.random.seed(42)  # For reproducibility
+            
             # Calculate probabilities for both players using Monte Carlo or analytical method
             if use_monte_carlo:
                 # Monte Carlo simulation for both players
-                np.random.seed(42)  # For reproducibility
                 if distribution_type == 'normal':
                     sim1 = np.random.normal(mu1, sigma1, n_simulations)
                     sim2 = np.random.normal(mu2, sigma2, n_simulations)
                 elif distribution_type == 't':
                     from scipy.stats import t
-                    df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
-                    df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
-                    sim1 = t.rvs(df1, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                    sim2 = t.rvs(df2, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
+                    df1 = df_t
+                    df2 = df_t
+                    scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
+                    scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
+                    sim1 = t.rvs(df1, loc=mu1, scale=scale1, size=n_simulations, random_state=42)
+                    sim2 = t.rvs(df2, loc=mu2, scale=scale2, size=n_simulations, random_state=42)
                 elif distribution_type == 'skew_t':
                     from scipy.stats import skewnorm
-                    sim1 = skewnorm.rvs(0, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                    sim2 = skewnorm.rvs(0, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
+                    sim1 = skewnorm.rvs(skew_a, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
+                    sim2 = skewnorm.rvs(skew_a, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
                 else:
                     raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
                 
+                # Clip simulations at zero since points cannot be negative
+                sim1 = np.maximum(sim1, 0)
+                sim2 = np.maximum(sim2, 0)
                 p1_over = np.mean(sim1 > player1_line['LINE'])
                 p2_over = np.mean(sim2 > player2_line['LINE'])
             else:
@@ -402,14 +415,16 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                     p2_over = 1 - norm.cdf(player2_line['LINE'], mu2, sigma2)
                 elif distribution_type == 't':
                     from scipy.stats import t
-                    df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
-                    df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
-                    p1_over = 1 - t.cdf(player1_line['LINE'], df1, mu1, sigma1)
-                    p2_over = 1 - t.cdf(player2_line['LINE'], df2, mu2, sigma2)
+                    df1 = df_t
+                    df2 = df_t
+                    scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
+                    scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
+                    p1_over = 1 - t.cdf(player1_line['LINE'], df1, loc=mu1, scale=scale1)
+                    p2_over = 1 - t.cdf(player2_line['LINE'], df2, loc=mu2, scale=scale2)
                 elif distribution_type == 'skew_t':
                     from scipy.stats import skewnorm
-                    p1_over = 1 - skewnorm.cdf(player1_line['LINE'], 0, loc=mu1, scale=sigma1)
-                    p2_over = 1 - skewnorm.cdf(player2_line['LINE'], 0, loc=mu2, scale=sigma2)
+                    p1_over = 1 - skewnorm.cdf(player1_line['LINE'], skew_a, loc=mu1, scale=sigma1)
+                    p2_over = 1 - skewnorm.cdf(player2_line['LINE'], skew_a, loc=mu2, scale=sigma2)
                 else:
                     raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
             
@@ -517,7 +532,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
 
 def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, df_t=5, skew_a=-2.0):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -606,30 +621,39 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 sigma3_raw = (q90_3 - q10_3) / 2.56
                 sigma3 = sigma3_raw * variance_inflation
                 
+                # Set random seed outside conditional for reproducibility across runs
+                np.random.seed(42)  # For reproducibility
+                
                 # Calculate probabilities for all three players using Monte Carlo or analytical method
                 if use_monte_carlo:
                     # Monte Carlo simulation for all three players
-                    np.random.seed(42)  # For reproducibility
                     if distribution_type == 'normal':
                         sim1 = np.random.normal(mu1, sigma1, n_simulations)
                         sim2 = np.random.normal(mu2, sigma2, n_simulations)
                         sim3 = np.random.normal(mu3, sigma3, n_simulations)
                     elif distribution_type == 't':
                         from scipy.stats import t
-                        df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
-                        df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
-                        df3 = max(3, 2 * sigma3**2 / (sigma3**2 - 1))
-                        sim1 = t.rvs(df1, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                        sim2 = t.rvs(df2, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
-                        sim3 = t.rvs(df3, loc=mu3, scale=sigma3, size=n_simulations, random_state=42)
+                        df1 = df_t
+                        df2 = df_t
+                        df3 = df_t
+                        scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
+                        scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
+                        scale3 = sigma3 * np.sqrt((df3 - 2) / df3)
+                        sim1 = t.rvs(df1, loc=mu1, scale=scale1, size=n_simulations, random_state=42)
+                        sim2 = t.rvs(df2, loc=mu2, scale=scale2, size=n_simulations, random_state=42)
+                        sim3 = t.rvs(df3, loc=mu3, scale=scale3, size=n_simulations, random_state=42)
                     elif distribution_type == 'skew_t':
                         from scipy.stats import skewnorm
-                        sim1 = skewnorm.rvs(0, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                        sim2 = skewnorm.rvs(0, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
-                        sim3 = skewnorm.rvs(0, loc=mu3, scale=sigma3, size=n_simulations, random_state=42)
+                        sim1 = skewnorm.rvs(skew_a, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
+                        sim2 = skewnorm.rvs(skew_a, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
+                        sim3 = skewnorm.rvs(skew_a, loc=mu3, scale=sigma3, size=n_simulations, random_state=42)
                     else:
                         raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
                     
+                    # Clip simulations at zero since points cannot be negative
+                    sim1 = np.maximum(sim1, 0)
+                    sim2 = np.maximum(sim2, 0)
+                    sim3 = np.maximum(sim3, 0)
                     p1_over = np.mean(sim1 > player1_line['LINE'])
                     p2_over = np.mean(sim2 > player2_line['LINE'])
                     p3_over = np.mean(sim3 > player3_line['LINE'])
@@ -642,17 +666,20 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                         p3_over = 1 - norm.cdf(player3_line['LINE'], mu3, sigma3)
                     elif distribution_type == 't':
                         from scipy.stats import t
-                        df1 = max(3, 2 * sigma1**2 / (sigma1**2 - 1))
-                        df2 = max(3, 2 * sigma2**2 / (sigma2**2 - 1))
-                        df3 = max(3, 2 * sigma3**2 / (sigma3**2 - 1))
-                        p1_over = 1 - t.cdf(player1_line['LINE'], df1, mu1, sigma1)
-                        p2_over = 1 - t.cdf(player2_line['LINE'], df2, mu2, sigma2)
-                        p3_over = 1 - t.cdf(player3_line['LINE'], df3, mu3, sigma3)
+                        df1 = df_t
+                        df2 = df_t
+                        df3 = df_t
+                        scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
+                        scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
+                        scale3 = sigma3 * np.sqrt((df3 - 2) / df3)
+                        p1_over = 1 - t.cdf(player1_line['LINE'], df1, loc=mu1, scale=scale1)
+                        p2_over = 1 - t.cdf(player2_line['LINE'], df2, loc=mu2, scale=scale2)
+                        p3_over = 1 - t.cdf(player3_line['LINE'], df3, loc=mu3, scale=scale3)
                     elif distribution_type == 'skew_t':
                         from scipy.stats import skewnorm
-                        p1_over = 1 - skewnorm.cdf(player1_line['LINE'], 0, loc=mu1, scale=sigma1)
-                        p2_over = 1 - skewnorm.cdf(player2_line['LINE'], 0, loc=mu2, scale=sigma2)
-                        p3_over = 1 - skewnorm.cdf(player3_line['LINE'], 0, loc=mu3, scale=sigma3)
+                        p1_over = 1 - skewnorm.cdf(player1_line['LINE'], skew_a, loc=mu1, scale=sigma1)
+                        p2_over = 1 - skewnorm.cdf(player2_line['LINE'], skew_a, loc=mu2, scale=sigma2)
+                        p3_over = 1 - skewnorm.cdf(player3_line['LINE'], skew_a, loc=mu3, scale=sigma3)
                     else:
                         raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
                 

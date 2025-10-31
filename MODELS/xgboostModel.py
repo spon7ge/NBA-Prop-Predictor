@@ -1,8 +1,9 @@
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import numpy as np
 import pandas as pd
 from xgboost import XGBRegressor
 from sklearn.model_selection import RandomizedSearchCV
+from skopt import BayesSearchCV
 from sklearn.inspection import permutation_importance
 from scipy.stats import uniform, randint
 import matplotlib.pyplot as plt
@@ -29,92 +30,31 @@ def clean_feature_dtypes(X, cat_cols):
     return Xc
 
 
-def xgb_quantile_params(quantile, base=None, use_gpu=False):
+def xgb_regression_params(base=None, use_gpu=False):
+    """Default XGBoost regression parameters."""
     p = dict(
-        objective="reg:quantileerror",  
-        eval_metric="quantile",
+        objective="reg:pseudohubererror",  
+        eval_metric="rmse",
         tree_method='hist',
         booster='gbtree',
         random_state=42,
         n_jobs=-1,
         
-        n_estimators=5000,
-        learning_rate=0.01412139968434072, 
-        max_depth=9,
-        min_child_weight=3, 
+        n_estimators=1500,
+        learning_rate=0.015,
+        max_depth=5,
+        min_child_weight=4,
         
-        subsample=0.73338144662399,
-        colsample_bytree=0.6460723242676091,
+        subsample=0.75,
+        colsample_bytree=0.75,
         
-        gamma=0.7327236865873834,
-        reg_alpha=3.4421579214044646,
-        reg_lambda=50.16154429033941,
+        gamma=0.8,
+        reg_alpha=1.5,
+        reg_lambda=8.0,
         
-        early_stopping_rounds=75, 
+        early_stopping_rounds=75,
         verbosity=1,
-        
-        quantile_alpha=quantile,  
     )
-    if base:
-        p.update(base)
-    if use_gpu:
-        p["tree_method"] = "gpu_hist"
-        p["gpu_id"] = 0
-        p["n_jobs"] = 1
-    return p
-
-def adaptive_quantile_alpha(quantile):
-    """
-    Adaptive quantile alpha that adjusts based on the quantile value.
-    More extreme quantiles (closer to 0 or 1) get slightly adjusted alphas.
-    """
-    if quantile <= 0.1:
-        return max(0.05, quantile - 0.02)  # Slightly lower for very low quantiles
-    elif quantile >= 0.9:
-        return min(0.95, quantile + 0.02)  # Slightly higher for very high quantiles
-    else:
-        return quantile  # Keep original for median quantiles
-
-def xgb_quantile_params_improved(quantile, base=None, use_gpu=False):
-    base_params = dict(
-        objective="reg:quantileerror",  
-        eval_metric="quantile",
-        tree_method='hist',
-        booster='gbtree',
-        random_state=42,
-        n_jobs=-1,
-        n_estimators=5000,
-        early_stopping_rounds=75, 
-        verbosity=1,
-        quantile_alpha=adaptive_quantile_alpha(quantile),
-    )
-    
-    if quantile in [0.1, 0.9]:
-        params = dict(
-            learning_rate=0.01,  # Lower learning rate for stability
-            max_depth=6,  # Shallower trees to prevent overfitting
-            min_child_weight=2,  # More conservative splitting
-            subsample=0.7,  # Less data to prevent overfitting
-            colsample_bytree=0.7,  # Fewer features
-            gamma=1.0,  # More pruning
-            reg_alpha=1.0,  # More L1 regularization
-            reg_lambda=10.0,  # More L2 regularization
-            max_delta_step=0,  # Smaller steps
-        )
-    else:
-        # Keep conservative settings for median
-        params = dict(
-            learning_rate=0.01412139968434072,
-            max_depth=9,
-            min_child_weight=3,
-            subsample=0.73338144662399,
-            colsample_bytree=0.6460723242676091,
-            gamma=0.7327236865873834,
-            reg_alpha=3.4421579214044646,
-            reg_lambda=50.16154429033941,
-        )
-    
-    p = {**base_params, **params}
     if base:
         p.update(base)
     if use_gpu:
@@ -124,12 +64,10 @@ def xgb_quantile_params_improved(quantile, base=None, use_gpu=False):
     return p
 
 
-def tune_quantile_hyperparams(X_train, y_train, X_val, y_val, quantile, 
-                              sample_weight=None, use_gpu=False, n_iter=50):
-    """
-    Tune hyperparameters for a specific quantile model.
-    """
-    base_params = xgb_quantile_params_improved(quantile, use_gpu=use_gpu)
+def tune_hyperparams(X_train, y_train, X_val, y_val, 
+                     sample_weight=None, use_gpu=False, n_iter=50):
+    """Tune hyperparameters for XGBoost regression model."""
+    base_params = xgb_regression_params(use_gpu=use_gpu)
     base_params.pop("early_stopping_rounds", None)
 
     xgb = XGBRegressor(**base_params)
@@ -147,15 +85,15 @@ def tune_quantile_hyperparams(X_train, y_train, X_val, y_val, quantile,
 
     n_jobs = 1 if use_gpu else -1  
     
-    search = RandomizedSearchCV(
+    search = BayesSearchCV(
         estimator=xgb,
-        param_distributions=param_dist,
+        search_spaces=param_dist,
         n_iter=n_iter,
         scoring="neg_root_mean_squared_error",
-        n_jobs=n_jobs,  
+        n_jobs=n_jobs,
         cv=[(range(len(y_train)), range(len(y_val)))],
-        verbose=1,
-        random_state=42
+        random_state=42,
+        verbose=1
     )
 
     X = pd.concat([X_train, X_val], ignore_index=True)
@@ -169,14 +107,16 @@ def tune_quantile_hyperparams(X_train, y_train, X_val, y_val, quantile,
     
     search.fit(X, y, sample_weight=combined_sample_weight)
 
-    print(f"Best params for q{int(quantile*100)}: {search.best_params_}")
-    print(f"Best R² for q{int(quantile*100)}: {search.best_score_}")
+    print(f"Best params: {search.best_params_}")
+    print(f"Best RMSE: {np.sqrt(-search.best_score_):.3f}")
 
     return search.best_params_
 
-def fit_quantile_models(train_df, val_df, features, target_col, date_col, player_col,
-                       recent_n=30, recent_weight=3.0, use_gpu=False, 
-                       tune_hyperparams=False, tune_iters=50):  
+
+def fit_model(train_df, val_df, features, target_col, date_col, player_col,
+              recent_n=30, recent_weight=3.0, use_gpu=False, 
+              tune_hyperparams_flag=False, tune_iters=50):
+    """Fit XGBoost regression model with optional hyperparameter tuning."""
     train_df = train_df.sort_values(date_col).reset_index(drop=True)
     
     if val_df is None or len(val_df) == 0:
@@ -187,9 +127,9 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
         val_df = val_df.sort_values(date_col).reset_index(drop=True)
         use_train_for_val = False
     
-    rolling_avg_cols = ['PTS_ROLLING_AVG_40', 'PTS_ROLLING_AVG_15', 'PTS_ROLLING_AVG_10']
-    train_df = train_df.dropna(subset=rolling_avg_cols)
-    val_df = val_df.dropna(subset=rolling_avg_cols)
+    # Drop rows with NaN in key features
+    train_df = train_df.dropna(subset=[target_col] + [f for f in features if f in train_df.columns])
+    val_df = val_df.dropna(subset=[target_col] + [f for f in features if f in val_df.columns])
 
     X_tr = train_df[features]
     y_tr = train_df[target_col].to_numpy()
@@ -200,140 +140,112 @@ def fit_quantile_models(train_df, val_df, features, target_col, date_col, player
     X_va = clean_feature_dtypes(X_va, set())
     w_tr = build_recent_weights(train_df, player_col, recent_n, recent_weight)
     
-    quantiles = [0.1, 0.5, 0.9]  # q10, q50, q90
-    models = {}
-    val_metrics = {}
+    print(f"Training XGBoost regression model...")
+    print(f"Training samples: {len(X_tr)}, Validation samples: {len(X_va)}")
     
-    for q in quantiles:
-        print(f"\nTraining quantile model for q{int(q*100)}...")
-        
-        if tune_hyperparams and not use_train_for_val:
-            print(f"Tuning hyperparameters for q{int(q*100)}...")
-            best_params = tune_quantile_hyperparams(
-                X_tr, y_tr, X_va, y_va, quantile=q,
-                sample_weight=w_tr, use_gpu=use_gpu, n_iter=tune_iters
-            )
-            p = xgb_quantile_params_improved(q, best_params, use_gpu=use_gpu)
-        else:
-            p = xgb_quantile_params_improved(q, use_gpu=use_gpu)
-        
-        model = XGBRegressor(**p)
-        
-        # Use different fitting approach based on validation data availability
-        if use_train_for_val:
-            # Train without early stopping when using training data as validation
-            p_no_early_stop = p.copy()
-            p_no_early_stop.pop("early_stopping_rounds", None)
-            model = XGBRegressor(**p_no_early_stop)
-            model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
-            best_iter = p["n_estimators"]  # Use full number of estimators
-        else:
-            model.fit(
-                X_tr, y_tr,
-                sample_weight=w_tr,
-                eval_set=[(X_va, y_va)],
-                verbose=False
-            )
-            best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
-        
-        if tune_hyperparams and not use_train_for_val:
-            p_final = xgb_quantile_params_improved(q, best_params, use_gpu=use_gpu)
-        else:
-            p_final = xgb_quantile_params_improved(q, use_gpu=use_gpu)
-        p_final["n_estimators"] = int(best_iter)
-        p_final.pop("early_stopping_rounds", None)
-        
-        # Final model training
-        if use_train_for_val:
-            # Use all training data for final model
-            final_model = XGBRegressor(**p_final)
-            final_model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
-        else:
-            # Use combined training + validation data for final model
-            full_df = pd.concat([train_df, val_df], ignore_index=True)
-            X_full = clean_feature_dtypes(full_df[features], set())
-            y_full = full_df[target_col].to_numpy()
-            
-            w_full = np.concatenate([
-                build_recent_weights(train_df, player_col, recent_n, recent_weight),
-                np.ones(len(val_df))
-            ])
-
-            final_model = XGBRegressor(**p_final)
-            final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
-        
-        # Validation metrics
-        if use_train_for_val:
-            # Use training metrics when no validation data
-            val_preds = model.predict(X_tr)
-            diff = val_preds - y_tr
-            val_rmse = float(np.sqrt(np.mean(diff**2)))
-            val_mae = float(np.mean(np.abs(diff)))
-            val_r2 = float(r2_score(y_tr, val_preds))
-            print(f"q{int(q*100)} training RMSE: {val_rmse:.3f} (no validation data)")
-        else:
-            val_preds = model.predict(X_va)
-            diff = val_preds - y_va
-            val_rmse = float(np.sqrt(np.mean(diff**2)))
-            val_mae = float(np.mean(np.abs(diff)))
-            val_r2 = float(r2_score(y_va, val_preds))
-            print(f"q{int(q*100)} validation RMSE: {val_rmse:.3f}")
-        
-        models[f'q{int(q*100)}'] = final_model
-        val_metrics[f'q{int(q*100)}'] = {
-            'RMSE': val_rmse, 
-            'MAE': val_mae, 
-            'R2': val_r2, 
-            'best_iteration': int(best_iter)
-        }
+    if tune_hyperparams_flag and not use_train_for_val:
+        print(f"Tuning hyperparameters...")
+        best_params = tune_hyperparams(
+            X_tr, y_tr, X_va, y_va,
+            sample_weight=w_tr, use_gpu=use_gpu, n_iter=tune_iters
+        )
+        p = xgb_regression_params(best_params, use_gpu=use_gpu)
+    else:
+        p = xgb_regression_params(use_gpu=use_gpu)
     
-    return models, val_metrics
+    model = XGBRegressor(**p)
+    
+    # Use different fitting approach based on validation data availability
+    if use_train_for_val:
+        # Train without early stopping when using training data as validation
+        p_no_early_stop = p.copy()
+        p_no_early_stop.pop("early_stopping_rounds", None)
+        model = XGBRegressor(**p_no_early_stop)
+        model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
+        best_iter = p["n_estimators"]
+    else:
+        model.fit(
+            X_tr, y_tr,
+            sample_weight=w_tr,
+            eval_set=[(X_va, y_va)],
+            verbose=False
+        )
+        best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
+    
+    p_final = xgb_regression_params(use_gpu=use_gpu)
+    p_final["n_estimators"] = int(best_iter)
+    p_final.pop("early_stopping_rounds", None)
+    
+    # Final model training on combined data
+    if use_train_for_val:
+        final_model = XGBRegressor(**p_final)
+        final_model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
+    else:
+        full_df = pd.concat([train_df, val_df], ignore_index=True)
+        X_full = clean_feature_dtypes(full_df[features], set())
+        y_full = full_df[target_col].to_numpy()
+        
+        w_full = np.concatenate([
+            build_recent_weights(train_df, player_col, recent_n, recent_weight),
+            np.ones(len(val_df))
+        ])
 
-def predict_quantiles(models, test_df, features):
+        final_model = XGBRegressor(**p_final)
+        final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
+    
+    # Validation metrics
+    if use_train_for_val:
+        val_preds = model.predict(X_tr)
+        diff = val_preds - y_tr
+    else:
+        val_preds = model.predict(X_va)
+        diff = val_preds - y_va
+    
+    val_rmse = float(np.sqrt(np.mean(diff**2)))
+    val_mae = float(np.mean(np.abs(diff)))
+    val_r2 = float(r2_score(y_va if not use_train_for_val else y_tr, val_preds))
+    
+    print(f"Validation RMSE: {val_rmse:.3f}")
+    print(f"Validation MAE: {val_mae:.3f}")
+    print(f"Validation R²: {val_r2:.3f}")
+    
+    metrics = {
+        'RMSE': val_rmse, 
+        'MAE': val_mae, 
+        'R2': val_r2, 
+        'best_iteration': int(best_iter)
+    }
+    
+    return final_model, metrics
+
+
+def predict(model, test_df, features):
+    """Generate predictions from trained model."""
     X_te = clean_feature_dtypes(test_df[features], set())
-    
-    predictions = {}
-    for quantile_name, model in models.items():
-        preds = model.predict(X_te)
-        predictions[quantile_name] = preds
-    
-    # Create DataFrame with all predictions
-    pred_df = pd.DataFrame(predictions)
-    pred_df['q10'] = predictions['q10']
-    pred_df['q50'] = predictions['q50']  # Median prediction
-    pred_df['q90'] = predictions['q90']
-    
-    # Calculate prediction intervals
-    pred_df['lower_bound'] = pred_df['q10']
-    pred_df['upper_bound'] = pred_df['q90']
-    pred_df['prediction_interval_width'] = pred_df['q90'] - pred_df['q10']
-    
-    return pred_df
+    preds = model.predict(X_te)
+    return preds
 
-def evaluate_quantile_models(models, test_df, features, target_col):
+
+def evaluate_model(model, test_df, features, target_col):
+    """Evaluate model performance on test set."""
     X_te = clean_feature_dtypes(test_df[features], set())
     y_te = test_df[target_col].to_numpy()
     
-    results = {}
+    preds = model.predict(X_te)
     
-    for quantile_name, model in models.items():
-        preds = model.predict(X_te)
-        diff = preds - y_te
-        
-        rmse = float(np.sqrt(np.mean(diff**2)))
-        mae = float(np.mean(np.abs(diff)))
-        r2 = float(r2_score(y_te, preds))
-        
-        results[quantile_name] = {
-            'RMSE': rmse,
-            'MAE': mae, 
-            'R2': r2
-        }
-        
-        print(f"{quantile_name} Test RMSE: {rmse:.3f}")
+    rmse = float(np.sqrt(np.mean((preds - y_te) ** 2)))
+    mae = float(np.mean(np.abs(preds - y_te)))
+    r2 = float(r2_score(y_te, preds))
     
-    return results
-
+    print(f"Test RMSE: {rmse:.3f}")
+    print(f"Test MAE: {mae:.3f}")
+    print(f"Test R²: {r2:.3f}")
+    
+    return {
+        'RMSE': rmse,
+        'MAE': mae, 
+        'R2': r2
+    }
 
 
 def correlation_analysis(df, features_list, target_col='PTS'):
@@ -361,13 +273,13 @@ def correlation_analysis(df, features_list, target_col='PTS'):
                 fmt='.2f',
                 cbar_kws={"shrink": .8})
     
-    plt.title('Feature Correlation Matrix - Point Prediction', fontsize=16, pad=20)
+    plt.title('Feature Correlation Matrix', fontsize=16, pad=20)
     plt.tight_layout()
     plt.show()
     
     target_corrs = corr_matrix[target_col].drop(target_col).abs().sort_values(ascending=False)
     
-    print("TOP 10 FEATURES MOST CORRELATED WITH PTS:")
+    print("TOP 10 FEATURES MOST CORRELATED WITH TARGET:")
     print("="*50)
     for i, (feature, corr) in enumerate(target_corrs.head(10).items(), 1):
         print(f"{i:2}. {feature:30} {corr:.3f}")
@@ -454,9 +366,7 @@ def select_features_xgb_importance(
 
     # Add context features that improve stability and interpretability
     if include_context:
-        context_features = [
-
-        ]
+        context_features = []
         for f in context_features:
             if f in X.columns and f not in top_features:
                 top_features.append(f)
@@ -484,30 +394,20 @@ def select_features_xgb_importance(
     return X[top_features], top_features
 
 
-def get_quantile_residuals(models, test_df, features, target_col='PTS'):
-    """
-    Get residuals analysis for quantile models.
-    """
-    import pandas as pd
-    import numpy as np
-    
+def get_residuals(model, test_df, features, target_col='PTS'):
+    """Get residuals analysis for regression model."""
     X_test = test_df[features].copy()
     y_test = test_df[target_col].values
     
-    # Get predictions from all quantile models
-    preds_q10 = models['q10'].predict(X_test)
-    preds_q50 = models['q50'].predict(X_test)
-    preds_q90 = models['q90'].predict(X_test)
+    # Get predictions
+    preds = model.predict(X_test)
     
     # Create residuals DataFrame
     residuals_df = pd.DataFrame({
         'actual': y_test,
-        'pred_q10': preds_q10,
-        'pred_q50': preds_q50,
-        'pred_q90': preds_q90,
-        'residual_q10': y_test - preds_q10,
-        'residual_q50': y_test - preds_q50,
-        'residual_q90': y_test - preds_q90,
+        'predicted': preds,
+        'residual': y_test - preds,
+        'abs_residual': np.abs(y_test - preds),
     })
     
     # Add context columns
@@ -515,228 +415,61 @@ def get_quantile_residuals(models, test_df, features, target_col='PTS'):
     available_cols = [c for c in context_cols if c in test_df.columns]
     residuals_df = residuals_df.join(test_df[available_cols])
     
-    # Add prediction interval analysis
-    residuals_df['interval_width'] = preds_q90 - preds_q10
-    residuals_df['within_80_interval'] = (y_test >= preds_q10) & (y_test <= preds_q90)
-    residuals_df['within_50_interval'] = (y_test >= preds_q10) & (y_test <= preds_q50)
-    
     return residuals_df
 
-def analyze_quantile_residuals(models, test_df, features, target_col='PTS'):
-    """
-    Analyze residuals for quantile models and show worst predictions.
-    """
+def analyze_residuals(model, test_df, features, target_col='PTS'):
+    """Analyze residuals for regression model and show worst predictions."""
     
     # Get residuals
-    residuals_df = get_quantile_residuals(models, test_df, features, target_col)
+    residuals_df = get_residuals(model, test_df, features, target_col)
     
-    print("QUANTILE MODEL RESIDUALS ANALYSIS")
+    print("RESIDUALS ANALYSIS")
     print("=" * 60)
     
     # Overall residuals statistics
-    print(f"Q10 Residuals - Mean: {residuals_df['residual_q10'].mean():.3f}, Std: {residuals_df['residual_q10'].std():.3f}")
-    print(f"Q50 Residuals - Mean: {residuals_df['residual_q50'].mean():.3f}, Std: {residuals_df['residual_q50'].std():.3f}")
-    print(f"Q90 Residuals - Mean: {residuals_df['residual_q90'].mean():.3f}, Std: {residuals_df['residual_q90'].std():.3f}")
-    
-    # Coverage analysis
-    coverage_80 = residuals_df['within_80_interval'].mean()
-    coverage_50 = residuals_df['within_50_interval'].mean()
-    print(f"\nCoverage Analysis:")
-    print(f"80% Interval Coverage: {coverage_80:.3f} (target: 0.80)")
-    print(f"50% Interval Coverage: {coverage_50:.3f} (target: 0.50)")
+    print(f"Residuals - Mean: {residuals_df['residual'].mean():.3f}, Std: {residuals_df['residual'].std():.3f}")
+    print(f"Absolute Residuals - Mean: {residuals_df['abs_residual'].mean():.3f}")
     
     # Worst predictions (largest residuals)
-    print(f"\nWORST PREDICTIONS (Q50 - Median):")
+    print(f"\nWORST PREDICTIONS:")
     print("-" * 50)
     
-    # Sort by absolute residual for q50 (median)
     worst_predictions = residuals_df.copy()
-    worst_predictions['abs_residual_q50'] = np.abs(worst_predictions['residual_q50'])
-    worst_predictions = worst_predictions.sort_values('abs_residual_q50', ascending=False)
+    worst_predictions = worst_predictions.sort_values('abs_residual', ascending=False)
     
     # Show top 20 worst predictions
-    top_errors = worst_predictions.head(20)[['PLAYER_NAME', 'MATCHUP', 'actual', 'pred_q50', 'residual_q50', 'MIN', 'GUARD', 'FORWARD', 'CENTER']]
+    top_errors = worst_predictions.head(20)[['PLAYER_NAME', 'MATCHUP', 'actual', 'predicted', 'residual', 'MIN']]
     print(top_errors.to_string(index=False))
     
     return residuals_df
 
-def analyze_quantile_shap(models, test_df, features, target_col='PTS'):
+def analyze_shap(model, test_df, features, target_col='PTS'):
+    """Generate SHAP analysis for model interpretability."""
     X_test = test_df[features].copy()
     
-    # Define position columns
-    position_cols = ['GUARD', 'FORWARD', 'CENTER']
-    quantiles = ['q10', 'q50', 'q90']
-    for quantile in quantiles:
-        if quantile not in models:
-            continue
-            
-        print(f"\n{quantile.upper()} MODEL:")
-        print("-" * 30)
-        
-        # Create SHAP explainer
-        explainer = shap.TreeExplainer(models[quantile])
-        shap_values = explainer.shap_values(X_test)
-        
-        # Overall top features
-        mean_shap = np.abs(shap_values).mean(axis=0)
-        feature_importance = pd.DataFrame({
-            'feature': features,
-            'importance': mean_shap
-        }).sort_values('importance', ascending=False)
-        
-        print("Top 10 Features:")
-        for idx, row in feature_importance.head(15).iterrows():
-            print(f"  {row['feature']:30} {row['importance']:.4f}")
-        
-        # Position-specific analysis
-        print(f"\nBy Position:")
-        for pos_col in position_cols:
-            if pos_col in test_df.columns:
-                pos_mask = test_df[pos_col] == 1
-                if pos_mask.sum() > 0:
-                    pos_shap = shap_values[pos_mask]
-                    pos_mean_shap = np.abs(pos_shap).mean(axis=0)
-                    
-                    pos_importance = pd.DataFrame({
-                        'feature': features,
-                        'importance': pos_mean_shap
-                    }).sort_values('importance', ascending=False)
-                    
-                    print(f"  {pos_col} (n={pos_mask.sum()}): {pos_importance.iloc[0]['feature']} ({pos_importance.iloc[0]['importance']:.3f})")
-        
-        # Create summary plot
-        plt.figure(figsize=(12, 8))
-        shap.summary_plot(shap_values, X_test, max_display=15, show=False)
-        plt.title(f'SHAP Summary - {quantile.upper()} Model', fontsize=14, fontweight='bold')
-        plt.tight_layout()
-        plt.show()
+    print(f"\nSHAP ANALYSIS:")
+    print("-" * 30)
     
-    return models
-
-
-def validate_out_of_time_pinball_loss(models, test_df, features, target_col='PTS'):
-    X_test = test_df[features].copy()
-    y_test = test_df[target_col].values
+    # Create SHAP explainer
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(X_test)
     
-    def pinball_loss(y_true, y_pred, quantile):
-        error = y_true - y_pred
-        return np.mean(np.maximum(quantile * error, (quantile - 1) * error))
+    # Overall top features
+    mean_shap = np.abs(shap_values).mean(axis=0)
+    feature_importance = pd.DataFrame({
+        'feature': features,
+        'importance': mean_shap
+    }).sort_values('importance', ascending=False)
     
-    print("OUT-OF-TIME PINBALL LOSS VALIDATION")
-    print("=" * 60)
-    print(f"Test set size: {len(y_test)} samples")
-    print(f"Date range: {test_df['GAME_DATE'].min()} to {test_df['GAME_DATE'].max()}")
+    print("Top 15 Features by SHAP importance:")
+    for idx, row in feature_importance.head(15).iterrows():
+        print(f"  {row['feature']:30} {row['importance']:.4f}")
     
-    results = {}
-    quantiles = [0.1, 0.5, 0.9]  # q10, q50, q90
+    # Create summary plot
+    plt.figure(figsize=(12, 8))
+    shap.summary_plot(shap_values, X_test, max_display=15, show=False)
+    plt.title(f'SHAP Summary Plot', fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    plt.show()
     
-    for q in quantiles:
-        quantile_name = f'q{int(q*100)}'
-        if quantile_name not in models:
-            continue
-            
-        # Get predictions
-        preds = models[quantile_name].predict(X_test)
-        
-        # Calculate pinball loss
-        pinball = pinball_loss(y_test, preds, q)
-        
-        # Calculate other metrics for comparison
-        mae = np.mean(np.abs(y_test - preds))
-        rmse = np.sqrt(np.mean((y_test - preds) ** 2))
-        
-        # Calculate coverage (for quantile validation)
-        if q == 0.1:
-            coverage = np.mean(y_test >= preds)
-        elif q == 0.9:
-            coverage = np.mean(y_test <= preds)
-        else:  # q50
-            coverage = None
-        
-        results[quantile_name] = {
-            'pinball_loss': pinball,
-            'mae': mae,
-            'rmse': rmse,
-            'coverage': coverage,
-            'quantile': q
-        }
-        
-        print(f"\n{quantile_name.upper()} Model:")
-        print(f"  Pinball Loss: {pinball:.4f}")
-        print(f"  MAE: {mae:.3f}")
-        print(f"  RMSE: {rmse:.3f}")
-        if coverage is not None:
-            print(f"  Coverage: {coverage:.3f} (target: {q:.1f})")
-    
-    # Calculate average pinball loss
-    avg_pinball = np.mean([results[f'q{int(q*100)}']['pinball_loss'] for q in quantiles])
-    print(f"\nAverage Pinball Loss: {avg_pinball:.4f}")
-    
-    # Model quality assessment
-    print(f"\nMODEL QUALITY ASSESSMENT:")
-    print("-" * 40)
-    if avg_pinball < 2.0:
-        print("EXCELLENT - Very reliable uncertainty estimates!")
-    elif avg_pinball < 3.0:
-        print("GOOD - Solid uncertainty estimates!")
-    elif avg_pinball < 4.0:
-        print("FAIR - Acceptable uncertainty estimates!")
-    else:
-        print("POOR - Uncertainty estimates need improvement!")
-    
-    # Additional validation metrics
-    print(f"\nADDITIONAL VALIDATION METRICS:")
-    print("-" * 40)
-    
-    # Check if q10 < q50 < q90 (monotonicity)
-    q10_preds = models['q10'].predict(X_test)
-    q50_preds = models['q50'].predict(X_test)
-    q90_preds = models['q90'].predict(X_test)
-    
-    monotonic_q10_q50 = np.mean(q10_preds <= q50_preds)
-    monotonic_q50_q90 = np.mean(q50_preds <= q90_preds)
-    
-    print(f"Monotonicity q10 ≤ q50: {monotonic_q10_q50:.3f} (should be ~1.0)")
-    print(f"Monotonicity q50 ≤ q90: {monotonic_q50_q90:.3f} (should be ~1.0)")
-    
-    # Prediction interval width analysis
-    interval_width = q90_preds - q10_preds
-    print(f"Average 80% interval width: {interval_width.mean():.2f}")
-    print(f"Median 80% interval width: {np.median(interval_width):.2f}")
-    
-    return results
-
-def validate_by_position_pinball_loss(models, test_df, features, target_col='PTS'):
-    """
-    Validate pinball loss by position to see if models work well for all positions.
-    """
-    import numpy as np
-    
-    X_test = test_df[features].copy()
-    y_test = test_df[target_col].values
-    
-    def pinball_loss(y_true, y_pred, quantile):
-        error = y_true - y_pred
-        return np.mean(np.maximum(quantile * error, (quantile - 1) * error))
-    
-    position_cols = ['GUARD', 'FORWARD', 'CENTER']
-    quantiles = [0.1, 0.5, 0.9]
-    
-    print("PINBALL LOSS BY POSITION")
-    print("=" * 50)
-    
-    for pos_col in position_cols:
-        if pos_col in test_df.columns:
-            pos_mask = test_df[pos_col] == 1
-            if pos_mask.sum() > 10:  # Only analyze if enough samples
-                print(f"\n{pos_col} (n={pos_mask.sum()}):")
-                
-                pos_X = X_test[pos_mask]
-                pos_y = y_test[pos_mask]
-                
-                for q in quantiles:
-                    quantile_name = f'q{int(q*100)}'
-                    if quantile_name in models:
-                        preds = models[quantile_name].predict(pos_X)
-                        pinball = pinball_loss(pos_y, preds, q)
-                        print(f"  {quantile_name}: {pinball:.4f}")
+    return model
