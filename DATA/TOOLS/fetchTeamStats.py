@@ -25,6 +25,7 @@ def getGameLogs(season, season_type):
         # CORRECT: Single pace calculation for the entire game
         game_pace = ((240.0 / game_minutes) * (p1 + p2) / 2.0) if game_minutes > 0 else 0
         game_pace = round(game_pace, 1)
+        
         # Offensive and Defensive Ratings
         off_rating_a = round((a['PTS'] / p1) * 100 if p1 > 0 else 0, 1)
         off_rating_b = round((b['PTS'] / p2) * 100 if p2 > 0 else 0, 1)

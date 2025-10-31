@@ -3,7 +3,7 @@ import numpy as np
 import time
 import os
 from datetime import datetime
-from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv2, teamgamelog, boxscoreplayertrackv3
+from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv2, boxscoreplayertrackv3
 from nba_api.stats.static import teams
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import sys
@@ -36,97 +36,86 @@ class FetchPlayersStatsV2:
         ]
         return df[cols]
 
-    def fetchAdvancedStats(self, game_id, sleep_time=None, max_retries=5, timeout=60):
+    def fetchAdvancedStats(self, game_id, sleep_time=None, timeout=60):
         sleep_time = sleep_time or self.sleep_time
-        for attempt in range(max_retries):
+        for attempt in range(2):  # Single retry (2 attempts total)
             try:
-                time.sleep(sleep_time * (attempt + 1))  # Exponential backoff
+                if attempt > 0:
+                    time.sleep(sleep_time)
                 df = boxscoreadvancedv2.BoxScoreAdvancedV2(
                     game_id=game_id,
                     timeout=timeout
                 ).get_data_frames()[0]
                 cols = [
-                    'GAME_ID', 'PLAYER_ID', 'START_POSITION', 'COMMENT',
-                    'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING',
-                    'E_DEF_RATING', 'NET_RATING', 'OREB_PCT', 'DREB_PCT',
-                    'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 'USG_PCT',
-                    'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS',
-                    'PACE_PER40', 'E_USG_PCT'
+                    'GAME_ID', 'PLAYER_ID', 'START_POSITION', 
+                    'OFF_RATING', 'DEF_RATING', 'NET_RATING', 'OREB_PCT', 'DREB_PCT',
+                    'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 'USG_PCT', 'TS_PCT',
+                    'PACE', 'PIE', 'POSS', 'PACE_PER40'
                 ]
                 return df[cols]
             except Exception as e:
-                if attempt < max_retries - 1:
-                    print(f"\n[RETRY {attempt+1}/{max_retries}] Game {game_id}: {e}")
+                if attempt == 0:
+                    print(f"[RETRY] Game {game_id}: {e}")
                 else:
-                    print(f"\n[FAILED] Game {game_id} after {max_retries} attempts: {e}")
+                    print(f"[FAILED] Game {game_id}: {e}")
                     return pd.DataFrame()
 
-    def fetchTrackingStats(self, game_id, sleep_time=None, max_retries=3, timeout=60):
+    def fetchTrackingStats(self, game_id, sleep_time=None, timeout=60):
         sleep_time = sleep_time or self.sleep_time
-        for attempt in range(max_retries):
+        for attempt in range(2):  # Single retry
             try:
-                time.sleep(sleep_time * (attempt + 1))
+                if attempt > 0:
+                    time.sleep(sleep_time)
                 df = boxscoreplayertrackv3.BoxScorePlayerTrackV3(
                     game_id=game_id,
                     timeout=timeout
                 ).get_data_frames()[0]
                 
+                # Only rename the necessary columns
                 column_mapping = {
                     'gameId': 'GAME_ID',
                     'personId': 'PLAYER_ID',
-                    'minutes': 'MIN',
-                    'speed': 'SPD',
-                    'distance': 'DIST',
-                    'reboundChancesOffensive': 'ORBC',
-                    'reboundChancesDefensive': 'DRBC',
-                    'reboundChancesTotal': 'RBC',
-                    'touches': 'TCHS',
-                    'secondaryAssists': 'SAST',
-                    'freeThrowAssists': 'FTAST',
-                    'passes': 'PASS',
-                    'contestedFieldGoalsMade': 'CFGM',
-                    'contestedFieldGoalsAttempted': 'CFGA',
-                    'contestedFieldGoalPercentage': 'CFG_PCT',
-                    'uncontestedFieldGoalsMade': 'UFGM',
-                    'uncontestedFieldGoalsAttempted': 'UFGA',
-                    'uncontestedFieldGoalsPercentage': 'UFG_PCT',
-                    'defendedAtRimFieldGoalsMade': 'DFGM',
-                    'defendedAtRimFieldGoalsAttempted': 'DFGA',
-                    'defendedAtRimFieldGoalPercentage': 'DFG_PCT'
+                    'minutes': 'MIN'
                 }
                 
                 df = df.rename(columns=column_mapping)
                 
+                # Keep only the key columns you need
                 cols = [
-                    'GAME_ID', 'PLAYER_ID', 'MIN', 'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC',
-                    'TCHS', 'SAST', 'FTAST', 'PASS', 'CFGM', 'CFGA', 'CFG_PCT',
-                    'UFGM', 'UFGA', 'UFG_PCT', 'DFGM', 'DFGA', 'DFG_PCT'
+                    'GAME_ID', 'PLAYER_ID', 'MIN', 'speed', 'distance',
+                    'touches', 'secondaryAssists', 'freeThrowAssists',
+                    'passes', 'contestedFieldGoalsMade', 'contestedFieldGoalsAttempted',
+                    'uncontestedFieldGoalsMade', 'uncontestedFieldGoalsAttempted',
+                    'defendedAtRimFieldGoalsMade', 'defendedAtRimFieldGoalsAttempted'
                 ]
                 
                 existing_cols = [col for col in cols if col in df.columns]
                 return df[existing_cols]
-                
+            
             except Exception as e:
-                if attempt < max_retries - 1:
-                    print(f"[RETRY {attempt+1}] Tracking stats for {game_id}: {e}")
+                if attempt == 0:
+                    print(f"[RETRY] Tracking stats for {game_id}: {e}")
                 else:
                     print(f"[ERROR] Failed fetching tracking for {game_id}: {e}")
                     return pd.DataFrame()
 
-    def fetchPlayByPlayStats(self, game_id, player_ids, sleep_time=None, max_retries=3):
+    def fetchPlayByPlayStats(self, game_id, player_ids, sleep_time=None):
         """Fetch play-by-play stats for all players in a game"""
         sleep_time = sleep_time or self.sleep_time
         all_pbp_stats = []
         
-        for attempt in range(max_retries):
+        for attempt in range(2):  # Single retry
             try:
-                time.sleep(sleep_time * (attempt + 1))
+                if attempt > 0:
+                    time.sleep(sleep_time)
                 
                 # Fetch play-by-play data ONCE per game
                 try:
                     game_pbp_data = cleanPlaybyPlay(game_id)
                     print(f"[SUCCESS] Fetched play-by-play data for game {game_id}")
                 except Exception as e:
+                    if attempt == 0:
+                        raise  # Retry on first attempt
                     print(f"[ERROR] Failed to fetch play-by-play data for game {game_id}: {e}")
                     return pd.DataFrame()
                 
@@ -135,7 +124,6 @@ class FetchPlayersStatsV2:
                     try:
                         # Pass the pre-fetched data to avoid redundant API calls
                         pbp_data = engineerPlayerPlaybyPlayBasics(game_id, player_id, game_pbp_data)
-                        pbp_data = quarterStatsDiff(pbp_data)
                         all_pbp_stats.append(pbp_data)
                     except Exception as e:
                         print(f"[ERROR] Processing player {player_id} in game {game_id}: {e}")
@@ -147,8 +135,8 @@ class FetchPlayersStatsV2:
                     return pd.DataFrame()
                     
             except Exception as e:
-                if attempt < max_retries - 1:
-                    print(f"[RETRY {attempt+1}] Play-by-play for game {game_id}: {e}")
+                if attempt == 0:
+                    print(f"[RETRY] Play-by-play for game {game_id}: {e}")
                 else:
                     print(f"[ERROR] Failed fetching play-by-play for {game_id}: {e}")
                     return pd.DataFrame()
@@ -156,13 +144,17 @@ class FetchPlayersStatsV2:
         return pd.DataFrame()
 
     def getCompleteStats(self, season=None, season_type='Regular Season',
-                         sleep_time=2, max_workers=3, batch_limit=None,
-                         complete_cache_file='../DATA/CSV_FILES/REGULAR_DATA/ALL_COMPLETE_DATA_V2.csv',
+                         sleep_time=0.1, max_workers=3, batch_limit=None,
+                         cache_dir='../DATA/CSV_FILES/REGULAR_DATA',
                          include_playbyplay=True):
         
+        # Generate cache file path based on season
+        season = season or self.default_season
+        cache_file = os.path.join(cache_dir, f'complete_data_{season.replace("-", "_")}.csv')
+        
         # Load cache
-        if os.path.exists(complete_cache_file):
-            cache = pd.read_csv(complete_cache_file, dtype={'GAME_ID':str})
+        if os.path.exists(cache_file):
+            cache = pd.read_csv(cache_file, dtype={'GAME_ID':str})
             existing_ids = set(cache['GAME_ID'].astype(str).unique())
         else:
             cache, existing_ids = pd.DataFrame(), set()
@@ -186,55 +178,55 @@ class FetchPlayersStatsV2:
         else:
             print(f"Processing all {len(new_game_ids)} new games")
 
-        # Process games in batches
-        batch_size = max_workers * 2
-        game_batches = [new_game_ids[i:i + batch_size] for i in range(0, len(new_game_ids), batch_size)]
-        
+        # Process all games concurrently with worker pool throttling
         all_advanced = []
         all_tracking = []
         all_playbyplay = []
 
-        total_batches = len(game_batches)
-        for batch_idx, game_batch in enumerate(game_batches, 1):
-            print(f"\nProcessing batch {batch_idx}/{total_batches} ({len(game_batch)} games)")
+        def process_game(game_id):
+            """Process a single game and return all stat types"""
+            results = {'game_id': game_id, 'advanced': None, 'tracking': None, 'playbyplay': None}
             
-            # Process each game in the batch
-            for game_id in game_batch:
-                print(f"  Processing game {game_id}...")
-                
-                # Get player IDs for this game
-                game_player_ids = new_stats[new_stats['GAME_ID'] == game_id]['PLAYER_ID'].unique()
-                
-                with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                    # Submit all stat types for this game concurrently
-                    futures = {
-                        'advanced': executor.submit(self.fetchAdvancedStats, game_id, sleep_time),
-                        'tracking': executor.submit(self.fetchTrackingStats, game_id, sleep_time),
-                    }
-                    
-                    # Add play-by-play if requested
-                    if include_playbyplay:
-                        futures['playbyplay'] = executor.submit(
-                            self.fetchPlayByPlayStats, game_id, game_player_ids, sleep_time
-                        )
-                    
-                    # Collect results
-                    for stat_type, future in futures.items():
-                        try:
-                            result = future.result()
-                            if not result.empty:
-                                if stat_type == 'advanced': all_advanced.append(result)
-                                elif stat_type == 'tracking': all_tracking.append(result)
-                                elif stat_type == 'playbyplay': all_playbyplay.append(result)
-                        except Exception as e:
-                            print(f"  Error fetching {stat_type} stats for game {game_id}: {e}")
+            # Get player IDs for this game
+            game_player_ids = new_stats[new_stats['GAME_ID'] == game_id]['PLAYER_ID'].unique()
+            
+            try:
+                results['advanced'] = self.fetchAdvancedStats(game_id, sleep_time)
+            except Exception as e:
+                print(f"  Error fetching advanced stats for game {game_id}: {e}")
+            
+            try:
+                results['tracking'] = self.fetchTrackingStats(game_id, sleep_time)
+            except Exception as e:
+                print(f"  Error fetching tracking stats for game {game_id}: {e}")
+            
+            if include_playbyplay:
+                try:
+                    results['playbyplay'] = self.fetchPlayByPlayStats(game_id, game_player_ids, sleep_time)
+                except Exception as e:
+                    print(f"  Error fetching play-by-play for game {game_id}: {e}")
+            
+            return results
 
-                # Sleep between games within a batch
-                time.sleep(sleep_time)
+        # Submit all games to worker pool
+        print(f"\nProcessing {len(new_game_ids)} games with {max_workers} workers...")
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_to_game = {executor.submit(process_game, game_id): game_id for game_id in new_game_ids}
             
-            print(f"Completed batch {batch_idx}/{total_batches}")
-            # Sleep between batches
-            time.sleep(sleep_time * 2)
+            for future in as_completed(future_to_game):
+                game_id = future_to_game[future]
+                try:
+                    results = future.result()
+                    print(f"  Completed game {game_id}")
+                    
+                    if results['advanced'] is not None and not results['advanced'].empty:
+                        all_advanced.append(results['advanced'])
+                    if results['tracking'] is not None and not results['tracking'].empty:
+                        all_tracking.append(results['tracking'])
+                    if results['playbyplay'] is not None and not results['playbyplay'].empty:
+                        all_playbyplay.append(results['playbyplay'])
+                except Exception as e:
+                    print(f"  Error processing game {game_id}: {e}")
 
         # Combine all stats
         merged_player = new_stats.copy()
@@ -269,8 +261,10 @@ class FetchPlayersStatsV2:
 
         # Combine with existing cache and save
         combined = pd.concat([cache, merged_player], ignore_index=True)
-        combined.to_csv(complete_cache_file, index=False)
-        print(f"\nCache updated. Total games now: {combined['GAME_ID'].nunique()}")
+        os.makedirs(cache_dir, exist_ok=True)
+        combined.to_csv(cache_file, index=False)
+        print(f"\nCache updated: {cache_file}")
+        print(f"Total games now: {combined['GAME_ID'].nunique()}")
         
         return combined
 
@@ -280,13 +274,12 @@ class FetchPlayersStatsV2:
         advanced_stats['PLAYER_ID'] = advanced_stats['PLAYER_ID'].astype(int)
 
         adv_cols = [
-            'GAME_ID', 'PLAYER_ID', 'START_POSITION', 'COMMENT',
-            'OFF_RATING', 'E_OFF_RATING', 'DEF_RATING',
-            'E_DEF_RATING', 'NET_RATING', 'OREB_PCT', 'DREB_PCT', 
-            'REB_PCT', 'AST_PCT', 'EFG_PCT', 'AST_TOV', 'USG_PCT', 
-            'TS_PCT', 'E_PACE', 'PACE', 'PIE', 'POSS',
-            'PACE_PER40', 'E_USG_PCT', 'OPP_DEF_RATING', 'OPP_PACE'
-        ]
+        'GAME_ID', 'PLAYER_ID', 'START_POSITION',
+        'OFF_RATING', 'DEF_RATING', 'NET_RATING',
+        'OREB_PCT', 'DREB_PCT', 'REB_PCT', 'AST_PCT',
+        'AST_TOV', 'USG_PCT', 'TS_PCT', 'EFG_PCT',
+        'PACE', 'PIE', 'POSS', 'PACE_PER40'
+    ]
         
         # Only keep columns that exist in advanced_stats
         existing_adv_cols = [col for col in adv_cols if col in advanced_stats.columns]

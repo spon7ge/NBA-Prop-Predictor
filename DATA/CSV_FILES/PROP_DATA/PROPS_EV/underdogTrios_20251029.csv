@@ -1,0 +1,16 @@
+player1,player2,player3,line1,line2,line3,pred1,pred2,pred3,model_side1,model_side2,model_side3,prob1,prob2,prob3,prob_all_three,edge1,edge2,edge3,combined_edge,ev_percent,kelly_full,recommendation,simulation_method
+Anfernee Simons,Josh Giddey,Keyonte George,14.5,18.5,17.5,9.3,22.95,22.36,under,over,over,0.902,0.93,0.947,0.6433,0.324,0.351,0.369,0.348,2.86,0.572,1,Analytical
+Donovan Mitchell,Josh Giddey,Keyonte George,29.5,18.5,17.5,21.32,22.95,22.36,under,over,over,0.868,0.93,0.947,0.6189,0.29,0.351,0.369,0.337,2.71,0.543,1,Analytical
+Cade Cunningham,Josh Giddey,Keyonte George,25.5,18.5,17.5,21.62,22.95,22.36,under,over,over,0.865,0.93,0.947,0.6168,0.287,0.351,0.369,0.336,2.7,0.54,1,Analytical
+Anfernee Simons,Donovan Mitchell,Keyonte George,14.5,29.5,17.5,9.3,21.32,22.36,under,under,over,0.902,0.868,0.947,0.6005,0.324,0.29,0.369,0.328,2.6,0.521,1,Analytical
+Anfernee Simons,Cade Cunningham,Keyonte George,14.5,25.5,17.5,9.3,21.62,22.36,under,under,over,0.902,0.865,0.947,0.5985,0.324,0.287,0.369,0.327,2.59,0.518,1,Analytical
+Josh Giddey,Keyonte George,Devin Booker,18.5,17.5,30.5,22.95,22.36,22.39,over,over,under,0.93,0.947,0.83,0.5921,0.351,0.369,0.252,0.324,2.55,0.51,1,Analytical
+Anfernee Simons,Donovan Mitchell,Josh Giddey,14.5,29.5,18.5,9.3,21.32,22.95,under,under,over,0.902,0.868,0.93,0.5892,0.324,0.29,0.351,0.322,2.54,0.507,1,Analytical
+Anfernee Simons,Cade Cunningham,Josh Giddey,14.5,25.5,18.5,9.3,21.62,22.95,under,under,over,0.902,0.865,0.93,0.5873,0.324,0.287,0.351,0.321,2.52,0.505,1,Analytical
+Dyson Daniels,Josh Giddey,Keyonte George,10.5,18.5,17.5,7.43,22.95,22.36,under,over,over,0.808,0.93,0.947,0.5761,0.23,0.351,0.369,0.317,2.46,0.491,1,Analytical
+Noah Clowney,Josh Giddey,Keyonte George,8.5,18.5,17.5,5.44,22.95,22.36,under,over,over,0.809,0.93,0.947,0.5769,0.231,0.351,0.369,0.317,2.46,0.492,1,Analytical
+Anfernee Simons,Keyonte George,Devin Booker,14.5,17.5,30.5,9.3,22.36,22.39,under,over,under,0.902,0.947,0.83,0.5745,0.324,0.369,0.252,0.315,2.45,0.489,1,Analytical
+Donovan Mitchell,Cade Cunningham,Keyonte George,29.5,25.5,17.5,21.32,21.62,22.36,under,under,over,0.868,0.865,0.947,0.5757,0.29,0.287,0.369,0.315,2.45,0.491,1,Analytical
+Josh Giddey,Tony Bradley,Keyonte George,18.5,8.5,17.5,22.95,5.56,22.36,over,under,over,0.93,0.8,0.947,0.5704,0.351,0.222,0.369,0.314,2.42,0.484,1,Analytical
+Josh Giddey,Keyonte George,Grayson Allen,18.5,17.5,16.5,22.95,22.36,13.1,over,over,under,0.93,0.947,0.792,0.5651,0.351,0.369,0.214,0.312,2.39,0.478,1,Analytical
+Donovan Mitchell,Cade Cunningham,Josh Giddey,29.5,25.5,18.5,21.32,21.62,22.95,under,under,over,0.868,0.865,0.93,0.5649,0.29,0.287,0.351,0.309,2.39,0.478,1,Analytical

@@ -1,0 +1,16 @@
+player1,player2,player3,line1,line2,line3,pred1,pred2,pred3,model_side1,model_side2,model_side3,prob1,prob2,prob3,prob_all_three,edge1,edge2,edge3,combined_edge,ev_percent,kelly_full,recommendation,simulation_method
+Domantas Sabonis,Keyonte George,Mark Williams,17.5,17.5,12.5,9.96,22.36,6.78,under,over,under,0.984,0.951,0.94,0.7131,0.406,0.373,0.362,0.381,3.28,0.656,0,Monte Carlo
+Domantas Sabonis,Josh Giddey,Keyonte George,17.5,18.5,17.5,9.96,22.95,22.36,under,over,over,0.984,0.933,0.95,0.7069,0.406,0.355,0.372,0.378,3.24,0.648,0,Monte Carlo
+Domantas Sabonis,Josh Giddey,Mark Williams,17.5,18.5,12.5,9.96,22.95,6.78,under,over,under,0.984,0.933,0.94,0.6993,0.406,0.355,0.362,0.374,3.2,0.639,0,Monte Carlo
+Anfernee Simons,Domantas Sabonis,Keyonte George,14.5,17.5,17.5,9.3,9.96,22.36,under,under,over,0.902,0.984,0.95,0.6832,0.324,0.406,0.372,0.367,3.1,0.62,0,Monte Carlo
+Anfernee Simons,Domantas Sabonis,Mark Williams,14.5,17.5,12.5,9.3,9.96,6.78,under,under,under,0.902,0.984,0.94,0.6759,0.324,0.406,0.362,0.364,3.06,0.611,0,Monte Carlo
+Josh Giddey,Keyonte George,Mark Williams,18.5,17.5,12.5,22.95,22.36,6.78,over,over,under,0.928,0.951,0.94,0.6722,0.35,0.373,0.362,0.362,3.03,0.607,0,Monte Carlo
+Anfernee Simons,Domantas Sabonis,Josh Giddey,14.5,17.5,18.5,9.3,9.96,22.95,under,under,over,0.902,0.984,0.931,0.6692,0.324,0.406,0.353,0.361,3.02,0.603,0,Monte Carlo
+Donovan Mitchell,Domantas Sabonis,Keyonte George,29.5,17.5,17.5,21.32,9.96,22.36,under,under,over,0.866,0.984,0.95,0.6562,0.288,0.406,0.372,0.356,2.94,0.587,0,Monte Carlo
+Cade Cunningham,Domantas Sabonis,Keyonte George,25.5,17.5,17.5,21.62,9.96,22.36,under,under,over,0.864,0.984,0.95,0.6545,0.286,0.406,0.372,0.355,2.93,0.585,0,Monte Carlo
+Anfernee Simons,Keyonte George,Mark Williams,14.5,17.5,12.5,9.3,22.36,6.78,under,over,under,0.902,0.951,0.94,0.6532,0.324,0.373,0.362,0.353,2.92,0.584,0,Monte Carlo
+Donovan Mitchell,Domantas Sabonis,Mark Williams,29.5,17.5,12.5,21.32,9.96,6.78,under,under,under,0.866,0.984,0.94,0.6492,0.288,0.406,0.362,0.352,2.9,0.579,0,Monte Carlo
+Anfernee Simons,Josh Giddey,Keyonte George,14.5,18.5,17.5,9.3,22.95,22.36,under,over,over,0.902,0.933,0.95,0.6475,0.324,0.355,0.372,0.35,2.89,0.577,0,Monte Carlo
+Cade Cunningham,Domantas Sabonis,Mark Williams,25.5,17.5,12.5,21.62,9.96,6.78,under,under,under,0.864,0.984,0.94,0.6475,0.286,0.406,0.362,0.351,2.88,0.577,0,Monte Carlo
+Donovan Mitchell,Domantas Sabonis,Josh Giddey,29.5,17.5,18.5,21.32,9.96,22.95,under,under,over,0.866,0.984,0.931,0.6428,0.288,0.406,0.353,0.349,2.86,0.571,0,Monte Carlo
+Cade Cunningham,Domantas Sabonis,Josh Giddey,25.5,17.5,18.5,21.62,9.96,22.95,under,under,over,0.864,0.984,0.931,0.641,0.286,0.406,0.353,0.348,2.85,0.569,0,Monte Carlo

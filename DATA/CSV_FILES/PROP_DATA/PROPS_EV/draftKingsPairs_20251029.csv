@@ -1,0 +1,21 @@
+player1,player2,line1,line2,pred1,pred2,model_side1,model_side2,prob1,prob2,prob_both,edge1,edge2,combined_edge,ev_percent,kelly_full,recommendation,confidence_interval1,confidence_interval2,interval_width1,interval_width2,sigma1,sigma2,sigma_flag1,sigma_flag2,simulation_method
+Kevin Durant,Aaron Gordon,25.5,16.5,34.19,22.28,over,over,0.85,0.872,0.6676,0.272,0.294,0.283,1.0,0.501,0,"(17.8, 50.6)","(12.1, 32.5)",32.83,20.37,8.38,5.2,High,Med,Monte Carlo
+Josh Giddey,Aaron Gordon,18.5,16.5,27.13,22.28,over,over,0.832,0.872,0.6529,0.254,0.294,0.274,0.96,0.479,0,"(9.7, 44.6)","(12.1, 32.5)",34.88,20.37,8.9,5.2,High,Med,Monte Carlo
+Kevin Durant,Josh Giddey,25.5,18.5,34.19,27.13,over,over,0.85,0.843,0.6453,0.272,0.265,0.269,0.94,0.468,0,"(17.8, 50.6)","(9.7, 44.6)",32.83,34.88,8.38,8.9,High,High,Monte Carlo
+Aaron Gordon,Deni Avdija,16.5,21.5,22.28,28.39,over,over,0.867,0.792,0.6183,0.289,0.214,0.252,0.85,0.427,0,"(12.1, 32.5)","(11.4, 45.4)",20.37,34.05,5.2,8.69,Med,High,Monte Carlo
+Scottie Barnes,Aaron Gordon,17.5,16.5,23.51,22.28,over,over,0.781,0.872,0.613,0.203,0.294,0.248,0.84,0.419,0,"(8.4, 38.6)","(12.1, 32.5)",30.17,20.37,7.7,5.2,High,Med,Monte Carlo
+Kevin Durant,Deni Avdija,25.5,21.5,34.19,28.39,over,over,0.85,0.792,0.6062,0.272,0.214,0.243,0.82,0.409,0,"(17.8, 50.6)","(11.4, 45.4)",32.83,34.05,8.38,8.69,High,High,Monte Carlo
+Cam Thomas,Aaron Gordon,23.5,16.5,32.1,22.28,over,over,0.772,0.872,0.606,0.194,0.294,0.244,0.82,0.409,0,"(9.7, 54.5)","(12.1, 32.5)",44.72,20.37,11.41,5.2,High,Med,Monte Carlo
+Aaron Gordon,Jrue Holiday,16.5,14.5,22.28,20.41,over,over,0.867,0.777,0.6065,0.289,0.199,0.244,0.82,0.41,0,"(12.1, 32.5)","(4.8, 36.0)",20.37,31.16,5.2,7.95,Med,High,Monte Carlo
+Kevin Durant,Scottie Barnes,25.5,17.5,34.19,23.51,over,over,0.85,0.789,0.6039,0.272,0.211,0.242,0.81,0.406,0,"(17.8, 50.6)","(8.4, 38.6)",32.83,30.17,8.38,7.7,High,High,Monte Carlo
+Kevin Durant,Cam Thomas,25.5,23.5,34.19,32.1,over,over,0.85,0.781,0.5974,0.272,0.203,0.237,0.79,0.396,0,"(17.8, 50.6)","(9.7, 54.5)",32.83,44.72,8.38,11.41,High,High,Monte Carlo
+Aaron Gordon,Royce O'Neale,16.5,11.5,22.28,16.83,over,over,0.867,0.763,0.5953,0.289,0.185,0.237,0.79,0.393,0,"(12.1, 32.5)","(1.9, 31.8)",20.37,29.95,5.2,7.64,Med,High,Monte Carlo
+Scottie Barnes,Josh Giddey,17.5,18.5,23.51,27.13,over,over,0.781,0.843,0.5925,0.203,0.265,0.234,0.78,0.389,0,"(8.4, 38.6)","(9.7, 44.6)",30.17,34.88,7.7,8.9,High,High,Monte Carlo
+Josh Giddey,Deni Avdija,18.5,21.5,27.13,28.39,over,over,0.832,0.792,0.5928,0.254,0.214,0.234,0.78,0.389,0,"(9.7, 44.6)","(11.4, 45.4)",34.88,34.05,8.9,8.69,High,High,Monte Carlo
+Kevin Durant,Jrue Holiday,25.5,14.5,34.19,20.41,over,over,0.85,0.777,0.5946,0.272,0.199,0.236,0.78,0.392,0,"(17.8, 50.6)","(4.8, 36.0)",32.83,31.16,8.38,7.95,High,High,Monte Carlo
+P.J. Washington,Aaron Gordon,14.5,16.5,19.62,22.28,over,over,0.75,0.872,0.5887,0.172,0.294,0.233,0.77,0.383,0,"(4.7, 34.6)","(12.1, 32.5)",29.87,20.37,7.62,5.2,High,Med,Monte Carlo
+Cam Thomas,Josh Giddey,23.5,18.5,32.1,27.13,over,over,0.772,0.843,0.5857,0.194,0.265,0.229,0.76,0.379,0,"(9.7, 54.5)","(9.7, 44.6)",44.72,34.88,11.41,8.9,High,High,Monte Carlo
+Kevin Durant,Royce O'Neale,25.5,11.5,34.19,16.83,over,over,0.85,0.763,0.5837,0.272,0.185,0.228,0.75,0.376,0,"(17.8, 50.6)","(1.9, 31.8)",32.83,29.95,8.38,7.64,High,High,Monte Carlo
+Cooper Flagg,Aaron Gordon,15.5,16.5,20.55,22.28,over,over,0.739,0.872,0.5799,0.161,0.294,0.227,0.74,0.37,0,"(5.0, 36.1)","(12.1, 32.5)",31.11,20.37,7.94,5.2,High,Med,Monte Carlo
+Josh Giddey,Jrue Holiday,18.5,14.5,27.13,20.41,over,over,0.832,0.777,0.5815,0.254,0.199,0.226,0.74,0.372,0,"(9.7, 44.6)","(4.8, 36.0)",34.88,31.16,8.9,7.95,High,High,Monte Carlo
+Kevin Durant,P.J. Washington,25.5,14.5,34.19,19.62,over,over,0.85,0.754,0.5774,0.272,0.176,0.224,0.73,0.366,0,"(17.8, 50.6)","(4.7, 34.6)",32.83,29.87,8.38,7.62,High,High,Monte Carlo
