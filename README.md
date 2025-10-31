@@ -1,63 +1,51 @@
-# 🏀 NBA Player Prop Prediction
-## Project Overview
-Im building an end-to-end pipeline that predicts NBA player performance using features from players historical data and advanced stats to create a catboost/xgboost model for points. Then grabbing the expected value (EV) and bet sizing using the Kelly Criterion for only single bets or 2 leg parlays to find the best bets.
-.
-## Goals
-### Predict NBA Player Prop Outcomes
-Training a catboost and xgboost model to predict a players stat line like points based on historical and contextual data.
+# NBA Player Prop Predictor
 
-### Build a Scalable Data Pipeline
-- Create an automated pipeline to collect, clean, and store
-- Historical player stats
-- Opponent and team metrics
-- Feature Engineering
-- Betting lines (PrizePicks, Underdog, other US sportbooks)
+An end-to-end machine learning pipeline that predicts NBA player performance and identifies profitable prop betting opportunities.
 
-### Calculate Smart Bets Using EV and proper risk management
-Evaluate bets using:
-- Monte Carlo Simulation 
-- Expected Value (EV)
-- Kelly Criterion
+## Features
 
-### Deploy a Streamlit Dashboard (End Goal)
-- Display the top 10 EVs for the day:
-- Predicted player stats from the model
-- Over/Under recommendation
-- EV rankings
-- Parlay builder (1-leg, 2-leg, 3-leg)
+- **Player Performance Prediction**: XGBoost models trained on historical data, game context, and opponent metrics
+- **Expected Value Calculation**: Monte Carlo simulation with configurable distributions (normal, t-distribution, skew-normal)
+- **Smart Bet Sizing**: Kelly Criterion for optimal bankroll management
+- **Multiple Bet Types**: Single bets, 2-leg parlays, and 3-leg parlays
+- **Streamlit Dashboard**: Interactive web app for daily betting opportunities
 
-If you want the odds from below use region='us'
-### Supported Sportsbooks from The Odds API
-- FanDuel *
-- DraftKings *
-- BetMGM *
-- Caesars (William Hill) *
-- BetRivers *
-- PointsBet
-- Bovada
-- MyBookie.ag
-- Unibet
-- TwinSpires
-- WynnBet
-- LowVig.ag
-- batPARX
-- ESPN BET *
-- Fliff
-- SI Sportsbook
-- Tipico
-- SuperBook
-- Wind Creek (Betfred PA)
+## Tech Stack
 
-## Current problems and changes coming:
-- grabing team spreads and total per bookmakers and assigning the average to the current team
-- assigning the current opponent when I run the predict function
-- changing player positions from G,F,C to PG,SG,SF,PF,C
+- **Machine Learning**: XGBoost, NGBoost
+- **Simulation**: Monte Carlo methods with Bayesian statistics
+- **Visualization**: Streamlit
+- **Data Sources**: NBA API, The Odds API
 
-## Example of what you get for a single bet only using bookmakers that allow single bets
-<img width="1326" height="303" alt="Screenshot 2025-09-25 at 4 37 12 PM" src="https://github.com/user-attachments/assets/62110db1-e23b-4c2b-9305-fb4017a0be5f" />
+## Project Structure
 
-## Example of what you get for a 2-leg parlay only using DFS bookmakers (The lines below are from underdog)
-<img width="1397" height="272" alt="Screenshot 2025-09-25 at 4 38 53 PM" src="https://github.com/user-attachments/assets/17db00eb-902d-4120-9ad5-e8602324e930" />
+```
+├── app.py                    # Streamlit dashboard
+├── MODELS/                   # Model training and inference
+├── NOTEBOOKS/                # EV calculation and analysis
+├── BACKTEST/                 # Backtesting framework
+├── FEATURES/                 # Feature engineering
+├── NBAPropFinder/           # Data scraping modules
+└── DATA/                     # Training and prop data
+```
+
+## How It Works
+
+1. **Data Collection**: Scrapes player stats, team metrics, and betting lines from multiple sources
+2. **Feature Engineering**: Builds comprehensive feature sets including recent form, matchups, and game context
+3. **Model Training**: Trains quantile regression models to predict player performance distributions
+4. **EV Calculation**: Uses Monte Carlo simulation to estimate probabilities and calculate expected value
+5. **Bet Selection**: Ranks opportunities by EV and provides Kelly-optimal bet sizing
+
+## Usage
+
+The Streamlit dashboard displays:
+
+- Top EV single bets
+- 2-leg and 3-leg parlay opportunities
+- Over/under hit rates
+- Confidence intervals and uncertainty metrics
 
 ## Disclaimer
-This project was created as a personal learning exercise and is intended for educational purposes only. The predictive models implemented here are experimental and have not demonstrated high accuracy in forecasting player performance. As such, the results should not be considered reliable for decision-making or betting purposes.
+
+This project is for educational purposes only. Sports betting involves risk, and past performance does not guarantee future results. Always gamble responsibly.
