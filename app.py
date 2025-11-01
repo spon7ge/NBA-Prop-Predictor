@@ -55,23 +55,28 @@ def style_over_rates(df):
 
 @st.cache_data  
 def loadSinglePTSBookmakers():
-    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv')
+    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv')
+    return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
 def loadUnderdogPairsBookmakers():
-    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv')
+    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv')
+    return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
 def loadPrizepicksPairsBookmakers():
-    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv')
+    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv')
+    return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
 def loadTriosUnderdogBookmakers():
-    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv')
+    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv')
+    return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
 def loadTriosPrizepicksBookmakers():
-    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv')
+    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv')
+    return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
 def loadOverRatesPrizePicks():
@@ -291,14 +296,14 @@ if options == 'Single Bets':
 elif options == '2-Leg Bets':
     st.subheader("Underdog Best Pairs for Points")
     if pairs.empty:
-        st.warning("No data available for Underdog pairs. Please check if the data file exists.")
+        st.warning("No bets available - Model found no profitable opportunities meeting criteria for Underdog pairs.")
     else:
         styled_pairs = format_dataframe(pairs.head(30)).reset_index(drop=True).style
         st.dataframe(styled_pairs, width='stretch')
     
     st.subheader("Prizepicks Best Pairs for Points")
     if pairsPrizepicks.empty:
-        st.warning("No data available for PrizePicks pairs. Please check if the data file exists.")
+        st.warning("No bets available - Model found no profitable opportunities meeting criteria for PrizePicks pairs.")
     else:
         styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index(drop=True).style
         st.dataframe(styled_pairs_pp, width='stretch')
@@ -306,14 +311,14 @@ elif options == '2-Leg Bets':
 elif options == '3-Leg Bets':
     st.subheader("Underdog Best Trios for Points")
     if triosUnderdog.empty:
-        st.warning("No data available for Underdog trios. Please check if the data file exists.")
+        st.warning("No bets available - Model found no profitable opportunities meeting criteria for Underdog trios.")
     else:
         styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index(drop=True).style
         st.dataframe(styled_trios_ud, width='stretch')
     
     st.subheader("Prizepicks Best Trios for Points")
     if triosPrizepicks.empty:
-        st.warning("No data available for PrizePicks trios. Please check if the data file exists.")
+        st.warning("No bets available - Model found no profitable opportunities meeting criteria for PrizePicks trios.")
     else:
         styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index(drop=True).style
         st.dataframe(styled_trios_pp, width='stretch')
