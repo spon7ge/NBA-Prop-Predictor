@@ -303,7 +303,7 @@ with st.sidebar:
     - Underdog
     """)
 
-options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Over Rates PrizePicks', 'Over Rates Underdog'])
+options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Historical Hit Rates - PrizePicks"', 'Historical Hit Rates - Underdog"'])
 
 if options == 'Single Bets':
     st.subheader("Single Best Bets for Points")
@@ -343,7 +343,7 @@ elif options == '3-Leg Bets':
         styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index(drop=True).style
         st.dataframe(styled_trios_pp, width='stretch')
 
-elif options == 'Over Rates PrizePicks':
+elif options == 'Historical Hit Rates - PrizePicks':
     st.subheader("Over Rates for Player Props")
     over_rates = loadOverRatesPrizePicks()
 
@@ -380,7 +380,7 @@ elif options == 'Over Rates PrizePicks':
     if not any_rendered:
         st.info("No Over Rates available to display.")
 
-elif options == 'Over Rates Underdog':
+elif options == 'Historical Hit Rates - Underdog':
     st.subheader("Over Rates for Player Props")
     over_rates = loadOverRatesUnderdog()
     sections = [
@@ -390,6 +390,13 @@ elif options == 'Over Rates Underdog':
         ('player_blocks', "Over Rates for Blocks"),
         ('player_steals', "Over Rates for Steals"),
         ('player_turnovers', "Over Rates for Turnovers"),
+        ('player_field_goals', "Over Rates for Field Goals Made"),
+        ('player_frees_made', "Over Rates for Free Throws Made"),
+        ('player_threes', "Over Rates for Three Pointers Made"),
+        ('player_points_rebounds', "Over Rates for Points + Rebounds"),
+        ('player_points_assists', "Over Rates for Points + Assists"),
+        ('player_rebounds_assists', "Over Rates for Rebounds + Assists"),
+        ('player_points_rebounds_assists', "Over Rates for Points + Rebounds + Assists"),
     ]
     
     any_rendered = False
