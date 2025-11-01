@@ -75,11 +75,14 @@ def loadTriosPrizepicksBookmakers():
 
 @st.cache_data  
 def loadOverRatesPrizePicks():
-
     over_rates_dir = 'DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS'
     over_rates_data = {}
-            
-    csv_files = [f for f in os.listdir(over_rates_dir) if f.endswith('.csv')]
+    
+    csv_files = sorted([f for f in os.listdir(over_rates_dir) if f.endswith('.csv')])
+    
+    # Use file list as part of cache key - cache invalidates when files change
+    cache_key = tuple(csv_files)  # Make it hashable
+    
     for file in csv_files:
         category = file.replace('.csv', '')
         filepath = os.path.join(over_rates_dir, file)
@@ -94,7 +97,11 @@ def loadOverRatesPrizePicks():
 def loadOverRatesUnderdog():
     over_rates_dir = 'DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG'
     over_rates_data = {}
-    csv_files = [f for f in os.listdir(over_rates_dir) if f.endswith('.csv')]
+    
+    csv_files = sorted([f for f in os.listdir(over_rates_dir) if f.endswith('.csv')])
+    
+    cache_key = tuple(csv_files)  
+    
     for file in csv_files:
         category = file.replace('.csv', '')
         filepath = os.path.join(over_rates_dir, file)
@@ -102,6 +109,7 @@ def loadOverRatesUnderdog():
             over_rates_data[category] = pd.read_csv(filepath)
         except Exception as e:
             st.error(f"Error loading {file}: {e}")
+    
     return over_rates_data
 
 singleBets = loadSinglePTSBookmakers()
