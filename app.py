@@ -186,8 +186,8 @@ with st.expander("📋 What's Available", expanded=True):
     
     **Focus on bets with sigma flag = Low and high EV% for the lowest risk opportunities.
     
-    ### **Over Rates**
-    The Over Rates section shows how often a player has hit their prop line historically:
+    ### **Historical Hit Rates**
+    The Historical Hit Rates section shows how often a player has hit their prop line historically:
     - **Last 5 Games**: Hit rate in the player's most recent 5 games
     - **Last 10 Games**: Hit rate in the player's most recent 10 games
     - **Last 15 Games**: Hit rate in the player's most recent 15 games

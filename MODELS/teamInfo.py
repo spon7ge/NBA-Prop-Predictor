@@ -1,36 +1,35 @@
 projectedStartingFive = {
-    "ATL": ["Dyson Daniels", "Nickeil Alexander-Walker", "Zaccharie Risacher", "Jalen Johnson", "Kristaps Porziņģis"],  # Trae Young confirmed out
-    "BOS": ["Derrick White", "Payton Pritchard", "Jaylen Brown", "Josh Minott", "Neemias Queta"],  # Jayson Tatum confirmed out
+    "ATL": ["Kristaps Porzingis", "Zaccharie Risacher", "Nickeil Alexander-Walker", "Dyson Daniels", "Jalen Johnson"],
     "BKN": ["Ben Saraf", "Cam Thomas", "Terrence Mann", "Michael Porter Jr.", "Nicolas Claxton"],
+    "BOS": ["Neemias Queta", "Derrick White", "Jaylen Brown", "Payton Pritchard", "Josh Minott"],
     "CHA": ["LaMelo Ball", "Collin Sexton", "Kon Knueppel", "Miles Bridges", "Ryan Kalkbrenner"],
-    "CHI": ["Tre Jones", "Josh Giddey", "Isaac Okoro", "Matas Buzelis", "Nikola Vučević"],  # Coby White confirmed out
-    "CLE": ["Lonzo Ball", "Jaylon Tyson", "De'Andre Hunter", "Evan Mobley", "Dean Wade"],  # Multiple confirmed out
+    "CHI": ["Isaac Okoro", "Tre Jones", "Nikola Vucevic", "Josh Giddey", "Matas Buzelis"],
+    "CLE": ["Lonzo Ball", "Dean Wade", "Jaylon Tyson", "Evan Mobley", "De'Andre Hunter"],
     "DAL": ["P.J. Washington", "Klay Thompson", "Cooper Flagg", "Anthony Davis", "Max Christie"],
-    "DEN": ["Jamal Murray", "Christian Braun", "Cameron Johnson", "Aaron Gordon", "Nikola Jokić"],
+    "DEN": ["Jamal Murray", "Aaron Gordon", "Nikola Jokic", "Christian Braun", "Cameron Johnson"],
     "DET": ["Cade Cunningham", "Duncan Robinson", "Ausar Thompson", "Tobias Harris", "Jalen Duren"],
     "GSW": ["Stephen Curry", "Brandin Podziemski", "Jalen Butler III", "Draymond Green", "Johnathan Kuminga"],
     "HOU": ["Steven Adams", "Amen Thompson", "Kevin Durant", "Jabari Smith Jr.", "Alperen Şengün"],
-    "IND": ["Tyrese Haliburton", "Quenton Jackson", "Aaron Nesmith", "Pascal Siakam", "Isaiah Jackson"],  # Updated with confirmed players
-    "LAC": ["James Harden", "Bradley Beal", "Kawhi Leonard", "Derrick Jones", "Ivica Zubac"],
-    "LAL": ["Luka Dončić", "Austin Reaves", "Marcus Smart", "Rui Hachimura", "Deandre Ayton"],  # LeBron James confirmed out
-    "MEM": ["Ja Morant", "Kentavious Caldwell-Pope", "Jaylen Wells", "Jaren Jackson Jr.", "Jock Landale"],
+    "IND": ["Isaiah Jackson", "Jarace Walker", "Aaron Nesmith", "Pascal Siakam", "Tyrese Haliburton"],
+    "LAC": ["Ivica Zubac", "Kawhi Leonard", "Bradley Beal", "James Harden", "Derrick Jones"],
+    "LAL": ["Luka Doncic", "Deandre Ayton", "Austin Reaves", "Marcus Smart", "Rui Hachimura"],
+    "MEM": ["Jaren Jackson", "Ja Morant", "Jock Landale", "Kentavious Caldwell-Pope", "Jaylen Wells"],
     "MIA": ["Donovan Mitchell", "Pelle Larsson", "Andrew Wiggins", "Bam Adebayo", "Kel'el Ware"],
     "MIL": ["Ryan Rollins", "Gary Trent Jr.", "AJ Green", "Giannis Antetokounmpo", "Myles Turner"],
     "MIN": ["Donte DiVincenzo", "Mike Conley", "Jaden McDaniels", "Julius Randle", "Rudy Gobert"],
-    "NOP": ["Trey Murphy", "Herbert Jones", "Yves Missi", "Zion Williamson", "Jeremiah Fears"],  # Updated with confirmed players
-    "NYK": ["Jalen Brunson", "Mikal Bridges", "OG Anunoby", "Karl-Anthony Towns", "Mitchell Robinson"],
+    "NOP": ["Herbert Jones", "Yves Missi", "Jeremiah Fears", "Zion Williamson", "Trey Murphy"],
+    "NYK": ["Karl-Anthony Towns", "Mikal Bridges", "OG Anunoby", "Mitchell Robinson", "Jalen Brunson"],
     "OKC": ["Shai Gilgeous-Alexander", "Cason Wallace", "Luguentz Dort", "Aaron Wiggins", "Isaiah Hartenstein"],
     "ORL": ["Jalen Suggs", "Desmond Bane", "Franz Wagner", "Paolo Banchero", "Wendell Carter Jr."],
-    "PHI": ["Tyrese Maxey", "VJ Edgecombe", "Kelly Oubre", "Paul George", "Joel Embiid"],  # All confirmed playing
-    "PHX": ["Devin Booker", "Royce O'Neale", "Ryan Dunn", "Grayson Allen", "Mark Williams"],  # Updated with confirmed players
-    "POR": ["Jrue Holiday", "Shaedon Sharpe", "Deni Avdija", "Toumani Camara", "Damian Lillard"],  # Updated with confirmed players
+    "PHI": ["Paul George", "Tyrese Maxey", "Joel Embiid", "Jabari Walker", "Kelly Oubre"],
+    "PHX": ["Devin Booker", "Isaiah Livers", "Ryan Dunn", "Royce O'Neale", "Grayson Allen"],
+    "POR": ["Jrue Holiday", "Shaedon Sharpe", "Toumani Camara", "Donovan Clingan", "Damian Lillard"],
     "SAC": ["Dennis Schröder", "Zach LaVine", "DeMar DeRozan","Russel Westbrook", "Domantas Sabonis"],
     "SAS": ["Stephon Castle", "Devin Vassell","Julian Champagnie", "Harrison Barnes", "Victor Wembanyama"],
-    "TOR": ["Immanuel Quickley", "RJ Barrett", "Brandon Ingram", "Scottie Barnes", "Collin Murray-Boyles"],  # Jakob Poeltl confirmed out
-    "UTA": ["Keyonte George", "Svi Mykhailiuk", "Kyle Filipowski", "Lauri Markkanen", "Walker Kessler"],
-    "WAS": ["Bub Carrington", "CJ McCollum", "Khris Middleton", "Kyshawn George", "Alex Sarr"]
+    "TOR": ["Brandon Ingram", "Immanuel Quickley", "Collin Murray-Boyles", "RJ Barrett", "Scottie Barnes"],
+    "UTA": ["Lauri Markkanen", "Walker Kessler", "Kyle Filipowski", "Svi Mykhailiuk", "Keyonte George"],
+    "WAS": ["Bub Carrington", "CJ McCollum", "Khris Middleton", "Kyshawn George", "Alex Sarr"],
 }
-
 
 teamStarPlayer = {
     "OKC": "Shai Gilgeous-Alexander", 
