@@ -1,7 +1,7 @@
-index,player1,player2,line1,line2,pred1,pred2,model_side1,model_side2,prob1,prob2,prob_both,edge1,edge2,combined_edge,ev_percent,kelly_full,recommendation,confidence_interval1,confidence_interval2,interval_width1,interval_width2,sigma1,sigma2,sigma_flag1,sigma_flag2,simulation_method
-382,Quenton Jackson,Andre Drummond,6.5,3.5,11.93,9.3,over,over,0.866,0.876,0.683,0.288,0.298,0.293,1.05,0.524,0,"(0.9, 23.0)","(0.0, 20.5)",22.06,20.51,5.63,5.72,Med,Med,Monte Carlo
-322,Keaton Wallace,Andre Drummond,4.5,3.5,8.36,9.3,over,over,0.807,0.876,0.6365,0.229,0.298,0.264,0.91,0.455,0,"(0.0, 18.6)","(0.0, 20.5)",18.57,20.51,5.21,5.72,Med,Med,Monte Carlo
-315,Keaton Wallace,Quenton Jackson,4.5,6.5,8.36,11.93,over,over,0.807,0.866,0.6289,0.229,0.288,0.258,0.89,0.443,0,"(0.0, 18.6)","(0.9, 23.0)",18.57,22.06,5.21,5.63,Med,Med,Monte Carlo
-804,Andre Drummond,Aaron Gordon,3.5,17.5,9.3,15.86,over,under,0.876,0.678,0.5349,0.298,0.1,0.199,0.6,0.302,0,"(0.0, 20.5)","(7.2, 24.5)",20.51,17.33,5.72,4.42,Med,Low,Monte Carlo
-410,Quenton Jackson,Aaron Gordon,6.5,17.5,11.93,15.86,over,under,0.866,0.678,0.5285,0.288,0.1,0.194,0.59,0.293,0,"(0.9, 23.0)","(7.2, 24.5)",22.06,17.33,5.63,4.42,Med,Low,Monte Carlo
-350,Keaton Wallace,Aaron Gordon,4.5,17.5,8.36,15.86,over,under,0.807,0.678,0.4925,0.229,0.1,0.164,0.48,0.239,0,"(0.0, 18.6)","(7.2, 24.5)",18.57,17.33,5.21,4.42,Med,Low,Monte Carlo
+player1,player2,line1,line2,pred1,pred2,model_side1,model_side2,prob1,prob2,prob_both,edge1,edge2,combined_edge,ev_percent,kelly_full,recommendation,confidence_interval1,confidence_interval2,interval_width1,interval_width2,sigma1,sigma2,sigma_flag1,sigma_flag2,simulation_method
+Quenton Jackson,Andre Drummond,6.5,3.5,11.93,9.3,over,over,0.866,0.876,0.683,0.288,0.298,0.293,1.05,0.524,0,"(0.9, 23.0)","(0.0, 20.5)",22.06,20.51,5.63,5.72,Med,Med,Monte Carlo
+Keaton Wallace,Andre Drummond,4.5,3.5,8.36,9.3,over,over,0.807,0.876,0.6365,0.229,0.298,0.264,0.91,0.455,0,"(0.0, 18.6)","(0.0, 20.5)",18.57,20.51,5.21,5.72,Med,Med,Monte Carlo
+Keaton Wallace,Quenton Jackson,4.5,6.5,8.36,11.93,over,over,0.807,0.866,0.6289,0.229,0.288,0.258,0.89,0.443,0,"(0.0, 18.6)","(0.9, 23.0)",18.57,22.06,5.21,5.63,Med,Med,Monte Carlo
+Andre Drummond,Aaron Gordon,3.5,17.5,9.3,15.86,over,under,0.876,0.678,0.5349,0.298,0.1,0.199,0.6,0.302,0,"(0.0, 20.5)","(7.2, 24.5)",20.51,17.33,5.72,4.42,Med,Low,Monte Carlo
+Quenton Jackson,Aaron Gordon,6.5,17.5,11.93,15.86,over,under,0.866,0.678,0.5285,0.288,0.1,0.194,0.59,0.293,0,"(0.9, 23.0)","(7.2, 24.5)",22.06,17.33,5.63,4.42,Med,Low,Monte Carlo
+Keaton Wallace,Aaron Gordon,4.5,17.5,8.36,15.86,over,under,0.807,0.678,0.4925,0.229,0.1,0.164,0.48,0.239,0,"(0.0, 18.6)","(7.2, 24.5)",18.57,17.33,5.21,4.42,Med,Low,Monte Carlo

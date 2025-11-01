@@ -124,7 +124,7 @@ def loadTriosPrizepicksBookmakers():
     return pd.read_csv(file_path)
 
 @st.cache_data  
-def loadOverRates():
+def loadOverRatesPrizePicks():
 
     over_rates_dir = 'DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS'
     over_rates_data = {}
@@ -140,6 +140,19 @@ def loadOverRates():
     
     return over_rates_data
 
+@st.cache_data  
+def loadOverRatesUnderdog():
+    over_rates_dir = 'DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG'
+    over_rates_data = {}
+    csv_files = [f for f in os.listdir(over_rates_dir) if f.endswith('.csv')]
+    for file in csv_files:
+        category = file.replace('.csv', '')
+        filepath = os.path.join(over_rates_dir, file)
+        try:
+            over_rates_data[category] = pd.read_csv(filepath)
+        except Exception as e:
+            st.error(f"Error loading {file}: {e}")
+    return over_rates_data
 
 singleBets = loadSinglePTSBookmakers()
 pairs = loadUnderdogPairsBookmakers()
@@ -170,7 +183,7 @@ with st.expander("📋 What's Available", expanded=True):
     - **1** = **Recommended Bet**: The model has high confidence this bet offers strong value
     - **0** = Not recommended (typically lower EV% or higher risk)
     
-    **Focus on bets with RECOMMENDATION = 1** for the highest quality opportunities. These bets have been filtered through multiple criteria including EV%, probability estimates, and risk assessment.
+    **Focus on bets with sigma flag = Low and high EV% for the lowest risk opportunities.
     
     ### **Over Rates**
     The Over Rates section shows how often a player has hit their prop line historically:
@@ -180,87 +193,67 @@ with st.expander("📋 What's Available", expanded=True):
     
     This helps you understand a player's recent form and consistency for each prop type (points, rebounds, assists, etc.).
     
-    The color coding helps you quickly identify performance:
-    - 🟢 **Green** (>80%): Excellent recent performance
-    - 🟡 **Yellow** (50-79%): Good recent performance
-    - 🔴 **Salmon** (<50%): Below average recent performance
+    **❌ What we're NOT doing:**
+    - We're **NOT** trying to predict exactly how many points a player will score
+    - We're **NOT** claiming to know the future outcome of any single game
+    - Sports are inherently unpredictable - too many variables affect any individual game
+    
+    **✅ What we ARE doing:**
+    - We're using **probability distributions** to estimate the likelihood of outcomes
+    - We're identifying bets where the **probability of winning is higher than what the odds suggest**
+    - We're finding **expected value** - bets that are profitable over many repetitions
+    - We're applying mathematical edge-finding to make profitable decisions **long-term**
+    
+    ### **The Probability-Based Approach**
+    
+    Instead of saying *"Player X will score exactly 25 points"*, we calculate:
+    - **Probability distribution**: How likely is it that Player X scores 20+ points? 25+? 30+?
+    - **Model probability**: Based on historical data, matchups, and trends, what's the real probability?
+    - **Odds probability**: What probability does the bookmaker's odds imply?
+    - **Edge calculation**: If our probability > odds probability, we have positive expected value
     """)
 
 # Disclaimer
-st.info("⚠️ **Disclaimer**: Please take these predictions with a grain of salt. Sports betting involves significant uncertainty, and anything can happen in any given game. Past performance does not guarantee future results. Always gamble responsibly and within your means.")
+st.info("⚠️ **Disclaimer**: Please take these predictions/probabilities with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
 
 # Add expandable help section with tooltips
 with st.expander("Betting Metrics Explained", expanded=False):
     st.markdown("""
     ### **EV% (Expected Value Percentage)**
-    **What it is**: The percentage profit you can expect to make on average per bet. It's calculated by comparing the predicted probability of winning (from your model) with the implied probability from the betting odds.
+    The average profit percentage per bet over many repetitions. Calculated by comparing our model's win probability vs. the bookmaker's implied probability from odds.
     
-    **How it works**:
-    - If your model says a bet has a 60% chance to win, but the odds imply only a 50% chance, you have positive expected value
-    - EV% tells you the average profit percentage per bet if you made this bet repeatedly
-    - **Example**: EV% of 25% means you expect to make 25 dollars in profit for every 100 dollars wagered over the long run
-    
-    **Interpretation**:
-    - Positive EV% = Profitable bet (the higher, the better)
-    - Negative EV% = Unprofitable bet (avoid these)
-    - Higher EV% bets are ranked at the top of each table
+    - **Positive EV%** = Profitable over time (higher is better)
+    - **Example**: 25% EV means +$25 profit per $100 wagered on average
+    - Higher EV% bets appear at the top of each table
     
     ### **Kelly Criterion**
-    **What it is**: A mathematical formula that tells you what percentage of your bankroll to bet based on your edge (advantage) and the odds. It maximizes long-term growth while protecting your bankroll.
+    Mathematical formula for optimal bet sizing based on your edge. Maximizes long-term growth while protecting your bankroll.
     
-    **Why it matters**: Betting too much risks going broke; betting too little leaves money on the table. Kelly finds the optimal balance.
+    - **Kelly Full**: Aggressive (max recommended) - for experienced bettors only
+    - **Kelly Half**: Conservative (recommended) - bet 50% of Kelly suggestion
+    - **Kelly Quarter**: Very safe - bet 25% of Kelly suggestion
     
-    **Betting Sizes**:
-    - **KELLY FULL**: Maximum recommended bet size (aggressive) - Use only if you're very confident and experienced
-    - **KELLY HALF**: Conservative bet size (recommended for beginners) - Bet half of what Kelly suggests
-    - **KELLY QUARTER**: Very conservative bet size (safest option) - Bet a quarter of what Kelly suggests
+    Most bettors should use Kelly Half or Quarter for safety.
     
-    **How to use**: 
-    - If Kelly Full suggests 10%, bet 10% of your bankroll
-    - If Kelly Half suggests 10%, bet 5% of your bankroll  
-    - If Kelly Quarter suggests 10%, bet 2.5% of your bankroll
-    - Never bet more than Kelly Full suggests
-    - Most bettors should start with Kelly Half or Quarter for safety
+    ### **How the Model Works**
+    Uses NGBoost (probabilistic ML) trained on thousands of games to estimate **probability distributions**, not exact scores. Considers:
     
-    ### **What the Model Uses to Make Predictions**
-    The model uses an NGBoost machine learning algorithm trained on thousands of NBA games. Here's what data goes into each prediction:
+    - Player performance (rolling averages, trends, volatility)
+    - Game context (home/away, rest days, back-to-back)
+    - Matchups (opponent defense, historical performance, team pace)
+    - Team context (ratings, star availability, recent form)
     
-    **Player Performance Features**:
-    - Rolling averages of points, shooting percentages, usage rate, and minutes over recent games (3, 5, 7, 10+ game windows)
-    - Historical performance patterns and trends
-    - Recent form indicators (hot/cold streaks, consistency metrics)
-    - Performance volatility (how consistent the player has been)
-    
-    **Game Context**:
-    - **Home vs Away**: Players often perform differently at home vs on the road
-    - **Rest Days**: How many days of rest the player and team have had (affects performance)
-    - **Back-to-Back Games**: Whether the team is playing consecutive nights
-    - **Starting Lineup**: Whether the player is projected to start
-    
-    **Matchup Features**:
-    - **Opponent Defense**: How well the opponent defends against the player's position
-    - **Historical Matchups**: How the player has performed against this specific opponent before
-    - **Team Pace**: Whether it's a fast-paced or slow-paced game (more opportunities vs fewer)
-    
-    **Team Context**:
-    - Team offensive and defensive ratings
-    - Whether star teammates are playing (affects usage and opportunities)
-    - Team recent form and momentum
-    
-    **Advanced Metrics**:
-    - True shooting percentage, effective field goal percentage
-    - Usage rate and touches per game
-    - Efficiency ratings and net rating contributions
-    
-    The model learns from all these factors to predict how many points a player will score, then compares that prediction to the betting line to find value bets.
+    Compares the model's probability distribution to betting odds to identify value opportunities.
     
     ### **Uncertainty Metrics**
-    These columns help you gauge how tight or uncertain a projection is:
-
-    - **CONFIDENCE INTERVAL**: The projected range for a player's outcome (e.g., points) within a chosen confidence level (commonly 95%). Shows the lower and upper bounds where the result is expected to fall.
-    - **INTERVAL WIDTH**: The size of that range (Upper − Lower). Smaller width = higher certainty; larger width = more uncertainty.
-    - **SIGMA**: The model's estimated standard deviation of the projection distribution (in points). Higher sigma indicates more volatile outcomes.
-    - **SIGMA FLAG**: A quick alert when volatility is elevated (e.g., when sigma exceeds a threshold or data quality is limited). Use flagged rows with extra caution.
+    Indicators of prediction confidence:
+    
+    - **CONFIDENCE INTERVAL**: Range where outcome likely falls (e.g., 95% confidence)
+    - **INTERVAL WIDTH**: Size of that range (smaller = more certain)
+    - **SIGMA**: Standard deviation of the distribution (higher = more volatile)
+    - **SIGMA FLAG**: Alert when volatility is elevated (Low/Med/High)
+    
+    Focus on bets with **Low sigma flags** for lower risk opportunities.
     """)
 
 # Add metric explanations in sidebar
@@ -269,54 +262,48 @@ with st.sidebar:
     
     st.markdown("### EV% Guide")
     st.markdown("""
-    - **20%+**: Excellent bet
-    - **10-19%**: Very good bet
-    - **5-9%**: Good bet
-    - **<5%**: Moderate bet
+    - **20%+**: Excellent
+    - **10-19%**: Very good
+    - **5-9%**: Good
+    - **<5%**: Moderate
     - **Negative**: Avoid
     """)
     
     st.markdown("### Kelly Sizing")
     st.markdown("""
-    - **Full**: Max aggressive
     - **Half**: Recommended
     - **Quarter**: Safest
+    - **Full**: Aggressive only
     """)
     
-    st.markdown("### Over Rates Colors")
+    st.markdown("### Sigma Flags")
     st.markdown("""
-    - 🟢 **Green** (>80%): Excellent
-    - 🟡 **Yellow** (50-79%): Good  
-    - 🔴 **Salmon** (<50%): Poor
+    - **Low**: Lower risk
+    - **Med**: Medium risk
+    - **High**: Higher risk
+    
+    Focus on **Low** flags.
     """)
     
-    st.markdown("### Recommendation Column")
+    st.markdown("### Bet Selection")
     st.markdown("""
-    - **1** = Recommended bet
-    - **0** = Not recommended
-    
-    **Filter by RECOMMENDATION = 1** for best bets
+    1. High EV% (top rows)
+    2. Low sigma flags
+    3. Check Over Rates
+    4. Use Kelly Half/Quarter
+    5. Max 5% per bet
     """)
     
-    st.markdown("### Bet Selection Tips")
+    st.markdown("### Platforms")
     st.markdown("""
-    1. **Filter REC = 1**: Best quality bets
-    2. **Prioritize High EV%**: Top = best value
-    3. **Check Over Rates**: Green = confident
-    4. **Use Kelly Half**: Safe sizing
-    5. **Bankroll Rule**: Max 5% per bet
-    """)
+    **Single**: All US books
     
-    st.markdown("### Available Platforms")
-    st.markdown("""
-    **Single Bets**: All US bookmakers
-    
-    **2-Leg & 3-Leg**:
+    **2-Leg/3-Leg**:
     - PrizePicks
-    - Underdog  
+    - Underdog
     """)
 
-options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Over Rates PrizePicks'])
+options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Over Rates PrizePicks', 'Over Rates Underdog'])
 
 if options == 'Single Bets':
     st.subheader("Single Best Bets for Points")
@@ -358,7 +345,7 @@ elif options == '3-Leg Bets':
 
 elif options == 'Over Rates PrizePicks':
     st.subheader("Over Rates for Player Props")
-    over_rates = loadOverRates()
+    over_rates = loadOverRatesPrizePicks()
 
     sections = [
         ('player_points', "Over Rates for Points"),
@@ -381,7 +368,42 @@ elif options == 'Over Rates PrizePicks':
         df = over_rates.get(key)
         if df is not None and not df.empty:
             st.subheader(title)
-            st.dataframe(style_over_rates(df), use_container_width=True)
+            # Sort by HIT RATE % LAST 10 in descending order (highest first)
+            if 'HIT RATE % LAST 10' in df.columns:
+                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_last=True).reset_index(drop=True)
+                st.dataframe(style_over_rates(df_sorted), use_container_width=True)
+            else:
+                # If column doesn't exist, show unsorted
+                st.dataframe(style_over_rates(df), use_container_width=True)
+            any_rendered = True
+
+    if not any_rendered:
+        st.info("No Over Rates available to display.")
+
+elif options == 'Over Rates Underdog':
+    st.subheader("Over Rates for Player Props")
+    over_rates = loadOverRatesUnderdog()
+    sections = [
+        ('player_points', "Over Rates for Points"),
+        ('player_rebounds', "Over Rates for Rebounds"),
+        ('player_assists', "Over Rates for Assists"),
+        ('player_blocks', "Over Rates for Blocks"),
+        ('player_steals', "Over Rates for Steals"),
+        ('player_turnovers', "Over Rates for Turnovers"),
+    ]
+    
+    any_rendered = False
+    for key, title in sections:
+        df = over_rates.get(key)
+        if df is not None and not df.empty:
+            st.subheader(title)
+            # Sort by HIT RATE % LAST 10 in descending order (highest first)
+            if 'HIT RATE % LAST 10' in df.columns:
+                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_last=True).reset_index(drop=True)
+                st.dataframe(style_over_rates(df_sorted), use_container_width=True)
+            else:
+                # If column doesn't exist, show unsorted
+                st.dataframe(style_over_rates(df), use_container_width=True)
             any_rendered = True
 
     if not any_rendered:
