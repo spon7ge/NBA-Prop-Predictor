@@ -167,17 +167,6 @@ with st.expander("📋 What's Available", expanded=True):
     
     This helps you understand a player's recent form and consistency for each prop type (points, rebounds, assists, etc.).
     
-    **❌ What we're NOT doing:**
-    - We're **NOT** trying to predict exactly how many points a player will score
-    - We're **NOT** claiming to know the future outcome of any single game
-    - Sports are inherently unpredictable - too many variables affect any individual game
-    
-    **✅ What we ARE doing:**
-    - We're using **probability distributions** to estimate the likelihood of outcomes
-    - We're identifying bets where the **probability of winning is higher than what the odds suggest**
-    - We're finding **expected value** - bets that are profitable over many repetitions
-    - We're applying mathematical edge-finding to make profitable decisions **long-term**
-    
     ### **The Probability-Based Approach**
     
     Instead of saying *"Player X will score exactly 25 points"*, we calculate:
@@ -185,6 +174,18 @@ with st.expander("📋 What's Available", expanded=True):
     - **Model probability**: Based on historical data, matchups, and trends, what's the real probability?
     - **Odds probability**: What probability does the bookmaker's odds imply?
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
+    
+    ** What we're NOT doing:**
+    - We're **NOT** trying to predict exactly how many points a player will score
+    - We're **NOT** claiming to know the future outcome of any single game
+    - Sports are inherently unpredictable - too many variables affect any individual game
+    
+    ** What we ARE doing:**
+    - We're using **probability distributions** to estimate the likelihood of outcomes
+    - We're identifying bets where the **probability of winning is higher than what the odds suggest**
+    - We're finding **expected value** - bets that are profitable over many repetitions
+    - We're applying mathematical edge-finding to make profitable decisions **long-term**
+    
     """)
 
 # Disclaimer
