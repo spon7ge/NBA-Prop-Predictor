@@ -372,7 +372,7 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
         )
         interval_width = round(confidence_interval[1] - confidence_interval[0], 2)
         # Sigma flag for readability
-        if sigma <= 4.0:
+        if sigma <= 5.0:
             sigma_flag = 'Low'
         elif sigma <= 6.0:
             sigma_flag = 'Med'
@@ -480,18 +480,22 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             mu1 = pred1_val
             mu2 = pred2_val
             
+            # Apply variance inflation if specified
+            sigma1 = sigma1 * variance_inflation
+            sigma2 = sigma2 * variance_inflation
+            
             # Calculate confidence intervals and sigma flags for both players
             ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
             ci2 = (max(0, mu2 - 1.96 * sigma2), mu2 + 1.96 * sigma2)
             width1 = round(ci1[1] - ci1[0], 2)
             width2 = round(ci2[1] - ci2[0], 2)
-            if sigma1 <= 4.0:
+            if sigma1 <= 5.0:
                 sigma_flag1 = 'Low'
             elif sigma1 <= 6.0:
                 sigma_flag1 = 'Med'
             else:
                 sigma_flag1 = 'High'
-            if sigma2 <= 4.0:
+            if sigma2 <= 5.0:
                 sigma_flag2 = 'Low'
             elif sigma2 <= 6.0:
                 sigma_flag2 = 'Med'
@@ -713,6 +717,11 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                 mu2 = pred2_val
                 mu3 = pred3_val
                 
+                # Apply variance inflation if specified
+                sigma1 = sigma1 * variance_inflation
+                sigma2 = sigma2 * variance_inflation
+                sigma3 = sigma3 * variance_inflation
+                
                 # Confidence intervals and sigma flags for all three players
                 ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
                 ci2 = (max(0, mu2 - 1.96 * sigma2), mu2 + 1.96 * sigma2)
@@ -721,7 +730,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                 width2 = round(ci2[1] - ci2[0], 2)
                 width3 = round(ci3[1] - ci3[0], 2)
                 def flag_sigma(s):
-                    if s <= 4.0:
+                    if s <= 5.0:
                         return 'Low'
                     elif s <= 6.0:
                         return 'Med'

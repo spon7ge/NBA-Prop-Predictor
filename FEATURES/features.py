@@ -175,6 +175,111 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     return player_data
 
+def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', window=5):
+    """Add trend features based on linear regression slope of last N games.
+    
+    Calculates the slope (trend) of various metrics over the last N games.
+    Positive slope = trending up, negative slope = trending down.
+    
+    Args:
+        df: DataFrame with player data
+        player_id_col: Column name for player identifier
+        date_col: Column name for date
+        window: Number of games to use for trend calculation
+        
+    Returns:
+        DataFrame with trend features added
+    """
+    df = df.copy()
+    df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
+    
+    # Metrics to calculate trends for
+    trend_metrics = ['PTS', 'MIN']
+    
+    # Only process metrics that exist in the dataframe
+    available_metrics = [m for m in trend_metrics if m in df.columns]
+    
+    for metric in available_metrics:
+        trend_col = f'{metric}_TREND_LAST_{window}'
+        
+        # Calculate rolling slope for each player group
+        def calculate_player_trend(group_metric):
+            """Calculate slope for rolling window of last N games."""
+            # Create results array same length as input
+            results = np.full(len(group_metric), np.nan)
+            
+            for i in range(window, len(group_metric)):
+                # Get last window values
+                window_values = group_metric.iloc[i-window:i].values
+                
+                # Remove NaN
+                clean_values = window_values[~np.isnan(window_values)]
+                
+                if len(clean_values) < 2:
+                    results[i] = 0
+                    continue
+                
+                # Create x axis
+                x = np.arange(len(clean_values))
+                y = clean_values
+                
+                # Calculate slope: (n*sum(xy) - sum(x)*sum(y)) / (n*sum(x²) - sum(x)²)
+                n = len(x)
+                if n < 2 or np.var(x) == 0:
+                    results[i] = 0
+                    continue
+                
+                slope = (n * np.sum(x * y) - np.sum(x) * np.sum(y)) / (n * np.sum(x**2) - np.sum(x)**2)
+                results[i] = slope
+            
+            return pd.Series(results, index=group_metric.index)
+        
+        # Apply trend calculation grouped by player with shifted values
+        df[trend_col] = (df.groupby(player_id_col)[metric]
+                        .shift(1)
+                        .groupby(df[player_id_col])
+                        .apply(calculate_player_trend)
+                        .reset_index(level=0, drop=True))
+        
+        # Fill NaN values with 0 (no trend)
+        df[trend_col] = df[trend_col].fillna(0).round(3)
+        
+    return df
+
+
+def add_player_role_tier_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
+    
+    # Check if required columns exist
+    if 'PTS_AVG_TO_DATE' not in df.columns:
+        print("Warning: PTS_AVG_TO_DATE not found, skipping role tier features")
+        return df
+    
+    starter_threshold = 20.0
+    role_threshold = 10.0
+    
+    # Create categorical role tier
+    def assign_role_tier(pts_avg):
+        if pd.isna(pts_avg):
+            return 'Unknown'
+        elif pts_avg >= starter_threshold:
+            return 'Starter'
+        elif pts_avg >= role_threshold and pts_avg < starter_threshold:
+            return 'Role'
+        else:
+            return 'Bench'
+    
+    df['PLAYER_ROLE_TIER'] = df['PTS_AVG_TO_DATE'].apply(assign_role_tier)
+    
+    # Create binary flags for each tier (useful for interactions)
+    df['IS_STARTER_TIER'] = (df['PLAYER_ROLE_TIER'] == 'Starter').astype(int)
+    df['IS_ROLE_TIER'] = (df['PLAYER_ROLE_TIER'] == 'Role').astype(int)
+    df['IS_BENCH_TIER'] = (df['PLAYER_ROLE_TIER'] == 'Bench').astype(int)
+    
+    return df
+
+
 def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     """
     Vectorized version that should be faster and avoid multi-index issues.
@@ -266,6 +371,20 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
         # Fill delta NaN values with 0 (no difference from average)
         df[home_delta_col] = df[home_delta_col].fillna(0)
         df[away_delta_col] = df[away_delta_col].fillna(0)
+    
+    # Add interaction features for PTS only (can extend to other metrics if needed)
+    if 'PTS' in metrics:
+        # Calculate baseline using shifted expanding mean to prevent leakage
+        pts_overall_avg = shifted_expanding_mean(df['PTS'], df[player_id_col])
+        df['PTS_BASELINE'] = pts_overall_avg.fillna(global_means['PTS']).astype('float32')
+        
+        # Calculate home/away multipliers (ratio of home to away performance)
+        # Add epsilon to avoid division by zero
+        eplison = 1e-8
+        df['HOME_PTS_MULTIPLIER'] = (df['PLAYER_HOME_AVG_PTS_TO_DATE'] / (df['PLAYER_AWAY_AVG_PTS_TO_DATE'] + eplison)).fillna(1.0).astype('float32')
+        
+        # Create interaction term: baseline * home_game * multiplier
+        df['PTS_BASELINE_x_HOME'] = (df['PTS_BASELINE'] * df['HOME_GAME'] * df['HOME_PTS_MULTIPLIER']).astype('float32')
 
     return df
 
@@ -1295,5 +1414,45 @@ def add_interaction_features(df):
     df['PLAYER_FGA_SHARE'] = df['FGA_AVG_TO_DATE'] / (df['TEAM_FGA_AVG_TO_DATE'] + eplison)
     df['PLAYER_FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['TEAM_FTA_AVG_TO_DATE'] + eplison)
     df['PLAYER_PTS_SHARE'] = df['PTS_AVG_TO_DATE'] / (df['TEAM_PTS_AVG_TO_DATE'] + eplison)
+    
+    # New interaction features
+    # Points per possession (true shooting possessions formula)
+    df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)
+    
+    # Usage x Efficiency
+    df['USAGE_X_EFFICIENCY'] = df['USG_PCT_AVG_TO_DATE'] * df['TS_PCT_AVG_TO_DATE']
+    
+    # Pace-adjusted expected points
+    df['PACE_ADJUSTED_EXPECTED_PTS'] = df['PTS_ROLLING_AVG_5'] * (df['EXPECTED_PACE'] / 100)
+    
+    # Star out x usage boost (checking if star_out features exist)
+    if 'STAR_SAT_OUT' in df.columns and 'USG_PCT_DELTA_STAR_OUT' in df.columns:
+        df['STAR_OUT_X_USAGE_BOOST'] = df['STAR_SAT_OUT'] * df['USG_PCT_DELTA_STAR_OUT']
+    elif 'PLAYER_PERFORMANCE_WITHOUT_STARS_PTS_ROLLING_AVG_5' in df.columns:
+        # Fallback: calculate star out multiplier
+        df['STAR_OUT_X_USAGE_BOOST'] = df['PLAYER_PERFORMANCE_WITHOUT_STARS_PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_5'] + eplison) * df['USG_PCT_ROLLING_AVG_5']
+    else:
+        df['STAR_OUT_X_USAGE_BOOST'] = 0
+    
+    # Role tier interactions to help model understand typical role expectations
+    if 'IS_STARTER_TIER' in df.columns:
+        df['PTS_X_STARTER_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_STARTER_TIER']
+        df['USG_X_STARTER_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_STARTER_TIER']
+        df['MIN_X_STARTER_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_STARTER_TIER']
+        
+        df['STARTING_X_BENCH_TIER'] = df['STARTING'] * df['IS_BENCH_TIER']
+        df['STARTING_X_ROLE_TIER'] = df['STARTING'] * df['IS_ROLE_TIER']
+        df['STARTING_X_STARTER_TIER'] = df['STARTING'] * df['IS_STARTER_TIER']
+    
+    if 'IS_ROLE_TIER' in df.columns:
+        df['PTS_X_ROLE_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_ROLE_TIER']
+        df['USG_X_ROLE_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_ROLE_TIER']
+        df['MIN_X_ROLE_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_ROLE_TIER']
+
+    
+    if 'IS_BENCH_TIER' in df.columns:
+        df['PTS_X_BENCH_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_BENCH_TIER']
+        df['USG_X_BENCH_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_BENCH_TIER']
+        df['MIN_X_BENCH_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_BENCH_TIER']
     
     return df
