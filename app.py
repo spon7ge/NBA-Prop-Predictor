@@ -3,9 +3,33 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 import os
+from zoneinfo import ZoneInfo
 
-today = datetime.today().strftime('%m-%d-%Y')  
-bet_date = datetime.today().strftime('%Y%m%d')
+# Use PST timezone for date calculation
+pst = ZoneInfo("America/Los_Angeles")
+now_pst = datetime.now(pst)
+today = now_pst.strftime('%m-%d-%Y')  
+bet_date = now_pst.strftime('%Y%m%d')
+
+def find_latest_file(base_path, filename_prefix):
+    """Find the most recent file matching the prefix, trying today's date first."""
+    import glob
+    
+    # First try today's date
+    today_file = f'{base_path}/{filename_prefix}_{bet_date}.csv'
+    if os.path.exists(today_file):
+        return today_file
+    
+    # If not found, search for the most recent file
+    pattern = f'{base_path}/{filename_prefix}_*.csv'
+    files = glob.glob(pattern)
+    
+    if not files:
+        return None
+    
+    # Sort by filename (which includes date) and return the most recent
+    files.sort(reverse=True)
+    return files[0]
 
 def format_dataframe(df):
     df_formatted = df.copy()
@@ -52,23 +76,52 @@ def style_over_rates(df):
 
 @st.cache_data  
 def loadSinglePTSBookmakers():
-    return pd.read_csv(f'DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets_{bet_date}.csv')
+    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
+    file_path = find_latest_file(base_path, 'singleBets')
+    if file_path is None:
+        st.error(f"No data file found for single bets. Expected: singleBets_{bet_date}.csv")
+        return pd.DataFrame()  # Return empty dataframe
+    # Show info if using a different date than today
+    if bet_date not in file_path:
+        file_date = os.path.basename(file_path).replace('singleBets_', '').replace('.csv', '')
+        st.info(f"⚠️ Using data from {file_date} (today's file not available)")
+    return pd.read_csv(file_path)
 
 @st.cache_data  
 def loadUnderdogPairsBookmakers():
-    return pd.read_csv(f'DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs_{bet_date}.csv')
+    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
+    file_path = find_latest_file(base_path, 'underdogPairs')
+    if file_path is None:
+        st.error(f"No data file found for Underdog pairs. Expected: underdogPairs_{bet_date}.csv")
+        return pd.DataFrame()
+    return pd.read_csv(file_path)
 
 @st.cache_data  
 def loadPrizepicksPairsBookmakers():
-    return pd.read_csv(f'DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs_{bet_date}.csv')
+    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
+    file_path = find_latest_file(base_path, 'prizepicksPairs')
+    if file_path is None:
+        st.error(f"No data file found for PrizePicks pairs. Expected: prizepicksPairs_{bet_date}.csv")
+        return pd.DataFrame()
+    return pd.read_csv(file_path)
 
 @st.cache_data  
 def loadTriosUnderdogBookmakers():
-    return pd.read_csv(f'DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios_{bet_date}.csv')
+    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
+    file_path = find_latest_file(base_path, 'underdogTrios')
+    if file_path is None:
+        st.error(f"No data file found for Underdog trios. Expected: underdogTrios_{bet_date}.csv")
+        return pd.DataFrame()
+    return pd.read_csv(file_path)
 
 @st.cache_data  
 def loadTriosPrizepicksBookmakers():
-    return pd.read_csv(f'DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios_{bet_date}.csv')
+    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
+    file_path = find_latest_file(base_path, 'prizepicksTrios')
+    if file_path is None:
+        st.error(f"No data file found for PrizePicks trios. Expected: prizepicksTrios_{bet_date}.csv")
+        return pd.DataFrame()
+    return pd.read_csv(file_path)
 
 @st.cache_data  
 def loadOverRates():
@@ -267,27 +320,41 @@ options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Le
 
 if options == 'Single Bets':
     st.subheader("Single Best Bets for Points")
-    # Apply row-level color coding to the dataframe
-    styled_df = format_dataframe(singleBets.head(30)).reset_index().style
-    st.dataframe(styled_df, use_container_width=True)
+    if singleBets.empty:
+        st.warning("No data available for single bets. Please check if the data file exists.")
+    else:
+        styled_df = format_dataframe(singleBets.head(30)).reset_index().style
+        st.dataframe(styled_df, use_container_width=True)
     
 elif options == '2-Leg Bets':
     st.subheader("Underdog Best Pairs for Points")
-    styled_pairs = format_dataframe(pairs.head(30)).reset_index().style
-    st.dataframe(styled_pairs, use_container_width=True)
+    if pairs.empty:
+        st.warning("No data available for Underdog pairs. Please check if the data file exists.")
+    else:
+        styled_pairs = format_dataframe(pairs.head(30)).reset_index().style
+        st.dataframe(styled_pairs, use_container_width=True)
     
     st.subheader("Prizepicks Best Pairs for Points")
-    styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index().style
-    st.dataframe(styled_pairs_pp, use_container_width=True)
+    if pairsPrizepicks.empty:
+        st.warning("No data available for PrizePicks pairs. Please check if the data file exists.")
+    else:
+        styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index().style
+        st.dataframe(styled_pairs_pp, use_container_width=True)
     
 elif options == '3-Leg Bets':
     st.subheader("Underdog Best Trios for Points")
-    styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index().style
-    st.dataframe(styled_trios_ud, use_container_width=True)
+    if triosUnderdog.empty:
+        st.warning("No data available for Underdog trios. Please check if the data file exists.")
+    else:
+        styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index().style
+        st.dataframe(styled_trios_ud, use_container_width=True)
     
     st.subheader("Prizepicks Best Trios for Points")
-    styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index().style
-    st.dataframe(styled_trios_pp, use_container_width=True)
+    if triosPrizepicks.empty:
+        st.warning("No data available for PrizePicks trios. Please check if the data file exists.")
+    else:
+        styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index().style
+        st.dataframe(styled_trios_pp, use_container_width=True)
 
 elif options == 'Over Rates PrizePicks':
     st.subheader("Over Rates for Player Props")
