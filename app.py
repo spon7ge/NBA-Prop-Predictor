@@ -122,13 +122,9 @@ triosPrizepicks = loadTriosPrizepicksBookmakers()
 st.title('🏀 NBA Prop Predictions')
 
 # Header info with columns
-col1, col2, col3 = st.columns([2, 1, 1])
-with col1:
-    st.markdown(f"**Date:** {today}")
-with col2:
-    st.markdown("**Creator:** Alex Gonzalez")
-with col3:
-    st.markdown("**Contact:** alg21@stmarys-ca.edu")
+st.write(f"**Date:** {today}")
+st.write("**Creator:** Alex Gonzalez")
+st.write("**Contact:** alg21@stmarys-ca.edu")
 
 # Update schedule info in an expandable info box
 with st.expander("Update Schedule & Notes", expanded=False):
