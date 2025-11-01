@@ -161,9 +161,10 @@ triosUnderdog = loadTriosUnderdogBookmakers()
 triosPrizepicks = loadTriosPrizepicksBookmakers()
 
 # Streamlit UI
-st.title('NBA Prop Predictions')
+st.title('NBA Prop Predictions - Made by Alex Gonzalez')
+st.write('Email: alg21@stmarys-ca.edu')
 st.write(f'Predictions for {today}')
-st.write(f'I will update this page every day at 12:00 PM PST maybe once or twice before tip off. Odds are updated from the bookmakers side as new information becomes available throughout the day so you might see different odds on the same bet depending on when you check the page.')
+st.write(f'I will update this page every day at 12:00 PM PST maybe once or twice more before tip off. Odds are updated from the bookmakers side as new information becomes available throughout the day so you might see different odds on the same bet depending on when you check the page.')
 
 # Description section
 with st.expander("📋 What's Available", expanded=True):
