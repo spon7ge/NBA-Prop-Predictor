@@ -303,7 +303,7 @@ with st.sidebar:
     - Underdog
     """)
 
-options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Historical Hit Rates - PrizePicks"', 'Historical Hit Rates - Underdog"'])
+options = st.selectbox('Select a prop type', ['Single Bets', '2-Leg Bets', '3-Leg Bets', 'Historical Hit Rates - PrizePicks', 'Historical Hit Rates - Underdog'])
 
 if options == 'Single Bets':
     st.subheader("Single Best Bets for Points")
