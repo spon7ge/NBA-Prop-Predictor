@@ -323,38 +323,38 @@ if options == 'Single Bets':
     if singleBets.empty:
         st.warning("No data available for single bets. Please check if the data file exists.")
     else:
-        styled_df = format_dataframe(singleBets.head(30)).reset_index().style
-        st.dataframe(styled_df, use_container_width=True)
+        styled_df = format_dataframe(singleBets.head(30)).reset_index(drop=True).style
+        st.dataframe(styled_df, use_container_width=True, hide_index=True)
     
 elif options == '2-Leg Bets':
     st.subheader("Underdog Best Pairs for Points")
     if pairs.empty:
         st.warning("No data available for Underdog pairs. Please check if the data file exists.")
     else:
-        styled_pairs = format_dataframe(pairs.head(30)).reset_index().style
-        st.dataframe(styled_pairs, use_container_width=True)
+        styled_pairs = format_dataframe(pairs.head(30)).reset_index(drop=True).style
+        st.dataframe(styled_pairs, use_container_width=True, hide_index=True)
     
     st.subheader("Prizepicks Best Pairs for Points")
     if pairsPrizepicks.empty:
         st.warning("No data available for PrizePicks pairs. Please check if the data file exists.")
     else:
-        styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index().style
-        st.dataframe(styled_pairs_pp, use_container_width=True)
+        styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index(drop=True).style
+        st.dataframe(styled_pairs_pp, use_container_width=True, hide_index=True)
     
 elif options == '3-Leg Bets':
     st.subheader("Underdog Best Trios for Points")
     if triosUnderdog.empty:
         st.warning("No data available for Underdog trios. Please check if the data file exists.")
     else:
-        styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index().style
-        st.dataframe(styled_trios_ud, use_container_width=True)
+        styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index(drop=True).style
+        st.dataframe(styled_trios_ud, use_container_width=True, hide_index=True)
     
     st.subheader("Prizepicks Best Trios for Points")
     if triosPrizepicks.empty:
         st.warning("No data available for PrizePicks trios. Please check if the data file exists.")
     else:
-        styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index().style
-        st.dataframe(styled_trios_pp, use_container_width=True)
+        styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index(drop=True).style
+        st.dataframe(styled_trios_pp, use_container_width=True, hide_index=True)
 
 elif options == 'Over Rates PrizePicks':
     st.subheader("Over Rates for Player Props")
@@ -381,7 +381,7 @@ elif options == 'Over Rates PrizePicks':
         df = over_rates.get(key)
         if df is not None and not df.empty:
             st.subheader(title)
-            st.dataframe(style_over_rates(df), use_container_width=True)
+            st.dataframe(style_over_rates(df), use_container_width=True, hide_index=True)
             any_rendered = True
 
     if not any_rendered:
