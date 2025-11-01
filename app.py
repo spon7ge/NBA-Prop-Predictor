@@ -9,27 +9,6 @@ from zoneinfo import ZoneInfo
 pst = ZoneInfo("America/Los_Angeles")
 now_pst = datetime.now(pst)
 today = now_pst.strftime('%m-%d-%Y')  
-bet_date = now_pst.strftime('%Y%m%d')
-
-def find_latest_file(base_path, filename_prefix):
-    """Find the most recent file matching the prefix, trying today's date first."""
-    import glob
-    
-    # First try today's date
-    today_file = f'{base_path}/{filename_prefix}_{bet_date}.csv'
-    if os.path.exists(today_file):
-        return today_file
-    
-    # If not found, search for the most recent file
-    pattern = f'{base_path}/{filename_prefix}_*.csv'
-    files = glob.glob(pattern)
-    
-    if not files:
-        return None
-    
-    # Sort by filename (which includes date) and return the most recent
-    files.sort(reverse=True)
-    return files[0]
 
 def format_dataframe(df):
     df_formatted = df.copy()
@@ -76,52 +55,23 @@ def style_over_rates(df):
 
 @st.cache_data  
 def loadSinglePTSBookmakers():
-    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
-    file_path = find_latest_file(base_path, 'singleBets')
-    if file_path is None:
-        st.error(f"No data file found for single bets. Expected: singleBets_{bet_date}.csv")
-        return pd.DataFrame()  # Return empty dataframe
-    # Show info if using a different date than today
-    if bet_date not in file_path:
-        file_date = os.path.basename(file_path).replace('singleBets_', '').replace('.csv', '')
-        st.info(f"⚠️ Using data from {file_date} (today's file not available)")
-    return pd.read_csv(file_path)
+    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv')
 
 @st.cache_data  
 def loadUnderdogPairsBookmakers():
-    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
-    file_path = find_latest_file(base_path, 'underdogPairs')
-    if file_path is None:
-        st.error(f"No data file found for Underdog pairs. Expected: underdogPairs_{bet_date}.csv")
-        return pd.DataFrame()
-    return pd.read_csv(file_path)
+    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv')
 
 @st.cache_data  
 def loadPrizepicksPairsBookmakers():
-    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
-    file_path = find_latest_file(base_path, 'prizepicksPairs')
-    if file_path is None:
-        st.error(f"No data file found for PrizePicks pairs. Expected: prizepicksPairs_{bet_date}.csv")
-        return pd.DataFrame()
-    return pd.read_csv(file_path)
+    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv')
 
 @st.cache_data  
 def loadTriosUnderdogBookmakers():
-    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
-    file_path = find_latest_file(base_path, 'underdogTrios')
-    if file_path is None:
-        st.error(f"No data file found for Underdog trios. Expected: underdogTrios_{bet_date}.csv")
-        return pd.DataFrame()
-    return pd.read_csv(file_path)
+    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv')
 
 @st.cache_data  
 def loadTriosPrizepicksBookmakers():
-    base_path = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV'
-    file_path = find_latest_file(base_path, 'prizepicksTrios')
-    if file_path is None:
-        st.error(f"No data file found for PrizePicks trios. Expected: prizepicksTrios_{bet_date}.csv")
-        return pd.DataFrame()
-    return pd.read_csv(file_path)
+    return pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv')
 
 @st.cache_data  
 def loadOverRatesPrizePicks():
@@ -170,7 +120,7 @@ with col1:
 with col2:
     st.markdown("**Creator:** Alex Gonzalez")
 with col3:
-    st.markdown("**Contact:** [alg21@stmarys-ca.edu](mailto:alg21@stmarys-ca.edu)")
+    st.markdown("**Contact:** alg21@stmarys-ca.edu")
 
 # Update schedule info in an expandable info box
 with st.expander("Update Schedule & Notes", expanded=False):
