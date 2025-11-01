@@ -48,4 +48,4 @@ The Streamlit dashboard displays:
 
 ## Disclaimer
 
-This project is for educational purposes only. Sports betting involves risk, and past performance does not guarantee future results. Always gamble responsibly.
+This project is for educational purposes only. Sports betting involves risk, and there are too many variables to fully predict a player's outcome. Always gamble responsibly.

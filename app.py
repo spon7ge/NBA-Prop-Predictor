@@ -173,7 +173,7 @@ with col3:
     st.markdown("**Contact:** [alg21@stmarys-ca.edu](mailto:alg21@stmarys-ca.edu)")
 
 # Update schedule info in an expandable info box
-with st.expander("ℹ️ Update Schedule & Notes", expanded=False):
+with st.expander("Update Schedule & Notes", expanded=False):
     st.info("""
     **Update Schedule:**
     - Updates posted daily at **12:00 PM PST**
