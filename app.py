@@ -163,6 +163,7 @@ triosPrizepicks = loadTriosPrizepicksBookmakers()
 # Streamlit UI
 st.title('NBA Prop Predictions')
 st.write(f'Predictions for {today}')
+st.write(f'I will update this page every day at 12:00 PM PST maybe once or twice before tip off. Odds are updated from the bookmakers side as new information becomes available throughout the day so you might see different odds on the same bet depending on when you check the page.')
 
 # Description section
 with st.expander("📋 What's Available", expanded=True):
@@ -223,7 +224,7 @@ with st.expander("Betting Metrics Explained", expanded=False):
     The average profit percentage per bet over many repetitions. Calculated by comparing our model's win probability vs. the bookmaker's implied probability from odds.
     
     - **Positive EV%** = Profitable over time (higher is better)
-    - **Example**: 25% EV means +$25 profit per $100 wagered on average
+    - **Example**: 25% EV means +25 profit per 100 dollars wagered on average
     - Higher EV% bets appear at the top of each table
     
     ### **Kelly Criterion**
