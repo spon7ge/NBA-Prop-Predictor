@@ -311,7 +311,7 @@ if options == 'Single Bets':
         st.warning("No data available for single bets. Please check if the data file exists.")
     else:
         styled_df = format_dataframe(singleBets.head(30)).reset_index(drop=True).style
-        st.dataframe(styled_df, use_container_width=True)
+        st.dataframe(styled_df, width='stretch')
     
 elif options == '2-Leg Bets':
     st.subheader("Underdog Best Pairs for Points")
@@ -319,14 +319,14 @@ elif options == '2-Leg Bets':
         st.warning("No data available for Underdog pairs. Please check if the data file exists.")
     else:
         styled_pairs = format_dataframe(pairs.head(30)).reset_index(drop=True).style
-        st.dataframe(styled_pairs, use_container_width=True)
+        st.dataframe(styled_pairs, width='stretch')
     
     st.subheader("Prizepicks Best Pairs for Points")
     if pairsPrizepicks.empty:
         st.warning("No data available for PrizePicks pairs. Please check if the data file exists.")
     else:
         styled_pairs_pp = format_dataframe(pairsPrizepicks.head(30)).reset_index(drop=True).style
-        st.dataframe(styled_pairs_pp, use_container_width=True)
+        st.dataframe(styled_pairs_pp, width='stretch')
     
 elif options == '3-Leg Bets':
     st.subheader("Underdog Best Trios for Points")
@@ -334,14 +334,14 @@ elif options == '3-Leg Bets':
         st.warning("No data available for Underdog trios. Please check if the data file exists.")
     else:
         styled_trios_ud = format_dataframe(triosUnderdog.head(30)).reset_index(drop=True).style
-        st.dataframe(styled_trios_ud, use_container_width=True)
+        st.dataframe(styled_trios_ud, width='stretch')
     
     st.subheader("Prizepicks Best Trios for Points")
     if triosPrizepicks.empty:
         st.warning("No data available for PrizePicks trios. Please check if the data file exists.")
     else:
         styled_trios_pp = format_dataframe(triosPrizepicks.head(30)).reset_index(drop=True).style
-        st.dataframe(styled_trios_pp, use_container_width=True)
+        st.dataframe(styled_trios_pp, width='stretch')
 
 elif options == 'Over Rates PrizePicks':
     st.subheader("Over Rates for Player Props")
@@ -370,11 +370,11 @@ elif options == 'Over Rates PrizePicks':
             st.subheader(title)
             # Sort by HIT RATE % LAST 10 in descending order (highest first)
             if 'HIT RATE % LAST 10' in df.columns:
-                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_last=True).reset_index(drop=True)
-                st.dataframe(style_over_rates(df_sorted), use_container_width=True)
+                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_position='last').reset_index(drop=True)
+                st.dataframe(style_over_rates(df_sorted), width='stretch')
             else:
                 # If column doesn't exist, show unsorted
-                st.dataframe(style_over_rates(df), use_container_width=True)
+                st.dataframe(style_over_rates(df), width='stretch')
             any_rendered = True
 
     if not any_rendered:
@@ -399,11 +399,11 @@ elif options == 'Over Rates Underdog':
             st.subheader(title)
             # Sort by HIT RATE % LAST 10 in descending order (highest first)
             if 'HIT RATE % LAST 10' in df.columns:
-                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_last=True).reset_index(drop=True)
-                st.dataframe(style_over_rates(df_sorted), use_container_width=True)
+                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_position='last').reset_index(drop=True)
+                st.dataframe(style_over_rates(df_sorted), width='stretch')
             else:
                 # If column doesn't exist, show unsorted
-                st.dataframe(style_over_rates(df), use_container_width=True)
+                st.dataframe(style_over_rates(df), width='stretch')
             any_rendered = True
 
     if not any_rendered:
