@@ -1,13 +1,15 @@
+# when i implement ast and rebound use poisson distribution
+
 import numpy as np
 import pandas as pd
 from ngboost import NGBRegressor
-from ngboost.distns import Normal, LogNormal
+from ngboost.distns import Normal, LogNormal, Poisson 
 from ngboost.scores import MLE
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.isotonic import IsotonicRegression
-from xgboost import XGBRegressor
+from sklearn.model_selection import TimeSeriesSplit
 
 
 def fit_ngboost(train_df: pd.DataFrame,
@@ -18,12 +20,10 @@ def fit_ngboost(train_df: pd.DataFrame,
                 n_estimators: int = 500,
                 max_depth: int = 3,
                 random_state: int = 42,
-                use_gpu: bool = False,
                 base_max_depth: int | None = None,
                 distribution: type = Normal):
 
     # Ensure data is sorted by date for time series consistency
-    # Note: NGBoost doesn't care about order internally, but this ensures no leakage
     if 'GAME_DATE' in train_df.columns:
         train_df = train_df.sort_values('GAME_DATE').reset_index(drop=True)
     if val_df is not None and len(val_df) > 0 and 'GAME_DATE' in val_df.columns:
@@ -38,7 +38,7 @@ def fit_ngboost(train_df: pd.DataFrame,
         X_va = val_df[features]
         y_va = val_df[target_col].to_numpy()
     
-    # For LogNormal distribution, ensure positive targets
+    # For LogNormal distribution
     if distribution == LogNormal and np.any(y_tr <= 0):
         print(f"Warning: LogNormal requires positive targets. Shifting by {abs(np.min(y_tr)) + 1:.2f}")
         y_min = np.min(y_tr)
@@ -54,26 +54,11 @@ def fit_ngboost(train_df: pd.DataFrame,
         X_va = X_va.replace([np.inf, -np.inf], np.nan)
         X_va = X_va.fillna(X_tr.median())  # Use train median for validation
 
-    # Choose base learner (GPU via XGBoost, or CPU DecisionTree)
+    # Choose base learner
     if base_max_depth is None:
         base_max_depth = max_depth
 
-    if use_gpu:
-        base_est = XGBRegressor(
-            max_depth=base_max_depth,
-            tree_method='hist',
-            device='cuda',
-            n_estimators=1,  # single tree per stage as weak learner
-            learning_rate=1.0,
-            subsample=1.0,
-            colsample_bytree=1.0,
-            reg_lambda=0.0,
-            reg_alpha=0.0,
-            random_state=random_state,
-            n_jobs=1
-        )
-    else:
-        base_est = DecisionTreeRegressor(max_depth=base_max_depth)
+    base_est = DecisionTreeRegressor(max_depth=base_max_depth)
 
     # Enable early stopping if validation data is available
     early_stopping_params = {}
@@ -254,108 +239,12 @@ def _nll_score(estimator: NGBRegressor, X, y):
     return float(dist.logpdf(y).mean())
 
 
-def chronological_split(df: pd.DataFrame,
-                        date_col: str,
-                        train_frac: float = 0.8) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Split a single dataframe chronologically into train/val sets.
-    
-    IMPORTANT: This function operates on ONE dataframe and splits it by time.
-    If you already have separate train/val data (e.g., by season), don't use this!
-    
-    Args:
-        df: Single DataFrame to split
-        date_col: Name of date column
-        train_frac: Fraction of data to use for training (default 0.8)
-        
-    Returns:
-        Tuple of (train_df, val_df)
-        
-    Example:
-        # If you have combined data and need to split it:
-        combined_data = pd.concat([season_2019, season_2020, season_2021])
-        train_df, val_df = chronological_split(combined_data, 'GAME_DATE')
-        
-        # If you already have train/val split, skip this:
-        # train_df = season_2019 + season_2020
-        # val_df = season_2021
-        # model = fit_ngboost(train_df, val_df, features, 'PTS')  # Don't call chronological_split!
-    """
-    data = df.copy()
-    if not pd.api.types.is_datetime64_any_dtype(data[date_col]):
-        data[date_col] = pd.to_datetime(data[date_col])
-    data = data.sort_values(date_col).reset_index(drop=True)
-
-    cut = int(len(data) * train_frac)
-    train_df = data.iloc[:cut].reset_index(drop=True)
-    val_df = data.iloc[cut:].reset_index(drop=True)
-    return train_df, val_df
-
-
-def expanding_window_cv(df: pd.DataFrame,
-                         date_col: str,
-                         min_train_size: int = 200,
-                         step_size: int = 30) -> list[tuple[pd.DataFrame, pd.DataFrame]]:
-    """Generate train/val splits using expanding window for time-series cross-validation.
-    
-    This simulates walk-forward validation where you incrementally add data to training
-    and test on the next period. Useful for testing model robustness over time.
-    
-    IMPORTANT: This operates on ONE combined dataframe. Use this for walk-forward CV
-    evaluation, NOT for your final model training if you already have year-based splits.
-    
-    Args:
-        df: Combined DataFrame with all time periods
-        date_col: Name of date column
-        min_train_size: Minimum number of unique dates in first training set
-        step_size: Number of dates to advance the validation window each split
-        
-    Returns:
-        List of (train_df, val_df) tuples for each expanding window split
-        
-    Example:
-        # For walk-forward cross-validation evaluation:
-        all_data = pd.concat([s19, s20, s21, s22, s23, s24, s25, s26])
-        cv_splits = expanding_window_cv(all_data, 'GAME_DATE', min_train_size=200)
-        
-        # Now loop through splits to evaluate model performance over time:
-        for train, val in cv_splits:
-            model = fit_ngboost(train, None, features, 'PTS')  # Note: no val for training
-            # evaluate on val set
-            
-        # For final model training with year-based splits, skip this:
-        # train_df = pd.concat([s19, s20, s21, s22, s23, s24])
-        # val_df = s25
-        # final_model = fit_ngboost(train_df, val_df, features, 'PTS')
-    """
-    data = df.copy()
-    if not pd.api.types.is_datetime64_any_dtype(data[date_col]):
-        data[date_col] = pd.to_datetime(data[date_col])
-    
-    dates = data[date_col].sort_values().unique()
-    splits = []
-    
-    for i in range(min_train_size, len(dates), step_size):
-        train_dates = dates[:i]
-        val_dates = dates[i:i + step_size] if i + step_size < len(dates) else dates[i:]
-        
-        train_df = data[data[date_col].isin(train_dates)].copy()
-        val_df = data[data[date_col].isin(val_dates)].copy()
-        
-        if len(val_df) > 0:  # Only include splits with validation data
-            train_df = train_df.reset_index(drop=True)
-            val_df = val_df.reset_index(drop=True)
-            splits.append((train_df, val_df))
-    
-    return splits
-
-
 def fit_ngboost_bayes(train_df: pd.DataFrame,
                       val_df: pd.DataFrame | None,
                       features: list[str],
                       target_col: str,
                       n_iter: int = 30,
                       random_state: int = 42,
-                      use_gpu: bool = False,
                       distribution: type = Normal):
 
     # Ensure data is sorted by date for time series consistency
@@ -389,38 +278,31 @@ def fit_ngboost_bayes(train_df: pd.DataFrame,
         X_va = X_va.replace([np.inf, -np.inf], np.nan)
         X_va = X_va.fillna(X_tr.median())  # Use train median for validation
 
-    base_learn = XGBRegressor() if use_gpu else DecisionTreeRegressor()
-
     base_est = NGBRegressor(
         Dist=distribution,
         Score=MLE,
         natural_gradient=True,
         verbose=False,
         random_state=random_state,
-        Base=base_learn
+        Base=DecisionTreeRegressor()
     )
 
     search_spaces = {
         'learning_rate': Real(0.01, 0.1, prior='log-uniform'),
         'n_estimators': Integer(500, 2000),
-        'minibatch_frac': Real(0.5, 1.0)
+        'minibatch_frac': Real(0.5, 1.0),
+        'Base__max_depth': Integer(2, 8)
     }
-    # Base learner hyperparameters to tune
-    if use_gpu:
-        search_spaces.update({
-            'Base__max_depth': Integer(2, 8)
-        })
-    else:
-        search_spaces.update({
-            'Base__max_depth': Integer(2, 8)
-        })
 
+    # This ensures training always comes before validation in time
+    tscv = TimeSeriesSplit(n_splits=3)
+    
     search = BayesSearchCV(
         estimator=base_est,
         search_spaces=search_spaces,
         n_iter=n_iter,
         scoring=_nll_score,
-        cv=3,
+        cv=tscv,
         n_jobs=-1,
         random_state=random_state,
         verbose=1

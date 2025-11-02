@@ -26,7 +26,7 @@ def style_over_rates(df):
     def highlight_hit_rate(val):
         if pd.isna(val):
             return ''
-    
+        
         if val > 0.8: 
             return 'background-color: #90EE90; color: black; font-weight: bold'  # Light green
         elif val >= 0.5:  
@@ -36,18 +36,32 @@ def style_over_rates(df):
     
     styled_df = df_copy.style
     for col in df_copy.columns:
-        if 'HIT RATE' in col.upper():
+        if col in ['L-5', 'L-10', 'L-15'] or col.startswith('L-'):
             styled_df = styled_df.map(highlight_hit_rate, subset=[col])
     
+    def format_percentage(x):
+        """Format percentage columns (L-5, L-10, L-15) as percentages"""
+        if pd.isna(x):
+            return x
+        if isinstance(x, (float, int)) and 0 <= x <= 1:
+            return f'{x*100:.0f}%'
+        return x
+    
     def format_number(x):
+        """Format regular numbers"""
+        if pd.isna(x):
+            return x
         return f'{x:g}' if pd.notna(x) else x
     
     format_dict = {}
     for col in df_copy.columns:
-        if df_copy[col].dtype in ['float64', 'float32']:
+        # Format L-5, L-10, L-15 as percentages
+        if col in ['L-5', 'L-10', 'L-15'] or (col.startswith('L-') and df_copy[col].dtype in ['float64', 'float32']):
+            format_dict[col] = format_percentage
+        # Format other numeric columns as regular numbers
+        elif df_copy[col].dtype in ['float64', 'float32']:
             format_dict[col] = format_number
     
-    # Apply formatting
     if format_dict:
         styled_df = styled_df.format(format_dict)
     
@@ -348,9 +362,9 @@ elif options == 'Historical Hit Rates - PrizePicks':
         df = over_rates.get(key)
         if df is not None and not df.empty:
             st.subheader(title)
-            # Sort by HIT RATE % LAST 10 in descending order (highest first)
-            if 'HIT RATE % LAST 10' in df.columns:
-                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_position='last').reset_index(drop=True)
+            
+            if 'L-10' in df.columns:
+                df_sorted = df.sort_values(by='L-10', ascending=False, na_position='last').reset_index(drop=True)
                 st.dataframe(style_over_rates(df_sorted), width='stretch')
             else:
                 # If column doesn't exist, show unsorted
@@ -384,9 +398,9 @@ elif options == 'Historical Hit Rates - Underdog':
         df = over_rates.get(key)
         if df is not None and not df.empty:
             st.subheader(title)
-            # Sort by HIT RATE % LAST 10 in descending order (highest first)
-            if 'HIT RATE % LAST 10' in df.columns:
-                df_sorted = df.sort_values(by='HIT RATE % LAST 10', ascending=False, na_position='last').reset_index(drop=True)
+          
+            if 'L-10' in df.columns:
+                df_sorted = df.sort_values(by='L-10', ascending=False, na_position='last').reset_index(drop=True)
                 st.dataframe(style_over_rates(df_sorted), width='stretch')
             else:
                 # If column doesn't exist, show unsorted

@@ -1,8 +1,8 @@
-NAME,CATEGORY,LINE,LAST 5,HIT RATE % LAST 5,LAST 10,HIT RATE % LAST 10,LAST 15,HIT RATE % LAST 15
-Miles Bridges,player_blocks,0.5,2,0.4,5,0.5,7,0.47
-Draymond Green,player_blocks,0.5,2,0.4,5,0.5,9,0.6
-Kevin Durant,player_blocks,0.5,3,0.6,5,0.5,9,0.6
-Tari Eason,player_blocks,0.5,3,0.6,7,0.7,9,0.6
-Cooper Flagg,player_blocks,0.5,3,0.6,3,0.3,3,0.2
-Ausar Thompson,player_blocks,0.5,3,0.6,7,0.7,9,0.6
-Dwight Powell,player_blocks,0.5,1,0.2,1,0.1,1,0.07
+NAME,CATEGORY,LINE,L-5,L-10,L-15
+Miles Bridges,player_blocks,0.5,0.4,0.5,0.47
+Draymond Green,player_blocks,0.5,0.4,0.5,0.6
+Kevin Durant,player_blocks,0.5,0.6,0.5,0.6
+Tari Eason,player_blocks,0.5,0.6,0.7,0.6
+Cooper Flagg,player_blocks,0.5,0.6,0.3,0.2
+Ausar Thompson,player_blocks,0.5,0.6,0.7,0.6
+Dwight Powell,player_blocks,0.5,0.2,0.1,0.07
