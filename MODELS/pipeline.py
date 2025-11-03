@@ -9,6 +9,46 @@ from MODELS.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingF
 today = datetime.today().strftime('%Y-%m-%d')
 
 
+def calculate_volatility(player_df, stat_col, window=5, use_cv=False):
+    if len(player_df) < 2:
+        return 0.0
+    
+    player_df_sorted = player_df.sort_values(by='GAME_DATE')
+    
+    rolling_std = player_df_sorted[stat_col].rolling(window=window, min_periods=2).std().iloc[-1]
+    
+    if pd.isna(rolling_std):
+        return 0.0
+    
+    if use_cv:
+        rolling_mean = player_df_sorted[stat_col].rolling(window=window, min_periods=2).mean().iloc[-1]
+        if pd.isna(rolling_mean) or rolling_mean == 0:
+            return 0.0
+        cv = rolling_std / rolling_mean
+        if pd.isna(cv) or abs(cv) == float('inf'):
+            return 0.0
+        return cv
+    
+    return rolling_std
+
+
+def get_volatility_or_calculate(player_df, volatility_col, stat_col=None, window=5):
+    if volatility_col in player_df.columns:
+        value = player_df[volatility_col].iloc[-1]
+        if not pd.isna(value):
+            return value
+    
+    if stat_col is None:
+        stat_col = volatility_col.replace('_VOLATILITY_5_TO_DATE', '').replace('_CV_5_TO_DATE', '')
+    
+    use_cv = '_CV_' in volatility_col
+    
+    if stat_col in player_df.columns:
+        return calculate_volatility(player_df, stat_col, window, use_cv)
+    
+    return 0.0
+
+
 def get_espn_games(date_str=today):  # YYYYMMDD format
     url = f"http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={date_str}"
     response = requests.get(url)
@@ -107,12 +147,10 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
     if player_name in projectedStartingFive[player_team]:
         res.append( 1 * player_df['IS_BENCH_TIER'].iloc[-1])
         res.append( 1 * player_df['IS_ROLE_TIER'].iloc[-1])
-        res.append( 1 * player_df['IS_STARTER_TIER'].iloc[-1])
     else:
         res.append(0)
         res.append(0)
-        res.append(0)
-        
+
     # Positions
     res.append(player_df['GUARD'].iloc[-1])
     res.append(player_df['FORWARD'].iloc[-1])
@@ -163,7 +201,7 @@ def playerScoring(player_name, data):
     res = []
 
     res.append(player_df['MIN'].iloc[-1])
-    res.append(player_df['MIN_VOLATILITY_5_TO_DATE'].iloc[-1])
+    res.append(calculate_volatility(player_df, 'MIN', window=5))
     res.append(player_df['percentagePointsMidrange2pt'].mean())
     res.append(player_df['percentagePointsPaint'].mean())
     res.append(player_df['PTS_DELTA_STAR_OUT'].iloc[-1])
@@ -171,19 +209,16 @@ def playerScoring(player_name, data):
     res.append(player_df['PTS_TREND_LAST_5'].iloc[-1])
     res.append(player_df['MIN_TREND_LAST_5'].iloc[-1])
     res.append((player_df['PTS'].mean() / (player_df['MIN'].mean()) + 0.01) * player_df['USG_PCT'].mean())
-    res.append(player_df['PTS'].iloc[-2])
-    res.append(player_df['PTS_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['PTS_EXTREME_VOLATILITY'].iloc[-1])
-    res.append(player_df['PTS_RECENT_HIGH_VOLATILITY'].iloc[-1])
+    res.append(calculate_volatility(player_df, 'PTS', window=5))
+    # res.append(player_df['PTS_EXTREME_VOLATILITY'].iloc[-1])
+    # res.append(player_df['PTS_RECENT_HIGH_VOLATILITY'].iloc[-1])
     res.append(player_df['FGA'].iloc[-1])
-    res.append(player_df['FGM_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FGA_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append((player_df['FTA'].tail(5).mean() / player_df['FGA'].tail(5).mean() + 0.01))
+    res.append(calculate_volatility(player_df, 'FGM', window=5))
+    res.append(calculate_volatility(player_df, 'FGA', window=5))
     res.append(player_df['FG3A'].mean() / player_df['FGA'].mean() + 0.01)
     res.append(player_df['USG_PCT'].iloc[-1])
-    res.append(player_df['USG_PCT_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['TS_PCT'].tail(25).mean())
-    res.append(player_df['TS_PCT_VOLATILITY_5_TO_DATE'].iloc[-1])
+    res.append(calculate_volatility(player_df, 'USG_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TS_PCT', window=5, use_cv=True))
     res.append(player_df['E_OFF_RATING'].mean())
     res.append(player_df['NET_RATING'].mean())
     res.append(player_df['TCHS'].tail(5).mean())
@@ -201,17 +236,19 @@ def playerScoring(player_name, data):
     res.append((player_df['PTS'].mean() / player_df['MIN'].mean() + 0.01 ) * player_df['MIN'].iloc[-1])
     res.append(player_df['USG_PCT'].mean() * player_df['TS_PCT'].mean() + 0.01)
     res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.44 * player_df['FTA'].mean() + player_df['TOV'].mean()))
-    res.append(player_df['PACE_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['E_OFF_RATING_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['NET_RATING_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FG_PCT_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FG3A_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FG3M_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FG3_PCT_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FTA_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FTM_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['FT_PCT_VOLATILITY_5_TO_DATE'].iloc[-1])
-    res.append(player_df['TOV_VOLATILITY_5_TO_DATE'].iloc[-1])
+    res.append(calculate_volatility(player_df, 'PACE', window=5))
+    res.append(calculate_volatility(player_df, 'E_OFF_RATING', window=5))
+    res.append(calculate_volatility(player_df, 'NET_RATING', window=5))
+    res.append(calculate_volatility(player_df, 'FG_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG3A', window=5))
+    res.append(calculate_volatility(player_df, 'FG3M', window=5))
+    res.append(calculate_volatility(player_df, 'FG3_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FTA', window=5))
+    res.append(calculate_volatility(player_df, 'FTM', window=5))
+    res.append(calculate_volatility(player_df, 'FT_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TOV', window=5))
+    res.append(player_df['FGA'].tail(10).mean())
+    res.append(player_df['USG_PCT'].tail(5).mean() * player_df['MIN'].tail(5).mean())
     return res
 
 
@@ -226,11 +263,46 @@ def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
     team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
     
+    # Get all unique teams and their average paces/ratings for ranking
+    all_teams_pace = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_PACE'].mean()
+    all_teams_off = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_OFF_RATING'].mean()
+    all_teams_def = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_DEF_RATING'].mean()
+    
+    # Rank team's pace relative to all teams (higher pace = better rank)
+    pace_rank = all_teams_pace.rank(ascending=False, method='min')[player_team]
+    if pace_rank <= 5:
+        res.extend([1, 0, 0, 0])  # PACE_ELITE
+    elif 6 <= pace_rank <= 15:
+        res.extend([0, 1, 0, 0])  # PACE_GOOD
+    elif 16 <= pace_rank <= 25:
+        res.extend([0, 0, 1, 0])  # PACE_AVERAGE
+    else:
+        res.extend([0, 0, 0, 1])  # PACE_POOR
+    
+    # Rank team's offense relative to all teams (higher offense = better rank)
+    off_rank = all_teams_off.rank(ascending=False, method='min')[player_team]
+    if off_rank <= 5:
+        res.extend([1, 0, 0, 0])  # OFF_ELITE
+    elif 6 <= off_rank <= 15:
+        res.extend([0, 1, 0, 0])  # OFF_GOOD
+    elif 16 <= off_rank <= 25:
+        res.extend([0, 0, 1, 0])  # OFF_AVERAGE
+    else:
+        res.extend([0, 0, 0, 1])  # OFF_POOR
+    
+    # Rank team's defense relative to all teams (lower defense rating = better rank)
+    def_rank = all_teams_def.rank(ascending=True, method='min')[player_team]
+    if def_rank <= 5:
+        res.extend([1, 0, 0, 0])  # DEF_ELITE
+    elif 6 <= def_rank <= 15:
+        res.extend([0, 1, 0, 0])  # DEF_GOOD
+    elif 16 <= def_rank <= 25:
+        res.extend([0, 0, 1, 0])  # DEF_AVERAGE
+    else:
+        res.extend([0, 0, 0, 1])  # DEF_POOR
+    
     res.append(team_df['TEAM_OFF_RATING'].mean())
-    res.append(team_df['TEAM_DEF_RATING'].tail(3).mean())
     res.append(team_df['TEAM_PACE'].mean())
-    res.append(team_df['TEAM_PTS'].tail(3).mean())
-    res.append(team_df['TEAM_AST'].tail(3).mean())
 
     return res
 
@@ -257,11 +329,44 @@ def playerVsOpp(player_name, data, current_date):
     player_3PA_rate = player_df['FG3A'].mean() / player_df['FGA'].mean() + 0.01
     playerFG_PCT = player_df['FG_PCT'].mean()
 
-    # Opponent Team Stats
-    if opp_team_df['TEAM_DEF_RATING'].mean() < 114:
-        res.append(1)
+    # Get all unique teams and their average paces/ratings for ranking
+    all_teams_pace = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_PACE'].mean()
+    all_teams_off = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_OFF_RATING'].mean()
+    all_teams_def = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_DEF_RATING'].mean()
+    
+    # Rank opponent's pace relative to all teams (higher pace = better rank)
+    opp_pace_rank = all_teams_pace.rank(ascending=False, method='min')[opp_team]
+    if opp_pace_rank <= 5:
+        res.extend([1, 0, 0, 0])  # OPP_PACE_ELITE
+    elif 6 <= opp_pace_rank <= 15:
+        res.extend([0, 1, 0, 0])  # OPP_PACE_GOOD
+    elif 16 <= opp_pace_rank <= 25:
+        res.extend([0, 0, 1, 0])  # OPP_PACE_AVERAGE
     else:
-        res.append(0)
+        res.extend([0, 0, 0, 1])  # OPP_PACE_POOR
+    
+    # Rank opponent's offense relative to all teams (higher offense = better rank)
+    opp_off_rank = all_teams_off.rank(ascending=False, method='min')[opp_team]
+    if opp_off_rank <= 5:
+        res.extend([1, 0, 0, 0])  # OPP_OFF_ELITE
+    elif 6 <= opp_off_rank <= 15:
+        res.extend([0, 1, 0, 0])  # OPP_OFF_GOOD
+    elif 16 <= opp_off_rank <= 25:
+        res.extend([0, 0, 1, 0])  # OPP_OFF_AVERAGE
+    else:
+        res.extend([0, 0, 0, 1])  # OPP_OFF_POOR
+    
+    # Rank opponent's defense relative to all teams (lower defense rating = better rank)
+    opp_def_rank = all_teams_def.rank(ascending=True, method='min')[opp_team]
+    if opp_def_rank <= 5:
+        res.extend([1, 0, 0, 0])  # OPP_DEF_ELITE
+    elif 6 <= opp_def_rank <= 15:
+        res.extend([0, 1, 0, 0])  # OPP_DEF_GOOD
+    elif 16 <= opp_def_rank <= 25:
+        res.extend([0, 0, 1, 0])  # OPP_DEF_AVERAGE
+    else:
+        res.extend([0, 0, 0, 1])  # OPP_DEF_POOR
+    
     res.append(opp_team_df['TEAM_DEF_RATING'].mean())
     res.append(opp_team_df['TEAM_PACE'].mean())
     res.append(opp_team_df['TEAM_TOV'].mean())
@@ -287,7 +392,7 @@ def playerVsOpp(player_name, data, current_date):
 
     res.append(team_df['TEAM_OFF_RATING'].tail(3).mean() - opp_df['TEAM_DEF_RATING'].mean())
     res.append(team_df['TEAM_PACE'].mean() * opp_df['TEAM_PACE'].mean())
-    res.append(player_df['PTS'].tail(5).mean() * ((opp_df['TEAM_PACE'].mean() * team_df['TEAM_PACE'].mean()) / 100))
+    # res.append(player_df['PTS'].tail(5).mean() * ((opp_df['TEAM_PACE'].mean() * team_df['TEAM_PACE'].mean()) / 100))
     return res
 
 
@@ -307,7 +412,11 @@ def playerMatchup(player_name, data, current_date_str):
     res.append((player_df['PTS'].mean() * home) * (home_df['PTS'].mean() / away_df['PTS'].mean()))
 
     oppTeam = player_df[player_df['OPP_ABBREVIATION'] == opp]
-    res.append(oppTeam['PTS'].tail(3).mean())
+    if oppTeam.empty:
+        res.append(player_df['PTS'].mean())
+    else:
+        res.append(oppTeam['PTS'].mean())
+    res.append(len(oppTeam))
     return res
 
 
