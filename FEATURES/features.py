@@ -125,7 +125,7 @@ def encode_teams(df):
 # ROLLING AVERAGES AND TIME SERIES FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
 
-def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7,10,15,25,40]):
+def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5,10,40]):
     """Calculate rolling averages for key player statistics only."""
     df = player_data.copy()
     
@@ -136,7 +136,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
 
     stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 
                 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt' ]
 
     for window in windows:
         for col in stats_cols:
@@ -156,7 +156,7 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     player_data = player_data.sort_values([player_id_col, date_col])
     stats_lines = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt']
     for stat_line in stats_lines:
         if stat_line not in player_data.columns:
             continue
@@ -194,7 +194,7 @@ def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', wind
     df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Metrics to calculate trends for
-    trend_metrics = ['PTS', 'MIN']
+    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT']
     
     # Only process metrics that exist in the dataframe
     available_metrics = [m for m in trend_metrics if m in df.columns]
@@ -290,7 +290,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt']
     for stat in stats_cols:
         if stat in df_enhanced.columns:
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
@@ -322,8 +322,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+    metrics = [ 'PTS','FGA', 'FG3A','FTA','TS_PCT', 'USG_PCT','MIN']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -390,97 +389,73 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
 
 
 
-def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION', stat_line='PTS'):
-    # Create copy to avoid modifying original
+def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVIATION'):
+    """
+    Calculate historical performance against each opponent.
+    Uses expanding average (all previous games vs that team).
+    """
     df = player_data.copy()
-    
-    # Reset index to ensure unique indices
     df.reset_index(drop=True, inplace=True)
-    
-    # Pre-sort once for all operations
     df.sort_values([player_id_col, 'GAME_DATE'], inplace=True)
     
-    # Create player-opponent grouper object once (reuse for efficiency)
+    # Metrics to track historical performance against teams
+    metrics = ['PTS', 'USG_PCT', 'EFG_PCT', 'TS_PCT']
+    
+    # Available metrics only
+    available_metrics = [m for m in metrics if m in df.columns]
+    
+    # Create player-opponent grouper
     player_opp_group = df.groupby([player_id_col, opp_col])
     
-    # Define metrics to track with their windows
-    metrics = {
-        'MIN': [3,5],
-        'FGA': [3,5],
-        'FG3A': [3,5],
-        'FTA': [3,5],
-        'PTS': [3,5],
-        'USG_PCT': [3,5],
-        'EFG_PCT': [3,5],
-        'TS_PCT': [3,5],
-        'TCHS': [3,5],
-        'PF': [3,5],
-    }
+    # Track how many games played against this opponent
+    df['GAMES_VS_OPP'] = player_opp_group.cumcount()
     
-    # Calculate games against opponent count efficiently
-    df['GAMES_VS_OPP'] = player_opp_group.cumcount() + 1
-    
-    # First, calculate overall averages for each player
-    for metric in metrics:
-        if metric in df.columns:
-            df[f'{metric}_AVG_TO_DATE'] = (
-                df.groupby(player_id_col)[metric]
-                .transform(lambda x: x.shift(1).expanding().mean())
-                .round(2)
-            )
-    
-    # Vectorized operations for all rolling windows - FIXED: Always shift by 1
-    for metric in metrics:
-        if metric not in df.columns:
-            continue
-            
-        # Shift values first to prevent data leakage
-        shifted_values = player_opp_group[metric].shift(1)
-        
-        for window in metrics[metric]:
-            # Calculate rolling average with shifted values
-            matchup_avg_col = f'MATCHUP_AVG_{metric}_LAST_{window}_TO_DATE'
-            df[matchup_avg_col] = (
-                shifted_values
-                .rolling(window=window, min_periods=1)
-                .mean()
-                .round(2)
-            )
-            
-            # Calculate delta (matchup performance - overall performance)
-            delta_col = f'MATCHUP_{metric}_DELTA_LAST_{window}'
-            df[delta_col] = (
-                df[matchup_avg_col] - df[f'{metric}_AVG_TO_DATE']
-            ).round(2)
-    
-    # Fill NaN values efficiently for all new columns at once
-    rolling_cols = [col for col in df.columns if 'MATCHUP_AVG_' in col and '_TO_DATE' in col]
-    delta_cols = [col for col in df.columns if 'MATCHUP_' in col and '_DELTA_' in col]
-    
-    if rolling_cols:
-        # Calculate global means for each metric once
-        global_means = df[rolling_cols].mean()
-        
-        # Fill missing values: first with backward fill, then forward fill, finally with global means
-        df[rolling_cols] = (
-            df[rolling_cols]
-            .bfill()
-            .ffill()
-            .fillna(global_means)
+    # Calculate expanding averages for each metric
+    for metric in available_metrics:
+        # Historical average vs this opponent (shifted to prevent leakage)
+        matchup_col = f'MATCHUP_AVG_{metric}_TO_DATE'
+        df[matchup_col] = (
+            player_opp_group[metric]
+            .transform(lambda x: x.shift(1).expanding(min_periods=1).mean())
             .round(2)
         )
+        
+        # Overall player average (for comparison)
+        overall_col = f'{metric}_AVG_TO_DATE'
+        if overall_col not in df.columns:
+            df[overall_col] = (
+                df.groupby(player_id_col)[metric]
+                .transform(lambda x: x.shift(1).expanding(min_periods=1).mean())
+                .round(2)
+            )
+        
+        # Delta: How does player perform vs this team compared to overall?
+        delta_col = f'MATCHUP_{metric}_DELTA'
+        df[delta_col] = (df[matchup_col] - df[overall_col]).round(2)
     
-    # Fill delta columns with 0 (no difference from average)
-    if delta_cols:
-        df[delta_cols] = df[delta_cols].fillna(0).round(2)
+    # Handle NaN values
+    matchup_cols = [col for col in df.columns if 'MATCHUP_AVG_' in col]
+    delta_cols = [col for col in df.columns if 'MATCHUP_' in col and '_DELTA' in col]
     
-    # Convert memory types to save space
-    for col in rolling_cols + delta_cols:
-        df[col] = df[col].astype('float32')
+    # For first game vs opponent, use player's overall average
+    for metric in available_metrics:
+        matchup_col = f'MATCHUP_AVG_{metric}_TO_DATE'
+        overall_col = f'{metric}_AVG_TO_DATE'
+        df[matchup_col] = df[matchup_col].fillna(df[overall_col])
+    
+    # Delta = 0 for first matchup (no history yet)
+    for col in delta_cols:
+        df[col] = df[col].fillna(0)
+    
+    # Memory optimization
+    for col in matchup_cols + delta_cols:
+        if df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
     
     df['GAMES_VS_OPP'] = df['GAMES_VS_OPP'].astype('int8')
     
     return df
+
 def assign_team_opp_def_by_position(df, min_minutes=15):
     # Define defensive columns that actually exist in your dataset
     def_cols = [
@@ -692,28 +667,118 @@ def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE'
 # OPPONENT AND DEFENSIVE FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
 
-def dynamic_defense_ranking(df, game_date_col='GAME_DATE'):
-    """Rank defenses based only on games played before each game date - FIXED"""
-    df_ranked = []
+def dynamic_defense_ranking(df, team_col='OPP_ABBREVIATION', rating_col='OPP_DEF_RATING_AVG_TO_DATE', 
+                            game_date_col='GAME_DATE', prefix=''):
+    """
+    Create defense tier features: Elite (top 5), Good (6-15), Average (16-25), Poor (26-30)
+    Lower defense rating = better defense, so rank in ascending order
+    """
+    df = df.copy()
+    df = df.sort_values([game_date_col])
     
-    for date in df[game_date_col].unique():
-        # Only use games before this date for ranking
-        historical_data = df[df[game_date_col] < date]
+    all_dates = sorted(df[game_date_col].unique())
+    
+    for i, current_date in enumerate(all_dates):
+        if i == 0:
+            continue
         
-        if len(historical_data) > 0:
-            # Calculate defensive strength up to this date
-            team_strength = historical_data.groupby('OPP_ABBREVIATION')['OPP_DEF_RATING_AVG_TO_DATE'].mean()
-            rankings = team_strength.rank(ascending=True, method='min')
-            
-            # Apply rankings to games on this date
-            games_today = df[df[game_date_col] == date].copy()
-            games_today['DEF_CATEGORY'] = games_today['OPP_ABBREVIATION'].map(
-                lambda x: 1 if rankings.get(x, 999) <= 10 else 0
-            )
-            df_ranked.append(games_today)
+        historical = df[df[game_date_col] < current_date]
+        team_latest_ratings = historical.groupby(team_col)[rating_col].last()
+        rankings = team_latest_ratings.rank(ascending=True, method='min')  # Lower rating = better rank
+        
+        # Apply tiers to today's games
+        mask = df[game_date_col] == current_date
+        
+        # Use prefix for column names
+        df.loc[mask, f'{prefix}DEF_ELITE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
+        )
+        df.loc[mask, f'{prefix}DEF_GOOD'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
+        )
+        df.loc[mask, f'{prefix}DEF_AVERAGE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
+        )
+        df.loc[mask, f'{prefix}DEF_POOR'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
+        )
     
-    return pd.concat(df_ranked, ignore_index=True)
+    return df
 
+def dynamic_pace_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREVIATION', 
+                        rating_col='TEAM_PACE_AVG_TO_DATE', prefix=''):
+    """
+    Create pace tier features for teams: Elite (top 5 fastest), Good (6-15), Average (16-25), Poor (26-30 slowest)
+    Higher pace = better, so rank in descending order
+    """
+    df = df.copy()
+    df = df.sort_values([game_date_col])
+    
+    all_dates = sorted(df[game_date_col].unique())
+    
+    for i, current_date in enumerate(all_dates):
+        if i == 0:
+            continue
+        
+        historical = df[df[game_date_col] < current_date]
+        team_latest_ratings = historical.groupby(team_col)[rating_col].last()
+        rankings = team_latest_ratings.rank(ascending=False, method='min')
+        
+        mask = df[game_date_col] == current_date
+        
+        # Use prefix for column names
+        df.loc[mask, f'{prefix}PACE_ELITE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
+        )
+        df.loc[mask, f'{prefix}PACE_GOOD'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
+        )
+        df.loc[mask, f'{prefix}PACE_AVERAGE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
+        )
+        df.loc[mask, f'{prefix}PACE_POOR'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
+        )
+    
+    return df
+
+def dynamic_offense_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREVIATION', 
+                           rating_col='TEAM_OFF_RATING_AVG_TO_DATE', prefix=''):
+    """
+    Create offense tier features for teams: Elite (top 5 best), Good (6-15), Average (16-25), Poor (26-30 worst)
+    Higher offense rating = better, so rank in descending order
+    """
+    df = df.copy()
+    df = df.sort_values([game_date_col])
+    
+    all_dates = sorted(df[game_date_col].unique())
+    
+    for i, current_date in enumerate(all_dates):
+        if i == 0:
+            continue
+        
+        historical = df[df[game_date_col] < current_date]
+        team_latest_ratings = historical.groupby(team_col)[rating_col].last()
+        rankings = team_latest_ratings.rank(ascending=False, method='min')  # Descending: higher rating = better rank
+        
+        # Apply tiers to today's games
+        mask = df[game_date_col] == current_date
+        
+        # Use prefix for column names
+        df.loc[mask, f'{prefix}OFF_ELITE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
+        )
+        df.loc[mask, f'{prefix}OFF_GOOD'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
+        )
+        df.loc[mask, f'{prefix}OFF_AVERAGE'] = df.loc[mask, team_col].map(
+            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
+        )
+        df.loc[mask, f'{prefix}OFF_POOR'] = df.loc[mask, team_col].map(
+            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
+        )
+    
+    return df
 
 # ================================================================================================
 # TEAM STATISTICS AND CONTEXT - FIXED FOR DATA LEAKAGE
@@ -724,7 +789,7 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     team_df = df[df['TEAM_ABBREVIATION'] == team_abbreviation].copy()
     team_cols = [
         'GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION', 'OPP_ABBREVIATION', 
-        'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_PTS', 'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
+        'TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS', 'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
     ]
     
     available_team_cols = [col for col in team_cols if col in team_df.columns]
@@ -735,6 +800,8 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     
     # FIXED: All averages now use shift(1) to prevent data leakage
     unique_games['DEF_RATING_AVG_TO_DATE'] = unique_games['TEAM_DEF_RATING'].shift(1).expanding().mean().round(2)
+    if 'TEAM_OFF_RATING' in unique_games.columns:
+        unique_games['OFF_RATING_AVG_TO_DATE'] = unique_games['TEAM_OFF_RATING'].shift(1).expanding().mean().round(2)
     unique_games['PACE_AVG_TO_DATE'] = unique_games['TEAM_PACE'].shift(1).expanding().mean().round(2)
     unique_games['PTS_AVG_TO_DATE'] = unique_games['TEAM_PTS'].shift(1).expanding().mean().round(2)
     unique_games['FGA_AVG_TO_DATE'] = unique_games['TEAM_FGA'].shift(1).expanding().mean().round(2)
@@ -748,7 +815,7 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     output_cols = [
         'GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION', 'OPP_ABBREVIATION', 'GAMES_PLAYED',
         'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_PTS',
-        'DEF_RATING_AVG_TO_DATE', 'PACE_AVG_TO_DATE', 'PTS_AVG_TO_DATE', 'FGA_AVG_TO_DATE', 'REB_AVG_TO_DATE', 'AST_AVG_TO_DATE', 'TOV_AVG_TO_DATE', 'BLK_AVG_TO_DATE', 'STL_AVG_TO_DATE'
+        'DEF_RATING_AVG_TO_DATE', 'OFF_RATING_AVG_TO_DATE', 'PACE_AVG_TO_DATE', 'PTS_AVG_TO_DATE', 'FGA_AVG_TO_DATE', 'REB_AVG_TO_DATE', 'AST_AVG_TO_DATE', 'TOV_AVG_TO_DATE', 'BLK_AVG_TO_DATE', 'STL_AVG_TO_DATE'
     ]
     
     available_cols = [col for col in output_cols if col in unique_games.columns]
@@ -765,6 +832,7 @@ def assign_opponent_team_stats_dict(df):
             key = (row['GAME_ID'], team)
             team_stats_dict[key] = {
                 'OPP_DEF_RATING_AVG_TO_DATE': row['DEF_RATING_AVG_TO_DATE'],
+                'OPP_OFF_RATING_AVG_TO_DATE': row.get('OFF_RATING_AVG_TO_DATE', None),
                 'OPP_PACE_AVG_TO_DATE': row['PACE_AVG_TO_DATE'],
                 'OPP_PTS_AVG_TO_DATE': row['PTS_AVG_TO_DATE'],
                 'OPP_FGA_AVG_TO_DATE': row['FGA_AVG_TO_DATE'],
@@ -779,7 +847,7 @@ def assign_opponent_team_stats_dict(df):
     df_enhanced = df.copy()
     lookup_keys = list(zip(df_enhanced['GAME_ID'], df_enhanced['OPP_ABBREVIATION']))
     
-    for col in ['OPP_DEF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_PTS_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE', 'OPP_REB_AVG_TO_DATE', 'OPP_AST_AVG_TO_DATE', 'OPP_TOV_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 'OPP_STL_AVG_TO_DATE']:
+    for col in ['OPP_DEF_RATING_AVG_TO_DATE', 'OPP_OFF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_PTS_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE', 'OPP_REB_AVG_TO_DATE', 'OPP_AST_AVG_TO_DATE', 'OPP_TOV_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 'OPP_STL_AVG_TO_DATE']:
         df_enhanced[col] = [team_stats_dict.get(key, {}).get(col, None) for key in lookup_keys]
     
     return df_enhanced
@@ -1420,7 +1488,7 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     df.sort_values([player_id_col, date_col], inplace=True)
     
     # Count/volume stats - use standard deviation
-    count_stats = ['PTS', 'AST', 'FGM', 'FGA', 'FG3M', 'FG3A', 'FTM', 'FTA', 'TOV', 'MIN']
+    count_stats = ['PTS', 'AST', 'FGM', 'FGA', 'FG3M', 'FG3A', 'FTM', 'FTA', 'TOV', 'MIN', 'PACE', 'E_OFF_RATING', 'NET_RATING']
     
     # Percentage/rate stats - use coefficient of variation
     pct_stats = ['FG_PCT', 'FG3_PCT', 'FT_PCT', 'TS_PCT', 'USG_PCT', 'EFG_PCT']
@@ -1452,77 +1520,6 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     return df
 
 
-# def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15, 25, 40]):
-#     df = df.copy()
-#     df.sort_values([player_id_col, date_col], inplace=True)
-    
-#     # Define stats to calculate standard deviation for
-#     std_stats = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-#                 'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
-    
-#     # Filter to only available columns
-#     available_stats = [stat for stat in std_stats if stat in df.columns]
-    
-#     if not available_stats:
-#         print("Warning: No stats found in dataframe for standard deviation calculation")
-#         return df
-    
-#     # Calculate standard deviation for each window
-#     for window in windows:
-#         for stat in available_stats:
-#             # Rolling standard deviation (shifted to prevent leakage)
-#             std_col = f'{stat}_STD_LAST_{window}'
-#             df[std_col] = (
-#                 df.groupby(player_id_col)[stat]
-#                 .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
-#                 .round(3)
-#             )
-    
-#     # Fill NaN values with appropriate defaults
-#     std_cols = [col for col in df.columns if '_STD_LAST_' in col]
-    
-#     for col in std_cols:
-#         df[col] = df[col].fillna(0)  # No standard deviation for first games
-    
-#     # Convert to appropriate data types to save memory
-#     for col in std_cols:
-#         if df[col].dtype == 'float64':
-#             df[col] = df[col].astype('float32')
-    
-#     return df
-
-
-def add_performance_volatility_categories(df, player_id_col='PLAYER_ID'):
-    """
-    Add categorical volatility features based on percentiles.
-    Categorizes players as Low, Medium, or High volatility.
-    """
-    df = df.copy()
-    
-    # Define key volatility metrics to categorize
-    key_metrics = ['PTS_EXPANDING_CV_TO_DATE', 'MIN_EXPANDING_CV_TO_DATE', 'USG_PCT_EXPANDING_CV_TO_DATE']
-    
-    for metric in key_metrics:
-        if metric in df.columns:
-            # Calculate percentiles for categorization
-            p33 = df[metric].quantile(0.33)
-            p67 = df[metric].quantile(0.67)
-            
-            # Create categorical column
-            category_col = metric.replace('_EXPANDING_CV_TO_DATE', '_VOLATILITY_CATEGORY')
-            df[category_col] = pd.cut(
-                df[metric],
-                bins=[-np.inf, p33, p67, np.inf],
-                labels=['Low', 'Medium', 'High']
-            )
-            
-            # Create binary flags for each category
-            for category in ['Low', 'Medium', 'High']:
-                flag_col = f"{metric.replace('_EXPANDING_CV_TO_DATE', '')}_{category.upper()}_VOLATILITY"
-                df[flag_col] = (df[category_col] == category).astype(int)
-    
-    return df
-
 
 def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', lookback_games=5):
     """
@@ -1532,8 +1529,7 @@ def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DAT
     df = df.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
-    key_stats = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+    key_stats = [ 'PTS', 'MIN', 'USG_PCT', 'EFG_PCT', 'TS_PCT']
     available_stats = [stat for stat in key_stats if stat in df.columns]
     
     for stat in available_stats:
@@ -1587,12 +1583,12 @@ def add_interaction_features(df):
     df['PTS_PER_40'] = round(df['PTS_AVG_TO_DATE'] * 40 / (df['MIN_AVG_TO_DATE'] + eplison), 3)
     df['PTS_PER_TCHS'] = round(df['PTS_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison), 3)
     df['PTS_PER_TCHS_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_5'] + eplison), 3)
-    df['PTS_PER_TCHS_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
-    df['PTS_PER_TCHS_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
+    # df['PTS_PER_TCHS_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
+    # df['PTS_PER_TCHS_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
     df['PTS_PER_TCHS_X_USG'] = round(df['PTS_PER_TCHS'] * df['USG_PCT_AVG_TO_DATE'], 3)
     df['PTS_PER_MIN_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_5'] + eplison), 3)
-    df['PTS_PER_MIN_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['MIN_ROLLING_AVG_15'] + eplison), 3)   
-    df['PTS_PER_MIN_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['MIN_ROLLING_AVG_40'] + eplison), 3)
+    # df['PTS_PER_MIN_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['MIN_ROLLING_AVG_15'] + eplison), 3)   
+    # df['PTS_PER_MIN_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['MIN_ROLLING_AVG_40'] + eplison), 3)
     df['PTS_PER_MIN_X_PACE'] = round(df['PTS_PER_MIN'] * df['EXPECTED_PACE'], 3)
     df['PTS_PER_MIN_X_POSS'] = round(df['PTS_PER_MIN'] * df['POSS_AVG_TO_DATE'], 3)
     df['PTS_PER_MIN_X_USG'] = round(df['PTS_PER_MIN'] * df['USG_PCT_AVG_TO_DATE'], 3)
@@ -1603,12 +1599,12 @@ def add_interaction_features(df):
 
     df['3PA_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['3PA_RATE_ROLLING_AVG_5'] = df['FG3A_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
-    df['3PA_RATE_ROLLING_AVG_10'] = df['FG3A_ROLLING_AVG_15'] / (df['FGA_ROLLING_AVG_15'] + eplison)
+    # df['3PA_RATE_ROLLING_AVG_10'] = df['FG3A_ROLLING_AVG_15'] / (df['FGA_ROLLING_AVG_15'] + eplison)
     df['3PA_TEAM_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
     
     df['FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
-    df['FT_RATE_ROLLING_AVG_5'] = df['FTA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
-    df['FT_RATE_ROLLING_AVG_10'] = df['FTA_ROLLING_AVG_10'] / (df['FGA_ROLLING_AVG_10'] + eplison)
+    # df['FT_RATE_ROLLING_AVG_5'] = df['FTA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
+    # df['FT_RATE_ROLLING_AVG_10'] = df['FTA_ROLLING_AVG_10'] / (df['FGA_ROLLING_AVG_10'] + eplison)
 
     # team sharing
     df['PLAYER_FG3A_SHARE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
