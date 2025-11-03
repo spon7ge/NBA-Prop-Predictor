@@ -1039,6 +1039,230 @@ def process_star_players_data(df, min_minutes=10):
 
     return df
 
+def add_usual_starters_availability(df, min_minutes=10, lookback_games=20):
+    """Calculate the number of usual starters who are available for each game."""
+    df = df.copy()
+    df = df.sort_values(['TEAM_ID', 'GAME_DATE', 'PLAYER_NAME']).reset_index(drop=True)
+    
+    # Check required columns exist
+    required_cols = ['GAME_ID', 'TEAM_ID', 'PLAYER_NAME', 'MIN', 'GAME_DATE']
+    if not all(col in df.columns for col in required_cols):
+        print(f"Warning: Missing required columns. Need: {required_cols}")
+        print(f"Available columns: {list(df.columns)}")
+        return df
+    
+    # Create indicator for players who played (sufficient minutes)
+    df['PLAYED'] = (df['MIN'] >= min_minutes).astype(int)
+    
+    # For each game, determine who started (based on START_POSITION if available, 
+    # otherwise use first 5 players by minutes)
+    if 'START_POSITION' in df.columns:
+        df['STARTED'] = df['START_POSITION'].notna().astype(int)
+    else:
+        # If no START_POSITION, approximate by top 5 players by minutes per team per game
+        df['STARTED'] = df.groupby(['GAME_ID', 'TEAM_ID']).apply(
+            lambda x: pd.Series(
+                (x['MIN'].rank(ascending=False, method='min') <= 5).astype(int).values,
+                index=x.index
+            )
+        ).reset_index(drop=True)
+    
+    # Calculate rolling window of games to determine "usual starters"
+    # We'll use a lookback window approach
+    df['USUAL_STARTERS_AVAILABLE'] = 0
+    df['USUAL_STARTERS_OUT'] = 0
+    
+    # Get unique games per team for efficient processing
+    unique_games = df.groupby(['GAME_ID', 'TEAM_ID']).first().reset_index()[['GAME_ID', 'TEAM_ID', 'GAME_DATE']]
+    unique_games = unique_games.sort_values(['TEAM_ID', 'GAME_DATE']).reset_index(drop=True)
+    
+    # For each team, process games chronologically
+    for team_id in df['TEAM_ID'].unique():
+        team_games = df[df['TEAM_ID'] == team_id].copy()
+        team_games = team_games.sort_values(['GAME_DATE', 'PLAYER_NAME']).reset_index(drop=True)
+        
+        # Get unique game IDs for this team in chronological order
+        team_unique_games = unique_games[unique_games['TEAM_ID'] == team_id].copy()
+        team_unique_games = team_unique_games.sort_values('GAME_DATE').reset_index(drop=True)
+        
+        # For each game in this team's schedule
+        for idx in range(len(team_unique_games)):
+            current_game_id = team_unique_games.iloc[idx]['GAME_ID']
+            
+            # Look back at previous games to determine usual starters
+            lookback_start = max(0, idx - lookback_games)
+            historical_game_ids = team_unique_games.iloc[lookback_start:idx]['GAME_ID'].tolist()
+            historical_games = team_games[team_games['GAME_ID'].isin(historical_game_ids)]
+            
+            if len(historical_games) == 0:
+                # First game(s) - can't determine usual starters yet
+                mask = df['GAME_ID'] == current_game_id
+                df.loc[mask, 'USUAL_STARTERS_AVAILABLE'] = 5
+                df.loc[mask, 'USUAL_STARTERS_OUT'] = 0
+                continue
+            
+            # Count how many times each player started in historical games
+            historical_starters = historical_games.groupby('PLAYER_NAME')['STARTED'].sum().reset_index()
+            historical_starters.columns = ['PLAYER_NAME', 'START_COUNT']
+            historical_starters = historical_starters.sort_values('START_COUNT', ascending=False)
+            
+            # Identify usual starters (top 5 by start count)
+            if len(historical_starters) >= 5:
+                usual_starters = set(historical_starters.head(5)['PLAYER_NAME'].tolist())
+            else:
+                # If less than 5 historical starters, use all of them
+                usual_starters = set(historical_starters['PLAYER_NAME'].tolist())
+                # If still no historical starters, use top 5 by average minutes
+                if len(usual_starters) == 0:
+                    avg_mins = historical_games.groupby('PLAYER_NAME')['MIN'].mean().reset_index()
+                    avg_mins = avg_mins.sort_values('MIN', ascending=False)
+                    usual_starters = set(avg_mins.head(5)['PLAYER_NAME'].tolist())
+            
+            # For the current game, count how many usual starters played
+            current_game_players = team_games[team_games['GAME_ID'] == current_game_id]
+            usual_starters_in_game = current_game_players[current_game_players['PLAYER_NAME'].isin(usual_starters)]
+            
+            usual_starters_available = usual_starters_in_game['PLAYED'].sum()
+            usual_starters_out = len(usual_starters) - usual_starters_available
+            
+            # Update the dataframe
+            mask = df['GAME_ID'] == current_game_id
+            df.loc[mask, 'USUAL_STARTERS_AVAILABLE'] = usual_starters_available
+            df.loc[mask, 'USUAL_STARTERS_OUT'] = usual_starters_out
+    
+    # Remove temporary columns
+    if 'STARTED' in df.columns:
+        df = df.drop(columns=['PLAYED', 'STARTED'])
+    else:
+        df = df.drop(columns=['PLAYED'])
+    
+    return df
+
+def add_opponent_usual_starters_availability(df, min_minutes=10, lookback_games=20):
+    """Calculate the number of usual opponent starters who are available for each game."""
+    df = df.copy()
+    df = df.sort_values(['TEAM_ID', 'GAME_DATE', 'PLAYER_NAME']).reset_index(drop=True)
+    
+    # Check required columns exist
+    required_cols = ['GAME_ID', 'TEAM_ID', 'PLAYER_NAME', 'MIN', 'GAME_DATE']
+    if not all(col in df.columns for col in required_cols):
+        print(f"Warning: Missing required columns. Need: {required_cols}")
+        print(f"Available columns: {list(df.columns)}")
+        return df
+    
+    # Create indicator for players who played (sufficient minutes)
+    df['PLAYED'] = (df['MIN'] >= min_minutes).astype(int)
+    
+    # For each game, determine who started (based on START_POSITION if available, 
+    # otherwise use first 5 players by minutes)
+    if 'START_POSITION' in df.columns:
+        df['STARTED'] = df['START_POSITION'].notna().astype(int)
+    else:
+        # If no START_POSITION, approximate by top 5 players by minutes per team per game
+        df['STARTED'] = df.groupby(['GAME_ID', 'TEAM_ID']).apply(
+            lambda x: pd.Series(
+                (x['MIN'].rank(ascending=False, method='min') <= 5).astype(int).values,
+                index=x.index
+            )
+        ).reset_index(drop=True)
+    
+    # Calculate rolling window of games to determine "usual starters" for opponents
+    # We'll use a lookback window approach
+    df['OPP_USUAL_STARTERS_AVAILABLE'] = 0
+    df['OPP_USUAL_STARTERS_OUT'] = 0
+    
+    # Get unique games per team for efficient processing
+    unique_games = df.groupby(['GAME_ID', 'TEAM_ID']).first().reset_index()[['GAME_ID', 'TEAM_ID', 'GAME_DATE']]
+    unique_games = unique_games.sort_values(['TEAM_ID', 'GAME_DATE']).reset_index(drop=True)
+    
+    # For each team, process games chronologically to determine their usual starters
+    for team_id in df['TEAM_ID'].unique():
+        team_games = df[df['TEAM_ID'] == team_id].copy()
+        team_games = team_games.sort_values(['GAME_DATE', 'PLAYER_NAME']).reset_index(drop=True)
+        
+        # Get unique game IDs for this team in chronological order
+        team_unique_games = unique_games[unique_games['TEAM_ID'] == team_id].copy()
+        team_unique_games = team_unique_games.sort_values('GAME_DATE').reset_index(drop=True)
+        
+        # For each game in this team's schedule
+        for idx in range(len(team_unique_games)):
+            current_game_id = team_unique_games.iloc[idx]['GAME_ID']
+            
+            # Get the opponent team ID for this game
+            opp_team_mask = df['GAME_ID'] == current_game_id
+            if not opp_team_mask.any():
+                continue
+                
+            # Get opponent team ID (the other team in this game)
+            game_teams = df[opp_team_mask]['TEAM_ID'].unique()
+            if len(game_teams) != 2:
+                continue
+            
+            opp_team_id = game_teams[game_teams != team_id][0]
+            
+            # Get opponent's games data
+            opp_games = df[df['TEAM_ID'] == opp_team_id].copy()
+            opp_games = opp_games.sort_values(['GAME_DATE', 'PLAYER_NAME']).reset_index(drop=True)
+            
+            # Get unique game IDs for opponent in chronological order
+            opp_unique_games = unique_games[unique_games['TEAM_ID'] == opp_team_id].copy()
+            opp_unique_games = opp_unique_games.sort_values('GAME_DATE').reset_index(drop=True)
+            
+            # Find which opponent game index this current_game_id represents
+            opp_game_indices = opp_unique_games.index[opp_unique_games['GAME_ID'] == current_game_id].tolist()
+            if not opp_game_indices:
+                continue
+            opp_game_idx = opp_game_indices[0]
+            
+            # Look back at previous games to determine opponent's usual starters
+            opp_lookback_start = max(0, opp_game_idx - lookback_games)
+            opp_historical_game_ids = opp_unique_games.iloc[opp_lookback_start:opp_game_idx]['GAME_ID'].tolist()
+            opp_historical_games = opp_games[opp_games['GAME_ID'].isin(opp_historical_game_ids)]
+            
+            if len(opp_historical_games) == 0:
+                # First game(s) for opponent - can't determine usual starters yet
+                mask = (df['GAME_ID'] == current_game_id) & (df['TEAM_ID'] == team_id)
+                df.loc[mask, 'OPP_USUAL_STARTERS_AVAILABLE'] = 5
+                df.loc[mask, 'OPP_USUAL_STARTERS_OUT'] = 0
+                continue
+            
+            # Count how many times each player started in opponent's historical games
+            opp_historical_starters = opp_historical_games.groupby('PLAYER_NAME')['STARTED'].sum().reset_index()
+            opp_historical_starters.columns = ['PLAYER_NAME', 'START_COUNT']
+            opp_historical_starters = opp_historical_starters.sort_values('START_COUNT', ascending=False)
+            
+            # Identify opponent's usual starters (top 5 by start count)
+            if len(opp_historical_starters) >= 5:
+                opp_usual_starters = set(opp_historical_starters.head(5)['PLAYER_NAME'].tolist())
+            else:
+                # If less than 5 historical starters, use all of them
+                opp_usual_starters = set(opp_historical_starters['PLAYER_NAME'].tolist())
+                # If still no historical starters, use top 5 by average minutes
+                if len(opp_usual_starters) == 0:
+                    avg_mins = opp_historical_games.groupby('PLAYER_NAME')['MIN'].mean().reset_index()
+                    avg_mins = avg_mins.sort_values('MIN', ascending=False)
+                    opp_usual_starters = set(avg_mins.head(5)['PLAYER_NAME'].tolist())
+            
+            # For the current game, count how many opponent usual starters played
+            current_game_players = opp_games[opp_games['GAME_ID'] == current_game_id]
+            opp_usual_starters_in_game = current_game_players[current_game_players['PLAYER_NAME'].isin(opp_usual_starters)]
+            
+            opp_usual_starters_available = opp_usual_starters_in_game['PLAYED'].sum()
+            opp_usual_starters_out = len(opp_usual_starters) - opp_usual_starters_available
+            
+            # Update the dataframe for all players of this team in this game
+            mask = (df['GAME_ID'] == current_game_id) & (df['TEAM_ID'] == team_id)
+            df.loc[mask, 'OPP_USUAL_STARTERS_AVAILABLE'] = opp_usual_starters_available
+            df.loc[mask, 'OPP_USUAL_STARTERS_OUT'] = opp_usual_starters_out
+    
+    # Remove temporary columns
+    if 'STARTED' in df.columns:
+        df = df.drop(columns=['PLAYED', 'STARTED'])
+    else:
+        df = df.drop(columns=['PLAYED'])
+    
+    return df
+
     
 ########################################################################################
 # UTILITY AND HELPER FUNCTIONS
@@ -1191,98 +1415,81 @@ team_dict = {
 ##############################################################################################################
 # VOLATILITY FEATURES
 ##############################################################################################################
-def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3, 5, 7,10, 15, 25, 40]):
-    """
-    Calculate volatility features for player performance metrics.
-    Only calculates rolling standard deviation for specified windows.
-    """
-    # Create copy and sort data
+def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
     df = df.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
-    # Define stats to calculate volatility for
-    volatility_stats = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
-    # Filter to only available columns
-    available_stats = [stat for stat in volatility_stats if stat in df.columns]
+    # Count/volume stats - use standard deviation
+    count_stats = ['PTS', 'AST', 'FGM', 'FGA', 'FG3M', 'FG3A', 'FTM', 'FTA', 'TOV', 'MIN']
     
-    if not available_stats:
-        print("Warning: No volatility stats found in dataframe")
-        return df
+    # Percentage/rate stats - use coefficient of variation
+    pct_stats = ['FG_PCT', 'FG3_PCT', 'FT_PCT', 'TS_PCT', 'USG_PCT', 'EFG_PCT']
     
-    # Calculate volatility metrics for each window
+    windows = [3, 5, 7, 10]
+    
+    # Standard deviation for count stats
     for window in windows:
-        for stat in available_stats:
-            # Rolling standard deviation (shifted to prevent leakage)
-            volatility_col = f'{stat}_VOLATILITY_{window}_TO_DATE'
-            df[volatility_col] = (
-                df.groupby(player_id_col)[stat]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
-                .round(3)
-            )
+        for stat in count_stats:
+            if stat in df.columns:
+                df[f'{stat}_VOLATILITY_{window}_TO_DATE'] = (
+                    df.groupby(player_id_col)[stat]
+                    .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
+                )
     
-    # Add expanding volatility metrics (season-long volatility)
-    for stat in available_stats:
-        # Expanding standard deviation
-        expanding_vol_col = f'{stat}_EXPANDING_VOLATILITY_TO_DATE'
-        df[expanding_vol_col] = (
-            df.groupby(player_id_col)[stat]
-            .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
-            .round(3)
-        )
-    
-    # Fill NaN values with appropriate defaults
-    volatility_cols = [col for col in df.columns if 'VOLATILITY' in col]
-    
-    for col in volatility_cols:
-        df[col] = df[col].fillna(0)  # No volatility for first games
-    
-    # Convert to appropriate data types to save memory
-    for col in volatility_cols:
-        if df[col].dtype == 'float64':
-            df[col] = df[col].astype('float32')
+    # CV for percentage stats (more comparable across players)
+    for window in windows:
+        for stat in pct_stats:
+            if stat in df.columns:
+                rolling_std = df.groupby(player_id_col)[stat].transform(
+                    lambda x: x.shift(1).rolling(window=window, min_periods=2).std()
+                )
+                rolling_mean = df.groupby(player_id_col)[stat].transform(
+                    lambda x: x.shift(1).rolling(window=window, min_periods=2).mean()
+                )
+                df[f'{stat}_CV_{window}_TO_DATE'] = rolling_std / rolling_mean
+                df[f'{stat}_CV_{window}_TO_DATE'].replace([np.inf, -np.inf], np.nan, inplace=True)
     
     return df
 
 
-def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15, 25, 40]):
-    df = df.copy()
-    df.sort_values([player_id_col, date_col], inplace=True)
+# def add_standard_deviation_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 15, 25, 40]):
+#     df = df.copy()
+#     df.sort_values([player_id_col, date_col], inplace=True)
     
-    # Define stats to calculate standard deviation for
-    std_stats = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
+#     # Define stats to calculate standard deviation for
+#     std_stats = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
+#                 'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFreeThrow', 'CFGA', 'UFGA' ]
     
-    # Filter to only available columns
-    available_stats = [stat for stat in std_stats if stat in df.columns]
+#     # Filter to only available columns
+#     available_stats = [stat for stat in std_stats if stat in df.columns]
     
-    if not available_stats:
-        print("Warning: No stats found in dataframe for standard deviation calculation")
-        return df
+#     if not available_stats:
+#         print("Warning: No stats found in dataframe for standard deviation calculation")
+#         return df
     
-    # Calculate standard deviation for each window
-    for window in windows:
-        for stat in available_stats:
-            # Rolling standard deviation (shifted to prevent leakage)
-            std_col = f'{stat}_STD_LAST_{window}'
-            df[std_col] = (
-                df.groupby(player_id_col)[stat]
-                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
-                .round(3)
-            )
+#     # Calculate standard deviation for each window
+#     for window in windows:
+#         for stat in available_stats:
+#             # Rolling standard deviation (shifted to prevent leakage)
+#             std_col = f'{stat}_STD_LAST_{window}'
+#             df[std_col] = (
+#                 df.groupby(player_id_col)[stat]
+#                 .transform(lambda x: x.shift(1).rolling(window=window, min_periods=2).std())
+#                 .round(3)
+#             )
     
-    # Fill NaN values with appropriate defaults
-    std_cols = [col for col in df.columns if '_STD_LAST_' in col]
+#     # Fill NaN values with appropriate defaults
+#     std_cols = [col for col in df.columns if '_STD_LAST_' in col]
     
-    for col in std_cols:
-        df[col] = df[col].fillna(0)  # No standard deviation for first games
+#     for col in std_cols:
+#         df[col] = df[col].fillna(0)  # No standard deviation for first games
     
-    # Convert to appropriate data types to save memory
-    for col in std_cols:
-        if df[col].dtype == 'float64':
-            df[col] = df[col].astype('float32')
+#     # Convert to appropriate data types to save memory
+#     for col in std_cols:
+#         if df[col].dtype == 'float64':
+#             df[col] = df[col].astype('float32')
     
-    return df
+#     return df
 
 
 def add_performance_volatility_categories(df, player_id_col='PLAYER_ID'):
@@ -1357,12 +1564,6 @@ def add_interaction_features(df):
     df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
     df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
     df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
-    df['PLAYER_PAINT_X_OPP_DEF'] = df['percentagePointsPaint_AVG_TO_DATE'] * (
-        df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] + df['OPP_FORWARD_DEF_FG_PCT_ALLOWED']
-    ) / 2
-    df['PLAYER_3PT_X_OPP_3PT_DEF'] = df['percentagePoints3pt_AVG_TO_DATE'] * (
-        df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] + df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
-    ) / 2
     df['FGA_PER_TCHS_X_TEAM_OFF'] = (
         df['FGA_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison)
     ) * df['TEAM_OFF_RATING_AVG_TO_DATE']
@@ -1400,10 +1601,10 @@ def add_interaction_features(df):
     df['PTS_X_OPP_DEF_RATING'] = round(df['PTS_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE'], 3)
     df['PTS_PER_MIN_X_MIN_LAG'] = round(df['PTS_PER_MIN'] * df['MIN_LAG_1'], 3)
 
-    df['3PA_SHARE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
-    df['3PA_SHARE_ROLLING_AVG_5'] = df['FG3A_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
-    df['3PA_SHARE_ROLLING_AVG_10'] = df['FG3A_ROLLING_AVG_15'] / (df['FGA_ROLLING_AVG_15'] + eplison)
-    df['3PA_TEAM_SHARE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
+    df['3PA_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    df['3PA_RATE_ROLLING_AVG_5'] = df['FG3A_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
+    df['3PA_RATE_ROLLING_AVG_10'] = df['FG3A_ROLLING_AVG_15'] / (df['FGA_ROLLING_AVG_15'] + eplison)
+    df['3PA_TEAM_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
     
     df['FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['FT_RATE_ROLLING_AVG_5'] = df['FTA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
@@ -1454,5 +1655,29 @@ def add_interaction_features(df):
         df['PTS_X_BENCH_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_BENCH_TIER']
         df['USG_X_BENCH_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_BENCH_TIER']
         df['MIN_X_BENCH_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_BENCH_TIER']
+    
+    df['PLAYER_3PT_RATE_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['3PA_RATE'] * (
+        df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] )
+    
+    df['PLAYER_3PT_RATE_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['3PA_RATE'] * (
+    df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED'] )
+    
+    df['PLAYER_3PT_RATE_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['3PA_RATE'] * (
+    df['OPP_CENTER_DEF_3PT_PCT_ALLOWED'] )
+
+    df['PLAYER_3PT_FG_PCT_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['FG3_PCT_AVG_TO_DATE'] * (
+    df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] )
+    
+    df['PLAYER_3PT_FG_PCT_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['FG3_PCT_AVG_TO_DATE'] * (
+    df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED'] )
+    
+    df['PLAYER_3PT_FG_PCT_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['FG3_PCT_AVG_TO_DATE'] * (
+    df['OPP_CENTER_DEF_3PT_PCT_ALLOWED'] )
+
+    df['PLAYER_X_MATCHUP_GUARD_FG_PCT'] = df['GUARD'] * (df['OPP_GUARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'] )
+    
+    df['PLAYER_X_MATCHUP_FORWARD_FG_PCT'] = df['FORWARD'] * (df['OPP_FORWARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE']  )
+    
+    df['PLAYER_X_MATCHUP_CENTER_FG_PCT'] = df['CENTER'] * (df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'] )
     
     return df

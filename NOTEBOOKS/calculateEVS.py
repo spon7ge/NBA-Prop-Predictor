@@ -99,18 +99,16 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 
 _prediction_cache = {}
 
-def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, teamStarPlayer):
+def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
     cache_key = f"{player_name}_{current_date}"
     
     if cache_key not in _prediction_cache:
         try:
-            # Filter once
             player_df = data[data['PLAYER_NAME'] == player_name].sort_values(by='GAME_DATE')
             if player_df.empty:
                 return None
             
-            # Build vector once
-            vector = buildVector(player_name, data, current_date, projectedStartingFive, teamStarPlayer)
+            vector = buildVector(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
             vector = [item for sublist in vector for item in sublist]
             vector = pd.DataFrame([vector], columns=features)
             
@@ -119,21 +117,15 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             
             vector = vector.fillna(0)
             
-            # If model provides a predictive distribution (e.g., NGBoost), use it
             if hasattr(model, "pred_dist"):
                 dist = model.pred_dist(vector)
                 pred = round(float(dist.loc[0]), 3)
                 sigma = float(dist.scale[0])
-                # Default to no skew for NGBoost Normal
                 skew = 0.0
             else:
                 # Predict with point model
                 pred = round(float(model.predict(vector)[0]), 3)
-                
-                # Calculate player-specific sigma using volatility features
                 sigma = calculate_player_sigma(player_df.iloc[-1], pred)
-                
-                # Calculate player-specific skew from recent points
                 skew = calculate_player_skew(player_df.iloc[-1])
             
             _prediction_cache[cache_key] = {
@@ -271,7 +263,7 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
         
         # Get prediction, sigma, and skew for this player
         try:
-            prediction_data = get_cached_prediction(name, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
+            prediction_data = get_cached_prediction(name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
             if prediction_data is None:
                 continue
             pred = prediction_data['prediction']
@@ -459,8 +451,8 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             
             # Get predictions, sigmas, and skews for both players using cached function
             try:
-                pred1_data = get_cached_prediction(player1, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
-                pred2_data = get_cached_prediction(player2, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
+                pred1_data = get_cached_prediction(player1, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
+                pred2_data = get_cached_prediction(player2, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
                 
                 if pred1_data is None or pred2_data is None:
                     continue
@@ -689,9 +681,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                 
                 # Get predictions, sigmas, and skews for all three players using cached function
                 try:
-                    pred1_data = get_cached_prediction(player1, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
-                    pred2_data = get_cached_prediction(player2, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
-                    pred3_data = get_cached_prediction(player3, data, model, features, current_date, projectedStartingFive, teamStarPlayer)
+                    pred1_data = get_cached_prediction(player1, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
+                    pred2_data = get_cached_prediction(player2, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
+                    pred3_data = get_cached_prediction(player3, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
                     
                     if pred1_data is None or pred2_data is None or pred3_data is None:
                         continue

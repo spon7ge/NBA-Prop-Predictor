@@ -16,11 +16,6 @@ def fit_ngboost(train_df: pd.DataFrame,
                 val_df: pd.DataFrame | None,
                 features: list[str],
                 target_col: str,
-                learning_rate: float = 0.06,
-                n_estimators: int = 500,
-                max_depth: int = 3,
-                random_state: int = 42,
-                base_max_depth: int | None = None,
                 distribution: type = Normal):
 
     # Ensure data is sorted by date for time series consistency
@@ -54,24 +49,21 @@ def fit_ngboost(train_df: pd.DataFrame,
         X_va = X_va.replace([np.inf, -np.inf], np.nan)
         X_va = X_va.fillna(X_tr.median())  # Use train median for validation
 
-    # Choose base learner
-    if base_max_depth is None:
-        base_max_depth = max_depth
-
-    base_est = DecisionTreeRegressor(max_depth=base_max_depth)
+    base_est = DecisionTreeRegressor(max_depth=4)
 
     # Enable early stopping if validation data is available
     early_stopping_params = {}
     if val_df is not None and len(val_df) > 0:
-        early_stopping_params = {'early_stopping_rounds': 50}
+        early_stopping_params = {'early_stopping_rounds': 20}
     
     ngb = NGBRegressor(
         Dist=distribution,
         Score=MLE,
         natural_gradient=True,
-        learning_rate=learning_rate,
-        n_estimators=n_estimators,
-        random_state=random_state,
+        learning_rate=0.05,
+        n_estimators=500,
+        random_state=42,
+        minibatch_frac=0.7,
         verbose=False,
         **early_stopping_params,
         Base=base_est
@@ -180,57 +172,41 @@ def predict_calibrated_mean(model: NGBRegressor,
         raise ValueError(f"Unknown calibration method: {method}")
 
 
-def predict_mean_with_tier_calibration(model: NGBRegressor,
-                                       df: pd.DataFrame,
-                                       features: list[str],
-                                       player_avg_col: str = 'PTS_ROLLING_AVG_15',
-                                       star_threshold: float = 20.0,
-                                       role_threshold: float = 10.0,
-                                       star_correction: float = 1.30,
-                                       role_correction: float = 0.81,
-                                       bench_correction: float = -0.63) -> np.ndarray:
-    """Get predictions with tier-specific bias correction based on validation findings.
+# def predict_mean_with_tier_calibration(
+#     model: NGBRegressor,
+#     df: pd.DataFrame,
+#     features: list[str],
+#     player_avg_col: str = 'PTS_ROLLING_AVG_40',
+#     star_threshold: float = 20.0,
+#     role_threshold: float = 10.0,
+#     star_correction: float = 1.30,
+#     role_correction: float = 0.81,
+#     bench_correction: float = -0.63,
+#     return_variance: bool = False  # NEW
+# ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:  # NEW
+
+#     # Get raw predictions
+#     pred_mean, pred_var = predict_mean_variance(model, df, features)
+#     pred_mean = pred_mean.values if hasattr(pred_mean, 'values') else pred_mean
+#     pred_var = pred_var.values if hasattr(pred_var, 'values') else pred_var
     
-    Applies different calibrations for star players (>20 PPG), role players (10-20 PPG),
-    and bench players (<10 PPG) based on observed bias patterns.
+#     # Get player average
+#     if player_avg_col not in df.columns:
+#         raise ValueError(f"Column '{player_avg_col}' not found in dataframe")
     
-    Args:
-        model: Trained NGBRegressor
-        df: DataFrame to make predictions on
-        features: List of feature names
-        player_avg_col: Column name for player's rolling average to determine tier
-        star_threshold: Points per game threshold for star players
-        role_threshold: Points per game threshold for role players
-        star_correction: Bias correction to add for star players (positive = reduce overprediction)
-        role_correction: Bias correction to add for role players
-        bench_correction: Bias correction to add for bench players (negative = reduce underprediction)
-        
-    Returns:
-        Calibrated mean predictions with tier-specific adjustments
-        
-    Example:
-        calibrated_preds = predict_mean_with_tier_calibration(
-            model, test_df, features,
-            player_avg_col='PTS_ROLLING_AVG_15'
-        )
-    """
-    # Get raw predictions
-    pred_mean, _ = predict_mean_variance(model, df, features)
-    pred_mean = pred_mean.values if hasattr(pred_mean, 'values') else pred_mean
+#     player_avg = df[player_avg_col].values
     
-    # Get player average to determine tier
-    if player_avg_col not in df.columns:
-        raise ValueError(f"Column '{player_avg_col}' not found in dataframe")
+#     # Apply tier-specific corrections (only to mean, not variance)
+#     corrections = np.where(
+#         player_avg > star_threshold, star_correction,
+#         np.where(player_avg >= role_threshold, role_correction, bench_correction)
+#     )
     
-    player_avg = df[player_avg_col].values
+#     calibrated_mean = pred_mean + corrections
     
-    # Apply tier-specific corrections
-    corrections = np.where(
-        player_avg > star_threshold, star_correction,
-        np.where(player_avg >= role_threshold, role_correction, bench_correction)
-    )
-    
-    return pred_mean + corrections
+#     if return_variance:
+#         return calibrated_mean, pred_var
+#     return calibrated_mean
 
 
 def _nll_score(estimator: NGBRegressor, X, y):
@@ -245,6 +221,7 @@ def fit_ngboost_bayes(train_df: pd.DataFrame,
                       target_col: str,
                       n_iter: int = 30,
                       random_state: int = 42,
+                      fast_mode: bool = False,
                       distribution: type = Normal):
 
     # Ensure data is sorted by date for time series consistency
@@ -278,24 +255,36 @@ def fit_ngboost_bayes(train_df: pd.DataFrame,
         X_va = X_va.replace([np.inf, -np.inf], np.nan)
         X_va = X_va.fillna(X_tr.median())  # Use train median for validation
 
+    if fast_mode:
+        n_splits = 2
+        n_estimators_range = (200, 500)
+        max_depth_range = (2, 5)
+        early_stopping = 15
+    else:
+        n_splits = 3
+        n_estimators_range = (300, 800)
+        max_depth_range = (2, 6)
+        early_stopping = 20
+
     base_est = NGBRegressor(
         Dist=distribution,
         Score=MLE,
         natural_gradient=True,
         verbose=False,
         random_state=random_state,
-        Base=DecisionTreeRegressor()
+        Base=DecisionTreeRegressor(),
+        early_stopping_rounds=early_stopping
     )
 
     search_spaces = {
         'learning_rate': Real(0.01, 0.1, prior='log-uniform'),
-        'n_estimators': Integer(500, 2000),
-        'minibatch_frac': Real(0.5, 1.0),
-        'Base__max_depth': Integer(2, 8)
+        'n_estimators': Integer(*n_estimators_range),
+        'minibatch_frac': Real(0.4, 0.8),
+        'Base__max_depth': Integer(*max_depth_range)
     }
 
     # This ensures training always comes before validation in time
-    tscv = TimeSeriesSplit(n_splits=3)
+    tscv = TimeSeriesSplit(n_splits=n_splits)
     
     search = BayesSearchCV(
         estimator=base_est,
