@@ -399,7 +399,7 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     df.sort_values([player_id_col, 'GAME_DATE'], inplace=True)
     
     # Metrics to track historical performance against teams
-    metrics = ['PTS', 'USG_PCT', 'EFG_PCT', 'TS_PCT']
+    metrics = ['PTS', 'MIN','USG_PCT', 'EFG_PCT', 'TS_PCT']
     
     # Available metrics only
     available_metrics = [m for m in metrics if m in df.columns]
@@ -670,7 +670,7 @@ def teamRollingDefenseByPosition(df, team_id_col='TEAM_ID', date_col='GAME_DATE'
 def dynamic_defense_ranking(df, team_col='OPP_ABBREVIATION', rating_col='OPP_DEF_RATING_AVG_TO_DATE', 
                             game_date_col='GAME_DATE', prefix=''):
     """
-    Create defense tier features: Elite (top 5), Good (6-15), Average (16-25), Poor (26-30)
+    Create defense ranking feature: 1 = best defense (lowest rating), 30 = worst defense (highest rating)
     Lower defense rating = better defense, so rank in ascending order
     """
     df = df.copy()
@@ -678,37 +678,27 @@ def dynamic_defense_ranking(df, team_col='OPP_ABBREVIATION', rating_col='OPP_DEF
     
     all_dates = sorted(df[game_date_col].unique())
     
+    # Initialize ranking column
+    df[f'{prefix}DEF_RANKING'] = np.nan
+    
     for i, current_date in enumerate(all_dates):
         if i == 0:
             continue
         
         historical = df[df[game_date_col] < current_date]
         team_latest_ratings = historical.groupby(team_col)[rating_col].last()
-        rankings = team_latest_ratings.rank(ascending=True, method='min')  # Lower rating = better rank
+        rankings = team_latest_ratings.rank(ascending=True, method='min')  # Lower rating = better rank (1 = best)
         
-        # Apply tiers to today's games
+        # Apply rankings to today's games
         mask = df[game_date_col] == current_date
-        
-        # Use prefix for column names
-        df.loc[mask, f'{prefix}DEF_ELITE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
-        )
-        df.loc[mask, f'{prefix}DEF_GOOD'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
-        )
-        df.loc[mask, f'{prefix}DEF_AVERAGE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
-        )
-        df.loc[mask, f'{prefix}DEF_POOR'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
-        )
+        df.loc[mask, f'{prefix}DEF_RANKING'] = df.loc[mask, team_col].map(rankings).fillna(15)  # Default to middle if team not found
     
     return df
 
 def dynamic_pace_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREVIATION', 
                         rating_col='TEAM_PACE_AVG_TO_DATE', prefix=''):
     """
-    Create pace tier features for teams: Elite (top 5 fastest), Good (6-15), Average (16-25), Poor (26-30 slowest)
+    Create pace ranking feature: 1 = fastest pace (highest rating), 30 = slowest pace (lowest rating)
     Higher pace = better, so rank in descending order
     """
     df = df.copy()
@@ -716,36 +706,26 @@ def dynamic_pace_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREVIAT
     
     all_dates = sorted(df[game_date_col].unique())
     
+    # Initialize ranking column
+    df[f'{prefix}PACE_RANKING'] = np.nan
+    
     for i, current_date in enumerate(all_dates):
         if i == 0:
             continue
         
         historical = df[df[game_date_col] < current_date]
         team_latest_ratings = historical.groupby(team_col)[rating_col].last()
-        rankings = team_latest_ratings.rank(ascending=False, method='min')
+        rankings = team_latest_ratings.rank(ascending=False, method='min')  # Higher rating = better rank (1 = fastest)
         
         mask = df[game_date_col] == current_date
-        
-        # Use prefix for column names
-        df.loc[mask, f'{prefix}PACE_ELITE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
-        )
-        df.loc[mask, f'{prefix}PACE_GOOD'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
-        )
-        df.loc[mask, f'{prefix}PACE_AVERAGE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
-        )
-        df.loc[mask, f'{prefix}PACE_POOR'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
-        )
+        df.loc[mask, f'{prefix}PACE_RANKING'] = df.loc[mask, team_col].map(rankings).fillna(15)  # Default to middle if team not found
     
     return df
 
 def dynamic_offense_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREVIATION', 
                            rating_col='TEAM_OFF_RATING_AVG_TO_DATE', prefix=''):
     """
-    Create offense tier features for teams: Elite (top 5 best), Good (6-15), Average (16-25), Poor (26-30 worst)
+    Create offense ranking feature: 1 = best offense (highest rating), 30 = worst offense (lowest rating)
     Higher offense rating = better, so rank in descending order
     """
     df = df.copy()
@@ -753,30 +733,20 @@ def dynamic_offense_ranking(df, game_date_col='GAME_DATE', team_col='TEAM_ABBREV
     
     all_dates = sorted(df[game_date_col].unique())
     
+    # Initialize ranking column
+    df[f'{prefix}OFF_RANKING'] = np.nan
+    
     for i, current_date in enumerate(all_dates):
         if i == 0:
             continue
         
         historical = df[df[game_date_col] < current_date]
         team_latest_ratings = historical.groupby(team_col)[rating_col].last()
-        rankings = team_latest_ratings.rank(ascending=False, method='min')  # Descending: higher rating = better rank
+        rankings = team_latest_ratings.rank(ascending=False, method='min')  # Higher rating = better rank (1 = best)
         
-        # Apply tiers to today's games
+        # Apply rankings to today's games
         mask = df[game_date_col] == current_date
-        
-        # Use prefix for column names
-        df.loc[mask, f'{prefix}OFF_ELITE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) <= 5 else 0
-        )
-        df.loc[mask, f'{prefix}OFF_GOOD'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 6 <= rankings.get(x, 999) <= 15 else 0
-        )
-        df.loc[mask, f'{prefix}OFF_AVERAGE'] = df.loc[mask, team_col].map(
-            lambda x: 1 if 16 <= rankings.get(x, 999) <= 25 else 0
-        )
-        df.loc[mask, f'{prefix}OFF_POOR'] = df.loc[mask, team_col].map(
-            lambda x: 1 if rankings.get(x, 999) >= 26 else 0
-        )
+        df.loc[mask, f'{prefix}OFF_RANKING'] = df.loc[mask, team_col].map(rankings).fillna(15)  # Default to middle if team not found
     
     return df
 
@@ -998,7 +968,7 @@ def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
 def expectedPace(df):
     df = df.copy()
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_AVG_TO_DATE'] + df['OPP_PACE_AVG_TO_DATE']) / 2).round(2)
-    df['EXPECTED_PACE_DIFF'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']    
+    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_AVG_TO_DATE'] - df['OPP_PACE_AVG_TO_DATE']    
     df['EXPECTED_POINTS'] = (df['TEAM_PTS_AVG_TO_DATE'] + df['OPP_PTS_AVG_TO_DATE']) / 2
     return df
 
@@ -1594,6 +1564,10 @@ def add_interaction_features(df):
     df['PTS_PER_MIN_X_OPP_DEF_RATING'] = round(df['PTS_PER_MIN'] * df['OPP_DEF_RATING_AVG_TO_DATE'], 3)
     df['PTS_X_OPP_DEF_RATING'] = round(df['PTS_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE'], 3)
     df['PTS_PER_MIN_X_MIN_LAG'] = round(df['PTS_PER_MIN'] * df['MIN_LAG_1'], 3)
+    df['EXPECTED_POINT_DIFF'] = df['TEAM_OFF_MINUS_OPP_DEF']
+    df['LIKELY_BLOWOUT'] = (np.abs(df['EXPECTED_POINT_DIFF']) > 8).astype(int)
+    df['LIKELY_CLOSE_GAME'] = (np.abs(df['EXPECTED_POINT_DIFF']) < 4).astype(int)
+
 
     df['3PA_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['3PA_RATE_ROLLING_AVG_5'] = df['FG3A_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
@@ -1601,15 +1575,25 @@ def add_interaction_features(df):
     df['3PA_TEAM_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
     
     df['FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
-    # df['FT_RATE_ROLLING_AVG_5'] = df['FTA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
-    # df['FT_RATE_ROLLING_AVG_10'] = df['FTA_ROLLING_AVG_10'] / (df['FGA_ROLLING_AVG_10'] + eplison)
 
     # team sharing
     df['PLAYER_FG3A_SHARE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
     df['PLAYER_FGA_SHARE'] = df['FGA_AVG_TO_DATE'] / (df['TEAM_FGA_AVG_TO_DATE'] + eplison)
     df['PLAYER_FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['TEAM_FTA_AVG_TO_DATE'] + eplison)
     df['PLAYER_PTS_SHARE'] = df['PTS_AVG_TO_DATE'] / (df['TEAM_PTS_AVG_TO_DATE'] + eplison)
-    
+    df['PTS_RECENT_VS_SEASON'] = df['PTS_ROLLING_AVG_5'] / df['PTS_AVG_TO_DATE']
+    df['HOT_STREAK'] = (df['PTS_RECENT_VS_SEASON'] > 1.15).astype(int)
+    df['COLD_STREAK'] = (df['PTS_RECENT_VS_SEASON'] < 0.85).astype(int)
+    df['ELITE_USAGE'] = (df['USG_PCT_AVG_TO_DATE'] > 28).astype(int)
+    df['HIGH_USAGE'] = ((df['USG_PCT_AVG_TO_DATE'] > 23) & 
+                    (df['USG_PCT_AVG_TO_DATE'] <= 28)).astype(int)
+    df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].rolling(10).max().values
+    df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].rolling(10).min().values
+    df['PTS_CEILING'] = df['PTS_MAX_LAST_10'] * 0.9  # Expected ceiling
+    df['PTS_FLOOR'] = df['PTS_MIN_LAST_10'] * 1.1    # Expected floor
+    df['STAR_HOT_HAND'] = (df['PLAYER_IS_TEAM_STAR'] * 
+                        (df['PTS_TREND_LAST_5'] > 0)).astype(int)
+    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS'].transform('mean') > 18).astype(int)
     # New interaction features
     # Points per possession (true shooting possessions formula)
     df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)
