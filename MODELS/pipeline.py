@@ -188,7 +188,12 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
     res.append(main_in_projected)
 
     opp_in_projected = len(set(mainStartingFive[opp_abv]) & set(projectedStartingFive[opp_abv]))
+
     res.append(opp_in_projected)
+    if player_df.empty:
+        res.append(0)
+    else:
+        res.append(len(player_df))
 
     return res
 
@@ -210,20 +215,29 @@ def playerScoring(player_name, data):
     res.append(player_df['MIN_TREND_LAST_5'].iloc[-1])
     res.append((player_df['PTS'].mean() / (player_df['MIN'].mean()) + 0.01) * player_df['USG_PCT'].mean())
     res.append(calculate_volatility(player_df, 'PTS', window=5))
-    # res.append(player_df['PTS_EXTREME_VOLATILITY'].iloc[-1])
-    # res.append(player_df['PTS_RECENT_HIGH_VOLATILITY'].iloc[-1])
+
     res.append(player_df['FGA'].iloc[-1])
     res.append(calculate_volatility(player_df, 'FGM', window=5))
+    res.append(calculate_volatility(player_df, 'FGM', window=10))
+    res.append(calculate_volatility(player_df, 'FGM', window=40))
     res.append(calculate_volatility(player_df, 'FGA', window=5))
+    res.append(calculate_volatility(player_df, 'FGA', window=10))
+    res.append(calculate_volatility(player_df, 'FGA', window=40))
     res.append(player_df['FG3A'].mean() / player_df['FGA'].mean() + 0.01)
     res.append(player_df['USG_PCT'].iloc[-1])
     res.append(calculate_volatility(player_df, 'USG_PCT', window=5, use_cv=True))
+
+    res.append(calculate_volatility(player_df, 'USG_PCT', window=10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'USG_PCT', window=40, use_cv=True))
     res.append(calculate_volatility(player_df, 'TS_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TS_PCT', window=10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TS_PCT', window=40, use_cv=True))
     res.append(player_df['E_OFF_RATING'].mean())
     res.append(player_df['NET_RATING'].mean())
     res.append(player_df['TCHS'].tail(5).mean())
     res.append(player_df['TOV'].tail(5).mean())
     res.append(player_df['PTS'].iloc[-1])
+
     res.append(player_df['FT_PCT'].tail(10).mean())
     res.append(player_df['FG_PCT'].tail(10).mean())
     res.append(player_df['FTM'].tail(40).mean())
@@ -234,21 +248,49 @@ def playerScoring(player_name, data):
     res.append(player_df['PLAYER_FG3A_SHARE'].iloc[-1])
     res.append(player_df['USG_PCT_DELTA_STAR_OUT'].iloc[-1])
     res.append((player_df['PTS'].mean() / player_df['MIN'].mean() + 0.01 ) * player_df['MIN'].iloc[-1])
+
     res.append(player_df['USG_PCT'].mean() * player_df['TS_PCT'].mean() + 0.01)
     res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.44 * player_df['FTA'].mean() + player_df['TOV'].mean()))
     res.append(calculate_volatility(player_df, 'PACE', window=5))
+    res.append(calculate_volatility(player_df, 'PACE', window=10))
+    res.append(calculate_volatility(player_df, 'PACE', window=20))
+    res.append(calculate_volatility(player_df, 'PACE', window=40))
     res.append(calculate_volatility(player_df, 'E_OFF_RATING', window=5))
+    res.append(calculate_volatility(player_df, 'E_OFF_RATING', window=10))
+    res.append(calculate_volatility(player_df, 'E_OFF_RATING', window=40))
     res.append(calculate_volatility(player_df, 'NET_RATING', window=5))
+
+    res.append(calculate_volatility(player_df, 'NET_RATING', window=10))
+    res.append(calculate_volatility(player_df, 'NET_RATING', window=20))
+    res.append(calculate_volatility(player_df, 'NET_RATING', window=40))
     res.append(calculate_volatility(player_df, 'FG_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG_PCT', window=10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG_PCT', window=40, use_cv=True))
     res.append(calculate_volatility(player_df, 'FG3A', window=5))
+    res.append(calculate_volatility(player_df, 'FG3A', window=10))
+    res.append(calculate_volatility(player_df, 'FG3A', window=40))
     res.append(calculate_volatility(player_df, 'FG3M', window=5))
+
+    res.append(calculate_volatility(player_df, 'FG3M', window=10))
+    res.append(calculate_volatility(player_df, 'FG3M', window=40))
     res.append(calculate_volatility(player_df, 'FG3_PCT', window=5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG3_PCT', window=10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG3_PCT', window=20, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG3_PCT', window=40, use_cv=True))
     res.append(calculate_volatility(player_df, 'FTA', window=5))
+    res.append(calculate_volatility(player_df, 'FTA', window=10))
     res.append(calculate_volatility(player_df, 'FTM', window=5))
+    res.append(calculate_volatility(player_df, 'FTM', window=10))
+
+    res.append(calculate_volatility(player_df, 'FTM', window=40))
     res.append(calculate_volatility(player_df, 'FT_PCT', window=5, use_cv=True))
-    res.append(calculate_volatility(player_df, 'TOV', window=5))
+    res.append(calculate_volatility(player_df, 'FT_PCT', window=10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FT_PCT', window=20, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FT_PCT', window=40, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TOV', window=10))
     res.append(player_df['FGA'].tail(10).mean())
     res.append(player_df['USG_PCT'].tail(5).mean() * player_df['MIN'].tail(5).mean())
+    
     return res
 
 

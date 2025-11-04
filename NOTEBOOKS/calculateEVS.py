@@ -117,13 +117,24 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             
             vector = vector.fillna(0)
             
-            if hasattr(model, "pred_dist"):
+            # Check if model is a tuple (split model: mean, variance, calibration_factor)
+            if isinstance(model, tuple):
+                mean_model = model[0]
+                variance_model = model[1]
+                calibration_factor = model[2] if len(model) > 2 else 1.25  # Use calibration factor if provided
+                from MODELS.ngboostModel import predict_mean_variance_split
+                mu, variance = predict_mean_variance_split(mean_model, variance_model, vector, features, calibration_factor)
+                pred = round(float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu), 3)
+                sigma = float(np.sqrt(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance))
+                skew = 0.0
+            elif hasattr(model, "pred_dist"):
+                # Single NGBoost model with pred_dist
                 dist = model.pred_dist(vector)
                 pred = round(float(dist.loc[0]), 3)
                 sigma = float(dist.scale[0])
                 skew = 0.0
             else:
-                # Predict with point model
+                # Point model (XGBoost or similar)
                 pred = round(float(model.predict(vector)[0]), 3)
                 sigma = calculate_player_sigma(player_df.iloc[-1], pred)
                 skew = calculate_player_skew(player_df.iloc[-1])
@@ -385,14 +396,14 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
             'IMPLIED PROB': round(market_prob, 3),
             'MODEL PROB': round(model_prob, 3),
             'EDGE': round(edge, 3),
-            'EV%': round(ev_total, 2),
+            'EV$': round(ev_total, 2),
             'KELLY_FRACTION': round(kelly_fraction, 3),
             'KELLY_DOLLARS': round(kelly_dollars, 2),
             'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
             'INTERVAL WIDTH': interval_width,
             'SIGMA': round(sigma, 2),
             'SIGMA FLAG': sigma_flag,
-            'EXPECTED ROI': round(ev_total / stake, 2),
+            'EXPECTED ROI': round((ev_total / stake )* 100, 1),
             'SIMULATION_METHOD': 'Analytical' if not use_monte_carlo or distribution_type == 'normal' else 'Monte Carlo'
         })
     
@@ -569,6 +580,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             p_both *= corr_factor
             payout_multiple = 3.0  # 3x payout for 2-leg parlay
             ev = payout_multiple * p_both - 1
+            ev_dollars = ev * stake
             
             # Kelly criterion with variance-adjusted constraint
             b = payout_multiple - 1.0  # b = 2.0
@@ -606,7 +618,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
                 'EDGE 1': round(edge1, 3),
                 'EDGE 2': round(edge2, 3),
                 'COMBINED EDGE': round(combined_edge, 3),
-                'EV%': round(ev, 2),
+                'EV$': round(ev_dollars, 2),
                 'KELLY FULL': round(kelly_full, 3),
                 'RECOMMENDATION': recommendation,
                 'INTERVAL WIDTH 1': width1,
@@ -615,6 +627,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
                 'SIGMA 2': round(sigma2, 2),
                 'SIGMA FLAG 1': sigma_flag1,
                 'SIGMA FLAG 2': sigma_flag2,
+                'EXPECTED ROI': round((ev_dollars / stake )* 100, 1),
                 'SIMULATION METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
             })
     
@@ -826,7 +839,8 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                 p_all_three *= corr_factor ** 2  # Squared for 3-leg parlay
                 payout_multiple = 6.0  # 6x payout for 3-leg parlay
                 ev = payout_multiple * p_all_three - 1
-                
+                ev_dollars = ev * stake
+
                 # Kelly criterion with variance-adjusted constraint
                 b = payout_multiple - 1.0  # b = 5.0
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
@@ -873,7 +887,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                     'EDGE 2': round(edge2, 3),
                     'EDGE 3': round(edge3, 3),
                     'COMBINED EDGE': round(combined_edge, 3),
-                    'EV%': round(ev, 2),
+                    'EV$': round(ev_dollars, 2),
                     'KELLY FULL': round(kelly_full, 3),
                     'RECOMMENDATION': recommendation,
                     'CONFIDENCE INTERVAL 1': f"({ci1[0]:.1f}, {ci1[1]:.1f})",
@@ -888,6 +902,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                     'SIGMA FLAG 1': sigma_flag1,
                     'SIGMA FLAG 2': sigma_flag2,
                     'SIGMA FLAG 3': sigma_flag3,
+                    'EXPECTED ROI': round((ev_dollars / stake )* 100, 1),
                     'SIMULATION METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
                 })
 

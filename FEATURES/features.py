@@ -1483,7 +1483,7 @@ team_dict = {
 ##############################################################################################################
 # VOLATILITY FEATURES
 ##############################################################################################################
-def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 20]):
     df = df.copy()
     df.sort_values([player_id_col, date_col], inplace=True)
     
@@ -1492,8 +1492,6 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     # Percentage/rate stats - use coefficient of variation
     pct_stats = ['FG_PCT', 'FG3_PCT', 'FT_PCT', 'TS_PCT', 'USG_PCT', 'EFG_PCT']
-    
-    windows = [3, 5, 7, 10]
     
     # Standard deviation for count stats
     for window in windows:
