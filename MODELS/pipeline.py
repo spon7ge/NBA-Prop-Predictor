@@ -151,11 +151,6 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
         res.append(0)
         res.append(0)
 
-    # Positions
-    res.append(player_df['GUARD'].iloc[-1])
-    res.append(player_df['FORWARD'].iloc[-1])
-    res.append(player_df['CENTER'].iloc[-1])
-
     # Team Star Player
     if player_name ==teamStarPlayer[player_team]:
         res.append(1)
@@ -207,6 +202,10 @@ def playerScoring(player_name, data):
 
     res.append(player_df['MIN'].iloc[-1])
     res.append(calculate_volatility(player_df, 'MIN', window=5))
+    res.append(calculate_volatility(player_df, 'MIN', window=10))
+    res.append(calculate_volatility(player_df, 'MIN', window=20))
+    res.append(calculate_volatility(player_df, 'MIN', window=40))
+    res.append(player_df['MIN'].tail(40).mean())
     res.append(player_df['percentagePointsMidrange2pt'].mean())
     res.append(player_df['percentagePointsPaint'].mean())
     res.append(player_df['PTS_DELTA_STAR_OUT'].iloc[-1])
@@ -234,8 +233,8 @@ def playerScoring(player_name, data):
     res.append(calculate_volatility(player_df, 'TS_PCT', window=40, use_cv=True))
     res.append(player_df['E_OFF_RATING'].mean())
     res.append(player_df['NET_RATING'].mean())
-    res.append(player_df['TCHS'].tail(5).mean())
-    res.append(player_df['TOV'].tail(5).mean())
+    res.append(player_df['TCHS'].tail(10).mean())
+    res.append(player_df['TOV'].tail(10).mean())
     res.append(player_df['PTS'].iloc[-1])
 
     res.append(player_df['FT_PCT'].tail(10).mean())
@@ -261,7 +260,6 @@ def playerScoring(player_name, data):
     res.append(calculate_volatility(player_df, 'NET_RATING', window=5))
 
     res.append(calculate_volatility(player_df, 'NET_RATING', window=10))
-    res.append(calculate_volatility(player_df, 'NET_RATING', window=20))
     res.append(calculate_volatility(player_df, 'NET_RATING', window=40))
     res.append(calculate_volatility(player_df, 'FG_PCT', window=5, use_cv=True))
     res.append(calculate_volatility(player_df, 'FG_PCT', window=10, use_cv=True))
@@ -305,44 +303,6 @@ def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
     team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
     
-    # Get all unique teams and their average paces/ratings for ranking
-    all_teams_pace = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_PACE'].mean()
-    all_teams_off = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_OFF_RATING'].mean()
-    all_teams_def = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_DEF_RATING'].mean()
-    
-    # Rank team's pace relative to all teams (higher pace = better rank)
-    pace_rank = all_teams_pace.rank(ascending=False, method='min')[player_team]
-    if pace_rank <= 5:
-        res.extend([1, 0, 0, 0])  # PACE_ELITE
-    elif 6 <= pace_rank <= 15:
-        res.extend([0, 1, 0, 0])  # PACE_GOOD
-    elif 16 <= pace_rank <= 25:
-        res.extend([0, 0, 1, 0])  # PACE_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # PACE_POOR
-    
-    # Rank team's offense relative to all teams (higher offense = better rank)
-    off_rank = all_teams_off.rank(ascending=False, method='min')[player_team]
-    if off_rank <= 5:
-        res.extend([1, 0, 0, 0])  # OFF_ELITE
-    elif 6 <= off_rank <= 15:
-        res.extend([0, 1, 0, 0])  # OFF_GOOD
-    elif 16 <= off_rank <= 25:
-        res.extend([0, 0, 1, 0])  # OFF_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # OFF_POOR
-    
-    # Rank team's defense relative to all teams (lower defense rating = better rank)
-    def_rank = all_teams_def.rank(ascending=True, method='min')[player_team]
-    if def_rank <= 5:
-        res.extend([1, 0, 0, 0])  # DEF_ELITE
-    elif 6 <= def_rank <= 15:
-        res.extend([0, 1, 0, 0])  # DEF_GOOD
-    elif 16 <= def_rank <= 25:
-        res.extend([0, 0, 1, 0])  # DEF_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # DEF_POOR
-    
     res.append(team_df['TEAM_OFF_RATING'].mean())
     res.append(team_df['TEAM_PACE'].mean())
 
@@ -370,44 +330,6 @@ def playerVsOpp(player_name, data, current_date):
     opp_center_df = opp_df[(opp_df['CENTER'] == 1) & (opp_df.groupby('PLAYER_NAME')['MIN'].transform('mean') > 10)]
     player_3PA_rate = player_df['FG3A'].mean() / player_df['FGA'].mean() + 0.01
     playerFG_PCT = player_df['FG_PCT'].mean()
-
-    # Get all unique teams and their average paces/ratings for ranking
-    all_teams_pace = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_PACE'].mean()
-    all_teams_off = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_OFF_RATING'].mean()
-    all_teams_def = data.drop_duplicates(subset=['GAME_ID']).groupby('TEAM_ABBREVIATION')['TEAM_DEF_RATING'].mean()
-    
-    # Rank opponent's pace relative to all teams (higher pace = better rank)
-    opp_pace_rank = all_teams_pace.rank(ascending=False, method='min')[opp_team]
-    if opp_pace_rank <= 5:
-        res.extend([1, 0, 0, 0])  # OPP_PACE_ELITE
-    elif 6 <= opp_pace_rank <= 15:
-        res.extend([0, 1, 0, 0])  # OPP_PACE_GOOD
-    elif 16 <= opp_pace_rank <= 25:
-        res.extend([0, 0, 1, 0])  # OPP_PACE_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # OPP_PACE_POOR
-    
-    # Rank opponent's offense relative to all teams (higher offense = better rank)
-    opp_off_rank = all_teams_off.rank(ascending=False, method='min')[opp_team]
-    if opp_off_rank <= 5:
-        res.extend([1, 0, 0, 0])  # OPP_OFF_ELITE
-    elif 6 <= opp_off_rank <= 15:
-        res.extend([0, 1, 0, 0])  # OPP_OFF_GOOD
-    elif 16 <= opp_off_rank <= 25:
-        res.extend([0, 0, 1, 0])  # OPP_OFF_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # OPP_OFF_POOR
-    
-    # Rank opponent's defense relative to all teams (lower defense rating = better rank)
-    opp_def_rank = all_teams_def.rank(ascending=True, method='min')[opp_team]
-    if opp_def_rank <= 5:
-        res.extend([1, 0, 0, 0])  # OPP_DEF_ELITE
-    elif 6 <= opp_def_rank <= 15:
-        res.extend([0, 1, 0, 0])  # OPP_DEF_GOOD
-    elif 16 <= opp_def_rank <= 25:
-        res.extend([0, 0, 1, 0])  # OPP_DEF_AVERAGE
-    else:
-        res.extend([0, 0, 0, 1])  # OPP_DEF_POOR
     
     res.append(opp_team_df['TEAM_DEF_RATING'].mean())
     res.append(opp_team_df['TEAM_PACE'].mean())
