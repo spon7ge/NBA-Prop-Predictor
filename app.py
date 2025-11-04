@@ -68,28 +68,33 @@ def style_over_rates(df):
     return styled_df
 
 @st.cache_data  
-def loadSinglePTSBookmakers():
-    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv')
+def loadSinglePTSBookmakers(file_mtime):
+    filepath = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv'
+    df = pd.read_csv(filepath)
     return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
-def loadUnderdogPairsBookmakers():
-    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv')
+def loadUnderdogPairsBookmakers(file_mtime):
+    filepath = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv'
+    df = pd.read_csv(filepath)
     return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
-def loadPrizepicksPairsBookmakers():
-    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv')
+def loadPrizepicksPairsBookmakers(file_mtime):
+    filepath = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv'
+    df = pd.read_csv(filepath)
     return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
-def loadTriosUnderdogBookmakers():
-    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv')
+def loadTriosUnderdogBookmakers(file_mtime):
+    filepath = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv'
+    df = pd.read_csv(filepath)
     return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
-def loadTriosPrizepicksBookmakers():
-    df = pd.read_csv('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv')
+def loadTriosPrizepicksBookmakers(file_mtime):
+    filepath = 'DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv'
+    df = pd.read_csv(filepath)
     return df if not df.empty else pd.DataFrame()
 
 @st.cache_data  
@@ -131,14 +136,19 @@ def loadOverRatesUnderdog():
     
     return over_rates_data
 
-singleBets = loadSinglePTSBookmakers()
-pairs = loadUnderdogPairsBookmakers()
-pairsPrizepicks = loadPrizepicksPairsBookmakers()
-triosUnderdog = loadTriosUnderdogBookmakers()
-triosPrizepicks = loadTriosPrizepicksBookmakers()
+# Get file modification times to use as cache keys
+def get_file_mtime(filepath):
+    return os.path.getmtime(filepath) if os.path.exists(filepath) else 0
 
 # Streamlit UI
 st.title('🏀 NBA Prop Predictions')
+
+# Load data inside Streamlit execution flow so it recalculates on each rerun
+singleBets = loadSinglePTSBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv'))
+pairs = loadUnderdogPairsBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv'))
+pairsPrizepicks = loadPrizepicksPairsBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv'))
+triosUnderdog = loadTriosUnderdogBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv'))
+triosPrizepicks = loadTriosPrizepicksBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv'))
 
 # Header info with columns
 st.write(f"**Date:** {today}")
@@ -183,51 +193,49 @@ with st.expander("📋 What's Available", expanded=True):
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
     """)
 
-# Disclaimer
+# Add expandable help section with tooltips
+# with st.expander("Betting Metrics Explained", expanded=False):
+#     st.markdown("""
+#     ### **EV% (Expected Value Percentage)**
+#     The average profit percentage per bet over many repetitions. Calculated by comparing our model's win probability vs. the bookmaker's implied probability from odds.
+    
+#     - **Positive EV%** = Profitable over time (higher is better)
+#     - **Example**: 25% EV means +25 profit per 100 dollars wagered on average
+#     - Higher EV% bets appear at the top of each table
+    
+#     ### **Kelly Criterion**
+#     Mathematical formula for optimal bet sizing based on your edge. Maximizes long-term growth while protecting your bankroll.
+    
+#     - **Kelly Full**: Aggressive (max recommended) - for experienced bettors only
+#     - **Kelly Half**: Conservative (recommended) - bet 50% of Kelly suggestion
+#     - **Kelly Quarter**: Very safe - bet 25% of Kelly suggestion
+    
+#     Most bettors should use Kelly Half or Quarter for safety.
+    
+#     ### **How the Model Works**
+#     Uses NGBoost (probabilistic ML) trained on thousands of games to estimate **probability distributions**, not exact scores. Considers:
+    
+#     - Player performance (rolling averages, trends, volatility)
+#     - Game context (home/away, rest days, back-to-back)
+#     - Matchups (opponent defense, historical performance, team pace)
+#     - Team context (ratings, star availability, recent form)
+    
+#     Compares the model's probability distribution to betting odds to identify value opportunities.
+    
+#     ### **Uncertainty Metrics**
+#     Indicators of prediction confidence:
+    
+#     - **CONFIDENCE INTERVAL**: Range where outcome likely falls (e.g., 95% confidence)
+#     - **INTERVAL WIDTH**: Size of that range (smaller = more certain)
+#     - **SIGMA**: Standard deviation of the distribution (higher = more volatile)
+#     - **SIGMA FLAG**: Alert when volatility is elevated (Low/Med/High)
+    
+#     Focus on bets with **Low sigma flags** for lower risk opportunities.
+#     """)
 st.info("""**Important Note:**
     Odds are updated from bookmakers throughout the day as new information becomes available. 
     You may see different odds on the same bet depending on when you check the page. """)
 st.info("⚠️ **Disclaimer**: Please take these predictions/probabilities with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
-
-# Add expandable help section with tooltips
-with st.expander("Betting Metrics Explained", expanded=False):
-    st.markdown("""
-    ### **EV% (Expected Value Percentage)**
-    The average profit percentage per bet over many repetitions. Calculated by comparing our model's win probability vs. the bookmaker's implied probability from odds.
-    
-    - **Positive EV%** = Profitable over time (higher is better)
-    - **Example**: 25% EV means +25 profit per 100 dollars wagered on average
-    - Higher EV% bets appear at the top of each table
-    
-    ### **Kelly Criterion**
-    Mathematical formula for optimal bet sizing based on your edge. Maximizes long-term growth while protecting your bankroll.
-    
-    - **Kelly Full**: Aggressive (max recommended) - for experienced bettors only
-    - **Kelly Half**: Conservative (recommended) - bet 50% of Kelly suggestion
-    - **Kelly Quarter**: Very safe - bet 25% of Kelly suggestion
-    
-    Most bettors should use Kelly Half or Quarter for safety.
-    
-    ### **How the Model Works**
-    Uses NGBoost (probabilistic ML) trained on thousands of games to estimate **probability distributions**, not exact scores. Considers:
-    
-    - Player performance (rolling averages, trends, volatility)
-    - Game context (home/away, rest days, back-to-back)
-    - Matchups (opponent defense, historical performance, team pace)
-    - Team context (ratings, star availability, recent form)
-    
-    Compares the model's probability distribution to betting odds to identify value opportunities.
-    
-    ### **Uncertainty Metrics**
-    Indicators of prediction confidence:
-    
-    - **CONFIDENCE INTERVAL**: Range where outcome likely falls (e.g., 95% confidence)
-    - **INTERVAL WIDTH**: Size of that range (smaller = more certain)
-    - **SIGMA**: Standard deviation of the distribution (higher = more volatile)
-    - **SIGMA FLAG**: Alert when volatility is elevated (Low/Med/High)
-    
-    Focus on bets with **Low sigma flags** for lower risk opportunities.
-    """)
 
 # Add metric explanations in sidebar
 with st.sidebar:
