@@ -141,7 +141,7 @@ def get_file_mtime(filepath):
     return os.path.getmtime(filepath) if os.path.exists(filepath) else 0
 
 # Streamlit UI
-st.title('🏀 NBA Prop Predictions')
+st.title('NBA Prop Predictions')
 
 # Load data inside Streamlit execution flow so it recalculates on each rerun
 singleBets = loadSinglePTSBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv'))
@@ -172,9 +172,9 @@ with st.expander("📋 What's Available", expanded=True):
     ### **Recommendation Column**
     Each betting table includes a **RECOMMENDATION** column that identifies the best bets:
     - **1** = **Recommended Bet**: The model has high confidence this bet offers strong value
-    - **0** = Not recommended (typically lower EV% or higher risk)
+    - **0** = Not recommended (typically lower EV$ or higher risk)
     
-    **Focus on bets with sigma flag = Low and high EV% for the lowest risk opportunities.
+    **Focus on bets with sigma flag = Low and high EV$ for the lowest risk opportunities.
     
     ### **Historical Hit Rates**
     The Historical Hit Rates section shows how often a player has hit their prop line historically:
@@ -268,7 +268,7 @@ with st.sidebar:
     
     st.markdown("### Bet Selection")
     st.markdown("""
-    1. High EV% (top rows)
+    1. High EV$ (top rows)
     2. Low sigma flags
     3. Check Over Rates
     4. Use Kelly Half/Quarter
