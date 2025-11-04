@@ -1,408 +1,386 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,EXPECTED ROI,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Bones Hyland,Deandre Ayton,4.5,17.5,7.67,13.91,over,under,0,55.45,55.5,0.277,Med,Med
-Sam Hauser,Deandre Ayton,9.5,17.5,6.97,13.91,under,under,0,48.04,48.0,0.24,Med,Med
-Jalen Duren,Deandre Ayton,14.5,17.5,12.25,13.91,under,under,0,47.88,47.9,0.239,Med,Med
-Bones Hyland,Sam Hauser,4.5,9.5,7.67,6.97,over,under,0,41.91,41.9,0.21,Med,Med
-Bones Hyland,Jalen Duren,4.5,14.5,7.67,12.25,over,under,0,41.75,41.8,0.209,Med,Med
-Jaylen Wells,Deandre Ayton,10.0,17.5,11.84,13.91,over,under,0,37.92,37.9,0.19,Med,Med
-Terrence Shannon Jr.,Deandre Ayton,5.5,17.5,7.16,13.91,over,under,0,36.6,36.6,0.183,Low,Med
-Isaiah Jackson,Deandre Ayton,7.5,17.5,9.24,13.91,over,under,0,35.87,35.9,0.179,Med,Med
-Cole Anthony,Deandre Ayton,8.5,17.5,10.39,13.91,over,under,0,35.57,35.6,0.178,Med,Med
-Jaylen Clark,Deandre Ayton,5.5,17.5,7.14,13.91,over,under,0,35.32,35.3,0.177,Med,Med
-Sam Hauser,Jalen Duren,9.5,14.5,6.97,12.25,under,under,0,35.0,35.0,0.175,Med,Med
-Cedric Coward,Deandre Ayton,12.5,17.5,10.96,13.91,under,under,0,34.38,34.4,0.172,Med,Med
-Bones Hyland,Jaylen Wells,4.5,10.0,7.67,11.84,over,over,0,32.2,32.2,0.161,Med,Med
-Taylor Hendricks,Deandre Ayton,7.5,17.5,6.08,13.91,under,under,0,30.78,30.8,0.154,Med,Med
-Isaiah Jackson,Bones Hyland,7.5,4.5,9.24,7.67,over,over,0,30.24,30.2,0.151,Med,Med
-Cole Anthony,Bones Hyland,8.5,4.5,10.39,7.67,over,over,0,29.96,30.0,0.15,Med,Med
-Bones Hyland,Cedric Coward,4.5,12.5,7.67,10.96,over,under,0,28.81,28.8,0.144,Med,Med
-Josh Okogie,Deandre Ayton,8.5,17.5,9.91,13.91,over,under,0,26.93,26.9,0.135,Med,Med
-Sam Hauser,Jaylen Wells,9.5,10.0,6.97,11.84,under,over,0,25.9,25.9,0.13,Med,Med
-Jalen Duren,Jaylen Wells,14.5,10.0,12.25,11.84,under,over,0,25.76,25.8,0.129,Med,Med
-Luka Garza,Deandre Ayton,6.5,17.5,5.41,13.91,under,under,0,25.51,25.5,0.128,Med,Med
-Bones Hyland,Taylor Hendricks,4.5,7.5,7.67,6.08,over,under,0,25.36,25.4,0.127,Med,Med
-Terrence Shannon Jr.,Sam Hauser,5.5,9.5,7.16,6.97,over,under,0,24.7,24.7,0.124,Low,Med
-Terrence Shannon Jr.,Jalen Duren,5.5,14.5,7.16,12.25,over,under,0,24.56,24.6,0.123,Low,Med
-Isaiah Jackson,Sam Hauser,7.5,9.5,9.24,6.97,over,under,0,24.03,24.0,0.12,Med,Med
-Isaiah Jackson,Jalen Duren,7.5,14.5,9.24,12.25,over,under,0,23.89,23.9,0.119,Med,Med
-Cole Anthony,Sam Hauser,8.5,9.5,10.39,6.97,over,under,0,23.77,23.8,0.119,Med,Med
-Cole Anthony,Jalen Duren,8.5,14.5,10.39,12.25,over,under,0,23.63,23.6,0.118,Med,Med
-Jaylen Clark,Sam Hauser,5.5,9.5,7.14,6.97,over,under,0,23.54,23.5,0.118,Med,Med
-Neemias Queta,Deandre Ayton,8.5,17.5,7.56,13.91,under,under,0,23.46,23.5,0.117,Med,Med
-Jaylen Clark,Jalen Duren,5.5,14.5,7.14,12.25,over,under,0,23.4,23.4,0.117,Med,Med
-Walter Clayton Jr.,Deandre Ayton,6.0,17.5,7.09,13.91,over,under,0,23.31,23.3,0.117,Med,Med
-Sam Hauser,Cedric Coward,9.5,12.5,6.97,10.96,under,under,0,22.68,22.7,0.113,Med,Med
-Jalen Duren,Cedric Coward,14.5,12.5,12.25,10.96,under,under,0,22.54,22.5,0.113,Med,Med
-Bones Hyland,Josh Okogie,4.5,8.5,7.67,9.91,over,over,0,21.67,21.7,0.108,Med,Med
-Steven Adams,Deandre Ayton,5.0,17.5,5.79,13.91,over,under,0,21.47,21.5,0.107,Low,Med
-Ace Bailey,Deandre Ayton,7.5,17.5,6.66,13.91,under,under,0,20.97,21.0,0.105,Med,Med
-Bones Hyland,Luka Garza,4.5,6.5,7.67,5.41,over,under,0,20.31,20.3,0.102,Med,Med
-Tari Eason,Deandre Ayton,11.5,17.5,10.71,13.91,under,under,0,20.15,20.2,0.101,Med,Med
-Sam Hauser,Taylor Hendricks,9.5,7.5,6.97,6.08,under,under,0,19.39,19.4,0.097,Med,Med
-Taylor Hendricks,Jalen Duren,7.5,14.5,6.08,12.25,under,under,0,19.26,19.3,0.096,Med,Med
-Tobias Harris,Deandre Ayton,14.0,17.5,13.27,13.91,under,under,0,18.52,18.5,0.093,Med,Med
-Peyton Watson,Deandre Ayton,6.5,17.5,5.92,13.91,under,under,0,18.48,18.5,0.092,Low,Med
-Bones Hyland,Neemias Queta,4.5,8.5,7.67,7.56,over,under,0,18.34,18.3,0.092,Med,Med
-Bones Hyland,Walter Clayton Jr.,4.5,6.0,7.67,7.09,over,over,0,18.2,18.2,0.091,Med,Med
-Bones Hyland,Steven Adams,4.5,5.0,7.67,5.79,over,over,0,16.44,16.4,0.082,Med,Low
-Rob Dillingham,Deandre Ayton,6.0,17.5,6.75,13.91,over,under,0,16.43,16.4,0.082,Med,Med
-Terrence Shannon Jr.,Jaylen Wells,5.5,10.0,7.16,11.84,over,over,0,16.17,16.2,0.081,Low,Med
-Bones Hyland,Ace Bailey,4.5,7.5,7.67,6.66,over,under,0,15.96,16.0,0.08,Med,Med
-Sam Hauser,Josh Okogie,9.5,8.5,6.97,9.91,under,over,0,15.88,15.9,0.079,Med,Med
-Josh Okogie,Jalen Duren,8.5,14.5,9.91,12.25,over,under,0,15.74,15.7,0.079,Med,Med
-Isaiah Jackson,Jaylen Wells,7.5,10.0,9.24,11.84,over,over,0,15.55,15.5,0.078,Med,Med
-Cole Anthony,Jaylen Wells,8.5,10.0,10.39,11.84,over,over,0,15.3,15.3,0.076,Med,Med
-Bones Hyland,Tari Eason,4.5,11.5,7.67,10.71,over,under,0,15.17,15.2,0.076,Med,Med
-Jaylen Clark,Jaylen Wells,5.5,10.0,7.14,11.84,over,over,0,15.08,15.1,0.075,Med,Med
-Reed Sheppard,Deandre Ayton,8.5,17.5,8.05,13.91,under,under,0,14.56,14.6,0.073,Med,Med
-Luka Garza,Jalen Duren,6.5,14.5,5.41,12.25,under,under,0,14.45,14.4,0.072,Med,Med
-Isaiah Jackson,Terrence Shannon Jr.,7.5,5.5,9.24,7.16,over,over,0,14.44,14.4,0.072,Med,Low
-Cole Anthony,Terrence Shannon Jr.,8.5,5.5,10.39,7.16,over,over,0,14.2,14.2,0.071,Med,Low
-Bones Hyland,Tobias Harris,4.5,14.0,7.67,13.27,over,under,0,13.61,13.6,0.068,Med,Med
-Cole Anthony,Isaiah Jackson,8.5,7.5,10.39,9.24,over,over,0,13.58,13.6,0.068,Med,Med
-Bones Hyland,Peyton Watson,4.5,6.5,7.67,5.92,over,under,0,13.57,13.6,0.068,Med,Low
-Isaiah Jackson,Jaylen Clark,7.5,5.5,9.24,7.14,over,over,0,13.37,13.4,0.067,Med,Med
-Terrence Shannon Jr.,Cedric Coward,5.5,12.5,7.16,10.96,over,under,0,13.19,13.2,0.066,Low,Med
-Cole Anthony,Jaylen Clark,8.5,5.5,10.39,7.14,over,over,0,13.13,13.1,0.066,Med,Med
-Isaiah Jackson,Cedric Coward,7.5,12.5,9.24,10.96,over,under,0,12.58,12.6,0.063,Med,Med
-Neemias Queta,Jalen Duren,8.5,14.5,7.56,12.25,under,under,0,12.58,12.6,0.063,Med,Med
-Sam Hauser,Walter Clayton Jr.,9.5,6.0,6.97,7.09,under,over,0,12.57,12.6,0.063,Med,Med
-Walter Clayton Jr.,Jalen Duren,6.0,14.5,7.09,12.25,over,under,0,12.44,12.4,0.062,Med,Med
-Cole Anthony,Cedric Coward,8.5,12.5,10.39,10.96,over,under,0,12.34,12.3,0.062,Med,Med
-Jaylen Clark,Cedric Coward,5.5,12.5,7.14,10.96,over,under,0,12.13,12.1,0.061,Med,Med
-Deandre Ayton,Donovan Clingan,17.5,9.5,13.91,9.96,under,over,0,12.1,12.1,0.06,Med,Med
-Taylor Hendricks,Jaylen Wells,7.5,10.0,6.08,11.84,under,over,0,11.22,11.2,0.056,Med,Med
-Dwight Powell,Deandre Ayton,4.5,17.5,4.84,13.91,over,under,0,10.99,11.0,0.055,Low,Med
-Sam Hauser,Steven Adams,9.5,5.0,6.97,5.79,under,over,0,10.89,10.9,0.054,Med,Low
-Steven Adams,Jalen Duren,5.0,14.5,5.79,12.25,over,under,0,10.76,10.8,0.054,Low,Med
-Sam Hauser,Ace Bailey,9.5,7.5,6.97,6.66,under,under,0,10.43,10.4,0.052,Med,Med
-Corey Kispert,Deandre Ayton,7.5,17.5,7.27,13.91,under,under,0,10.34,10.3,0.052,Med,Med
-Ace Bailey,Jalen Duren,7.5,14.5,6.66,12.25,under,under,0,10.31,10.3,0.052,Med,Med
-Terrence Shannon Jr.,Taylor Hendricks,5.5,7.5,7.16,6.08,over,under,0,10.16,10.2,0.051,Low,Med
-Cam Spencer,Deandre Ayton,7.0,17.5,7.29,13.91,over,under,0,10.07,10.1,0.05,Low,Med
-Bones Hyland,Reed Sheppard,4.5,8.5,7.67,8.05,over,under,0,9.82,9.8,0.049,Med,Med
-Khris Middleton,Deandre Ayton,10.5,17.5,10.31,13.91,under,under,0,9.71,9.7,0.049,Med,Med
-Sam Hauser,Tari Eason,9.5,11.5,6.97,10.71,under,under,0,9.69,9.7,0.048,Med,Med
-Isaiah Jackson,Taylor Hendricks,7.5,7.5,9.24,6.08,over,under,0,9.57,9.6,0.048,Med,Med
-Tari Eason,Jalen Duren,11.5,14.5,10.71,12.25,under,under,0,9.56,9.6,0.048,Med,Med
-Cole Anthony,Taylor Hendricks,8.5,7.5,10.39,6.08,over,under,0,9.33,9.3,0.047,Med,Med
-Jaylen Clark,Taylor Hendricks,5.5,7.5,7.14,6.08,over,under,0,9.13,9.1,0.046,Med,Med
-Taylor Hendricks,Cedric Coward,7.5,12.5,6.08,10.96,under,under,0,8.37,8.4,0.042,Med,Med
-Sam Hauser,Tobias Harris,9.5,14.0,6.97,13.27,under,under,0,8.2,8.2,0.041,Med,Med
-Sam Hauser,Peyton Watson,9.5,6.5,6.97,5.92,under,under,0,8.16,8.2,0.041,Med,Low
-Jalen Duren,Peyton Watson,14.5,6.5,12.25,5.92,under,under,0,8.04,8.0,0.04,Med,Low
-Aaron Gordon,Deandre Ayton,15.5,17.5,15.41,13.91,under,under,0,7.99,8.0,0.04,Low,Med
-Josh Okogie,Jaylen Wells,8.5,10.0,9.91,11.84,over,over,0,7.95,7.9,0.04,Med,Med
-Nique Clifford,Deandre Ayton,5.5,17.5,5.44,13.91,under,under,0,7.51,7.5,0.038,Low,Med
-Bones Hyland,Donovan Clingan,4.5,9.5,7.67,9.96,over,over,0,7.45,7.5,0.037,Med,Med
-Terrence Shannon Jr.,Josh Okogie,5.5,8.5,7.16,9.91,over,over,0,6.92,6.9,0.035,Low,Med
-Luka Garza,Jaylen Wells,6.5,10.0,5.41,11.84,under,over,0,6.74,6.7,0.034,Med,Med
-Bones Hyland,Dwight Powell,4.5,4.5,7.67,4.84,over,over,0,6.39,6.4,0.032,Med,Low
-Isaiah Jackson,Josh Okogie,7.5,8.5,9.24,9.91,over,over,0,6.34,6.3,0.032,Med,Med
-Rob Dillingham,Sam Hauser,6.0,9.5,6.75,6.97,over,under,0,6.29,6.3,0.031,Med,Med
-Rob Dillingham,Jalen Duren,6.0,14.5,6.75,12.25,over,under,0,6.17,6.2,0.031,Med,Med
-Cole Anthony,Josh Okogie,8.5,8.5,10.39,9.91,over,over,0,6.11,6.1,0.031,Med,Med
-Jaylen Clark,Josh Okogie,5.5,8.5,7.14,9.91,over,over,0,5.92,5.9,0.03,Med,Med
-Bones Hyland,Corey Kispert,4.5,7.5,7.67,7.27,over,under,0,5.77,5.8,0.029,Med,Med
-Terrence Shannon Jr.,Luka Garza,5.5,6.5,7.16,5.41,over,under,0,5.72,5.7,0.029,Low,Med
-Bones Hyland,Cam Spencer,4.5,7.0,7.67,7.29,over,over,0,5.51,5.5,0.028,Med,Low
-Josh Okogie,Cedric Coward,8.5,12.5,9.91,10.96,over,under,0,5.18,5.2,0.026,Med,Med
-Bones Hyland,Khris Middleton,4.5,10.5,7.67,10.31,over,under,0,5.17,5.2,0.026,Med,Med
-Isaiah Jackson,Luka Garza,7.5,6.5,9.24,5.41,over,under,0,5.15,5.2,0.026,Med,Med
-Neemias Queta,Jaylen Wells,8.5,10.0,7.56,11.84,under,over,0,4.99,5.0,0.025,Med,Med
-Cole Anthony,Luka Garza,8.5,6.5,10.39,5.41,over,under,0,4.92,4.9,0.025,Med,Med
-Walter Clayton Jr.,Jaylen Wells,6.0,10.0,7.09,11.84,over,over,0,4.87,4.9,0.024,Med,Med
-Jaylen Clark,Luka Garza,5.5,6.5,7.14,5.41,over,under,0,4.73,4.7,0.024,Med,Med
-Sam Hauser,Reed Sheppard,9.5,8.5,6.97,8.05,under,under,0,4.59,4.6,0.023,Med,Med
-Reed Sheppard,Jalen Duren,8.5,14.5,8.05,12.25,under,under,0,4.47,4.5,0.022,Med,Med
-Rudy Gobert,Deandre Ayton,12.5,17.5,12.56,13.91,over,under,0,4.33,4.3,0.022,Med,Med
-Luka Garza,Cedric Coward,6.5,12.5,5.41,10.96,under,under,0,4.0,4.0,0.02,Med,Med
-Terrence Shannon Jr.,Neemias Queta,5.5,8.5,7.16,7.56,over,under,0,3.99,4.0,0.02,Low,Med
-Terrence Shannon Jr.,Walter Clayton Jr.,5.5,6.0,7.16,7.09,over,over,0,3.87,3.9,0.019,Low,Med
-Bones Hyland,Aaron Gordon,4.5,15.5,7.67,15.41,over,under,0,3.52,3.5,0.018,Med,Low
-Isaiah Jackson,Neemias Queta,7.5,8.5,9.24,7.56,over,under,0,3.43,3.4,0.017,Med,Med
-Isaiah Jackson,Walter Clayton Jr.,7.5,6.0,9.24,7.09,over,over,0,3.31,3.3,0.017,Med,Med
-Steven Adams,Jaylen Wells,5.0,10.0,5.79,11.84,over,over,0,3.3,3.3,0.017,Low,Med
-Cole Anthony,Neemias Queta,8.5,8.5,10.39,7.56,over,under,0,3.21,3.2,0.016,Med,Med
-Cole Anthony,Walter Clayton Jr.,8.5,6.0,10.39,7.09,over,over,0,3.09,3.1,0.015,Med,Med
-Bones Hyland,Nique Clifford,4.5,5.5,7.67,5.44,over,under,0,3.06,3.1,0.015,Med,Low
-Jaylen Clark,Neemias Queta,5.5,8.5,7.14,7.56,over,under,0,3.02,3.0,0.015,Med,Med
-Jaylen Clark,Walter Clayton Jr.,5.5,6.0,7.14,7.09,over,over,0,2.9,2.9,0.014,Med,Med
-Ace Bailey,Jaylen Wells,7.5,10.0,6.66,11.84,under,over,0,2.88,2.9,0.014,Med,Med
-Taylor Hendricks,Josh Okogie,7.5,8.5,6.08,9.91,under,over,0,2.36,2.4,0.012,Med,Med
-Sam Hauser,Donovan Clingan,9.5,9.5,6.97,9.96,under,over,0,2.33,2.3,0.012,Med,Med
-Terrence Shannon Jr.,Steven Adams,5.5,5.0,7.16,5.79,over,over,0,2.32,2.3,0.012,Low,Low
-Neemias Queta,Cedric Coward,8.5,12.5,7.56,10.96,under,under,0,2.3,2.3,0.012,Med,Med
-Jalen Duren,Donovan Clingan,14.5,9.5,12.25,9.96,under,over,0,2.22,2.2,0.011,Med,Med
-Tari Eason,Jaylen Wells,11.5,10.0,10.71,11.84,under,over,0,2.18,2.2,0.011,Med,Med
-Walter Clayton Jr.,Cedric Coward,6.0,12.5,7.09,10.96,over,under,0,2.18,2.2,0.011,Med,Med
-Terrence Shannon Jr.,Ace Bailey,5.5,7.5,7.16,6.66,over,under,0,1.89,1.9,0.009,Low,Med
-Isaiah Jackson,Steven Adams,7.5,5.0,9.24,5.79,over,over,0,1.77,1.8,0.009,Med,Low
-Cole Anthony,Steven Adams,8.5,5.0,10.39,5.79,over,over,0,1.55,1.5,0.008,Med,Low
-Jaylen Clark,Steven Adams,5.5,5.0,7.14,5.79,over,over,0,1.36,1.4,0.007,Med,Low
-Isaiah Jackson,Ace Bailey,7.5,7.5,9.24,6.66,over,under,0,1.35,1.3,0.007,Med,Med
-Sam Hauser,Dwight Powell,9.5,4.5,6.97,4.84,under,over,0,1.32,1.3,0.007,Med,Low
-Taylor Hendricks,Luka Garza,7.5,6.5,6.08,5.41,under,under,0,1.22,1.2,0.006,Med,Med
-Terrence Shannon Jr.,Tari Eason,5.5,11.5,7.16,10.71,over,under,0,1.21,1.2,0.006,Low,Med
-Dwight Powell,Jalen Duren,4.5,14.5,4.84,12.25,over,under,0,1.21,1.2,0.006,Low,Med
-Cole Anthony,Ace Bailey,8.5,7.5,10.39,6.66,over,under,0,1.13,1.1,0.006,Med,Med
-Jaylen Clark,Ace Bailey,5.5,7.5,7.14,6.66,over,under,0,0.94,0.9,0.005,Med,Med
-Tobias Harris,Jaylen Wells,14.0,10.0,13.27,11.84,under,over,0,0.79,0.8,0.004,Med,Med
-Jaylen Wells,Peyton Watson,10.0,6.5,11.84,5.92,over,under,0,0.76,0.8,0.004,Med,Low
-Sam Hauser,Corey Kispert,9.5,7.5,6.97,7.27,under,under,0,0.73,0.7,0.004,Med,Med
-Isaiah Jackson,Tari Eason,7.5,11.5,9.24,10.71,over,under,0,0.66,0.7,0.003,Med,Med
-Steven Adams,Cedric Coward,5.0,12.5,5.79,10.96,over,under,0,0.66,0.7,0.003,Low,Med
-Corey Kispert,Jalen Duren,7.5,14.5,7.27,12.25,under,under,0,0.61,0.6,0.003,Med,Med
-Sam Hauser,Cam Spencer,9.5,7.0,6.97,7.29,under,over,0,0.48,0.5,0.002,Med,Low
-Cole Anthony,Tari Eason,8.5,11.5,10.39,10.71,over,under,0,0.45,0.4,0.002,Med,Med
-Jalen Duren,Cam Spencer,14.5,7.0,12.25,7.29,under,over,0,0.37,0.4,0.002,Med,Low
-Jaylen Clark,Tari Eason,5.5,11.5,7.14,10.71,over,under,0,0.26,0.3,0.001,Med,Med
-Ace Bailey,Cedric Coward,7.5,12.5,6.66,10.96,under,under,0,0.24,0.2,0.001,Med,Med
-Sam Hauser,Khris Middleton,9.5,10.5,6.97,10.31,under,under,0,0.15,0.2,0.001,Med,Med
-Khris Middleton,Jalen Duren,10.5,14.5,10.31,12.25,under,under,0,0.04,0.0,0.0,Med,Med
-Terrence Shannon Jr.,Tobias Harris,5.5,14.0,7.16,13.27,over,under,0,-0.17,-0.2,0.0,Low,Med
-Terrence Shannon Jr.,Peyton Watson,5.5,6.5,7.16,5.92,over,under,0,-0.2,-0.2,0.0,Low,Low
-Neemias Queta,Taylor Hendricks,8.5,7.5,7.56,6.08,under,under,0,-0.44,-0.4,0.0,Med,Med
-Tari Eason,Cedric Coward,11.5,12.5,10.71,10.96,under,under,0,-0.44,-0.4,0.0,Med,Med
-Isaiah Jackson,Tobias Harris,7.5,14.0,9.24,13.27,over,under,0,-0.7,-0.7,0.0,Med,Med
-Isaiah Jackson,Peyton Watson,7.5,6.5,9.24,5.92,over,under,0,-0.74,-0.7,0.0,Med,Low
-Cole Anthony,Tobias Harris,8.5,14.0,10.39,13.27,over,under,0,-0.92,-0.9,0.0,Med,Med
-Cole Anthony,Peyton Watson,8.5,6.5,10.39,5.92,over,under,0,-0.95,-1.0,0.0,Med,Low
-Rob Dillingham,Jaylen Wells,6.0,10.0,6.75,11.84,over,over,0,-0.98,-1.0,0.0,Med,Med
-Jaylen Clark,Tobias Harris,5.5,14.0,7.14,13.27,over,under,0,-1.1,-1.1,0.0,Med,Med
-Jaylen Clark,Peyton Watson,5.5,6.5,7.14,5.92,over,under,0,-1.14,-1.1,0.0,Med,Low
-Sam Hauser,Aaron Gordon,9.5,15.5,6.97,15.41,under,under,0,-1.41,-1.4,0.0,Med,Low
-Jalen Duren,Aaron Gordon,14.5,15.5,12.25,15.41,under,under,0,-1.52,-1.5,0.0,Med,Low
-Luka Garza,Josh Okogie,6.5,8.5,5.41,9.91,under,over,0,-1.76,-1.8,0.0,Med,Med
-Tobias Harris,Cedric Coward,14.0,12.5,13.27,10.96,under,under,0,-1.79,-1.8,0.0,Med,Med
-Cedric Coward,Peyton Watson,12.5,6.5,10.96,5.92,under,under,0,-1.82,-1.8,0.0,Med,Low
-Sam Hauser,Nique Clifford,9.5,5.5,6.97,5.44,under,under,0,-1.85,-1.9,0.0,Med,Low
-Jalen Duren,Nique Clifford,14.5,5.5,12.25,5.44,under,under,0,-1.96,-2.0,0.0,Med,Low
-Taylor Hendricks,Steven Adams,7.5,5.0,6.08,5.79,under,over,0,-2.04,-2.0,0.0,Med,Low
-Isaiah Jackson,Rob Dillingham,7.5,6.0,9.24,6.75,over,over,0,-2.46,-2.5,0.0,Med,Med
-Reed Sheppard,Jaylen Wells,8.5,10.0,8.05,11.84,under,over,0,-2.57,-2.6,0.0,Med,Med
-Cole Anthony,Rob Dillingham,8.5,6.0,10.39,6.75,over,over,0,-2.67,-2.7,0.0,Med,Med
-Taylor Hendricks,Tari Eason,7.5,11.5,6.08,10.71,under,under,0,-3.1,-3.1,0.0,Med,Med
-Neemias Queta,Josh Okogie,8.5,8.5,7.56,9.91,under,over,0,-3.37,-3.4,0.0,Med,Med
-Walter Clayton Jr.,Josh Okogie,6.0,8.5,7.09,9.91,over,over,0,-3.48,-3.5,0.0,Med,Med
-Terrence Shannon Jr.,Reed Sheppard,5.5,8.5,7.16,8.05,over,under,0,-3.5,-3.5,0.0,Low,Med
-Rob Dillingham,Cedric Coward,6.0,12.5,6.75,10.96,over,under,0,-3.52,-3.5,0.0,Med,Med
-Isaiah Jackson,Reed Sheppard,7.5,8.5,9.24,8.05,over,under,0,-4.02,-4.0,0.0,Med,Med
-Cole Anthony,Reed Sheppard,8.5,8.5,10.39,8.05,over,under,0,-4.22,-4.2,0.0,Med,Med
-Jaylen Clark,Reed Sheppard,5.5,8.5,7.14,8.05,over,under,0,-4.4,-4.4,0.0,Med,Med
-Taylor Hendricks,Tobias Harris,7.5,14.0,6.08,13.27,under,under,0,-4.42,-4.4,0.0,Med,Med
-Taylor Hendricks,Peyton Watson,7.5,6.5,6.08,5.92,under,under,0,-4.45,-4.5,0.0,Med,Low
-Luka Garza,Walter Clayton Jr.,6.5,6.0,5.41,7.09,under,over,0,-4.57,-4.6,0.0,Med,Med
-Jaylen Wells,Donovan Clingan,10.0,9.5,11.84,9.96,over,over,0,-4.67,-4.7,0.0,Med,Med
-Rudy Gobert,Sam Hauser,12.5,9.5,12.56,6.97,over,under,0,-4.75,-4.8,0.0,Med,Med
-Rudy Gobert,Jalen Duren,12.5,14.5,12.56,12.25,over,under,0,-4.86,-4.9,0.0,Med,Med
-Reed Sheppard,Cedric Coward,8.5,12.5,8.05,10.96,under,under,0,-5.07,-5.1,0.0,Med,Med
-Ace Bailey,Josh Okogie,7.5,8.5,6.66,9.91,under,over,0,-5.32,-5.3,0.0,Med,Med
-Terrence Shannon Jr.,Donovan Clingan,5.5,9.5,7.16,9.96,over,over,0,-5.58,-5.6,0.0,Low,Med
-Dwight Powell,Jaylen Wells,4.5,10.0,4.84,11.84,over,over,0,-5.61,-5.6,0.0,Low,Med
-Luka Garza,Steven Adams,6.5,5.0,5.41,5.79,under,over,0,-5.99,-6.0,0.0,Med,Low
-Isaiah Jackson,Donovan Clingan,7.5,9.5,9.24,9.96,over,over,0,-6.09,-6.1,0.0,Med,Med
-Rob Dillingham,Taylor Hendricks,6.0,7.5,6.75,6.08,over,under,0,-6.11,-6.1,0.0,Med,Med
-Neemias Queta,Walter Clayton Jr.,8.5,6.0,7.56,7.09,under,over,0,-6.12,-6.1,0.0,Med,Med
-Corey Kispert,Jaylen Wells,7.5,10.0,7.27,11.84,under,over,0,-6.16,-6.2,0.0,Med,Med
-Cole Anthony,Donovan Clingan,8.5,9.5,10.39,9.96,over,over,0,-6.29,-6.3,0.0,Med,Med
-Ace Bailey,Luka Garza,7.5,6.5,6.66,5.41,under,under,0,-6.38,-6.4,0.0,Med,Med
-Jaylen Clark,Donovan Clingan,5.5,9.5,7.14,9.96,over,over,0,-6.46,-6.5,0.0,Med,Med
-Terrence Shannon Jr.,Dwight Powell,5.5,4.5,7.16,4.84,over,over,0,-6.51,-6.5,0.0,Low,Low
-Khris Middleton,Jaylen Wells,10.5,10.0,10.31,11.84,under,over,0,-6.7,-6.7,0.0,Med,Med
-Luka Garza,Tari Eason,6.5,11.5,5.41,10.71,under,under,0,-7.01,-7.0,0.0,Med,Med
-Isaiah Jackson,Dwight Powell,7.5,4.5,9.24,4.84,over,over,0,-7.02,-7.0,0.0,Med,Low
-Terrence Shannon Jr.,Corey Kispert,5.5,7.5,7.16,7.27,over,under,0,-7.06,-7.1,0.0,Low,Med
-Cedric Coward,Donovan Clingan,12.5,9.5,10.96,9.96,under,over,0,-7.11,-7.1,0.0,Med,Med
-Cole Anthony,Dwight Powell,8.5,4.5,10.39,4.84,over,over,0,-7.22,-7.2,0.0,Med,Low
-Josh Okogie,Tobias Harris,8.5,14.0,9.91,13.27,over,under,0,-7.23,-7.2,0.0,Med,Med
-Josh Okogie,Peyton Watson,8.5,6.5,9.91,5.92,over,under,0,-7.27,-7.3,0.0,Med,Low
-Terrence Shannon Jr.,Cam Spencer,5.5,7.0,7.16,7.29,over,over,0,-7.29,-7.3,0.0,Low,Low
-Jaylen Clark,Dwight Powell,5.5,4.5,7.14,4.84,over,over,0,-7.39,-7.4,0.0,Med,Low
-Neemias Queta,Steven Adams,8.5,5.0,7.56,5.79,under,over,0,-7.53,-7.5,0.0,Med,Low
-Isaiah Jackson,Corey Kispert,7.5,7.5,9.24,7.27,over,under,0,-7.56,-7.6,0.0,Med,Med
-Terrence Shannon Jr.,Khris Middleton,5.5,10.5,7.16,10.31,over,under,0,-7.59,-7.6,0.0,Low,Med
-Taylor Hendricks,Reed Sheppard,7.5,8.5,6.08,8.05,under,under,0,-7.61,-7.6,0.0,Med,Med
-Walter Clayton Jr.,Steven Adams,6.0,5.0,7.09,5.79,over,over,0,-7.64,-7.6,0.0,Med,Low
-Cole Anthony,Corey Kispert,8.5,7.5,10.39,7.27,over,under,0,-7.76,-7.8,0.0,Med,Med
-Isaiah Jackson,Cam Spencer,7.5,7.0,9.24,7.29,over,over,0,-7.79,-7.8,0.0,Med,Low
-Neemias Queta,Ace Bailey,8.5,7.5,7.56,6.66,under,under,0,-7.91,-7.9,0.0,Med,Med
-Jaylen Clark,Corey Kispert,5.5,7.5,7.14,7.27,over,under,0,-7.93,-7.9,0.0,Med,Med
-Cole Anthony,Cam Spencer,8.5,7.0,10.39,7.29,over,over,0,-7.99,-8.0,0.0,Med,Low
-Dwight Powell,Cedric Coward,4.5,12.5,4.84,10.96,over,under,0,-8.03,-8.0,0.0,Low,Med
-Isaiah Jackson,Khris Middleton,7.5,10.5,9.24,10.31,over,under,0,-8.08,-8.1,0.0,Med,Med
-Jaylen Wells,Aaron Gordon,10.0,15.5,11.84,15.41,over,under,0,-8.16,-8.2,0.0,Med,Low
-Jaylen Clark,Cam Spencer,5.5,7.0,7.14,7.29,over,over,0,-8.16,-8.2,0.0,Med,Low
-Luka Garza,Tobias Harris,6.5,14.0,5.41,13.27,under,under,0,-8.27,-8.3,0.0,Med,Med
-Cole Anthony,Khris Middleton,8.5,10.5,10.39,10.31,over,under,0,-8.28,-8.3,0.0,Med,Med
-Luka Garza,Peyton Watson,6.5,6.5,5.41,5.92,under,under,0,-8.31,-8.3,0.0,Med,Low
-Jaylen Clark,Khris Middleton,5.5,10.5,7.14,10.31,over,under,0,-8.45,-8.5,0.0,Med,Med
-Neemias Queta,Tari Eason,8.5,11.5,7.56,10.71,under,under,0,-8.53,-8.5,0.0,Med,Med
-Corey Kispert,Cedric Coward,7.5,12.5,7.27,10.96,under,under,0,-8.57,-8.6,0.0,Med,Med
-Jaylen Wells,Nique Clifford,10.0,5.5,11.84,5.44,over,under,0,-8.57,-8.6,0.0,Med,Low
-Walter Clayton Jr.,Tari Eason,6.0,11.5,7.09,10.71,over,under,0,-8.64,-8.6,0.0,Med,Med
-Rob Dillingham,Josh Okogie,6.0,8.5,6.75,9.91,over,over,0,-8.87,-8.9,0.0,Med,Med
-Terrence Shannon Jr.,Aaron Gordon,5.5,15.5,7.16,15.41,over,under,0,-9.03,-9.0,0.0,Low,Low
-Khris Middleton,Cedric Coward,10.5,12.5,10.31,10.96,under,under,0,-9.09,-9.1,0.0,Med,Med
-Ace Bailey,Steven Adams,7.5,5.0,6.66,5.79,under,over,0,-9.39,-9.4,0.0,Med,Low
-Terrence Shannon Jr.,Nique Clifford,5.5,5.5,7.16,5.44,over,under,0,-9.44,-9.4,0.0,Low,Low
-Isaiah Jackson,Aaron Gordon,7.5,15.5,9.24,15.41,over,under,0,-9.52,-9.5,0.0,Med,Low
-Taylor Hendricks,Donovan Clingan,7.5,9.5,6.08,9.96,under,over,0,-9.6,-9.6,0.0,Med,Med
-Cole Anthony,Aaron Gordon,8.5,15.5,10.39,15.41,over,under,0,-9.72,-9.7,0.0,Med,Low
-Neemias Queta,Tobias Harris,8.5,14.0,7.56,13.27,under,under,0,-9.77,-9.8,0.0,Med,Med
-Neemias Queta,Peyton Watson,8.5,6.5,7.56,5.92,under,under,0,-9.8,-9.8,0.0,Med,Low
-Walter Clayton Jr.,Tobias Harris,6.0,14.0,7.09,13.27,over,under,0,-9.88,-9.9,0.0,Med,Med
-Jaylen Clark,Aaron Gordon,5.5,15.5,7.14,15.41,over,under,0,-9.88,-9.9,0.0,Med,Low
-Rob Dillingham,Luka Garza,6.0,6.5,6.75,5.41,over,under,0,-9.89,-9.9,0.0,Med,Med
-Walter Clayton Jr.,Peyton Watson,6.0,6.5,7.09,5.92,over,under,0,-9.91,-9.9,0.0,Med,Low
-Isaiah Jackson,Nique Clifford,7.5,5.5,9.24,5.44,over,under,0,-9.93,-9.9,0.0,Med,Low
-Cole Anthony,Nique Clifford,8.5,5.5,10.39,5.44,over,under,0,-10.12,-10.1,0.0,Med,Low
-Jaylen Clark,Nique Clifford,5.5,5.5,7.14,5.44,over,under,0,-10.29,-10.3,0.0,Med,Low
-Ace Bailey,Tari Eason,7.5,11.5,6.66,10.71,under,under,0,-10.37,-10.4,0.0,Med,Med
-Taylor Hendricks,Dwight Powell,7.5,4.5,6.08,4.84,under,over,0,-10.5,-10.5,0.0,Med,Low
-Cedric Coward,Aaron Gordon,12.5,15.5,10.96,15.41,under,under,0,-10.51,-10.5,0.0,Med,Low
-Cedric Coward,Nique Clifford,12.5,5.5,10.96,5.44,under,under,0,-10.91,-10.9,0.0,Med,Low
-Taylor Hendricks,Corey Kispert,7.5,7.5,6.08,7.27,under,under,0,-11.02,-11.0,0.0,Med,Med
-Steven Adams,Tobias Harris,5.0,14.0,5.79,13.27,over,under,0,-11.23,-11.2,0.0,Low,Med
-Taylor Hendricks,Cam Spencer,7.5,7.0,6.08,7.29,under,over,0,-11.24,-11.2,0.0,Med,Low
-Steven Adams,Peyton Watson,5.0,6.5,5.79,5.92,over,under,0,-11.26,-11.3,0.0,Low,Low
-Rudy Gobert,Jaylen Wells,12.5,10.0,12.56,11.84,over,over,0,-11.27,-11.3,0.0,Med,Med
-Luka Garza,Reed Sheppard,6.5,8.5,5.41,8.05,under,under,0,-11.33,-11.3,0.0,Med,Med
-Rob Dillingham,Neemias Queta,6.0,8.5,6.75,7.56,over,under,0,-11.37,-11.4,0.0,Med,Med
-Rob Dillingham,Walter Clayton Jr.,6.0,6.0,6.75,7.09,over,over,0,-11.47,-11.5,0.0,Med,Med
-Taylor Hendricks,Khris Middleton,7.5,10.5,6.08,10.31,under,under,0,-11.52,-11.5,0.0,Med,Med
-Ace Bailey,Tobias Harris,7.5,14.0,6.66,13.27,under,under,0,-11.59,-11.6,0.0,Med,Med
-Ace Bailey,Peyton Watson,7.5,6.5,6.66,5.92,under,under,0,-11.62,-11.6,0.0,Med,Low
-Tari Eason,Tobias Harris,11.5,14.0,10.71,13.27,under,under,0,-12.19,-12.2,0.0,Med,Med
-Tari Eason,Peyton Watson,11.5,6.5,10.71,5.92,under,under,0,-12.22,-12.2,0.0,Med,Low
-Josh Okogie,Donovan Clingan,8.5,9.5,9.91,9.96,over,over,0,-12.26,-12.3,0.0,Med,Med
-Isaiah Jackson,Rudy Gobert,7.5,12.5,9.24,12.56,over,over,0,-12.59,-12.6,0.0,Med,Med
-Neemias Queta,Reed Sheppard,8.5,8.5,7.56,8.05,under,under,0,-12.78,-12.8,0.0,Med,Med
-Cole Anthony,Rudy Gobert,8.5,12.5,10.39,12.56,over,over,0,-12.78,-12.8,0.0,Med,Med
-Rob Dillingham,Steven Adams,6.0,5.0,6.75,5.79,over,over,0,-12.79,-12.8,0.0,Med,Low
-Walter Clayton Jr.,Reed Sheppard,6.0,8.5,7.09,8.05,over,under,0,-12.89,-12.9,0.0,Med,Med
-Taylor Hendricks,Aaron Gordon,7.5,15.5,6.08,15.41,under,under,0,-12.91,-12.9,0.0,Med,Low
-Josh Okogie,Dwight Powell,8.5,4.5,9.91,4.84,over,over,0,-13.13,-13.1,0.0,Med,Low
-Rob Dillingham,Ace Bailey,6.0,7.5,6.75,6.66,over,under,0,-13.15,-13.2,0.0,Med,Med
-Luka Garza,Donovan Clingan,6.5,9.5,5.41,9.96,under,over,0,-13.25,-13.2,0.0,Med,Med
-Taylor Hendricks,Nique Clifford,7.5,5.5,6.08,5.44,under,under,0,-13.3,-13.3,0.0,Med,Low
-Tobias Harris,Peyton Watson,14.0,6.5,13.27,5.92,under,under,0,-13.41,-13.4,0.0,Med,Low
-Rudy Gobert,Cedric Coward,12.5,12.5,12.56,10.96,over,under,0,-13.55,-13.5,0.0,Med,Med
-Corey Kispert,Josh Okogie,7.5,8.5,7.27,9.91,under,over,0,-13.64,-13.6,0.0,Med,Med
-Rob Dillingham,Tari Eason,6.0,11.5,6.75,10.71,over,under,0,-13.74,-13.7,0.0,Med,Med
-Josh Okogie,Cam Spencer,8.5,7.0,9.91,7.29,over,over,0,-13.85,-13.9,0.0,Med,Low
-Luka Garza,Dwight Powell,6.5,4.5,5.41,4.84,under,over,0,-14.1,-14.1,0.0,Med,Low
-Khris Middleton,Josh Okogie,10.5,8.5,10.31,9.91,under,over,0,-14.13,-14.1,0.0,Med,Med
-Ace Bailey,Reed Sheppard,7.5,8.5,6.66,8.05,under,under,0,-14.54,-14.5,0.0,Med,Med
-Luka Garza,Corey Kispert,6.5,7.5,5.41,7.27,under,under,0,-14.61,-14.6,0.0,Med,Med
-Neemias Queta,Donovan Clingan,8.5,9.5,7.56,9.96,under,over,0,-14.66,-14.7,0.0,Med,Med
-Walter Clayton Jr.,Donovan Clingan,6.0,9.5,7.09,9.96,over,over,0,-14.76,-14.8,0.0,Med,Med
-Luka Garza,Cam Spencer,6.5,7.0,5.41,7.29,under,over,0,-14.82,-14.8,0.0,Med,Low
-Rob Dillingham,Tobias Harris,6.0,14.0,6.75,13.27,over,under,0,-14.91,-14.9,0.0,Med,Med
-Rob Dillingham,Peyton Watson,6.0,6.5,6.75,5.92,over,under,0,-14.94,-14.9,0.0,Med,Low
-Luka Garza,Khris Middleton,6.5,10.5,5.41,10.31,under,under,0,-15.09,-15.1,0.0,Med,Med
-Josh Okogie,Aaron Gordon,8.5,15.5,9.91,15.41,over,under,0,-15.47,-15.5,0.0,Med,Low
-Neemias Queta,Dwight Powell,8.5,4.5,7.56,4.84,under,over,0,-15.51,-15.5,0.0,Med,Low
-Walter Clayton Jr.,Dwight Powell,6.0,4.5,7.09,4.84,over,over,0,-15.61,-15.6,0.0,Med,Low
-Josh Okogie,Nique Clifford,8.5,5.5,9.91,5.44,over,under,0,-15.85,-15.8,0.0,Med,Low
-Rudy Gobert,Taylor Hendricks,12.5,7.5,12.56,6.08,over,under,0,-15.86,-15.9,0.0,Med,Med
-Neemias Queta,Corey Kispert,8.5,7.5,7.56,7.27,under,under,0,-16.0,-16.0,0.0,Med,Med
-Steven Adams,Donovan Clingan,5.0,9.5,5.79,9.96,over,over,0,-16.04,-16.0,0.0,Low,Med
-Walter Clayton Jr.,Corey Kispert,6.0,7.5,7.09,7.27,over,under,0,-16.1,-16.1,0.0,Med,Med
-Neemias Queta,Cam Spencer,8.5,7.0,7.56,7.29,under,over,0,-16.21,-16.2,0.0,Med,Low
-Reed Sheppard,Tobias Harris,8.5,14.0,8.05,13.27,under,under,0,-16.27,-16.3,0.0,Med,Med
-Reed Sheppard,Peyton Watson,8.5,6.5,8.05,5.92,under,under,0,-16.3,-16.3,0.0,Med,Low
-Walter Clayton Jr.,Cam Spencer,6.0,7.0,7.09,7.29,over,over,0,-16.31,-16.3,0.0,Med,Low
-Ace Bailey,Donovan Clingan,7.5,9.5,6.66,9.96,under,over,0,-16.38,-16.4,0.0,Med,Med
-Luka Garza,Aaron Gordon,6.5,15.5,5.41,15.41,under,under,0,-16.42,-16.4,0.0,Med,Low
-Neemias Queta,Khris Middleton,8.5,10.5,7.56,10.31,under,under,0,-16.48,-16.5,0.0,Med,Med
-Walter Clayton Jr.,Khris Middleton,6.0,10.5,7.09,10.31,over,under,0,-16.58,-16.6,0.0,Med,Med
-Luka Garza,Nique Clifford,6.5,5.5,5.41,5.44,under,under,0,-16.79,-16.8,0.0,Med,Low
-Steven Adams,Dwight Powell,5.0,4.5,5.79,4.84,over,over,0,-16.87,-16.9,0.0,Low,Low
-Tari Eason,Donovan Clingan,11.5,9.5,10.71,9.96,under,over,0,-16.95,-16.9,0.0,Med,Med
-Ace Bailey,Dwight Powell,7.5,4.5,6.66,4.84,under,over,0,-17.21,-17.2,0.0,Med,Low
-Corey Kispert,Steven Adams,7.5,5.0,7.27,5.79,under,over,0,-17.35,-17.4,0.0,Med,Low
-Steven Adams,Cam Spencer,5.0,7.0,5.79,7.29,over,over,0,-17.56,-17.6,0.0,Low,Low
-Ace Bailey,Corey Kispert,7.5,7.5,6.66,7.27,under,under,0,-17.7,-17.7,0.0,Med,Med
-Rob Dillingham,Reed Sheppard,6.0,8.5,6.75,8.05,over,under,0,-17.75,-17.8,0.0,Med,Med
-Tari Eason,Dwight Powell,11.5,4.5,10.71,4.84,under,over,0,-17.77,-17.8,0.0,Med,Low
-Neemias Queta,Aaron Gordon,8.5,15.5,7.56,15.41,under,under,0,-17.79,-17.8,0.0,Med,Low
-Khris Middleton,Steven Adams,10.5,5.0,10.31,5.79,under,over,0,-17.82,-17.8,0.0,Med,Low
-Walter Clayton Jr.,Aaron Gordon,6.0,15.5,7.09,15.41,over,under,0,-17.88,-17.9,0.0,Med,Low
-Ace Bailey,Cam Spencer,7.5,7.0,6.66,7.29,under,over,0,-17.9,-17.9,0.0,Med,Low
-Tobias Harris,Donovan Clingan,14.0,9.5,13.27,9.96,under,over,0,-18.08,-18.1,0.0,Med,Med
-Peyton Watson,Donovan Clingan,6.5,9.5,5.92,9.96,under,over,0,-18.11,-18.1,0.0,Low,Med
-Neemias Queta,Nique Clifford,8.5,5.5,7.56,5.44,under,under,0,-18.15,-18.2,0.0,Med,Low
-Ace Bailey,Khris Middleton,7.5,10.5,6.66,10.31,under,under,0,-18.16,-18.2,0.0,Med,Med
-Corey Kispert,Tari Eason,7.5,11.5,7.27,10.71,under,under,0,-18.25,-18.3,0.0,Med,Med
-Walter Clayton Jr.,Nique Clifford,6.0,5.5,7.09,5.44,over,under,0,-18.25,-18.2,0.0,Med,Low
-Rudy Gobert,Josh Okogie,12.5,8.5,12.56,9.91,over,over,0,-18.34,-18.3,0.0,Med,Med
-Tari Eason,Cam Spencer,11.5,7.0,10.71,7.29,under,over,0,-18.45,-18.5,0.0,Med,Low
-Khris Middleton,Tari Eason,10.5,11.5,10.31,10.71,under,under,0,-18.72,-18.7,0.0,Med,Med
-Dwight Powell,Tobias Harris,4.5,14.0,4.84,13.27,over,under,0,-18.89,-18.9,0.0,Low,Med
-Dwight Powell,Peyton Watson,4.5,6.5,4.84,5.92,over,under,0,-18.92,-18.9,0.0,Low,Low
-Steven Adams,Aaron Gordon,5.0,15.5,5.79,15.41,over,under,0,-19.11,-19.1,0.0,Low,Low
-Rudy Gobert,Luka Garza,12.5,6.5,12.56,5.41,over,under,0,-19.25,-19.3,0.0,Med,Med
-Corey Kispert,Tobias Harris,7.5,14.0,7.27,13.27,under,under,0,-19.36,-19.4,0.0,Med,Med
-Corey Kispert,Peyton Watson,7.5,6.5,7.27,5.92,under,under,0,-19.39,-19.4,0.0,Med,Low
-Ace Bailey,Aaron Gordon,7.5,15.5,6.66,15.41,under,under,0,-19.44,-19.4,0.0,Med,Low
-Steven Adams,Nique Clifford,5.0,5.5,5.79,5.44,over,under,0,-19.47,-19.5,0.0,Low,Low
-Rob Dillingham,Donovan Clingan,6.0,9.5,6.75,9.96,over,over,0,-19.52,-19.5,0.0,Med,Med
-Tobias Harris,Cam Spencer,14.0,7.0,13.27,7.29,under,over,0,-19.56,-19.6,0.0,Med,Low
-Cam Spencer,Peyton Watson,7.0,6.5,7.29,5.92,over,under,0,-19.59,-19.6,0.0,Low,Low
-Ace Bailey,Nique Clifford,7.5,5.5,6.66,5.44,under,under,0,-19.8,-19.8,0.0,Med,Low
-Khris Middleton,Tobias Harris,10.5,14.0,10.31,13.27,under,under,0,-19.82,-19.8,0.0,Med,Med
-Khris Middleton,Peyton Watson,10.5,6.5,10.31,5.92,under,under,0,-19.85,-19.8,0.0,Med,Low
-Tari Eason,Aaron Gordon,11.5,15.5,10.71,15.41,under,under,0,-19.99,-20.0,0.0,Med,Low
-Rob Dillingham,Dwight Powell,6.0,4.5,6.75,4.84,over,over,0,-20.32,-20.3,0.0,Med,Low
-Tari Eason,Nique Clifford,11.5,5.5,10.71,5.44,under,under,0,-20.34,-20.3,0.0,Med,Low
-Rudy Gobert,Neemias Queta,12.5,8.5,12.56,7.56,over,under,0,-20.57,-20.6,0.0,Med,Med
-Rudy Gobert,Walter Clayton Jr.,12.5,6.0,12.56,7.09,over,over,0,-20.67,-20.7,0.0,Med,Med
-Rob Dillingham,Corey Kispert,6.0,7.5,6.75,7.27,over,under,0,-20.78,-20.8,0.0,Med,Med
-Reed Sheppard,Donovan Clingan,8.5,9.5,8.05,9.96,under,over,0,-20.81,-20.8,0.0,Med,Med
-Rob Dillingham,Cam Spencer,6.0,7.0,6.75,7.29,over,over,0,-20.98,-21.0,0.0,Med,Low
-Tobias Harris,Aaron Gordon,14.0,15.5,13.27,15.41,under,under,0,-21.07,-21.1,0.0,Med,Low
-Rob Dillingham,Khris Middleton,6.0,10.5,6.75,10.31,over,under,0,-21.24,-21.2,0.0,Med,Med
-Tobias Harris,Nique Clifford,14.0,5.5,13.27,5.44,under,under,0,-21.43,-21.4,0.0,Med,Low
-Peyton Watson,Nique Clifford,6.5,5.5,5.92,5.44,under,under,0,-21.45,-21.5,0.0,Low,Low
-Reed Sheppard,Dwight Powell,8.5,4.5,8.05,4.84,under,over,0,-21.59,-21.6,0.0,Med,Low
-Rudy Gobert,Steven Adams,12.5,5.0,12.56,5.79,over,over,0,-21.85,-21.9,0.0,Med,Low
-Corey Kispert,Reed Sheppard,7.5,8.5,7.27,8.05,under,under,0,-22.05,-22.1,0.0,Med,Med
-Rudy Gobert,Ace Bailey,12.5,7.5,12.56,6.66,over,under,0,-22.18,-22.2,0.0,Med,Med
-Reed Sheppard,Cam Spencer,8.5,7.0,8.05,7.29,under,over,0,-22.24,-22.2,0.0,Med,Low
-Rob Dillingham,Aaron Gordon,6.0,15.5,6.75,15.41,over,under,0,-22.47,-22.5,0.0,Med,Low
-Khris Middleton,Reed Sheppard,10.5,8.5,10.31,8.05,under,under,0,-22.5,-22.5,0.0,Med,Med
-Rudy Gobert,Tari Eason,12.5,11.5,12.56,10.71,over,under,0,-22.7,-22.7,0.0,Med,Med
-Rob Dillingham,Nique Clifford,6.0,5.5,6.75,5.44,over,under,0,-22.81,-22.8,0.0,Med,Low
-Dwight Powell,Donovan Clingan,4.5,9.5,4.84,9.96,over,over,0,-23.28,-23.3,0.0,Low,Med
-Reed Sheppard,Aaron Gordon,8.5,15.5,8.05,15.41,under,under,0,-23.71,-23.7,0.0,Med,Low
-Corey Kispert,Donovan Clingan,7.5,9.5,7.27,9.96,under,over,0,-23.73,-23.7,0.0,Med,Med
-Rudy Gobert,Tobias Harris,12.5,14.0,12.56,13.27,over,under,0,-23.75,-23.8,0.0,Med,Med
-Rudy Gobert,Peyton Watson,12.5,6.5,12.56,5.92,over,under,0,-23.78,-23.8,0.0,Med,Low
-Cam Spencer,Donovan Clingan,7.0,9.5,7.29,9.96,over,over,0,-23.92,-23.9,0.0,Low,Med
-Reed Sheppard,Nique Clifford,8.5,5.5,8.05,5.44,under,under,0,-24.05,-24.0,0.0,Med,Low
-Khris Middleton,Donovan Clingan,10.5,9.5,10.31,9.96,under,over,0,-24.17,-24.2,0.0,Med,Med
-Corey Kispert,Dwight Powell,7.5,4.5,7.27,4.84,under,over,0,-24.49,-24.5,0.0,Med,Low
-Dwight Powell,Cam Spencer,4.5,7.0,4.84,7.29,over,over,0,-24.67,-24.7,0.0,Low,Low
-Khris Middleton,Dwight Powell,10.5,4.5,10.31,4.84,under,over,0,-24.92,-24.9,0.0,Med,Low
-Corey Kispert,Cam Spencer,7.5,7.0,7.27,7.29,under,over,0,-25.11,-25.1,0.0,Med,Low
-Aaron Gordon,Donovan Clingan,15.5,9.5,15.41,9.96,under,over,0,-25.35,-25.4,0.0,Low,Med
-Khris Middleton,Cam Spencer,10.5,7.0,10.31,7.29,under,over,0,-25.54,-25.5,0.0,Med,Low
-Nique Clifford,Donovan Clingan,5.5,9.5,5.44,9.96,under,over,0,-25.68,-25.7,0.0,Low,Med
-Dwight Powell,Aaron Gordon,4.5,15.5,4.84,15.41,over,under,0,-26.09,-26.1,0.0,Low,Low
-Rudy Gobert,Reed Sheppard,12.5,8.5,12.56,8.05,over,under,0,-26.29,-26.3,0.0,Med,Med
-Dwight Powell,Nique Clifford,4.5,5.5,4.84,5.44,over,under,0,-26.42,-26.4,0.0,Low,Low
-Corey Kispert,Aaron Gordon,7.5,15.5,7.27,15.41,under,under,0,-26.52,-26.5,0.0,Med,Low
-Cam Spencer,Aaron Gordon,7.0,15.5,7.29,15.41,over,under,0,-26.7,-26.7,0.0,Low,Low
-Corey Kispert,Nique Clifford,7.5,5.5,7.27,5.44,under,under,0,-26.85,-26.8,0.0,Med,Low
-Khris Middleton,Aaron Gordon,10.5,15.5,10.31,15.41,under,under,0,-26.94,-26.9,0.0,Med,Low
-Cam Spencer,Nique Clifford,7.0,5.5,7.29,5.44,over,under,0,-27.03,-27.0,0.0,Low,Low
-Khris Middleton,Nique Clifford,10.5,5.5,10.31,5.44,under,under,0,-27.27,-27.3,0.0,Med,Low
-Rudy Gobert,Donovan Clingan,12.5,9.5,12.56,9.96,over,over,0,-27.88,-27.9,0.0,Med,Med
-Aaron Gordon,Nique Clifford,15.5,5.5,15.41,5.44,under,under,0,-28.4,-28.4,0.0,Low,Low
-Rudy Gobert,Dwight Powell,12.5,4.5,12.56,4.84,over,over,0,-28.6,-28.6,0.0,Med,Low
-Rudy Gobert,Corey Kispert,12.5,7.5,12.56,7.27,over,under,0,-29.01,-29.0,0.0,Med,Med
-Rudy Gobert,Cam Spencer,12.5,7.0,12.56,7.29,over,over,0,-29.19,-29.2,0.0,Med,Low
-Rudy Gobert,Khris Middleton,12.5,10.5,12.56,10.31,over,under,0,-29.42,-29.4,0.0,Med,Med
-Rudy Gobert,Aaron Gordon,12.5,15.5,12.56,15.41,over,under,0,-30.52,-30.5,0.0,Med,Low
-Rudy Gobert,Nique Clifford,12.5,5.5,12.56,5.44,over,under,0,-30.83,-30.8,0.0,Med,Low
+Jalen Duren,Deandre Ayton,15.5,17.5,12.25,13.91,under,under,0,6.27,62.7,0.314,Med,Med
+Bones Hyland,Jalen Duren,4.5,15.5,7.67,12.25,over,under,0,5.6,56.0,0.28,Med,Med
+Bones Hyland,Deandre Ayton,4.5,17.5,7.67,13.91,over,under,0,5.55,55.5,0.277,Med,Med
+Tari Eason,Jalen Duren,13.5,15.5,10.71,12.25,under,under,0,5.25,52.5,0.262,Med,Med
+Tari Eason,Deandre Ayton,13.5,17.5,10.71,13.91,under,under,0,5.2,52.0,0.26,Med,Med
+Sam Hauser,Jalen Duren,9.5,15.5,6.97,12.25,under,under,0,4.86,48.6,0.243,Med,Med
+Sam Hauser,Deandre Ayton,9.5,17.5,6.97,13.91,under,under,0,4.8,48.0,0.24,Med,Med
+Bones Hyland,Tari Eason,4.5,13.5,7.67,10.71,over,under,0,4.57,45.7,0.228,Med,Med
+Bones Hyland,Sam Hauser,4.5,9.5,7.67,6.97,over,under,0,4.19,41.9,0.21,Med,Med
+Sam Hauser,Tari Eason,9.5,13.5,6.97,10.71,under,under,0,3.87,38.7,0.194,Med,Med
+Jalen Duren,Jaylen Wells,15.5,10.0,12.25,11.84,under,over,0,3.84,38.4,0.192,Med,Med
+Jaylen Wells,Deandre Ayton,10.0,17.5,11.84,13.91,over,under,0,3.79,37.9,0.19,Med,Med
+Terrence Shannon Jr.,Jalen Duren,5.5,15.5,7.16,12.25,over,under,0,3.71,37.1,0.185,Low,Med
+Terrence Shannon Jr.,Deandre Ayton,5.5,17.5,7.16,13.91,over,under,0,3.66,36.6,0.183,Low,Med
+Isaiah Jackson,Jalen Duren,7.5,15.5,9.24,12.25,over,under,0,3.63,36.3,0.182,Med,Med
+Cole Anthony,Jalen Duren,8.5,15.5,10.39,12.25,over,under,0,3.6,36.0,0.18,Med,Med
+Isaiah Jackson,Deandre Ayton,7.5,17.5,9.24,13.91,over,under,0,3.59,35.9,0.179,Med,Med
+Jaylen Clark,Jalen Duren,5.5,15.5,7.14,12.25,over,under,0,3.58,35.8,0.179,Med,Med
+Cole Anthony,Deandre Ayton,8.5,17.5,10.39,13.91,over,under,0,3.56,35.6,0.178,Med,Med
+Jaylen Clark,Deandre Ayton,5.5,17.5,7.14,13.91,over,under,0,3.53,35.3,0.177,Med,Med
+Jalen Duren,Cedric Coward,15.5,12.5,12.25,10.96,under,under,0,3.48,34.8,0.174,Med,Med
+Cedric Coward,Deandre Ayton,12.5,17.5,10.96,13.91,under,under,0,3.44,34.4,0.172,Med,Med
+Bones Hyland,Jaylen Wells,4.5,10.0,7.67,11.84,over,over,0,3.22,32.2,0.161,Med,Med
+Taylor Hendricks,Jalen Duren,7.5,15.5,6.08,12.25,under,under,0,3.12,31.2,0.156,Med,Med
+Taylor Hendricks,Deandre Ayton,7.5,17.5,6.08,13.91,under,under,0,3.08,30.8,0.154,Med,Med
+Bones Hyland,Isaiah Jackson,4.5,7.5,7.67,9.24,over,over,0,3.02,30.2,0.151,Med,Med
+Bones Hyland,Cole Anthony,4.5,8.5,7.67,10.39,over,over,0,3.0,30.0,0.15,Med,Med
+Tari Eason,Jaylen Wells,13.5,10.0,10.71,11.84,under,over,0,2.92,29.2,0.146,Med,Med
+Bones Hyland,Cedric Coward,4.5,12.5,7.67,10.96,over,under,0,2.88,28.8,0.144,Med,Med
+Jalen Wilson,Jalen Duren,7.5,15.5,6.29,12.25,under,under,0,2.84,28.4,0.142,Med,Med
+Jalen Wilson,Deandre Ayton,7.5,17.5,6.29,13.91,under,under,0,2.8,28.0,0.14,Med,Med
+Terrence Shannon Jr.,Tari Eason,5.5,13.5,7.16,10.71,over,under,0,2.8,28.0,0.14,Low,Med
+Josh Okogie,Jalen Duren,8.5,15.5,9.91,12.25,over,under,0,2.74,27.4,0.137,Med,Med
+Isaiah Jackson,Tari Eason,7.5,13.5,9.24,10.71,over,under,0,2.73,27.3,0.137,Med,Med
+Cole Anthony,Tari Eason,8.5,13.5,10.39,10.71,over,under,0,2.7,27.0,0.135,Med,Med
+Josh Okogie,Deandre Ayton,8.5,17.5,9.91,13.91,over,under,0,2.69,26.9,0.135,Med,Med
+Jaylen Clark,Tari Eason,5.5,13.5,7.14,10.71,over,under,0,2.68,26.8,0.134,Med,Med
+Tari Eason,Cedric Coward,13.5,12.5,10.71,10.96,under,under,0,2.59,25.9,0.13,Med,Med
+Sam Hauser,Jaylen Wells,9.5,10.0,6.97,11.84,under,over,0,2.59,25.9,0.13,Med,Med
+Luka Garza,Jalen Duren,6.5,15.5,5.41,12.25,under,under,0,2.59,25.9,0.13,Med,Med
+Luka Garza,Deandre Ayton,6.5,17.5,5.41,13.91,under,under,0,2.55,25.5,0.128,Med,Med
+Bones Hyland,Taylor Hendricks,4.5,7.5,7.67,6.08,over,under,0,2.54,25.4,0.127,Med,Med
+Terrence Shannon Jr.,Sam Hauser,5.5,9.5,7.16,6.97,over,under,0,2.47,24.7,0.124,Low,Med
+Isaiah Jackson,Sam Hauser,7.5,9.5,9.24,6.97,over,under,0,2.4,24.0,0.12,Med,Med
+Neemias Queta,Jalen Duren,8.5,15.5,7.56,12.25,under,under,0,2.39,23.9,0.119,Med,Med
+Cole Anthony,Sam Hauser,8.5,9.5,10.39,6.97,over,under,0,2.38,23.8,0.119,Med,Med
+Walter Clayton Jr.,Jalen Duren,6.0,15.5,7.09,12.25,over,under,0,2.37,23.7,0.119,Med,Med
+Jaylen Clark,Sam Hauser,5.5,9.5,7.14,6.97,over,under,0,2.35,23.5,0.118,Med,Med
+Neemias Queta,Deandre Ayton,8.5,17.5,7.56,13.91,under,under,0,2.35,23.5,0.117,Med,Med
+Walter Clayton Jr.,Deandre Ayton,6.0,17.5,7.09,13.91,over,under,0,2.33,23.3,0.117,Med,Med
+Sam Hauser,Cedric Coward,9.5,12.5,6.97,10.96,under,under,0,2.27,22.7,0.113,Med,Med
+Jalen Wilson,Bones Hyland,7.5,4.5,6.29,7.67,under,over,0,2.27,22.7,0.113,Med,Med
+Taylor Hendricks,Tari Eason,7.5,13.5,6.08,10.71,under,under,0,2.25,22.5,0.113,Med,Med
+Bones Hyland,Josh Okogie,4.5,8.5,7.67,9.91,over,over,0,2.17,21.7,0.108,Med,Med
+Ace Bailey,Jalen Duren,7.5,15.5,6.66,12.25,under,under,0,2.14,21.4,0.107,Med,Med
+Ace Bailey,Deandre Ayton,7.5,17.5,6.66,13.91,under,under,0,2.1,21.0,0.105,Med,Med
+Bones Hyland,Luka Garza,4.5,6.5,7.67,5.41,over,under,0,2.03,20.3,0.102,Med,Med
+Jalen Wilson,Tari Eason,7.5,13.5,6.29,10.71,under,under,0,1.99,19.9,0.1,Med,Med
+Sam Hauser,Taylor Hendricks,9.5,7.5,6.97,6.08,under,under,0,1.94,19.4,0.097,Med,Med
+Jalen Duren,Peyton Watson,15.5,6.5,12.25,5.92,under,under,0,1.89,18.9,0.094,Med,Low
+Tobias Harris,Deandre Ayton,14.0,17.5,13.27,13.91,under,under,0,1.85,18.5,0.093,Med,Med
+Peyton Watson,Deandre Ayton,6.5,17.5,5.92,13.91,under,under,0,1.85,18.5,0.092,Low,Med
+Bones Hyland,Neemias Queta,4.5,8.5,7.67,7.56,over,under,0,1.83,18.3,0.092,Med,Med
+Bones Hyland,Walter Clayton Jr.,4.5,6.0,7.67,7.09,over,over,0,1.82,18.2,0.091,Med,Med
+Luka Garza,Tari Eason,6.5,13.5,5.41,10.71,under,under,0,1.76,17.6,0.088,Med,Med
+Jalen Wilson,Sam Hauser,7.5,9.5,6.29,6.97,under,under,0,1.68,16.8,0.084,Med,Med
+Rob Dillingham,Jalen Duren,6.0,15.5,6.75,12.25,over,under,0,1.68,16.8,0.084,Med,Med
+Rob Dillingham,Deandre Ayton,6.0,17.5,6.75,13.91,over,under,0,1.64,16.4,0.082,Med,Med
+Terrence Shannon Jr.,Jaylen Wells,5.5,10.0,7.16,11.84,over,over,0,1.62,16.2,0.081,Low,Med
+Bones Hyland,Ace Bailey,4.5,7.5,7.67,6.66,over,under,0,1.6,16.0,0.08,Med,Med
+Sam Hauser,Josh Okogie,9.5,8.5,6.97,9.91,under,over,0,1.59,15.9,0.079,Med,Med
+Neemias Queta,Tari Eason,8.5,13.5,7.56,10.71,under,under,0,1.57,15.7,0.078,Med,Med
+Walter Clayton Jr.,Tari Eason,6.0,13.5,7.09,10.71,over,under,0,1.55,15.5,0.078,Med,Med
+Isaiah Jackson,Jaylen Wells,7.5,10.0,9.24,11.84,over,over,0,1.55,15.5,0.078,Med,Med
+Cole Anthony,Jaylen Wells,8.5,10.0,10.39,11.84,over,over,0,1.53,15.3,0.076,Med,Med
+Jaylen Clark,Jaylen Wells,5.5,10.0,7.14,11.84,over,over,0,1.51,15.1,0.075,Med,Med
+Terrence Shannon Jr.,Isaiah Jackson,5.5,7.5,7.16,9.24,over,over,0,1.44,14.4,0.072,Low,Med
+Terrence Shannon Jr.,Cole Anthony,5.5,8.5,7.16,10.39,over,over,0,1.42,14.2,0.071,Low,Med
+Jalen Duren,Keon Ellis,15.5,6.5,12.25,6.2,under,under,0,1.41,14.1,0.07,Med,Low
+Keon Ellis,Deandre Ayton,6.5,17.5,6.2,13.91,under,under,0,1.37,13.7,0.068,Low,Med
+Cole Anthony,Isaiah Jackson,8.5,7.5,10.39,9.24,over,over,0,1.36,13.6,0.068,Med,Med
+Bones Hyland,Peyton Watson,4.5,6.5,7.67,5.92,over,under,0,1.36,13.6,0.068,Med,Low
+Bones Hyland,Tobias Harris,4.5,14.0,7.67,13.27,over,under,0,1.36,13.6,0.068,Med,Med
+Jaylen Clark,Isaiah Jackson,5.5,7.5,7.14,9.24,over,over,0,1.34,13.4,0.067,Med,Med
+Ace Bailey,Tari Eason,7.5,13.5,6.66,10.71,under,under,0,1.34,13.4,0.067,Med,Med
+Terrence Shannon Jr.,Cedric Coward,5.5,12.5,7.16,10.96,over,under,0,1.32,13.2,0.066,Low,Med
+Jaylen Clark,Cole Anthony,5.5,8.5,7.14,10.39,over,over,0,1.31,13.1,0.066,Med,Med
+Isaiah Jackson,Cedric Coward,7.5,12.5,9.24,10.96,over,under,0,1.26,12.6,0.063,Med,Med
+Sam Hauser,Walter Clayton Jr.,9.5,6.0,6.97,7.09,under,over,0,1.26,12.6,0.063,Med,Med
+Jalen Duren,Donovan Clingan,15.5,9.5,12.25,9.96,under,over,0,1.25,12.5,0.062,Med,Med
+Cole Anthony,Cedric Coward,8.5,12.5,10.39,10.96,over,under,0,1.23,12.3,0.062,Med,Med
+Deandre Ayton,Donovan Clingan,17.5,9.5,13.91,9.96,under,over,0,1.21,12.1,0.06,Med,Med
+Jaylen Clark,Cedric Coward,5.5,12.5,7.14,10.96,over,under,0,1.21,12.1,0.061,Med,Med
+Dwight Powell,Jalen Duren,4.5,15.5,4.84,12.25,over,under,0,1.14,11.4,0.057,Low,Med
+Taylor Hendricks,Jaylen Wells,7.5,10.0,6.08,11.84,under,over,0,1.12,11.2,0.056,Med,Med
+Tari Eason,Tobias Harris,13.5,14.0,10.71,13.27,under,under,0,1.11,11.1,0.055,Med,Med
+Tari Eason,Peyton Watson,13.5,6.5,10.71,5.92,under,under,0,1.1,11.0,0.055,Med,Low
+Dwight Powell,Deandre Ayton,4.5,17.5,4.84,13.91,over,under,0,1.1,11.0,0.055,Low,Med
+Corey Kispert,Jalen Duren,7.5,15.5,7.27,12.25,under,under,0,1.07,10.7,0.054,Med,Med
+Steven Adams,Jalen Duren,5.5,15.5,5.79,12.25,over,under,0,1.06,10.6,0.053,Low,Med
+Jalen Duren,Cam Spencer,15.5,7.0,12.25,7.29,under,over,0,1.04,10.4,0.052,Med,Low
+Sam Hauser,Ace Bailey,9.5,7.5,6.97,6.66,under,under,0,1.04,10.4,0.052,Med,Med
+Corey Kispert,Deandre Ayton,7.5,17.5,7.27,13.91,under,under,0,1.03,10.3,0.052,Med,Med
+Steven Adams,Deandre Ayton,5.5,17.5,5.79,13.91,over,under,0,1.02,10.2,0.051,Low,Med
+Terrence Shannon Jr.,Taylor Hendricks,5.5,7.5,7.16,6.08,over,under,0,1.02,10.2,0.051,Low,Med
+Cam Spencer,Deandre Ayton,7.0,17.5,7.29,13.91,over,under,0,1.01,10.1,0.05,Low,Med
+Isaiah Jackson,Taylor Hendricks,7.5,7.5,9.24,6.08,over,under,0,0.96,9.6,0.048,Med,Med
+Cole Anthony,Taylor Hendricks,8.5,7.5,10.39,6.08,over,under,0,0.93,9.3,0.047,Med,Med
+Rob Dillingham,Tari Eason,6.0,13.5,6.75,10.71,over,under,0,0.91,9.1,0.045,Med,Med
+Jaylen Clark,Taylor Hendricks,5.5,7.5,7.14,6.08,over,under,0,0.91,9.1,0.046,Med,Med
+Bones Hyland,Keon Ellis,4.5,6.5,7.67,6.2,over,under,0,0.9,9.0,0.045,Med,Low
+Jalen Wilson,Jaylen Wells,7.5,10.0,6.29,11.84,under,over,0,0.89,8.9,0.044,Med,Med
+Taylor Hendricks,Cedric Coward,7.5,12.5,6.08,10.96,under,under,0,0.84,8.4,0.042,Med,Med
+Jalen Duren,Aaron Gordon,15.5,15.5,12.25,15.41,under,under,0,0.84,8.4,0.042,Med,Low
+Sam Hauser,Tobias Harris,9.5,14.0,6.97,13.27,under,under,0,0.82,8.2,0.041,Med,Med
+Sam Hauser,Peyton Watson,9.5,6.5,6.97,5.92,under,under,0,0.82,8.2,0.041,Med,Low
+Aaron Gordon,Deandre Ayton,15.5,17.5,15.41,13.91,under,under,0,0.8,8.0,0.04,Low,Med
+Jalen Duren,Nique Clifford,15.5,5.5,12.25,5.44,under,under,0,0.79,7.9,0.039,Med,Low
+Josh Okogie,Jaylen Wells,8.5,10.0,9.91,11.84,over,over,0,0.79,7.9,0.04,Med,Med
+Jalen Wilson,Terrence Shannon Jr.,7.5,5.5,6.29,7.16,under,over,0,0.78,7.8,0.039,Med,Low
+Nique Clifford,Deandre Ayton,5.5,17.5,5.44,13.91,under,under,0,0.75,7.5,0.038,Low,Med
+Bones Hyland,Donovan Clingan,4.5,9.5,7.67,9.96,over,over,0,0.75,7.5,0.037,Med,Med
+Jalen Wilson,Isaiah Jackson,7.5,7.5,6.29,9.24,under,over,0,0.72,7.2,0.036,Med,Med
+Jalen Wilson,Cole Anthony,7.5,8.5,6.29,10.39,under,over,0,0.7,7.0,0.035,Med,Med
+Terrence Shannon Jr.,Josh Okogie,5.5,8.5,7.16,9.91,over,over,0,0.69,6.9,0.035,Low,Med
+Jalen Wilson,Jaylen Clark,7.5,5.5,6.29,7.14,under,over,0,0.68,6.8,0.034,Med,Med
+Luka Garza,Jaylen Wells,6.5,10.0,5.41,11.84,under,over,0,0.67,6.7,0.034,Med,Med
+Tari Eason,Keon Ellis,13.5,6.5,10.71,6.2,under,under,0,0.65,6.5,0.033,Med,Low
+Bones Hyland,Dwight Powell,4.5,4.5,7.67,4.84,over,over,0,0.64,6.4,0.032,Med,Low
+Isaiah Jackson,Josh Okogie,7.5,8.5,9.24,9.91,over,over,0,0.63,6.3,0.032,Med,Med
+Rob Dillingham,Sam Hauser,6.0,9.5,6.75,6.97,over,under,0,0.63,6.3,0.031,Med,Med
+Cole Anthony,Josh Okogie,8.5,8.5,10.39,9.91,over,over,0,0.61,6.1,0.031,Med,Med
+Jalen Wilson,Cedric Coward,7.5,12.5,6.29,10.96,under,under,0,0.61,6.1,0.03,Med,Med
+Jaylen Clark,Josh Okogie,5.5,8.5,7.14,9.91,over,over,0,0.59,5.9,0.03,Med,Med
+Bones Hyland,Corey Kispert,4.5,7.5,7.67,7.27,over,under,0,0.58,5.8,0.029,Med,Med
+Terrence Shannon Jr.,Luka Garza,5.5,6.5,7.16,5.41,over,under,0,0.57,5.7,0.029,Low,Med
+Bones Hyland,Steven Adams,4.5,5.5,7.67,5.79,over,over,0,0.56,5.6,0.028,Med,Low
+Bones Hyland,Cam Spencer,4.5,7.0,7.67,7.29,over,over,0,0.55,5.5,0.028,Med,Low
+Isaiah Jackson,Luka Garza,7.5,6.5,9.24,5.41,over,under,0,0.52,5.2,0.026,Med,Med
+Josh Okogie,Cedric Coward,8.5,12.5,9.91,10.96,over,under,0,0.52,5.2,0.026,Med,Med
+Tari Eason,Donovan Clingan,13.5,9.5,10.71,9.96,under,over,0,0.5,5.0,0.025,Med,Med
+Neemias Queta,Jaylen Wells,8.5,10.0,7.56,11.84,under,over,0,0.5,5.0,0.025,Med,Med
+Walter Clayton Jr.,Jaylen Wells,6.0,10.0,7.09,11.84,over,over,0,0.49,4.9,0.024,Med,Med
+Cole Anthony,Luka Garza,8.5,6.5,10.39,5.41,over,under,0,0.49,4.9,0.025,Med,Med
+Jaylen Clark,Luka Garza,5.5,6.5,7.14,5.41,over,under,0,0.47,4.7,0.024,Med,Med
+Luka Garza,Cedric Coward,6.5,12.5,5.41,10.96,under,under,0,0.4,4.0,0.02,Med,Med
+Tari Eason,Dwight Powell,13.5,4.5,10.71,4.84,under,over,0,0.4,4.0,0.02,Med,Low
+Terrence Shannon Jr.,Neemias Queta,5.5,8.5,7.16,7.56,over,under,0,0.4,4.0,0.02,Low,Med
+Terrence Shannon Jr.,Walter Clayton Jr.,5.5,6.0,7.16,7.09,over,over,0,0.39,3.9,0.019,Low,Med
+Sam Hauser,Keon Ellis,9.5,6.5,6.97,6.2,under,under,0,0.38,3.8,0.019,Med,Low
+Bones Hyland,Aaron Gordon,4.5,15.5,7.67,15.41,over,under,0,0.35,3.5,0.018,Med,Low
+Corey Kispert,Tari Eason,7.5,13.5,7.27,10.71,under,under,0,0.34,3.4,0.017,Med,Med
+Isaiah Jackson,Neemias Queta,7.5,8.5,9.24,7.56,over,under,0,0.34,3.4,0.017,Med,Med
+Isaiah Jackson,Walter Clayton Jr.,7.5,6.0,9.24,7.09,over,over,0,0.33,3.3,0.017,Med,Med
+Jalen Wilson,Taylor Hendricks,7.5,7.5,6.29,6.08,under,under,0,0.32,3.2,0.016,Med,Med
+Cole Anthony,Neemias Queta,8.5,8.5,10.39,7.56,over,under,0,0.32,3.2,0.016,Med,Med
+Cole Anthony,Walter Clayton Jr.,8.5,6.0,10.39,7.09,over,over,0,0.31,3.1,0.015,Med,Med
+Bones Hyland,Nique Clifford,4.5,5.5,7.67,5.44,over,under,0,0.31,3.1,0.015,Med,Low
+Tari Eason,Cam Spencer,13.5,7.0,10.71,7.29,under,over,0,0.31,3.1,0.016,Med,Low
+Jaylen Clark,Neemias Queta,5.5,8.5,7.14,7.56,over,under,0,0.3,3.0,0.015,Med,Med
+Jaylen Clark,Walter Clayton Jr.,5.5,6.0,7.14,7.09,over,over,0,0.29,2.9,0.014,Med,Med
+Ace Bailey,Jaylen Wells,7.5,10.0,6.66,11.84,under,over,0,0.29,2.9,0.014,Med,Med
+Taylor Hendricks,Josh Okogie,7.5,8.5,6.08,9.91,under,over,0,0.24,2.4,0.012,Med,Med
+Neemias Queta,Cedric Coward,8.5,12.5,7.56,10.96,under,under,0,0.23,2.3,0.012,Med,Med
+Sam Hauser,Donovan Clingan,9.5,9.5,6.97,9.96,under,over,0,0.23,2.3,0.012,Med,Med
+Walter Clayton Jr.,Cedric Coward,6.0,12.5,7.09,10.96,over,under,0,0.22,2.2,0.011,Med,Med
+Terrence Shannon Jr.,Ace Bailey,5.5,7.5,7.16,6.66,over,under,0,0.19,1.9,0.009,Low,Med
+Sam Hauser,Dwight Powell,9.5,4.5,6.97,4.84,under,over,0,0.13,1.3,0.007,Med,Low
+Isaiah Jackson,Ace Bailey,7.5,7.5,9.24,6.66,over,under,0,0.13,1.3,0.007,Med,Med
+Tari Eason,Aaron Gordon,13.5,15.5,10.71,15.41,under,under,0,0.12,1.2,0.006,Med,Low
+Taylor Hendricks,Luka Garza,7.5,6.5,6.08,5.41,under,under,0,0.12,1.2,0.006,Med,Med
+Cole Anthony,Ace Bailey,8.5,7.5,10.39,6.66,over,under,0,0.11,1.1,0.006,Med,Med
+Jaylen Clark,Ace Bailey,5.5,7.5,7.14,6.66,over,under,0,0.09,0.9,0.005,Med,Med
+Jaylen Wells,Peyton Watson,10.0,6.5,11.84,5.92,over,under,0,0.08,0.8,0.004,Med,Low
+Tobias Harris,Jaylen Wells,14.0,10.0,13.27,11.84,under,over,0,0.08,0.8,0.004,Med,Med
+Tari Eason,Nique Clifford,13.5,5.5,10.71,5.44,under,under,0,0.07,0.7,0.004,Med,Low
+Sam Hauser,Corey Kispert,9.5,7.5,6.97,7.27,under,under,0,0.07,0.7,0.004,Med,Med
+Sam Hauser,Steven Adams,9.5,5.5,6.97,5.79,under,over,0,0.06,0.6,0.003,Med,Low
+Sam Hauser,Cam Spencer,9.5,7.0,6.97,7.29,under,over,0,0.05,0.5,0.002,Med,Low
+Jalen Wilson,Josh Okogie,7.5,8.5,6.29,9.91,under,over,0,0.02,0.2,0.001,Med,Med
+Ace Bailey,Cedric Coward,7.5,12.5,6.66,10.96,under,under,0,0.02,0.2,0.001,Med,Med
+Terrence Shannon Jr.,Tobias Harris,5.5,14.0,7.16,13.27,over,under,0,-0.02,-0.2,0.0,Low,Med
+Terrence Shannon Jr.,Peyton Watson,5.5,6.5,7.16,5.92,over,under,0,-0.02,-0.2,0.0,Low,Low
+Neemias Queta,Taylor Hendricks,8.5,7.5,7.56,6.08,under,under,0,-0.04,-0.4,0.0,Med,Med
+Isaiah Jackson,Peyton Watson,7.5,6.5,9.24,5.92,over,under,0,-0.07,-0.7,0.0,Med,Low
+Isaiah Jackson,Tobias Harris,7.5,14.0,9.24,13.27,over,under,0,-0.07,-0.7,0.0,Med,Med
+Cole Anthony,Tobias Harris,8.5,14.0,10.39,13.27,over,under,0,-0.09,-0.9,0.0,Med,Med
+Jalen Wilson,Luka Garza,7.5,6.5,6.29,5.41,under,under,0,-0.09,-0.9,0.0,Med,Med
+Cole Anthony,Peyton Watson,8.5,6.5,10.39,5.92,over,under,0,-0.1,-1.0,0.0,Med,Low
+Rob Dillingham,Jaylen Wells,6.0,10.0,6.75,11.84,over,over,0,-0.1,-1.0,0.0,Med,Med
+Jaylen Clark,Peyton Watson,5.5,6.5,7.14,5.92,over,under,0,-0.11,-1.1,0.0,Med,Low
+Jaylen Clark,Tobias Harris,5.5,14.0,7.14,13.27,over,under,0,-0.11,-1.1,0.0,Med,Med
+Sam Hauser,Aaron Gordon,9.5,15.5,6.97,15.41,under,under,0,-0.14,-1.4,0.0,Med,Low
+Luka Garza,Josh Okogie,6.5,8.5,5.41,9.91,under,over,0,-0.18,-1.8,0.0,Med,Med
+Tobias Harris,Cedric Coward,14.0,12.5,13.27,10.96,under,under,0,-0.18,-1.8,0.0,Med,Med
+Cedric Coward,Peyton Watson,12.5,6.5,10.96,5.92,under,under,0,-0.18,-1.8,0.0,Med,Low
+Sam Hauser,Nique Clifford,9.5,5.5,6.97,5.44,under,under,0,-0.19,-1.9,0.0,Med,Low
+Rob Dillingham,Isaiah Jackson,6.0,7.5,6.75,9.24,over,over,0,-0.25,-2.5,0.0,Med,Med
+Jalen Wilson,Neemias Queta,7.5,8.5,6.29,7.56,under,under,0,-0.26,-2.6,0.0,Med,Med
+Jalen Wilson,Walter Clayton Jr.,7.5,6.0,6.29,7.09,under,over,0,-0.27,-2.7,0.0,Med,Med
+Rob Dillingham,Cole Anthony,6.0,8.5,6.75,10.39,over,over,0,-0.27,-2.7,0.0,Med,Med
+Jaylen Wells,Keon Ellis,10.0,6.5,11.84,6.2,over,under,0,-0.33,-3.3,0.0,Med,Low
+Neemias Queta,Josh Okogie,8.5,8.5,7.56,9.91,under,over,0,-0.34,-3.4,0.0,Med,Med
+Rob Dillingham,Cedric Coward,6.0,12.5,6.75,10.96,over,under,0,-0.35,-3.5,0.0,Med,Med
+Walter Clayton Jr.,Josh Okogie,6.0,8.5,7.09,9.91,over,over,0,-0.35,-3.5,0.0,Med,Med
+Terrence Shannon Jr.,Keon Ellis,5.5,6.5,7.16,6.2,over,under,0,-0.43,-4.3,0.0,Low,Low
+Taylor Hendricks,Tobias Harris,7.5,14.0,6.08,13.27,under,under,0,-0.44,-4.4,0.0,Med,Med
+Taylor Hendricks,Peyton Watson,7.5,6.5,6.08,5.92,under,under,0,-0.45,-4.5,0.0,Med,Low
+Jalen Wilson,Ace Bailey,7.5,7.5,6.29,6.66,under,under,0,-0.45,-4.5,0.0,Med,Med
+Luka Garza,Walter Clayton Jr.,6.5,6.0,5.41,7.09,under,over,0,-0.46,-4.6,0.0,Med,Med
+Jaylen Wells,Donovan Clingan,10.0,9.5,11.84,9.96,over,over,0,-0.47,-4.7,0.0,Med,Med
+Isaiah Jackson,Keon Ellis,7.5,6.5,9.24,6.2,over,under,0,-0.48,-4.8,0.0,Med,Low
+Cole Anthony,Keon Ellis,8.5,6.5,10.39,6.2,over,under,0,-0.5,-5.0,0.0,Med,Low
+Jaylen Clark,Keon Ellis,5.5,6.5,7.14,6.2,over,under,0,-0.52,-5.2,0.0,Med,Low
+Ace Bailey,Josh Okogie,7.5,8.5,6.66,9.91,under,over,0,-0.53,-5.3,0.0,Med,Med
+Terrence Shannon Jr.,Donovan Clingan,5.5,9.5,7.16,9.96,over,over,0,-0.56,-5.6,0.0,Low,Med
+Dwight Powell,Jaylen Wells,4.5,10.0,4.84,11.84,over,over,0,-0.56,-5.6,0.0,Low,Med
+Cedric Coward,Keon Ellis,12.5,6.5,10.96,6.2,under,under,0,-0.58,-5.8,0.0,Med,Low
+Neemias Queta,Walter Clayton Jr.,8.5,6.0,7.56,7.09,under,over,0,-0.61,-6.1,0.0,Med,Med
+Isaiah Jackson,Donovan Clingan,7.5,9.5,9.24,9.96,over,over,0,-0.61,-6.1,0.0,Med,Med
+Rob Dillingham,Taylor Hendricks,6.0,7.5,6.75,6.08,over,under,0,-0.61,-6.1,0.0,Med,Med
+Corey Kispert,Jaylen Wells,7.5,10.0,7.27,11.84,under,over,0,-0.62,-6.2,0.0,Med,Med
+Steven Adams,Jaylen Wells,5.5,10.0,5.79,11.84,over,over,0,-0.63,-6.3,0.0,Low,Med
+Cole Anthony,Donovan Clingan,8.5,9.5,10.39,9.96,over,over,0,-0.63,-6.3,0.0,Med,Med
+Ace Bailey,Luka Garza,7.5,6.5,6.66,5.41,under,under,0,-0.64,-6.4,0.0,Med,Med
+Terrence Shannon Jr.,Dwight Powell,5.5,4.5,7.16,4.84,over,over,0,-0.65,-6.5,0.0,Low,Low
+Jalen Wilson,Tobias Harris,7.5,14.0,6.29,13.27,under,under,0,-0.65,-6.5,0.0,Med,Med
+Jaylen Clark,Donovan Clingan,5.5,9.5,7.14,9.96,over,over,0,-0.65,-6.5,0.0,Med,Med
+Jalen Wilson,Peyton Watson,7.5,6.5,6.29,5.92,under,under,0,-0.65,-6.5,0.0,Med,Low
+Isaiah Jackson,Dwight Powell,7.5,4.5,9.24,4.84,over,over,0,-0.7,-7.0,0.0,Med,Low
+Cedric Coward,Donovan Clingan,12.5,9.5,10.96,9.96,under,over,0,-0.71,-7.1,0.0,Med,Med
+Terrence Shannon Jr.,Corey Kispert,5.5,7.5,7.16,7.27,over,under,0,-0.71,-7.1,0.0,Low,Med
+Josh Okogie,Tobias Harris,8.5,14.0,9.91,13.27,over,under,0,-0.72,-7.2,0.0,Med,Med
+Cole Anthony,Dwight Powell,8.5,4.5,10.39,4.84,over,over,0,-0.72,-7.2,0.0,Med,Low
+Terrence Shannon Jr.,Steven Adams,5.5,5.5,7.16,5.79,over,over,0,-0.72,-7.2,0.0,Low,Low
+Josh Okogie,Peyton Watson,8.5,6.5,9.91,5.92,over,under,0,-0.73,-7.3,0.0,Med,Low
+Terrence Shannon Jr.,Cam Spencer,5.5,7.0,7.16,7.29,over,over,0,-0.73,-7.3,0.0,Low,Low
+Jaylen Clark,Dwight Powell,5.5,4.5,7.14,4.84,over,over,0,-0.74,-7.4,0.0,Med,Low
+Isaiah Jackson,Corey Kispert,7.5,7.5,9.24,7.27,over,under,0,-0.76,-7.6,0.0,Med,Med
+Isaiah Jackson,Steven Adams,7.5,5.5,9.24,5.79,over,over,0,-0.77,-7.7,0.0,Med,Low
+Cole Anthony,Corey Kispert,8.5,7.5,10.39,7.27,over,under,0,-0.78,-7.8,0.0,Med,Med
+Isaiah Jackson,Cam Spencer,7.5,7.0,9.24,7.29,over,over,0,-0.78,-7.8,0.0,Med,Low
+Neemias Queta,Ace Bailey,8.5,7.5,7.56,6.66,under,under,0,-0.79,-7.9,0.0,Med,Med
+Cole Anthony,Steven Adams,8.5,5.5,10.39,5.79,over,over,0,-0.79,-7.9,0.0,Med,Low
+Jaylen Clark,Corey Kispert,5.5,7.5,7.14,7.27,over,under,0,-0.79,-7.9,0.0,Med,Med
+Cole Anthony,Cam Spencer,8.5,7.0,10.39,7.29,over,over,0,-0.8,-8.0,0.0,Med,Low
+Dwight Powell,Cedric Coward,4.5,12.5,4.84,10.96,over,under,0,-0.8,-8.0,0.0,Low,Med
+Jaylen Clark,Steven Adams,5.5,5.5,7.14,5.79,over,over,0,-0.81,-8.1,0.0,Med,Low
+Jalen Wilson,Rob Dillingham,7.5,6.0,6.29,6.75,under,over,0,-0.81,-8.1,0.0,Med,Med
+Jaylen Wells,Aaron Gordon,10.0,15.5,11.84,15.41,over,under,0,-0.82,-8.2,0.0,Med,Low
+Jaylen Clark,Cam Spencer,5.5,7.0,7.14,7.29,over,over,0,-0.82,-8.2,0.0,Med,Low
+Luka Garza,Peyton Watson,6.5,6.5,5.41,5.92,under,under,0,-0.83,-8.3,0.0,Med,Low
+Luka Garza,Tobias Harris,6.5,14.0,5.41,13.27,under,under,0,-0.83,-8.3,0.0,Med,Med
+Taylor Hendricks,Keon Ellis,7.5,6.5,6.08,6.2,under,under,0,-0.83,-8.3,0.0,Med,Low
+Jaylen Wells,Nique Clifford,10.0,5.5,11.84,5.44,over,under,0,-0.86,-8.6,0.0,Med,Low
+Corey Kispert,Cedric Coward,7.5,12.5,7.27,10.96,under,under,0,-0.86,-8.6,0.0,Med,Med
+Steven Adams,Cedric Coward,5.5,12.5,5.79,10.96,over,under,0,-0.87,-8.7,0.0,Low,Med
+Rob Dillingham,Josh Okogie,6.0,8.5,6.75,9.91,over,over,0,-0.89,-8.9,0.0,Med,Med
+Terrence Shannon Jr.,Aaron Gordon,5.5,15.5,7.16,15.41,over,under,0,-0.9,-9.0,0.0,Low,Low
+Terrence Shannon Jr.,Nique Clifford,5.5,5.5,7.16,5.44,over,under,0,-0.94,-9.4,0.0,Low,Low
+Isaiah Jackson,Aaron Gordon,7.5,15.5,9.24,15.41,over,under,0,-0.95,-9.5,0.0,Med,Low
+Taylor Hendricks,Donovan Clingan,7.5,9.5,6.08,9.96,under,over,0,-0.96,-9.6,0.0,Med,Med
+Cole Anthony,Aaron Gordon,8.5,15.5,10.39,15.41,over,under,0,-0.97,-9.7,0.0,Med,Low
+Neemias Queta,Tobias Harris,8.5,14.0,7.56,13.27,under,under,0,-0.98,-9.8,0.0,Med,Med
+Neemias Queta,Peyton Watson,8.5,6.5,7.56,5.92,under,under,0,-0.98,-9.8,0.0,Med,Low
+Jaylen Clark,Aaron Gordon,5.5,15.5,7.14,15.41,over,under,0,-0.99,-9.9,0.0,Med,Low
+Walter Clayton Jr.,Peyton Watson,6.0,6.5,7.09,5.92,over,under,0,-0.99,-9.9,0.0,Med,Low
+Isaiah Jackson,Nique Clifford,7.5,5.5,9.24,5.44,over,under,0,-0.99,-9.9,0.0,Med,Low
+Rob Dillingham,Luka Garza,6.0,6.5,6.75,5.41,over,under,0,-0.99,-9.9,0.0,Med,Med
+Walter Clayton Jr.,Tobias Harris,6.0,14.0,7.09,13.27,over,under,0,-0.99,-9.9,0.0,Med,Med
+Cole Anthony,Nique Clifford,8.5,5.5,10.39,5.44,over,under,0,-1.01,-10.1,0.0,Med,Low
+Jalen Wilson,Keon Ellis,7.5,6.5,6.29,6.2,under,under,0,-1.03,-10.3,0.0,Med,Low
+Jaylen Clark,Nique Clifford,5.5,5.5,7.14,5.44,over,under,0,-1.03,-10.3,0.0,Med,Low
+Taylor Hendricks,Dwight Powell,7.5,4.5,6.08,4.84,under,over,0,-1.05,-10.5,0.0,Med,Low
+Cedric Coward,Aaron Gordon,12.5,15.5,10.96,15.41,under,under,0,-1.05,-10.5,0.0,Med,Low
+Cedric Coward,Nique Clifford,12.5,5.5,10.96,5.44,under,under,0,-1.09,-10.9,0.0,Med,Low
+Taylor Hendricks,Corey Kispert,7.5,7.5,6.08,7.27,under,under,0,-1.1,-11.0,0.0,Med,Med
+Josh Okogie,Keon Ellis,8.5,6.5,9.91,6.2,over,under,0,-1.1,-11.0,0.0,Med,Low
+Taylor Hendricks,Steven Adams,7.5,5.5,6.08,5.79,under,over,0,-1.12,-11.2,0.0,Med,Low
+Taylor Hendricks,Cam Spencer,7.5,7.0,6.08,7.29,under,over,0,-1.12,-11.2,0.0,Med,Low
+Rob Dillingham,Neemias Queta,6.0,8.5,6.75,7.56,over,under,0,-1.14,-11.4,0.0,Med,Med
+Rob Dillingham,Walter Clayton Jr.,6.0,6.0,6.75,7.09,over,over,0,-1.15,-11.5,0.0,Med,Med
+Jalen Wilson,Donovan Clingan,7.5,9.5,6.29,9.96,under,over,0,-1.15,-11.5,0.0,Med,Med
+Ace Bailey,Tobias Harris,7.5,14.0,6.66,13.27,under,under,0,-1.16,-11.6,0.0,Med,Med
+Ace Bailey,Peyton Watson,7.5,6.5,6.66,5.92,under,under,0,-1.16,-11.6,0.0,Med,Low
+Luka Garza,Keon Ellis,6.5,6.5,5.41,6.2,under,under,0,-1.2,-12.0,0.0,Med,Low
+Josh Okogie,Donovan Clingan,8.5,9.5,9.91,9.96,over,over,0,-1.23,-12.3,0.0,Med,Med
+Jalen Wilson,Dwight Powell,7.5,4.5,6.29,4.84,under,over,0,-1.24,-12.4,0.0,Med,Low
+Taylor Hendricks,Aaron Gordon,7.5,15.5,6.08,15.41,under,under,0,-1.29,-12.9,0.0,Med,Low
+Jalen Wilson,Corey Kispert,7.5,7.5,6.29,7.27,under,under,0,-1.29,-12.9,0.0,Med,Med
+Jalen Wilson,Steven Adams,7.5,5.5,6.29,5.79,under,over,0,-1.3,-13.0,0.0,Med,Low
+Jalen Wilson,Cam Spencer,7.5,7.0,6.29,7.29,under,over,0,-1.31,-13.1,0.0,Med,Low
+Josh Okogie,Dwight Powell,8.5,4.5,9.91,4.84,over,over,0,-1.31,-13.1,0.0,Med,Low
+Rob Dillingham,Ace Bailey,6.0,7.5,6.75,6.66,over,under,0,-1.32,-13.2,0.0,Med,Med
+Luka Garza,Donovan Clingan,6.5,9.5,5.41,9.96,under,over,0,-1.32,-13.2,0.0,Med,Med
+Taylor Hendricks,Nique Clifford,7.5,5.5,6.08,5.44,under,under,0,-1.33,-13.3,0.0,Med,Low
+Tobias Harris,Peyton Watson,14.0,6.5,13.27,5.92,under,under,0,-1.34,-13.4,0.0,Med,Low
+Neemias Queta,Keon Ellis,8.5,6.5,7.56,6.2,under,under,0,-1.35,-13.5,0.0,Med,Low
+Corey Kispert,Josh Okogie,7.5,8.5,7.27,9.91,under,over,0,-1.36,-13.6,0.0,Med,Med
+Walter Clayton Jr.,Keon Ellis,6.0,6.5,7.09,6.2,over,under,0,-1.36,-13.6,0.0,Med,Low
+Josh Okogie,Cam Spencer,8.5,7.0,9.91,7.29,over,over,0,-1.39,-13.9,0.0,Med,Low
+Luka Garza,Dwight Powell,6.5,4.5,5.41,4.84,under,over,0,-1.41,-14.1,0.0,Med,Low
+Luka Garza,Corey Kispert,6.5,7.5,5.41,7.27,under,under,0,-1.46,-14.6,0.0,Med,Med
+Neemias Queta,Donovan Clingan,8.5,9.5,7.56,9.96,under,over,0,-1.47,-14.7,0.0,Med,Med
+Luka Garza,Steven Adams,6.5,5.5,5.41,5.79,under,over,0,-1.47,-14.7,0.0,Med,Low
+Luka Garza,Cam Spencer,6.5,7.0,5.41,7.29,under,over,0,-1.48,-14.8,0.0,Med,Low
+Jalen Wilson,Aaron Gordon,7.5,15.5,6.29,15.41,under,under,0,-1.48,-14.8,0.0,Med,Low
+Walter Clayton Jr.,Donovan Clingan,6.0,9.5,7.09,9.96,over,over,0,-1.48,-14.8,0.0,Med,Med
+Rob Dillingham,Peyton Watson,6.0,6.5,6.75,5.92,over,under,0,-1.49,-14.9,0.0,Med,Low
+Rob Dillingham,Tobias Harris,6.0,14.0,6.75,13.27,over,under,0,-1.49,-14.9,0.0,Med,Med
+Jalen Wilson,Nique Clifford,7.5,5.5,6.29,5.44,under,under,0,-1.51,-15.1,0.0,Med,Low
+Ace Bailey,Keon Ellis,7.5,6.5,6.66,6.2,under,under,0,-1.52,-15.2,0.0,Med,Low
+Neemias Queta,Dwight Powell,8.5,4.5,7.56,4.84,under,over,0,-1.55,-15.5,0.0,Med,Low
+Josh Okogie,Aaron Gordon,8.5,15.5,9.91,15.41,over,under,0,-1.55,-15.5,0.0,Med,Low
+Walter Clayton Jr.,Dwight Powell,6.0,4.5,7.09,4.84,over,over,0,-1.56,-15.6,0.0,Med,Low
+Josh Okogie,Nique Clifford,8.5,5.5,9.91,5.44,over,under,0,-1.58,-15.8,0.0,Med,Low
+Neemias Queta,Corey Kispert,8.5,7.5,7.56,7.27,under,under,0,-1.6,-16.0,0.0,Med,Med
+Neemias Queta,Steven Adams,8.5,5.5,7.56,5.79,under,over,0,-1.61,-16.1,0.0,Med,Low
+Walter Clayton Jr.,Corey Kispert,6.0,7.5,7.09,7.27,over,under,0,-1.61,-16.1,0.0,Med,Med
+Walter Clayton Jr.,Steven Adams,6.0,5.5,7.09,5.79,over,over,0,-1.62,-16.2,0.0,Med,Low
+Neemias Queta,Cam Spencer,8.5,7.0,7.56,7.29,under,over,0,-1.62,-16.2,0.0,Med,Low
+Walter Clayton Jr.,Cam Spencer,6.0,7.0,7.09,7.29,over,over,0,-1.63,-16.3,0.0,Med,Low
+Luka Garza,Aaron Gordon,6.5,15.5,5.41,15.41,under,under,0,-1.64,-16.4,0.0,Med,Low
+Ace Bailey,Donovan Clingan,7.5,9.5,6.66,9.96,under,over,0,-1.64,-16.4,0.0,Med,Med
+Luka Garza,Nique Clifford,6.5,5.5,5.41,5.44,under,under,0,-1.68,-16.8,0.0,Med,Low
+Tobias Harris,Keon Ellis,14.0,6.5,13.27,6.2,under,under,0,-1.69,-16.9,0.0,Med,Low
+Peyton Watson,Keon Ellis,6.5,6.5,5.92,6.2,under,under,0,-1.7,-17.0,0.0,Low,Low
+Ace Bailey,Dwight Powell,7.5,4.5,6.66,4.84,under,over,0,-1.72,-17.2,0.0,Med,Low
+Ace Bailey,Corey Kispert,7.5,7.5,6.66,7.27,under,under,0,-1.77,-17.7,0.0,Med,Med
+Ace Bailey,Steven Adams,7.5,5.5,6.66,5.79,under,over,0,-1.78,-17.8,0.0,Med,Low
+Neemias Queta,Aaron Gordon,8.5,15.5,7.56,15.41,under,under,0,-1.78,-17.8,0.0,Med,Low
+Ace Bailey,Cam Spencer,7.5,7.0,6.66,7.29,under,over,0,-1.79,-17.9,0.0,Med,Low
+Walter Clayton Jr.,Aaron Gordon,6.0,15.5,7.09,15.41,over,under,0,-1.79,-17.9,0.0,Med,Low
+Tobias Harris,Donovan Clingan,14.0,9.5,13.27,9.96,under,over,0,-1.81,-18.1,0.0,Med,Med
+Peyton Watson,Donovan Clingan,6.5,9.5,5.92,9.96,under,over,0,-1.81,-18.1,0.0,Low,Med
+Neemias Queta,Nique Clifford,8.5,5.5,7.56,5.44,under,under,0,-1.82,-18.2,0.0,Med,Low
+Walter Clayton Jr.,Nique Clifford,6.0,5.5,7.09,5.44,over,under,0,-1.82,-18.2,0.0,Med,Low
+Rob Dillingham,Keon Ellis,6.0,6.5,6.75,6.2,over,under,0,-1.84,-18.4,0.0,Med,Low
+Dwight Powell,Tobias Harris,4.5,14.0,4.84,13.27,over,under,0,-1.89,-18.9,0.0,Low,Med
+Dwight Powell,Peyton Watson,4.5,6.5,4.84,5.92,over,under,0,-1.89,-18.9,0.0,Low,Low
+Ace Bailey,Aaron Gordon,7.5,15.5,6.66,15.41,under,under,0,-1.94,-19.4,0.0,Med,Low
+Corey Kispert,Peyton Watson,7.5,6.5,7.27,5.92,under,under,0,-1.94,-19.4,0.0,Med,Low
+Corey Kispert,Tobias Harris,7.5,14.0,7.27,13.27,under,under,0,-1.94,-19.4,0.0,Med,Med
+Steven Adams,Tobias Harris,5.5,14.0,5.79,13.27,over,under,0,-1.95,-19.5,0.0,Low,Med
+Rob Dillingham,Donovan Clingan,6.0,9.5,6.75,9.96,over,over,0,-1.95,-19.5,0.0,Med,Med
+Steven Adams,Peyton Watson,5.5,6.5,5.79,5.92,over,under,0,-1.95,-19.5,0.0,Low,Low
+Tobias Harris,Cam Spencer,14.0,7.0,13.27,7.29,under,over,0,-1.96,-19.6,0.0,Med,Low
+Cam Spencer,Peyton Watson,7.0,6.5,7.29,5.92,over,under,0,-1.96,-19.6,0.0,Low,Low
+Ace Bailey,Nique Clifford,7.5,5.5,6.66,5.44,under,under,0,-1.98,-19.8,0.0,Med,Low
+Rob Dillingham,Dwight Powell,6.0,4.5,6.75,4.84,over,over,0,-2.03,-20.3,0.0,Med,Low
+Rob Dillingham,Corey Kispert,6.0,7.5,6.75,7.27,over,under,0,-2.08,-20.8,0.0,Med,Med
+Rob Dillingham,Steven Adams,6.0,5.5,6.75,5.79,over,over,0,-2.09,-20.9,0.0,Med,Low
+Rob Dillingham,Cam Spencer,6.0,7.0,6.75,7.29,over,over,0,-2.1,-21.0,0.0,Med,Low
+Tobias Harris,Aaron Gordon,14.0,15.5,13.27,15.41,under,under,0,-2.11,-21.1,0.0,Med,Low
+Tobias Harris,Nique Clifford,14.0,5.5,13.27,5.44,under,under,0,-2.14,-21.4,0.0,Med,Low
+Keon Ellis,Donovan Clingan,6.5,9.5,6.2,9.96,under,over,0,-2.14,-21.4,0.0,Low,Med
+Peyton Watson,Nique Clifford,6.5,5.5,5.92,5.44,under,under,0,-2.15,-21.5,0.0,Low,Low
+Dwight Powell,Keon Ellis,4.5,6.5,4.84,6.2,over,under,0,-2.22,-22.2,0.0,Low,Low
+Rob Dillingham,Aaron Gordon,6.0,15.5,6.75,15.41,over,under,0,-2.25,-22.5,0.0,Med,Low
+Corey Kispert,Keon Ellis,7.5,6.5,7.27,6.2,under,under,0,-2.27,-22.7,0.0,Med,Low
+Steven Adams,Keon Ellis,5.5,6.5,5.79,6.2,over,under,0,-2.28,-22.8,0.0,Low,Low
+Rob Dillingham,Nique Clifford,6.0,5.5,6.75,5.44,over,under,0,-2.28,-22.8,0.0,Med,Low
+Cam Spencer,Keon Ellis,7.0,6.5,7.29,6.2,over,under,0,-2.29,-22.9,0.0,Low,Low
+Dwight Powell,Donovan Clingan,4.5,9.5,4.84,9.96,over,over,0,-2.33,-23.3,0.0,Low,Med
+Corey Kispert,Donovan Clingan,7.5,9.5,7.27,9.96,under,over,0,-2.37,-23.7,0.0,Med,Med
+Steven Adams,Donovan Clingan,5.5,9.5,5.79,9.96,over,over,0,-2.38,-23.8,0.0,Low,Med
+Cam Spencer,Donovan Clingan,7.0,9.5,7.29,9.96,over,over,0,-2.39,-23.9,0.0,Low,Med
+Aaron Gordon,Keon Ellis,15.5,6.5,15.41,6.2,under,under,0,-2.43,-24.3,0.0,Low,Low
+Corey Kispert,Dwight Powell,7.5,4.5,7.27,4.84,under,over,0,-2.45,-24.5,0.0,Med,Low
+Steven Adams,Dwight Powell,5.5,4.5,5.79,4.84,over,over,0,-2.46,-24.6,0.0,Low,Low
+Dwight Powell,Cam Spencer,4.5,7.0,4.84,7.29,over,over,0,-2.47,-24.7,0.0,Low,Low
+Corey Kispert,Steven Adams,7.5,5.5,7.27,5.79,under,over,0,-2.5,-25.0,0.0,Med,Low
+Corey Kispert,Cam Spencer,7.5,7.0,7.27,7.29,under,over,0,-2.51,-25.1,0.0,Med,Low
+Steven Adams,Cam Spencer,5.5,7.0,5.79,7.29,over,over,0,-2.52,-25.2,0.0,Low,Low
+Aaron Gordon,Donovan Clingan,15.5,9.5,15.41,9.96,under,over,0,-2.54,-25.4,0.0,Low,Med
+Nique Clifford,Donovan Clingan,5.5,9.5,5.44,9.96,under,over,0,-2.57,-25.7,0.0,Low,Med
+Dwight Powell,Aaron Gordon,4.5,15.5,4.84,15.41,over,under,0,-2.61,-26.1,0.0,Low,Low
+Dwight Powell,Nique Clifford,4.5,5.5,4.84,5.44,over,under,0,-2.64,-26.4,0.0,Low,Low
+Corey Kispert,Aaron Gordon,7.5,15.5,7.27,15.41,under,under,0,-2.65,-26.5,0.0,Med,Low
+Steven Adams,Aaron Gordon,5.5,15.5,5.79,15.41,over,under,0,-2.66,-26.6,0.0,Low,Low
+Cam Spencer,Aaron Gordon,7.0,15.5,7.29,15.41,over,under,0,-2.67,-26.7,0.0,Low,Low
+Corey Kispert,Nique Clifford,7.5,5.5,7.27,5.44,under,under,0,-2.68,-26.8,0.0,Med,Low
+Cam Spencer,Nique Clifford,7.0,5.5,7.29,5.44,over,under,0,-2.7,-27.0,0.0,Low,Low
+Steven Adams,Nique Clifford,5.5,5.5,5.79,5.44,over,under,0,-2.7,-27.0,0.0,Low,Low
+Aaron Gordon,Nique Clifford,15.5,5.5,15.41,5.44,under,under,0,-2.84,-28.4,0.0,Low,Low

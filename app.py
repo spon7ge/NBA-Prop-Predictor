@@ -151,15 +151,15 @@ triosUnderdog = loadTriosUnderdogBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_
 triosPrizepicks = loadTriosPrizepicksBookmakers(get_file_mtime('DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv'))
 
 # Header info with columns
-st.write(f"**Date:** {today}")
+st.write(f"**Predictions for {today}**")
 st.write("**Creator:** Alex Gonzalez")
-st.write("**Contact:** alg21@stmarys-ca.edu")
+st.write("**Contact:** [Linkedin](https://www.linkedin.com/in/alex-gonzalez-data)")
 
 # Description section
 with st.expander("📋 What's Available", expanded=True):
     st.markdown("""
     ### **Betting Options**
-    This app provides prop betting opportunities for **points only** across multiple platforms:
+    I created this app to look for the most profitable props(**points only**) across multiple platforms:
     
     - **Single Bets**: Individual player prop bets with the best expected value
     - **2-Leg Bets**: Two-player combinations available on:
@@ -187,7 +187,7 @@ with st.expander("📋 What's Available", expanded=True):
     ### **The Probability-Based Approach**
     
     Instead of saying *"Player X will score exactly 25 points"*, we calculate:
-    - **Probability distribution**: How likely is it that Player X scores 20+ points? 25+? 30+?
+    - **Probability distribution**: How likely is it that Player X scores 20+ points? Given the uncertainty of the match and what we know about the player, we can create a probability distribution for the points scored.
     - **Model probability**: Based on historical data, matchups, and trends, what's the real probability?
     - **Odds probability**: What probability does the bookmaker's odds imply?
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
@@ -241,12 +241,12 @@ st.info("⚠️ **Disclaimer**: Please take these predictions/probabilities with
 with st.sidebar:
     st.header("Quick Reference")
     
-    st.markdown("### EV% Guide")
+    st.markdown("### EV Dollar Per 100$ Bet")
     st.markdown("""
-    - **20%+**: Excellent
-    - **10-19%**: Very good
-    - **5-9%**: Good
-    - **<5%**: Moderate
+    - **20$+**: Excellent EV
+    - **10-19$**: Very good EV
+    - **5-9$**: Good EV
+    - **<5$**: Moderate EV
     - **Negative**: Avoid
     """)
     
