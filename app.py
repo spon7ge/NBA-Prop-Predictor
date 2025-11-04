@@ -145,18 +145,6 @@ st.write(f"**Date:** {today}")
 st.write("**Creator:** Alex Gonzalez")
 st.write("**Contact:** alg21@stmarys-ca.edu")
 
-# Update schedule info in an expandable info box
-with st.expander("Update Schedule & Notes", expanded=False):
-    st.info("""
-    **Update Schedule:**
-    - Updates posted daily at **12:00 PM PST**
-    - Additional updates may occur before tip-off as new information becomes available
-    
-    **Important Note:**
-    Odds are updated from bookmakers throughout the day as new information becomes available. 
-    You may see different odds on the same bet depending on when you check the page.
-    """)
-
 # Description section
 with st.expander("📋 What's Available", expanded=True):
     st.markdown("""
@@ -193,21 +181,12 @@ with st.expander("📋 What's Available", expanded=True):
     - **Model probability**: Based on historical data, matchups, and trends, what's the real probability?
     - **Odds probability**: What probability does the bookmaker's odds imply?
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
-    
-    ** What we're NOT doing:**
-    - We're **NOT** trying to predict exactly how many points a player will score
-    - We're **NOT** claiming to know the future outcome of any single game
-    - Sports are inherently unpredictable - too many variables affect any individual game
-    
-    ** What we ARE doing:**
-    - We're using **probability distributions** to estimate the likelihood of outcomes
-    - We're identifying bets where the **probability of winning is higher than what the odds suggest**
-    - We're finding **expected value** - bets that are profitable over many repetitions
-    - We're applying mathematical edge-finding to make profitable decisions **long-term**
-    
     """)
 
 # Disclaimer
+st.info("""**Important Note:**
+    Odds are updated from bookmakers throughout the day as new information becomes available. 
+    You may see different odds on the same bet depending on when you check the page. """)
 st.info("⚠️ **Disclaimer**: Please take these predictions/probabilities with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
 
 # Add expandable help section with tooltips
