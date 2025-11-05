@@ -1,13 +1,14 @@
 import pandas as pd
 import numpy as np
+import warnings
 from scipy.stats import norm
 import scipy.stats as stats
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
-from nba_api.stats.endpoints import scoreboardv2
 from MODELS.teamInfo import *
 from itertools import combinations
+from MODELS.ngboostModel import predict_mean_variance_split
 
 
 nameDict = {
@@ -90,7 +91,11 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 _prediction_cache = {}
 
 def get_cached_prediction(player_name, data, models, features, stat_col='PTS', game_date=None):
-    """Get cached prediction for a player, computing if not already cached."""
+    """Get cached prediction for a player, computing if not already cached.
+    
+    Returns:
+        Dictionary with 'prediction' (mu/mean), 'sigma' keys (matching calculateEVS.py format)
+    """
     cache_key = f"{player_name}_{stat_col}_{game_date}" if game_date else f"{player_name}_{stat_col}"
     
     if cache_key not in _prediction_cache:
@@ -105,53 +110,74 @@ def predictStats(playerName, data, models, features):
     playerData = data[data['PLAYER_NAME'] == playerName]
     sorted_data = playerData.sort_values(by='GAME_DATE')
     
-    # Get latest row for game context and opponent context
+    if len(sorted_data) == 0:
+        raise ValueError(f"No data found for player {playerName}")
+    
+    # Use most recent game row (.iloc[-1]) for all features
     latestRow = sorted_data.iloc[-1]
-    
-    # Get second-to-latest row for all other features
-    secondLatestRow = sorted_data.iloc[-2] if len(sorted_data) > 1 else latestRow
-    
-    # Define feature categories
-    game_context_features = [
-        'HOME_GAME', 'STARTING', 'PLAYER_IS_TEAM_STAR', 'STAR_SAT_OUT', 
-        'IS_BACK_TO_BACK', 'PLAYER_DAYS_REST', 'spread', 'TEAM_IMPLIED_PTS'
-    ]
-    
-    opponent_context_features = [
-        'OPP_DEF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 
-        'OPP_TOV_AVG_TO_DATE', 'OPP_GUARD_DEF_RATING', 'OPP_GUARD_DEF_FG_PCT_ALLOWED',
-        'OPP_GUARD_DEF_3PT_PCT_ALLOWED', 'OPP_GUARD_PTS_ALLOWED_PER_MIN',
-        'OPP_FORWARD_DEF_RATING', 'OPP_FORWARD_DEF_FG_PCT_ALLOWED',
-        'OPP_FORWARD_DEF_3PT_PCT_ALLOWED', 'OPP_FORWARD_PTS_ALLOWED_PER_MIN',
-        'OPP_CENTER_DEF_RATING', 'OPP_CENTER_DEF_FG_PCT_ALLOWED',
-        'OPP_CENTER_DEF_3PT_PCT_ALLOWED', 'OPP_CENTER_PTS_ALLOWED_PER_MIN',
-        'PTS_PER_MIN_X_OPP_DEF_RATING'
-    ]
     
     available_features = [f for f in features if f in data.columns]
     playerInput = {}
     
-    # Use latest row for game context and opponent context
+    # Use latest row for all features
     for feature in available_features:
-        if feature in game_context_features or feature in opponent_context_features:
-            playerInput[feature] = latestRow[feature]
-        else:
-            # Use second-to-latest row for all other features
-            playerInput[feature] = secondLatestRow[feature]
+        playerInput[feature] = latestRow[feature]
     
     playerInput_df = pd.DataFrame([list(playerInput.values())], columns=list(playerInput.keys()))
     
+    # Clean the input data
     for col in playerInput_df.columns:
         if playerInput_df[col].dtype == 'object':
             playerInput_df[col] = pd.to_numeric(playerInput_df[col], errors='coerce').fillna(0)
         elif playerInput_df[col].dtype == 'bool':
             playerInput_df[col] = playerInput_df[col].astype(int)
     
-    # Get predictions from all quantile models
-    predictions = {}
-    for quantile_name, model in models.items():
-        pred = model.predict(playerInput_df)[0]
-        predictions[quantile_name] = float(pred)
+    # Handle NaN and inf values
+    playerInput_df = playerInput_df.replace([np.inf, -np.inf], np.nan)
+    playerInput_df = playerInput_df.fillna(playerInput_df.median())
+    
+    # Get predictions from NGBoost models
+    if isinstance(models, dict):
+        # Check if it's the new format with 'mean' and 'variance' keys
+        if 'mean' in models and 'variance' in models:
+            mean_model = models['mean']
+            variance_model = models['variance']
+            calibration_factor = models.get('calibration_factor', 1.25)
+        else:
+            # Old quantile format - convert if needed
+            raise ValueError("Models dict must contain 'mean' and 'variance' keys for NGBoost models")
+    elif isinstance(models, tuple):
+        # Tuple format: (mean_model, variance_model, calibration_factor)
+        mean_model = models[0]
+        variance_model = models[1]
+        calibration_factor = models[2] if len(models) > 2 else 1.25
+    else:
+        raise ValueError("Models must be a dict with 'mean' and 'variance' keys or a tuple of (mean_model, variance_model, calibration_factor)")
+    
+    # Get mean and variance predictions
+    mu, variance = predict_mean_variance_split(
+        mean_model, variance_model, playerInput_df, features, calibration_factor
+    )
+    
+    # Convert to scalars if arrays
+    mu = float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu)
+    variance = float(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance)
+    sigma = np.sqrt(variance)
+    
+    # Clip predictions to be non-negative (points/rebounds/assists can't be negative)
+    # If prediction is negative, it likely means the player has very low historical stats
+    # or the model encountered unusual feature values. Floor at 0.5 to avoid extreme edge cases.
+    if mu < 0:
+        warnings.warn(f"Negative prediction ({mu:.2f}) for {playerName}. Clipping to 0.5. This may indicate insufficient data or unusual feature values.")
+        mu = 0.5
+    elif mu < 0.5:
+        # Very low but positive predictions should also be floored to avoid unrealistic values
+        mu = 0.5
+    
+    predictions = {
+        'prediction': mu,  # Match calculateEVS.py format
+        'sigma': sigma
+    }
     
     return predictions
 
@@ -160,7 +186,7 @@ def predictStats(playerName, data, models, features):
 def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
                      variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
                      use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, df_t=5, skew_a=-2.0):
-    print("Processing single bets with quantile models...")
+    print("Processing single bets with NGBoost models...")
     
     results = []
     
@@ -181,23 +207,19 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         if player_df.empty or stat_col not in player_df.columns:
             continue
         
-        # Get quantile predictions using cached function
+        # Get predictions using cached function (returns prediction and sigma)
         try:
             predictions = get_cached_prediction(name, data, models, features, stat_col)
             if predictions is None:
                 continue
-            q10_pred = predictions['q10']
-            q50_pred = predictions['q50']
-            q90_pred = predictions['q90']
+            mu = predictions['prediction']
+            sigma_raw = predictions['sigma']
+            # Apply variance inflation if needed
+            sigma = sigma_raw * variance_inflation
             
         except Exception as e:
             print(f"Error getting prediction for {name}: {e}")
             continue
-        
-        # Convert quantiles to distribution parameters
-        mu = q50_pred  # Median as mean
-        sigma_raw = (q90_pred - q10_pred) / 2.56  # 80% interval to std dev
-        sigma = sigma_raw * variance_inflation  # Apply variance inflation
         
         # Set random seed outside conditional for reproducibility across runs
         np.random.seed(42)  # For reproducibility
@@ -273,9 +295,6 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         else:
             recommendation = 0
         
-        # Confidence interval (using quantiles)
-        confidence_interval = (q10_pred, q90_pred)
-        
         results.append({
         'NAME': name,
         'BOOKMAKER': bookmaker,
@@ -283,9 +302,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         'LINE': line,
         'ODDS': odds,
         'SIDE': side,
-        'PREDICTION': round(q50_pred, 2),
-        'Q10': round(q10_pred, 2),
-        'Q90': round(q90_pred, 2),
+        'PREDICTION': round(mu, 2),
         'RECOMMENDATION': recommendation,
         'OVER%': round(p_over, 3),
         'UNDER%': round(p_under, 3),
@@ -295,7 +312,6 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         'EV%': round(ev_total, 2),
         'KELLY_FRACTION': round(kelly_fraction, 3),  # Kelly as fraction
         'KELLY_DOLLARS': round(kelly_dollars, 2),  # Kelly in dollars
-        'CONFIDENCE INTERVAL': f"({confidence_interval[0]:.1f}, {confidence_interval[1]:.1f})",
         'SIGMA': round(sigma, 2),
         'SIMULATION_METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
     })
@@ -354,7 +370,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player1_line = player1_bets.iloc[0]
             player2_line = player2_bets.iloc[0]
             
-            # Get quantile predictions for both players using cached function
+            # Get predictions for both players using cached function
             try:
                 pred1 = get_cached_prediction(player1, data, models, features, stat_col, gameDate)
                 pred2 = get_cached_prediction(player2, data, models, features, stat_col, gameDate)
@@ -362,21 +378,18 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 if pred1 is None or pred2 is None:
                     continue
                 
-                q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
-                q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
+                # Extract prediction (mu) and sigma directly
+                mu1 = pred1['prediction']
+                sigma1_raw = pred1['sigma']
+                sigma1 = sigma1_raw * variance_inflation
+                
+                mu2 = pred2['prediction']
+                sigma2_raw = pred2['sigma']
+                sigma2 = sigma2_raw * variance_inflation
                 
             except Exception as e:
                 print(f"Error getting predictions for {player1} or {player2}: {e}")
                 continue
-            
-            # Convert quantiles to distribution parameters for both players
-            mu1 = q50_1
-            sigma1_raw = (q90_1 - q10_1) / 2.56
-            sigma1 = sigma1_raw * variance_inflation
-            
-            mu2 = q50_2
-            sigma2_raw = (q90_2 - q10_2) / 2.56
-            sigma2 = sigma2_raw * variance_inflation
             
             # Set random seed outside conditional for reproducibility across runs
             np.random.seed(42)  # For reproducibility
@@ -429,33 +442,49 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                     raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
             
             # Determine model sides based on predictions vs lines
-            if q50_1 > player1_line['LINE']:
+            if mu1 > player1_line['LINE']:
                 model_side1 = 'over'
                 p1 = p1_over
             else:
                 model_side1 = 'under'
                 p1 = 1 - p1_over
                 
-            if q50_2 > player2_line['LINE']:
+            if mu2 > player2_line['LINE']:
                 model_side2 = 'over'
                 p2 = p2_over
             else:
                 model_side2 = 'under'
                 p2 = 1 - p2_over
             
+            # Calculate confidence intervals and sigma flags for both players
+            ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
+            ci2 = (max(0, mu2 - 1.96 * sigma2), mu2 + 1.96 * sigma2)
+            width1 = round(ci1[1] - ci1[0], 2)
+            width2 = round(ci2[1] - ci2[0], 2)
+            
+            # Sigma flags for readability
+            if sigma1 <= 5.0:
+                sigma_flag1 = 'Low'
+            elif sigma1 <= 6.0:
+                sigma_flag1 = 'Med'
+            else:
+                sigma_flag1 = 'High'
+            if sigma2 <= 5.0:
+                sigma_flag2 = 'Low'
+            elif sigma2 <= 6.0:
+                sigma_flag2 = 'Med'
+            else:
+                sigma_flag2 = 'High'
+            
             # Calculate combined probability and EV
             p_both = p1 * p2
             payout_multiple = 3.0  # 3x payout for 2-leg parlay
             ev = payout_multiple * p_both - 1
+            ev_dollars = ev * stake
             
             # Kelly criterion with variance-adjusted constraint
             b = payout_multiple - 1.0  # b = 2.0
             kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b) if b > 0 else 0.0
-            kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
-            
-            # Calculate Kelly bet size in dollars
-            kelly_bet_size = kelly_capped * stake
-            kelly_bet_size_full = kelly_full * stake
             
             # Edge calculation (probability edge for both players)
             market_prob1 = impliedProb(-137)  # Fixed odds
@@ -464,16 +493,16 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             edge2 = p2 - market_prob2
             combined_edge = (edge1 + edge2) / 2  # Average edge
             
-            # Recommendation based on multiple criteria
+            # Recommendation based on multiple criteria (matching calculateEVS.py)
             if (combined_edge > edge_threshold and 
-                kelly_capped > -0.02 and
-                p_both > 0.45 and 
-                ev > 0.4):
+                sigma_flag1 == 'Med' or sigma_flag1 == 'Low' and 
+                sigma_flag2 == 'Med' or sigma_flag2 == 'Low' and 
+                ev_dollars > 5):
                 recommendation = 1
             else:
                 recommendation = 0
             
-            # Get actual results
+            # Get actual results for backtesting
             actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
             actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
             
@@ -492,39 +521,39 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 profit = -stake  # Loss: lose the stake
             
             results.append({
-                'player1': player1,
-                'player2': player2,
-                'line1': player1_line['LINE'],
-                'line2': player2_line['LINE'],
-                'pred1': round(q50_1, 2),
-                'pred2': round(q50_2, 2),
-                'q10_1': round(q10_1, 2),
-                'q90_1': round(q90_1, 2),
-                'q10_2': round(q10_2, 2),
-                'q90_2': round(q90_2, 2),
-                'model_side1': model_side1,
-                'model_side2': model_side2,
-                'prob1': round(p1, 3),
-                'prob2': round(p2, 3),
-                'prob_both': round(p_both, 4),
-                'edge1': round(edge1, 3),
-                'edge2': round(edge2, 3),
-                'combined_edge': round(combined_edge, 3),
-                'ev_percent': round(ev, 2),
-                'kelly_full': round(kelly_full, 3),
-                'kelly_capped': round(kelly_capped, 3),
-                'kelly_bet_size': round(kelly_bet_size, 2),
-                'kelly_bet_size_full': round(kelly_bet_size_full, 2),
-                'stake': stake,
-                'profit': round(profit, 2),
-                'recommendation': recommendation,
+                'NAME 1': player1,
+                'NAME 2': player2,
+                'LINE 1': player1_line['LINE'],
+                'LINE 2': player2_line['LINE'],
+                'PREDICTION 1': round(mu1, 2),
+                'PREDICTION 2': round(mu2, 2),
+                'MODEL SIDE 1': model_side1,
+                'MODEL SIDE 2': model_side2,
+                'PROB 1': round(p1, 3),
+                'PROB 2': round(p2, 3),
+                'PROB BOTH': round(p_both, 4),
+                'EDGE 1': round(edge1, 3),
+                'EDGE 2': round(edge2, 3),
+                'COMBINED EDGE': round(combined_edge, 3),
+                'EV$': round(ev_dollars, 2),
+                'KELLY FULL': round(kelly_full, 3),
+                'RECOMMENDATION': recommendation,
+                'INTERVAL WIDTH 1': width1,
+                'INTERVAL WIDTH 2': width2,
+                'SIGMA 1': round(sigma1, 2),
+                'SIGMA 2': round(sigma2, 2),
+                'SIGMA FLAG 1': sigma_flag1,
+                'SIGMA FLAG 2': sigma_flag2,
+                'EXPECTED ROI': round((ev_dollars / stake) * 100, 1),
+                'SIMULATION METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical',
+                # Backtest-specific columns (for backtest.py compatibility)
                 'actual1': actual1,
                 'actual2': actual2,
                 'won1': won1,
                 'won2': won2,
                 'won_both': won_both,
-                'date': gameDate,
-                'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
+                'profit': round(profit, 2),
+                'date': gameDate
             })
     
     results_df = pd.DataFrame(results)
@@ -591,7 +620,7 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player2_line = player2_bets.iloc[0]
                 player3_line = player3_bets.iloc[0]
                 
-                # Get quantile predictions for all three players using cached function
+                # Get predictions for all three players using cached function
                 try:
                     pred1 = get_cached_prediction(player1, data, models, features, stat_col, gameDate)
                     pred2 = get_cached_prediction(player2, data, models, features, stat_col, gameDate)
@@ -600,26 +629,22 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     if pred1 is None or pred2 is None or pred3 is None:
                         continue
                     
-                    q10_1, q50_1, q90_1 = pred1['q10'], pred1['q50'], pred1['q90']
-                    q10_2, q50_2, q90_2 = pred2['q10'], pred2['q50'], pred2['q90']
-                    q10_3, q50_3, q90_3 = pred3['q10'], pred3['q50'], pred3['q90']
+                    # Extract prediction (mu) and sigma directly
+                    mu1 = pred1['prediction']
+                    sigma1_raw = pred1['sigma']
+                    sigma1 = sigma1_raw * variance_inflation
+                    
+                    mu2 = pred2['prediction']
+                    sigma2_raw = pred2['sigma']
+                    sigma2 = sigma2_raw * variance_inflation
+                    
+                    mu3 = pred3['prediction']
+                    sigma3_raw = pred3['sigma']
+                    sigma3 = sigma3_raw * variance_inflation
                     
                 except Exception as e:
                     print(f"Error getting predictions for {player1}, {player2}, or {player3}: {e}")
                     continue
-                
-                # Convert quantiles to distribution parameters for all three players
-                mu1 = q50_1
-                sigma1_raw = (q90_1 - q10_1) / 2.56
-                sigma1 = sigma1_raw * variance_inflation
-                
-                mu2 = q50_2
-                sigma2_raw = (q90_2 - q10_2) / 2.56
-                sigma2 = sigma2_raw * variance_inflation
-                
-                mu3 = q50_3
-                sigma3_raw = (q90_3 - q10_3) / 2.56
-                sigma3 = sigma3_raw * variance_inflation
                 
                 # Set random seed outside conditional for reproducibility across runs
                 np.random.seed(42)  # For reproducibility
@@ -684,40 +709,56 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                         raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
                 
                 # Determine model sides based on predictions vs lines
-                if q50_1 > player1_line['LINE']:
+                if mu1 > player1_line['LINE']:
                     model_side1 = 'over'
                     p1 = p1_over
                 else:
                     model_side1 = 'under'
                     p1 = 1 - p1_over
                     
-                if q50_2 > player2_line['LINE']:
+                if mu2 > player2_line['LINE']:
                     model_side2 = 'over'
                     p2 = p2_over
                 else:
                     model_side2 = 'under'
                     p2 = 1 - p2_over
                     
-                if q50_3 > player3_line['LINE']:
+                if mu3 > player3_line['LINE']:
                     model_side3 = 'over'
                     p3 = p3_over
                 else:
                     model_side3 = 'under'
                     p3 = 1 - p3_over
                 
+                # Confidence intervals and sigma flags for all three players
+                ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
+                ci2 = (max(0, mu2 - 1.96 * sigma2), mu2 + 1.96 * sigma2)
+                ci3 = (max(0, mu3 - 1.96 * sigma3), mu3 + 1.96 * sigma3)
+                width1 = round(ci1[1] - ci1[0], 2)
+                width2 = round(ci2[1] - ci2[0], 2)
+                width3 = round(ci3[1] - ci3[0], 2)
+                
+                # Sigma flags helper function
+                def flag_sigma(s):
+                    if s <= 5.0:
+                        return 'Low'
+                    elif s <= 6.0:
+                        return 'Med'
+                    else:
+                        return 'High'
+                sigma_flag1 = flag_sigma(sigma1)
+                sigma_flag2 = flag_sigma(sigma2)
+                sigma_flag3 = flag_sigma(sigma3)
+                
                 # Calculate combined probability and EV
                 p_all_three = p1 * p2 * p3
                 payout_multiple = 6.0  # 6x payout for 3-leg parlay
                 ev = payout_multiple * p_all_three - 1
+                ev_dollars = ev * stake
                 
                 # Kelly criterion with variance-adjusted constraint
                 b = payout_multiple - 1.0  # b = 5.0
                 kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b) if b > 0 else 0.0
-                kelly_capped = min(kelly_full, max_kelly)  # Cap Kelly at max_kelly (default 0.25)
-                
-                # Calculate Kelly bet size in dollars
-                kelly_bet_size = kelly_capped * stake
-                kelly_bet_size_full = kelly_full * stake
                 
                 # Edge calculation (probability edge for all three players)
                 market_prob1 = impliedProb(-137)  # Fixed odds
@@ -728,11 +769,13 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 edge3 = p3 - market_prob3
                 combined_edge = (edge1 + edge2 + edge3) / 3  # Average edge
                 
-                # Recommendation based on multiple criteria
+                # Recommendation based on multiple criteria (matching calculateEVS.py)
                 if (combined_edge > edge_threshold and 
-                    kelly_capped > -0.02 and
-                    p_all_three > 0.45 and 
-                    ev > 0.5):
+                    sigma1 <= 5 and 
+                    sigma2 <= 5 and 
+                    sigma3 <= 5 and
+                    p_all_three > 0.40 and 
+                    ev > 0):
                     recommendation = 1
                 else:
                     recommendation = 0
@@ -758,40 +801,44 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     profit = -stake  # Loss: lose the stake
                 
                 results.append({
-                    'player1': player1,
-                    'player2': player2,
-                    'player3': player3,
-                    'line1': player1_line['LINE'],
-                    'line2': player2_line['LINE'],
-                    'line3': player3_line['LINE'],
-                    'pred1': round(q50_1, 2),
-                    'pred2': round(q50_2, 2),
-                    'pred3': round(q50_3, 2),
-                    'q10_1': round(q10_1, 2),
-                    'q90_1': round(q90_1, 2),
-                    'q10_2': round(q10_2, 2),
-                    'q90_2': round(q90_2, 2),
-                    'q10_3': round(q10_3, 2),
-                    'q90_3': round(q90_3, 2),
-                    'model_side1': model_side1,
-                    'model_side2': model_side2,
-                    'model_side3': model_side3,
-                    'prob1': round(p1, 3),
-                    'prob2': round(p2, 3),
-                    'prob3': round(p3, 3),
-                    'prob_all_three': round(p_all_three, 4),
-                    'edge1': round(edge1, 3),
-                    'edge2': round(edge2, 3),
-                    'edge3': round(edge3, 3),
-                    'combined_edge': round(combined_edge, 3),
-                    'ev_percent': round(ev, 2),
-                    'kelly_full': round(kelly_full, 3),
-                    'kelly_capped': round(kelly_capped, 3),
-                    'kelly_bet_size': round(kelly_bet_size, 2),
-                    'kelly_bet_size_full': round(kelly_bet_size_full, 2),
-                    'stake': stake,
-                    'profit': round(profit, 2),
-                    'recommendation': recommendation,
+                    'NAME 1': player1,
+                    'NAME 2': player2,
+                    'NAME 3': player3,
+                    'LINE 1': player1_line['LINE'],
+                    'LINE 2': player2_line['LINE'],
+                    'LINE 3': player3_line['LINE'],
+                    'PREDICTION 1': round(mu1, 2),
+                    'PREDICTION 2': round(mu2, 2),
+                    'PREDICTION 3': round(mu3, 2),
+                    'MODEL SIDE 1': model_side1,
+                    'MODEL SIDE 2': model_side2,
+                    'MODEL SIDE 3': model_side3,
+                    'PROB 1': round(p1, 3),
+                    'PROB 2': round(p2, 3),
+                    'PROB 3': round(p3, 3),
+                    'PROB ALL THREE': round(p_all_three, 4),
+                    'EDGE 1': round(edge1, 3),
+                    'EDGE 2': round(edge2, 3),
+                    'EDGE 3': round(edge3, 3),
+                    'COMBINED EDGE': round(combined_edge, 3),
+                    'EV$': round(ev_dollars, 2),
+                    'KELLY FULL': round(kelly_full, 3),
+                    'RECOMMENDATION': recommendation,
+                    'CONFIDENCE INTERVAL 1': f"({ci1[0]:.1f}, {ci1[1]:.1f})",
+                    'CONFIDENCE INTERVAL 2': f"({ci2[0]:.1f}, {ci2[1]:.1f})",
+                    'CONFIDENCE INTERVAL 3': f"({ci3[0]:.1f}, {ci3[1]:.1f})",
+                    'INTERVAL WIDTH 1': width1,
+                    'INTERVAL WIDTH 2': width2,
+                    'INTERVAL WIDTH 3': width3,
+                    'SIGMA 1': round(sigma1, 2),
+                    'SIGMA 2': round(sigma2, 2),
+                    'SIGMA 3': round(sigma3, 2),
+                    'SIGMA FLAG 1': sigma_flag1,
+                    'SIGMA FLAG 2': sigma_flag2,
+                    'SIGMA FLAG 3': sigma_flag3,
+                    'EXPECTED ROI': round((ev_dollars / stake) * 100, 1),
+                    'SIMULATION METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical',
+                    # Backtest-specific columns (for backtest.py compatibility)
                     'actual1': actual1,
                     'actual2': actual2,
                     'actual3': actual3,
@@ -799,8 +846,8 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     'won2': won2,
                     'won3': won3,
                     'won_all_three': won_all_three,
-                    'date': gameDate,
-                    'simulation_method': 'Monte Carlo' if use_monte_carlo else 'Analytical'
+                    'profit': round(profit, 2),
+                    'date': gameDate
                 })
     
     results_df = pd.DataFrame(results)
