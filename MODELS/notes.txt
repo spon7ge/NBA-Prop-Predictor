@@ -35,3 +35,42 @@
    Log Loss: 0.7775 (lower is better)
    AUC-ROC: 0.6032 (higher is better)
    Samples: 525
+
+  
+  ============================================================
+           COMPREHENSIVE BETTING ANALYSIS UNDERDOG
+============================================================
+
+ ALL BETS ANALYSIS:
+   Total Bets: 1,363
+   Wins: 725
+   Hit Rate: 53.19%
+   Total Profit: $4,060.00
+   Total Staked: $6,815.00
+   ROI: 59.57%
+   Volatility: $44.76
+   Max Drawdown: $-175.00
+   Sharpe Ratio: 12.741
+
+   PROBABILITY METRICS:
+   Brier Score: 0.2704 (lower is better)
+   Log Loss: 0.7477 (lower is better)
+   AUC-ROC: 0.5761 (higher is better)
+   Samples: 1363
+
+ RECOMMENDED BETS ANALYSIS (Edge > 0.20):
+   Total Bets: 521
+   Wins: 258
+   Hit Rate: 49.52%
+   Total Profit: $1,265.00
+   Total Staked: $2,605.00
+   ROI: 48.56%
+   Volatility: $25.75
+   Max Drawdown: $-80.00
+   Sharpe Ratio: 7.692
+
+   PROBABILITY METRICS:
+   Brier Score: 0.2850 (lower is better)
+   Log Loss: 0.7807 (lower is better)
+   AUC-ROC: 0.5871 (higher is better)
+   Samples: 521
