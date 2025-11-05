@@ -494,11 +494,11 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             combined_edge = (edge1 + edge2) / 2  # Average edge
             
             # Recommendation based on multiple criteria (matching calculateEVS.py)
-            if (combined_edge > edge_threshold and 
-                sigma_flag1 == 'Med' or sigma_flag1 == 'Low' and 
-                sigma_flag2 == 'Med' or sigma_flag2 == 'Low' and 
-                ev_dollars > 5):
-                recommendation = 1
+            if (sigma1 in ['Low', 'Med'] and sigma2 in ['Low', 'Med']):
+                if combined_edge >= edge_threshold and ev_dollars >= 10.00:
+                    recommendation = 1
+                else:
+                    recommendation = 0
             else:
                 recommendation = 0
             
