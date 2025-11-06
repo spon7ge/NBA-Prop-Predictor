@@ -206,6 +206,8 @@ def playerScoring(player_name, data):
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
+    player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
+    team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
 
     res = []
 
@@ -249,7 +251,7 @@ def playerScoring(player_name, data):
     res.append(player_df['FTM'].tail(40).mean())
     res.append(player_df['EFG_PCT'].mean())
     res.append(player_df['E_OFF_RATING'].tail(5).mean())
-    res.append(player_df['PLAYER_FG3A_SHARE'].iloc[-1])
+    res.append(player_df['FG3A'].mean() / team_df['TEAM_FG3A'].mean() + 0.01)
     res.append(player_df['USG_PCT_DELTA_STAR_OUT'].iloc[-1])
     res.append(player_df['USG_PCT'].mean() * player_df['TS_PCT'].mean() + 0.01)
 
@@ -294,8 +296,7 @@ def playerScoring(player_name, data):
     res.append(1 if (player_df['PLAYER_IS_TEAM_STAR'].iloc[-1] * (player_df['PTS_TREND_LAST_5'].iloc[-1] > 0)) else 0)
     res.append(1 if player_df['PTS'].mean() > 18 else 0)
     res.append(1 if player_df['PTS'].mean() < 18 else 0)
-    player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
-    team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
+
     res.append(player_df['PTS'].mean() / team_df['TEAM_PTS'].mean())
     res.append(player_df['FGA'].mean() / team_df['TEAM_FGA'].mean())
     

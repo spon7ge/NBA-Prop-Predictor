@@ -4,22 +4,44 @@ training on s19-s25 and validating on s26 data
 
 
 ============================================================
+           COMPREHENSIVE BETTING ANALYSIS PRIZEPICKS
+============================================================
+
+ ALL BETS ANALYSIS:
+   Total Bets: 2,716
+   Wins: 1,058
+   Hit Rate: 38.95%
+   Total Profit: $2,290.00
+   Total Staked: $13,580.00
+   ROI: 16.86%
+   Volatility: $68.75
+   Max Drawdown: $-350.00
+   Sharpe Ratio: 4.679
+
+   PROBABILITY METRICS:
+   Brier Score: 0.2602 (lower is better)
+   Log Loss: 0.7180 (lower is better)
+   AUC-ROC: 0.5876 (higher is better)
+   Samples: 2716
+
+
+============================================================
            COMPREHENSIVE BETTING ANALYSIS UNDERDOG
 ============================================================
 
  ALL BETS ANALYSIS:
-   Total Bets: 2,697
-   Wins: 1,107
-   Hit Rate: 41.05%
-   Total Profit: $3,120.00
-   Total Staked: $13,485.00
-   ROI: 23.14%
-   Volatility: $70.45
-   Max Drawdown: $-345.00
-   Sharpe Ratio: 6.221
+   Total Bets: 2,696
+   Wins: 1,161
+   Hit Rate: 43.06%
+   Total Profit: $3,935.00
+   Total Staked: $13,480.00
+   ROI: 29.19%
+   Volatility: $67.52
+   Max Drawdown: $-240.00
+   Sharpe Ratio: 8.187
 
    PROBABILITY METRICS:
-   Brier Score: 0.2734 (lower is better)
-   Log Loss: 0.7479 (lower is better)
-   AUC-ROC: 0.5768 (higher is better)
-   Samples: 2697
+   Brier Score: 0.2603 (lower is better)
+   Log Loss: 0.7187 (lower is better)
+   AUC-ROC: 0.5760 (higher is better)
+   Samples: 2696
