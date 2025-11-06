@@ -498,7 +498,11 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             combined_edge = combined_model_prob - combined_market_prob
             
             # Recommendation based on multiple criteria (matching calculateEVS.py)
-            if combined_edge > 0 and combined_model_prob > 0.335 and ev_dollars > 0:
+            if (combined_edge > 0 and 
+            combined_model_prob > 0.335 and 
+            ev_dollars > 0 and 
+            sigma1 <= 5.5 and 
+            sigma2 <= 5.5):
                 recommendation = 1
             else:
                 recommendation = 0

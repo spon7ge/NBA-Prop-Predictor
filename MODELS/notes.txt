@@ -45,3 +45,61 @@ training on s19-s25 and validating on s26 data
    Log Loss: 0.7187 (lower is better)
    AUC-ROC: 0.5760 (higher is better)
    Samples: 2696
+
+
+
+MATH NEEDED:
+
+**Core Probability and Statistics**
+
+* Probability rules, conditional probability, independence
+* Distributions: Normal, Poisson, Binomial, Exponential
+* Expected value, variance and correlation
+* Law of large numbers, central limit theorem, Bayes Theorem
+* Hypothesis testing and confidence intervals
+* Regression basics (linear, logistic)
+* Bayesian Thinking
+  - Prior, liklihood, posterior
+  - Bayesian updating
+  - Monte Carlo sampling for posterior simulation
+* Decision and Risk Theory
+  - Expected Utility and risk aversion
+  - Kelly Criterion
+  - Value at Risk(VaR) and expected shortfall
+  - Correlated Risk and portfolio variance
+* Stochastic Processes
+  - Markov Chain
+  - Martingales
+  - Random Walks and Brownian motion
+
+**Applied Statistics for Sports**
+
+* Time series analysis (ARIMA, moving averages, stationarity)
+* Correlation and autocorrelation
+* Survival analysis (player time on court, injury risk modeling)
+* Bayesian inference (updating beliefs as new games are played)
+
+**Machine Learning Foundations**
+
+* Linear regression, logistic regression
+* Decision trees, random forests, gradient boosting (XGBoost, CatBoost, LightGBM)
+* Regularization (L1, L2)
+* Feature engineering for temporal and categorical data
+
+**Optimization and Decision Making**
+
+* Monte Carlo simulation for scenario testing
+* Expected value (EV) and Kelly Criterion for bankroll sizing
+* Linear programming and constrained optimization (useful in DFS lineups)
+
+**Mathematics of the Game**
+
+* Combinatorics (lineup combinations, possession outcomes)
+* Markov chains (possession-based modeling, win probability)
+* Elo/Glicko rating systems (team and player strength)
+
+**Advanced/Optional**
+
+* Calculus (to understand optimization and ML gradients)
+* Linear algebra (to understand matrix operations in ML models)
+* Probability density estimation (kernel density, bootstrapping)
