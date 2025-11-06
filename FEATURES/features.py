@@ -175,75 +175,67 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     return player_data
 
-def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', window=5):
-    """Add trend features based on linear regression slope of last N games.
-    
-    Calculates the slope (trend) of various metrics over the last N games.
-    Positive slope = trending up, negative slope = trending down.
-    
-    Args:
-        df: DataFrame with player data
-        player_id_col: Column name for player identifier
-        date_col: Column name for date
-        window: Number of games to use for trend calculation
-        
-    Returns:
-        DataFrame with trend features added
-    """
+def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 20, 40]):
     df = df.copy()
     df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Metrics to calculate trends for
-    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT']
+    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT', 'TS_PCT', 'EFG_PCT']
     
     # Only process metrics that exist in the dataframe
     available_metrics = [m for m in trend_metrics if m in df.columns]
     
+    # Ensure windows is a list
+    if isinstance(windows, int):
+        windows = [windows]
+    
+    # Calculate trend for each metric and each window
     for metric in available_metrics:
-        trend_col = f'{metric}_TREND_LAST_{window}'
-        
-        # Calculate rolling slope for each player group
-        def calculate_player_trend(group_metric):
-            """Calculate slope for rolling window of last N games."""
-            # Create results array same length as input
-            results = np.full(len(group_metric), np.nan)
+        for window in windows:
+            trend_col = f'{metric}_TREND_LAST_{window}'
             
-            for i in range(window, len(group_metric)):
-                # Get last window values
-                window_values = group_metric.iloc[i-window:i].values
+            # Calculate rolling slope for each player group
+            def calculate_player_trend(group_metric):
+                """Calculate slope for rolling window of last N games."""
+                # Create results array same length as input
+                results = np.full(len(group_metric), np.nan)
                 
-                # Remove NaN
-                clean_values = window_values[~np.isnan(window_values)]
+                for i in range(window, len(group_metric)):
+                    # Get last window values
+                    window_values = group_metric.iloc[i-window:i].values
+                    
+                    # Remove NaN
+                    clean_values = window_values[~np.isnan(window_values)]
+                    
+                    if len(clean_values) < 2:
+                        results[i] = 0
+                        continue
+                    
+                    # Create x axis
+                    x = np.arange(len(clean_values))
+                    y = clean_values
+                    
+                    # Calculate slope: (n*sum(xy) - sum(x)*sum(y)) / (n*sum(x²) - sum(x)²)
+                    n = len(x)
+                    if n < 2 or np.var(x) == 0:
+                        results[i] = 0
+                        continue
+                    
+                    slope = (n * np.sum(x * y) - np.sum(x) * np.sum(y)) / (n * np.sum(x**2) - np.sum(x)**2)
+                    results[i] = slope
                 
-                if len(clean_values) < 2:
-                    results[i] = 0
-                    continue
-                
-                # Create x axis
-                x = np.arange(len(clean_values))
-                y = clean_values
-                
-                # Calculate slope: (n*sum(xy) - sum(x)*sum(y)) / (n*sum(x²) - sum(x)²)
-                n = len(x)
-                if n < 2 or np.var(x) == 0:
-                    results[i] = 0
-                    continue
-                
-                slope = (n * np.sum(x * y) - np.sum(x) * np.sum(y)) / (n * np.sum(x**2) - np.sum(x)**2)
-                results[i] = slope
+                return pd.Series(results, index=group_metric.index)
             
-            return pd.Series(results, index=group_metric.index)
-        
-        # Apply trend calculation grouped by player with shifted values
-        df[trend_col] = (df.groupby(player_id_col)[metric]
-                        .shift(1)
-                        .groupby(df[player_id_col])
-                        .apply(calculate_player_trend)
-                        .reset_index(level=0, drop=True))
-        
-        # Fill NaN values with 0 (no trend)
-        df[trend_col] = df[trend_col].fillna(0).round(3)
-        
+            # Apply trend calculation grouped by player with shifted values
+            df[trend_col] = (df.groupby(player_id_col)[metric]
+                            .shift(1)
+                            .groupby(df[player_id_col])
+                            .apply(calculate_player_trend)
+                            .reset_index(level=0, drop=True))
+            
+            # Fill NaN values with 0 (no trend)
+            df[trend_col] = df[trend_col].fillna(0).round(3)
+    
     return df
 
 
@@ -930,6 +922,57 @@ def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DA
     return df
 
 
+def add_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[5, 10, 15]):
+    """
+    Add rolling averages for player's team statistics over specified windows.
+    Shows how the player's own team has been performing in their recent games.
+    
+    Args:
+        df: DataFrame with player and team data
+        team_id_col: Column name for team identifier (default: 'TEAM_ID')
+        date_col: Column name for date (default: 'GAME_DATE')
+        windows: List of window sizes for rolling averages (default: [5, 10, 15])
+        
+    Returns:
+        DataFrame with team rolling average features added
+    """
+    df = df.copy()
+    df = df.sort_values([team_id_col, date_col]).reset_index(drop=True)
+    
+    # Define team stats to calculate rolling averages for
+    team_stats = [
+        'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_PTS', 
+        'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL',
+        'TEAM_FG3A', 'TEAM_FTA'
+    ]
+    
+    # Filter to only available columns
+    available_stats = [stat for stat in team_stats if stat in df.columns]
+    
+    if not available_stats:
+        print("Warning: No team stats found in dataframe for rolling averages")
+        return df
+    
+    # Calculate rolling averages for each window
+    for window in windows:
+        for stat in available_stats:
+            # Rolling average (shifted to prevent leakage)
+            rolling_col = f'{stat}_ROLLING_AVG_{window}'
+            df[rolling_col] = (
+                df.groupby(team_id_col)[stat]
+                .transform(lambda x: x.shift(1).rolling(window=window, min_periods=1).mean())
+                .round(2)
+            )
+    
+    # Convert to appropriate data types to save memory
+    rolling_cols = [col for col in df.columns if col.startswith('TEAM_') and '_ROLLING_AVG_' in col]
+    for col in rolling_cols:
+        if df[col].dtype == 'float64':
+            df[col] = df[col].astype('float32')
+    
+    return df
+
+
 def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
     """
     Add indicators showing if opponent team is in good/bad form recently.
@@ -1587,13 +1630,15 @@ def add_interaction_features(df):
     df['ELITE_USAGE'] = (df['USG_PCT_AVG_TO_DATE'] > 28).astype(int)
     df['HIGH_USAGE'] = ((df['USG_PCT_AVG_TO_DATE'] > 23) & 
                     (df['USG_PCT_AVG_TO_DATE'] <= 28)).astype(int)
-    df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].rolling(10).max().values
-    df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].rolling(10).min().values
+    df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).max().values
+    df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).min().values
     df['PTS_CEILING'] = df['PTS_MAX_LAST_10'] * 0.9  # Expected ceiling
     df['PTS_FLOOR'] = df['PTS_MIN_LAST_10'] * 1.1    # Expected floor
     df['STAR_HOT_HAND'] = (df['PLAYER_IS_TEAM_STAR'] * 
                         (df['PTS_TREND_LAST_5'] > 0)).astype(int)
-    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS'].transform('mean') > 18).astype(int)
+    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') > 18).astype(int)
+    df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 18).astype(int)
+    df['IS_MEDIUM_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 18) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') <= 18).astype(int)
     # New interaction features
     # Points per possession (true shooting possessions formula)
     df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)

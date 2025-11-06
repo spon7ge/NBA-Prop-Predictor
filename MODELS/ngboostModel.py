@@ -30,7 +30,7 @@ def fit_ngboost_split(train_df: pd.DataFrame,
                      variance_lr: float = 0.08,
                      variance_max_depth: int = 6,
                      variance_n_estimators: int = 300,
-                     variance_calibration_factor: float = 1.25):
+                     variance_calibration_factor: float = 1.4):
     """
     This approach trains separate models for mean and variance:
     - Mean model uses recency weights to prioritize recent performance
@@ -83,7 +83,7 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         Score=MLE,
         natural_gradient=True,
         learning_rate=0.08,
-        n_estimators=500,
+        n_estimators=1000,
         random_state=42,
         minibatch_frac=0.8,
         verbose=False,
@@ -127,6 +127,108 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         ngb_scale.fit(X_tr, np.abs(residuals), sample_weight=w_variance)
     
     return ngb_mean, ngb_scale, variance_calibration_factor
+
+
+def fit_ngboost_full(train_df: pd.DataFrame,
+                     val_df: pd.DataFrame | None,
+                     features: list[str],
+                     target_col: str,
+                     distribution: type = Normal,
+                     player_col: str = 'PLAYER_ID',
+                     recent_n: int = 30,
+                     recent_weight: float = 3.0,
+                     learning_rate: float = 0.08,
+                     max_depth: int = 4,
+                     n_estimators: int = 500,
+                     minibatch_frac: float = 0.8,
+                     random_state: int = 42):
+    """
+    Fit a single NGBoost model that learns both mean and variance together.
+    This is the standard NGBoost approach without splitting into separate models.
+    
+    Args:
+        train_df: Training DataFrame
+        val_df: Validation DataFrame (optional)
+        features: List of feature names
+        target_col: Name of target column
+        distribution: Distribution type (Normal, LogNormal, Poisson)
+        player_col: Column name for player ID (for recency weighting)
+        recent_n: Number of recent games to weight more heavily
+        recent_weight: Weight multiplier for recent games
+        learning_rate: Learning rate for NGBoost
+        max_depth: Max depth for base decision tree
+        n_estimators: Number of boosting rounds
+        minibatch_frac: Fraction of data to use per iteration
+        random_state: Random seed
+        
+    Returns:
+        Trained NGBRegressor model
+    """
+    if 'GAME_DATE' in train_df.columns:
+        train_df = train_df.sort_values('GAME_DATE').reset_index(drop=True)
+    if val_df is not None and len(val_df) > 0 and 'GAME_DATE' in val_df.columns:
+        val_df = val_df.sort_values('GAME_DATE').reset_index(drop=True)
+    
+    X_tr = train_df[features]
+    y_tr = train_df[target_col].to_numpy()
+    
+    X_va = None
+    y_va = None
+    if val_df is not None and len(val_df) > 0:
+        X_va = val_df[features]
+        y_va = val_df[target_col].to_numpy()
+    
+    # Handle LogNormal distribution requirement for positive values
+    if distribution == LogNormal and np.any(y_tr <= 0):
+        print(f"Warning: LogNormal requires positive targets. Shifting by {abs(np.min(y_tr)) + 1:.2f}")
+        y_min = np.min(y_tr)
+        shift = abs(y_min) + 1 if y_min <= 0 else 0
+        y_tr = y_tr + shift
+        if y_va is not None:
+            y_va = y_va + shift
+    
+    # Handle infinite and NaN values
+    X_tr = X_tr.replace([np.inf, -np.inf], np.nan)
+    X_tr = X_tr.fillna(X_tr.median())
+    if X_va is not None:
+        X_va = X_va.replace([np.inf, -np.inf], np.nan)
+        X_va = X_va.fillna(X_tr.median())
+    
+    # Build base estimator
+    base_est = DecisionTreeRegressor(max_depth=max_depth)
+    
+    # Setup early stopping if validation data provided
+    early_stopping_params = {}
+    if val_df is not None and len(val_df) > 0:
+        early_stopping_params = {'early_stopping_rounds': 20}
+    
+    # Build recency weights
+    w_recent = build_recent_weights(train_df, player_col, recent_n, recent_weight)
+    w_recent_val = None
+    if X_va is not None:
+        w_recent_val = build_recent_weights(val_df, player_col, recent_n, recent_weight)
+    
+    # Create and train single NGBoost model
+    ngb = NGBRegressor(
+        Dist=distribution,
+        Score=MLE,
+        natural_gradient=True,
+        learning_rate=learning_rate,
+        n_estimators=n_estimators,
+        random_state=random_state,
+        minibatch_frac=minibatch_frac,
+        verbose=False,
+        **early_stopping_params,
+        Base=base_est
+    )
+    
+    # Fit the model
+    if X_va is not None:
+        ngb.fit(X_tr, y_tr, X_val=X_va, Y_val=y_va, sample_weight=w_recent, val_sample_weight=w_recent_val)
+    else:
+        ngb.fit(X_tr, y_tr, sample_weight=w_recent)
+    
+    return ngb
 
 
 def predict_mean_variance(model: NGBRegressor, df: pd.DataFrame, features: list[str]):

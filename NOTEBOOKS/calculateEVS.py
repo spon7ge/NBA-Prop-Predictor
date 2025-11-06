@@ -591,14 +591,14 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             market_prob2 = impliedProb(-137)  # Fixed odds
             edge1 = p1 - market_prob1
             edge2 = p2 - market_prob2
-            combined_edge = (edge1 + edge2) / 2  # Average edge
+            
+            # Calculate combined probabilities and edge
+            combined_model_prob = p1 * p2
+            combined_market_prob = market_prob1 * market_prob2
+            combined_edge = combined_model_prob - combined_market_prob
             
             # Recommendation based on multiple criteria
-            if (combined_edge > edge_threshold and 
-                sigma1 <= 5 and 
-                sigma2 <= 5 and 
-                p_both > 0.40 and 
-                ev > 0):
+            if combined_edge > 0 and combined_model_prob > 0.335 and ev_dollars > 0:
                 recommendation = 1
             else:
                 recommendation = 0
@@ -853,15 +853,14 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                 edge1 = p1 - market_prob1
                 edge2 = p2 - market_prob2
                 edge3 = p3 - market_prob3
-                combined_edge = (edge1 + edge2 + edge3) / 3  # Average edge
+                
+                # Calculate combined probabilities and edge
+                combined_model_prob = p1 * p2 * p3
+                combined_market_prob = market_prob1 * market_prob2 * market_prob3
+                combined_edge = combined_model_prob - combined_market_prob
                 
                 # Recommendation based on multiple criteria
-                if (combined_edge > edge_threshold and 
-                    sigma1 <= 5 and 
-                    sigma2 <= 5 and 
-                    sigma3 <= 5 and 
-                    p_all_three > 0.40 and 
-                    ev > 0):
+                if combined_edge > 0 and combined_model_prob > 0.185 and ev_dollars > 0:
                     recommendation = 1
                 else:
                     recommendation = 0

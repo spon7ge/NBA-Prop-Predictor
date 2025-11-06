@@ -1,199 +1,134 @@
-NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,EXPECTED ROI,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Bones Hyland,Deandre Ayton,4.5,17.5,7.67,13.91,over,under,0,5.55,55.5,0.277,Med,Med
-Deandre Ayton,Goga Bitadze,17.5,4.5,13.91,6.44,under,over,0,5.38,53.8,0.269,Med,Low
-Tari Eason,Deandre Ayton,13.5,17.5,10.71,13.91,under,under,0,5.2,52.0,0.26,Med,Med
-Sam Hauser,Deandre Ayton,9.5,17.5,6.97,13.91,under,under,0,4.8,48.0,0.24,Med,Med
-Bones Hyland,Goga Bitadze,4.5,4.5,7.67,6.44,over,over,0,4.74,47.4,0.237,Med,Low
-Bones Hyland,Tari Eason,4.5,13.5,7.67,10.71,over,under,0,4.57,45.7,0.228,Med,Med
-Tari Eason,Goga Bitadze,13.5,4.5,10.71,6.44,under,over,0,4.41,44.1,0.221,Med,Low
-Bones Hyland,Sam Hauser,4.5,9.5,7.67,6.97,over,under,0,4.19,41.9,0.21,Med,Med
-Deandre Ayton,Tristan da Silva,17.5,7.5,13.91,9.59,under,over,0,4.14,41.4,0.207,Med,Med
-Sam Hauser,Goga Bitadze,9.5,4.5,6.97,6.44,under,over,0,4.04,40.4,0.202,Med,Low
-Sam Hauser,Tari Eason,9.5,13.5,6.97,10.71,under,under,0,3.87,38.7,0.194,Med,Med
-Terrence Shannon Jr.,Deandre Ayton,5.5,17.5,7.16,13.91,over,under,0,3.66,36.6,0.183,Low,Med
-Bones Hyland,Tristan da Silva,4.5,7.5,7.67,9.59,over,over,0,3.56,35.6,0.178,Med,Med
-Cole Anthony,Deandre Ayton,8.5,17.5,10.39,13.91,over,under,0,3.56,35.6,0.178,Med,Med
-Jaylen Clark,Deandre Ayton,5.5,17.5,7.14,13.91,over,under,0,3.53,35.3,0.177,Med,Med
-Cedric Coward,Deandre Ayton,12.5,17.5,10.96,13.91,under,under,0,3.44,34.4,0.172,Med,Med
-Tari Eason,Tristan da Silva,13.5,7.5,10.71,9.59,under,over,0,3.25,32.5,0.163,Med,Med
-Taylor Hendricks,Deandre Ayton,7.5,17.5,6.08,13.91,under,under,0,3.08,30.8,0.154,Med,Med
-Bones Hyland,Cole Anthony,4.5,8.5,7.67,10.39,over,over,0,3.0,30.0,0.15,Med,Med
-Terrence Shannon Jr.,Goga Bitadze,5.5,4.5,7.16,6.44,over,over,0,2.96,29.6,0.148,Low,Low
-Sam Hauser,Tristan da Silva,9.5,7.5,6.97,9.59,under,over,0,2.91,29.1,0.145,Med,Med
-Bones Hyland,Cedric Coward,4.5,12.5,7.67,10.96,over,under,0,2.88,28.8,0.144,Med,Med
-Cole Anthony,Goga Bitadze,8.5,4.5,10.39,6.44,over,over,0,2.86,28.6,0.143,Med,Low
-Jaylen Clark,Goga Bitadze,5.5,4.5,7.14,6.44,over,over,0,2.84,28.4,0.142,Med,Low
-Terrence Shannon Jr.,Tari Eason,5.5,13.5,7.16,10.71,over,under,0,2.8,28.0,0.14,Low,Med
-Jalen Wilson,Deandre Ayton,7.5,17.5,6.29,13.91,under,under,0,2.8,28.0,0.14,Med,Med
-Deandre Ayton,Kris Dunn,17.5,6.5,13.91,5.5,under,under,0,2.76,27.6,0.138,Med,Low
-Cedric Coward,Goga Bitadze,12.5,4.5,10.96,6.44,under,over,0,2.75,27.5,0.137,Med,Low
-Cole Anthony,Tari Eason,8.5,13.5,10.39,10.71,over,under,0,2.7,27.0,0.135,Med,Med
-Jaylen Clark,Tari Eason,5.5,13.5,7.14,10.71,over,under,0,2.68,26.8,0.134,Med,Med
-Tari Eason,Cedric Coward,13.5,12.5,10.71,10.96,under,under,0,2.59,25.9,0.13,Med,Med
-Luka Garza,Deandre Ayton,6.5,17.5,5.41,13.91,under,under,0,2.55,25.5,0.128,Med,Med
-Bones Hyland,Taylor Hendricks,4.5,7.5,7.67,6.08,over,under,0,2.54,25.4,0.127,Med,Med
-Rob Dillingham,Deandre Ayton,5.5,17.5,6.75,13.91,over,under,0,2.49,24.9,0.125,Med,Med
-Terrence Shannon Jr.,Sam Hauser,5.5,9.5,7.16,6.97,over,under,0,2.47,24.7,0.124,Low,Med
-Taylor Hendricks,Goga Bitadze,7.5,4.5,6.08,6.44,under,over,0,2.4,24.0,0.12,Med,Low
-Johnny Furphy,Deandre Ayton,6.5,17.5,7.62,13.91,over,under,0,2.38,23.8,0.119,Med,Med
-Cole Anthony,Sam Hauser,8.5,9.5,10.39,6.97,over,under,0,2.38,23.8,0.119,Med,Med
-Jaylen Clark,Sam Hauser,5.5,9.5,7.14,6.97,over,under,0,2.35,23.5,0.118,Med,Med
-Jalen Wilson,Bones Hyland,7.5,4.5,6.29,7.67,under,over,0,2.27,22.7,0.113,Med,Med
-Sam Hauser,Cedric Coward,9.5,12.5,6.97,10.96,under,under,0,2.27,22.7,0.113,Med,Med
-Taylor Hendricks,Tari Eason,7.5,13.5,6.08,10.71,under,under,0,2.25,22.5,0.113,Med,Med
-Bones Hyland,Kris Dunn,4.5,6.5,7.67,5.5,over,under,0,2.23,22.3,0.111,Med,Low
-Jalen Wilson,Goga Bitadze,7.5,4.5,6.29,6.44,under,over,0,2.14,21.4,0.107,Med,Low
-Kris Dunn,Goga Bitadze,6.5,4.5,5.5,6.44,under,over,0,2.1,21.0,0.105,Low,Low
-Bones Hyland,Luka Garza,4.5,6.5,7.67,5.41,over,under,0,2.03,20.3,0.102,Med,Med
-Jalen Wilson,Tari Eason,7.5,13.5,6.29,10.71,under,under,0,1.99,19.9,0.1,Med,Med
-Tari Eason,Kris Dunn,13.5,6.5,10.71,5.5,under,under,0,1.95,19.5,0.098,Med,Low
-Taylor Hendricks,Sam Hauser,7.5,9.5,6.08,6.97,under,under,0,1.94,19.4,0.097,Med,Med
-Terrence Shannon Jr.,Tristan da Silva,5.5,7.5,7.16,9.59,over,over,0,1.91,19.1,0.096,Low,Med
-Luka Garza,Goga Bitadze,6.5,4.5,5.41,6.44,under,over,0,1.9,19.0,0.095,Med,Low
-Bones Hyland,Johnny Furphy,4.5,6.5,7.67,7.62,over,over,0,1.87,18.7,0.094,Med,Med
-Rob Dillingham,Goga Bitadze,5.5,4.5,6.75,6.44,over,over,0,1.85,18.5,0.092,Med,Low
-Peyton Watson,Deandre Ayton,6.5,17.5,5.92,13.91,under,under,0,1.85,18.5,0.092,Low,Med
-Cole Anthony,Tristan da Silva,8.5,7.5,10.39,9.59,over,over,0,1.82,18.2,0.091,Med,Med
-Jaylen Clark,Tristan da Silva,5.5,7.5,7.14,9.59,over,over,0,1.8,18.0,0.09,Med,Med
-Luka Garza,Tari Eason,6.5,13.5,5.41,10.71,under,under,0,1.76,17.6,0.088,Med,Med
-Johnny Furphy,Goga Bitadze,6.5,4.5,7.62,6.44,over,over,0,1.75,17.5,0.087,Med,Low
-Cedric Coward,Tristan da Silva,12.5,7.5,10.96,9.59,under,over,0,1.72,17.2,0.086,Med,Med
-Rob Dillingham,Tari Eason,5.5,13.5,6.75,10.71,over,under,0,1.7,17.0,0.085,Med,Med
-Jalen Wilson,Sam Hauser,7.5,9.5,6.29,6.97,under,under,0,1.68,16.8,0.084,Med,Med
-Sam Hauser,Kris Dunn,9.5,6.5,6.97,5.5,under,under,0,1.65,16.5,0.082,Med,Low
-Johnny Furphy,Tari Eason,6.5,13.5,7.62,10.71,over,under,0,1.6,16.0,0.08,Med,Med
-Terrence Shannon Jr.,Cole Anthony,5.5,8.5,7.16,10.39,over,over,0,1.42,14.2,0.071,Low,Med
-Taylor Hendricks,Tristan da Silva,7.5,7.5,6.08,9.59,under,over,0,1.4,14.0,0.07,Med,Med
-Rob Dillingham,Sam Hauser,5.5,9.5,6.75,6.97,over,under,0,1.4,14.0,0.07,Med,Med
-Bones Hyland,Peyton Watson,4.5,6.5,7.67,5.92,over,under,0,1.36,13.6,0.068,Med,Low
-Terrence Shannon Jr.,Cedric Coward,5.5,12.5,7.16,10.96,over,under,0,1.32,13.2,0.066,Low,Med
-Jaylen Clark,Cole Anthony,5.5,8.5,7.14,10.39,over,over,0,1.31,13.1,0.066,Med,Med
-Johnny Furphy,Sam Hauser,6.5,9.5,7.62,6.97,over,under,0,1.3,13.0,0.065,Med,Med
-Peyton Watson,Goga Bitadze,6.5,4.5,5.92,6.44,under,over,0,1.24,12.4,0.062,Low,Low
-Cole Anthony,Cedric Coward,8.5,12.5,10.39,10.96,over,under,0,1.23,12.3,0.062,Med,Med
-Jaylen Clark,Cedric Coward,5.5,12.5,7.14,10.96,over,under,0,1.21,12.1,0.061,Med,Med
-Jalen Wilson,Tristan da Silva,7.5,7.5,6.29,9.59,under,over,0,1.16,11.6,0.058,Med,Med
-Kris Dunn,Tristan da Silva,6.5,7.5,5.5,9.59,under,over,0,1.12,11.2,0.056,Low,Med
-Tari Eason,Peyton Watson,13.5,6.5,10.71,5.92,under,under,0,1.1,11.0,0.055,Med,Low
-Josh Okogie,Deandre Ayton,9.5,17.5,9.91,13.91,over,under,0,1.04,10.4,0.052,Med,Med
-Corey Kispert,Deandre Ayton,7.5,17.5,7.27,13.91,under,under,0,1.03,10.3,0.052,Med,Med
-Steven Adams,Deandre Ayton,5.5,17.5,5.79,13.91,over,under,0,1.02,10.2,0.051,Low,Med
-Terrence Shannon Jr.,Taylor Hendricks,5.5,7.5,7.16,6.08,over,under,0,1.02,10.2,0.051,Low,Med
-Luka Garza,Tristan da Silva,6.5,7.5,5.41,9.59,under,over,0,0.94,9.4,0.047,Med,Med
-Cole Anthony,Taylor Hendricks,8.5,7.5,10.39,6.08,over,under,0,0.93,9.3,0.047,Med,Med
-Jaylen Clark,Taylor Hendricks,5.5,7.5,7.14,6.08,over,under,0,0.91,9.1,0.046,Med,Med
-Rob Dillingham,Tristan da Silva,5.5,7.5,6.75,9.59,over,over,0,0.89,8.9,0.045,Med,Med
-Taylor Hendricks,Cedric Coward,7.5,12.5,6.08,10.96,under,under,0,0.84,8.4,0.042,Med,Med
-Sam Hauser,Peyton Watson,9.5,6.5,6.97,5.92,under,under,0,0.82,8.2,0.041,Med,Low
-Johnny Furphy,Tristan da Silva,6.5,7.5,7.62,9.59,over,over,0,0.8,8.0,0.04,Med,Med
-Aaron Gordon,Deandre Ayton,15.5,17.5,15.41,13.91,under,under,0,0.8,8.0,0.04,Low,Med
-Terrence Shannon Jr.,Jalen Wilson,5.5,7.5,7.16,6.29,over,under,0,0.78,7.8,0.039,Low,Med
-Terrence Shannon Jr.,Kris Dunn,5.5,6.5,7.16,5.5,over,under,0,0.75,7.5,0.037,Low,Low
-Jalen Wilson,Cole Anthony,7.5,8.5,6.29,10.39,under,over,0,0.7,7.0,0.035,Med,Med
-Jaylen Clark,Jalen Wilson,5.5,7.5,7.14,6.29,over,under,0,0.68,6.8,0.034,Med,Med
-Cole Anthony,Kris Dunn,8.5,6.5,10.39,5.5,over,under,0,0.67,6.7,0.033,Med,Low
-Jaylen Clark,Kris Dunn,5.5,6.5,7.14,5.5,over,under,0,0.65,6.5,0.032,Med,Low
-Jalen Wilson,Cedric Coward,7.5,12.5,6.29,10.96,under,under,0,0.61,6.1,0.03,Med,Med
-Bones Hyland,Josh Okogie,4.5,9.5,7.67,9.91,over,over,0,0.58,5.8,0.029,Med,Med
-Bones Hyland,Corey Kispert,4.5,7.5,7.67,7.27,over,under,0,0.58,5.8,0.029,Med,Med
-Terrence Shannon Jr.,Luka Garza,5.5,6.5,7.16,5.41,over,under,0,0.57,5.7,0.029,Low,Med
-Cedric Coward,Kris Dunn,12.5,6.5,10.96,5.5,under,under,0,0.57,5.7,0.029,Med,Low
-Bones Hyland,Steven Adams,4.5,5.5,7.67,5.79,over,over,0,0.56,5.6,0.028,Med,Low
-Cole Anthony,Luka Garza,8.5,6.5,10.39,5.41,over,under,0,0.49,4.9,0.025,Med,Med
-Corey Kispert,Goga Bitadze,7.5,4.5,7.27,6.44,under,over,0,0.47,4.7,0.023,Med,Low
-Josh Okogie,Goga Bitadze,9.5,4.5,9.91,6.44,over,over,0,0.47,4.7,0.023,Med,Low
-Jaylen Clark,Luka Garza,5.5,6.5,7.14,5.41,over,under,0,0.47,4.7,0.024,Med,Med
-Steven Adams,Goga Bitadze,5.5,4.5,5.79,6.44,over,over,0,0.45,4.5,0.022,Low,Low
-Rob Dillingham,Cole Anthony,5.5,8.5,6.75,10.39,over,over,0,0.44,4.4,0.022,Med,Med
-Terrence Shannon Jr.,Johnny Furphy,5.5,6.5,7.16,7.62,over,over,0,0.43,4.3,0.022,Low,Med
-Luka Garza,Cedric Coward,6.5,12.5,5.41,10.96,under,under,0,0.4,4.0,0.02,Med,Med
-Cole Anthony,Johnny Furphy,8.5,6.5,10.39,7.62,over,over,0,0.35,3.5,0.018,Med,Med
-Bones Hyland,Aaron Gordon,4.5,15.5,7.67,15.41,over,under,0,0.35,3.5,0.018,Med,Low
-Rob Dillingham,Cedric Coward,5.5,12.5,6.75,10.96,over,under,0,0.35,3.5,0.017,Med,Med
-Corey Kispert,Tari Eason,7.5,13.5,7.27,10.71,under,under,0,0.34,3.4,0.017,Med,Med
-Peyton Watson,Tristan da Silva,6.5,7.5,5.92,9.59,under,over,0,0.33,3.3,0.017,Low,Med
-Jaylen Clark,Johnny Furphy,5.5,6.5,7.14,7.62,over,over,0,0.33,3.3,0.017,Med,Med
-Jalen Wilson,Taylor Hendricks,7.5,7.5,6.29,6.08,under,under,0,0.32,3.2,0.016,Med,Med
-Taylor Hendricks,Kris Dunn,7.5,6.5,6.08,5.5,under,under,0,0.29,2.9,0.014,Med,Low
-Johnny Furphy,Cedric Coward,6.5,12.5,7.62,10.96,over,under,0,0.26,2.6,0.013,Med,Med
-Aaron Gordon,Goga Bitadze,15.5,4.5,15.41,6.44,under,over,0,0.24,2.4,0.012,Low,Low
-Taylor Hendricks,Luka Garza,7.5,6.5,6.08,5.41,under,under,0,0.12,1.2,0.006,Med,Med
-Tari Eason,Aaron Gordon,13.5,15.5,10.71,15.41,under,under,0,0.12,1.2,0.006,Med,Low
-Rob Dillingham,Taylor Hendricks,5.5,7.5,6.75,6.08,over,under,0,0.07,0.7,0.004,Med,Med
-Jalen Wilson,Kris Dunn,7.5,6.5,6.29,5.5,under,under,0,0.07,0.7,0.003,Med,Low
-Sam Hauser,Corey Kispert,9.5,7.5,6.97,7.27,under,under,0,0.07,0.7,0.004,Med,Med
-Sam Hauser,Josh Okogie,9.5,9.5,6.97,9.91,under,over,0,0.07,0.7,0.004,Med,Med
-Sam Hauser,Steven Adams,9.5,5.5,6.97,5.79,under,over,0,0.06,0.6,0.003,Med,Low
-Johnny Furphy,Taylor Hendricks,6.5,7.5,7.62,6.08,over,under,0,-0.01,-0.1,0.0,Med,Med
-Terrence Shannon Jr.,Peyton Watson,5.5,6.5,7.16,5.92,over,under,0,-0.02,-0.2,0.0,Low,Low
-Jalen Wilson,Luka Garza,7.5,6.5,6.29,5.41,under,under,0,-0.09,-0.9,0.0,Med,Med
-Cole Anthony,Peyton Watson,8.5,6.5,10.39,5.92,over,under,0,-0.1,-1.0,0.0,Med,Low
-Jaylen Clark,Peyton Watson,5.5,6.5,7.14,5.92,over,under,0,-0.11,-1.1,0.0,Med,Low
-Luka Garza,Kris Dunn,6.5,6.5,5.41,5.5,under,under,0,-0.13,-1.3,0.0,Med,Low
-Sam Hauser,Aaron Gordon,9.5,15.5,6.97,15.41,under,under,0,-0.14,-1.4,0.0,Med,Low
-Rob Dillingham,Jalen Wilson,5.5,7.5,6.75,6.29,over,under,0,-0.14,-1.4,0.0,Med,Med
-Rob Dillingham,Kris Dunn,5.5,6.5,6.75,5.5,over,under,0,-0.17,-1.7,0.0,Med,Low
-Cedric Coward,Peyton Watson,12.5,6.5,10.96,5.92,under,under,0,-0.18,-1.8,0.0,Med,Low
-Jalen Wilson,Johnny Furphy,7.5,6.5,6.29,7.62,under,over,0,-0.23,-2.3,0.0,Med,Med
-Johnny Furphy,Kris Dunn,6.5,6.5,7.62,5.5,over,under,0,-0.26,-2.6,0.0,Med,Low
-Rob Dillingham,Luka Garza,5.5,6.5,6.75,5.41,over,under,0,-0.33,-3.3,0.0,Med,Med
-Josh Okogie,Tristan da Silva,9.5,7.5,9.91,9.59,over,over,0,-0.38,-3.8,0.0,Med,Med
-Corey Kispert,Tristan da Silva,7.5,7.5,7.27,9.59,under,over,0,-0.38,-3.8,0.0,Med,Med
-Steven Adams,Tristan da Silva,5.5,7.5,5.79,9.59,over,over,0,-0.39,-3.9,0.0,Low,Med
-Johnny Furphy,Luka Garza,6.5,6.5,7.62,5.41,over,under,0,-0.42,-4.2,0.0,Med,Med
-Taylor Hendricks,Peyton Watson,7.5,6.5,6.08,5.92,under,under,0,-0.45,-4.5,0.0,Med,Low
-Rob Dillingham,Johnny Furphy,5.5,6.5,6.75,7.62,over,over,0,-0.46,-4.6,0.0,Med,Med
-Aaron Gordon,Tristan da Silva,15.5,7.5,15.41,9.59,under,over,0,-0.58,-5.8,0.0,Low,Med
-Jalen Wilson,Peyton Watson,7.5,6.5,6.29,5.92,under,under,0,-0.65,-6.5,0.0,Med,Low
-Peyton Watson,Kris Dunn,6.5,6.5,5.92,5.5,under,under,0,-0.68,-6.8,0.0,Low,Low
-Terrence Shannon Jr.,Josh Okogie,5.5,9.5,7.16,9.91,over,over,0,-0.7,-7.0,0.0,Low,Med
-Terrence Shannon Jr.,Corey Kispert,5.5,7.5,7.16,7.27,over,under,0,-0.71,-7.1,0.0,Low,Med
-Terrence Shannon Jr.,Steven Adams,5.5,5.5,7.16,5.79,over,over,0,-0.72,-7.2,0.0,Low,Low
-Cole Anthony,Josh Okogie,8.5,9.5,10.39,9.91,over,over,0,-0.77,-7.7,0.0,Med,Med
-Cole Anthony,Corey Kispert,8.5,7.5,10.39,7.27,over,under,0,-0.78,-7.8,0.0,Med,Med
-Cole Anthony,Steven Adams,8.5,5.5,10.39,5.79,over,over,0,-0.79,-7.9,0.0,Med,Low
-Jaylen Clark,Corey Kispert,5.5,7.5,7.14,7.27,over,under,0,-0.79,-7.9,0.0,Med,Med
-Jaylen Clark,Josh Okogie,5.5,9.5,7.14,9.91,over,over,0,-0.79,-7.9,0.0,Med,Med
-Jaylen Clark,Steven Adams,5.5,5.5,7.14,5.79,over,over,0,-0.81,-8.1,0.0,Med,Low
-Luka Garza,Peyton Watson,6.5,6.5,5.41,5.92,under,under,0,-0.83,-8.3,0.0,Med,Low
-Corey Kispert,Cedric Coward,7.5,12.5,7.27,10.96,under,under,0,-0.86,-8.6,0.0,Med,Med
-Josh Okogie,Cedric Coward,9.5,12.5,9.91,10.96,over,under,0,-0.86,-8.6,0.0,Med,Med
-Steven Adams,Cedric Coward,5.5,12.5,5.79,10.96,over,under,0,-0.87,-8.7,0.0,Low,Med
-Rob Dillingham,Peyton Watson,5.5,6.5,6.75,5.92,over,under,0,-0.87,-8.7,0.0,Med,Low
-Terrence Shannon Jr.,Aaron Gordon,5.5,15.5,7.16,15.41,over,under,0,-0.9,-9.0,0.0,Low,Low
-Johnny Furphy,Peyton Watson,6.5,6.5,7.62,5.92,over,under,0,-0.95,-9.5,0.0,Med,Low
-Cole Anthony,Aaron Gordon,8.5,15.5,10.39,15.41,over,under,0,-0.97,-9.7,0.0,Med,Low
-Jaylen Clark,Aaron Gordon,5.5,15.5,7.14,15.41,over,under,0,-0.99,-9.9,0.0,Med,Low
-Cedric Coward,Aaron Gordon,12.5,15.5,10.96,15.41,under,under,0,-1.05,-10.5,0.0,Med,Low
-Taylor Hendricks,Corey Kispert,7.5,7.5,6.08,7.27,under,under,0,-1.1,-11.0,0.0,Med,Med
-Taylor Hendricks,Josh Okogie,7.5,9.5,6.08,9.91,under,over,0,-1.1,-11.0,0.0,Med,Med
-Taylor Hendricks,Steven Adams,7.5,5.5,6.08,5.79,under,over,0,-1.12,-11.2,0.0,Med,Low
-Taylor Hendricks,Aaron Gordon,7.5,15.5,6.08,15.41,under,under,0,-1.29,-12.9,0.0,Med,Low
-Jalen Wilson,Josh Okogie,7.5,9.5,6.29,9.91,under,over,0,-1.29,-12.9,0.0,Med,Med
-Jalen Wilson,Corey Kispert,7.5,7.5,6.29,7.27,under,under,0,-1.29,-12.9,0.0,Med,Med
-Jalen Wilson,Steven Adams,7.5,5.5,6.29,5.79,under,over,0,-1.3,-13.0,0.0,Med,Low
-Corey Kispert,Kris Dunn,7.5,6.5,7.27,5.5,under,under,0,-1.32,-13.2,0.0,Med,Low
-Josh Okogie,Kris Dunn,9.5,6.5,9.91,5.5,over,under,0,-1.32,-13.2,0.0,Med,Low
-Steven Adams,Kris Dunn,5.5,6.5,5.79,5.5,over,under,0,-1.33,-13.3,0.0,Low,Low
-Luka Garza,Josh Okogie,6.5,9.5,5.41,9.91,under,over,0,-1.46,-14.6,0.0,Med,Med
-Luka Garza,Corey Kispert,6.5,7.5,5.41,7.27,under,under,0,-1.46,-14.6,0.0,Med,Med
-Luka Garza,Steven Adams,6.5,5.5,5.41,5.79,under,over,0,-1.47,-14.7,0.0,Med,Low
-Jalen Wilson,Aaron Gordon,7.5,15.5,6.29,15.41,under,under,0,-1.48,-14.8,0.0,Med,Low
-Rob Dillingham,Corey Kispert,5.5,7.5,6.75,7.27,over,under,0,-1.5,-15.0,0.0,Med,Med
-Rob Dillingham,Josh Okogie,5.5,9.5,6.75,9.91,over,over,0,-1.5,-15.0,0.0,Med,Med
-Aaron Gordon,Kris Dunn,15.5,6.5,15.41,5.5,under,under,0,-1.5,-15.0,0.0,Low,Low
-Rob Dillingham,Steven Adams,5.5,5.5,6.75,5.79,over,over,0,-1.51,-15.1,0.0,Med,Low
-Johnny Furphy,Josh Okogie,6.5,9.5,7.62,9.91,over,over,0,-1.57,-15.7,0.0,Med,Med
-Johnny Furphy,Corey Kispert,6.5,7.5,7.62,7.27,over,under,0,-1.57,-15.7,0.0,Med,Med
-Johnny Furphy,Steven Adams,6.5,5.5,7.62,5.79,over,over,0,-1.59,-15.9,0.0,Med,Low
-Luka Garza,Aaron Gordon,6.5,15.5,5.41,15.41,under,under,0,-1.64,-16.4,0.0,Med,Low
-Rob Dillingham,Aaron Gordon,5.5,15.5,6.75,15.41,over,under,0,-1.68,-16.8,0.0,Med,Low
-Johnny Furphy,Aaron Gordon,6.5,15.5,7.62,15.41,over,under,0,-1.75,-17.5,0.0,Med,Low
-Josh Okogie,Peyton Watson,9.5,6.5,9.91,5.92,over,under,0,-1.94,-19.4,0.0,Med,Low
-Corey Kispert,Peyton Watson,7.5,6.5,7.27,5.92,under,under,0,-1.94,-19.4,0.0,Med,Low
-Steven Adams,Peyton Watson,5.5,6.5,5.79,5.92,over,under,0,-1.95,-19.5,0.0,Low,Low
-Corey Kispert,Josh Okogie,7.5,9.5,7.27,9.91,under,over,0,-2.49,-24.9,0.0,Med,Med
-Corey Kispert,Steven Adams,7.5,5.5,7.27,5.79,under,over,0,-2.5,-25.0,0.0,Med,Low
-Corey Kispert,Aaron Gordon,7.5,15.5,7.27,15.41,under,under,0,-2.65,-26.5,0.0,Med,Low
-Josh Okogie,Aaron Gordon,9.5,15.5,9.91,15.41,over,under,0,-2.65,-26.5,0.0,Med,Low
-Steven Adams,Aaron Gordon,5.5,15.5,5.79,15.41,over,under,0,-2.66,-26.6,0.0,Low,Low
+NAME 1,NAME 2,LINE 1,LINE 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
+Jock Landale,Isaiah Hartenstein,8.5,10.5,over,over,1,13.54,0.677,Med,Med
+Neemias Queta,Jock Landale,8.5,8.5,over,over,1,12.72,0.636,Low,Med
+Neemias Queta,Isaiah Hartenstein,8.5,10.5,over,over,1,12.48,0.624,Low,Med
+Caris LeVert,Jock Landale,10.5,8.5,under,over,1,11.04,0.552,Low,Med
+Mitchell Robinson,Jock Landale,4.5,8.5,over,over,1,10.81,0.541,Low,Med
+Caris LeVert,Isaiah Hartenstein,10.5,10.5,under,over,1,10.81,0.541,Low,Med
+Jock Landale,Josh Okogie,8.5,8.5,over,over,1,10.75,0.538,Med,Med
+Mitchell Robinson,Isaiah Hartenstein,4.5,10.5,over,over,1,10.59,0.53,Low,Med
+Josh Okogie,Isaiah Hartenstein,8.5,10.5,over,over,1,10.53,0.527,Med,Med
+Jabari Walker,Jock Landale,4.5,8.5,over,over,1,10.49,0.525,Med,Med
+Jabari Walker,Isaiah Hartenstein,4.5,10.5,over,over,1,10.28,0.514,Med,Med
+Caris LeVert,Neemias Queta,10.5,8.5,under,over,1,10.09,0.505,Low,Low
+Neemias Queta,Mitchell Robinson,8.5,4.5,over,over,1,9.88,0.494,Low,Low
+Adem Bona,Jock Landale,5.5,8.5,over,over,1,9.86,0.493,Low,Med
+Neemias Queta,Josh Okogie,8.5,8.5,over,over,1,9.82,0.491,Low,Med
+Adem Bona,Isaiah Hartenstein,5.5,10.5,over,over,1,9.65,0.482,Low,Med
+Jabari Walker,Neemias Queta,4.5,8.5,over,over,1,9.57,0.479,Med,Low
+Adem Bona,Neemias Queta,5.5,8.5,over,over,1,8.97,0.448,Low,Low
+Jock Landale,Kevon Looney,8.5,5.5,over,over,1,8.51,0.426,Med,Med
+Caris LeVert,Mitchell Robinson,10.5,4.5,under,over,1,8.41,0.42,Low,Low
+Caris LeVert,Josh Okogie,10.5,8.5,under,over,1,8.35,0.418,Low,Med
+Kevon Looney,Isaiah Hartenstein,5.5,10.5,over,over,1,8.32,0.416,Med,Med
+Svi Mykhailiuk,Jock Landale,7.5,8.5,over,over,1,8.2,0.41,Med,Med
+Mitchell Robinson,Josh Okogie,4.5,8.5,over,over,1,8.15,0.408,Low,Med
+Caris LeVert,Jabari Walker,10.5,4.5,under,over,1,8.13,0.406,Low,Med
+Svi Mykhailiuk,Isaiah Hartenstein,7.5,10.5,over,over,1,8.01,0.4,Med,Med
+Jock Landale,Jarred Vanderbilt,8.5,4.5,over,over,1,8.0,0.4,Med,Low
+Jabari Walker,Mitchell Robinson,4.5,4.5,over,over,1,7.93,0.397,Med,Low
+Jock Landale,Julian Champagnie,8.5,8.5,over,over,1,7.93,0.396,Med,Med
+Jabari Walker,Josh Okogie,4.5,8.5,over,over,1,7.88,0.394,Med,Med
+Jarred Vanderbilt,Isaiah Hartenstein,4.5,10.5,over,over,1,7.81,0.391,Low,Med
+Julian Champagnie,Isaiah Hartenstein,8.5,10.5,over,over,1,7.74,0.387,Med,Med
+Neemias Queta,Kevon Looney,8.5,5.5,over,over,1,7.68,0.384,Low,Med
+Josh Hart,Jock Landale,8.5,8.5,over,over,1,7.64,0.382,Med,Med
+Caris LeVert,Adem Bona,10.5,5.5,under,over,1,7.56,0.378,Low,Low
+Josh Hart,Isaiah Hartenstein,8.5,10.5,over,over,1,7.46,0.373,Med,Med
+Svi Mykhailiuk,Neemias Queta,7.5,8.5,over,over,1,7.38,0.369,Med,Low
+Adem Bona,Mitchell Robinson,5.5,4.5,over,over,1,7.37,0.369,Low,Low
+Adem Bona,Josh Okogie,5.5,8.5,over,over,1,7.32,0.366,Low,Med
+Neemias Queta,Jarred Vanderbilt,8.5,4.5,over,over,1,7.19,0.36,Low,Low
+Neemias Queta,Julian Champagnie,8.5,8.5,over,over,1,7.12,0.356,Low,Med
+Neemias Queta,Josh Hart,8.5,8.5,over,over,1,6.85,0.342,Low,Med
+Caris LeVert,Kevon Looney,10.5,5.5,under,over,1,6.37,0.319,Low,Med
+Mitchell Robinson,Kevon Looney,4.5,5.5,over,over,1,6.2,0.31,Low,Med
+Josh Okogie,Kevon Looney,8.5,5.5,over,over,1,6.15,0.307,Med,Med
+Caris LeVert,Svi Mykhailiuk,10.5,7.5,under,over,1,6.1,0.305,Low,Med
+Jock Landale,Peyton Watson,8.5,6.5,over,under,1,5.96,0.298,Med,Low
+Jabari Walker,Kevon Looney,4.5,5.5,over,over,1,5.95,0.298,Med,Med
+Svi Mykhailiuk,Mitchell Robinson,7.5,4.5,over,over,1,5.92,0.296,Med,Low
+Caris LeVert,Jarred Vanderbilt,10.5,4.5,under,over,1,5.92,0.296,Low,Low
+Svi Mykhailiuk,Josh Okogie,7.5,8.5,over,over,1,5.88,0.294,Med,Med
+Caris LeVert,Julian Champagnie,10.5,8.5,under,over,1,5.85,0.293,Low,Med
+Peyton Watson,Isaiah Hartenstein,6.5,10.5,under,over,1,5.79,0.289,Low,Med
+Jock Landale,Naji Marshall,8.5,9.5,over,under,1,5.78,0.289,Med,Med
+Mitchell Robinson,Jarred Vanderbilt,4.5,4.5,over,over,1,5.75,0.287,Low,Low
+Josh Okogie,Jarred Vanderbilt,8.5,4.5,over,over,1,5.7,0.285,Med,Low
+Mitchell Robinson,Julian Champagnie,4.5,8.5,over,over,1,5.68,0.284,Low,Med
+Svi Mykhailiuk,Jabari Walker,7.5,4.5,over,over,1,5.68,0.284,Med,Med
+Josh Okogie,Julian Champagnie,8.5,8.5,over,over,1,5.64,0.282,Med,Med
+Naji Marshall,Isaiah Hartenstein,9.5,10.5,under,over,1,5.61,0.281,Med,Med
+Caris LeVert,Josh Hart,10.5,8.5,under,over,1,5.6,0.28,Low,Med
+Jabari Walker,Jarred Vanderbilt,4.5,4.5,over,over,1,5.51,0.275,Med,Low
+Adem Bona,Kevon Looney,5.5,5.5,over,over,1,5.46,0.273,Low,Med
+Jabari Walker,Julian Champagnie,4.5,8.5,over,over,1,5.45,0.272,Med,Med
+Josh Hart,Josh Okogie,8.5,8.5,over,over,1,5.39,0.27,Med,Med
+Neemias Queta,Peyton Watson,8.5,6.5,over,under,1,5.24,0.262,Low,Low
+Svi Mykhailiuk,Adem Bona,7.5,5.5,over,over,1,5.2,0.26,Med,Low
+Jabari Walker,Josh Hart,4.5,8.5,over,over,1,5.2,0.26,Med,Med
+Neemias Queta,Naji Marshall,8.5,9.5,over,under,1,5.07,0.253,Low,Med
+Adem Bona,Jarred Vanderbilt,5.5,4.5,over,over,1,5.03,0.251,Low,Low
+Adem Bona,Julian Champagnie,5.5,8.5,over,over,1,4.97,0.248,Low,Med
+Adem Bona,Josh Hart,5.5,8.5,over,over,1,4.73,0.236,Low,Med
+Ace Bailey,Jock Landale,6.5,8.5,over,over,1,4.45,0.223,Med,Med
+Ace Bailey,Isaiah Hartenstein,6.5,10.5,over,over,1,4.3,0.215,Med,Med
+Svi Mykhailiuk,Kevon Looney,7.5,5.5,over,over,1,4.17,0.208,Med,Med
+Caris LeVert,Peyton Watson,10.5,6.5,under,under,1,4.11,0.206,Low,Low
+Kevon Looney,Jarred Vanderbilt,5.5,4.5,over,over,1,4.01,0.2,Med,Low
+Mitchell Robinson,Peyton Watson,4.5,6.5,over,under,1,3.96,0.198,Low,Low
+Caris LeVert,Naji Marshall,10.5,9.5,under,under,1,3.95,0.198,Low,Med
+Kevon Looney,Julian Champagnie,5.5,8.5,over,over,1,3.95,0.198,Med,Med
+Josh Okogie,Peyton Watson,8.5,6.5,over,under,1,3.92,0.196,Med,Low
+Ace Bailey,Neemias Queta,6.5,8.5,over,over,1,3.8,0.19,Med,Low
+Mitchell Robinson,Naji Marshall,4.5,9.5,over,under,1,3.8,0.19,Low,Med
+Corey Kispert,Jock Landale,7.5,8.5,over,over,1,3.8,0.19,Med,Med
+Svi Mykhailiuk,Jarred Vanderbilt,7.5,4.5,over,over,1,3.77,0.189,Med,Low
+Josh Okogie,Naji Marshall,8.5,9.5,over,under,1,3.76,0.188,Med,Med
+Jabari Walker,Peyton Watson,4.5,6.5,over,under,1,3.75,0.187,Med,Low
+Josh Hart,Kevon Looney,8.5,5.5,over,over,1,3.73,0.187,Med,Med
+Svi Mykhailiuk,Julian Champagnie,7.5,8.5,over,over,1,3.72,0.186,Med,Med
+Corey Kispert,Isaiah Hartenstein,7.5,10.5,over,over,1,3.66,0.183,Med,Med
+Jabari Walker,Naji Marshall,4.5,9.5,over,under,1,3.59,0.18,Med,Med
+Jarred Vanderbilt,Julian Champagnie,4.5,8.5,over,over,1,3.57,0.178,Low,Med
+Svi Mykhailiuk,Josh Hart,7.5,8.5,over,over,1,3.5,0.175,Med,Med
+Josh Hart,Jarred Vanderbilt,8.5,4.5,over,over,1,3.35,0.168,Med,Low
+Adem Bona,Peyton Watson,5.5,6.5,over,under,1,3.32,0.166,Low,Low
+Josh Hart,Julian Champagnie,8.5,8.5,over,over,1,3.3,0.165,Med,Med
+Corey Kispert,Neemias Queta,7.5,8.5,over,over,1,3.18,0.159,Med,Low
+Adem Bona,Naji Marshall,5.5,9.5,over,under,1,3.17,0.159,Low,Med
+Ace Bailey,Caris LeVert,6.5,10.5,over,under,1,2.78,0.139,Med,Low
+Ace Bailey,Mitchell Robinson,6.5,4.5,over,over,1,2.64,0.132,Med,Low
+Ace Bailey,Josh Okogie,6.5,8.5,over,over,1,2.61,0.13,Med,Med
+Ace Bailey,Jabari Walker,6.5,4.5,over,over,1,2.45,0.123,Med,Med
+Kevon Looney,Peyton Watson,5.5,6.5,over,under,1,2.42,0.121,Med,Low
+Naji Marshall,Kevon Looney,9.5,5.5,under,over,1,2.28,0.114,Med,Med
+Svi Mykhailiuk,Peyton Watson,7.5,6.5,over,under,1,2.21,0.11,Med,Low
+Caris LeVert,Corey Kispert,10.5,7.5,under,over,1,2.21,0.11,Low,Med
+Corey Kispert,Mitchell Robinson,7.5,4.5,over,over,1,2.08,0.104,Med,Low
+Peyton Watson,Jarred Vanderbilt,6.5,4.5,under,over,1,2.07,0.104,Low,Low
+Ace Bailey,Adem Bona,6.5,5.5,over,over,1,2.07,0.103,Med,Low
+Svi Mykhailiuk,Naji Marshall,7.5,9.5,over,under,1,2.07,0.104,Med,Med
+Corey Kispert,Josh Okogie,7.5,8.5,over,over,1,2.04,0.102,Med,Med
+Peyton Watson,Julian Champagnie,6.5,8.5,under,over,1,2.03,0.101,Low,Med
+Naji Marshall,Jarred Vanderbilt,9.5,4.5,under,over,1,1.94,0.097,Med,Low
+Naji Marshall,Julian Champagnie,9.5,8.5,under,over,1,1.89,0.095,Med,Med
+Jabari Walker,Corey Kispert,4.5,7.5,over,over,1,1.89,0.095,Med,Med
+Josh Hart,Peyton Watson,8.5,6.5,over,under,1,1.83,0.092,Med,Low
+Josh Hart,Naji Marshall,8.5,9.5,over,under,1,1.7,0.085,Med,Med
+Adem Bona,Corey Kispert,5.5,7.5,over,over,1,1.52,0.076,Low,Med
+Ace Bailey,Kevon Looney,6.5,5.5,over,over,1,1.25,0.062,Med,Med
+Ace Bailey,Jarred Vanderbilt,6.5,4.5,over,over,1,0.94,0.047,Med,Low
+Ace Bailey,Julian Champagnie,6.5,8.5,over,over,1,0.89,0.045,Med,Med
+Corey Kispert,Kevon Looney,7.5,5.5,over,over,1,0.74,0.037,Med,Med
+Ace Bailey,Josh Hart,6.5,8.5,over,over,1,0.72,0.036,Med,Med
+Naji Marshall,Peyton Watson,9.5,6.5,under,under,1,0.58,0.029,Med,Low
+Svi Mykhailiuk,Corey Kispert,7.5,7.5,over,over,1,0.56,0.028,Med,Med
+Corey Kispert,Jarred Vanderbilt,7.5,4.5,over,over,1,0.45,0.022,Med,Low
+Corey Kispert,Julian Champagnie,7.5,8.5,over,over,1,0.4,0.02,Med,Med
+Corey Kispert,Josh Hart,7.5,8.5,over,over,1,0.24,0.012,Med,Med
+Ace Bailey,Peyton Watson,6.5,6.5,over,under,0,-0.31,0.0,Med,Low
+Ace Bailey,Naji Marshall,6.5,9.5,over,under,0,-0.41,0.0,Med,Med
+Corey Kispert,Peyton Watson,7.5,6.5,over,under,0,-0.74,0.0,Med,Low
+Corey Kispert,Naji Marshall,7.5,9.5,over,under,0,-0.84,0.0,Med,Med
+Ace Bailey,Corey Kispert,6.5,7.5,over,over,0,-1.61,0.0,Med,Med
