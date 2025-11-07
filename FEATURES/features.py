@@ -1632,14 +1632,19 @@ def add_interaction_features(df):
                     (df['USG_PCT_AVG_TO_DATE'] <= 28)).astype(int)
     df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).max().values
     df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).min().values
+    df['PTS_MAX_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).max().values
+    df['PTS_MIN_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).min().values
+    df['PTS_MAX_LAST_40'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(40).max().values
+    df['PTS_MIN_LAST_40'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(40).min().values
     df['PTS_CEILING'] = df['PTS_MAX_LAST_10'] * 0.9  # Expected ceiling
     df['PTS_FLOOR'] = df['PTS_MIN_LAST_10'] * 1.1    # Expected floor
     df['STAR_HOT_HAND'] = (df['PLAYER_IS_TEAM_STAR'] * 
                         (df['PTS_TREND_LAST_5'] > 0)).astype(int)
-    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') > 18).astype(int)
-    df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 18).astype(int)
-    df['IS_MEDIUM_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 18) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') <= 18).astype(int)
-    # New interaction features
+    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') > 20).astype(int)
+    df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 10).astype(int)
+    df['IS_MEDIUM_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 10) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') <= 20).astype(int)
+    
+    
     # Points per possession (true shooting possessions formula)
     df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)
     
@@ -1703,4 +1708,12 @@ def add_interaction_features(df):
     
     df['PLAYER_X_MATCHUP_CENTER_FG_PCT'] = df['CENTER'] * (df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'] )
     
+    
+    # Minutes
+    df['MIN_MAX_LAST_10'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(10).max().values
+    df['MIN_MIN_LAST_10'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(10).min().values
+    df['MIN_MAX_LAST_20'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(20).max().values
+    df['MIN_MIN_LAST_20'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(20).min().values
+    df['MIN_MAX_LAST_40'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(40).max().values
+    df['MIN_MIN_LAST_40'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(40).min().values
     return df
