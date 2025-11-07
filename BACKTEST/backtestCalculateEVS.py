@@ -287,10 +287,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        if (edge > edge_threshold and 
-            kelly_capped_fraction > -0.02 and
-            p > 0.40 and 
-            ev_total > 80.00):
+        if edge > edge_threshold:
             recommendation = 1
         else:
             recommendation = 0
@@ -498,11 +495,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             combined_edge = combined_model_prob - combined_market_prob
             
             # Recommendation based on multiple criteria (matching calculateEVS.py)
-            if (combined_edge > 0 and 
-            combined_model_prob > 0.335 and 
-            ev_dollars > 0 and 
-            sigma1 <= 5.5 and 
-            sigma2 <= 5.5):
+            if (combined_edge > edge_threshold):
                 recommendation = 1
             else:
                 recommendation = 0
@@ -779,7 +772,7 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 combined_edge = combined_model_prob - combined_market_prob
                 
                 # Recommendation based on multiple criteria (matching calculateEVS.py)
-                if combined_edge > 0 and combined_model_prob > 0.185 and ev_dollars > 0:
+                if combined_edge > edge_threshold:
                     recommendation = 1
                 else:
                     recommendation = 0

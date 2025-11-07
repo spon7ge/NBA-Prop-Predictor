@@ -512,7 +512,14 @@ def calculatePairMetrics(results_df, stake=5):
             # Log loss (lower is better)
             # Clip probabilities to avoid log(0) or log(1)
             prob_clipped = np.clip(prob_pred_clean, 1e-15, 1 - 1e-15)
-            prob_metrics['log_loss'] = float(log_loss(y_actual_clean, prob_clipped))
+            if n_positives > 0 and n_negatives > 0:
+                prob_metrics['log_loss'] = float(log_loss(y_actual_clean, prob_clipped))
+            else:
+                prob_metrics['log_loss'] = float('nan')
+                prob_metrics['log_loss_note'] = (
+                    "Log loss undefined with a single class present "
+                    f"(positives: {n_positives}, negatives: {n_negatives})"
+                )
             
             # AUC-ROC (higher is better, range: 0 to 1)
             # Only calculate if we have both positive and negative cases

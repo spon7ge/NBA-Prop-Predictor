@@ -22,7 +22,7 @@ def process_date(date, df, backtestData, models, features):
             gameDate=date,
             models=models,
             features=features,
-            edge_threshold=0.12,
+            edge_threshold=0.20,
             top_n=15,
             variance_inflation=1.1,
             distribution_type='t',
@@ -30,7 +30,7 @@ def process_date(date, df, backtestData, models, features):
             use_monte_carlo=False,
             n_simulations=10000,
             max_kelly=0.25,
-            stake=100
+            stake=5
         )
         print(f"✓ {date}: {len(results)} bets")
         return results
@@ -47,8 +47,8 @@ def main():
     # Load everything
     print("Loading data and models...")
     # Load NGBoost mean and variance models
-    mean_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_MEAN_MODEL.pkl'))
-    variance_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_VAR_MODEL.pkl'))
+    mean_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_MEAN_MODEL_TEST.pkl'))
+    variance_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_VAR_MODEL_TEST.pkl'))
     calibration_factor = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_CALIBRATION_FACTOR.pkl'))
 
     models = {
@@ -114,11 +114,11 @@ def main():
 
     # Calculate profit at $10 stake
     # 3-leg parlays typically pay 6x (so win = $60, lose = -$10)
-    stake = 10
+    stake = 5
     wins = top_ev['parlay_won'].sum() if len(top_ev) > 0 else 0
     losses = len(top_ev) - wins
     total_staked = len(top_ev) * stake
-    total_profit = (wins * 60) - (losses * stake)  # Fixed: 6x payout means $60 win for $10 stake
+    total_profit = (wins * 30) - (losses * stake)  # Fixed: 6x payout means $60 win for $10 stake
 
     print(f"\n${stake} per bet:")
     print(f"Staked: ${total_staked:,}")
