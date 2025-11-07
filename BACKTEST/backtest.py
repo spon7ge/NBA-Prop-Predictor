@@ -650,7 +650,7 @@ def calculate3LegMetrics(results_df, stake=5):
     results_df = results_df.copy()
     def calculate_profit(row):
         if row['parlay_won'] == 1:
-            # PrizePicks 3-leg pays 6x stake (profit = 5x stake)
+            # 3-leg pays 6x stake (profit = 5x stake)
             return 5 * stake
         else:
             return -stake
@@ -694,5 +694,5 @@ def calculate3LegMetrics(results_df, stake=5):
         'max_drawdown': max_drawdown,
         'sharpe_ratio': sharpe_ratio,
         'daily_pnl': daily_pnl,
-        'probability_metrics': prob_metrics  # AUC-ROC, log loss, Brier score
+        'probability_metrics': prob_metrics
     }
