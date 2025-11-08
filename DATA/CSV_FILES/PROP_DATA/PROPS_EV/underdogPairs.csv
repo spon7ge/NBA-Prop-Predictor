@@ -1,418 +1,88 @@
 NAME 1,NAME 2,LINE 1,LINE 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-KJ Simpson,Cedric Coward,10.5,13.5,under,under,1,6.45,0.322,Med,Med
-Tyrese Martin,Cedric Coward,11.5,13.5,under,under,1,6.37,0.319,Med,Med
-Tyrese Martin,KJ Simpson,11.5,10.5,under,under,1,6.26,0.313,Med,Med
-Khris Middleton,Cedric Coward,11.5,13.5,under,under,1,6.2,0.31,Med,Med
-Khris Middleton,KJ Simpson,11.5,10.5,under,under,1,6.09,0.304,Med,Med
-Khris Middleton,Tyrese Martin,11.5,11.5,under,under,1,6.01,0.301,Med,Med
-Javonte Green,Cedric Coward,6.5,13.5,under,under,1,5.48,0.274,Low,Med
-Javonte Green,KJ Simpson,6.5,10.5,under,under,1,5.37,0.269,Low,Med
-Javonte Green,Tyrese Martin,6.5,11.5,under,under,1,5.3,0.265,Low,Med
-Simone Fontecchio,Cedric Coward,8.5,13.5,under,under,1,5.22,0.261,Med,Med
-Khris Middleton,Javonte Green,11.5,6.5,under,under,1,5.14,0.257,Med,Low
-Simone Fontecchio,KJ Simpson,8.5,10.5,under,under,1,5.11,0.256,Med,Med
-Tyrese Martin,Simone Fontecchio,11.5,8.5,under,under,1,5.04,0.252,Med,Med
-Khris Middleton,Simone Fontecchio,11.5,8.5,under,under,1,4.88,0.244,Med,Med
-Steven Adams,Cedric Coward,4.5,13.5,over,under,1,4.87,0.244,Low,Med
-Steven Adams,KJ Simpson,4.5,10.5,over,under,1,4.77,0.238,Low,Med
-Tyrese Martin,Steven Adams,11.5,4.5,under,over,1,4.7,0.235,Med,Low
-Khris Middleton,Steven Adams,11.5,4.5,under,over,1,4.54,0.227,Med,Low
-Daniel Gafford,Cedric Coward,12.5,13.5,under,under,1,4.31,0.215,Med,Med
-Javonte Green,Simone Fontecchio,6.5,8.5,under,under,1,4.22,0.211,Low,Med
-KJ Simpson,Daniel Gafford,10.5,12.5,under,under,1,4.21,0.211,Med,Med
-Tyrese Martin,Daniel Gafford,11.5,12.5,under,under,1,4.15,0.207,Med,Med
-Sam Merrill,Cedric Coward,9.5,13.5,under,under,1,4.15,0.207,Med,Med
-Sam Merrill,KJ Simpson,9.5,10.5,under,under,1,4.05,0.203,Med,Med
-Khris Middleton,Daniel Gafford,11.5,12.5,under,under,1,3.99,0.2,Med,Med
-Sam Merrill,Tyrese Martin,9.5,11.5,under,under,1,3.99,0.199,Med,Med
-KJ Simpson,Jock Landale,10.5,9.5,under,under,1,3.98,0.199,Med,Med
-Tyrese Martin,Jock Landale,11.5,9.5,under,under,1,3.92,0.196,Med,Med
-Javonte Green,Steven Adams,6.5,4.5,under,over,1,3.9,0.195,Low,Low
-Khris Middleton,Sam Merrill,11.5,9.5,under,under,1,3.84,0.192,Med,Med
-Khris Middleton,Jock Landale,11.5,9.5,under,under,1,3.77,0.188,Med,Med
-Davion Mitchell,Cedric Coward,10.5,13.5,under,under,1,3.69,0.184,Med,Med
-Steven Adams,Simone Fontecchio,4.5,8.5,over,under,1,3.66,0.183,Low,Med
-Davion Mitchell,KJ Simpson,10.5,10.5,under,under,1,3.6,0.18,Med,Med
-Tyrese Martin,Davion Mitchell,11.5,10.5,under,under,1,3.53,0.177,Med,Med
-Sion James,Cedric Coward,9.5,13.5,under,under,1,3.42,0.171,Med,Med
-Khris Middleton,Davion Mitchell,11.5,10.5,under,under,1,3.39,0.169,Med,Med
-Javonte Green,Daniel Gafford,6.5,12.5,under,under,1,3.37,0.169,Low,Med
-Tyrese Martin,Sion James,11.5,9.5,under,under,1,3.26,0.163,Med,Med
-Sam Merrill,Javonte Green,9.5,6.5,under,under,1,3.22,0.161,Med,Low
-Javonte Green,Jock Landale,6.5,9.5,under,under,1,3.16,0.158,Low,Med
-Simone Fontecchio,Daniel Gafford,8.5,12.5,under,under,1,3.15,0.157,Med,Med
-Khris Middleton,Sion James,11.5,9.5,under,under,1,3.12,0.156,Med,Med
-Ryan Kalkbrenner,Cedric Coward,9.5,13.5,under,under,1,3.12,0.156,Med,Med
-Jeremy Sochan,Cedric Coward,8.5,13.5,under,under,1,3.05,0.152,Med,Med
-Sam Merrill,Simone Fontecchio,9.5,8.5,under,under,1,3.0,0.15,Med,Med
-Tyrese Martin,Ryan Kalkbrenner,11.5,9.5,under,under,1,2.97,0.149,Med,Med
-Jeremy Sochan,KJ Simpson,8.5,10.5,under,under,1,2.96,0.148,Med,Med
-Jaylon Tyson,Cedric Coward,7.5,13.5,over,under,1,2.95,0.148,Med,Med
-Simone Fontecchio,Jock Landale,8.5,9.5,under,under,1,2.93,0.147,Med,Med
-Tyrese Martin,Jeremy Sochan,11.5,8.5,under,under,1,2.9,0.145,Med,Med
-Patrick Williams,Cedric Coward,7.5,13.5,under,under,1,2.88,0.144,Med,Med
-Jaylon Tyson,KJ Simpson,7.5,10.5,over,under,1,2.86,0.143,Med,Med
-Steven Adams,Daniel Gafford,4.5,12.5,over,under,1,2.85,0.142,Low,Med
-Khris Middleton,Ryan Kalkbrenner,11.5,9.5,under,under,1,2.84,0.142,Med,Med
-Jaylon Tyson,Tyrese Martin,7.5,11.5,over,under,1,2.8,0.14,Med,Med
-KJ Simpson,Patrick Williams,10.5,7.5,under,under,1,2.79,0.14,Med,Med
-Javonte Green,Davion Mitchell,6.5,10.5,under,under,1,2.79,0.14,Low,Med
-Khris Middleton,Jeremy Sochan,11.5,8.5,under,under,1,2.76,0.138,Med,Med
-Tyrese Martin,Patrick Williams,11.5,7.5,under,under,1,2.73,0.137,Med,Med
-Sam Merrill,Steven Adams,9.5,4.5,under,over,1,2.7,0.135,Med,Low
-Khris Middleton,Jaylon Tyson,11.5,7.5,under,over,1,2.67,0.133,Med,Med
-Steven Adams,Jock Landale,4.5,9.5,over,under,1,2.64,0.132,Low,Med
-Khris Middleton,Patrick Williams,11.5,7.5,under,under,1,2.6,0.13,Med,Med
-Javonte Green,Sion James,6.5,9.5,under,under,1,2.54,0.127,Low,Med
-Cedric Coward,Alex Caruso,13.5,7.5,under,under,1,2.46,0.123,Med,Low
-KJ Simpson,Alex Caruso,10.5,7.5,under,under,1,2.38,0.119,Med,Low
-Simone Fontecchio,Sion James,8.5,9.5,under,under,1,2.33,0.116,Med,Med
-Tyrese Martin,Alex Caruso,11.5,7.5,under,under,1,2.32,0.116,Med,Low
-Steven Adams,Davion Mitchell,4.5,10.5,over,under,1,2.29,0.114,Low,Med
-Javonte Green,Ryan Kalkbrenner,6.5,9.5,under,under,1,2.27,0.113,Low,Med
-Jalen Wilson,Cedric Coward,7.5,13.5,under,under,1,2.22,0.111,Med,Med
-Sam Merrill,Daniel Gafford,9.5,12.5,under,under,1,2.22,0.111,Med,Med
-Khris Middleton,Alex Caruso,11.5,7.5,under,under,1,2.19,0.109,Med,Low
-Javonte Green,Jeremy Sochan,6.5,8.5,under,under,1,2.19,0.11,Low,Med
-Daniel Gafford,Jock Landale,12.5,9.5,under,under,1,2.16,0.108,Med,Med
-Jalen Wilson,KJ Simpson,7.5,10.5,under,under,1,2.14,0.107,Med,Med
-Jaylon Tyson,Javonte Green,7.5,6.5,over,under,1,2.1,0.105,Med,Low
-Ryan Kalkbrenner,Simone Fontecchio,9.5,8.5,under,under,1,2.06,0.103,Med,Med
-Steven Adams,Sion James,4.5,9.5,over,under,1,2.04,0.102,Low,Med
-Javonte Green,Patrick Williams,6.5,7.5,under,under,1,2.04,0.102,Low,Med
-Sam Merrill,Jock Landale,9.5,9.5,under,under,1,2.02,0.101,Med,Med
-Jeremy Sochan,Simone Fontecchio,8.5,8.5,under,under,1,1.99,0.099,Med,Med
-Khris Middleton,Jalen Wilson,11.5,7.5,under,under,1,1.96,0.098,Med,Med
-Jaylon Tyson,Simone Fontecchio,7.5,8.5,over,under,1,1.9,0.095,Med,Med
-KJ Simpson,Kentavious Caldwell-Pope,10.5,8.5,under,under,1,1.86,0.093,Med,Med
-Simone Fontecchio,Patrick Williams,8.5,7.5,under,under,1,1.83,0.092,Med,Med
-Davion Mitchell,Daniel Gafford,10.5,12.5,under,under,1,1.83,0.091,Med,Med
-Tyrese Martin,Kentavious Caldwell-Pope,11.5,8.5,under,under,1,1.81,0.09,Med,Med
-Cedric Coward,Peyton Watson,13.5,4.5,under,under,1,1.8,0.09,Med,Low
-Steven Adams,Ryan Kalkbrenner,4.5,9.5,over,under,1,1.78,0.089,Low,Med
-KJ Simpson,Peyton Watson,10.5,4.5,under,under,1,1.72,0.086,Med,Low
-Jeremy Sochan,Steven Adams,8.5,4.5,under,over,1,1.71,0.086,Med,Low
-Sam Merrill,Davion Mitchell,9.5,10.5,under,under,1,1.69,0.085,Med,Med
-Khris Middleton,Kentavious Caldwell-Pope,11.5,8.5,under,under,1,1.68,0.084,Med,Med
-Tyrese Martin,Peyton Watson,11.5,4.5,under,under,1,1.67,0.083,Med,Low
-Javonte Green,Alex Caruso,6.5,7.5,under,under,1,1.65,0.082,Low,Low
-Jaylon Tyson,Steven Adams,7.5,4.5,over,over,1,1.63,0.081,Med,Low
-Davion Mitchell,Jock Landale,10.5,9.5,under,under,1,1.63,0.082,Med,Med
-Sion James,Daniel Gafford,9.5,12.5,under,under,1,1.59,0.079,Med,Med
-Steven Adams,Patrick Williams,4.5,7.5,over,under,1,1.56,0.078,Low,Med
-Khris Middleton,Peyton Watson,11.5,4.5,under,under,1,1.54,0.077,Med,Low
-Marvin Bagley III,Cedric Coward,6.5,13.5,over,under,1,1.52,0.076,Med,Med
-Sam Merrill,Sion James,9.5,9.5,under,under,1,1.46,0.073,Med,Med
-Simone Fontecchio,Alex Caruso,8.5,7.5,under,under,1,1.45,0.072,Med,Low
-Marvin Bagley III,KJ Simpson,6.5,10.5,over,under,1,1.44,0.072,Med,Med
-Javonte Green,Jalen Wilson,6.5,7.5,under,under,1,1.43,0.071,Low,Med
-Sion James,Jock Landale,9.5,9.5,under,under,1,1.4,0.07,Med,Med
-Marvin Bagley III,Tyrese Martin,6.5,11.5,over,under,1,1.39,0.069,Med,Med
-Ryan Kalkbrenner,Daniel Gafford,9.5,12.5,under,under,1,1.34,0.067,Med,Med
-Jeremy Sochan,Daniel Gafford,8.5,12.5,under,under,1,1.27,0.064,Med,Med
-Josh Okogie,Cedric Coward,7.5,13.5,under,under,1,1.24,0.062,Med,Med
-Jalen Wilson,Simone Fontecchio,7.5,8.5,under,under,1,1.23,0.062,Med,Med
-Sam Merrill,Ryan Kalkbrenner,9.5,9.5,under,under,1,1.21,0.06,Med,Med
-Cedric Coward,Al Horford,13.5,7.5,under,under,1,1.21,0.06,Med,Med
-Steven Adams,Alex Caruso,4.5,7.5,over,under,1,1.19,0.059,Low,Low
-Jaylon Tyson,Daniel Gafford,7.5,12.5,over,under,1,1.19,0.059,Med,Med
-Josh Okogie,KJ Simpson,7.5,10.5,under,under,1,1.16,0.058,Med,Med
-Javonte Green,Kentavious Caldwell-Pope,6.5,8.5,under,under,1,1.16,0.058,Low,Med
-Ryan Kalkbrenner,Jock Landale,9.5,9.5,under,under,1,1.15,0.058,Med,Med
-Sam Merrill,Jeremy Sochan,9.5,8.5,under,under,1,1.14,0.057,Med,Med
-Patrick Williams,Daniel Gafford,7.5,12.5,under,under,1,1.13,0.056,Med,Med
-KJ Simpson,Al Horford,10.5,7.5,under,under,1,1.13,0.057,Med,Med
-Tyrese Martin,Josh Okogie,11.5,7.5,under,under,1,1.11,0.055,Med,Med
-Cedric Coward,Walter Clayton Jr.,13.5,5.5,under,over,1,1.1,0.055,Med,Med
-Davion Mitchell,Sion James,10.5,9.5,under,under,1,1.09,0.054,Med,Med
-Jeremy Sochan,Jock Landale,8.5,9.5,under,under,1,1.09,0.054,Med,Med
-Tyrese Martin,Al Horford,11.5,7.5,under,under,1,1.08,0.054,Med,Med
-Isaac Okoro,Cedric Coward,7.5,13.5,under,under,1,1.04,0.052,Med,Med
-Cedric Coward,Cason Wallace,13.5,9.5,under,under,1,1.03,0.052,Med,Med
-Javonte Green,Peyton Watson,6.5,4.5,under,under,1,1.03,0.052,Low,Low
-KJ Simpson,Walter Clayton Jr.,10.5,5.5,under,over,1,1.02,0.051,Med,Med
-Jaylon Tyson,Jock Landale,7.5,9.5,over,under,1,1.01,0.05,Med,Med
-Sam Merrill,Patrick Williams,9.5,7.5,under,under,1,1.0,0.05,Med,Med
-Khris Middleton,Josh Okogie,11.5,7.5,under,under,1,0.99,0.049,Med,Med
-Jalen Wilson,Steven Adams,7.5,4.5,under,over,1,0.98,0.049,Med,Low
-Tyrese Martin,Walter Clayton Jr.,11.5,5.5,under,over,1,0.97,0.049,Med,Med
-Simone Fontecchio,Kentavious Caldwell-Pope,8.5,8.5,under,under,1,0.97,0.049,Med,Med
-Khris Middleton,Al Horford,11.5,7.5,under,under,1,0.96,0.048,Med,Med
-KJ Simpson,Isaac Okoro,10.5,7.5,under,under,1,0.96,0.048,Med,Med
-KJ Simpson,Cason Wallace,10.5,9.5,under,under,1,0.96,0.048,Med,Med
-Cedric Coward,Bruce Brown,13.5,6.5,under,under,1,0.95,0.047,Med,Med
-Patrick Williams,Jock Landale,7.5,9.5,under,under,1,0.95,0.047,Med,Med
-Cedric Coward,Isaiah Hartenstein,13.5,9.5,under,over,1,0.92,0.046,Med,Med
-Tyrese Martin,Isaac Okoro,11.5,7.5,under,under,1,0.91,0.046,Med,Med
-Tyrese Martin,Cason Wallace,11.5,9.5,under,under,1,0.91,0.045,Med,Med
-KJ Simpson,Bruce Brown,10.5,6.5,under,under,1,0.88,0.044,Med,Med
-Simone Fontecchio,Peyton Watson,8.5,4.5,under,under,1,0.85,0.042,Med,Low
-Davion Mitchell,Ryan Kalkbrenner,10.5,9.5,under,under,1,0.85,0.042,Med,Med
-KJ Simpson,Isaiah Hartenstein,10.5,9.5,under,over,1,0.85,0.042,Med,Med
-Khris Middleton,Walter Clayton Jr.,11.5,5.5,under,over,1,0.85,0.043,Med,Med
-Tyrese Martin,Bruce Brown,11.5,6.5,under,under,1,0.83,0.041,Med,Med
-Khris Middleton,Isaac Okoro,11.5,7.5,under,under,1,0.8,0.04,Med,Med
-Tyrese Martin,Isaiah Hartenstein,11.5,9.5,under,over,1,0.8,0.04,Med,Med
-Khris Middleton,Cason Wallace,11.5,9.5,under,under,1,0.79,0.04,Med,Med
-Jeremy Sochan,Davion Mitchell,8.5,10.5,under,under,1,0.78,0.039,Med,Med
-Daniel Gafford,Alex Caruso,12.5,7.5,under,under,1,0.77,0.038,Med,Low
-Marvin Bagley III,Javonte Green,6.5,6.5,over,under,1,0.76,0.038,Med,Low
-Steven Adams,Kentavious Caldwell-Pope,4.5,8.5,over,under,1,0.72,0.036,Low,Med
-Khris Middleton,Bruce Brown,11.5,6.5,under,under,1,0.71,0.035,Med,Med
-Jaylon Tyson,Davion Mitchell,7.5,10.5,over,under,1,0.7,0.035,Med,Med
-Khris Middleton,Isaiah Hartenstein,11.5,9.5,under,over,1,0.68,0.034,Med,Med
-Mouhamed Gueye,Cedric Coward,5.5,13.5,over,under,1,0.64,0.032,Med,Med
-Davion Mitchell,Patrick Williams,10.5,7.5,under,under,1,0.64,0.032,Med,Med
-Sam Merrill,Alex Caruso,9.5,7.5,under,under,1,0.64,0.032,Med,Low
-Day'Ron Sharpe,Cedric Coward,6.5,13.5,over,under,1,0.61,0.03,Low,Med
-Steven Adams,Peyton Watson,4.5,4.5,over,under,1,0.6,0.03,Low,Low
-Jock Landale,Alex Caruso,9.5,7.5,under,under,1,0.59,0.03,Med,Low
-Marvin Bagley III,Simone Fontecchio,6.5,8.5,over,under,1,0.58,0.029,Med,Med
-Mouhamed Gueye,KJ Simpson,5.5,10.5,over,under,1,0.57,0.029,Med,Med
-Jeremy Sochan,Sion James,8.5,9.5,under,under,1,0.57,0.028,Med,Med
-Jalen Wilson,Daniel Gafford,7.5,12.5,under,under,1,0.56,0.028,Med,Med
-Day'Ron Sharpe,KJ Simpson,6.5,10.5,over,under,1,0.54,0.027,Low,Med
-Mouhamed Gueye,Tyrese Martin,5.5,11.5,over,under,1,0.52,0.026,Med,Med
-Javonte Green,Josh Okogie,6.5,7.5,under,under,1,0.5,0.025,Low,Med
-Jaylon Tyson,Sion James,7.5,9.5,over,under,1,0.49,0.024,Med,Med
-Javonte Green,Al Horford,6.5,7.5,under,under,1,0.48,0.024,Low,Med
-Sam Merrill,Jalen Wilson,9.5,7.5,under,under,1,0.44,0.022,Med,Med
-Sion James,Patrick Williams,9.5,7.5,under,under,1,0.43,0.022,Med,Med
-Khris Middleton,Mouhamed Gueye,11.5,5.5,under,over,1,0.41,0.02,Med,Med
-Jalen Wilson,Jock Landale,7.5,9.5,under,under,1,0.39,0.02,Med,Med
-Khris Middleton,Day'Ron Sharpe,11.5,6.5,under,over,1,0.38,0.019,Med,Low
-Javonte Green,Walter Clayton Jr.,6.5,5.5,under,over,1,0.37,0.019,Low,Med
-Jeremy Sochan,Ryan Kalkbrenner,8.5,9.5,under,under,1,0.34,0.017,Med,Med
-Marvin Bagley III,Steven Adams,6.5,4.5,over,over,1,0.34,0.017,Med,Low
-Josh Okogie,Simone Fontecchio,7.5,8.5,under,under,1,0.32,0.016,Med,Med
-Javonte Green,Isaac Okoro,6.5,7.5,under,under,1,0.32,0.016,Low,Med
-Kentavious Caldwell-Pope,Daniel Gafford,8.5,12.5,under,under,1,0.32,0.016,Med,Med
-Javonte Green,Cason Wallace,6.5,9.5,under,under,1,0.31,0.016,Low,Med
-Davion Mitchell,Alex Caruso,10.5,7.5,under,under,1,0.3,0.015,Med,Low
-Simone Fontecchio,Al Horford,8.5,7.5,under,under,1,0.3,0.015,Med,Med
-Jaylon Tyson,Ryan Kalkbrenner,7.5,9.5,over,under,1,0.26,0.013,Med,Med
-Javonte Green,Bruce Brown,6.5,6.5,under,under,1,0.23,0.012,Low,Med
-Javonte Green,Isaiah Hartenstein,6.5,9.5,under,over,1,0.21,0.01,Low,Med
-Ryan Kalkbrenner,Patrick Williams,9.5,7.5,under,under,1,0.2,0.01,Med,Med
-Sam Merrill,Kentavious Caldwell-Pope,9.5,8.5,under,under,1,0.2,0.01,Med,Med
-Simone Fontecchio,Walter Clayton Jr.,8.5,5.5,under,over,1,0.2,0.01,Med,Med
-Jaylon Tyson,Jeremy Sochan,7.5,8.5,over,under,1,0.2,0.01,Med,Med
-Daniel Gafford,Peyton Watson,12.5,4.5,under,under,1,0.2,0.01,Med,Low
-Jeremy Sochan,Patrick Williams,8.5,7.5,under,under,1,0.15,0.007,Med,Med
-Simone Fontecchio,Cason Wallace,8.5,9.5,under,under,1,0.14,0.007,Med,Med
-Simone Fontecchio,Isaac Okoro,8.5,7.5,under,under,1,0.14,0.007,Med,Med
-Jalen Wilson,Davion Mitchell,7.5,10.5,under,under,1,0.1,0.005,Med,Med
-Sion James,Alex Caruso,9.5,7.5,under,under,1,0.09,0.005,Med,Low
-Sam Merrill,Peyton Watson,9.5,4.5,under,under,1,0.08,0.004,Med,Low
-Jaylon Tyson,Patrick Williams,7.5,7.5,over,under,1,0.07,0.003,Med,Med
-Simone Fontecchio,Bruce Brown,8.5,6.5,under,under,1,0.06,0.003,Med,Med
-Steven Adams,Al Horford,4.5,7.5,over,under,1,0.06,0.003,Low,Med
-Jock Landale,Peyton Watson,9.5,4.5,under,under,1,0.03,0.002,Med,Low
-Simone Fontecchio,Isaiah Hartenstein,8.5,9.5,under,over,1,0.03,0.002,Med,Med
-Steven Adams,Walter Clayton Jr.,4.5,5.5,over,over,0,-0.04,0.0,Low,Med
-Mouhamed Gueye,Javonte Green,5.5,6.5,over,under,0,-0.05,0.0,Med,Low
-Marvin Bagley III,Daniel Gafford,6.5,12.5,over,under,0,-0.05,0.0,Med,Med
-Javonte Green,Day'Ron Sharpe,6.5,6.5,under,over,0,-0.08,0.0,Low,Low
-Steven Adams,Isaac Okoro,4.5,7.5,over,under,0,-0.09,0.0,Low,Med
-Steven Adams,Cason Wallace,4.5,9.5,over,under,0,-0.09,0.0,Low,Med
-Jalen Wilson,Sion James,7.5,9.5,under,under,0,-0.1,0.0,Med,Med
-Davion Mitchell,Kentavious Caldwell-Pope,10.5,8.5,under,under,0,-0.13,0.0,Med,Med
-Ryan Kalkbrenner,Alex Caruso,9.5,7.5,under,under,0,-0.13,0.0,Med,Low
-Sam Merrill,Marvin Bagley III,9.5,6.5,under,over,0,-0.16,0.0,Med,Med
-Steven Adams,Bruce Brown,4.5,6.5,over,under,0,-0.17,0.0,Low,Med
-Jeremy Sochan,Alex Caruso,8.5,7.5,under,under,0,-0.18,0.0,Med,Low
-Steven Adams,Isaiah Hartenstein,4.5,9.5,over,over,0,-0.2,0.0,Low,Med
-Marvin Bagley III,Jock Landale,6.5,9.5,over,under,0,-0.21,0.0,Med,Med
-Mouhamed Gueye,Simone Fontecchio,5.5,8.5,over,under,0,-0.22,0.0,Med,Med
-Davion Mitchell,Peyton Watson,10.5,4.5,under,under,0,-0.24,0.0,Med,Low
-Day'Ron Sharpe,Simone Fontecchio,6.5,8.5,over,under,0,-0.25,0.0,Low,Med
-Jaylon Tyson,Alex Caruso,7.5,7.5,over,under,0,-0.26,0.0,Med,Low
-Josh Okogie,Daniel Gafford,7.5,12.5,under,under,0,-0.29,0.0,Med,Med
-Jalen Wilson,Ryan Kalkbrenner,7.5,9.5,under,under,0,-0.31,0.0,Med,Med
-Patrick Williams,Alex Caruso,7.5,7.5,under,under,0,-0.31,0.0,Med,Low
-Daniel Gafford,Al Horford,12.5,7.5,under,under,0,-0.32,0.0,Med,Med
-Sion James,Kentavious Caldwell-Pope,9.5,8.5,under,under,0,-0.33,0.0,Med,Med
-Jalen Wilson,Jeremy Sochan,7.5,8.5,under,under,0,-0.37,0.0,Med,Med
-Sam Merrill,Josh Okogie,9.5,7.5,under,under,0,-0.4,0.0,Med,Med
-Daniel Gafford,Walter Clayton Jr.,12.5,5.5,under,over,0,-0.41,0.0,Med,Med
-Sam Merrill,Al Horford,9.5,7.5,under,under,0,-0.42,0.0,Med,Med
-Mouhamed Gueye,Steven Adams,5.5,4.5,over,over,0,-0.44,0.0,Med,Low
-Jaylon Tyson,Jalen Wilson,7.5,7.5,over,under,0,-0.44,0.0,Med,Med
-Sion James,Peyton Watson,9.5,4.5,under,under,0,-0.44,0.0,Med,Low
-Josh Okogie,Jock Landale,7.5,9.5,under,under,0,-0.45,0.0,Med,Med
-Isaac Okoro,Daniel Gafford,7.5,12.5,under,under,0,-0.46,0.0,Med,Med
-Jock Landale,Al Horford,9.5,7.5,under,under,0,-0.47,0.0,Med,Med
-Daniel Gafford,Cason Wallace,12.5,9.5,under,under,0,-0.47,0.0,Med,Med
-Day'Ron Sharpe,Steven Adams,6.5,4.5,over,over,0,-0.47,0.0,Low,Low
-Marvin Bagley III,Davion Mitchell,6.5,10.5,over,under,0,-0.48,0.0,Med,Med
-Jalen Wilson,Patrick Williams,7.5,7.5,under,under,0,-0.49,0.0,Med,Med
-Sam Merrill,Walter Clayton Jr.,9.5,5.5,under,over,0,-0.52,0.0,Med,Med
-Ryan Kalkbrenner,Kentavious Caldwell-Pope,9.5,8.5,under,under,0,-0.54,0.0,Med,Med
-Daniel Gafford,Bruce Brown,12.5,6.5,under,under,0,-0.54,0.0,Med,Med
-Jock Landale,Walter Clayton Jr.,9.5,5.5,under,over,0,-0.57,0.0,Med,Med
-Sam Merrill,Isaac Okoro,9.5,7.5,under,under,0,-0.57,0.0,Med,Med
-Sam Merrill,Cason Wallace,9.5,9.5,under,under,0,-0.57,0.0,Med,Med
-Daniel Gafford,Isaiah Hartenstein,12.5,9.5,under,over,0,-0.57,0.0,Med,Med
-Jeremy Sochan,Kentavious Caldwell-Pope,8.5,8.5,under,under,0,-0.59,0.0,Med,Med
-Jock Landale,Cason Wallace,9.5,9.5,under,under,0,-0.62,0.0,Med,Med
-Isaac Okoro,Jock Landale,7.5,9.5,under,under,0,-0.62,0.0,Med,Med
-Ryan Kalkbrenner,Peyton Watson,9.5,4.5,under,under,0,-0.65,0.0,Med,Low
-Sam Merrill,Bruce Brown,9.5,6.5,under,under,0,-0.65,0.0,Med,Med
-Jaylon Tyson,Kentavious Caldwell-Pope,7.5,8.5,over,under,0,-0.66,0.0,Med,Med
-Sam Merrill,Isaiah Hartenstein,9.5,9.5,under,over,0,-0.67,0.0,Med,Med
-Marvin Bagley III,Sion James,6.5,9.5,over,under,0,-0.67,0.0,Med,Med
-Jock Landale,Bruce Brown,9.5,6.5,under,under,0,-0.69,0.0,Med,Med
-Jeremy Sochan,Peyton Watson,8.5,4.5,under,under,0,-0.7,0.0,Med,Low
-Patrick Williams,Kentavious Caldwell-Pope,7.5,8.5,under,under,0,-0.71,0.0,Med,Med
-Josh Okogie,Davion Mitchell,7.5,10.5,under,under,0,-0.71,0.0,Med,Med
-Jock Landale,Isaiah Hartenstein,9.5,9.5,under,over,0,-0.72,0.0,Med,Med
-Davion Mitchell,Al Horford,10.5,7.5,under,under,0,-0.74,0.0,Med,Med
-Jaylon Tyson,Peyton Watson,7.5,4.5,over,under,0,-0.77,0.0,Med,Low
-Jalen Wilson,Alex Caruso,7.5,7.5,under,under,0,-0.8,0.0,Med,Low
-Mouhamed Gueye,Daniel Gafford,5.5,12.5,over,under,0,-0.81,0.0,Med,Med
-Patrick Williams,Peyton Watson,7.5,4.5,under,under,0,-0.82,0.0,Med,Low
-Day'Ron Sharpe,Daniel Gafford,6.5,12.5,over,under,0,-0.83,0.0,Low,Med
-Davion Mitchell,Walter Clayton Jr.,10.5,5.5,under,over,0,-0.83,0.0,Med,Med
-Marvin Bagley III,Ryan Kalkbrenner,6.5,9.5,over,under,0,-0.87,0.0,Med,Med
-Davion Mitchell,Isaac Okoro,10.5,7.5,under,under,0,-0.88,0.0,Med,Med
-Davion Mitchell,Cason Wallace,10.5,9.5,under,under,0,-0.88,0.0,Med,Med
-Josh Okogie,Sion James,7.5,9.5,under,under,0,-0.9,0.0,Med,Med
-Sam Merrill,Mouhamed Gueye,9.5,5.5,under,over,0,-0.91,0.0,Med,Med
-Sion James,Al Horford,9.5,7.5,under,under,0,-0.92,0.0,Med,Med
-Marvin Bagley III,Jeremy Sochan,6.5,8.5,over,under,0,-0.93,0.0,Med,Med
-Sam Merrill,Day'Ron Sharpe,9.5,6.5,under,over,0,-0.94,0.0,Med,Low
-Mouhamed Gueye,Jock Landale,5.5,9.5,over,under,0,-0.95,0.0,Med,Med
-Davion Mitchell,Bruce Brown,10.5,6.5,under,under,0,-0.95,0.0,Med,Med
-Davion Mitchell,Isaiah Hartenstein,10.5,9.5,under,over,0,-0.97,0.0,Med,Med
-Day'Ron Sharpe,Jock Landale,6.5,9.5,over,under,0,-0.98,0.0,Low,Med
-Jaylon Tyson,Marvin Bagley III,7.5,6.5,over,over,0,-1.0,0.0,Med,Med
-Sion James,Walter Clayton Jr.,9.5,5.5,under,over,0,-1.01,0.0,Med,Med
-Kentavious Caldwell-Pope,Alex Caruso,8.5,7.5,under,under,0,-1.02,0.0,Med,Low
-Marvin Bagley III,Patrick Williams,6.5,7.5,over,under,0,-1.05,0.0,Med,Med
-Sion James,Cason Wallace,9.5,9.5,under,under,0,-1.06,0.0,Med,Med
-Sion James,Isaac Okoro,9.5,7.5,under,under,0,-1.06,0.0,Med,Med
-Josh Okogie,Ryan Kalkbrenner,7.5,9.5,under,under,0,-1.1,0.0,Med,Med
-Peyton Watson,Alex Caruso,4.5,7.5,under,under,0,-1.12,0.0,Low,Low
-Ryan Kalkbrenner,Al Horford,9.5,7.5,under,under,0,-1.12,0.0,Med,Med
-Sion James,Bruce Brown,9.5,6.5,under,under,0,-1.13,0.0,Med,Med
-Jeremy Sochan,Josh Okogie,8.5,7.5,under,under,0,-1.15,0.0,Med,Med
-Sion James,Isaiah Hartenstein,9.5,9.5,under,over,0,-1.15,0.0,Med,Med
-Jeremy Sochan,Al Horford,8.5,7.5,under,under,0,-1.17,0.0,Med,Med
-Jalen Wilson,Kentavious Caldwell-Pope,7.5,8.5,under,under,0,-1.19,0.0,Med,Med
-Mouhamed Gueye,Davion Mitchell,5.5,10.5,over,under,0,-1.2,0.0,Med,Med
-Ryan Kalkbrenner,Walter Clayton Jr.,9.5,5.5,under,over,0,-1.21,0.0,Med,Med
-Jaylon Tyson,Josh Okogie,7.5,7.5,over,under,0,-1.22,0.0,Med,Med
-Jaylon Tyson,Al Horford,7.5,7.5,over,under,0,-1.23,0.0,Med,Med
-Day'Ron Sharpe,Davion Mitchell,6.5,10.5,over,under,0,-1.23,0.0,Low,Med
-Ryan Kalkbrenner,Isaac Okoro,9.5,7.5,under,under,0,-1.25,0.0,Med,Med
-Josh Okogie,Patrick Williams,7.5,7.5,under,under,0,-1.26,0.0,Med,Med
-Jeremy Sochan,Walter Clayton Jr.,8.5,5.5,under,over,0,-1.26,0.0,Med,Med
-Ryan Kalkbrenner,Cason Wallace,9.5,9.5,under,under,0,-1.26,0.0,Med,Med
-Patrick Williams,Al Horford,7.5,7.5,under,under,0,-1.28,0.0,Med,Med
-Jalen Wilson,Peyton Watson,7.5,4.5,under,under,0,-1.29,0.0,Med,Low
-Jeremy Sochan,Isaac Okoro,8.5,7.5,under,under,0,-1.3,0.0,Med,Med
-Jeremy Sochan,Cason Wallace,8.5,9.5,under,under,0,-1.31,0.0,Med,Med
-Jaylon Tyson,Walter Clayton Jr.,7.5,5.5,over,over,0,-1.32,0.0,Med,Med
-Ryan Kalkbrenner,Bruce Brown,9.5,6.5,under,under,0,-1.32,0.0,Med,Med
-Marvin Bagley III,Alex Caruso,6.5,7.5,over,under,0,-1.33,0.0,Med,Low
-Ryan Kalkbrenner,Isaiah Hartenstein,9.5,9.5,under,over,0,-1.35,0.0,Med,Med
-Jeremy Sochan,Bruce Brown,8.5,6.5,under,under,0,-1.37,0.0,Med,Med
-Jaylon Tyson,Isaac Okoro,7.5,7.5,over,under,0,-1.37,0.0,Med,Med
-Jaylon Tyson,Cason Wallace,7.5,9.5,over,under,0,-1.37,0.0,Med,Med
-Patrick Williams,Walter Clayton Jr.,7.5,5.5,under,over,0,-1.37,0.0,Med,Med
-Mouhamed Gueye,Sion James,5.5,9.5,over,under,0,-1.38,0.0,Med,Med
-Jeremy Sochan,Isaiah Hartenstein,8.5,9.5,under,over,0,-1.4,0.0,Med,Med
-Day'Ron Sharpe,Sion James,6.5,9.5,over,under,0,-1.41,0.0,Low,Med
-Patrick Williams,Cason Wallace,7.5,9.5,under,under,0,-1.42,0.0,Med,Med
-Jaylon Tyson,Bruce Brown,7.5,6.5,over,under,0,-1.44,0.0,Med,Med
-Jaylon Tyson,Isaiah Hartenstein,7.5,9.5,over,over,0,-1.46,0.0,Med,Med
-Kentavious Caldwell-Pope,Peyton Watson,8.5,4.5,under,under,0,-1.49,0.0,Med,Low
-Patrick Williams,Bruce Brown,7.5,6.5,under,under,0,-1.49,0.0,Med,Med
-Marvin Bagley III,Jalen Wilson,6.5,7.5,over,under,0,-1.5,0.0,Med,Med
-Patrick Williams,Isaiah Hartenstein,7.5,9.5,under,over,0,-1.51,0.0,Med,Med
-Josh Okogie,Alex Caruso,7.5,7.5,under,under,0,-1.55,0.0,Med,Low
-Al Horford,Alex Caruso,7.5,7.5,under,under,0,-1.57,0.0,Med,Low
-Mouhamed Gueye,Ryan Kalkbrenner,5.5,9.5,over,under,0,-1.57,0.0,Med,Med
-Day'Ron Sharpe,Ryan Kalkbrenner,6.5,9.5,over,under,0,-1.59,0.0,Low,Med
-Mouhamed Gueye,Jeremy Sochan,5.5,8.5,over,under,0,-1.62,0.0,Med,Med
-Day'Ron Sharpe,Jeremy Sochan,6.5,8.5,over,under,0,-1.64,0.0,Low,Med
-Walter Clayton Jr.,Alex Caruso,5.5,7.5,over,under,0,-1.65,0.0,Med,Low
-Jaylon Tyson,Mouhamed Gueye,7.5,5.5,over,over,0,-1.68,0.0,Med,Med
-Isaac Okoro,Alex Caruso,7.5,7.5,under,under,0,-1.69,0.0,Med,Low
-Jaylon Tyson,Day'Ron Sharpe,7.5,6.5,over,over,0,-1.7,0.0,Med,Low
-Marvin Bagley III,Kentavious Caldwell-Pope,6.5,8.5,over,under,0,-1.7,0.0,Med,Med
-Jalen Wilson,Josh Okogie,7.5,7.5,under,under,0,-1.71,0.0,Med,Med
-Mouhamed Gueye,Patrick Williams,5.5,7.5,over,under,0,-1.72,0.0,Med,Med
-Jalen Wilson,Al Horford,7.5,7.5,under,under,0,-1.73,0.0,Med,Med
-Day'Ron Sharpe,Patrick Williams,6.5,7.5,over,under,0,-1.75,0.0,Low,Med
-Bruce Brown,Alex Caruso,6.5,7.5,under,under,0,-1.76,0.0,Med,Low
-Marvin Bagley III,Peyton Watson,6.5,4.5,over,under,0,-1.79,0.0,Med,Low
-Jalen Wilson,Walter Clayton Jr.,7.5,5.5,under,over,0,-1.81,0.0,Med,Med
-Jalen Wilson,Isaac Okoro,7.5,7.5,under,under,0,-1.85,0.0,Med,Med
-Jalen Wilson,Cason Wallace,7.5,9.5,under,under,0,-1.86,0.0,Med,Med
-Josh Okogie,Kentavious Caldwell-Pope,7.5,8.5,under,under,0,-1.9,0.0,Med,Med
-Jalen Wilson,Bruce Brown,7.5,6.5,under,under,0,-1.92,0.0,Med,Med
-Kentavious Caldwell-Pope,Al Horford,8.5,7.5,under,under,0,-1.92,0.0,Med,Med
-Jalen Wilson,Isaiah Hartenstein,7.5,9.5,under,over,0,-1.94,0.0,Med,Med
-Mouhamed Gueye,Alex Caruso,5.5,7.5,over,under,0,-1.99,0.0,Med,Low
-Josh Okogie,Peyton Watson,7.5,4.5,under,under,0,-1.99,0.0,Med,Low
-Kentavious Caldwell-Pope,Walter Clayton Jr.,8.5,5.5,under,over,0,-2.0,0.0,Med,Med
-Al Horford,Peyton Watson,7.5,4.5,under,under,0,-2.01,0.0,Med,Low
-Day'Ron Sharpe,Alex Caruso,6.5,7.5,over,under,0,-2.02,0.0,Low,Low
-Isaac Okoro,Kentavious Caldwell-Pope,7.5,8.5,under,under,0,-2.04,0.0,Med,Med
-Kentavious Caldwell-Pope,Cason Wallace,8.5,9.5,under,under,0,-2.04,0.0,Med,Med
-Walter Clayton Jr.,Peyton Watson,5.5,4.5,over,under,0,-2.09,0.0,Med,Low
-Kentavious Caldwell-Pope,Bruce Brown,8.5,6.5,under,under,0,-2.11,0.0,Med,Med
-Kentavious Caldwell-Pope,Isaiah Hartenstein,8.5,9.5,under,over,0,-2.13,0.0,Med,Med
-Isaac Okoro,Peyton Watson,7.5,4.5,under,under,0,-2.13,0.0,Med,Low
-Peyton Watson,Cason Wallace,4.5,9.5,under,under,0,-2.14,0.0,Low,Med
-Mouhamed Gueye,Jalen Wilson,5.5,7.5,over,under,0,-2.14,0.0,Med,Med
-Marvin Bagley III,Josh Okogie,6.5,7.5,over,under,0,-2.19,0.0,Med,Med
-Marvin Bagley III,Al Horford,6.5,7.5,over,under,0,-2.21,0.0,Med,Med
-Peyton Watson,Isaiah Hartenstein,4.5,9.5,under,over,0,-2.22,0.0,Low,Med
-Marvin Bagley III,Walter Clayton Jr.,6.5,5.5,over,over,0,-2.28,0.0,Med,Med
-Marvin Bagley III,Isaac Okoro,6.5,7.5,over,under,0,-2.32,0.0,Med,Med
-Marvin Bagley III,Cason Wallace,6.5,9.5,over,under,0,-2.33,0.0,Med,Med
-Mouhamed Gueye,Kentavious Caldwell-Pope,5.5,8.5,over,under,0,-2.33,0.0,Med,Med
-Day'Ron Sharpe,Kentavious Caldwell-Pope,6.5,8.5,over,under,0,-2.35,0.0,Low,Med
-Marvin Bagley III,Bruce Brown,6.5,6.5,over,under,0,-2.39,0.0,Med,Med
-Josh Okogie,Al Horford,7.5,7.5,under,under,0,-2.4,0.0,Med,Med
-Mouhamed Gueye,Peyton Watson,5.5,4.5,over,under,0,-2.41,0.0,Med,Low
-Marvin Bagley III,Isaiah Hartenstein,6.5,9.5,over,over,0,-2.41,0.0,Med,Med
-Day'Ron Sharpe,Peyton Watson,6.5,4.5,over,under,0,-2.44,0.0,Low,Low
-Josh Okogie,Walter Clayton Jr.,7.5,5.5,under,over,0,-2.47,0.0,Med,Med
-Walter Clayton Jr.,Al Horford,5.5,7.5,over,under,0,-2.49,0.0,Med,Med
-Josh Okogie,Isaac Okoro,7.5,7.5,under,under,0,-2.51,0.0,Med,Med
-Josh Okogie,Cason Wallace,7.5,9.5,under,under,0,-2.51,0.0,Med,Med
-Isaac Okoro,Al Horford,7.5,7.5,under,under,0,-2.53,0.0,Med,Med
-Al Horford,Cason Wallace,7.5,9.5,under,under,0,-2.53,0.0,Med,Med
-Josh Okogie,Bruce Brown,7.5,6.5,under,under,0,-2.57,0.0,Med,Med
-Al Horford,Bruce Brown,7.5,6.5,under,under,0,-2.59,0.0,Med,Med
-Josh Okogie,Isaiah Hartenstein,7.5,9.5,under,over,0,-2.59,0.0,Med,Med
-Isaac Okoro,Walter Clayton Jr.,7.5,5.5,under,over,0,-2.6,0.0,Med,Med
-Marvin Bagley III,Mouhamed Gueye,6.5,5.5,over,over,0,-2.6,0.0,Med,Med
-Al Horford,Isaiah Hartenstein,7.5,9.5,under,over,0,-2.61,0.0,Med,Med
-Walter Clayton Jr.,Cason Wallace,5.5,9.5,over,under,0,-2.61,0.0,Med,Med
-Marvin Bagley III,Day'Ron Sharpe,6.5,6.5,over,over,0,-2.62,0.0,Med,Low
-Isaac Okoro,Cason Wallace,7.5,9.5,under,under,0,-2.65,0.0,Med,Med
-Walter Clayton Jr.,Bruce Brown,5.5,6.5,over,under,0,-2.66,0.0,Med,Med
-Walter Clayton Jr.,Isaiah Hartenstein,5.5,9.5,over,over,0,-2.68,0.0,Med,Med
-Isaac Okoro,Bruce Brown,7.5,6.5,under,under,0,-2.7,0.0,Med,Med
-Bruce Brown,Cason Wallace,6.5,9.5,under,under,0,-2.7,0.0,Med,Med
-Isaac Okoro,Isaiah Hartenstein,7.5,9.5,under,over,0,-2.72,0.0,Med,Med
-Mouhamed Gueye,Josh Okogie,5.5,7.5,over,under,0,-2.78,0.0,Med,Med
-Bruce Brown,Isaiah Hartenstein,6.5,9.5,under,over,0,-2.78,0.0,Med,Med
-Mouhamed Gueye,Al Horford,5.5,7.5,over,under,0,-2.8,0.0,Med,Med
-Day'Ron Sharpe,Josh Okogie,6.5,7.5,over,under,0,-2.8,0.0,Low,Med
-Day'Ron Sharpe,Al Horford,6.5,7.5,over,under,0,-2.82,0.0,Low,Med
-Mouhamed Gueye,Walter Clayton Jr.,5.5,5.5,over,over,0,-2.87,0.0,Med,Med
-Day'Ron Sharpe,Walter Clayton Jr.,6.5,5.5,over,over,0,-2.89,0.0,Low,Med
-Mouhamed Gueye,Isaac Okoro,5.5,7.5,over,under,0,-2.91,0.0,Med,Med
-Mouhamed Gueye,Cason Wallace,5.5,9.5,over,under,0,-2.91,0.0,Med,Med
-Day'Ron Sharpe,Cason Wallace,6.5,9.5,over,under,0,-2.93,0.0,Low,Med
-Day'Ron Sharpe,Isaac Okoro,6.5,7.5,over,under,0,-2.93,0.0,Low,Med
-Mouhamed Gueye,Bruce Brown,5.5,6.5,over,under,0,-2.96,0.0,Med,Med
-Mouhamed Gueye,Isaiah Hartenstein,5.5,9.5,over,over,0,-2.98,0.0,Med,Med
-Day'Ron Sharpe,Bruce Brown,6.5,6.5,over,under,0,-2.99,0.0,Low,Med
-Day'Ron Sharpe,Isaiah Hartenstein,6.5,9.5,over,over,0,-3.0,0.0,Low,Med
-Mouhamed Gueye,Day'Ron Sharpe,5.5,6.5,over,over,0,-3.18,0.0,Med,Low
+Jared McCain,Andrew Nembhard,7.5,11.5,under,under,1,8.58,0.429,Low,Med
+Jose Alvarado,Andrew Nembhard,10.5,11.5,under,under,1,8.48,0.424,Med,Med
+Jared McCain,Jose Alvarado,7.5,10.5,under,under,1,7.78,0.389,Low,Med
+Keldon Johnson,Andrew Nembhard,10.5,11.5,under,under,1,7.21,0.36,Med,Med
+Kris Murray,Andrew Nembhard,6.5,11.5,under,under,1,7.18,0.359,Low,Med
+Jared McCain,Keldon Johnson,7.5,10.5,under,under,1,6.55,0.328,Low,Med
+Jared McCain,Kris Murray,7.5,6.5,under,under,1,6.53,0.327,Low,Low
+Keldon Johnson,Jose Alvarado,10.5,10.5,under,under,1,6.46,0.323,Med,Med
+Jose Alvarado,Kris Murray,10.5,6.5,under,under,1,6.44,0.322,Med,Low
+Corey Kispert,Andrew Nembhard,9.5,11.5,under,under,1,5.92,0.296,Med,Med
+Andrew Nembhard,Brook Lopez,11.5,7.5,under,under,1,5.34,0.267,Med,Med
+Corey Kispert,Jared McCain,9.5,7.5,under,under,1,5.32,0.266,Med,Low
+Keldon Johnson,Kris Murray,10.5,6.5,under,under,1,5.31,0.265,Med,Low
+Corey Kispert,Jose Alvarado,9.5,10.5,under,under,1,5.24,0.262,Med,Med
+Lonzo Ball,Andrew Nembhard,7.5,11.5,under,under,1,5.06,0.253,Low,Med
+Jared McCain,Brook Lopez,7.5,7.5,under,under,1,4.75,0.238,Low,Med
+Jake LaRavia,Andrew Nembhard,11.5,11.5,under,under,1,4.72,0.236,Med,Med
+Jose Alvarado,Brook Lopez,10.5,7.5,under,under,1,4.68,0.234,Med,Med
+Jared McCain,Lonzo Ball,7.5,7.5,under,under,1,4.48,0.224,Low,Low
+Patrick Williams,Andrew Nembhard,7.5,11.5,under,under,1,4.43,0.221,Med,Med
+Jose Alvarado,Lonzo Ball,10.5,7.5,under,under,1,4.41,0.22,Med,Low
+Corey Kispert,Keldon Johnson,9.5,10.5,under,under,1,4.19,0.209,Med,Med
+Corey Kispert,Kris Murray,9.5,6.5,under,under,1,4.17,0.208,Med,Low
+Jared McCain,Jake LaRavia,7.5,11.5,under,under,1,4.16,0.208,Low,Med
+Jake LaRavia,Jose Alvarado,11.5,10.5,under,under,1,4.09,0.204,Med,Med
+Harrison Barnes,Andrew Nembhard,10.5,11.5,under,under,1,3.95,0.197,Med,Med
+Jared McCain,Patrick Williams,7.5,7.5,under,under,1,3.88,0.194,Low,Med
+Jose Alvarado,Patrick Williams,10.5,7.5,under,under,1,3.8,0.19,Med,Med
+Keldon Johnson,Brook Lopez,10.5,7.5,under,under,1,3.66,0.183,Med,Med
+Kris Murray,Brook Lopez,6.5,7.5,under,under,1,3.65,0.182,Low,Med
+Jared McCain,Harrison Barnes,7.5,10.5,under,under,1,3.42,0.171,Low,Med
+Keldon Johnson,Lonzo Ball,10.5,7.5,under,under,1,3.41,0.171,Med,Low
+Lonzo Ball,Kris Murray,7.5,6.5,under,under,1,3.4,0.17,Low,Low
+Harrison Barnes,Jose Alvarado,10.5,10.5,under,under,1,3.34,0.167,Med,Med
+Jake LaRavia,Keldon Johnson,11.5,10.5,under,under,1,3.12,0.156,Med,Med
+Jake LaRavia,Kris Murray,11.5,6.5,under,under,1,3.1,0.155,Med,Low
+Dalton Knecht,Andrew Nembhard,6.5,11.5,under,under,1,2.97,0.148,Med,Med
+Keldon Johnson,Patrick Williams,10.5,7.5,under,under,1,2.85,0.143,Med,Med
+Patrick Williams,Kris Murray,7.5,6.5,under,under,1,2.83,0.142,Med,Low
+Marvin Bagley III,Andrew Nembhard,6.5,11.5,under,under,1,2.81,0.141,Low,Med
+Jalen Smith,Andrew Nembhard,8.5,11.5,under,under,1,2.75,0.137,Med,Med
+Corey Kispert,Brook Lopez,9.5,7.5,under,under,1,2.64,0.132,Med,Med
+Jared McCain,Dalton Knecht,7.5,6.5,under,under,1,2.47,0.124,Low,Med
+Dalton Knecht,Jose Alvarado,6.5,10.5,under,under,1,2.41,0.12,Med,Med
+Harrison Barnes,Kris Murray,10.5,6.5,under,under,1,2.41,0.12,Med,Low
+Corey Kispert,Lonzo Ball,9.5,7.5,under,under,1,2.41,0.121,Med,Low
+Marvin Bagley III,Jared McCain,6.5,7.5,under,under,1,2.33,0.116,Low,Low
+Jared McCain,Jalen Smith,7.5,8.5,under,under,1,2.26,0.113,Low,Med
+Marvin Bagley III,Jose Alvarado,6.5,10.5,under,under,1,2.26,0.113,Low,Med
+Jose Alvarado,Jalen Smith,10.5,8.5,under,under,1,2.2,0.11,Med,Med
+Corey Kispert,Jake LaRavia,9.5,11.5,under,under,1,2.14,0.107,Med,Med
+Lonzo Ball,Brook Lopez,7.5,7.5,under,under,1,1.96,0.098,Low,Med
+Corey Kispert,Patrick Williams,9.5,7.5,under,under,1,1.89,0.095,Med,Med
+Jake LaRavia,Brook Lopez,11.5,7.5,under,under,1,1.69,0.085,Med,Med
+Dalton Knecht,Keldon Johnson,6.5,10.5,under,under,1,1.55,0.078,Med,Med
+Dalton Knecht,Kris Murray,6.5,6.5,under,under,1,1.54,0.077,Med,Low
+Corey Kispert,Harrison Barnes,9.5,10.5,under,under,1,1.5,0.075,Med,Med
+Jake LaRavia,Lonzo Ball,11.5,7.5,under,under,1,1.48,0.074,Med,Low
+Patrick Williams,Brook Lopez,7.5,7.5,under,under,1,1.45,0.073,Med,Med
+Marvin Bagley III,Keldon Johnson,6.5,10.5,under,under,1,1.42,0.071,Low,Med
+Marvin Bagley III,Kris Murray,6.5,6.5,under,under,1,1.4,0.07,Low,Low
+Keldon Johnson,Jalen Smith,10.5,8.5,under,under,1,1.36,0.068,Med,Med
+Jalen Smith,Kris Murray,8.5,6.5,under,under,1,1.34,0.067,Med,Low
+Patrick Williams,Lonzo Ball,7.5,7.5,under,under,1,1.24,0.062,Med,Low
+Harrison Barnes,Brook Lopez,10.5,7.5,under,under,1,1.07,0.054,Med,Med
+Jake LaRavia,Patrick Williams,11.5,7.5,under,under,1,1.0,0.05,Med,Med
+Harrison Barnes,Lonzo Ball,10.5,7.5,under,under,1,0.87,0.044,Med,Low
+Corey Kispert,Dalton Knecht,9.5,6.5,under,under,1,0.69,0.035,Med,Med
+Jake LaRavia,Harrison Barnes,11.5,10.5,under,under,1,0.63,0.032,Med,Med
+Corey Kispert,Jalen Smith,9.5,8.5,under,under,1,0.51,0.025,Med,Med
+Harrison Barnes,Patrick Williams,10.5,7.5,under,under,1,0.42,0.021,Med,Med
+Dalton Knecht,Brook Lopez,6.5,7.5,under,under,1,0.3,0.015,Med,Med
+Marvin Bagley III,Brook Lopez,6.5,7.5,under,under,1,0.17,0.009,Low,Med
+Jalen Smith,Brook Lopez,8.5,7.5,under,under,1,0.12,0.006,Med,Med
+Dalton Knecht,Lonzo Ball,6.5,7.5,under,under,1,0.11,0.005,Med,Low
+Marvin Bagley III,Lonzo Ball,6.5,7.5,under,under,0,-0.01,0.0,Low,Low
+Lonzo Ball,Jalen Smith,7.5,8.5,under,under,0,-0.06,0.0,Low,Med
+Marvin Bagley III,Jake LaRavia,6.5,11.5,under,under,0,-0.23,0.0,Low,Med
+Jake LaRavia,Jalen Smith,11.5,8.5,under,under,0,-0.28,0.0,Med,Med
+Dalton Knecht,Patrick Williams,6.5,7.5,under,under,0,-0.32,0.0,Med,Med
+Marvin Bagley III,Patrick Williams,6.5,7.5,under,under,0,-0.43,0.0,Low,Med
+Dalton Knecht,Harrison Barnes,6.5,10.5,under,under,0,-0.64,0.0,Med,Med
+Marvin Bagley III,Harrison Barnes,6.5,10.5,under,under,0,-0.75,0.0,Low,Med
+Harrison Barnes,Jalen Smith,10.5,8.5,under,under,0,-0.8,0.0,Med,Med
+Marvin Bagley III,Dalton Knecht,6.5,6.5,under,under,0,-1.4,0.0,Low,Med
+Dalton Knecht,Jalen Smith,6.5,8.5,under,under,0,-1.44,0.0,Med,Med
+Marvin Bagley III,Jalen Smith,6.5,8.5,under,under,0,-1.54,0.0,Low,Med
