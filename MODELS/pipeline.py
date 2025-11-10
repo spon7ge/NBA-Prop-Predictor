@@ -2,14 +2,50 @@ import requests
 from datetime import datetime, timedelta
 import pytz
 import pandas as pd
+import numpy as np
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2
 from MODELS.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive
 
 
 today = datetime.today().strftime('%Y-%m-%d')
 
-def calculate_slope():
-    pass 
+def calculate_slope(player_df, stat_col, window=5):
+    if len(player_df) < 2:
+        return 0.0
+    
+    # Sort by date to ensure chronological order
+    player_df_sorted = player_df.sort_values(by='GAME_DATE')
+    
+    # Get the last 'window' values
+    recent_values = player_df_sorted[stat_col].tail(window).values
+    
+    # Remove NaN values
+    clean_values = recent_values[~pd.isna(recent_values)]
+    
+    # Need at least 2 points to calculate slope
+    if len(clean_values) < 2:
+        return 0.0
+    
+    # Create x-axis (game indices)
+    x = np.arange(len(clean_values))
+    y = clean_values
+    
+    n = len(x)
+    
+    # Check for zero variance (all x values the same - shouldn't happen, but safety check)
+    if n < 2 or np.var(x) == 0:
+        return 0.0
+    
+    # Calculate slope using the formula: (n*sum(xy) - sum(x)*sum(y)) / (n*sum(x²) - sum(x)²)
+    numerator = n * np.sum(x * y) - np.sum(x) * np.sum(y)
+    denominator = n * np.sum(x**2) - np.sum(x)**2
+    
+    if denominator == 0:
+        return 0.0
+    
+    slope = numerator / denominator
+    
+    return round(float(slope), 3)
 
 def calculate_volatility(player_df, stat_col, window=5, use_cv=False):
     if len(player_df) < 2:
@@ -221,9 +257,9 @@ def playerScoring(player_name, data):
     res.append(player_df['percentagePointsPaint'].mean())
     res.append(player_df['PTS_DELTA_STAR_OUT'].iloc[-1])
     res.append(player_df['PTS'].tail(40).mean())
-    res.append(player_df['PTS_TREND_LAST_5'].iloc[-1])
+    res.append(calculate_slope(player_df, 'PTS', window=5))
 
-    res.append(player_df['MIN_TREND_LAST_5'].iloc[-1])
+    res.append(calculate_slope(player_df, 'MIN', window=5))
     res.append((player_df['PTS'].mean() / (player_df['MIN'].mean()) + 0.01) * player_df['USG_PCT'].mean())
     res.append(calculate_volatility(player_df, 'PTS', window=5))
     res.append(player_df['FGA'].iloc[-1])
@@ -281,17 +317,16 @@ def playerScoring(player_name, data):
     res.append(calculate_volatility(player_df, 'FT_PCT', window=10, use_cv=True))
     res.append(calculate_volatility(player_df, 'FT_PCT', window=40, use_cv=True))
     res.append(calculate_volatility(player_df, 'TOV', window=10))
-    pts_recent_vs_season = player_df['PTS'].tail(5).mean() / player_df['PTS'].mean()
+    pts_recent_vs_season = (player_df['PTS'].tail(5).mean() / (player_df['PTS'].mean() + 0.01))
     res.append(pts_recent_vs_season)
     res.append(1 if pts_recent_vs_season > 1.15 else 0)
     res.append(1 if pts_recent_vs_season < 0.85 else 0)
-
     res.append(1 if player_df['USG_PCT'].mean() > 28 else 0)
     res.append(1 if player_df['USG_PCT'].mean() > 23 and player_df['USG_PCT'].mean() <= 28 else 0)
     # res.append(player_df['PTS'].tail(10).max())
     res.append(player_df['PTS'].tail(20).max())
     res.append(player_df['PTS'].tail(10).min())
-    res.append(1 if (player_df['PLAYER_IS_TEAM_STAR'].iloc[-1] * (player_df['PTS_TREND_LAST_5'].iloc[-1] > 0)) else 0)
+    res.append(1 if (player_df['PLAYER_IS_TEAM_STAR'].iloc[-1] * (calculate_slope(player_df, 'PTS', window=5) > 0)) else 0)
     res.append(1 if player_df['PTS'].mean() < 18 else 0)
     res.append(1 if ((player_df['PTS'].mean() > 10) & (player_df['PTS'].mean() < 18)) else 0)
 
