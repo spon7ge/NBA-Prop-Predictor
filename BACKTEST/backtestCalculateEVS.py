@@ -7,6 +7,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from MODELS.teamInfo import *
+from MODELS.pipeline import findOpp, calculate_volatility
 from itertools import combinations
 from MODELS.ngboostModel import predict_mean_variance_split
 
@@ -45,47 +46,6 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
-
-def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.035):
-    df = bookmakersData[
-        (bookmakersData['NAME'] == name) &
-        (bookmakersData['CATEGORY'] == category)
-    ]
-    
-    grouped_df = df.groupby('LINE').agg({
-        'BOOKMAKER': list,  # Collect all bookmakers offering the same line
-        'ODDS': list,
-        'OVER/UNDER': list
-    }).reset_index() 
-
-    res = []
-    for idx, row in grouped_df.iterrows():
-        if line == row['LINE']:
-            for odds, OU in zip(row['ODDS'], row['OVER/UNDER']):
-                if OU == over_under:
-                    res.append(round(impliedProb(odds), 2))
-    
-    # Apply a fixed buffer for one-sided props
-    adjusted_probs = [prob - fixed_buffer for prob in res]
-
-    # Calculate the fair odds
-    if len(adjusted_probs) == 0:
-        raise ValueError("No valid probabilities found for the given line and over/under condition.")
-    
-    fair_odds = sum(adjusted_probs) / len(adjusted_probs)
-    
-    if fair_odds == 0:
-        raise ValueError("Calculated fair probability is zero, cannot convert to odds.")
-    
-    odds_to_decimal = 1 / fair_odds
-    
-    # Convert to American odds
-    if odds_to_decimal == 2.0:
-        return +100
-    elif odds_to_decimal > 2.0:
-        return round((odds_to_decimal - 1) * 100)
-    else:
-        return round(-100 / (odds_to_decimal - 1))
 
 # Global prediction cache
 _prediction_cache = {}
@@ -180,6 +140,79 @@ def predictStats(playerName, data, models, features):
     }
     
     return predictions
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
+def calculate_player_sigma(player_df, prediction, current_date):
+    try:
+        if player_df.empty:
+            return max(2.5, min(8.5, prediction * 0.15))
+        
+        player_df_sorted = player_df.sort_values(by='GAME_DATE').copy()
+        latest_row = player_df_sorted.iloc[-1]
+        
+        pts_std_25 = calculate_volatility(player_df_sorted, 'PTS', window=25, use_cv=False)
+        if pd.isna(pts_std_25) or pts_std_25 == 0:
+            base_sigma = max(2.5, min(8.5, prediction * 0.15))
+        else:
+            base_sigma = max(2.5, min(8.5, 1.2 * pts_std_25))
+        
+        adjustments = []
+        current_date_dt = pd.to_datetime(current_date)
+        player_df_sorted['GAME_DATE'] = pd.to_datetime(player_df_sorted['GAME_DATE'])
+        if latest_row['IS_BACK_TO_BACK'] == 1:
+            adjustments.append(0.15)
+        
+        usage_pct = latest_row['USG_PCT_AVG_TO_DATE']
+        if usage_pct > 30:
+            usage_adjustment = min(0.25, (usage_pct - 30) * 0.01)
+            adjustments.append(usage_adjustment)
+        
+        min_std = latest_row['MIN_VOLATILITY_10_TO_DATE']
+        if not pd.isna(min_std) and min_std < 3:
+            adjustments.append(-0.15)
+        
+
+        expected_pace = latest_row['EXPECTED_PACE']
+        if expected_pace > 103:
+            pace_adjustment = min(0.20, (expected_pace - 105) * 0.01)
+            adjustments.append(pace_adjustment)
+        
+        opp_def_rating = latest_row['OPP_TEAM_DEF_RATING_AVG_TO_DATE']
+        if opp_def_rating < 101:
+            opp_def_adjustment = min(0.20, (opp_def_rating - 100) * 0.01)
+            adjustments.append(opp_def_adjustment)
+        
+        total_adjustment = sum(adjustments)
+        adjusted_sigma = base_sigma * (1 + total_adjustment)
+        final_sigma = max(1.5, min(12.0, adjusted_sigma))
+        
+        return round(final_sigma, 2)
+    except Exception as e:
+        print(f"Error calculating sigma for player: {e}")
+        return max(2.5, min(8.5, prediction * 0.15))
+
+
+def calculate_player_skew(player_df):
+    try:
+        if player_df.empty:
+            return 1.0
+        
+        player_df_sorted = player_df.sort_values(by='GAME_DATE')
+        pts_std_25 = player_df_sorted['PTS_VOLATILITY_20_TO_DATE'].iloc[-1]
+        pts_std_10 = player_df_sorted['PTS_VOLATILITY_10_TO_DATE'].iloc[-1]
+        
+        if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
+            volatility_ratio = pts_std_10 / pts_std_25
+            recent_skew = (volatility_ratio - 1.0) * 2.0
+        else:
+            recent_skew = 0.5
+        
+        alpha = np.clip(3 * recent_skew, -4, 4)
+        return round(alpha, 2)
+    except Exception as e:
+        print(f"Error calculating skew for player: {e}")
+        return 1.0
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------

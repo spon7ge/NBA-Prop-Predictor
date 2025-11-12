@@ -213,7 +213,7 @@ def calculate_player_sigma(player_df, prediction, current_date):
 
 def calculate_player_skew(player_df):
     try:
-        pts_std_25 = calculate_volatility(player_df, 'PTS', window=25, use_cv=False)
+        pts_std_25 = calculate_volatility(player_df, 'PTS', window=20, use_cv=False)
         pts_std_10 = calculate_volatility(player_df, 'PTS', window=10, use_cv=False)
             
         if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
