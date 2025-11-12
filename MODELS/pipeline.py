@@ -246,9 +246,8 @@ def playerScoring(player_name, data):
 
     res.append(player_df['MIN'].iloc[-1])
     res.append(player_df['MIN'].tail(10).max())
-    res.append(player_df['MIN'].tail(10).min())
     res.append(player_df['MIN'].tail(20).max())
-    res.append(player_df['MIN'].tail(20).min())
+    res.append(player_df['MIN'].tail(10).min())
     res.append(calculate_volatility(player_df, 'MIN', window=5))
     res.append(calculate_volatility(player_df, 'MIN', window=10))
     res.append(calculate_volatility(player_df, 'MIN', window=40))
@@ -323,15 +322,13 @@ def playerScoring(player_name, data):
     res.append(1 if pts_recent_vs_season < 0.85 else 0)
     res.append(1 if player_df['USG_PCT'].mean() > 28 else 0)
     res.append(1 if player_df['USG_PCT'].mean() > 23 and player_df['USG_PCT'].mean() <= 28 else 0)
-    # res.append(player_df['PTS'].tail(10).max())
+    
     res.append(player_df['PTS'].tail(20).max())
     res.append(player_df['PTS'].tail(10).min())
     res.append(1 if (player_df['PLAYER_IS_TEAM_STAR'].iloc[-1] * (calculate_slope(player_df, 'PTS', window=5) > 0)) else 0)
     res.append(1 if player_df['PTS'].mean() < 18 else 0)
     res.append(1 if ((player_df['PTS'].mean() > 10) & (player_df['PTS'].mean() < 18)) else 0)
 
-
-    
     return res
 
 

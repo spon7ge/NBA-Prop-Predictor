@@ -10,6 +10,7 @@ from MODELS.teamInfo import *
 from MODELS.pipeline import *
 from itertools import combinations
 from collections import defaultdict
+from MODELS.pipeline import calculate_volatility
 
 nameDict = {
     'Nikola Jokic': 'Nikola Jokić',
@@ -136,8 +137,8 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             else:
                 # Point model (XGBoost or similar)
                 pred = round(float(model.predict(vector)[0]), 3)
-                sigma = calculate_player_sigma(player_df.iloc[-1], pred)
-                skew = calculate_player_skew(player_df.iloc[-1])
+                sigma = calculate_player_sigma(player_df, pred, current_date)
+                skew = calculate_player_skew(player_df)
             
             _prediction_cache[cache_key] = {
                 'prediction': pred,
@@ -149,104 +150,84 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             return None
     return _prediction_cache[cache_key]
 
-def calculate_player_sigma(player_row, prediction):
+def calculate_player_sigma(player_df, prediction, current_date):
     try:
-        # Base sigma from points volatility (25-game rolling standard deviation)
-        pts_std_25 = player_row.get('PTS_STD_LAST_25', 0)
-        
-        # If no volatility data available, use prediction-based estimate
+        player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
+        team_df = player_df[player_df['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
+        opp_team, _ = findOpp(player_df['PLAYER_NAME'].iloc[-1], player_df, current_date)
+        opp_df = player_df[player_df['TEAM_ABBREVIATION'] == opp_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
+        # Base sigma from points volatility
+        pts_std_25 = calculate_volatility(player_df, 'PTS', window=25, use_cv=False)
         if pd.isna(pts_std_25) or pts_std_25 == 0:
-            # Estimate sigma based on prediction level (higher scorers tend to be more volatile)
-            # INCREASED minimum to prevent overly narrow distributions
-            base_sigma = max(3.5, min(8.5, prediction * 0.18))  # Was 2.5 and 0.15
+            base_sigma = max(2.5, min(8.5, prediction * 0.15))  
         else:
-            # Use actual volatility data with scaling factor
-            # INCREASED minimum to prevent overly narrow distributions
-            base_sigma = max(3.5, min(8.5, 1.3 * pts_std_25))  # Was 2.5 and 1.2
+            base_sigma = max(2.5, min(8.5, 1.2 * pts_std_25)) 
         
-        # Adjustments based on game context
         adjustments = []
-        
-        # Back-to-back adjustment (10-25% increase)
-        if player_row.get('IS_BACK_TO_BACK', 0) == 1:
+        current_date_dt = pd.to_datetime(current_date)
+        current_date_str = current_date_dt.strftime('%Y-%m-%d')
+        team_df['GAME_DATE'] = pd.to_datetime(team_df['GAME_DATE'])
+        if (current_date_dt - player_df['GAME_DATE'].iloc[-1]).days == 1:
             adjustments.append(0.15)  # 15% increase
         
         # High pace adjustment (10-20% increase)
-        game_pace = player_row.get('TEAM_PACE_AVG_TO_DATE', 100)
-        if game_pace > 105:  # High pace threshold
+        game_pace = team_df['TEAM_PACE'].mean()
+        if game_pace > 103:  # High pace threshold
             pace_adjustment = min(0.20, (game_pace - 105) * 0.01)  # Up to 20% increase
             adjustments.append(pace_adjustment)
         
         # Star player with extreme usage adjustment (10-25% increase)
-        usage_pct = player_row.get('USG_PCT_AVG_TO_DATE', 20)
+        usage_pct = player_df['USG_PCT'].mean()
         if usage_pct > 30:  # High usage threshold
             usage_adjustment = min(0.25, (usage_pct - 30) * 0.01)  # Up to 25% increase
             adjustments.append(usage_adjustment)
         
         # Minutes volatility low adjustment (10-20% decrease)
-        min_std = player_row.get('MIN_STD_LAST_25', 0)
+        min_std = calculate_volatility(player_df, 'MIN', window=10, use_cv=False)
         if not pd.isna(min_std) and min_std < 3:  # Low minutes volatility
             min_adjustment = -0.15  # 15% decrease
             adjustments.append(min_adjustment)
         
-        # Opponent slow pace adjustment (10-20% decrease)
-        # opp_pace = player_row.get('OPP_PACE_AVG_TO_DATE', 100)
-        # if opp_pace < 95:  # Slow pace threshold
-        #     opp_adjustment = -min(0.20, (95 - opp_pace) * 0.01)  # Up to 20% decrease
-        #     adjustments.append(opp_adjustment)
+        opp_pace = opp_df['TEAM_PACE'].mean()
+        if opp_pace > 103:  # High pace threshold
+            opp_pace_adjustment = min(0.20, (opp_pace - 105) * 0.01)  # Up to 20% increase
+            adjustments.append(opp_pace_adjustment)
         
+        opp_def_rating = opp_df['TEAM_DEF_RATING'].mean()
+        if opp_def_rating < 101:  # High defense threshold
+            opp_def_adjustment = min(0.20, (opp_def_rating - 100) * 0.01)  # Up to 20% increase
+            adjustments.append(opp_def_adjustment)
+            
         # Apply adjustments
         total_adjustment = sum(adjustments)
         adjusted_sigma = base_sigma * (1 + total_adjustment)
         
         # Final clipping to sane range
-        # INCREASED minimum from 1.5 to 3.0 to prevent extreme probabilities
-        final_sigma = max(3.0, min(12.0, adjusted_sigma))  # Was max(1.5, ...)
+        final_sigma = max(1.5, min(12.0, adjusted_sigma))  
         
         return round(final_sigma, 2)
         
     except Exception as e:
         print(f"Error calculating sigma for player: {e}")
-        # Fallback to prediction-based sigma with higher minimum
-        return max(3.5, min(8.5, prediction * 0.18))  # Was 2.5 and 0.15
+        return max(2.5, min(8.5, prediction * 0.15)) 
 
-def calculate_player_skew(player_row):
+def calculate_player_skew(player_df):
     try:
-        # Try to get empirical skew from recent points volatility features
-        # Look for skew-related features in the data
-        recent_skew = None
-        
-        # Check for explicit skew features first
-        if 'PTS_SKEW_LAST_25' in player_row.index:
-            recent_skew = player_row.get('PTS_SKEW_LAST_25', None)
-        elif 'PTS_SKEW_LAST_15' in player_row.index:
-            recent_skew = player_row.get('PTS_SKEW_LAST_15', None)
-        elif 'PTS_SKEW_LAST_10' in player_row.index:
-            recent_skew = player_row.get('PTS_SKEW_LAST_10', None)
-        
-        # If no explicit skew data, estimate from volatility patterns
-        if pd.isna(recent_skew) or recent_skew == 0:
-            # Use volatility ratios as proxy for skew
-            pts_std_25 = player_row.get('PTS_STD_LAST_25', 0)
-            pts_std_10 = player_row.get('PTS_STD_LAST_10', 0)
+        pts_std_25 = calculate_volatility(player_df, 'PTS', window=25, use_cv=False)
+        pts_std_10 = calculate_volatility(player_df, 'PTS', window=10, use_cv=False)
             
-            if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
-                # Higher short-term volatility relative to long-term suggests positive skew
-                volatility_ratio = pts_std_10 / pts_std_25
-                recent_skew = (volatility_ratio - 1.0) * 2.0  # Scale to reasonable skew range
-            else:
-                # Default to mild right tail skew
-                recent_skew = 0.5
+        if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
+            volatility_ratio = pts_std_10 / pts_std_25
+            recent_skew = (volatility_ratio - 1.0) * 2.0  
+        else:   
+            recent_skew = 0.5
         
-        # Convert empirical skew to skewnorm shape parameter
-        # Clip to reasonable range and scale
         alpha = np.clip(3 * recent_skew, -4, 4)
         
         return round(alpha, 2)
         
     except Exception as e:
         print(f"Error calculating skew for player: {e}")
-        # Fallback to mild right tail skew
         return 1.0
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
