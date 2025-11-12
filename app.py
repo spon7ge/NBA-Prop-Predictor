@@ -334,14 +334,6 @@ elif options == 'Historical Hit Rates - PrizePicks':
         ('player_assists', "Over Rates for Assists"),
         ('player_blocks', "Over Rates for Blocks"),
         ('player_steals', "Over Rates for Steals"),
-        ('player_turnovers', "Over Rates for Turnovers"),
-        ('player_field_goals', "Over Rates for Field Goals Made"),
-        ('player_frees_made', "Over Rates for Free Throws Made"),
-        ('player_threes', "Over Rates for Three Pointers Made"),
-        ('player_points_rebounds', "Over Rates for Points + Rebounds"),
-        ('player_points_assists', "Over Rates for Points + Assists"),
-        ('player_rebounds_assists', "Over Rates for Rebounds + Assists"),
-        ('player_points_rebounds_assists', "Over Rates for Points + Rebounds + Assists"),
     ]
 
     any_rendered = False
@@ -370,14 +362,6 @@ elif options == 'Historical Hit Rates - Underdog':
         ('player_assists', "Over Rates for Assists"),
         ('player_blocks', "Over Rates for Blocks"),
         ('player_steals', "Over Rates for Steals"),
-        ('player_turnovers', "Over Rates for Turnovers"),
-        ('player_field_goals', "Over Rates for Field Goals Made"),
-        ('player_frees_made', "Over Rates for Free Throws Made"),
-        ('player_threes', "Over Rates for Three Pointers Made"),
-        ('player_points_rebounds', "Over Rates for Points + Rebounds"),
-        ('player_points_assists', "Over Rates for Points + Assists"),
-        ('player_rebounds_assists', "Over Rates for Rebounds + Assists"),
-        ('player_points_rebounds_assists', "Over Rates for Points + Rebounds + Assists"),
     ]
     
     any_rendered = False
