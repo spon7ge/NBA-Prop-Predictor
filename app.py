@@ -193,45 +193,6 @@ with st.expander("📋 What's Available", expanded=True):
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
     """)
 
-# Add expandable help section with tooltips
-# with st.expander("Betting Metrics Explained", expanded=False):
-#     st.markdown("""
-#     ### **EV% (Expected Value Percentage)**
-#     The average profit percentage per bet over many repetitions. Calculated by comparing our model's win probability vs. the bookmaker's implied probability from odds.
-    
-#     - **Positive EV%** = Profitable over time (higher is better)
-#     - **Example**: 25% EV means +25 profit per 100 dollars wagered on average
-#     - Higher EV% bets appear at the top of each table
-    
-#     ### **Kelly Criterion**
-#     Mathematical formula for optimal bet sizing based on your edge. Maximizes long-term growth while protecting your bankroll.
-    
-#     - **Kelly Full**: Aggressive (max recommended) - for experienced bettors only
-#     - **Kelly Half**: Conservative (recommended) - bet 50% of Kelly suggestion
-#     - **Kelly Quarter**: Very safe - bet 25% of Kelly suggestion
-    
-#     Most bettors should use Kelly Half or Quarter for safety.
-    
-#     ### **How the Model Works**
-#     Uses NGBoost (probabilistic ML) trained on thousands of games to estimate **probability distributions**, not exact scores. Considers:
-    
-#     - Player performance (rolling averages, trends, volatility)
-#     - Game context (home/away, rest days, back-to-back)
-#     - Matchups (opponent defense, historical performance, team pace)
-#     - Team context (ratings, star availability, recent form)
-    
-#     Compares the model's probability distribution to betting odds to identify value opportunities.
-    
-#     ### **Uncertainty Metrics**
-#     Indicators of prediction confidence:
-    
-#     - **CONFIDENCE INTERVAL**: Range where outcome likely falls (e.g., 95% confidence)
-#     - **INTERVAL WIDTH**: Size of that range (smaller = more certain)
-#     - **SIGMA**: Standard deviation of the distribution (higher = more volatile)
-#     - **SIGMA FLAG**: Alert when volatility is elevated (Low/Med/High)
-    
-#     Focus on bets with **Low sigma flags** for lower risk opportunities.
-#     """)
 st.info("""**Important Note:**
     Odds are updated from bookmakers throughout the day as new information becomes available. 
     You may see different odds on the same bet depending on when you check the page. """)
@@ -263,7 +224,7 @@ with st.sidebar:
     - **Med**: Medium risk
     - **High**: Higher risk
     
-    Focus on **Low** flags.
+    Focus on **Low/Med** flags.
     """)
     
     st.markdown("### Bet Selection")
