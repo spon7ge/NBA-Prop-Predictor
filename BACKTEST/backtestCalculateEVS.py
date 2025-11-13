@@ -46,6 +46,25 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
+def apply_calibration(raw_prob, shrinkage=0.75):
+    """
+    Shrink probabilities toward 50% to fix overconfidence.
+    
+    Args:
+        raw_prob: Raw probability from model (0 to 1)
+        shrinkage: How much to trust the model (0 = ignore model, 1 = trust fully)
+                  Default 0.75 based on empirical results showing ~75% of predicted edge is real
+    
+    Returns:
+        Calibrated probability closer to market
+    
+    Examples:
+        Raw 90% -> Calibrated 80%  (0.5 + (0.90 - 0.5) * 0.75)
+        Raw 70% -> Calibrated 65%  (0.5 + (0.70 - 0.5) * 0.75)
+        Raw 50% -> Calibrated 50%  (no change at 50/50)
+    """
+    return 0.5 + (raw_prob - 0.5) * shrinkage
+
 
 # Global prediction cache
 _prediction_cache = {}
@@ -54,13 +73,42 @@ def get_cached_prediction(player_name, data, models, features, stat_col='PTS', g
     """Get cached prediction for a player, computing if not already cached.
     
     Returns:
-        Dictionary with 'prediction' (mu/mean), 'sigma' keys (matching calculateEVS.py format)
+        Dictionary with 'prediction' (mu/mean), 'sigma', 'skew' keys (matching calculateEVS.py format)
     """
     cache_key = f"{player_name}_{stat_col}_{game_date}" if game_date else f"{player_name}_{stat_col}"
     
     if cache_key not in _prediction_cache:
         try:
-            _prediction_cache[cache_key] = predictStats(player_name, data, models, features)
+            # Get base prediction from model
+            base_prediction = predictStats(player_name, data, models, features)
+            mu = base_prediction['prediction']
+            sigma_model = base_prediction['sigma']
+            
+            # Get player data for sigma and skew adjustments
+            player_df = data[data['PLAYER_NAME'] == player_name].sort_values(by='GAME_DATE')
+            
+            # Determine current_date: use game_date if provided, otherwise use latest game date
+            if game_date:
+                current_date = game_date
+            elif not player_df.empty:
+                current_date = player_df['GAME_DATE'].iloc[-1]
+            else:
+                current_date = None
+            
+            # Calculate adjusted sigma using player-specific factors
+            if current_date and not player_df.empty:
+                sigma_adjusted = calculate_player_sigma(player_df, mu, current_date)
+                skew = calculate_player_skew(player_df)
+            else:
+                # Fallback to model sigma if we can't calculate adjusted
+                sigma_adjusted = sigma_model
+                skew = 0.0
+            
+            _prediction_cache[cache_key] = {
+                'prediction': mu,
+                'sigma': sigma_adjusted,
+                'skew': skew
+            }
         except Exception as e:
             print(f"Error getting prediction for {player_name}: {e}")
             return None
@@ -96,18 +144,14 @@ def predictStats(playerName, data, models, features):
     playerInput_df = playerInput_df.replace([np.inf, -np.inf], np.nan)
     playerInput_df = playerInput_df.fillna(playerInput_df.median())
     
-    # Get predictions from NGBoost models
     if isinstance(models, dict):
-        # Check if it's the new format with 'mean' and 'variance' keys
         if 'mean' in models and 'variance' in models:
             mean_model = models['mean']
             variance_model = models['variance']
             calibration_factor = models.get('calibration_factor', 1.25)
         else:
-            # Old quantile format - convert if needed
             raise ValueError("Models dict must contain 'mean' and 'variance' keys for NGBoost models")
     elif isinstance(models, tuple):
-        # Tuple format: (mean_model, variance_model, calibration_factor)
         mean_model = models[0]
         variance_model = models[1]
         calibration_factor = models[2] if len(models) > 2 else 1.25
@@ -124,18 +168,14 @@ def predictStats(playerName, data, models, features):
     variance = float(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance)
     sigma = np.sqrt(variance)
     
-    # Clip predictions to be non-negative (points/rebounds/assists can't be negative)
-    # If prediction is negative, it likely means the player has very low historical stats
-    # or the model encountered unusual feature values. Floor at 0.5 to avoid extreme edge cases.
     if mu < 0:
         warnings.warn(f"Negative prediction ({mu:.2f}) for {playerName}. Clipping to 0.5. This may indicate insufficient data or unusual feature values.")
         mu = 0.5
     elif mu < 0.5:
-        # Very low but positive predictions should also be floored to avoid unrealistic values
         mu = 0.5
     
     predictions = {
-        'prediction': mu,  # Match calculateEVS.py format
+        'prediction': mu,
         'sigma': sigma
     }
     
@@ -164,8 +204,8 @@ def calculate_player_sigma(player_df, prediction, current_date):
             adjustments.append(0.15)
         
         usage_pct = latest_row['USG_PCT_AVG_TO_DATE']
-        if usage_pct > 30:
-            usage_adjustment = min(0.25, (usage_pct - 30) * 0.01)
+        if usage_pct > 25:
+            usage_adjustment = min(0.25, (usage_pct - 25) * 0.01)
             adjustments.append(usage_adjustment)
         
         min_std = latest_row['MIN_VOLATILITY_10_TO_DATE']
@@ -174,13 +214,13 @@ def calculate_player_sigma(player_df, prediction, current_date):
         
 
         expected_pace = latest_row['EXPECTED_PACE']
-        if expected_pace > 103:
-            pace_adjustment = min(0.20, (expected_pace - 105) * 0.01)
+        if expected_pace > 102:
+            pace_adjustment = min(0.20, (expected_pace - 102) * 0.01)
             adjustments.append(pace_adjustment)
         
-        opp_def_rating = latest_row['OPP_TEAM_DEF_RATING_AVG_TO_DATE']
-        if opp_def_rating < 101:
-            opp_def_adjustment = min(0.20, (opp_def_rating - 100) * 0.01)
+        opp_def_rating = latest_row['OPP_DEF_RATING_AVG_TO_DATE']
+        if opp_def_rating < 110:
+            opp_def_adjustment = min(0.20, (opp_def_rating - 110) * 0.01)
             adjustments.append(opp_def_adjustment)
         
         total_adjustment = sum(adjustments)
@@ -217,8 +257,8 @@ def calculate_player_skew(player_df):
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
-                     variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                     use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, df_t=5, skew_a=-2.0):
+                     variance_inflation=1.1, stat_col='PTS', 
+                     use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, skew_a=-2.0):
     print("Processing single bets with NGBoost models...")
     
     results = []
@@ -240,13 +280,14 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         if player_df.empty or stat_col not in player_df.columns:
             continue
         
-        # Get predictions using cached function (returns prediction and sigma)
+        # Get predictions using cached function (returns prediction, sigma, and skew)
         try:
             predictions = get_cached_prediction(name, data, models, features, stat_col)
             if predictions is None:
                 continue
             mu = predictions['prediction']
             sigma_raw = predictions['sigma']
+            skew = predictions.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
             # Apply variance inflation if needed
             sigma = sigma_raw * variance_inflation
             
@@ -258,72 +299,70 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         np.random.seed(42)  # For reproducibility
         
         # Calculate probabilities using Monte Carlo simulation or analytical method
-        if use_monte_carlo:
-            # Monte Carlo simulation (10k draws)
-            if distribution_type == 'normal':
-                simulations = np.random.normal(mu, sigma, n_simulations)
-            elif distribution_type == 't':
-                from scipy.stats import t
-                df = df_t  # treat df as hyperparameter controlling tail thickness
-                scale = sigma * np.sqrt((df - 2) / df)
-                simulations = t.rvs(df, loc=mu, scale=scale, size=n_simulations, random_state=42)
-            elif distribution_type == 'skew_t':
-                from scipy.stats import skewnorm
-                # Approximate skew-t with skew-normal using configurable skew parameter
-                simulations = skewnorm.rvs(skew_a, loc=mu, scale=sigma, size=n_simulations, random_state=42)
-            else:
-                raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
-            
-            # Clip simulations at zero since points cannot be negative
-            simulations = np.maximum(simulations, 0)
-            p_over = np.mean(simulations > line)
-        else:
-            # Analytical method (original)
-            if distribution_type == 'normal':
-                from scipy.stats import norm
-                p_over = 1 - norm.cdf(line, mu, sigma)
-            elif distribution_type == 't':
-                from scipy.stats import t
-                df = df_t
-                scale = sigma * np.sqrt((df - 2) / df)
-                p_over = 1 - t.cdf(line, df, loc=mu, scale=scale)
-            elif distribution_type == 'skew_t':
-                from scipy.stats import skewnorm
-                p_over = 1 - skewnorm.cdf(line, skew_a, loc=mu, scale=sigma)
-            else:
-                raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
+        from scipy.stats import skewnorm
         
-        p_under = 1.0 - p_over
+        if use_monte_carlo:
+            # Monte Carlo simulation using rejection sampling to properly handle zero-bound
+            # Sample from skew-normal and reject negative values (no artificial spike at zero)
+            simulations = []
+            rng = np.random.RandomState(42)
+            batch_size = n_simulations * 2  # Sample extra to account for rejections
+            while len(simulations) < n_simulations:
+                batch = skewnorm.rvs(skew, loc=mu, scale=sigma, size=batch_size, random_state=rng)
+                positive_batch = batch[batch >= 0]
+                simulations.extend(positive_batch)
+                if len(simulations) >= n_simulations:
+                    break
+            simulations = np.array(simulations[:n_simulations])
+            p_over_raw = np.mean(simulations > line)
+        else:
+            # Analytical method using conditional probability: P(X > line | X >= 0)
+            # = P(X > line) / P(X >= 0)
+            p_above_line = 1 - skewnorm.cdf(line, skew, loc=mu, scale=sigma)
+            p_non_negative = 1 - skewnorm.cdf(0, skew, loc=mu, scale=sigma)
+            # Avoid division by zero - if p_non_negative is very small, use direct calculation
+            if p_non_negative > 1e-10:
+                p_over_raw = p_above_line / p_non_negative
+            else:
+                # Fallback: if almost all probability is negative, use direct calculation
+                p_over_raw = max(0.0, min(1.0, p_above_line))
+        
+        # Use raw probabilities for all decision-making (edge, EV, Kelly, recommendations)
+        p_under_raw = 1.0 - p_over_raw
         
         # Choose probability based on the offered side
         if str(side).upper().startswith('O'):
-            p = p_over
+            p = p_over_raw
         else:
-            p = p_under
+            p = p_under_raw
         
         # Convert odds to decimal and calculate EV
         dec_odds = american_to_decimal(odds)
         b = dec_odds - 1.0
         
-        # EV calculations
+        # EV calculations using raw probabilities
         ev_per_dollar = p * b - (1 - p)
         ev_total = ev_per_dollar * stake  # Total EV in dollars
         
-        # Kelly criterion with variance-adjusted constraint
+        # Kelly criterion with variance-adjusted constraint (using raw probabilities)
         kelly_fraction = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
         kelly_capped_fraction = min(kelly_fraction, max_kelly)  
         kelly_dollars = kelly_capped_fraction * stake * b  
         
-        # Edge calculation (difference between model and market probabilities)
+        # Edge calculation (difference between model and market probabilities) - using raw probabilities
         market_prob = impliedProb(odds)
-        model_prob = p_over if str(side).upper().startswith('O') else p_under
+        model_prob = p_over_raw if str(side).upper().startswith('O') else p_under_raw
         edge = model_prob - market_prob
         
-        # Recommendation based on edge threshold
+        # Recommendation based on edge threshold (using raw probabilities)
         if edge > edge_threshold:
             recommendation = 1
         else:
             recommendation = 0
+        
+        # Apply calibration ONLY for reporting/display purposes
+        p_over_calibrated = apply_calibration(p_over_raw, shrinkage=0.75)
+        p_under_calibrated = apply_calibration(p_under_raw, shrinkage=0.75)
         
         results.append({
         'NAME': name,
@@ -334,14 +373,14 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         'SIDE': side,
         'PREDICTION': round(mu, 2),
         'RECOMMENDATION': recommendation,
-        'OVER%': round(p_over, 3),
-        'UNDER%': round(p_under, 3),
+        'OVER%': round(p_over_calibrated, 3),  # Calibrated for display
+        'UNDER%': round(p_under_calibrated, 3),  # Calibrated for display
         'IMPLIED PROB': round(market_prob, 3),
-        'MODEL PROB': round(model_prob, 3),
-        'EDGE': round(edge, 3),
-        'EV%': round(ev_total, 2),
-        'KELLY_FRACTION': round(kelly_fraction, 3),  # Kelly as fraction
-        'KELLY_DOLLARS': round(kelly_dollars, 2),  # Kelly in dollars
+        'MODEL PROB': round(model_prob, 3),  # Raw probability for edge calculation (already stored)
+        'EDGE': round(edge, 3),  # Calculated using raw probabilities
+        'EV%': round(ev_total, 2),  # Calculated using raw probabilities
+        'KELLY_FRACTION': round(kelly_fraction, 3),  # Calculated using raw probabilities
+        'KELLY_DOLLARS': round(kelly_dollars, 2),  # Calculated using raw probabilities
         'SIGMA': round(sigma, 2),
         'SIMULATION_METHOD': 'Monte Carlo' if use_monte_carlo else 'Analytical'
     })
@@ -349,8 +388,8 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
     return pd.DataFrame(results)    
 
 def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, df_t=5, skew_a=-2.0):
+                 variance_inflation=1.1, stat_col='PTS', 
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, skew_a=-2.0):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -408,13 +447,15 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 if pred1 is None or pred2 is None:
                     continue
                 
-                # Extract prediction (mu) and sigma directly
+                # Extract prediction (mu), sigma, and skew directly
                 mu1 = pred1['prediction']
                 sigma1_raw = pred1['sigma']
+                skew1 = pred1.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
                 sigma1 = sigma1_raw * variance_inflation
                 
                 mu2 = pred2['prediction']
                 sigma2_raw = pred2['sigma']
+                skew2 = pred2.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
                 sigma2 = sigma2_raw * variance_inflation
                 
             except Exception as e:
@@ -425,66 +466,62 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             np.random.seed(42)  # For reproducibility
             
             # Calculate probabilities for both players using Monte Carlo or analytical method
-            if use_monte_carlo:
-                # Monte Carlo simulation for both players
-                if distribution_type == 'normal':
-                    sim1 = np.random.normal(mu1, sigma1, n_simulations)
-                    sim2 = np.random.normal(mu2, sigma2, n_simulations)
-                elif distribution_type == 't':
-                    from scipy.stats import t
-                    df1 = df_t
-                    df2 = df_t
-                    scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
-                    scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
-                    sim1 = t.rvs(df1, loc=mu1, scale=scale1, size=n_simulations, random_state=42)
-                    sim2 = t.rvs(df2, loc=mu2, scale=scale2, size=n_simulations, random_state=42)
-                elif distribution_type == 'skew_t':
-                    from scipy.stats import skewnorm
-                    sim1 = skewnorm.rvs(skew_a, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                    sim2 = skewnorm.rvs(skew_a, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
-                else:
-                    raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
-                
-                # Clip simulations at zero since points cannot be negative
-                sim1 = np.maximum(sim1, 0)
-                sim2 = np.maximum(sim2, 0)
-                p1_over = np.mean(sim1 > player1_line['LINE'])
-                p2_over = np.mean(sim2 > player2_line['LINE'])
-            else:
-                # Analytical method (original)
-                if distribution_type == 'normal':
-                    from scipy.stats import norm
-                    p1_over = 1 - norm.cdf(player1_line['LINE'], mu1, sigma1)
-                    p2_over = 1 - norm.cdf(player2_line['LINE'], mu2, sigma2)
-                elif distribution_type == 't':
-                    from scipy.stats import t
-                    df1 = df_t
-                    df2 = df_t
-                    scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
-                    scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
-                    p1_over = 1 - t.cdf(player1_line['LINE'], df1, loc=mu1, scale=scale1)
-                    p2_over = 1 - t.cdf(player2_line['LINE'], df2, loc=mu2, scale=scale2)
-                elif distribution_type == 'skew_t':
-                    from scipy.stats import skewnorm
-                    p1_over = 1 - skewnorm.cdf(player1_line['LINE'], skew_a, loc=mu1, scale=sigma1)
-                    p2_over = 1 - skewnorm.cdf(player2_line['LINE'], skew_a, loc=mu2, scale=sigma2)
-                else:
-                    raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
+            from scipy.stats import skewnorm
             
+            if use_monte_carlo:
+                # Monte Carlo simulation using rejection sampling to properly handle zero-bound
+                rng = np.random.RandomState(42)
+                batch_size = n_simulations * 2
+                
+                # Player 1
+                sim1_list = []
+                while len(sim1_list) < n_simulations:
+                    batch = skewnorm.rvs(skew1, loc=mu1, scale=sigma1, size=batch_size, random_state=rng)
+                    positive_batch = batch[batch >= 0]
+                    sim1_list.extend(positive_batch)
+                    if len(sim1_list) >= n_simulations:
+                        break
+                sim1 = np.array(sim1_list[:n_simulations])
+                
+                # Player 2
+                sim2_list = []
+                while len(sim2_list) < n_simulations:
+                    batch = skewnorm.rvs(skew2, loc=mu2, scale=sigma2, size=batch_size, random_state=rng)
+                    positive_batch = batch[batch >= 0]
+                    sim2_list.extend(positive_batch)
+                    if len(sim2_list) >= n_simulations:
+                        break
+                sim2 = np.array(sim2_list[:n_simulations])
+                
+                p1_over_raw = np.mean(sim1 > player1_line['LINE'])
+                p2_over_raw = np.mean(sim2 > player2_line['LINE'])
+            else:
+                # Analytical method using conditional probability: P(X > line | X >= 0)
+                # Player 1
+                p1_above_line = 1 - skewnorm.cdf(player1_line['LINE'], skew1, loc=mu1, scale=sigma1)
+                p1_non_negative = 1 - skewnorm.cdf(0, skew1, loc=mu1, scale=sigma1)
+                p1_over_raw = (p1_above_line / p1_non_negative) if p1_non_negative > 1e-10 else max(0.0, min(1.0, p1_above_line))
+                
+                # Player 2
+                p2_above_line = 1 - skewnorm.cdf(player2_line['LINE'], skew2, loc=mu2, scale=sigma2)
+                p2_non_negative = 1 - skewnorm.cdf(0, skew2, loc=mu2, scale=sigma2)
+                p2_over_raw = (p2_above_line / p2_non_negative) if p2_non_negative > 1e-10 else max(0.0, min(1.0, p2_above_line))
+            
+            # Use raw probabilities for all decision-making (edge, EV, Kelly, recommendations)
             # Determine model sides based on predictions vs lines
             if mu1 > player1_line['LINE']:
                 model_side1 = 'over'
-                p1 = p1_over
+                p1 = p1_over_raw
             else:
                 model_side1 = 'under'
-                p1 = 1 - p1_over
+                p1 = 1 - p1_over_raw
                 
             if mu2 > player2_line['LINE']:
                 model_side2 = 'over'
-                p2 = p2_over
+                p2 = p2_over_raw
             else:
                 model_side2 = 'under'
-                p2 = 1 - p2_over
+                p2 = 1 - p2_over_raw
             
             # Calculate confidence intervals and sigma flags for both players
             ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
@@ -527,11 +564,16 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             combined_market_prob = market_prob1 * market_prob2
             combined_edge = combined_model_prob - combined_market_prob
             
-            # Recommendation based on multiple criteria (matching calculateEVS.py)
+            # Recommendation based on multiple criteria (matching calculateEVS.py) - using raw probabilities
             if (combined_edge > edge_threshold):
                 recommendation = 1
             else:
                 recommendation = 0
+            
+            # Apply calibration ONLY for reporting/display purposes
+            p1_calibrated = apply_calibration(p1, shrinkage=0.85)
+            p2_calibrated = apply_calibration(p2, shrinkage=0.85)
+            p_both_calibrated = apply_calibration(p_both, shrinkage=1.00)
             
             # Get actual results for backtesting
             actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
@@ -560,9 +602,9 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 'PREDICTION 2': round(mu2, 2),
                 'MODEL SIDE 1': model_side1,
                 'MODEL SIDE 2': model_side2,
-                'PROB 1': round(p1, 3),
-                'PROB 2': round(p2, 3),
-                'PROB BOTH': round(p_both, 4),
+                'PROB 1': round(p1_calibrated, 3),  # Calibrated for display
+                'PROB 2': round(p2_calibrated, 3),  # Calibrated for display
+                'PROB BOTH': round(p_both_calibrated, 4),  # Calibrated for display
                 'EDGE 1': round(edge1, 3),
                 'EDGE 2': round(edge2, 3),
                 'COMBINED EDGE': round(combined_edge, 3),
@@ -591,8 +633,8 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
     return results_df
 
 def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, df_t=5, skew_a=-2.0):
+                 variance_inflation=1.1, stat_col='PTS', 
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100, skew_a=-2.0):
     data = data[data['GAME_DATE'] <= gameDate]
     category = 'player_points'
     backtestData = backtestData[(backtestData['CATEGORY'] == category) & (backtestData['GAME_DATE'] == gameDate)]
@@ -660,17 +702,20 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     if pred1 is None or pred2 is None or pred3 is None:
                         continue
                     
-                    # Extract prediction (mu) and sigma directly
+                    # Extract prediction (mu), sigma, and skew directly
                     mu1 = pred1['prediction']
                     sigma1_raw = pred1['sigma']
+                    skew1 = pred1.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
                     sigma1 = sigma1_raw * variance_inflation
                     
                     mu2 = pred2['prediction']
                     sigma2_raw = pred2['sigma']
+                    skew2 = pred2.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
                     sigma2 = sigma2_raw * variance_inflation
                     
                     mu3 = pred3['prediction']
                     sigma3_raw = pred3['sigma']
+                    skew3 = pred3.get('skew', skew_a)  # Use player-specific skew, fallback to skew_a
                     sigma3 = sigma3_raw * variance_inflation
                     
                 except Exception as e:
@@ -681,85 +726,85 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 np.random.seed(42)  # For reproducibility
                 
                 # Calculate probabilities for all three players using Monte Carlo or analytical method
-                if use_monte_carlo:
-                    # Monte Carlo simulation for all three players
-                    if distribution_type == 'normal':
-                        sim1 = np.random.normal(mu1, sigma1, n_simulations)
-                        sim2 = np.random.normal(mu2, sigma2, n_simulations)
-                        sim3 = np.random.normal(mu3, sigma3, n_simulations)
-                    elif distribution_type == 't':
-                        from scipy.stats import t
-                        df1 = df_t
-                        df2 = df_t
-                        df3 = df_t
-                        scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
-                        scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
-                        scale3 = sigma3 * np.sqrt((df3 - 2) / df3)
-                        sim1 = t.rvs(df1, loc=mu1, scale=scale1, size=n_simulations, random_state=42)
-                        sim2 = t.rvs(df2, loc=mu2, scale=scale2, size=n_simulations, random_state=42)
-                        sim3 = t.rvs(df3, loc=mu3, scale=scale3, size=n_simulations, random_state=42)
-                    elif distribution_type == 'skew_t':
-                        from scipy.stats import skewnorm
-                        sim1 = skewnorm.rvs(skew_a, loc=mu1, scale=sigma1, size=n_simulations, random_state=42)
-                        sim2 = skewnorm.rvs(skew_a, loc=mu2, scale=sigma2, size=n_simulations, random_state=42)
-                        sim3 = skewnorm.rvs(skew_a, loc=mu3, scale=sigma3, size=n_simulations, random_state=42)
-                    else:
-                        raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
-                    
-                    # Clip simulations at zero since points cannot be negative
-                    sim1 = np.maximum(sim1, 0)
-                    sim2 = np.maximum(sim2, 0)
-                    sim3 = np.maximum(sim3, 0)
-                    p1_over = np.mean(sim1 > player1_line['LINE'])
-                    p2_over = np.mean(sim2 > player2_line['LINE'])
-                    p3_over = np.mean(sim3 > player3_line['LINE'])
-                else:
-                    # Analytical method (original)
-                    if distribution_type == 'normal':
-                        from scipy.stats import norm
-                        p1_over = 1 - norm.cdf(player1_line['LINE'], mu1, sigma1)
-                        p2_over = 1 - norm.cdf(player2_line['LINE'], mu2, sigma2)
-                        p3_over = 1 - norm.cdf(player3_line['LINE'], mu3, sigma3)
-                    elif distribution_type == 't':
-                        from scipy.stats import t
-                        df1 = df_t
-                        df2 = df_t
-                        df3 = df_t
-                        scale1 = sigma1 * np.sqrt((df1 - 2) / df1)
-                        scale2 = sigma2 * np.sqrt((df2 - 2) / df2)
-                        scale3 = sigma3 * np.sqrt((df3 - 2) / df3)
-                        p1_over = 1 - t.cdf(player1_line['LINE'], df1, loc=mu1, scale=scale1)
-                        p2_over = 1 - t.cdf(player2_line['LINE'], df2, loc=mu2, scale=scale2)
-                        p3_over = 1 - t.cdf(player3_line['LINE'], df3, loc=mu3, scale=scale3)
-                    elif distribution_type == 'skew_t':
-                        from scipy.stats import skewnorm
-                        p1_over = 1 - skewnorm.cdf(player1_line['LINE'], skew_a, loc=mu1, scale=sigma1)
-                        p2_over = 1 - skewnorm.cdf(player2_line['LINE'], skew_a, loc=mu2, scale=sigma2)
-                        p3_over = 1 - skewnorm.cdf(player3_line['LINE'], skew_a, loc=mu3, scale=sigma3)
-                    else:
-                        raise ValueError("distribution_type must be 'normal', 't', or 'skew_t'")
+                from scipy.stats import skewnorm
                 
+                if use_monte_carlo:
+                    # Monte Carlo simulation using rejection sampling to properly handle zero-bound
+                    rng = np.random.RandomState(42)
+                    batch_size = n_simulations * 2
+                    
+                    # Player 1
+                    sim1_list = []
+                    while len(sim1_list) < n_simulations:
+                        batch = skewnorm.rvs(skew1, loc=mu1, scale=sigma1, size=batch_size, random_state=rng)
+                        positive_batch = batch[batch >= 0]
+                        sim1_list.extend(positive_batch)
+                        if len(sim1_list) >= n_simulations:
+                            break
+                    sim1 = np.array(sim1_list[:n_simulations])
+                    
+                    # Player 2
+                    sim2_list = []
+                    while len(sim2_list) < n_simulations:
+                        batch = skewnorm.rvs(skew2, loc=mu2, scale=sigma2, size=batch_size, random_state=rng)
+                        positive_batch = batch[batch >= 0]
+                        sim2_list.extend(positive_batch)
+                        if len(sim2_list) >= n_simulations:
+                            break
+                    sim2 = np.array(sim2_list[:n_simulations])
+                    
+                    # Player 3
+                    sim3_list = []
+                    while len(sim3_list) < n_simulations:
+                        batch = skewnorm.rvs(skew3, loc=mu3, scale=sigma3, size=batch_size, random_state=rng)
+                        positive_batch = batch[batch >= 0]
+                        sim3_list.extend(positive_batch)
+                        if len(sim3_list) >= n_simulations:
+                            break
+                    sim3 = np.array(sim3_list[:n_simulations])
+                    
+                    p1_over_raw = np.mean(sim1 > player1_line['LINE'])
+                    p2_over_raw = np.mean(sim2 > player2_line['LINE'])
+                    p3_over_raw = np.mean(sim3 > player3_line['LINE'])
+                else:
+                    # Analytical method using conditional probability: P(X > line | X >= 0)
+                    # Player 1
+                    p1_above_line = 1 - skewnorm.cdf(player1_line['LINE'], skew1, loc=mu1, scale=sigma1)
+                    p1_non_negative = 1 - skewnorm.cdf(0, skew1, loc=mu1, scale=sigma1)
+                    p1_over_raw = (p1_above_line / p1_non_negative) if p1_non_negative > 1e-10 else max(0.0, min(1.0, p1_above_line))
+                    
+                    # Player 2
+                    p2_above_line = 1 - skewnorm.cdf(player2_line['LINE'], skew2, loc=mu2, scale=sigma2)
+                    p2_non_negative = 1 - skewnorm.cdf(0, skew2, loc=mu2, scale=sigma2)
+                    p2_over_raw = (p2_above_line / p2_non_negative) if p2_non_negative > 1e-10 else max(0.0, min(1.0, p2_above_line))
+                    
+                    # Player 3
+                    p3_above_line = 1 - skewnorm.cdf(player3_line['LINE'], skew3, loc=mu3, scale=sigma3)
+                    p3_non_negative = 1 - skewnorm.cdf(0, skew3, loc=mu3, scale=sigma3)
+                    p3_over_raw = (p3_above_line / p3_non_negative) if p3_non_negative > 1e-10 else max(0.0, min(1.0, p3_above_line))
+                
+                # Use raw probabilities for all decision-making (edge, EV, Kelly, recommendations)
                 # Determine model sides based on predictions vs lines
                 if mu1 > player1_line['LINE']:
                     model_side1 = 'over'
-                    p1 = p1_over
+                    p1 = p1_over_raw
                 else:
                     model_side1 = 'under'
-                    p1 = 1 - p1_over
+                    p1 = 1 - p1_over_raw
                     
                 if mu2 > player2_line['LINE']:
                     model_side2 = 'over'
-                    p2 = p2_over
+                    p2 = p2_over_raw
                 else:
                     model_side2 = 'under'
-                    p2 = 1 - p2_over
+                    p2 = 1 - p2_over_raw
                     
                 if mu3 > player3_line['LINE']:
                     model_side3 = 'over'
-                    p3 = p3_over
+                    p3 = p3_over_raw
                 else:
                     model_side3 = 'under'
-                    p3 = 1 - p3_over
+                    p3 = 1 - p3_over_raw
                 
                 # Confidence intervals and sigma flags for all three players
                 ci1 = (max(0, mu1 - 1.96 * sigma1), mu1 + 1.96 * sigma1)
@@ -804,11 +849,17 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 combined_market_prob = market_prob1 * market_prob2 * market_prob3
                 combined_edge = combined_model_prob - combined_market_prob
                 
-                # Recommendation based on multiple criteria (matching calculateEVS.py)
+                # Recommendation based on multiple criteria (matching calculateEVS.py) - using raw probabilities
                 if combined_edge > edge_threshold:
                     recommendation = 1
                 else:
                     recommendation = 0
+                
+                # Apply calibration ONLY for reporting/display purposes
+                p1_calibrated = apply_calibration(p1, shrinkage=0.75)
+                p2_calibrated = apply_calibration(p2, shrinkage=0.75)
+                p3_calibrated = apply_calibration(p3, shrinkage=0.75)
+                p_all_three_calibrated = apply_calibration(p_all_three, shrinkage=0.75)
                 
                 # Get actual results
                 actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
@@ -843,10 +894,10 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     'MODEL SIDE 1': model_side1,
                     'MODEL SIDE 2': model_side2,
                     'MODEL SIDE 3': model_side3,
-                    'PROB 1': round(p1, 3),
-                    'PROB 2': round(p2, 3),
-                    'PROB 3': round(p3, 3),
-                    'PROB ALL THREE': round(p_all_three, 4),
+                    'PROB 1': round(p1_calibrated, 3),  # Calibrated for display
+                    'PROB 2': round(p2_calibrated, 3),  # Calibrated for display
+                    'PROB 3': round(p3_calibrated, 3),  # Calibrated for display
+                    'PROB ALL THREE': round(p_all_three_calibrated, 4),  # Calibrated for display
                     'EDGE 1': round(edge1, 3),
                     'EDGE 2': round(edge2, 3),
                     'EDGE 3': round(edge3, 3),

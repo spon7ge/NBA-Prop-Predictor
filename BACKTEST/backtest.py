@@ -16,7 +16,7 @@ from BACKTEST.backtestCalculateEVS import backtestSingleBet as calculateSingleBe
 from BACKTEST.backtestCalculateEVS import backtest3Legs as calculate3Legs
 
 def backtestSingle(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                  variance_inflation=1.1, distribution_type='normal', use_monte_carlo=True, 
+                  variance_inflation=1.1, use_monte_carlo=True, 
                   n_simulations=10000, max_kelly=0.25, stake=100):
     
     data = data[data['GAME_DATE'] == gameDate]
@@ -34,7 +34,6 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
         edge_threshold=edge_threshold,
         stake=stake,
         variance_inflation=variance_inflation,
-        distribution_type=distribution_type,
         use_monte_carlo=use_monte_carlo,
         n_simulations=n_simulations,
         max_kelly=max_kelly
@@ -96,7 +95,7 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
 
 def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+                 variance_inflation=1.1, stat_col='PTS', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
     print(f"Starting backtest for pairs on {gameDate}")
     total_start = time.time()
@@ -118,7 +117,6 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
         edge_threshold=edge_threshold,
         top_n=top_n,
         variance_inflation=variance_inflation,
-        distribution_type=distribution_type,
         stat_col=stat_col,
         use_monte_carlo=use_monte_carlo,
         n_simulations=n_simulations,
@@ -242,7 +240,7 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
     return pd.DataFrame(backtest_results)
 
 def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, distribution_type='normal', stat_col='PTS', 
+                 variance_inflation=1.1, stat_col='PTS', 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
     data = data[data['GAME_DATE'] == gameDate]
     if stat_col == 'PTS':
@@ -269,7 +267,6 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
         edge_threshold=edge_threshold,
         top_n=top_n,
         variance_inflation=variance_inflation,
-        distribution_type=distribution_type,
         stat_col=stat_col,
         use_monte_carlo=use_monte_carlo,
         n_simulations=n_simulations,
