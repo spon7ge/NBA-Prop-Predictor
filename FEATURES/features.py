@@ -1357,7 +1357,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     df = df.copy()
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
-    metrics = ['MIN', 'PTS', 'USG_PCT']
+    metrics = ['MIN', 'PTS', 'FGA', 'USG_PCT', 'TS_PCT']
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1563,157 +1563,128 @@ def add_recent_form_volatility(df, player_id_col='PLAYER_ID', date_col='GAME_DAT
     return df
 
 def add_interaction_features(df):
+    """
+    Add interaction features used in the model.
+    Only includes features that are in the model's feature list.
+    """
     eplison = 1e-8
     df = df.copy()
     
+    # ===== GAME CONTEXT =====
     df['TEAM_OFF_MINUS_OPP_DEF'] = df['TEAM_OFF_RATING_AVG_TO_DATE'] - df['OPP_DEF_RATING_AVG_TO_DATE']
-    df['USG_X_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    df['MIN_X_PACE'] = df['MIN_AVG_TO_DATE'] * df['EXPECTED_PACE']
-    df['TS_X_USG'] = df['TS_PCT_AVG_TO_DATE'] * df['USG_PCT_AVG_TO_DATE']
-    df['EFG_X_MIN'] = df['EFG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
-    df['FGA_PER_TCHS_X_TEAM_OFF'] = (
-        df['FGA_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison)
-    ) * df['TEAM_OFF_RATING_AVG_TO_DATE']
-    df['EXPECTED_USAGE_MIN'] = df['USG_PCT_ROLLING_AVG_5'] * (df['MIN_ROLLING_AVG_5'] + eplison)
-    df['EFG_X_OPP_DEF'] = df['EFG_PCT_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
-
-    # star player interactions
-    df['PTS_X_STAR_PLAYER'] = df['PTS_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['FGA_X_STAR_PLAYER'] = df['FGA_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['USG_PCT_X_STAR_PLAYER'] = df['USG_PCT_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['EFG_PCT_X_STAR_PLAYER'] = df['EFG_PCT_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['E_OFF_RATING_X_STAR_PLAYER'] = df['E_OFF_RATING_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['NET_RATING_X_STAR_PLAYER'] = df['NET_RATING_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['TCHS_X_STAR_PLAYER'] = df['TCHS_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['POSS_X_STAR_PLAYER'] = df['POSS_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['EFG_PCT_X_STAR_PLAYER'] = df['EFG_PCT_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-    df['E_OFF_RATING_X_STAR_PLAYER'] = df['E_OFF_RATING_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
-
-    # Points per minute interactions
-    df['PTS_PER_MIN'] = round(df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison), 3)
-    df['PTS_PER_40'] = round(df['PTS_AVG_TO_DATE'] * 40 / (df['MIN_AVG_TO_DATE'] + eplison), 3)
-    df['PTS_PER_TCHS'] = round(df['PTS_AVG_TO_DATE'] / (df['TCHS_AVG_TO_DATE'] + eplison), 3)
-    df['PTS_PER_TCHS_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_5'] + eplison), 3)
-    # df['PTS_PER_TCHS_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['TCHS_ROLLING_AVG_15'] + eplison), 3)
-    # df['PTS_PER_TCHS_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['TCHS_ROLLING_AVG_40'] + eplison), 3)
-    df['PTS_PER_TCHS_X_USG'] = round(df['PTS_PER_TCHS'] * df['USG_PCT_AVG_TO_DATE'], 3)
-    df['PTS_PER_MIN_ROLLING_AVG_5'] = round(df['PTS_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_5'] + eplison), 3)
-    # df['PTS_PER_MIN_ROLLING_AVG_15'] = round(df['PTS_ROLLING_AVG_15'] / (df['MIN_ROLLING_AVG_15'] + eplison), 3)   
-    # df['PTS_PER_MIN_ROLLING_AVG_40'] = round(df['PTS_ROLLING_AVG_40'] / (df['MIN_ROLLING_AVG_40'] + eplison), 3)
-    df['PTS_PER_MIN_X_PACE'] = round(df['PTS_PER_MIN'] * df['EXPECTED_PACE'], 3)
-    df['PTS_PER_MIN_X_POSS'] = round(df['PTS_PER_MIN'] * df['POSS_AVG_TO_DATE'], 3)
-    df['PTS_PER_MIN_X_USG'] = round(df['PTS_PER_MIN'] * df['USG_PCT_AVG_TO_DATE'], 3)
-    df['PTS_PER_MIN_X_TEAM_OFF'] = round(df['PTS_PER_MIN'] * df['TEAM_OFF_RATING_AVG_TO_DATE'], 3)
-    df['PTS_PER_MIN_X_OPP_DEF_RATING'] = round(df['PTS_PER_MIN'] * df['OPP_DEF_RATING_AVG_TO_DATE'], 3)
-    df['PTS_X_OPP_DEF_RATING'] = round(df['PTS_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE'], 3)
-    df['PTS_PER_MIN_X_MIN_LAG'] = round(df['PTS_PER_MIN'] * df['MIN_LAG_1'], 3)
-    df['EXPECTED_POINT_DIFF'] = df['TEAM_OFF_MINUS_OPP_DEF']
-    df['LIKELY_BLOWOUT'] = (np.abs(df['EXPECTED_POINT_DIFF']) > 8).astype(int)
-    df['LIKELY_CLOSE_GAME'] = (np.abs(df['EXPECTED_POINT_DIFF']) < 4).astype(int)
-
-
-    df['3PA_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
-    df['3PA_RATE_ROLLING_AVG_5'] = df['FG3A_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_5'] + eplison)
-    # df['3PA_RATE_ROLLING_AVG_10'] = df['FG3A_ROLLING_AVG_15'] / (df['FGA_ROLLING_AVG_15'] + eplison)
-    df['3PA_TEAM_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
     
-    df['FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    # ===== POINTS PER MINUTE INTERACTIONS =====
+    df['PTS_PER_MIN'] = df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison)
+    df['PTS_PER_36'] = df['PTS_AVG_TO_DATE'] / 36.0
+    df['PTS_PER_MIN_X_USG'] = df['PTS_PER_MIN'] * df['USG_PCT_AVG_TO_DATE']
+    df['GAMES_OVER_20_MIN'] = (df['MIN_AVG_TO_DATE'] > 20).astype(int)
+    df['GAMES_OVER_30_MIN'] = (df['MIN_AVG_TO_DATE'] > 30).astype(int)
+    df['GAMES_OVER_20_PTS'] = (df['PTS_AVG_TO_DATE'] > 20).astype(int)
+    df['GAMES_OVER_30_PTS'] = (df['PTS_AVG_TO_DATE'] > 30).astype(int)
+    
+    # ===== STAR PLAYER INTERACTIONS =====
+    df['PTS_X_STAR_PLAYER'] = df['PTS_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
+    df['NET_RATING_X_STAR_PLAYER'] = df['NET_RATING_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
+    df['PTS_PER_36_X_STAR_PLAYER'] = df['PTS_PER_36'] * df['PLAYER_IS_TEAM_STAR']
+    
+    
+    # ===== ROLE TIER INTERACTIONS =====
+    if 'IS_STARTER_TIER' in df.columns:
+        df['PTS_X_STARTER_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_STARTER_TIER']
 
-    # team sharing
+    # ===== USAGE X EFFICIENCY =====
+    df['USAGE_X_EFFICIENCY'] = df['USG_PCT_AVG_TO_DATE'] * df['TS_PCT_AVG_TO_DATE']
+    df['USAGE_X_MINUTES'] = df['USG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
+    
+    # ===== POINTS PER POSSESSION =====
+    df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)
+    df['PTS_PER_SHOT'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    
+    # ===== SHOT PROFILE =====
+    df['3PA_RATE'] = df['FG3A_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['PLAYER_FG3A_SHARE'] = df['FG3A_AVG_TO_DATE'] / (df['TEAM_FG3A_AVG_TO_DATE'] + eplison)
-    df['PLAYER_FGA_SHARE'] = df['FGA_AVG_TO_DATE'] / (df['TEAM_FGA_AVG_TO_DATE'] + eplison)
-    df['PLAYER_FT_RATE'] = df['FTA_AVG_TO_DATE'] / (df['TEAM_FTA_AVG_TO_DATE'] + eplison)
-    df['PLAYER_PTS_SHARE'] = df['PTS_AVG_TO_DATE'] / (df['TEAM_PTS_AVG_TO_DATE'] + eplison)
-    df['PTS_RECENT_VS_SEASON'] = df['PTS_ROLLING_AVG_5'] / df['PTS_AVG_TO_DATE']
+    
+    # ===== STREAKS & TIERS =====
+    df['PTS_RECENT_VS_SEASON'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_AVG_TO_DATE'] + eplison)
     df['HOT_STREAK'] = (df['PTS_RECENT_VS_SEASON'] > 1.15).astype(int)
     df['COLD_STREAK'] = (df['PTS_RECENT_VS_SEASON'] < 0.85).astype(int)
     df['ELITE_USAGE'] = (df['USG_PCT_AVG_TO_DATE'] > 28).astype(int)
-    df['HIGH_USAGE'] = ((df['USG_PCT_AVG_TO_DATE'] > 23) & 
+    df['MEDIUM_USAGE'] = ((df['USG_PCT_AVG_TO_DATE'] > 20) & 
                     (df['USG_PCT_AVG_TO_DATE'] <= 28)).astype(int)
-    df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).max().values
-    df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).min().values
-    df['PTS_MAX_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).max().values
-    df['PTS_MIN_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).min().values
-    df['PTS_MAX_LAST_40'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(40).max().values
-    df['PTS_MIN_LAST_40'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(40).min().values
-    df['PTS_CEILING'] = df['PTS_MAX_LAST_10'] * 0.9  # Expected ceiling
-    df['PTS_FLOOR'] = df['PTS_MIN_LAST_10'] * 1.1    # Expected floor
-    df['STAR_HOT_HAND'] = (df['PLAYER_IS_TEAM_STAR'] * 
-                        (df['PTS_TREND_LAST_5'] > 0)).astype(int)
-    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') > 20).astype(int)
+    df['LOW_USAGE'] = (df['USG_PCT_AVG_TO_DATE'] < 20).astype(int)
     df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 10).astype(int)
-    df['IS_MEDIUM_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 10) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') <= 20).astype(int)
+    df['IS_MEDIUM_SCORER'] = ((df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 10) & 
+                          (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') <= 20)).astype(int)
+    df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') > 20).astype(int)
     
-    
-    # Points per possession (true shooting possessions formula)
-    df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df['FTA_AVG_TO_DATE'] + df['TOV_AVG_TO_DATE'] + eplison)
-    
-    # Usage x Efficiency
-    df['USAGE_X_EFFICIENCY'] = df['USG_PCT_AVG_TO_DATE'] * df['TS_PCT_AVG_TO_DATE']
-    
-    # Pace-adjusted expected points
-    df['PACE_ADJUSTED_EXPECTED_PTS'] = df['PTS_ROLLING_AVG_5'] * (df['EXPECTED_PACE'] / 100)
-    
-    # Star out x usage boost (checking if star_out features exist)
-    if 'STAR_SAT_OUT' in df.columns and 'USG_PCT_DELTA_STAR_OUT' in df.columns:
-        df['STAR_OUT_X_USAGE_BOOST'] = df['STAR_SAT_OUT'] * df['USG_PCT_DELTA_STAR_OUT']
-    elif 'PLAYER_PERFORMANCE_WITHOUT_STARS_PTS_ROLLING_AVG_5' in df.columns:
-        # Fallback: calculate star out multiplier
-        df['STAR_OUT_X_USAGE_BOOST'] = df['PLAYER_PERFORMANCE_WITHOUT_STARS_PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_5'] + eplison) * df['USG_PCT_ROLLING_AVG_5']
+    # ===== STAR DYNAMICS =====
+    if 'PTS_TREND_LAST_5' in df.columns:
+        df['STAR_HOT_HAND'] = (df['PLAYER_IS_TEAM_STAR'] * 
+                            (df['PTS_TREND_LAST_5'] > 0)).astype(int)
     else:
-        df['STAR_OUT_X_USAGE_BOOST'] = 0
+        df['STAR_HOT_HAND'] = 0
     
-    # Role tier interactions to help model understand typical role expectations
-    if 'IS_STARTER_TIER' in df.columns:
-        df['PTS_X_STARTER_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_STARTER_TIER']
-        df['USG_X_STARTER_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_STARTER_TIER']
-        df['MIN_X_STARTER_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_STARTER_TIER']
-        
-        df['STARTING_X_BENCH_TIER'] = df['STARTING'] * df['IS_BENCH_TIER']
-        df['STARTING_X_ROLE_TIER'] = df['STARTING'] * df['IS_ROLE_TIER']
-        df['STARTING_X_STARTER_TIER'] = df['STARTING'] * df['IS_STARTER_TIER']
-    
-    if 'IS_ROLE_TIER' in df.columns:
-        df['PTS_X_ROLE_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_ROLE_TIER']
-        df['USG_X_ROLE_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_ROLE_TIER']
-        df['MIN_X_ROLE_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_ROLE_TIER']
-
-    
-    if 'IS_BENCH_TIER' in df.columns:
-        df['PTS_X_BENCH_TIER'] = df['PTS_AVG_TO_DATE'] * df['IS_BENCH_TIER']
-        df['USG_X_BENCH_TIER'] = df['USG_PCT_AVG_TO_DATE'] * df['IS_BENCH_TIER']
-        df['MIN_X_BENCH_TIER'] = df['MIN_AVG_TO_DATE'] * df['IS_BENCH_TIER']
-    
-    df['PLAYER_3PT_RATE_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['3PA_RATE'] * (
-        df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] )
-    
-    df['PLAYER_3PT_RATE_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['3PA_RATE'] * (
-    df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED'] )
-    
-    df['PLAYER_3PT_RATE_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['3PA_RATE'] * (
-    df['OPP_CENTER_DEF_3PT_PCT_ALLOWED'] )
-
-    df['PLAYER_3PT_FG_PCT_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['FG3_PCT_AVG_TO_DATE'] * (
-    df['OPP_GUARD_DEF_3PT_PCT_ALLOWED'] )
-    
-    df['PLAYER_3PT_FG_PCT_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['FG3_PCT_AVG_TO_DATE'] * (
-    df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED'] )
-    
-    df['PLAYER_3PT_FG_PCT_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['FG3_PCT_AVG_TO_DATE'] * (
-    df['OPP_CENTER_DEF_3PT_PCT_ALLOWED'] )
-
-    df['PLAYER_X_MATCHUP_GUARD_FG_PCT'] = df['GUARD'] * (df['OPP_GUARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'] )
-    
-    df['PLAYER_X_MATCHUP_FORWARD_FG_PCT'] = df['FORWARD'] * (df['OPP_FORWARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE']  )
-    
-    df['PLAYER_X_MATCHUP_CENTER_FG_PCT'] = df['CENTER'] * (df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'] )
-    
-    
-    # Minutes
+    # ===== MIN/MAX FEATURES =====
     df['MIN_MAX_LAST_10'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(10).max().values
-    df['MIN_MIN_LAST_10'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(10).min().values
     df['MIN_MAX_LAST_20'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(20).max().values
+    df['MIN_MIN_LAST_10'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(10).min().values
     df['MIN_MIN_LAST_20'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(20).min().values
-    df['MIN_MAX_LAST_40'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(40).max().values
-    df['MIN_MIN_LAST_40'] = df.groupby('PLAYER_ID')['MIN'].shift(1).rolling(40).min().values
+    df['PTS_MAX_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).max().values
+    df['PTS_MAX_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).max().values
+    df['PTS_MIN_LAST_10'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(10).min().values
+    df['PTS_MIN_LAST_20'] = df.groupby('PLAYER_ID')['PTS'].shift(1).rolling(20).min().values
+    df['USG_PCT_MAX_LAST_10'] = df.groupby('PLAYER_ID')['USG_PCT'].shift(1).rolling(10).max().values
+    df['USG_PCT_MIN_LAST_10'] = df.groupby('PLAYER_ID')['USG_PCT'].shift(1).rolling(10).min().values
+    df['TS_PCT_MAX_LAST_10'] = df.groupby('PLAYER_ID')['TS_PCT'].shift(1).rolling(10).max().values
+    df['TS_PCT_MIN_LAST_10'] = df.groupby('PLAYER_ID')['TS_PCT'].shift(1).rolling(10).min().values
+    
+    # Short-term vs long-term divergence
+    df['PTS_5G_VS_40G_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_40'] + eplison)
+    df['PTS_10G_VS_40G_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_ROLLING_AVG_40'] + eplison)
+    df['PTS_5G_VS_20G_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_20'] + eplison)
+    df['MIN_5G_VS_40G_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_40'] + eplison)
+    df['MIN_10G_VS_40G_RATIO'] = df['MIN_ROLLING_AVG_10'] / (df['MIN_ROLLING_AVG_40'] + eplison)
+    df['MIN_5G_VS_20G_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_20'] + eplison)
+    df['USG_PCT_5G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
+    df['USG_PCT_10G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
+    df['USG_PCT_5G_VS_20G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_20'] + eplison)
+    df['TS_PCT_5G_VS_40G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_40'] + eplison)
+    
+    # Consistency metrics (inverse of volatility)
+    df['PTS_CONSISTENCY'] = 1 / (df['PTS_VOLATILITY_10_TO_DATE'] + eplison)
+    df['MIN_CONSISTENCY'] = 1 / (df['MIN_VOLATILITY_10_TO_DATE'] + eplison)
+    df['USG_PCT_CONSISTENCY'] = 1 / (df['USG_PCT_CV_10_TO_DATE'] + eplison)
+    df['TS_PCT_CONSISTENCY'] = 1 / (df['TS_PCT_CV_10_TO_DATE'] + eplison)
+    
+    # Range compression (signals predictability)
+    df['PTS_RANGE_10'] = df['PTS_MAX_LAST_10'] - df['PTS_MIN_LAST_10']
+    df['MIN_RANGE_10'] = df['MIN_MAX_LAST_10'] - df['MIN_MIN_LAST_10']
+    df['USG_PCT_RANGE_10'] = df['USG_PCT_MAX_LAST_10'] - df['USG_PCT_MIN_LAST_10']
+    df['TS_PCT_RANGE_10'] = df['TS_PCT_MAX_LAST_10'] - df['TS_PCT_MIN_LAST_10']
+    
+    # Variance stability (meta-feature)
+    df['VARIANCE_STABILITY'] = df['PTS_VOLATILITY_10_TO_DATE'] / (df['PTS_VOLATILITY_40_TO_DATE'] + eplison)
+    df['MIN_VARIANCE_STABILITY'] = df['MIN_VOLATILITY_10_TO_DATE'] / (df['MIN_VOLATILITY_40_TO_DATE'] + eplison)
+    df['USG_PCT_VARIANCE_STABILITY'] = df['USG_PCT_CV_10_TO_DATE'] / (df['USG_PCT_CV_40_TO_DATE'] + eplison)
+    df['TS_PCT_VARIANCE_STABILITY'] = df['TS_PCT_CV_10_TO_DATE'] / (df['TS_PCT_CV_40_TO_DATE'] + eplison)
+    
+    # ===== MATCHUP INTERACTIONS =====
+    if 'GUARD' in df.columns and 'OPP_GUARD_DEF_FG_PCT_ALLOWED' in df.columns:
+        df['PLAYER_X_MATCHUP_GUARD_FG_PCT'] = df['GUARD'] * (df['OPP_GUARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'])
+        df['PLAYER_3PT_RATE_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['3PA_RATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+        if 'FG3_PCT_AVG_TO_DATE' in df.columns:
+            df['PLAYER_3PT_FG_PCT_X_OPP_GUARD_3PT_DEF_ALLOWED'] = df['GUARD'] * df['FG3_PCT_AVG_TO_DATE'] * df['OPP_GUARD_DEF_3PT_PCT_ALLOWED']
+    
+    if 'FORWARD' in df.columns and 'OPP_FORWARD_DEF_FG_PCT_ALLOWED' in df.columns:
+        df['PLAYER_X_MATCHUP_FORWARD_FG_PCT'] = df['FORWARD'] * (df['OPP_FORWARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'])
+        df['PLAYER_3PT_RATE_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['3PA_RATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
+        if 'FG3_PCT_AVG_TO_DATE' in df.columns:
+            df['PLAYER_3PT_FG_PCT_X_OPP_FORWARD_3PT_DEF_ALLOWED'] = df['FORWARD'] * df['FG3_PCT_AVG_TO_DATE'] * df['OPP_FORWARD_DEF_3PT_PCT_ALLOWED']
+    
+    if 'CENTER' in df.columns and 'OPP_CENTER_DEF_FG_PCT_ALLOWED' in df.columns:
+        df['PLAYER_X_MATCHUP_CENTER_FG_PCT'] = df['CENTER'] * (df['OPP_CENTER_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'])
+        df['PLAYER_3PT_RATE_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['3PA_RATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
+        if 'FG3_PCT_AVG_TO_DATE' in df.columns:
+            df['PLAYER_3PT_FG_PCT_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['FG3_PCT_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
+    
     return df

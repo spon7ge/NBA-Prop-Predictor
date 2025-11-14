@@ -1,6 +1,6 @@
 # NBA Player Prop Predictor
 
-An end-to-end machine learning pipeline that predicts NBA player performance and identifies profitable prop betting opportunities.
+I built this to help me and my friends stop making decisions based on vibes and hot takes, so I created a tool that actually quantifies edge using probabilistic modeling. Now instead of guessing, we can see which props are actually +EV and make data-driven decisions.
 
 ## Features
 
@@ -13,7 +13,7 @@ An end-to-end machine learning pipeline that predicts NBA player performance and
 ## Tech Stack
 
 - **Machine Learning**: XGBoost, NGBoost
-- **Simulation**: Monte Carlo methods with Bayesian statistics
+- **Simulation**: Monte Carlo
 - **Visualization**: Streamlit
 - **Data Sources**: NBA API, The Odds API
 
@@ -23,6 +23,7 @@ An end-to-end machine learning pipeline that predicts NBA player performance and
 ├── app.py                    # Streamlit dashboard
 ├── MODELS/                   # Model training and inference
 ├── NOTEBOOKS/                # EV calculation and analysis
+├── PRODUCTION/                # Where I calculate my EVs before displaying
 ├── BACKTEST/                 # Backtesting framework
 ├── FEATURES/                 # Feature engineering
 ├── NBAPropFinder/           # Data scraping modules
