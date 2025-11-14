@@ -1,2 +1,4 @@
 # TRAIN_DATA files are ignored - too large, can be redownloaded
 # DATA/CSV_FILES/TRAIN_DATA/*.csv filter=lfs diff=lfs merge=lfs -text
+DATA/CSV_FILES/REGULAR_DATA/*.csv filter=lfs diff=lfs merge=lfs -text
+MODELS/SAVED_MODELS/*.pkl filter=lfs diff=lfs merge=lfs -text
