@@ -6,8 +6,8 @@ import scipy.stats as stats
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
-from MODELS.teamInfo import *
-from MODELS.pipeline import findOpp, calculate_volatility
+from PRODUCTION.teamInfo import *
+from PRODUCTION.pipeline import findOpp, calculate_volatility
 from itertools import combinations
 from MODELS.ngboostModel import predict_mean_variance_split
 
@@ -46,24 +46,6 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
-def apply_calibration(raw_prob, shrinkage=0.75):
-    """
-    Shrink probabilities toward 50% to fix overconfidence.
-    
-    Args:
-        raw_prob: Raw probability from model (0 to 1)
-        shrinkage: How much to trust the model (0 = ignore model, 1 = trust fully)
-                  Default 0.75 based on empirical results showing ~75% of predicted edge is real
-    
-    Returns:
-        Calibrated probability closer to market
-    
-    Examples:
-        Raw 90% -> Calibrated 80%  (0.5 + (0.90 - 0.5) * 0.75)
-        Raw 70% -> Calibrated 65%  (0.5 + (0.70 - 0.5) * 0.75)
-        Raw 50% -> Calibrated 50%  (no change at 50/50)
-    """
-    return 0.5 + (raw_prob - 0.5) * shrinkage
 
 
 # Global prediction cache
@@ -360,10 +342,6 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         else:
             recommendation = 0
         
-        # Apply calibration ONLY for reporting/display purposes
-        p_over_calibrated = apply_calibration(p_over_raw, shrinkage=0.75)
-        p_under_calibrated = apply_calibration(p_under_raw, shrinkage=0.75)
-        
         results.append({
         'NAME': name,
         'BOOKMAKER': bookmaker,
@@ -373,8 +351,8 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         'SIDE': side,
         'PREDICTION': round(mu, 2),
         'RECOMMENDATION': recommendation,
-        'OVER%': round(p_over_calibrated, 3),  # Calibrated for display
-        'UNDER%': round(p_under_calibrated, 3),  # Calibrated for display
+        'OVER%': round(p_over_raw, 3),
+        'UNDER%': round(p_under_raw, 3),
         'IMPLIED PROB': round(market_prob, 3),
         'MODEL PROB': round(model_prob, 3),  # Raw probability for edge calculation (already stored)
         'EDGE': round(edge, 3),  # Calculated using raw probabilities
@@ -426,6 +404,21 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player2_team = player2_data['TEAM_ABBREVIATION'].iloc[-1]
             
             if player1_team == player2_team:
+                continue
+            
+            # Check if players are from the same game using findOpp
+            # Convert gameDate to string format if needed
+            game_date_str = pd.to_datetime(gameDate).strftime('%Y-%m-%d') if isinstance(gameDate, (pd.Timestamp, datetime)) else gameDate
+            
+            player1_opp, _ = findOpp(player1, player1_data, game_date_str)
+            player2_opp, _ = findOpp(player2, player2_data, game_date_str)
+            
+            # Skip if we can't find opponents
+            if player1_opp is None or player2_opp is None:
+                continue
+            
+            # Prevent same-game combinations: players are in same game if one's team is the other's opponent
+            if (player1_team == player2_opp) or (player2_team == player1_opp):
                 continue
                 
             # Get betting lines for both players
@@ -570,11 +563,6 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             else:
                 recommendation = 0
             
-            # Apply calibration ONLY for reporting/display purposes
-            p1_calibrated = apply_calibration(p1, shrinkage=0.85)
-            p2_calibrated = apply_calibration(p2, shrinkage=0.85)
-            p_both_calibrated = apply_calibration(p_both, shrinkage=1.00)
-            
             # Get actual results for backtesting
             actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
             actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
@@ -602,9 +590,9 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
                 'PREDICTION 2': round(mu2, 2),
                 'MODEL SIDE 1': model_side1,
                 'MODEL SIDE 2': model_side2,
-                'PROB 1': round(p1_calibrated, 3),  # Calibrated for display
-                'PROB 2': round(p2_calibrated, 3),  # Calibrated for display
-                'PROB BOTH': round(p_both_calibrated, 4),  # Calibrated for display
+                'PROB 1': round(p1, 3),
+                'PROB 2': round(p2, 3),
+                'PROB BOTH': round(p_both, 4),
                 'EDGE 1': round(edge1, 3),
                 'EDGE 2': round(edge2, 3),
                 'COMBINED EDGE': round(combined_edge, 3),
@@ -674,11 +662,48 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 player2_team = player2_data['TEAM_ABBREVIATION'].iloc[-1]
                 player3_team = player3_data['TEAM_ABBREVIATION'].iloc[-1]
                 
-                # Skip if any two players are from the same team
-                if (player1_team == player2_team and
-                    player1_team == player3_team and
-                    player2_team == player3_team):
+                # Skip if all 3 players are from the same team
+                if player1_team == player2_team == player3_team:
                     continue
+                
+                # Check if all 3 players are from the same game using findOpp
+                game_date_str = pd.to_datetime(gameDate).strftime('%Y-%m-%d') if isinstance(gameDate, (pd.Timestamp, datetime)) else gameDate
+                
+                player1_opp, _ = findOpp(player1, player1_data, game_date_str)
+                player2_opp, _ = findOpp(player2, player2_data, game_date_str)
+                player3_opp, _ = findOpp(player3, player3_data, game_date_str)
+                
+                # Skip if we can't find opponents
+                if player1_opp is None or player2_opp is None or player3_opp is None:
+                    continue
+                
+                # Prevent all 3 players from being in the same game
+                # For 3 players to be in the same game, they must be from exactly 2 teams
+                unique_teams = set([player1_team, player2_team, player3_team])
+                if len(unique_teams) == 2:
+                    # Check if the two teams are playing each other (same game)
+                    teams_list = list(unique_teams)
+                    team_a = teams_list[0]
+                    team_b = teams_list[1]
+                    
+                    # Get opponents for each team
+                    if player1_team == team_a:
+                        team_a_opp = player1_opp
+                    elif player2_team == team_a:
+                        team_a_opp = player2_opp
+                    else:  # player3_team == team_a
+                        team_a_opp = player3_opp
+                    
+                    if player1_team == team_b:
+                        team_b_opp = player1_opp
+                    elif player2_team == team_b:
+                        team_b_opp = player2_opp
+                    else:  # player3_team == team_b
+                        team_b_opp = player3_opp
+                    
+                    # If team_a's opponent is team_b and team_b's opponent is team_a, they're in the same game
+                    if team_a_opp == team_b and team_b_opp == team_a:
+                        continue  # Skip - all 3 players are in the same game
                     
                 # Get betting lines for all three players
                 player1_bets = backtestData[backtestData['NAME'] == player1]
@@ -855,12 +880,6 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 else:
                     recommendation = 0
                 
-                # Apply calibration ONLY for reporting/display purposes
-                p1_calibrated = apply_calibration(p1, shrinkage=0.75)
-                p2_calibrated = apply_calibration(p2, shrinkage=0.75)
-                p3_calibrated = apply_calibration(p3, shrinkage=0.75)
-                p_all_three_calibrated = apply_calibration(p_all_three, shrinkage=0.75)
-                
                 # Get actual results
                 actual1 = player1_data[player1_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player1_data[player1_data['GAME_DATE'] == gameDate]) > 0 else None
                 actual2 = player2_data[player2_data['GAME_DATE'] == gameDate]['PTS'].iloc[0] if len(player2_data[player2_data['GAME_DATE'] == gameDate]) > 0 else None
@@ -894,10 +913,10 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                     'MODEL SIDE 1': model_side1,
                     'MODEL SIDE 2': model_side2,
                     'MODEL SIDE 3': model_side3,
-                    'PROB 1': round(p1_calibrated, 3),  # Calibrated for display
-                    'PROB 2': round(p2_calibrated, 3),  # Calibrated for display
-                    'PROB 3': round(p3_calibrated, 3),  # Calibrated for display
-                    'PROB ALL THREE': round(p_all_three_calibrated, 4),  # Calibrated for display
+                    'PROB 1': round(p1, 3),
+                    'PROB 2': round(p2, 3),
+                    'PROB 3': round(p3, 3),
+                    'PROB ALL THREE': round(p_all_three, 4),
                     'EDGE 1': round(edge1, 3),
                     'EDGE 2': round(edge2, 3),
                     'EDGE 3': round(edge3, 3),

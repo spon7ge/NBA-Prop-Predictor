@@ -46,24 +46,6 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
-def apply_calibration(raw_prob, shrinkage=0.75):
-    """
-    Shrink probabilities toward 50% to fix overconfidence.
-    
-    Args:
-        raw_prob: Raw probability from model (0 to 1)
-        shrinkage: How much to trust the model (0 = ignore model, 1 = trust fully)
-                  Default 0.75 based on empirical results showing ~75% of predicted edge is real
-    
-    Returns:
-        Calibrated probability closer to market
-    
-    Examples:
-        Raw 90% -> Calibrated 80%  (0.5 + (0.90 - 0.5) * 0.75)
-        Raw 70% -> Calibrated 65%  (0.5 + (0.70 - 0.5) * 0.75)
-        Raw 50% -> Calibrated 50%  (no change at 50/50)
-    """
-    return 0.5 + (raw_prob - 0.5) * shrinkage
 
 def estimate_skew_from_residuals(residuals: np.ndarray) -> float:
     """Estimate skew-normal shape parameter from residuals.
@@ -362,10 +344,6 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
                                p > 0.40 and 
                                ev_total > 1.00) else 0
         
-        # Apply calibration ONLY for reporting/display purposes
-        p_over_calibrated = apply_calibration(p_over_raw, shrinkage=0.75)
-        p_under_calibrated = apply_calibration(p_under_raw, shrinkage=0.75)
-        
         # Confidence interval (using proper statistical formula with player-specific sigma)
         confidence_interval = (
             max(0, pred - 1.96 * sigma),  # Lower bound, clipped at zero
@@ -383,8 +361,8 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
             'SIDE': side,
             'PREDICTION': round(pred, 2),
             'RECOMMENDATION': recommendation,
-            'OVER%': round(p_over_calibrated, 3),  # Calibrated for display
-            'UNDER%': round(p_under_calibrated, 3),  # Calibrated for display
+            'OVER%': round(p_over_raw, 3),
+            'UNDER%': round(p_under_raw, 3),
             'IMPLIED PROB': round(market_prob, 3),
             'MODEL PROB': round(model_prob, 3),  # Raw probability for edge calculation (already stored)
             'EDGE': round(edge, 3),  # Calculated using raw probabilities
@@ -425,9 +403,12 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
     # Pre-compute all predictions once
     player_predictions = {}
     player_teams = {}
+    player_opponents = {}
     player_lines = {}
     
     print(f"Pre-computing predictions for {len(available_players)} players...")
+    current_date_str = pd.to_datetime(current_date).strftime('%Y-%m-%d')
+    
     for player in available_players:
         # Map player name
         mapped_player = nameDict.get(player, player)
@@ -446,6 +427,11 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         # Get team
         player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
         
+        # Get opponent using findOpp
+        opp_team, _ = findOpp(mapped_player, player_data, current_date_str)
+        if opp_team is None:
+            continue
+        
         # Get betting line (first available)
         player_bets = bookmakers[bookmakers['NAME'] == player]
         if player_bets.empty:
@@ -454,10 +440,11 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         # Store all data
         player_predictions[player] = pred_data
         player_teams[player] = player_team
+        player_opponents[player] = opp_team
         player_lines[player] = player_bets.iloc[0]
     
-    # Filter to only players with valid predictions, teams, and lines
-    available_players = [p for p in available_players if p in player_predictions and p in player_teams and p in player_lines]
+    # Filter to only players with valid predictions, teams, opponents, and lines
+    available_players = [p for p in available_players if p in player_predictions and p in player_teams and p in player_opponents and p in player_lines]
     
     if len(available_players) < 2:
         print("Not enough players with valid predictions for 2-leg bets")
@@ -465,14 +452,23 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
     
     print(f"Processing {len(available_players)} players with valid predictions...")
     
-    # Generate only valid combinations (different teams)
+    # Generate only valid combinations (different teams and different games)
     valid_combinations = []
     for p1, p2 in combinations(available_players, 2):
         team1 = player_teams[p1]
         team2 = player_teams[p2]
+        opp1 = player_opponents[p1]
+        opp2 = player_opponents[p2]
+        
         # Prevent same-team combinations
-        if team1 != team2:
-            valid_combinations.append((p1, p2))
+        if team1 == team2:
+            continue
+        
+        # Prevent same-game combinations: players are in same game if one's team is the other's opponent
+        if (team1 == opp2) or (team2 == opp1):
+            continue
+        
+        valid_combinations.append((p1, p2))
     
     print(f"Generated {len(valid_combinations)} valid 2-leg combinations")
     
@@ -481,7 +477,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
     market_prob_combined = market_prob ** 2
     
     # Pre-compute constants
-    corr_factor = 0.9
+    corr_factor = 0.90
     payout_multiple = 3.0
     b = payout_multiple - 1.0
     
@@ -572,27 +568,23 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             p2_non_negative = 1 - skewnorm.cdf(0, a2, loc=mu2, scale=sigma2)
             p2_over_raw = (p2_above_line / p2_non_negative) if p2_non_negative > 1e-10 else max(0.0, min(1.0, p2_above_line))
         
-        # Apply calibration for display (but use raw for calculations)
-        p1_over_calibrated = apply_calibration(p1_over_raw, shrinkage=0.75)
-        p2_over_calibrated = apply_calibration(p2_over_raw, shrinkage=0.75)
-        
         # Determine model sides based on predictions vs lines
         if pred1_val > line1:
             model_side1 = 'over'
-            p1 = p1_over_calibrated
+            p1 = p1_over_raw
             p1_raw = p1_over_raw
         else:
             model_side1 = 'under'
-            p1 = 1 - p1_over_calibrated
+            p1 = 1 - p1_over_raw
             p1_raw = 1 - p1_over_raw
             
         if pred2_val > line2:
             model_side2 = 'over'
-            p2 = p2_over_calibrated
+            p2 = p2_over_raw
             p2_raw = p2_over_raw
         else:
             model_side2 = 'under'
-            p2 = 1 - p2_over_calibrated
+            p2 = 1 - p2_over_raw
             p2_raw = 1 - p2_over_raw
         
         # Calculate combined probability and EV with correlation adjustment (using raw probabilities)
@@ -615,9 +607,6 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         # Recommendation based on multiple criteria
         recommendation = 1 if (combined_edge > 0 and combined_model_prob > 0.335 and ev_dollars > 0) else 0
         
-        # Apply calibration for display
-        p_both_calibrated = apply_calibration(p_both, shrinkage=0.75)
-        
         results.append({
             'NAME 1': mapped_p1,
             'NAME 2': mapped_p2,
@@ -627,9 +616,9 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             'PREDICTION 2': round(pred2_val, 2),
             'MODEL SIDE 1': model_side1,
             'MODEL SIDE 2': model_side2,
-            'PROB 1': round(p1, 3),  # Calibrated for display
-            'PROB 2': round(p2, 3),  # Calibrated for display
-            'PROB BOTH': round(p_both_calibrated, 4),  # Calibrated for display
+            'PROB 1': round(p1, 3),
+            'PROB 2': round(p2, 3),
+            'PROB BOTH': round(p_both, 4),
             'EDGE 1': round(edge1, 3),
             'EDGE 2': round(edge2, 3),
             'COMBINED EDGE': round(combined_edge, 3),
@@ -668,9 +657,12 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
     # Pre-compute all predictions once
     player_predictions = {}
     player_teams = {}
+    player_opponents = {}
     player_lines = {}
     
     print(f"Pre-computing predictions for {len(available_players)} players...")
+    current_date_str = pd.to_datetime(current_date).strftime('%Y-%m-%d')
+    
     for player in available_players:
         # Map player name
         mapped_player = nameDict.get(player, player)
@@ -689,6 +681,11 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         # Get team
         player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
         
+        # Get opponent using findOpp
+        opp_team, _ = findOpp(mapped_player, player_data, current_date_str)
+        if opp_team is None:
+            continue
+        
         # Get betting line (first available)
         player_bets = bookmakers[bookmakers['NAME'] == player]
         if player_bets.empty:
@@ -697,10 +694,11 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         # Store all data
         player_predictions[player] = pred_data
         player_teams[player] = player_team
+        player_opponents[player] = opp_team
         player_lines[player] = player_bets.iloc[0]
     
-    # Filter to only players with valid predictions, teams, and lines
-    available_players = [p for p in available_players if p in player_predictions and p in player_teams and p in player_lines]
+    # Filter to only players with valid predictions, teams, opponents, and lines
+    available_players = [p for p in available_players if p in player_predictions and p in player_teams and p in player_opponents and p in player_lines]
     
     if len(available_players) < 3:
         print("Not enough players with valid predictions for 3-leg bets")
@@ -708,15 +706,56 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
     
     print(f"Processing {len(available_players)} players with valid predictions...")
     
-    # Generate only valid combinations (different teams)
+    # Generate only valid combinations (different teams and not all in same game)
     valid_combinations = []
     for p1, p2, p3 in combinations(available_players, 3):
         team1 = player_teams[p1]
         team2 = player_teams[p2]
         team3 = player_teams[p3]
+        opp1 = player_opponents[p1]
+        opp2 = player_opponents[p2]
+        opp3 = player_opponents[p3]
+        
         # Prevent all 3 players from being on the same team
-        if not (team1 == team2 == team3):
-            valid_combinations.append((p1, p2, p3))
+        if team1 == team2 == team3:
+            continue
+        
+        # Prevent all 3 players from being in the same game
+        # For 3 players to be in the same game, they must be from exactly 2 teams
+        unique_teams = set([team1, team2, team3])
+        if len(unique_teams) == 2:
+            # Check if the two teams are playing each other (same game)
+            # Get the two teams
+            teams_list = list(unique_teams)
+            team_a = teams_list[0]
+            team_b = teams_list[1]
+            
+            # Check if team_a's opponent is team_b and team_b's opponent is team_a
+            # Find which players are on which team
+            p1_team = team1
+            p2_team = team2
+            p3_team = team3
+            
+            # Get opponents for each team
+            if p1_team == team_a:
+                team_a_opp = opp1
+            elif p2_team == team_a:
+                team_a_opp = opp2
+            else:  # p3_team == team_a
+                team_a_opp = opp3
+            
+            if p1_team == team_b:
+                team_b_opp = opp1
+            elif p2_team == team_b:
+                team_b_opp = opp2
+            else:  # p3_team == team_b
+                team_b_opp = opp3
+            
+            # If team_a's opponent is team_b and team_b's opponent is team_a, they're in the same game
+            if team_a_opp == team_b and team_b_opp == team_a:
+                continue  # Skip - all 3 players are in the same game
+        
+        valid_combinations.append((p1, p2, p3))
     
     print(f"Generated {len(valid_combinations)} valid 3-leg combinations")
     
@@ -725,7 +764,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
     market_prob_combined = market_prob ** 3
     
     # Pre-compute constants
-    corr_factor = 0.9
+    corr_factor = 0.90
     payout_multiple = 6.0
     b = payout_multiple - 1.0
     
@@ -845,37 +884,32 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
             p3_non_negative = 1 - skewnorm.cdf(0, a3, loc=mu3, scale=sigma3)
             p3_over_raw = (p3_above_line / p3_non_negative) if p3_non_negative > 1e-10 else max(0.0, min(1.0, p3_above_line))
         
-        # Apply calibration for display (but use raw for calculations)
-        p1_over_calibrated = apply_calibration(p1_over_raw, shrinkage=0.75)
-        p2_over_calibrated = apply_calibration(p2_over_raw, shrinkage=0.75)
-        p3_over_calibrated = apply_calibration(p3_over_raw, shrinkage=0.75)
-        
         # Determine model sides based on predictions vs lines
         if pred1_val > line1:
             model_side1 = 'over'
-            p1 = p1_over_calibrated
+            p1 = p1_over_raw
             p1_raw = p1_over_raw
         else:
             model_side1 = 'under'
-            p1 = 1 - p1_over_calibrated
+            p1 = 1 - p1_over_raw
             p1_raw = 1 - p1_over_raw
             
         if pred2_val > line2:
             model_side2 = 'over'
-            p2 = p2_over_calibrated
+            p2 = p2_over_raw
             p2_raw = p2_over_raw
         else:
             model_side2 = 'under'
-            p2 = 1 - p2_over_calibrated
+            p2 = 1 - p2_over_raw
             p2_raw = 1 - p2_over_raw
             
         if pred3_val > line3:
             model_side3 = 'over'
-            p3 = p3_over_calibrated
+            p3 = p3_over_raw
             p3_raw = p3_over_raw
         else:
             model_side3 = 'under'
-            p3 = 1 - p3_over_calibrated
+            p3 = 1 - p3_over_raw
             p3_raw = 1 - p3_over_raw
         
         # Calculate combined probability and EV with correlation adjustment (using raw probabilities)
