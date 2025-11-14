@@ -5,7 +5,7 @@ I built this to help me and my friends stop making decisions based on vibes and 
 ## Features
 
 - **Player Performance Prediction**: XGBoost models trained on historical data, game context, and opponent metrics
-- **Expected Value Calculation**: Monte Carlo simulation with configurable distributions (normal, t-distribution, skew-normal)
+- **Expected Value Calculation**: Monte Carlo simulation with configurable distributions using skew-normal
 - **Smart Bet Sizing**: Kelly Criterion for optimal bankroll management
 - **Multiple Bet Types**: Single bets, 2-leg parlays, and 3-leg parlays
 - **Streamlit Dashboard**: Interactive web app for daily betting opportunities

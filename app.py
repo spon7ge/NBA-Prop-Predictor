@@ -159,7 +159,7 @@ st.write("**Contact:** [Linkedin](https://www.linkedin.com/in/alex-gonzalez-data
 with st.expander("📋 What's Available", expanded=True):
     st.markdown("""
     ### **Betting Options**
-    I created this app to look for the most profitable props(**points only**) across multiple platforms and to use as a tool to help me make decisions on my bets:
+    I created this app to look for the most profitable props(**points only**) across multiple platforms and to use as a tool to help others make decisions on their bets:
     
     - **Single Bets**: Individual player prop bets with the best expected value
     - **2-Leg Bets**: Two-player combinations available on:
@@ -181,16 +181,10 @@ with st.expander("📋 What's Available", expanded=True):
     - **Last 5 Games**: Hit rate in the player's most recent 5 games
     - **Last 10 Games**: Hit rate in the player's most recent 10 games
     - **Last 15 Games**: Hit rate in the player's most recent 15 games
+    - **OVER%**: Probability of the player hitting the prop line using poisson posterior prediction
+    - **UNDER%**: Probability of the player not hitting the prop line using poisson posterior prediction
     
     This helps you understand a player's recent form and consistency for each prop type (points, rebounds, assists, etc.).
-    
-    ### **The Probability-Based Approach**
-    
-    Instead of saying *"Player X will score exactly 25 points"*, we calculate:
-    - **Probability distribution**: How likely is it that Player X scores 20+ points? Given the uncertainty of the match and what we know about the player, we can create a probability distribution for the points scored.
-    - **Model probability**: Based on historical data, matchups, and trends, what's the real probability?
-    - **Odds probability**: What probability does the bookmaker's odds imply?
-    - **Edge calculation**: If our probability > odds probability, we have positive expected value
     """)
 
 st.info("⚠️ **Disclaimer**: Please take these predictions with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
