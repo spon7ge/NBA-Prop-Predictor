@@ -180,7 +180,7 @@ def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', wind
     df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Metrics to calculate trends for
-    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT', 'TS_PCT', 'EFG_PCT']
+    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT', 'TS_PCT']
     
     # Only process metrics that exist in the dataframe
     available_metrics = [m for m in trend_metrics if m in df.columns]

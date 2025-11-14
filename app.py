@@ -159,7 +159,7 @@ st.write("**Contact:** [Linkedin](https://www.linkedin.com/in/alex-gonzalez-data
 with st.expander("📋 What's Available", expanded=True):
     st.markdown("""
     ### **Betting Options**
-    I created this app to look for the most profitable props(**points only**) across multiple platforms:
+    I created this app to look for the most profitable props(**points only**) across multiple platforms and to use as a tool to help me make decisions on my bets:
     
     - **Single Bets**: Individual player prop bets with the best expected value
     - **2-Leg Bets**: Two-player combinations available on:
@@ -193,10 +193,7 @@ with st.expander("📋 What's Available", expanded=True):
     - **Edge calculation**: If our probability > odds probability, we have positive expected value
     """)
 
-st.info("""**Important Note:**
-    Odds are updated from bookmakers throughout the day as new information becomes available. 
-    You may see different odds on the same bet depending on when you check the page. """)
-st.info("⚠️ **Disclaimer**: Please take these predictions/probabilities with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
+st.info("⚠️ **Disclaimer**: Please take these predictions with a grain of salt. Sports betting involves significant uncertainty, and there are too many variables to accurately predict outcomes. **Bookmakers are sharp** - they use sophisticated models and set generally accurate odds that are difficult to beat consistently. Always gamble responsibly and within your means.")
 
 # Add metric explanations in sidebar
 with st.sidebar:

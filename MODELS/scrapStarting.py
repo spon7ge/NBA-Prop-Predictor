@@ -1,7 +1,7 @@
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
-from MODELS.teamInfo import *
+from PRODUCTION.teamInfo import *
 import re
 import os
 
@@ -65,7 +65,7 @@ class NBADailyLineups:
                 }
             })
     
-    def updateTeamInfo(self, file_path="MODELS/teamInfo.py"):
+    def updateTeamInfo(self, file_path="PRODUCTION/teamInfo.py"):
         """Update teamInfo.py with scraped confirmed playing players"""
         if not self.data:
             print("No data available. Run getDict() first.")

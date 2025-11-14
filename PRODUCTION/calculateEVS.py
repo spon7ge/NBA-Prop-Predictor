@@ -6,11 +6,11 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from nba_api.stats.endpoints import scoreboardv2
-from MODELS.teamInfo import *
-from MODELS.pipeline import *
+from PRODUCTION.teamInfo import *
+from PRODUCTION.pipeline import *
 from itertools import combinations
 from collections import defaultdict
-from MODELS.pipeline import calculate_volatility
+from PRODUCTION.pipeline import calculate_volatility
 
 nameDict = {
     'Nikola Jokic': 'Nikola Jokić',

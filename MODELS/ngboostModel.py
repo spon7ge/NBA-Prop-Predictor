@@ -103,6 +103,9 @@ def fit_ngboost_split(train_df: pd.DataFrame,
     # Clip extreme residuals to stabilize variance model
     upper_limit = np.percentile(squared_residuals, clip_residuals_percentile)
     squared_residuals_clipped = np.minimum(squared_residuals, upper_limit)
+    
+    # Log-transform for stability (variance is multiplicative)
+    log_squared_residuals = np.log(squared_residuals_clipped + 1e-6)
 
     # Build variance weights
     if variance_recent_weight == 1.0:
@@ -132,15 +135,16 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         residuals_va = y_va - y_pred_mean_va
         squared_residuals_va = residuals_va ** 2
         squared_residuals_va_clipped = np.minimum(squared_residuals_va, upper_limit)
+        log_squared_residuals_va = np.log(squared_residuals_va_clipped + 1e-6)
         
         ngb_scale.fit(
-            X_tr, squared_residuals_clipped,
-            X_val=X_va, Y_val=squared_residuals_va_clipped,
+            X_tr, log_squared_residuals,
+            X_val=X_va, Y_val=log_squared_residuals_va,
             sample_weight=w_variance, 
             val_sample_weight=w_variance_val
         )
     else:
-        ngb_scale.fit(X_tr, squared_residuals_clipped, sample_weight=w_variance)
+        ngb_scale.fit(X_tr, log_squared_residuals, sample_weight=w_variance)
     
     # Calculate bias correction AFTER training both models
     bias_correction = 0.0
@@ -268,14 +272,15 @@ def predict_mean_variance_split(mean_model: NGBRegressor,
                                  calibration_factor: float = 1.25):
     """Return per-row mean and variance from split models (mean + variance).
     
-    Note: variance_model now predicts squared residuals (variance) directly,
-    so the calibration_factor is applied to variance (not scale).
+    Note: variance_model predicts log(variance), so we transform back via exp.
+    The calibration_factor is applied to variance (not scale).
     """
     X = df[features]
     mean = mean_model.predict(X)
     bias_correction = getattr(mean_model, 'bias_correction_', 0.0)
     mean = mean + bias_correction
-    variance = variance_model.predict(X)  # Already variance (squared residuals)
+    log_var_pred = variance_model.predict(X)  # Predicts log(variance)
+    variance = np.exp(log_var_pred)  # Transform back to variance
     variance = variance * calibration_factor  # Apply calibration to variance
     return mean, variance
 
