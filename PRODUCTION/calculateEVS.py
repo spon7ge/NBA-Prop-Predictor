@@ -605,7 +605,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         combined_edge = combined_model_prob - market_prob_combined
         
         # Recommendation based on multiple criteria
-        recommendation = 1 if (combined_edge > 0 and combined_model_prob > 0.335 and ev_dollars > 0) else 0
+        recommendation = 1 if (combined_edge > 0 and combined_model_prob > edge_threshold and ev_dollars > 0) else 0
         
         results.append({
             'NAME 1': mapped_p1,
@@ -931,7 +931,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         combined_edge = combined_model_prob - market_prob_combined
         
         # Recommendation based on multiple criteria
-        recommendation = 1 if combined_edge > edge_threshold else 0
+        recommendation = 1 if (ev_dollars > 0 and combined_edge > edge_threshold and kelly_full > 0) else 0
         
         results.append({
             'NAME 1': mapped_p1,
