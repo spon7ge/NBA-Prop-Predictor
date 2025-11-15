@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrizePicks & Underdog Top EVs</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Top EV Picks Dashboard</h1>
+            
+            <div class="filters">
+                <div class="platform-toggle" id="platformToggle">
+                    <button class="btn active" data-platform="prizepicks">PrizePicks</button>
+                    <button class="btn" data-platform="underdog">Underdog</button>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Bet Type:</label>
+                    <select class="dropdown" id="betTypeSelect">
+                        <option value="singles">Singles</option>
+                        <option value="pairs">Pairs</option>
+                        <option value="trios">Trios</option>
+                        <option value="hitrates">Over Hit Rates</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group" id="propTypeGroup" style="display: none;">
+                    <label class="filter-label">Prop Type:</label>
+                    <select class="dropdown" id="propTypeSelect">
+                        <option value="points">Points</option>
+                        <option value="assists">Assists</option>
+                        <option value="rebounds">Rebounds</option>
+                        <option value="blocks">Blocks</option>
+                        <option value="steals">Steals</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group" id="searchGroup" style="display: none;">
+                    <input type="text" id="playerSearch" class="dropdown" placeholder="Search players..." style="min-width: 200px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row" id="statsContainer"></div>
+
+        <p class="picks-count" id="picksCount"></p>
+
+        <div class="table-container">
+            <table id="dataTable">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
