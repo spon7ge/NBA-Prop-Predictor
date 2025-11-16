@@ -1649,6 +1649,7 @@ def add_interaction_features(df):
     df['USG_PCT_10G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
     df['USG_PCT_5G_VS_20G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_20'] + eplison)
     df['TS_PCT_5G_VS_40G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_40'] + eplison)
+    df['TS_PCT_5G_VS_20G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_20'] + eplison)
     
     # Consistency metrics (inverse of volatility)
     df['PTS_CONSISTENCY'] = 1 / (df['PTS_VOLATILITY_10_TO_DATE'] + eplison)

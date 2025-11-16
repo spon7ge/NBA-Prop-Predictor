@@ -309,7 +309,8 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
 def calculate2LegBets(data, bookmakers, model, features, current_date, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
-                 enforce_downside_skew: bool = False, skew_override: float | None = None):
+                 enforce_downside_skew: bool = False, skew_override: float | None = None,
+                 max_player_appearances: int = 3):
 
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
@@ -548,6 +549,8 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
             'EV$': round(ev_dollars, 2),
             'KELLY FULL': round(kelly_full, 3),
             'RECOMMENDATION': recommendation,
+            'CONFIDENCE INTERVAL 1': f"({ci1[0]:.1f}, {ci1[1]:.1f})",
+            'CONFIDENCE INTERVAL 2': f"({ci2[0]:.1f}, {ci2[1]:.1f})",
             'INTERVAL WIDTH 1': width1,
             'INTERVAL WIDTH 2': width2,
             'SIGMA 1': round(sigma1, 2),
@@ -559,12 +562,38 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         })
     
     results_df = pd.DataFrame(results)
+    
+    # Apply player frequency limit for diversification
+    if max_player_appearances is not None and len(results_df) > 0:
+        # Sort by EV descending to prioritize best bets
+        results_df = results_df.sort_values('EV$', ascending=False).reset_index(drop=True)
+        
+        # Track how many times each player appears
+        player_count = defaultdict(int)
+        selected_rows = []
+        
+        for idx, row in results_df.iterrows():
+            p1 = row['NAME 1']
+            p2 = row['NAME 2']
+            
+            # Check if adding this combination would exceed the limit for any player
+            if (player_count[p1] < max_player_appearances and 
+                player_count[p2] < max_player_appearances):
+                selected_rows.append(idx)
+                player_count[p1] += 1
+                player_count[p2] += 1
+        
+        results_df = results_df.loc[selected_rows].reset_index(drop=True)
+        print(f"Applied player frequency limit ({max_player_appearances} max appearances per player)")
+        print(f"Selected {len(selected_rows)} combinations from {len(results)} candidates")
+    
     return results_df
 
 def calculate3LegBets(data, bookmakers, model, features, current_date, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
-                 enforce_downside_skew: bool = False, skew_override: float | None = None):
+                 enforce_downside_skew: bool = False, skew_override: float | None = None,
+                 max_player_appearances: int = 2):
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
     if bookmakers.empty:
@@ -897,4 +926,32 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         })
 
     results_df = pd.DataFrame(results)
+    
+    # Apply player frequency limit for diversification
+    if max_player_appearances is not None and len(results_df) > 0:
+        # Sort by EV descending to prioritize best bets
+        results_df = results_df.sort_values('EV$', ascending=False).reset_index(drop=True)
+        
+        # Track how many times each player appears
+        player_count = defaultdict(int)
+        selected_rows = []
+        
+        for idx, row in results_df.iterrows():
+            p1 = row['NAME 1']
+            p2 = row['NAME 2']
+            p3 = row['NAME 3']
+            
+            # Check if adding this combination would exceed the limit for any player
+            if (player_count[p1] < max_player_appearances and 
+                player_count[p2] < max_player_appearances and
+                player_count[p3] < max_player_appearances):
+                selected_rows.append(idx)
+                player_count[p1] += 1
+                player_count[p2] += 1
+                player_count[p3] += 1
+        
+        results_df = results_df.loc[selected_rows].reset_index(drop=True)
+        print(f"Applied player frequency limit ({max_player_appearances} max appearances per player)")
+        print(f"Selected {len(selected_rows)} combinations from {len(results)} candidates")
+    
     return results_df

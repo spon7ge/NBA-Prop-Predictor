@@ -8,6 +8,7 @@ class NBAPropFinder():
     def __init__(self, region='us_dfs'):
         # Get data only from Odds API
         print("Scraping Odds API...")
+        self.region = region
         self.odds_data = Odds_Scraper(region=region)
         print("Organizing Data...")
         self.organizeData()
@@ -86,7 +87,7 @@ class NBAPropFinder():
         timestamp = datetime.now().strftime("%Y%m%d")
         
 
-        filename = f"NBA_{timestamp}.csv"
+        filename = f"NBA_DFS_{timestamp}.csv" if getattr(self, "region", None) == "us_dfs" else f"NBA_US_{timestamp}.csv"
         filepath = os.path.join(save_dir, filename)
         
         # Save DataFrame to CSV

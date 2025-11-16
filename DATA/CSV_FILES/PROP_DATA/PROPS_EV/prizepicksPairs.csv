@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-T.J. McConnell,Luka Dončić,10.0,32.5,under,under,1,7.85,0.392,Low,High
-Spencer Jones,Luka Dončić,6.5,32.5,under,under,1,6.52,0.326,Low,High
-Scottie Barnes,Luka Dončić,18.5,32.5,over,under,1,6.46,0.323,High,High
-T.J. McConnell,Spencer Jones,10.0,6.5,under,under,0,6.12,0.306,Low,Low
-T.J. McConnell,Marcus Smart,10.0,9.5,under,over,0,6.02,0.301,Low,High
-T.J. McConnell,Scottie Barnes,10.0,18.5,under,over,0,5.99,0.3,Low,High
-Jock Landale,Luka Dončić,7.5,32.5,over,under,0,5.97,0.299,High,High
-Donovan Mitchell,Luka Dončić,28.5,32.5,over,under,0,5.69,0.285,High,High
-Jock Landale,T.J. McConnell,7.5,10.0,over,under,0,5.61,0.28,High,Low
-Donovan Mitchell,T.J. McConnell,28.5,10.0,over,under,0,5.25,0.263,High,Low
+NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
+Dillon Brooks,Lauri Markkanen,16.5,26.5,23.59,32.72,over,over,1,8.37,0.418,High,High
+Nicolas Batum,Dillon Brooks,4.5,16.5,6.07,23.59,over,over,0,6.11,0.305,Med,High
+Harrison Barnes,Dillon Brooks,9.5,16.5,12.72,23.59,over,over,0,6.03,0.301,High,High
+Day'Ron Sharpe,Lauri Markkanen,6.5,26.5,9.0,32.72,over,over,0,5.9,0.295,Med,High
+Zion Williamson,Lauri Markkanen,19.0,26.5,22.4,32.72,over,over,0,5.76,0.288,High,High
+Nicolas Batum,Harrison Barnes,4.5,9.5,6.07,12.72,over,over,0,3.83,0.191,Med,High
+Zion Williamson,Brandon Williams,19.0,13.5,22.4,17.26,over,over,0,3.69,0.184,High,High
+Harrison Barnes,Brandon Williams,9.5,13.5,12.72,17.26,over,over,0,3.65,0.183,High,High
+Day'Ron Sharpe,Brandon Williams,6.5,13.5,9.0,17.26,over,over,0,3.61,0.18,Med,High
+Nicolas Batum,Zion Williamson,4.5,19.0,6.07,22.4,over,over,0,3.54,0.177,Med,High

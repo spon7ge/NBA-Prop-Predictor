@@ -1,11 +1,11 @@
-NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Donovan Mitchell,Scottie Barnes,Luka Dončić,28.5,18.5,32.5,over,over,under,0,12.01,0.24,High,High,High
-Cam Spencer,Scottie Barnes,Luka Dončić,6.5,18.5,32.5,over,over,under,0,11.96,0.239,High,High,High
-Scottie Barnes,Spencer Jones,Luka Dončić,18.5,6.5,32.5,over,under,under,0,11.93,0.239,High,Low,High
-Cam Spencer,Spencer Jones,Luka Dončić,6.5,6.5,32.5,over,under,under,0,11.91,0.238,High,Low,High
-Scottie Barnes,Tony Bradley,Luka Dončić,18.5,6.5,32.5,over,over,under,0,11.87,0.237,High,Med,High
-Cam Spencer,Tony Bradley,Luka Dončić,6.5,6.5,32.5,over,over,under,0,11.81,0.236,High,Med,High
-Donovan Mitchell,Tony Bradley,Luka Dončić,28.5,6.5,32.5,over,over,under,0,11.79,0.236,High,Med,High
-Spencer Jones,Luka Dončić,Marcus Smart,6.5,32.5,9.5,under,under,over,0,11.44,0.229,Low,High,High
-Tony Bradley,Spencer Jones,Luka Dončić,6.5,6.5,32.5,over,under,under,0,11.27,0.225,Med,Low,High
-Tony Bradley,Luka Dončić,Marcus Smart,6.5,32.5,9.5,over,under,over,0,11.25,0.225,Med,High,High
+NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
+Dillon Brooks,Lauri Markkanen,Isaac Okoro,16.5,26.5,6.5,23.59,32.72,10.67,over,over,over,0,16.05,0.321,High,High,High
+Anthony Black,Dillon Brooks,Lauri Markkanen,9.5,16.5,26.5,14.02,23.59,32.72,over,over,over,0,15.49,0.31,High,High,High
+Anthony Black,Goga Bitadze,Isaac Okoro,9.5,4.5,6.5,14.02,6.94,10.67,over,over,over,0,11.25,0.225,High,Med,High
+Goga Bitadze,Dyson Daniels,Nikola Vučević,4.5,12.5,18.5,6.94,8.79,13.84,over,under,under,0,9.43,0.189,Med,Med,High
+Day'Ron Sharpe,Dyson Daniels,Nikola Vučević,6.5,12.5,18.5,9.0,8.79,13.84,over,under,under,0,8.68,0.174,Med,Med,High
+Harrison Barnes,Day'Ron Sharpe,Brandon Williams,9.5,6.5,13.5,12.72,9.0,17.26,over,over,over,0,7.73,0.155,High,Med,High
+Kyshawn George,Zion Williamson,Brandon Williams,13.5,19.0,13.5,17.07,22.4,17.26,over,over,over,0,7.31,0.146,High,High,High
+Harrison Barnes,Kyshawn George,Zion Williamson,9.5,13.5,19.0,12.72,17.07,22.4,over,over,over,0,7.23,0.145,High,High,High
+Nicolas Batum,Naji Marshall,Onyeka Okongwu,4.5,11.5,12.5,6.07,14.54,15.75,over,over,over,0,6.54,0.131,Med,High,High
+Nicolas Batum,Precious Achiuwa,Naji Marshall,4.5,5.5,11.5,6.07,7.12,14.54,over,over,over,0,6.32,0.126,Med,Med,High
