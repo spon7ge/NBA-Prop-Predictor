@@ -35,6 +35,34 @@ def csv_to_js_array(csv_file, array_name):
     
     return js_code
 
+def csv_to_js_array_combo(csv_file, array_name):
+    """Convert combo prop CSV file to JavaScript array format (no OVER%/UNDER% columns)."""
+    data = []
+    
+    with open(csv_file, 'r', encoding='utf-8', errors='replace') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            # Convert CSV data to the format expected by the dashboard
+            # Combo props don't have OVER%/UNDER% from Poisson, only historical hit rates
+            data_point = {
+                'name': row['NAME'],
+                'line': float(row['LINE']),
+                'l5': float(row['L-5']),
+                'l10': float(row['L-10']),
+                'l15': float(row['L-15']),
+                'overPct': float(row['L-10']),  # Use L-10 as a proxy for over percentage
+                'underPct': 1 - float(row['L-10'])  # Complement of L-10
+            }
+            data.append(data_point)
+    
+    # Convert to JavaScript array format
+    js_code = f"const {array_name} = [\n"
+    for item in data:
+        js_code += "    " + json.dumps(item) + ",\n"
+    js_code += "];"
+    
+    return js_code
+
 def load_hit_rate_lookup():
     """Load all hit rate CSV files into lookup dictionaries by platform.
     Returns: dict with 'prizepicks' and 'underdog' keys, each containing
@@ -113,6 +141,8 @@ def csv_to_js_pairs(csv_file, array_name, hit_rate_lookups=None):
                 'name2': name2,
                 'line1': line1,
                 'line2': line2,
+                'prediction1': float(row.get('PREDICTION 1', 0.0)),
+                'prediction2': float(row.get('PREDICTION 2', 0.0)),
                 'side1': side1,
                 'side2': side2,
                 'recommendation': int(row['RECOMMENDATION']),
@@ -195,6 +225,9 @@ def csv_to_js_trios(csv_file, array_name, hit_rate_lookups=None):
                 'line1': line1,
                 'line2': line2,
                 'line3': line3,
+                'prediction1': float(row.get('PREDICTION 1', 0.0)),
+                'prediction2': float(row.get('PREDICTION 2', 0.0)),
+                'prediction3': float(row.get('PREDICTION 3', 0.0)),
                 'side1': side1,
                 'side2': side2,
                 'side3': side3,
@@ -287,6 +320,8 @@ def update_dashboard(csv_files_map, script_file='script.js'):
                 js_arrays[array_name] = csv_to_js_trios(csv_file, array_name, hit_rate_lookups)
             elif 'singleBets' in array_name or 'Singles' in array_name:
                 js_arrays[array_name] = csv_to_js_singles(csv_file, array_name)
+            elif any(combo in array_name for combo in ['PRA', 'PR', 'PA', 'RA', 'Turnovers', 'BlocksSteals']):
+                js_arrays[array_name] = csv_to_js_array_combo(csv_file, array_name)
             else:
                 js_arrays[array_name] = csv_to_js_array(csv_file, array_name)
         else:
@@ -349,22 +384,38 @@ def update_dashboard(csv_files_map, script_file='script.js'):
 
 if __name__ == "__main__":
     csv_files_map = {
-        'prizepicksPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points.csv',
-        'prizepicksAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_assists.csv',  
-        'prizepicksReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_rebounds.csv',
-        'prizepicksBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_blocks.csv',
-        'prizepicksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_steals.csv',
-        'underdogPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points.csv',
-        'underdogAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_assists.csv',
-        'underdogReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_rebounds.csv',
-        'underdogBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_blocks.csv',
-        'underdogStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_steals.csv',
-        'prizepicksPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv',  
-        'prizepicksTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv',  
-        'underdogPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv',  
-        'underdogTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv',  
-        'prizepicksSinglesData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv',
-    } 
+    'prizepicksPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points.csv',
+    'prizepicksAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_assists.csv',  
+    'prizepicksReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_rebounds.csv',
+    'prizepicksBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_blocks.csv',
+    'prizepicksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_steals.csv',
+    'prizepicksPRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_rebounds_assists.csv',
+    'prizepicksPRHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_rebounds.csv',
+    'prizepicksPAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_assists.csv',
+    'prizepicksRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_rebounds_assists.csv',
+    'prizepicksTurnoversHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_turnovers.csv',
+    'prizepicksBlocksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_blocks_steals.csv',
+    
+    # Underdog
+    'underdogPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points.csv',
+    'underdogAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_assists.csv',
+    'underdogReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_rebounds.csv',
+    'underdogBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_blocks.csv',
+    'underdogStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_steals.csv',
+    'underdogPRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_rebounds_assists.csv',
+    'underdogPRHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_rebounds.csv',
+    'underdogPAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_assists.csv',
+    'underdogRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_rebounds_assists.csv',
+    'underdogTurnoversHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_turnovers.csv',
+    'underdogBlocksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_blocks_steals.csv',
+
+    # Pairs and Trios
+    'prizepicksPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv',  
+    'prizepicksTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv',  
+    'underdogPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv',  
+    'underdogTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv',  
+    'prizepicksSinglesData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv',
+}
     
     print("PrizePicks Dashboard Data Updater")
     print("=" * 50)
