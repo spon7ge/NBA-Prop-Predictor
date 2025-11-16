@@ -10,7 +10,7 @@ from PRODUCTION.teamInfo import *
 from PRODUCTION.pipeline import *
 from itertools import combinations
 from collections import defaultdict
-from PRODUCTION.pipeline import calculate_volatility
+from PRODUCTION.pipeline import calculate_volatility  # (may be unused after removing player sigma/skew helpers)
 
 nameDict = {
     'Nikola Jokic': 'Nikola Jokić',
@@ -138,8 +138,9 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             else:
                 # Point model (XGBoost or similar)
                 pred = round(float(model.predict(vector)[0]), 3)
-                sigma = calculate_player_sigma(player_df, pred, current_date)
-                skew = calculate_player_skew(player_df)
+                # Use simple default sigma and neutral skew when model doesn't provide distribution
+                sigma = max(1.5, min(12.0, max(2.5, min(8.5, pred * 0.15))))
+                skew = 0.0
             
             _prediction_cache[cache_key] = {
                 'prediction': pred,
@@ -151,81 +152,7 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             return None
     return _prediction_cache[cache_key]
 
-def calculate_player_sigma(player_df, prediction, current_date):
-    try:
-        player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
-        team_df = player_df[player_df['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
-        opp_team, _ = findOpp(player_df['PLAYER_NAME'].iloc[-1], player_df, current_date)
-        opp_df = player_df[player_df['TEAM_ABBREVIATION'] == opp_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
-        # Base sigma from points volatility
-        pts_std_25 = calculate_volatility(player_df, 'PTS', window=25, use_cv=False)
-        if pd.isna(pts_std_25) or pts_std_25 == 0:
-            base_sigma = max(2.5, min(8.5, prediction * 0.15))  
-        else:
-            base_sigma = max(2.5, min(8.5, 1.2 * pts_std_25)) 
-        
-        adjustments = []
-        current_date_dt = pd.to_datetime(current_date)
-        current_date_str = current_date_dt.strftime('%Y-%m-%d')
-        team_df['GAME_DATE'] = pd.to_datetime(team_df['GAME_DATE'])
-        if (current_date_dt - player_df['GAME_DATE'].iloc[-1]).days == 1:
-            adjustments.append(0.15)  # 15% increase
-        
-        # Star player with extreme usage adjustment (10-25% increase)
-        usage_pct = player_df['USG_PCT'].mean()
-        if usage_pct > 25:  # High usage threshold
-            usage_adjustment = min(0.25, (usage_pct - 25) * 0.01)  # Up to 25% increase
-            adjustments.append(usage_adjustment)
-        
-        # Minutes volatility low adjustment (10-20% decrease)
-        min_std = calculate_volatility(player_df, 'MIN', window=10, use_cv=False)
-        if not pd.isna(min_std) and min_std < 3:  # Low minutes volatility
-            min_adjustment = -0.15  # 15% decrease
-            adjustments.append(min_adjustment)
-        
-        opp_pace = opp_df['TEAM_PACE'].mean()
-        game_pace = team_df['TEAM_PACE'].mean()
-        expected_pace = (game_pace + opp_pace) / 2
-        if expected_pace > 102:  # High pace threshold
-            pace_adjustment = min(0.20, (expected_pace - 102) * 0.01)  # Up to 20% increase
-            adjustments.append(pace_adjustment)
-        
-        opp_def_rating = opp_df['TEAM_DEF_RATING'].mean()
-        if opp_def_rating < 110:  # High defense threshold
-            opp_def_adjustment = min(0.20, (opp_def_rating - 110) * 0.01)  # Up to 20% increase
-            adjustments.append(opp_def_adjustment)
-            
-        # Apply adjustments
-        total_adjustment = sum(adjustments)
-        adjusted_sigma = base_sigma * (1 + total_adjustment)
-        
-        # Final clipping to sane range
-        final_sigma = max(1.5, min(12.0, adjusted_sigma))  
-        
-        return round(final_sigma, 2)
-        
-    except Exception as e:
-        print(f"Error calculating sigma for player: {e}")
-        return max(2.5, min(8.5, prediction * 0.15)) 
 
-def calculate_player_skew(player_df):
-    try:
-        pts_std_25 = calculate_volatility(player_df, 'PTS', window=20, use_cv=False)
-        pts_std_10 = calculate_volatility(player_df, 'PTS', window=10, use_cv=False)
-            
-        if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
-            volatility_ratio = pts_std_10 / pts_std_25
-            recent_skew = (volatility_ratio - 1.0) * 2.0  
-        else:   
-            recent_skew = 0.5
-        
-        alpha = np.clip(3 * recent_skew, -4, 4)
-        
-        return round(alpha, 2)
-        
-    except Exception as e:
-        print(f"Error calculating skew for player: {e}")
-        return 1.0
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 def calculateSingleBets(data, bookmakers, model, features, current_date, edge_threshold=0.05, stake=100, 
@@ -452,7 +379,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
     
     print(f"Processing {len(available_players)} players with valid predictions...")
     
-    # Generate only valid combinations (different teams and different games)
+    # Generate only valid combinations (different teams)
     valid_combinations = []
     for p1, p2 in combinations(available_players, 2):
         team1 = player_teams[p1]
@@ -462,10 +389,6 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         
         # Prevent same-team combinations
         if team1 == team2:
-            continue
-        
-        # Prevent same-game combinations: players are in same game if one's team is the other's opponent
-        if (team1 == opp2) or (team2 == opp1):
             continue
         
         valid_combinations.append((p1, p2))

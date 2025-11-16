@@ -3,13 +3,12 @@ import numpy as np
 import warnings
 from scipy.stats import norm
 import scipy.stats as stats
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
-from PRODUCTION.teamInfo import *
-from PRODUCTION.pipeline import findOpp, calculate_volatility
 from itertools import combinations
 from MODELS.ngboostModel import predict_mean_variance_split
+from nba_api.stats.endpoints import scheduleleaguev2
 
 
 nameDict = {
@@ -46,6 +45,43 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
+_gameCache = {}
+
+def getUpcomingGamesCached(date):
+    if date not in _gameCache:
+        schedule = scheduleleaguev2.ScheduleLeagueV2(season=2024).get_data_frames()[0]
+        schedule['gameDate'] = pd.to_datetime(schedule['gameDate']).dt.strftime('%Y-%m-%d')
+        _gameCache[date] = schedule
+    return _gameCache[date]
+
+
+def findOpp(playerName, players_df, gameDate, max_days_ahead=3):
+    player_team = players_df.loc[
+        players_df['PLAYER_NAME'] == playerName, 'TEAM_ABBREVIATION'
+    ].iloc[-1]
+    
+    base_date = datetime.strptime(gameDate, '%Y-%m-%d')
+    dates_to_check = [(base_date + timedelta(days=i)).strftime('%Y-%m-%d') 
+                      for i in range(max_days_ahead + 1)]
+    
+    for check_date in dates_to_check:
+        schedule = getUpcomingGamesCached(check_date)
+        schedule_filtered = schedule[schedule['gameDate'] == check_date]
+        homeTeams = schedule_filtered['homeTeam_teamTricode'].unique().tolist()
+        awayTeams = schedule_filtered['awayTeam_teamTricode'].unique().tolist()
+        
+        home = 0
+        if player_team in homeTeams:
+            opp_team = awayTeams[homeTeams.index(player_team)]
+            home = 1
+            return opp_team, home
+        elif player_team in awayTeams:
+            opp_team = homeTeams[awayTeams.index(player_team)]
+            home = 0
+            return opp_team, home
+    
+    print(f"No game found for {player_team} within {max_days_ahead} days from {gameDate}")
+    return None, None
 
 
 # Global prediction cache
@@ -77,14 +113,9 @@ def get_cached_prediction(player_name, data, models, features, stat_col='PTS', g
             else:
                 current_date = None
             
-            # Calculate adjusted sigma using player-specific factors
-            if current_date and not player_df.empty:
-                sigma_adjusted = calculate_player_sigma(player_df, mu, current_date)
-                skew = calculate_player_skew(player_df)
-            else:
-                # Fallback to model sigma if we can't calculate adjusted
-                sigma_adjusted = sigma_model
-                skew = 0.0
+            # Use model-provided sigma and neutral skew for backtests
+            sigma_adjusted = sigma_model
+            skew = 0.0
             
             _prediction_cache[cache_key] = {
                 'prediction': mu,
@@ -162,80 +193,6 @@ def predictStats(playerName, data, models, features):
     }
     
     return predictions
-
-
-#----------------------------------------------------------------------------------------------------------------------------------------------------------------
-def calculate_player_sigma(player_df, prediction, current_date):
-    try:
-        if player_df.empty:
-            return max(2.5, min(8.5, prediction * 0.15))
-        
-        player_df_sorted = player_df.sort_values(by='GAME_DATE').copy()
-        latest_row = player_df_sorted.iloc[-1]
-        
-        pts_std_25 = calculate_volatility(player_df_sorted, 'PTS', window=25, use_cv=False)
-        if pd.isna(pts_std_25) or pts_std_25 == 0:
-            base_sigma = max(2.5, min(8.5, prediction * 0.15))
-        else:
-            base_sigma = max(2.5, min(8.5, 1.2 * pts_std_25))
-        
-        adjustments = []
-        current_date_dt = pd.to_datetime(current_date)
-        player_df_sorted['GAME_DATE'] = pd.to_datetime(player_df_sorted['GAME_DATE'])
-        if latest_row['IS_BACK_TO_BACK'] == 1:
-            adjustments.append(0.15)
-        
-        usage_pct = latest_row['USG_PCT_AVG_TO_DATE']
-        if usage_pct > 25:
-            usage_adjustment = min(0.25, (usage_pct - 25) * 0.01)
-            adjustments.append(usage_adjustment)
-        
-        min_std = latest_row['MIN_VOLATILITY_10_TO_DATE']
-        if not pd.isna(min_std) and min_std < 3:
-            adjustments.append(-0.15)
-        
-
-        expected_pace = latest_row['EXPECTED_PACE']
-        if expected_pace > 102:
-            pace_adjustment = min(0.20, (expected_pace - 102) * 0.01)
-            adjustments.append(pace_adjustment)
-        
-        opp_def_rating = latest_row['OPP_DEF_RATING_AVG_TO_DATE']
-        if opp_def_rating < 110:
-            opp_def_adjustment = min(0.20, (opp_def_rating - 110) * 0.01)
-            adjustments.append(opp_def_adjustment)
-        
-        total_adjustment = sum(adjustments)
-        adjusted_sigma = base_sigma * (1 + total_adjustment)
-        final_sigma = max(1.5, min(12.0, adjusted_sigma))
-        
-        return round(final_sigma, 2)
-    except Exception as e:
-        print(f"Error calculating sigma for player: {e}")
-        return max(2.5, min(8.5, prediction * 0.15))
-
-
-def calculate_player_skew(player_df):
-    try:
-        if player_df.empty:
-            return 1.0
-        
-        player_df_sorted = player_df.sort_values(by='GAME_DATE')
-        pts_std_25 = player_df_sorted['PTS_VOLATILITY_20_TO_DATE'].iloc[-1]
-        pts_std_10 = player_df_sorted['PTS_VOLATILITY_10_TO_DATE'].iloc[-1]
-        
-        if not pd.isna(pts_std_25) and not pd.isna(pts_std_10) and pts_std_25 > 0:
-            volatility_ratio = pts_std_10 / pts_std_25
-            recent_skew = (volatility_ratio - 1.0) * 2.0
-        else:
-            recent_skew = 0.5
-        
-        alpha = np.clip(3 * recent_skew, -4, 4)
-        return round(alpha, 2)
-    except Exception as e:
-        print(f"Error calculating skew for player: {e}")
-        return 1.0
-
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, stake=100, 
@@ -383,7 +340,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
 
     results = []
     player_combinations = list(combinations(available_players, 2))
-    # Generate all 2-leg combinations
+    # Generate all 2-leg combinations (allow same-game, disallow same-team)
     for player1, player2 in player_combinations:
         
             # Handle name variations
@@ -404,21 +361,6 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             player2_team = player2_data['TEAM_ABBREVIATION'].iloc[-1]
             
             if player1_team == player2_team:
-                continue
-            
-            # Check if players are from the same game using findOpp
-            # Convert gameDate to string format if needed
-            game_date_str = pd.to_datetime(gameDate).strftime('%Y-%m-%d') if isinstance(gameDate, (pd.Timestamp, datetime)) else gameDate
-            
-            player1_opp, _ = findOpp(player1, player1_data, game_date_str)
-            player2_opp, _ = findOpp(player2, player2_data, game_date_str)
-            
-            # Skip if we can't find opponents
-            if player1_opp is None or player2_opp is None:
-                continue
-            
-            # Prevent same-game combinations: players are in same game if one's team is the other's opponent
-            if (player1_team == player2_opp) or (player2_team == player1_opp):
                 continue
                 
             # Get betting lines for both players
