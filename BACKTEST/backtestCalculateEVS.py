@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from scipy.stats import truncnorm
 from itertools import combinations
 from collections import defaultdict
-from MODELS.ngboostModel import predict_mean_variance_split
+from MODELS.NGBoostModel import predict_mean_variance_split
 from nba_api.stats.endpoints import scheduleleaguev2
 
 
@@ -295,7 +295,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold (using raw probabilities)
-        if edge > edge_threshold:
+        if abs(line - mu) > 4.5:
             recommendation = 1
         else:
             recommendation = 0
@@ -502,7 +502,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
             combined_edge = combined_model_prob - combined_market_prob
             
             # Recommendation based on multiple criteria (matching calculateEVS.py) - using raw probabilities
-            if (combined_edge > edge_threshold):
+            if (abs(player1_line['LINE'] - mu1) > 4.5 and abs(player2_line['LINE'] - mu2) > 4.5):
                 recommendation = 1
             else:
                 recommendation = 0
@@ -845,7 +845,7 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
                 combined_edge = combined_model_prob - combined_market_prob
                 
                 # Recommendation based on multiple criteria (matching calculateEVS.py) - using raw probabilities
-                if combined_edge > edge_threshold:
+                if (abs(player1_line['LINE'] - mu1) > 4.5 and abs(player2_line['LINE'] - mu2) > 4.5 and abs(player3_line['LINE'] - mu3) > 4.5):
                     recommendation = 1
                 else:
                     recommendation = 0
