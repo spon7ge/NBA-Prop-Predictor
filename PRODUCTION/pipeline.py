@@ -201,8 +201,8 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
     res.append(main_in_projected)
 
     opp_in_projected = len(set(mainStartingFive[opp_abv]) & set(projectedStartingFive[opp_abv]))
-
     res.append(opp_in_projected)
+
     if player_df.empty:
         res.append(0)
     else:
@@ -222,17 +222,38 @@ def playerScoring(player_name, data, teamStarPlayer, projectedStartingFive):
     res = []
     
     # Rolling Averages
+    res.append(player_df['PTS'].tail(5).mean())
     res.append(player_df['PTS'].tail(10).mean())
+    res.append(player_df['PTS'].tail(20).mean())
+    res.append(player_df['MIN'].tail(5).mean())
     res.append(player_df['MIN'].tail(10).mean())
+    res.append(player_df['MIN'].tail(20).mean())
+    res.append(player_df['USG_PCT'].tail(5).mean())
     res.append(player_df['USG_PCT'].tail(10).mean())
-    res.append(player_df['TS_PCT'].tail(5).mean())
+    res.append(player_df['USG_PCT'].tail(20).mean())
     res.append(player_df['TS_PCT'].tail(10).mean())
-    res.append(player_df['FG_PCT'].tail(5).mean())
+    res.append(player_df['TS_PCT'].tail(20).mean())
+    res.append(player_df['FGA'].tail(5).mean())
+    res.append(player_df['FGA'].tail(10).mean())
+    res.append(player_df['FGA'].tail(20).mean())
     res.append(player_df['FG_PCT'].tail(10).mean())
+    res.append(player_df['FG_PCT'].tail(20).mean())
+    res.append(player_df['FG3A'].tail(5).mean())
+    res.append(player_df['FG3A'].tail(10).mean())
+    res.append(player_df['FG3A'].tail(20).mean())
+    res.append(player_df['FG3_PCT'].tail(10).mean())
+    res.append(player_df['FG3_PCT'].tail(20).mean())
+    res.append(player_df['FTA'].tail(5).mean())
     res.append(player_df['FTA'].tail(10).mean())
+    res.append(player_df['FTA'].tail(20).mean())
+    res.append(player_df['FT_PCT'].tail(10).mean())
+    res.append(player_df['FT_PCT'].tail(20).mean())
     res.append(player_df['E_OFF_RATING'].tail(5).mean())
     res.append(player_df['E_OFF_RATING'].tail(10).mean())
+    res.append(player_df['E_OFF_RATING'].tail(20).mean())
+    res.append(player_df['NET_RATING'].tail(5).mean())
     res.append(player_df['NET_RATING'].tail(10).mean())
+    res.append(player_df['NET_RATING'].tail(20).mean())
     
     # Lag Features
     res.append(player_df['MIN'].iloc[-1])
@@ -243,19 +264,26 @@ def playerScoring(player_name, data, teamStarPlayer, projectedStartingFive):
     # Volatility
     res.append(calculate_volatility(player_df, 'MIN', 5))
     res.append(calculate_volatility(player_df, 'MIN', 10))
+    res.append(calculate_volatility(player_df, 'MIN', 20))
     res.append(calculate_volatility(player_df, 'PTS', 5))
+    res.append(calculate_volatility(player_df, 'PTS', 10))
+    res.append(calculate_volatility(player_df, 'PTS', 20))
     res.append(calculate_volatility(player_df, 'FGA', 5))
     res.append(calculate_volatility(player_df, 'FGA', 10))
-    res.append(calculate_volatility(player_df, 'FGM', 10))
-    res.append(calculate_volatility(player_df, 'USG_PCT', 5))
-    res.append(calculate_volatility(player_df, 'TS_PCT', 5))
-    res.append(calculate_volatility(player_df, 'TS_PCT', 10))
-    res.append(calculate_volatility(player_df, 'FG_PCT', 5))
+    res.append(calculate_volatility(player_df, 'FGA', 20))
+    res.append(calculate_volatility(player_df, 'USG_PCT', 5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'USG_PCT', 10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'USG_PCT', 20, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TS_PCT', 10, use_cv=True))
+    res.append(calculate_volatility(player_df, 'TS_PCT', 20, use_cv=True))
     res.append(calculate_volatility(player_df, 'FG3A', 5))
-    res.append(calculate_volatility(player_df, 'FG3M', 5))
-    res.append(calculate_volatility(player_df, 'FG3_PCT', 5, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FG3A', 10))
+    res.append(calculate_volatility(player_df, 'FG3A', 20))
     res.append(calculate_volatility(player_df, 'FG3_PCT', 10, use_cv=True))
-    res.append(calculate_volatility(player_df, 'FTM', 5))
+    res.append(calculate_volatility(player_df, 'FG3_PCT', 20, use_cv=True))
+    res.append(calculate_volatility(player_df, 'FTA', 5))
+    res.append(calculate_volatility(player_df, 'FTA', 10))
+    res.append(calculate_volatility(player_df, 'FTA', 20))
     res.append(calculate_volatility(player_df, 'FT_PCT', 5, use_cv=True))
     res.append(calculate_volatility(player_df, 'FT_PCT', 10, use_cv=True))
     res.append(calculate_volatility(player_df, 'TOV', 10))
@@ -265,6 +293,10 @@ def playerScoring(player_name, data, teamStarPlayer, projectedStartingFive):
     res.append(calculate_volatility(player_df, 'E_OFF_RATING', 10))
     res.append(calculate_volatility(player_df, 'NET_RATING', 5))
     res.append(calculate_volatility(player_df, 'NET_RATING', 10))
+    res.append(calculate_volatility(player_df, 'TCHS', 5))
+    res.append(calculate_volatility(player_df, 'TCHS', 10))
+    res.append(calculate_volatility(player_df, 'TOV', 5))
+    res.append(calculate_volatility(player_df, 'TOV', 10))
 
     #MIN/MAX
     res.append(player_df['MIN'].tail(10).max())
@@ -326,13 +358,6 @@ def playerScoring(player_name, data, teamStarPlayer, projectedStartingFive):
     res.append((player_df['PTS'].mean() >= 10) & (player_df['PTS'].mean() <= 20))
     res.append(int(player_df['PTS'].mean() > 20))
 
-    #Advanced Metrics
-    res.append(player_df['E_OFF_RATING'].mean())
-    res.append(player_df['NET_RATING'].mean())
-    res.append(player_df['TCHS'].tail(10).mean())
-    res.append(player_df['TOV'].tail(10).mean())
-    res.append(player_df['FT_PCT'].tail(10).mean())
-    res.append(player_df['EFG_PCT'].mean())
     return res
 
 

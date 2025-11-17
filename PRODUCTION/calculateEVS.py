@@ -10,7 +10,7 @@ from PRODUCTION.teamInfo import *
 from PRODUCTION.pipeline import *
 from itertools import combinations
 from collections import defaultdict
-from PRODUCTION.pipeline import calculate_volatility  # (may be unused after removing player sigma/skew helpers)
+from PRODUCTION.pipeline import calculate_volatility 
 
 nameDict = {
     'Nikola Jokic': 'Nikola Jokić',
@@ -124,7 +124,7 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
                 mean_model = model[0]
                 variance_model = model[1]
                 calibration_factor = model[2] if len(model) > 2 else 1.25  # Use calibration factor if provided
-                from MODELS.ngboostModel import predict_mean_variance_split
+                from MODELS.NGBoostModel import predict_mean_variance_split
                 mu, variance = predict_mean_variance_split(mean_model, variance_model, vector, features, calibration_factor)
                 pred = round(float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu), 3)
                 sigma = float(np.sqrt(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance))
@@ -266,10 +266,7 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold (using raw probabilities)
-        recommendation = 1 if (edge > edge_threshold and 
-                               kelly_capped_fraction > 0 and
-                               p > 0.40 and 
-                               ev_total > 1.00) else 0
+        recommendation = 1 if (abs(line - pred) > 4.5) else 0
         
         # Confidence interval (using proper statistical formula with player-specific sigma)
         confidence_interval = (
@@ -529,7 +526,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         combined_edge = combined_model_prob - market_prob_combined
         
         # Recommendation based on multiple criteria
-        recommendation = 1 if (combined_edge > 0 and combined_model_prob > edge_threshold and ev_dollars > 0) else 0
+        recommendation = 1 if (abs(line1 - pred1_val) > 4.5 and abs(line2 - pred2_val) > 4.5) else 0
         
         results.append({
             'NAME 1': mapped_p1,
@@ -883,7 +880,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         combined_edge = combined_model_prob - market_prob_combined
         
         # Recommendation based on multiple criteria
-        recommendation = 1 if (ev_dollars > 0 and combined_edge > edge_threshold and kelly_full > 0) else 0
+        recommendation = 1 if (abs(line1 - pred1_val) > 4.5 and abs(line2 - pred2_val) > 4.5 and abs(line3 - pred3_val) > 4.5) else 0
         
         results.append({
             'NAME 1': mapped_p1,
