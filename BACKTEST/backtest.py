@@ -96,7 +96,8 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
 def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
+                 max_player_appearances: int = 3):
     print(f"Starting backtest for pairs on {gameDate}")
     total_start = time.time()
 
@@ -121,7 +122,8 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
         use_monte_carlo=use_monte_carlo,
         n_simulations=n_simulations,
         max_kelly=max_kelly,
-        stake=stake
+        stake=stake,
+        max_player_appearances=max_player_appearances
     )
     print(f"Time taken for pairs: {time.time() - total_start} seconds")
 
@@ -241,7 +243,8 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
 
 def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
                  variance_inflation=1.1, stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100):
+                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
+                 max_player_appearances: int = 2):
     data = data[data['GAME_DATE'] == gameDate]
     if stat_col == 'PTS':
         category = 'player_points'
@@ -271,7 +274,8 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
         use_monte_carlo=use_monte_carlo,
         n_simulations=n_simulations,
         max_kelly=max_kelly,
-        stake=stake
+        stake=stake,
+        max_player_appearances=max_player_appearances
     )
     
     # Sort by combined edge and take top bets
