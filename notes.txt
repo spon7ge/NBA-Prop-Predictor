@@ -1,14 +1,6 @@
 training on s19-s25 and validating on s26 data
 10/21/25 - 11/03/25 live testing metrics MAE: 4.88 R2: 0.527
 
-Hard cap per player p:
-sum_{pairs i contains p} x_i ≤ Cap_p
-Soft cap:
-maximize Σ EV_i·x_i − λ Σ_p (Σ_{i∋p} x_i)^2
-Diversity between selected pairs i, j:
-Σ_{legs l} overlap_{i,j,l} ≤ 1 for chosen i,j
-Risk aversion:
-maximize Σ (EV_i_adj)·x_i − γ Σ Var_i·x_i
 
 ============================================================
     COMPREHENSIVE BETTING ANALYSIS UNDERDOG 2024-25
