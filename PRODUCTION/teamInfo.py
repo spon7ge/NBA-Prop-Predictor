@@ -1,12 +1,12 @@
 projectedStartingFive = {
-    "ATL": ["Onyeka Okongwu", "Nickeil Alexander-Walker", "Kristaps Porzingis", "Dyson Daniels", "Zaccharie Risacher"],
+    "ATL": ["Onyeka Okongwu", "Nickeil Alexander-Walker", "Kristaps Porziņģis", "Dyson Daniels", "Zaccharie Risacher"],
     "BKN": ["Egor Demin", "Nic Claxton", "Terance Mann", "Noah Clowney", "Michael Porter"],
     "BOS": ["Payton Pritchard", "Neemias Queta", "Jordan Walsh", "Derrick White", "Jaylen Brown"],
     "CHA": ["Miles Bridges", "Sion James", "Ryan Kalkbrenner", "LaMelo Ball", "Kon Knueppel"],
-    "CHI": ["Isaac Okoro", "Josh Giddey", "Matas Buzelis", "Kevin Huerter", "Nikola Vucevic"],
+    "CHI": ["Isaac Okoro", "Josh Giddey", "Matas Buzelis", "Kevin Huerter", "Nikola Vučević"],
     "CLE": ["Sam Merrill", "De'Andre Hunter", "Donovan Mitchell", "Jarrett Allen", "Evan Mobley"],
     "DAL": ["Brandon Williams", "Moussa Cisse", "Max Christie", "Cooper Flagg", "P.J. Washington"],
-    "DEN": ["Jamal Murray", "Aaron Gordon", "Nikola Jokic", "Cameron Johnson", "Peyton Watson"],
+    "DEN": ["Jamal Murray", "Aaron Gordon", "Nikola Jokić", "Cameron Johnson", "Peyton Watson"],
     "DET": ["Ronald Holland", "Isaiah Stewart", "Duncan Robinson", "Jalen Duren", "Daniss Jenkins"],
     "GSW": ["Draymond Green", "Moses Moody", "Will Richard", "Stephen Curry", "Jimmy Butler"],
     "HOU": ["Kevin Durant", "Josh Okogie", "Amen Thompson", "Alperen Sengun", "Jabari Smith"],
@@ -32,20 +32,20 @@ projectedStartingFive = {
 }
 
 mainStartingFive = {
-    "ATL": ["Nickeil Alexander-Walker", "Dyson Daniels", "Zaccharie Risacher", "Jalen Johnson", "Kristaps Porzingis"],
+    "ATL": ["Nickeil Alexander-Walker", "Dyson Daniels", "Zaccharie Risacher", "Jalen Johnson", "Kristaps Porziņģis"],
     "BOS": ["Derrick White", "Payton Pritchard", "Jaylen Brown", "Josh Minott", "Neemias Queta"],
     "BKN": ["Tyrese Martin", "Cam Thomas", "Terance Mann", "Michael Porter Jr.", "Nic Claxton"],
     "CHA": ["LaMelo Ball", "Collin Sexton", "Brandon Miller", "Miles Bridges", "Ryan Kalkbrenner"],
-    "CHI": ["Josh Giddey", "Coby White", "Isaac Okoro", "Matas Buzelis", "Nikola Vucevic"],
+    "CHI": ["Josh Giddey", "Coby White", "Isaac Okoro", "Matas Buzelis", "Nikola Vučević"],
     "CLE": ["Darius Garland", "Donovan Mitchell", "De'Andre Hunter", "Evan Mobley", "Jarrett Allen"],
     "DAL": ["Cooper Flagg", "Klay Thompson", "P.J. Washington", "Anthony Davis", "Dereck Lively II"],
-    "DEN": ["Jamal Murray", "Christian Braun", "Cameron Johnson", "Aaron Gordon", "Nikola Jokic"],
+    "DEN": ["Jamal Murray", "Christian Braun", "Cameron Johnson", "Aaron Gordon", "Nikola Jokić"],
     "DET": ["Cade Cunningham", "Duncan Robinson", "Ausar Thompson", "Tobias Harris", "Jalen Duren"],
     "GSW": ["Stephen Curry", "Jimmy Butler III", "Jonathan Kuminga", "Draymond Green", "Quinten Post"],
     "HOU": ["Amen Thompson", "Josh Okogie", "Kevin Durant", "Jabari Smith Jr.", "Alperen Sengun"],
     "IND": ["Andrew Nembhard", "Bennedict Mathurin", "Aaron Nesmith", "Pascal Siakam", "Isaiah Jackson"],
     "LAC": ["James Harden", "Bradley Beal", "Kawhi Leonard", "Derrick Jones Jr.", "Ivica Zubac"],
-    "LAL": ["Luka Doncic", "Austin Reaves", "Marcus Smart", "Rui Hachimura", "Deandre Ayton"],
+    "LAL": ["Luka Dončić", "Austin Reaves", "Marcus Smart", "Rui Hachimura", "Deandre Ayton"],
     "MEM": ["Ja Morant", "Kentavious Caldwell-Pope", "Jaylen Wells", "Jaren Jackson Jr.", "Jock Landale"],
     "MIA": ["Davion Mitchell", "Norman Powell", "Andrew Wiggins", "Bam Adebayo", "Kel'el Ware"],
     "MIL": ["Ryan Rollins", "AJ Green", "Gary Trent Jr.", "Giannis Antetokounmpo", "Myles Turner"],
@@ -66,13 +66,13 @@ mainStartingFive = {
 
 teamStarPlayer = {
     "OKC": "Shai Gilgeous-Alexander", 
-    "DEN": 'Nikola Jokic', 
+    "DEN": 'Nikola Jokić', 
     "NYK": 'Jalen Brunson', 
     "CLE": "Donovan Mitchell",
     "ORL": "Paolo Banchero", 
     "MIN": "Anthony Edwards", 
     "GSW": "Stephen Curry", 
-    "LAL": 'Luka Doncic', 
+    "LAL": 'Luka Dončić', 
     "HOU": "Kevin Durant",
     "SAS": "Victor Wembanyama", 
     "LAC": "Kawhi Leonard", 
@@ -95,4 +95,18 @@ teamStarPlayer = {
     "CHA": "LaMelo Ball",
     "BKN": "Cam Thomas",
     "WAS": "Keyshawn George"
+}
+
+# Name mapping dictionary to handle special characters in player names
+nameDict = {
+    'Nikola Jokic': 'Nikola Jokić',
+    'Luka Doncic': 'Luka Dončić',
+    'Nikola Vucevic': 'Nikola Vučević',
+    'Jonas Valanciunas': 'Jonas Valančiūnas',
+    'Dennis Schroder': 'Dennis Schröder',
+    'Kristaps Porzingis': 'Kristaps Porziņģis',
+    'Bogdan Bogdanovic': 'Bogdan Bogdanović',
+    'Dario Saric': 'Dario Šarić',
+    'Nikola Jovic': 'Nikola Jović',
+    'Vlatko Cancar': 'Vlatko Čančar',
 }

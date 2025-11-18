@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Nikola Jokić,Josh Giddey,27.5,18.5,22.09,25.38,under,over,1,7.36,0.368,High,High
-Ryan Kalkbrenner,Nikola Jokić,8.5,27.5,11.86,22.09,over,under,0,6.34,0.317,Med,High
-Ryan Kalkbrenner,Josh Giddey,8.5,18.5,11.86,25.38,over,over,0,6.06,0.303,Med,High
-D'Angelo Russell,Nikola Jokić,11.5,27.5,15.64,22.09,over,under,0,5.64,0.282,High,High
-Chaz Lanier,Josh Giddey,5.5,18.5,7.35,25.38,over,over,0,5.28,0.264,Med,High
-Ryan Kalkbrenner,D'Angelo Russell,8.5,11.5,11.86,15.64,over,over,0,4.19,0.21,Med,High
-Karl-Anthony Towns,D'Angelo Russell,28.5,11.5,24.56,15.64,under,over,0,3.32,0.166,High,High
-Chaz Lanier,P.J. Washington,5.5,15.5,7.35,19.53,over,over,0,3.29,0.164,Med,High
-Karl-Anthony Towns,P.J. Washington,28.5,15.5,24.56,19.53,under,over,0,3.15,0.157,High,High
-Chaz Lanier,Karl-Anthony Towns,5.5,28.5,7.35,24.56,over,under,0,3.01,0.15,Med,High
+Ryan Kalkbrenner,Josh Giddey,8.5,18.5,11.85,26.11,over,over,0,6.51,0.326,Med,High
+Karl-Anthony Towns,Josh Giddey,28.5,18.5,23.76,26.11,under,over,1,5.97,0.299,High,High
+Chaz Lanier,Josh Giddey,5.5,18.5,7.53,26.11,over,over,0,5.88,0.294,Med,High
+Ryan Kalkbrenner,Karl-Anthony Towns,8.5,28.5,11.85,23.76,over,under,0,4.56,0.228,Med,High
+Chaz Lanier,Ryan Kalkbrenner,5.5,8.5,7.53,11.85,over,over,0,4.17,0.208,Med,Med
+Chaz Lanier,Karl-Anthony Towns,5.5,28.5,7.53,23.76,over,under,0,3.83,0.192,Med,High
+D'Angelo Russell,Jaylin Williams,11.5,5.5,15.43,7.36,over,over,0,3.22,0.161,High,Med
+D'Angelo Russell,Ajay Mitchell,11.5,14.5,15.43,18.06,over,over,0,3.18,0.159,High,High
+P.J. Washington,Ajay Mitchell,15.5,14.5,19.29,18.06,over,over,0,3.14,0.157,High,High
+D'Angelo Russell,Alex Caruso,11.5,5.5,15.43,7.16,over,over,0,3.04,0.152,High,Med

@@ -10,20 +10,9 @@ from PRODUCTION.teamInfo import *
 from PRODUCTION.pipeline import *
 from itertools import combinations
 from collections import defaultdict
-from PRODUCTION.pipeline import calculate_volatility 
+from PRODUCTION.pipeline import calculate_volatility
+from PRODUCTION.teamInfo import nameDict
 
-nameDict = {
-    'Nikola Jokic': 'Nikola Jokić',
-    'Luka Doncic': 'Luka Dončić',
-    'Nikola Vucevic': 'Nikola Vučević',
-    'Jonas Valanciunas': 'Jonas Valančiūnas',
-    'Dennis Schroder': 'Dennis Schröder',
-    'Kristaps Porzingis': 'Kristaps Porziņģis',
-    'Bogdan Bogdanovic': 'Bogdan Bogdanović',
-    'Dario Saric': 'Dario Šarić',
-    'Nikola Jovic': 'Nikola Jović',
-    'Vlatko Cancar': 'Vlatko Čančar',
-}
 
 # Convert UTC to ET and create game_date column
 def convert_to_et(utc_time):

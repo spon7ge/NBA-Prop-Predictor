@@ -4,7 +4,7 @@ import pytz
 import pandas as pd
 import numpy as np
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2
-from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive
+from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive, nameDict, nameDictReverse
 
 
 today = datetime.today().strftime('%Y-%m-%d')
@@ -175,23 +175,20 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
         res.append(1)
     else:
         res.append(0)
-        
-    # Team Star Player
+
+    # Team Star Player 
     if player_name == teamStarPlayer[player_team]:
         res.append(1)
     else:
         res.append(0)
 
-
-    #Team Star Out
+    # Team Star Out
     if teamStarPlayer[player_team] not in projectedStartingFive[player_team]:
         res.append(1)
     else:
         res.append(0)
 
-        
-    # Back to Back and Days Rested
-
+    # Days Rested
     days_rested = (current_date_dt - player_df['GAME_DATE'].iloc[-1]).days
     days_rested = min(days_rested, 3)
     res.append(days_rested)
