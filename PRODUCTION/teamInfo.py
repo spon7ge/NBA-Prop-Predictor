@@ -17,7 +17,7 @@ projectedStartingFive = {
     "MIA": ["Davion Mitchell", "Norman Powell", "Pelle Larsson", "Andrew Wiggins", "Kel'el Ware"],
     "MIL": ["Giannis Antetokounmpo", "AJ Green", "Kyle Kuzma", "Ryan Rollins", "Myles Turner"],
     "MIN": ["Julius Randle", "Donte DiVincenzo", "Jaden McDaniels", "Anthony Edwards", "Rudy Gobert"],
-    "NOP": ["Jeremiah Fears", "Herbert Jones", "Derik Queen", "Trey Murphy"],
+    "NOP": ["Karlo Matkovic", "Herbert Jones", "Derik Queen", "Jeremiah Fears", "Trey Murphy"],
     "NYK": ["Miles McBride", "Landry Shamet", "Karl-Anthony Towns", "Mitchell Robinson", "Mikal Bridges"],
     "OKC": ["Shai Gilgeous-Alexander", "Cason Wallace", "Chet Holmgren", "Thomas Sorber", "Isaiah Hartenstein"],
     "ORL": ["Anthony Black", "Wendell Carter", "Jalen Suggs", "Tristan da Silva", "Desmond Bane"],
