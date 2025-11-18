@@ -1222,7 +1222,7 @@ function updateStats(data) {
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (consistent), Med, Low (volatile)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile), Med, Low (consistent)</div>
             </div>
         `;
     } else if (currentType === 'hitrates') {
@@ -1256,7 +1256,7 @@ function updateStats(data) {
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (consistent), Med, Low (volatile)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile), Med, Low (consistent)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Rec (Recommendation)</div>
