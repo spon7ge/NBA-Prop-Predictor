@@ -4,7 +4,7 @@ import pytz
 import pandas as pd
 import numpy as np
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2
-from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive, nameDict, nameDictReverse
+from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive, nameDict
 
 
 today = datetime.today().strftime('%Y-%m-%d')

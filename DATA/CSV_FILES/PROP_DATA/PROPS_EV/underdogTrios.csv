@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Ryan Kalkbrenner,Nikola Jokić,Josh Giddey,8.5,27.5,18.5,11.86,22.09,25.38,over,under,over,0,13.25,0.265,Med,High,High
-D'Angelo Russell,Nikola Jokić,Josh Giddey,11.5,27.5,18.5,15.64,22.09,25.38,over,under,over,0,12.2,0.244,High,High,High
-Ryan Kalkbrenner,Karl-Anthony Towns,D'Angelo Russell,8.5,28.5,11.5,11.86,24.56,15.64,over,under,over,0,7.7,0.154,Med,High,High
-Chaz Lanier,Karl-Anthony Towns,P.J. Washington,5.5,28.5,15.5,7.35,24.56,19.53,over,under,over,0,6.32,0.126,Med,High,High
-Chaz Lanier,P.J. Washington,Jose Alvarado,5.5,15.5,7.5,7.35,19.53,9.81,over,over,over,0,6.04,0.121,Med,High,High
-Miles Bridges,Andrew Wiggins,Jose Alvarado,19.5,18.5,7.5,22.98,21.08,9.81,over,over,over,0,4.46,0.089,High,High,High
-Miles Bridges,Andrew Wiggins,Josh Hart,19.5,18.5,12.5,22.98,21.08,9.77,over,over,under,0,3.64,0.073,High,High,High
-Josh Hart,Pelle Larsson,Alex Caruso,12.5,9.5,5.5,9.77,11.28,6.44,under,over,over,0,2.99,0.06,High,Med,Med
-Pelle Larsson,Alex Caruso,Jaylin Williams,9.5,5.5,5.5,11.28,6.44,6.43,over,over,over,0,2.85,0.057,Med,Med,Med
-James Harden,Kyle Kuzma,Jaylin Williams,25.5,12.5,5.5,27.79,14.85,6.43,over,over,over,0,2.54,0.051,High,High,Med
+Lauri Markkanen,Keyonte George,Nick Richards,26.5,18.5,4.5,34.77,25.05,7.39,over,over,over,0,14.85,0.297,High,High,Med
+Lauri Markkanen,Keyonte George,Dillon Brooks,26.5,18.5,18.5,34.77,25.05,23.84,over,over,over,1,14.8,0.296,High,High,High
+Anthony Black,Dillon Brooks,Nick Richards,9.5,18.5,4.5,14.28,23.84,7.39,over,over,over,0,12.06,0.241,High,High,Med
+Draymond Green,Anthony Black,Day'Ron Sharpe,7.5,9.5,5.5,11.05,14.28,8.4,over,over,over,0,11.01,0.22,Med,High,Med
+Draymond Green,Tristan da Silva,Day'Ron Sharpe,7.5,11.5,5.5,11.05,16.21,8.4,over,over,over,0,10.35,0.207,Med,High,Med
+Tristan da Silva,Dyson Daniels,Svi Mykhailiuk,11.5,13.5,7.5,16.21,10.12,10.66,over,under,over,0,8.14,0.163,High,High,High
+Dyson Daniels,Julian Champagnie,Svi Mykhailiuk,13.5,12.5,7.5,10.12,8.89,10.66,under,under,over,0,6.94,0.139,High,High,High
+Buddy Hield,Julian Champagnie,Luke Kornet,6.5,12.5,10.5,8.18,8.89,12.83,over,under,over,0,4.92,0.098,Med,High,Med
+Buddy Hield,Cade Cunningham,Luke Kornet,6.5,25.5,10.5,8.18,29.03,12.83,over,over,over,0,4.34,0.087,Med,High,Med
+Jaylen Brown,Cade Cunningham,De'Aaron Fox,26.5,25.5,26.5,29.97,29.03,23.58,over,over,under,0,3.89,0.078,High,High,High
