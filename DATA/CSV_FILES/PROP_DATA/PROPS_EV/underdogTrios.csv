@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Dereck Lively II,Jerami Grant,Isaac Okoro,4.5,23.5,5.5,7.96,17.27,9.04,over,under,over,0,13.9,0.278,Low,High,High
-Dereck Lively II,Jerami Grant,Josh Giddey,4.5,23.5,19.5,7.96,17.27,25.27,over,under,over,0,13.65,0.273,Low,High,High
-Landry Shamet,Josh Giddey,Isaac Okoro,9.5,19.5,5.5,13.84,25.27,9.04,over,over,over,0,11.7,0.234,High,High,High
-Aaron Gordon,Landry Shamet,Kevin Huerter,17.5,9.5,10.5,22.11,13.84,14.35,over,over,over,0,9.26,0.185,High,High,High
-Aaron Gordon,Ayo Dosunmu,Kevin Huerter,17.5,11.5,10.5,22.11,14.95,14.35,over,over,over,0,8.04,0.161,High,High,High
-Jeremiah Fears,Patrick Williams,Ayo Dosunmu,14.5,5.5,11.5,18.11,7.53,14.95,over,over,over,0,6.78,0.136,High,Med,High
-Jeremiah Fears,Patrick Williams,Kris Murray,14.5,5.5,8.5,18.11,7.53,5.49,over,over,under,0,6.45,0.129,High,Med,Low
-Bennedict Mathurin,Kyshawn George,Kris Murray,20.5,14.5,8.5,22.81,17.97,5.49,over,over,under,0,5.76,0.115,Low,High,Low
-Bennedict Mathurin,Kyshawn George,Jalen Smith,20.5,14.5,9.5,22.81,17.97,12.19,over,over,over,0,5.45,0.109,Low,High,High
-Sion James,Daniel Gafford,Jalen Smith,6.5,11.5,9.5,8.31,14.36,12.19,over,over,over,0,5.16,0.103,High,High,High
+Landry Shamet,Jerami Grant,Isaac Okoro,9.5,23.5,5.5,13.84,17.27,9.04,over,under,over,0,12.26,0.245,High,High,High
+Landry Shamet,Josh Giddey,Jerami Grant,9.5,19.5,23.5,13.84,25.27,17.27,over,over,under,0,12.03,0.241,High,High,High
+Jeremiah Fears,Josh Giddey,Isaac Okoro,13.5,19.5,5.5,18.11,25.27,9.04,over,over,over,0,11.24,0.225,High,High,High
+Aaron Gordon,Jeremiah Fears,Kevin Huerter,17.5,13.5,10.5,22.11,18.11,14.35,over,over,over,0,8.85,0.177,High,High,High
+Reed Sheppard,Aaron Gordon,Kevin Huerter,10.5,17.5,10.5,13.5,22.11,14.35,over,over,over,0,8.16,0.163,Med,High,High
+Reed Sheppard,Patrick Williams,Ayo Dosunmu,10.5,5.5,11.5,13.5,7.53,14.95,over,over,over,0,7.25,0.145,Med,Med,High
+Will Richard,Patrick Williams,Ayo Dosunmu,16.5,5.5,11.5,12.62,7.53,14.95,under,over,over,0,7.0,0.14,High,Med,High
+Davion Mitchell,Will Richard,Kris Murray,9.5,16.5,8.5,12.4,12.62,5.49,over,under,under,0,6.39,0.128,High,High,Low
+Josh Okogie,Davion Mitchell,Kris Murray,6.5,9.5,8.5,8.57,12.4,5.49,over,over,under,0,6.11,0.122,High,High,Low
+Josh Okogie,Bam Adebayo,Jaylen Clark,6.5,16.5,5.5,8.57,20.8,7.24,over,over,over,0,5.9,0.118,High,High,Med
