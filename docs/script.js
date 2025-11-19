@@ -1,19 +1,19 @@
 const prizepicksSinglesData = [
-    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 27.5, "prediction": 34.77, "side": "Over", "odds": 108, "recommendation": 1, "ev": 6.73, "roi": 67.3, "kelly": 0.623, "sigma": "High"},
-    {"name": "Lauri Markkanen", "bookmaker": "FanDuel", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": 102, "recommendation": 1, "ev": 6.73, "roi": 67.3, "kelly": 0.66, "sigma": "High"},
-    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -107, "recommendation": 1, "ev": 6.28, "roi": 62.8, "kelly": 0.672, "sigma": "High"},
-    {"name": "Keyonte George", "bookmaker": "BetRivers", "line": 20.5, "prediction": 25.05, "side": "Over", "odds": 123, "recommendation": 1, "ev": 6.15, "roi": 61.5, "kelly": 0.5, "sigma": "High"},
-    {"name": "Lauri Markkanen", "bookmaker": "BetMGM", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -110, "recommendation": 1, "ev": 5.96, "roi": 59.6, "kelly": 0.656, "sigma": "High"},
-    {"name": "Nick Richards", "bookmaker": "DraftKings", "line": 4.5, "prediction": 7.39, "side": "Over", "odds": 107, "recommendation": 0, "ev": 5.89, "roi": 58.9, "kelly": 0.55, "sigma": "Med"},
-    {"name": "Lauri Markkanen", "bookmaker": "DraftKings", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -113, "recommendation": 1, "ev": 5.79, "roi": 57.9, "kelly": 0.654, "sigma": "High"},
-    {"name": "Marcus Smart", "bookmaker": "DraftKings", "line": 7.5, "prediction": 13.65, "side": "Over", "odds": -112, "recommendation": 1, "ev": 5.71, "roi": 57.1, "kelly": 0.639, "sigma": "High"},
-    {"name": "Marcus Smart", "bookmaker": "FanDuel", "line": 7.5, "prediction": 13.65, "side": "Over", "odds": -113, "recommendation": 1, "ev": 5.7, "roi": 57.0, "kelly": 0.644, "sigma": "High"},
-    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 25.5, "prediction": 34.77, "side": "Over", "odds": -125, "recommendation": 1, "ev": 5.49, "roi": 54.9, "kelly": 0.686, "sigma": "High"},
-    {"name": "Keyonte George", "bookmaker": "BetRivers", "line": 19.5, "prediction": 25.05, "side": "Over", "odds": 104, "recommendation": 1, "ev": 5.45, "roi": 54.5, "kelly": 0.524, "sigma": "High"},
-    {"name": "Nick Richards", "bookmaker": "FanDuel", "line": 4.5, "prediction": 7.39, "side": "Over", "odds": -106, "recommendation": 0, "ev": 5.16, "roi": 51.6, "kelly": 0.547, "sigma": "Med"},
-    {"name": "Keyonte George", "bookmaker": "FanDuel", "line": 18.5, "prediction": 25.05, "side": "Over", "odds": -108, "recommendation": 1, "ev": 5.13, "roi": 51.3, "kelly": 0.554, "sigma": "High"},
-    {"name": "Keyonte George", "bookmaker": "BetMGM", "line": 19.5, "prediction": 25.05, "side": "Over", "odds": 100, "recommendation": 1, "ev": 5.11, "roi": 51.1, "kelly": 0.511, "sigma": "High"},
-    {"name": "Isaiah Collier", "bookmaker": "BetRivers", "line": 9.5, "prediction": 12.69, "side": "Over", "odds": 110, "recommendation": 0, "ev": 5.09, "roi": 50.9, "kelly": 0.463, "sigma": "Med"},
+    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 27.5, "prediction": 34.77, "side": "Over", "odds": 108, "recommendation": 1, "ev": 6.73, "kelly": 0.623, "sigma": "High"},
+    {"name": "Lauri Markkanen", "bookmaker": "FanDuel", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": 102, "recommendation": 1, "ev": 6.73, "kelly": 0.66, "sigma": "High"},
+    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -107, "recommendation": 1, "ev": 6.28, "kelly": 0.672, "sigma": "High"},
+    {"name": "Keyonte George", "bookmaker": "BetRivers", "line": 20.5, "prediction": 25.05, "side": "Over", "odds": 123, "recommendation": 1, "ev": 6.27, "kelly": 0.51, "sigma": "High"},
+    {"name": "Lauri Markkanen", "bookmaker": "BetMGM", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -110, "recommendation": 1, "ev": 5.96, "kelly": 0.656, "sigma": "High"},
+    {"name": "Nick Richards", "bookmaker": "DraftKings", "line": 4.5, "prediction": 7.39, "side": "Over", "odds": 107, "recommendation": 0, "ev": 5.89, "kelly": 0.55, "sigma": "Med"},
+    {"name": "Lauri Markkanen", "bookmaker": "DraftKings", "line": 26.5, "prediction": 34.77, "side": "Over", "odds": -113, "recommendation": 1, "ev": 5.79, "kelly": 0.654, "sigma": "High"},
+    {"name": "Keyonte George", "bookmaker": "BetRivers", "line": 19.5, "prediction": 25.05, "side": "Over", "odds": 104, "recommendation": 1, "ev": 5.56, "kelly": 0.534, "sigma": "High"},
+    {"name": "Lauri Markkanen", "bookmaker": "BetRivers", "line": 25.5, "prediction": 34.77, "side": "Over", "odds": -125, "recommendation": 1, "ev": 5.49, "kelly": 0.686, "sigma": "High"},
+    {"name": "Keyonte George", "bookmaker": "FanDuel", "line": 18.5, "prediction": 25.05, "side": "Over", "odds": -108, "recommendation": 1, "ev": 5.27, "kelly": 0.569, "sigma": "High"},
+    {"name": "Keyonte George", "bookmaker": "BetMGM", "line": 19.5, "prediction": 25.05, "side": "Over", "odds": 100, "recommendation": 1, "ev": 5.23, "kelly": 0.523, "sigma": "High"},
+    {"name": "Cade Cunningham", "bookmaker": "BetRivers", "line": 26.5, "prediction": 30.82, "side": "Over", "odds": 120, "recommendation": 0, "ev": 5.21, "kelly": 0.434, "sigma": "High"},
+    {"name": "Nick Richards", "bookmaker": "FanDuel", "line": 4.5, "prediction": 7.39, "side": "Over", "odds": -106, "recommendation": 0, "ev": 5.16, "kelly": 0.547, "sigma": "Med"},
+    {"name": "Keyonte George", "bookmaker": "BetRivers", "line": 18.5, "prediction": 25.05, "side": "Over", "odds": -115, "recommendation": 1, "ev": 5.0, "kelly": 0.575, "sigma": "High"},
+    {"name": "Cade Cunningham", "bookmaker": "BetRivers", "line": 25.5, "prediction": 30.82, "side": "Over", "odds": 102, "recommendation": 1, "ev": 4.96, "kelly": 0.486, "sigma": "High"},
 ];const prizepicksPairsData = [
     {"name1": "Luka Don\u010di\u0107", "name2": "Lauri Markkanen", "line1": 0.5, "line2": 26.0, "prediction1": 29.3, "prediction2": 34.77, "side1": "over", "side2": "over", "recommendation": 1, "ev": 13.03, "kelly": 0.651, "sigma1": "High", "sigma2": "High", "hitRate1": 0.0, "l5_1": 0.0, "l15_1": 0.0, "hitRate2": 60.4, "l5_2": 0.6, "l15_2": 0.53},
     {"name1": "Luka Don\u010di\u0107", "name2": "Nick Richards", "line1": 0.5, "line2": 4.0, "prediction1": 29.3, "prediction2": 7.39, "side1": "over", "side2": "over", "recommendation": 0, "ev": 11.73, "kelly": 0.586, "sigma1": "High", "sigma2": "Med", "hitRate1": 0.0, "l5_1": 0.0, "l15_1": 0.0, "hitRate2": 26.3, "l5_2": 0.2, "l15_2": 0.27},
@@ -60,9 +60,7 @@ const underdogPairsData = [
     {"name1": "Dyson Daniels", "name2": "Julian Champagnie", "name3": "Tyrese Maxey", "line1": 13.5, "line2": 12.5, "line3": 31.5, "prediction1": 10.12, "prediction2": 8.89, "prediction3": 27.11, "side1": "under", "side2": "under", "side3": "under", "recommendation": 0, "ev": 6.34, "kelly": 0.127, "sigma1": "High", "sigma2": "High", "sigma3": "High", "hitRate1": 93.4, "l5_1": 0.0, "l15_1": 0.2, "hitRate2": 66.3, "l5_2": 0.4, "l15_2": 0.33, "hitRate3": 59.5, "l5_3": 0.2, "l15_3": 0.33},
     {"name1": "Dyson Daniels", "name2": "Javonte Green", "name3": "Julian Champagnie", "line1": 13.5, "line2": 8.5, "line3": 12.5, "prediction1": 10.12, "prediction2": 10.71, "prediction3": 8.89, "side1": "under", "side2": "over", "side3": "under", "recommendation": 0, "ev": 5.59, "kelly": 0.112, "sigma1": "High", "sigma2": "High", "sigma3": "High", "hitRate1": 93.4, "l5_1": 0.0, "l15_1": 0.2, "hitRate2": 46.4, "l5_2": 0.6, "l15_2": 0.27, "hitRate3": 66.3, "l5_3": 0.4, "l15_3": 0.33},
     {"name1": "Cade Cunningham", "name2": "Javonte Green", "name3": "Luke Kornet", "line1": 25.5, "line2": 8.5, "line3": 10.5, "prediction1": 29.03, "prediction2": 10.71, "prediction3": 12.83, "side1": "over", "side2": "over", "side3": "over", "recommendation": 0, "ev": 4.32, "kelly": 0.086, "sigma1": "High", "sigma2": "High", "sigma3": "Med", "hitRate1": 85.1, "l5_1": 1.0, "l15_1": 0.4, "hitRate2": 46.4, "l5_2": 0.6, "l15_2": 0.27, "hitRate3": 42.4, "l5_3": 0.8, "l15_3": 0.27},
-];
-
-const prizepicksPointsHitRates = [
+];const prizepicksPointsHitRates = [
     {"name": "Luka Doncic", "line": 0.5, "l5": 0.2, "l10": 0.1, "l15": 0.07, "overPct": 1.0, "underPct": 0.0},
     {"name": "Rui Hachimura", "line": 11.5, "l5": 0.8, "l10": 0.8, "l15": 0.67, "overPct": 0.899, "underPct": 0.101},
     {"name": "Cade Cunningham", "line": 24.5, "l5": 1.0, "l10": 0.7, "l15": 0.47, "overPct": 0.891, "underPct": 0.109},
@@ -882,11 +880,11 @@ function renderSinglesTable(data) {
             <th style="width: 18%">Player</th>
             <th style="width: 12%">Bookmaker</th>
             <th style="width: 10%">Line</th>
-            <th style="width: 10%">Prediction</th>
+            <th style="width: 10%">Proj.</th>
             <th style="width: 10%">Side</th>
             <th style="width: 8%">Odds</th>
             <th style="width: 9%">EV $</th>
-            <th style="width: 9%">ROI %</th>
+            <th style="width: 9%">Kelly</th>
             <th style="width: 9%">Sigma</th>
         </tr>
     `;
@@ -903,7 +901,7 @@ function renderSinglesTable(data) {
             </td>
             <td style="font-weight: 600; color: ${row.odds > 0 ? '#34d399' : '#f87171'};">${formatOdds(row.odds)}</td>
             <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
-            <td class="kelly-cell">${row.roi.toFixed(1)}%</td>
+            <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td>
                 <span class="sigma-badge ${getSigmaClass(row.sigma)}">${row.sigma}</span>
             </td>
@@ -920,10 +918,10 @@ function renderPairsTable(data) {
             <th style="width: 3%">#</th>
             <th style="width: 16%">Player 1</th>
             <th style="width: 6%">Line 1</th>
-            <th style="width: 6%">Pred 1</th>
+            <th style="width: 6%">Proj. 1</th>
             <th style="width: 16%">Player 2</th>
             <th style="width: 6%">Line 2</th>
-            <th style="width: 6%">Pred 2</th>
+            <th style="width: 6%">Proj. 2</th>
             <th style="width: 9%">EV $</th>
             <th style="width: 9%">Kelly</th>
             <th style="width: 14%">Sigma</th>
@@ -976,13 +974,13 @@ function renderTriosTable(data) {
             <th style="width: 2%">#</th>
             <th style="width: 13%">Player 1</th>
             <th style="width: 5%">Line 1</th>
-            <th style="width: 5%">Pred 1</th>
+            <th style="width: 5%">Proj. 1</th>
             <th style="width: 13%">Player 2</th>
             <th style="width: 5%">Line 2</th>
-            <th style="width: 5%">Pred 2</th>
+            <th style="width: 5%">Proj. 2</th>
             <th style="width: 13%">Player 3</th>
             <th style="width: 5%">Line 3</th>
-            <th style="width: 5%">Pred 3</th>
+            <th style="width: 5%">Proj. 3</th>
             <th style="width: 7%">EV $</th>
             <th style="width: 7%">Kelly</th>
             <th style="width: 3%">Rec</th>
@@ -1077,12 +1075,16 @@ function updateStats(data) {
     if (currentType === 'singles') {
         statsHTML = `
             <div class="stat-card">
-                <div class="stat-label">Prediction & Side</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value and betting direction</div>
+                <div class="stat-label">Projection</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value given the context of the game and player performance</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">EV $ & ROI %</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake & Return on Investment percentage</div>
+                <div class="stat-label">Expected Value $</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake (Ex. If EV is $2.00, you can expect to win $2.00 per $10 bet on average)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Kelly Criterion</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Optimal bet sizing percentage to maximize long-term bankroll growth while managing risk (Ex. If bankroll is $10 for the day, and kelly is 25%, bet $2.50)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Odds</div>
@@ -1090,7 +1092,7 @@ function updateStats(data) {
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile), Med, Low (consistent)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable predictions), Med, Low (consistent, more reliable predictions)</div>
             </div>
         `;
     } else if (currentType === 'hitrates') {
@@ -1115,20 +1117,20 @@ function updateStats(data) {
     } else {
         statsHTML = `
             <div class="stat-card">
-                <div class="stat-label">Pred (Prediction)</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's predicted value. <span style="color: #10b981;">Green</span> = over line, <span style="color: #f59e0b;">Orange</span> = under</div>
+                <div class="stat-label">Projection</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value given the context of the game and player performance</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">EV $ & Kelly</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake & Kelly Criterion bet sizing %</div>
+                <div class="stat-label">Expected Value $</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake (Ex. If EV is $2.00, you can expect to win $2.00 per $10 bet on average)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile), Med, Low (consistent)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable predictions), Med, Low (consistent, more reliable predictions)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Rec (Recommendation)</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">1 = Strong play, 0 = Consider</div>
+                <div class="stat-label">Kelly Criterion</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Optimal bet sizing percentage to maximize long-term bankroll growth while managing risk (Ex. If bankroll is $10 per bet, and kelly is 25%, bet only $2.50)</div>
             </div>
         `;
     }

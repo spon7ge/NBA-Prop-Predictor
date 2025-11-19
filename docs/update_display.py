@@ -274,7 +274,6 @@ def csv_to_js_singles(csv_file, array_name):
                 'odds': int(row['ODDS']),
                 'recommendation': int(row['RECOMMENDATION']),
                 'ev': float(row['EV$']),
-                'roi': float(row['EXPECTED ROI']),  # script.js uses 'roi' not 'expectedRoi'
                 'kelly': float(row['KELLY_FRACTION']),
                 'sigma': row['SIGMA FLAG']
             }
