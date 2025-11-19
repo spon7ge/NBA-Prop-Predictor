@@ -6,7 +6,7 @@ projectedStartingFive = {
     "CHI": ["Matas Buzelis", "Coby White", "Josh Giddey", "Isaac Okoro", "Nikola Vucevic"],
     "CLE": ["De'Andre Hunter", "Evan Mobley", "Jarrett Allen", "Donovan Mitchell", 'Sam Merrill'],
     "DAL": ["Daniel Gafford", "P.J. Washington", "Max Christie", "Brandon Williams", "Dereck Lively"],
-    "DEN": ["Jamal Murray", "Peyton Watson", "Cameron Johnson", "Nikola Jokic"],
+    "DEN": ["Jamal Murray", "Peyton Watson", "Cameron Johnson", "Nikola Jokić", 'Aaron Gordon'],
     "DET": ["Cade Cunningham", "Tobias Harris", "Jalen Duren", "Caris LeVert", "Duncan Robinson"],
     "GSW": ["Buddy Hield", "Moses Moody", "Quinten Post", "Brandin Podziemski", "Will Richard"],
     "HOU": ["Amen Thompson", "Alperen Sengun", "Josh Okogie", "Kevin Durant", 'Jabari Smith Jr.'],
