@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Aaron Gordon,Dereck Lively II,Josh Giddey,17.5,4.5,19.5,22.79,7.09,25.27,over,over,over,0,11.49,0.23,High,Low,High
-Landry Shamet,Dereck Lively II,Josh Giddey,9.5,4.5,19.5,13.84,7.09,25.27,over,over,over,0,11.38,0.228,High,Low,High
-Pelle Larsson,Aaron Gordon,Landry Shamet,9.5,17.5,9.5,13.81,22.79,13.84,over,over,over,0,10.92,0.218,High,High,High
-Tony Bradley,Pelle Larsson,Kyshawn George,4.5,9.5,13.5,6.89,13.81,17.97,over,over,over,0,9.84,0.197,Low,High,High
-Tony Bradley,Davion Mitchell,Kyshawn George,4.5,9.5,13.5,6.89,13.07,17.97,over,over,over,0,9.07,0.181,Low,High,High
-Davion Mitchell,Draymond Green,Keon Ellis,9.5,9.5,6.5,13.07,12.68,8.91,over,over,over,0,7.3,0.146,High,High,High
-Draymond Green,Zion Williamson,Keon Ellis,9.5,19.5,6.5,12.68,22.53,8.91,over,over,over,0,6.73,0.135,High,Med,High
-Zion Williamson,Jeremiah Fears,Brandon Williams,19.5,14.5,14.5,22.53,18.0,18.1,over,over,over,0,5.99,0.12,Med,High,High
-Jarrett Allen,Jeremiah Fears,Brandon Williams,12.5,14.5,14.5,15.68,18.0,18.1,over,over,over,0,5.64,0.113,High,High,High
-Sion James,Jarrett Allen,Derik Queen,6.5,12.5,11.5,8.38,15.68,14.34,over,over,over,0,5.25,0.105,High,High,High
+Dereck Lively II,Kris Murray,Isaac Okoro,4.5,9.5,5.5,7.09,5.49,9.04,over,under,over,0,11.93,0.239,Low,Low,High
+Dereck Lively II,Josh Giddey,Isaac Okoro,4.5,19.5,5.5,7.09,25.27,9.04,over,over,over,0,11.89,0.238,Low,High,High
+Aaron Gordon,Josh Giddey,Kris Murray,17.5,19.5,9.5,22.79,25.27,5.49,over,over,under,0,11.61,0.232,High,High,Low
+Brandin Podziemski,Aaron Gordon,Landry Shamet,16.5,17.5,9.5,11.51,22.79,13.84,under,over,over,0,11.12,0.222,High,High,High
+Brandin Podziemski,Pelle Larsson,Landry Shamet,16.5,9.5,9.5,11.51,13.81,13.84,under,over,over,0,10.91,0.218,High,High,High
+Tony Bradley,Pelle Larsson,Mitchell Robinson,4.5,9.5,4.5,6.89,13.81,6.89,over,over,over,0,10.34,0.207,Low,High,Med
+Tony Bradley,Mitchell Robinson,Caleb Love,4.5,4.5,13.5,6.89,6.89,9.63,over,over,under,0,9.58,0.192,Low,Med,High
+Will Richard,Caleb Love,Kevin Huerter,16.5,13.5,10.5,12.36,9.63,14.35,under,under,over,0,8.03,0.161,High,High,High
+Moses Moody,Will Richard,Kevin Huerter,18.5,16.5,10.5,14.24,12.36,14.35,under,under,over,0,7.7,0.154,High,High,High
+Moses Moody,Keon Ellis,Ayo Dosunmu,18.5,6.5,11.5,14.24,8.91,14.95,under,over,over,0,7.2,0.144,High,High,High

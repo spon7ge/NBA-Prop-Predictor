@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Dereck Lively II,Josh Giddey,4.5,19.5,7.09,25.27,over,over,0,5.81,0.29,Low,High
-Aaron Gordon,Dereck Lively II,17.5,4.5,22.79,7.09,over,over,0,5.54,0.277,High,Low
-Pelle Larsson,Landry Shamet,9.5,9.5,13.81,13.84,over,over,0,5.5,0.275,High,High
-Pelle Larsson,Josh Giddey,9.5,19.5,13.81,25.27,over,over,0,5.48,0.274,High,High
-Aaron Gordon,Landry Shamet,17.5,9.5,22.79,13.84,over,over,0,5.46,0.273,High,High
-Aaron Gordon,Josh Giddey,17.5,19.5,22.79,25.27,over,over,1,5.44,0.272,High,High
-Landry Shamet,Dereck Lively II,9.5,4.5,13.84,7.09,over,over,0,5.42,0.271,High,Low
-Tony Bradley,Pelle Larsson,4.5,9.5,6.89,13.81,over,over,0,5.2,0.26,Low,High
-Tony Bradley,Kyshawn George,4.5,13.5,6.89,17.97,over,over,0,4.62,0.231,Low,High
-Tony Bradley,Davion Mitchell,4.5,9.5,6.89,13.07,over,over,0,4.44,0.222,Low,High
+Josh Giddey,Kris Murray,19.5,9.5,25.27,5.49,over,under,0,6.12,0.306,High,Low
+Kris Murray,Isaac Okoro,9.5,5.5,5.49,9.04,under,over,0,5.94,0.297,Low,High
+Dereck Lively II,Josh Giddey,4.5,19.5,7.09,25.27,over,over,0,5.87,0.294,Low,High
+Dereck Lively II,Isaac Okoro,4.5,5.5,7.09,9.04,over,over,0,5.86,0.293,Low,High
+Brandin Podziemski,Kris Murray,16.5,9.5,11.51,5.49,under,under,0,5.82,0.291,High,Low
+Landry Shamet,Isaac Okoro,9.5,5.5,13.84,9.04,over,over,0,5.8,0.29,High,High
+Aaron Gordon,Josh Giddey,17.5,19.5,22.79,25.27,over,over,1,5.73,0.286,High,High
+Brandin Podziemski,Aaron Gordon,16.5,17.5,11.51,22.79,under,over,1,5.61,0.28,High,High
+Pelle Larsson,Dereck Lively II,9.5,4.5,13.81,7.09,over,over,0,5.6,0.28,High,Low
+Brandin Podziemski,Landry Shamet,16.5,9.5,11.51,13.84,under,over,0,5.5,0.275,High,High
