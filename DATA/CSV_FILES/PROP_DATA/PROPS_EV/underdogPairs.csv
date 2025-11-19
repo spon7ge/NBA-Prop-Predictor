@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
 Josh Giddey,Jerami Grant,19.5,23.5,25.27,17.27,over,under,1,6.43,0.321,High,High
 Jerami Grant,Isaac Okoro,23.5,5.5,17.27,9.04,under,over,0,6.33,0.316,High,High
-Landry Shamet,Jerami Grant,9.5,23.5,13.84,17.27,over,under,0,5.82,0.291,High,High
+Reed Sheppard,Jerami Grant,10.5,23.5,14.27,17.27,over,under,0,5.88,0.294,Med,High
+Reed Sheppard,Isaac Okoro,10.5,5.5,14.27,9.04,over,over,0,5.82,0.291,Med,High
+Reed Sheppard,Josh Giddey,10.5,19.5,14.27,25.27,over,over,0,5.75,0.287,Med,High
 Landry Shamet,Isaac Okoro,9.5,5.5,13.84,9.04,over,over,0,5.7,0.285,High,High
 Landry Shamet,Josh Giddey,9.5,19.5,13.84,25.27,over,over,0,5.56,0.278,High,High
-Jeremiah Fears,Isaac Okoro,13.5,5.5,18.11,9.04,over,over,0,5.33,0.266,High,High
-Jeremiah Fears,Josh Giddey,13.5,19.5,18.11,25.27,over,over,1,5.2,0.26,High,High
+Jeremiah Fears,Landry Shamet,13.5,9.5,18.11,13.84,over,over,0,5.08,0.254,High,High
 Jeremiah Fears,Kevin Huerter,13.5,10.5,18.11,14.35,over,over,0,4.52,0.226,High,High
-Reed Sheppard,Aaron Gordon,10.5,17.5,13.5,22.11,over,over,0,4.13,0.207,Med,High
-Aaron Gordon,Patrick Williams,17.5,5.5,22.11,7.53,over,over,0,4.02,0.201,High,Med
+Aaron Gordon,Jeremiah Fears,17.5,13.5,22.11,18.11,over,over,1,4.45,0.223,High,High
