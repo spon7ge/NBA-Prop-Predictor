@@ -60,8 +60,8 @@ const underdogPairsData = [
     {"name1": "Dyson Daniels", "name2": "Julian Champagnie", "name3": "Tyrese Maxey", "line1": 13.5, "line2": 12.5, "line3": 31.5, "prediction1": 10.12, "prediction2": 8.89, "prediction3": 27.11, "side1": "under", "side2": "under", "side3": "under", "recommendation": 0, "ev": 6.34, "kelly": 0.127, "sigma1": "High", "sigma2": "High", "sigma3": "High", "hitRate1": 93.4, "l5_1": 0.0, "l15_1": 0.2, "hitRate2": 66.3, "l5_2": 0.4, "l15_2": 0.33, "hitRate3": 59.5, "l5_3": 0.2, "l15_3": 0.33},
     {"name1": "Dyson Daniels", "name2": "Javonte Green", "name3": "Julian Champagnie", "line1": 13.5, "line2": 8.5, "line3": 12.5, "prediction1": 10.12, "prediction2": 10.71, "prediction3": 8.89, "side1": "under", "side2": "over", "side3": "under", "recommendation": 0, "ev": 5.59, "kelly": 0.112, "sigma1": "High", "sigma2": "High", "sigma3": "High", "hitRate1": 93.4, "l5_1": 0.0, "l15_1": 0.2, "hitRate2": 46.4, "l5_2": 0.6, "l15_2": 0.27, "hitRate3": 66.3, "l5_3": 0.4, "l15_3": 0.33},
     {"name1": "Cade Cunningham", "name2": "Javonte Green", "name3": "Luke Kornet", "line1": 25.5, "line2": 8.5, "line3": 10.5, "prediction1": 29.03, "prediction2": 10.71, "prediction3": 12.83, "side1": "over", "side2": "over", "side3": "over", "recommendation": 0, "ev": 4.32, "kelly": 0.086, "sigma1": "High", "sigma2": "High", "sigma3": "Med", "hitRate1": 85.1, "l5_1": 1.0, "l15_1": 0.4, "hitRate2": 46.4, "l5_2": 0.6, "l15_2": 0.27, "hitRate3": 42.4, "l5_3": 0.8, "l15_3": 0.27},
-];// This is a large data file - I'll create a simplified version that includes all the hit rates data
-// For brevity, I'll include a condensed version with the key structures
+];
+
 const prizepicksPointsHitRates = [
     {"name": "Luka Doncic", "line": 0.5, "l5": 0.2, "l10": 0.1, "l15": 0.07, "overPct": 1.0, "underPct": 0.0},
     {"name": "Rui Hachimura", "line": 11.5, "l5": 0.8, "l10": 0.8, "l15": 0.67, "overPct": 0.899, "underPct": 0.101},
@@ -885,7 +885,7 @@ function renderSinglesTable(data) {
             <th style="width: 10%">Prediction</th>
             <th style="width: 10%">Side</th>
             <th style="width: 8%">Odds</th>
-            <th style="width: 9%">EV %</th>
+            <th style="width: 9%">EV $</th>
             <th style="width: 9%">ROI %</th>
             <th style="width: 9%">Sigma</th>
         </tr>
@@ -902,7 +902,7 @@ function renderSinglesTable(data) {
                 <span class="side-badge side-${row.side.toLowerCase()}">${row.side}</span>
             </td>
             <td style="font-weight: 600; color: ${row.odds > 0 ? '#34d399' : '#f87171'};">${formatOdds(row.odds)}</td>
-            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
             <td class="kelly-cell">${row.roi.toFixed(1)}%</td>
             <td>
                 <span class="sigma-badge ${getSigmaClass(row.sigma)}">${row.sigma}</span>
@@ -924,7 +924,7 @@ function renderPairsTable(data) {
             <th style="width: 16%">Player 2</th>
             <th style="width: 6%">Line 2</th>
             <th style="width: 6%">Pred 2</th>
-            <th style="width: 9%">EV %</th>
+            <th style="width: 9%">EV $</th>
             <th style="width: 9%">Kelly</th>
             <th style="width: 14%">Sigma</th>
             <th style="width: 4%">Rec</th>
@@ -954,7 +954,7 @@ function renderPairsTable(data) {
             </td>
             <td class="line-value">${row.line2}</td>
             <td class="prediction-value" style="color: ${row.prediction2 > row.line2 ? '#10b981' : '#f59e0b'}; font-weight: 600;">${row.prediction2.toFixed(1)}</td>
-            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
             <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td>
                 <span class="sigma-badge ${getSigmaClass(row.sigma1)}">${row.sigma1}</span>
@@ -983,7 +983,7 @@ function renderTriosTable(data) {
             <th style="width: 13%">Player 3</th>
             <th style="width: 5%">Line 3</th>
             <th style="width: 5%">Pred 3</th>
-            <th style="width: 7%">EV %</th>
+            <th style="width: 7%">EV $</th>
             <th style="width: 7%">Kelly</th>
             <th style="width: 3%">Rec</th>
         </tr>
@@ -1022,7 +1022,7 @@ function renderTriosTable(data) {
             </td>
             <td class="line-value">${row.line3}</td>
             <td class="prediction-value" style="color: ${row.prediction3 > row.line3 ? '#10b981' : '#f59e0b'}; font-weight: 600;">${row.prediction3.toFixed(1)}</td>
-            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
             <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td class="recommendation-cell">
                 <span class="rec-badge rec-${row.recommendation}"></span>
@@ -1081,8 +1081,8 @@ function updateStats(data) {
                 <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value and betting direction</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">EV % & ROI %</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value & Return on Investment percentage</div>
+                <div class="stat-label">EV $ & ROI %</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake & Return on Investment percentage</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Odds</div>
@@ -1119,8 +1119,8 @@ function updateStats(data) {
                 <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's predicted value. <span style="color: #10b981;">Green</span> = over line, <span style="color: #f59e0b;">Orange</span> = under</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">EV % & Kelly</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value(How much you can expect to win per 10$ bet) & Kelly Criterion bet sizing %</div>
+                <div class="stat-label">EV $ & Kelly</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake & Kelly Criterion bet sizing %</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
@@ -1262,7 +1262,18 @@ document.getElementById('playerSearch').addEventListener('input', function() {
 
 // Update last updated timestamp
 function updateLastUpdated() {
-    const now = new Date();
+    // Get timestamp from meta tag (set during GitHub Pages deployment)
+    const metaTag = document.querySelector('meta[name="last-updated"]');
+    let timestamp;
+    
+    if (metaTag && metaTag.content && metaTag.content !== 'BUILD_TIMESTAMP') {
+        // Use the deployment timestamp from GitHub Actions
+        timestamp = new Date(metaTag.content);
+    } else {
+        // Fallback to current time if meta tag not set (for local development)
+        timestamp = new Date();
+    }
+    
     const options = { 
         weekday: 'long', 
         year: 'numeric', 
@@ -1272,7 +1283,7 @@ function updateLastUpdated() {
         minute: '2-digit',
         hour12: true
     };
-    const formattedDate = now.toLocaleString('en-US', options);
+    const formattedDate = timestamp.toLocaleString('en-US', options);
     const timeElement = document.getElementById('lastUpdatedTime');
     if (timeElement) {
         timeElement.textContent = formattedDate;

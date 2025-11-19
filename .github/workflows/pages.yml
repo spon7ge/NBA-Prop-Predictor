@@ -25,6 +25,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      - name: Update last updated timestamp
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          sed -i "s/BUILD_TIMESTAMP/$TIMESTAMP/g" docs/index.html
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       

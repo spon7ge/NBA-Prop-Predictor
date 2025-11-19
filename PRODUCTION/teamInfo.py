@@ -12,7 +12,7 @@ projectedStartingFive = {
     "HOU": ["Kevin Durant", "Josh Okogie", "Amen Thompson", "Alperen Sengun", "Jabari Smith"],
     "IND": ["Pascal Siakam", "Isaiah Jackson", "Tyrese Haliburton", "Jarace Walker", "Andrew Nembhard"],
     "LAC": ["Kris Dunn", "Kobe Sanders", "John Collins", "Ivica Zubac", "James Harden"],
-    "LAL": ["Austin Reaves", "Deandre Ayton", "Rui Hachimura", "Luka Doncic"],
+    "LAL": ["Austin Reaves", "Deandre Ayton", "Rui Hachimura", "Luka Doncic","LeBron James"],
     "MEM": ["Zach Edey", "Jaren Jackson", "Cedric Coward", "Vince Williams", "Jaylen Wells"],
     "MIA": ["Kel'el Ware", "Norman Powell", "Davion Mitchell", "Pelle Larsson", "Andrew Wiggins"],
     "MIL": ["AJ Green", "Kyle Kuzma", "Ryan Rollins", "Myles Turner", "Giannis Antetokounmpo"],
