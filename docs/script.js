@@ -916,12 +916,12 @@ function renderPairsTable(data) {
     const thead = `
         <tr>
             <th style="width: 3%">#</th>
-            <th style="width: 16%">Player 1</th>
-            <th style="width: 6%">Line 1</th>
-            <th style="width: 6%">Proj. 1</th>
-            <th style="width: 16%">Player 2</th>
-            <th style="width: 6%">Line 2</th>
-            <th style="width: 6%">Proj. 2</th>
+            <th style="width: 16%">Player </th>
+            <th style="width: 6%">Line </th>
+            <th style="width: 6%">Proj. </th>
+            <th style="width: 16%">Player </th>
+            <th style="width: 6%">Line </th>
+            <th style="width: 6%">Proj. </th>
             <th style="width: 9%">EV $</th>
             <th style="width: 9%">Kelly</th>
             <th style="width: 14%">Sigma</th>
@@ -972,15 +972,15 @@ function renderTriosTable(data) {
     const thead = `
         <tr>
             <th style="width: 2%">#</th>
-            <th style="width: 13%">Player 1</th>
-            <th style="width: 5%">Line 1</th>
-            <th style="width: 5%">Proj. 1</th>
-            <th style="width: 13%">Player 2</th>
-            <th style="width: 5%">Line 2</th>
-            <th style="width: 5%">Proj. 2</th>
-            <th style="width: 13%">Player 3</th>
-            <th style="width: 5%">Line 3</th>
-            <th style="width: 5%">Proj. 3</th>
+            <th style="width: 13%">Player </th>
+            <th style="width: 5%">Line </th>
+            <th style="width: 5%">Proj. </th>
+            <th style="width: 13%">Player </th>
+            <th style="width: 5%">Line </th>
+            <th style="width: 5%">Proj. </th>
+            <th style="width: 13%">Player </th>
+            <th style="width: 5%">Line </th>
+            <th style="width: 5%">Proj. </th>
             <th style="width: 7%">EV $</th>
             <th style="width: 7%">Kelly</th>
             <th style="width: 3%">Rec</th>
@@ -1092,7 +1092,7 @@ function updateStats(data) {
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable predictions), Med, Low (consistent, more reliable predictions)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable projections), Med, Low (consistent, more reliable projections)</div>
             </div>
         `;
     } else if (currentType === 'hitrates') {
@@ -1126,7 +1126,7 @@ function updateStats(data) {
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable predictions), Med, Low (consistent, more reliable predictions)</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Confidence level: High (volatile, less reliable projections), Med, Low (consistent, more reliable projections)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Kelly Criterion</div>
