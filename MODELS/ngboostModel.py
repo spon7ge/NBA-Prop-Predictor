@@ -124,7 +124,7 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         learning_rate=variance_lr,
         n_estimators=variance_n_estimators,
         random_state=42,
-        minibatch_frac=1.0,
+        minibatch_frac=0.7,
         verbose=False,
         **early_stopping_params,
         Base=base_est_scale

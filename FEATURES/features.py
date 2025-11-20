@@ -1120,6 +1120,211 @@ def process_star_players_data(df, min_minutes=10):
 
     return df
 
+def add_opponent_star_status(df, min_minutes=10):
+    """
+    Add feature indicating if the opponent's star player is in or out.
+    
+    Args:
+        df: DataFrame with player game data
+        min_minutes: Minimum minutes played to be considered active (default: 10)
+        
+    Returns:
+        DataFrame with OPP_STAR_OUT column added:
+        - 1 if opponent star is out (not active)
+        - 0 if opponent star is in (active)
+    """
+    df = df.copy()
+    
+    # Check required columns
+    required_cols = ['GAME_ID', 'OPP_TEAM_ID', 'PLAYER_NAME', 'MIN']
+    if not all(col in df.columns for col in required_cols):
+        print(f"Warning: Missing required columns. Need: {required_cols}")
+        print(f"Available columns: {list(df.columns)}")
+        return df
+    
+    # Create ACTIVE column based on minutes played
+    df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
+    
+    # Identify opponent star players using the same logic as process_star_players_data
+    # But we need to identify stars by OPP_TEAM_ID
+    active_players = df[df['ACTIVE'] == 1].copy()
+    
+    # Calculate mean stats per player per opponent team
+    # We need to group by OPP_TEAM_ID, but we need to get the opponent's players
+    # The challenge is that in the current row, we have the player's team, not the opponent's players
+    
+    # Strategy: For each game, identify the opponent team's star
+    # We'll create a mapping of (GAME_ID, OPP_TEAM_ID) -> opponent star status
+    
+    # First, identify stars per team (similar to process_star_players_data)
+    player_stats = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME'], dropna=False)
+        .agg({
+            'USG_PCT': 'mean',
+            'TS_PCT': 'mean',
+            'EFG_PCT': 'mean',
+            'PTS': 'mean',
+            'PIE': 'mean',
+            'NET_RATING': 'mean',
+        })
+        .reset_index()
+    )
+    
+    # Fill NaN values with 0
+    player_stats = player_stats.fillna(0)
+    
+    # Normalize metrics within each team
+    normalized_stats = player_stats.copy()
+    for stat in ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']:
+        normalized_stats[f'{stat}_NORM'] = (
+            player_stats.groupby('TEAM_ID')[stat]
+            .transform(lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else 0)
+        )
+    
+    # Calculate composite star score
+    normalized_stats['STAR_SCORE'] = (
+        0.25 * normalized_stats['USG_PCT_NORM'] +
+        0.20 * normalized_stats['TS_PCT_NORM'] +
+        0.15 * normalized_stats['EFG_PCT_NORM'] +
+        0.20 * normalized_stats['PTS_NORM'] +
+        0.15 * normalized_stats['PIE_NORM'] +
+        0.05 * normalized_stats['NET_RATING_NORM']
+    )
+    
+    # Select highest scoring player per team as star
+    star_rows = (
+        normalized_stats.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
+        .groupby(['TEAM_ID'], as_index=False)
+        .first()
+    )
+    
+    star_by_team = {
+        row.TEAM_ID: row.PLAYER_NAME
+        for _, row in star_rows.iterrows()
+    }
+    
+    # For each game, check if opponent star is active
+    # Create a mapping: (GAME_ID, OPP_TEAM_ID) -> opponent star active status
+    opp_star_status = {}
+    
+    # Get unique games
+    unique_games = df[['GAME_ID', 'OPP_TEAM_ID']].drop_duplicates()
+    
+    for _, game_row in unique_games.iterrows():
+        game_id = game_row['GAME_ID']
+        opp_team_id = game_row['OPP_TEAM_ID']
+        
+        # Get opponent star name
+        opp_star_name = star_by_team.get(opp_team_id)
+        
+        if opp_star_name is None:
+            # No star identified for this opponent team
+            opp_star_status[(game_id, opp_team_id)] = 1  # Assume out if no star identified
+            continue
+        
+        # Check if opponent star is active in this game
+        # Look for rows where TEAM_ID == opp_team_id and PLAYER_NAME == opp_star_name
+        opp_star_in_game = df[
+            (df['GAME_ID'] == game_id) & 
+            (df['TEAM_ID'] == opp_team_id) & 
+            (df['PLAYER_NAME'] == opp_star_name)
+        ]
+        
+        if opp_star_in_game.empty:
+            # Opponent star not found in game data
+            opp_star_status[(game_id, opp_team_id)] = 1  # Assume out
+        else:
+            # Check if star is active (played >= min_minutes)
+            star_active = opp_star_in_game['ACTIVE'].max()
+            opp_star_status[(game_id, opp_team_id)] = 1 - star_active  # 1 if out, 0 if in
+    
+    # Map opponent star status to each row
+    df['OPP_STAR_OUT'] = df.apply(
+        lambda row: opp_star_status.get((row['GAME_ID'], row['OPP_TEAM_ID']), 0),
+        axis=1
+    ).astype(int)
+    
+    # Drop temporary ACTIVE column
+    df = df.drop(columns=['ACTIVE'])
+    
+    return df
+
+def is_opponent_star_out(df, game_id, opp_team_id, min_minutes=10):
+    """
+    Simple helper function to check if opponent star is out for a specific game.
+    
+    Args:
+        df: DataFrame with player game data
+        game_id: Game ID to check
+        opp_team_id: Opponent team ID
+        min_minutes: Minimum minutes played to be considered active (default: 10)
+        
+    Returns:
+        bool: True if opponent star is out, False if in
+        None if unable to determine
+    """
+    if 'OPP_STAR_OUT' in df.columns:
+        # If the feature already exists, use it
+        result = df[(df['GAME_ID'] == game_id) & (df['OPP_TEAM_ID'] == opp_team_id)]['OPP_STAR_OUT']
+        if not result.empty:
+            return bool(result.iloc[0])
+    
+    # Otherwise, calculate on the fly
+    # Identify star for opponent team
+    active_players = df[df['MIN'] >= min_minutes].copy()
+    
+    player_stats = (
+        active_players[active_players['TEAM_ID'] == opp_team_id]
+        .groupby('PLAYER_NAME', dropna=False)
+        .agg({
+            'USG_PCT': 'mean',
+            'TS_PCT': 'mean',
+            'EFG_PCT': 'mean',
+            'PTS': 'mean',
+            'PIE': 'mean',
+            'NET_RATING': 'mean',
+        })
+        .reset_index()
+    )
+    
+    if player_stats.empty:
+        return None
+    
+    # Fill NaN and normalize
+    player_stats = player_stats.fillna(0)
+    for stat in ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']:
+        if player_stats[stat].max() > player_stats[stat].min():
+            player_stats[f'{stat}_NORM'] = (
+                (player_stats[stat] - player_stats[stat].min()) / 
+                (player_stats[stat].max() - player_stats[stat].min())
+            )
+        else:
+            player_stats[f'{stat}_NORM'] = 0
+    
+    player_stats['STAR_SCORE'] = (
+        0.25 * player_stats['USG_PCT_NORM'] +
+        0.20 * player_stats['TS_PCT_NORM'] +
+        0.15 * player_stats['EFG_PCT_NORM'] +
+        0.20 * player_stats['PTS_NORM'] +
+        0.15 * player_stats['PIE_NORM'] +
+        0.05 * player_stats['NET_RATING_NORM']
+    )
+    
+    opp_star_name = player_stats.loc[player_stats['STAR_SCORE'].idxmax(), 'PLAYER_NAME']
+    
+    # Check if star is active in this game
+    opp_star_in_game = df[
+        (df['GAME_ID'] == game_id) & 
+        (df['TEAM_ID'] == opp_team_id) & 
+        (df['PLAYER_NAME'] == opp_star_name)
+    ]
+    
+    if opp_star_in_game.empty:
+        return True  # Star not found, assume out
+    
+    star_active = (opp_star_in_game['MIN'].max() >= min_minutes)
+    return not star_active  # Return True if out, False if in
+
 def add_usual_starters_availability(df, min_minutes=10, lookback_games=20):
     """Calculate the number of usual starters who are available for each game."""
     df = df.copy()
@@ -1357,7 +1562,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     df = df.copy()
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
-    metrics = ['MIN', 'PTS', 'FGA', 'USG_PCT', 'TS_PCT']
+    metrics = ['MIN', 'PTS', 'FGA', 'FG3A', 'TOV', 'USG_PCT', 'TS_PCT']
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1668,7 +1873,9 @@ def add_interaction_features(df):
     df['MIN_VARIANCE_STABILITY'] = df['MIN_VOLATILITY_10_TO_DATE'] / (df['MIN_VOLATILITY_40_TO_DATE'] + eplison)
     df['USG_PCT_VARIANCE_STABILITY'] = df['USG_PCT_CV_10_TO_DATE'] / (df['USG_PCT_CV_40_TO_DATE'] + eplison)
     df['TS_PCT_VARIANCE_STABILITY'] = df['TS_PCT_CV_10_TO_DATE'] / (df['TS_PCT_CV_40_TO_DATE'] + eplison)
-    
+    df['B2B_X_MIN_LAST_5'] = df['IS_BACK_TO_BACK'] * df['MIN_ROLLING_AVG_5']
+    df['USG_PCT_X_STAR_SAT_OUT'] = df['USG_PCT_AVG_TO_DATE'] * df['STAR_SAT_OUT']
+
     # ===== MATCHUP INTERACTIONS =====
     if 'GUARD' in df.columns and 'OPP_GUARD_DEF_FG_PCT_ALLOWED' in df.columns:
         df['PLAYER_X_MATCHUP_GUARD_FG_PCT'] = df['GUARD'] * (df['OPP_GUARD_DEF_FG_PCT_ALLOWED'] - df['FG_PCT_AVG_TO_DATE'])
