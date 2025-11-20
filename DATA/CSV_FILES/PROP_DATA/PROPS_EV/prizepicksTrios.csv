@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Zion Williamson,Josh Giddey,Isaac Okoro,18.5,19.5,5.5,24.09,25.27,9.04,over,over,over,0,13.88,0.278,Med,High,High
-Zion Williamson,Landry Shamet,Isaac Okoro,18.5,9.5,5.5,24.09,13.84,9.04,over,over,over,0,13.56,0.271,Med,High,High
-Landry Shamet,Jerami Grant,Josh Giddey,9.5,22.5,19.5,13.84,17.27,25.27,over,under,over,0,10.92,0.218,High,High,High
-Dereck Lively II,Jerami Grant,Kevin Huerter,5.5,22.5,10.5,7.96,17.27,14.35,over,under,over,0,9.17,0.183,Low,High,High
-Dereck Lively II,Ayo Dosunmu,Kevin Huerter,5.5,11.5,10.5,7.96,14.95,14.35,over,over,over,0,8.19,0.164,Low,High,High
-Jeremiah Fears,Ayo Dosunmu,Patrick Williams,13.5,11.5,5.5,17.35,14.95,7.53,over,over,over,0,7.09,0.142,High,High,Med
-Jeremiah Fears,Shai Gilgeous-Alexander,Patrick Williams,13.5,31.5,5.5,17.35,28.1,7.53,over,under,over,0,6.96,0.139,High,High,Med
-Kyshawn George,Shai Gilgeous-Alexander,Ajay Mitchell,14.5,31.5,14.5,17.97,28.1,17.86,over,under,over,0,5.87,0.117,High,High,High
-Kyshawn George,Ajay Mitchell,Jalen Smith,14.5,14.5,9.5,17.97,17.86,12.19,over,over,over,0,5.38,0.108,High,High,High
-Daniel Gafford,Mitchell Robinson,Jalen Smith,11.5,5.5,9.5,14.36,6.89,12.19,over,over,over,0,4.98,0.1,High,Med,High
+Bobby Portis,Deni Avdija,Will Richard,14.5,23.5,6.5,9.42,29.23,11.1,under,over,over,1,13.02,0.26,High,High,High
+Bobby Portis,Donovan Clingan,Will Richard,14.5,8.5,6.5,9.42,11.46,11.1,under,over,over,0,11.24,0.225,High,High,High
+Tyus Jones,Deni Avdija,Donovan Clingan,3.5,23.5,8.5,4.46,29.23,11.46,over,over,over,0,8.4,0.168,Low,High,High
+Kobe Sanders,Tyus Jones,Brandin Podziemski,9.5,3.5,11.5,12.7,4.46,14.85,over,over,over,0,6.61,0.132,High,Low,High
+Kobe Sanders,Goga Bitadze,Brandin Podziemski,9.5,4.5,11.5,12.7,5.94,14.85,over,over,over,0,6.38,0.128,High,Low,High
+Nicolas Batum,Goga Bitadze,Buddy Hield,5.0,4.5,7.5,6.35,5.94,9.95,over,over,over,0,5.82,0.116,Med,Low,High
+Nicolas Batum,Zach Edey,Buddy Hield,5.0,12.5,7.5,6.35,14.88,9.95,over,over,over,0,5.09,0.102,Med,Med,High
+Brook Lopez,Zach Edey,Al Horford,6.5,12.5,6.5,7.87,14.88,7.93,over,over,over,0,3.67,0.073,Med,Med,Med
+Brook Lopez,Moses Moody,Al Horford,6.5,12.5,6.5,7.87,15.06,7.93,over,over,over,0,3.45,0.069,Med,High,Med
+Myles Turner,VJ Edgecombe,Moses Moody,16.5,14.5,12.5,13.7,17.21,15.06,under,over,over,0,3.21,0.064,High,High,High

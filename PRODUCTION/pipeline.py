@@ -242,10 +242,12 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
     res.append(player_df['FGM'].tail(20).mean())
     res.append(player_df['FG_PCT'].tail(10).mean())
     res.append(player_df['FG_PCT'].tail(20).mean())
-    res.append(player_df['FG3M'].tail(3).mean())
+    res.append(player_df['FG3M'].tail(3).mean()) #change later on 
     res.append(player_df['FG3A'].tail(5).mean())
     res.append(player_df['FG3A'].tail(10).mean())
     res.append(player_df['FG3A'].tail(20).mean())
+    res.append(player_df['FG3M'].tail(10).mean()) #change later on 
+    res.append(player_df['FG3M'].tail(20).mean()) #change later on 
     res.append(player_df['FG3_PCT'].tail(10).mean())
     res.append(player_df['FG3_PCT'].tail(20).mean())
     res.append(player_df['FTA'].tail(5).mean())
@@ -355,6 +357,7 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
     res.append(net_rating_avg_to_date * is_star)
     res.append((player_df['PTS'].mean() / (player_df['MIN'].mean() + 0.01)) * player_df['USG_PCT'].mean())
     res.append(player_df['USG_PCT'].mean() * player_df['TS_PCT'].mean())
+    res.append(player_df['USG_PCT'].mean() * player_df['MIN'].mean())
     res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.44 * player_df['FTA'].mean() + player_df['TOV'].mean() + 0.01))
     current_date_dt = pd.to_datetime(current_date)
     current_date_str = current_date_dt.strftime('%Y-%m-%d')
@@ -429,9 +432,12 @@ def playerVsOpp(player_name, data, current_date):
     player_3PA_rate = player_df['FG3A'].mean() / player_df['FGA'].mean() + 0.01
     playerFG_PCT = player_df['FG_PCT'].mean()
     
+    # Team Stats
     res.append(opp_team_df['TEAM_DEF_RATING'].tail(5).mean())
     res.append(opp_team_df['TEAM_PACE'].tail(5).mean())
     res.append(opp_team_df['TEAM_TOV'].mean())
+    res.append(opp_team_df['TEAM_BLK'].mean())
+    res.append(opp_team_df['TEAM_STL'].mean())
 
     # Opponent Player Stats
     res.append(opp_guard_df['E_DEF_RATING'].mean())
@@ -492,7 +498,7 @@ def buildVector(player_name, data, current_date, projectedStartingFive, mainStar
         print(f"No data found for {player_name}")
         return None
     res = [playerContext(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer) + 
-    playerScoring(player_name, data, teamStarPlayer, projectedStartingFive) + 
+    playerScoring(player_name, data, current_date, teamStarPlayer, projectedStartingFive) + 
     teamContext(player_name, data, teamStarPlayer, projectedStartingFive) + 
     playerVsOpp(player_name, data, current_date) + 
     playerMatchup(player_name, data, current_date)]

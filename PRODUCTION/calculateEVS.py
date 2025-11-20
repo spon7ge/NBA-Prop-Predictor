@@ -113,7 +113,7 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
                 mean_model = model[0]
                 variance_model = model[1]
                 calibration_factor = model[2] if len(model) > 2 else 1.25  # Use calibration factor if provided
-                from MODELS.NGBoostModel import predict_mean_variance_split
+                from MODELS.ngboostModel import predict_mean_variance_split
                 mu, variance = predict_mean_variance_split(mean_model, variance_model, vector, features, calibration_factor)
                 pred = round(float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu), 3)
                 sigma = float(np.sqrt(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance))

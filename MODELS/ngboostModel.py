@@ -412,3 +412,51 @@ def validate_production_model(mean_model, variance_model, val_df, features, targ
               f"Expected={expected:.2%}")
     
     return standardized
+
+
+def remove_highly_correlated_features(df, features_list, target_col='PTS', threshold=0.95):
+    available_features = [col for col in features_list if col in df.columns]
+    
+    if target_col in df.columns and target_col not in available_features:
+        available_features.append(target_col)
+    
+    corr_matrix = df[available_features].corr()
+    
+    high_corr_pairs = []
+    for i in range(len(corr_matrix.columns)):
+        for j in range(i+1, len(corr_matrix.columns)):
+            corr_val = abs(corr_matrix.iloc[i, j])
+            if corr_val > threshold:
+                feat1 = corr_matrix.columns[i]
+                feat2 = corr_matrix.columns[j]
+                high_corr_pairs.append((feat1, feat2, corr_val))
+    
+    high_corr_pairs.sort(key=lambda x: x[2], reverse=True)
+    
+    features_to_remove = set()
+    
+    for feat1, feat2, corr in high_corr_pairs:
+        if feat1 in features_to_remove or feat2 in features_to_remove:
+            continue
+            
+        if feat1 == target_col or feat2 == target_col:
+            continue
+            
+        feat1_target_corr = abs(corr_matrix.loc[feat1, target_col])
+        feat2_target_corr = abs(corr_matrix.loc[feat2, target_col])
+        
+        if feat1_target_corr >= feat2_target_corr:
+            features_to_remove.add(feat2)
+            print(f"REMOVED: {feat2:30} (corr with {feat1}: {corr:.3f})")
+        else:
+            features_to_remove.add(feat1)
+            print(f"REMOVED: {feat1:30} (corr with {feat2}: {corr:.3f})")
+    
+    cleaned_features = [f for f in available_features if f not in features_to_remove and f != target_col]
+    
+    print(f"\nSUMMARY:")
+    print(f"Original features: {len(features_list)}")
+    print(f"Removed features: {len(features_to_remove)}")
+    print(f"Final features: {len(cleaned_features)}")
+    
+    return cleaned_features
