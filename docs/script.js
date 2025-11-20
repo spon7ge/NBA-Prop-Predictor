@@ -1067,6 +1067,20 @@ document.getElementById('playerSearch').addEventListener('input', function() {
     render();
 });
 
+// Toggle description expand/collapse
+document.getElementById('toggleDescription').addEventListener('click', function() {
+    const expandedSection = document.getElementById('descriptionExpanded');
+    const button = this;
+    
+    if (expandedSection.classList.contains('show')) {
+        expandedSection.classList.remove('show');
+        button.textContent = 'Learn More';
+    } else {
+        expandedSection.classList.add('show');
+        button.textContent = 'Show Less';
+    }
+});
+
 // Update last updated timestamp
 function updateLastUpdated() {
     // Get timestamp from meta tag (set during GitHub Pages deployment)
