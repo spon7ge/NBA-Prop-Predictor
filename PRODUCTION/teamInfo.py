@@ -23,7 +23,7 @@ projectedStartingFive = {
     "ORL": ["Paolo Banchero", "Wendell Carter", "Jalen Suggs", "Franz Wagner", "Tristan da Silva"],
     "PHI": ["Andre Drummond", "Justin Edwards", "Dominick Barlow", "VJ Edgecombe", "Tyrese Maxey"],
     "PHX": ["Mark Williams", "Devin Booker", "Dillon Brooks", "Ryan Dunn", "Royce O'Neale"],
-    "POR": ["Deni Avdija", "Toumani Camara", "Kris Murray", "Damian Lillard", "Donovan Clingan"],
+    "POR": ["Deni Avdija", "Toumani Camara", "Kris Murray", "Caleb Love", "Donovan Clingan"],
     "SAC": ["Russell Westbrook", "Drew Eubanks", "Zach LaVine", "Precious Achiuwa", "DeMar DeRozan"],
     "SAS": ["Jordan McLaughlin", "Devin Vassell", "De'Aaron Fox", "Luke Kornet", "Harrison Barnes"],
     "TOR": ["Immanuel Quickley", "Brandon Ingram", "RJ Barrett", "Jakob Poeltl", "Scottie Barnes"],
