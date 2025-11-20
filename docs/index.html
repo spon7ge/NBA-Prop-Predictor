@@ -32,10 +32,15 @@
             
             <div class="description">
                 <p class="description-text">
-                    This dashboard analyzes NBA player props from PrizePicks and Underdog, highlighting betting opportunities with the highest expected value (EV). My predictive model currently generates forecasts exclusively for points props. For other prop types such as assists, rebounds, blocks, steals, and combo props, select "Over Hit Rates" from the Bet Type dropdown to view historical hit rate statistics that can help inform your betting decisions.
-                    <br>
-                    --- Reccomend using the picks 15 minutes before tipoff once lineups are released. ---
-                    <br>
+                    This dashboard analyzes NBA player props from PrizePicks and Underdog, highlighting betting opportunities with the highest expected value (EV).
+                    <span id="descriptionExpanded" class="description-expanded">
+                        <br><br>
+                        <strong>Points Props:</strong> Uses predictive model to find players with the best probability of hitting the prop line and calculates the expected value (EV) for each bet<br>
+                        <strong>Other Props:</strong> Select "Over Hit Rates" to view historical statistics<br>
+                        <br>
+                        <em>💡 Best used 15 minutes before tipoff after lineups are released</em>
+                    </span>
+                    <button id="toggleDescription" class="description-toggle">Learn More</button>
                 </p>
             </div>
             

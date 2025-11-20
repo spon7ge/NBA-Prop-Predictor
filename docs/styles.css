@@ -66,6 +66,39 @@ body {
     font-weight: 400;
 }
 
+.description-expanded {
+    display: none;
+    margin-top: 10px;
+}
+
+.description-expanded.show {
+    display: inline;
+}
+
+.description-toggle {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid rgba(102, 126, 234, 0.4);
+    border-radius: 6px;
+    color: #667eea;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.description-toggle:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.description-toggle:active {
+    transform: translateY(0);
+}
+
 .filters {
     display: flex;
     gap: 15px;
