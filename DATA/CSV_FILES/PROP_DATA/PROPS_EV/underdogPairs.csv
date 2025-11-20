@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Bobby Portis,Will Richard,14.5,6.5,9.42,11.1,under,over,1,6.74,0.337,High,High
-Deni Avdija,Will Richard,23.5,6.5,29.23,11.1,over,over,1,6.35,0.318,High,High
-Bobby Portis,Deni Avdija,14.5,23.5,9.42,29.23,under,over,1,6.01,0.301,High,High
-Tyus Jones,Dominick Barlow,3.5,5.5,4.46,8.15,over,over,0,4.24,0.212,Low,Med
-Kobe Sanders,Dominick Barlow,9.5,5.5,12.7,8.15,over,over,0,4.08,0.204,High,Med
-Tyus Jones,Donovan Clingan,3.5,8.5,4.46,11.46,over,over,0,3.63,0.182,Low,High
-Kobe Sanders,Donovan Clingan,9.5,8.5,12.7,11.46,over,over,0,3.48,0.174,High,High
-Cam Spencer,Buddy Hield,12.5,7.5,9.37,9.95,under,over,0,2.72,0.136,High,High
-Cam Spencer,Brandin Podziemski,12.5,11.5,9.37,14.85,under,over,0,2.66,0.133,High,High
-Zach Edey,Brandin Podziemski,12.5,11.5,14.88,14.85,over,over,0,2.45,0.122,Med,High
+Bobby Portis,Dominick Barlow,14.5,5.5,9.42,8.15,under,over,0,5.53,0.277,High,Med
+Kobe Sanders,Bobby Portis,9.5,14.5,12.7,9.42,over,under,0,4.81,0.241,High,High
+Tyus Jones,Dominick Barlow,3.5,5.5,4.46,8.15,over,over,0,3.84,0.192,Low,Med
+Tyus Jones,Kobe Sanders,3.5,9.5,4.46,12.7,over,over,0,3.48,0.174,Low,High
+Cam Spencer,VJ Edgecombe,12.5,14.5,9.37,17.21,under,over,0,1.68,0.084,High,High
+Tristan da Silva,Cam Spencer,12.5,12.5,14.73,9.37,over,under,0,1.67,0.084,High,High
+Zach Edey,VJ Edgecombe,12.5,14.5,14.88,17.21,over,over,0,1.65,0.082,Med,High
+Tristan da Silva,Zach Edey,12.5,12.5,14.73,14.88,over,over,0,1.31,0.065,High,Med
+Desmond Bane,Santi Aldama,21.5,16.5,19.4,13.8,under,under,0,0.61,0.031,High,High
+Nickeil Alexander-Walker,Santi Aldama,17.5,16.5,19.65,13.8,over,under,0,0.55,0.027,High,High
