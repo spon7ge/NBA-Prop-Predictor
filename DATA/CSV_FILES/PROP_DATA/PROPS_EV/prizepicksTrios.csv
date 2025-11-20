@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Zion Williamson,Josh Giddey,Isaac Okoro,18.5,19.5,5.5,22.59,25.27,9.04,over,over,over,0,11.79,0.236,Med,High,High
-Tony Bradley,Josh Giddey,Isaac Okoro,4.5,19.5,5.5,7.06,25.27,9.04,over,over,over,0,11.72,0.234,Low,High,High
-Tony Bradley,Zion Williamson,Landry Shamet,4.5,18.5,9.5,7.06,22.59,13.84,over,over,over,0,11.02,0.22,Low,Med,High
-Landry Shamet,Mitchell Robinson,Jerami Grant,9.5,4.5,22.5,13.84,6.89,17.27,over,over,under,0,10.41,0.208,High,Med,High
-Pelle Larsson,Mitchell Robinson,Jerami Grant,9.5,4.5,22.5,13.3,6.89,17.27,over,over,under,0,9.76,0.195,High,Med,High
-Pelle Larsson,Aaron Gordon,Kevin Huerter,9.5,17.5,10.5,13.3,22.11,14.35,over,over,over,0,8.64,0.173,High,High,High
-Aaron Gordon,Brandon Williams,Kevin Huerter,17.5,14.5,10.5,22.11,18.68,14.35,over,over,over,0,8.12,0.162,High,High,High
-Keon Ellis,Brandon Williams,Ayo Dosunmu,6.5,14.5,11.5,8.91,18.68,14.95,over,over,over,0,7.22,0.144,High,High,High
-Keon Ellis,Ayo Dosunmu,Patrick Williams,6.5,11.5,5.5,8.91,14.95,7.53,over,over,over,0,7.08,0.142,High,High,Med
-Ben Sheppard,Will Richard,Patrick Williams,6.5,16.5,5.5,8.78,12.62,7.53,over,under,over,0,6.78,0.136,High,High,Med
+Zion Williamson,Josh Giddey,Isaac Okoro,18.5,19.5,5.5,24.09,25.27,9.04,over,over,over,0,13.88,0.278,Med,High,High
+Zion Williamson,Landry Shamet,Isaac Okoro,18.5,9.5,5.5,24.09,13.84,9.04,over,over,over,0,13.56,0.271,Med,High,High
+Landry Shamet,Jerami Grant,Josh Giddey,9.5,22.5,19.5,13.84,17.27,25.27,over,under,over,0,10.92,0.218,High,High,High
+Dereck Lively II,Jerami Grant,Kevin Huerter,5.5,22.5,10.5,7.96,17.27,14.35,over,under,over,0,9.17,0.183,Low,High,High
+Dereck Lively II,Ayo Dosunmu,Kevin Huerter,5.5,11.5,10.5,7.96,14.95,14.35,over,over,over,0,8.19,0.164,Low,High,High
+Jeremiah Fears,Ayo Dosunmu,Patrick Williams,13.5,11.5,5.5,17.35,14.95,7.53,over,over,over,0,7.09,0.142,High,High,Med
+Jeremiah Fears,Shai Gilgeous-Alexander,Patrick Williams,13.5,31.5,5.5,17.35,28.1,7.53,over,under,over,0,6.96,0.139,High,High,Med
+Kyshawn George,Shai Gilgeous-Alexander,Ajay Mitchell,14.5,31.5,14.5,17.97,28.1,17.86,over,under,over,0,5.87,0.117,High,High,High
+Kyshawn George,Ajay Mitchell,Jalen Smith,14.5,14.5,9.5,17.97,17.86,12.19,over,over,over,0,5.38,0.108,High,High,High
+Daniel Gafford,Mitchell Robinson,Jalen Smith,11.5,5.5,9.5,14.36,6.89,12.19,over,over,over,0,4.98,0.1,High,Med,High
