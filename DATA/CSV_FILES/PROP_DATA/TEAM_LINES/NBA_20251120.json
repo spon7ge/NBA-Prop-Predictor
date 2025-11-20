@@ -6,19 +6,19 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Los Angeles Clippers",
-                                "price": -108,
+                                "price": -106,
                                 "point": 5.5
                             },
                             {
                                 "name": "Orlando Magic",
-                                "price": -112,
+                                "price": -114,
                                 "point": -5.5
                             }
                         ]
@@ -28,12 +28,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -112,
                                 "point": 218.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -108,
                                 "point": 218.5
                             }
                         ]
@@ -42,7 +42,7 @@
             },
             {
                 "bookmaker": "MyBookie.ag",
-                "last_updated": "2025-11-20T22:38:04Z",
+                "last_updated": "2025-11-20T23:40:56Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -78,19 +78,19 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Los Angeles Clippers",
-                                "price": -115,
+                                "price": -117,
                                 "point": 6.0
                             },
                             {
                                 "name": "Orlando Magic",
-                                "price": -110,
+                                "price": -109,
                                 "point": -6.0
                             }
                         ]
@@ -100,12 +100,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -115,
+                                "price": -113,
                                 "point": 218.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -113,
                                 "point": 218.5
                             }
                         ]
@@ -114,7 +114,7 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -150,7 +150,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -186,7 +186,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -222,7 +222,43 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Clippers",
+                                "price": -105,
+                                "point": 5.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -115,
+                                "point": -5.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 218.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 218.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2025-11-20T23:40:57Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -245,42 +281,6 @@
                             {
                                 "name": "Over",
                                 "price": -105,
-                                "point": 219.5
-                            },
-                            {
-                                "name": "Under",
-                                "price": -115,
-                                "point": 219.5
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "bookmaker": "BetUS",
-                "last_updated": "2025-11-20T22:38:42Z",
-                "markets": [
-                    {
-                        "market_key": "spreads",
-                        "outcomes": [
-                            {
-                                "name": "Los Angeles Clippers",
-                                "price": -110,
-                                "point": 6.0
-                            },
-                            {
-                                "name": "Orlando Magic",
-                                "price": -110,
-                                "point": -6.0
-                            }
-                        ]
-                    },
-                    {
-                        "market_key": "totals",
-                        "outcomes": [
-                            {
-                                "name": "Over",
-                                "price": -105,
                                 "point": 219.0
                             },
                             {
@@ -294,7 +294,7 @@
             },
             {
                 "bookmaker": "Bovada",
-                "last_updated": "2025-11-20T22:39:14Z",
+                "last_updated": "2025-11-20T23:41:00Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -317,12 +317,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 218.5
+                                "point": 219.0
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 218.5
+                                "point": 219.0
                             }
                         ]
                     }
@@ -337,20 +337,20 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -114,
-                                "point": 1.0
+                                "price": -110,
+                                "point": -1.5
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": -106,
-                                "point": -1.0
+                                "price": -110,
+                                "point": 1.5
                             }
                         ]
                     },
@@ -359,13 +359,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -114,
-                                "point": 232.5
+                                "price": -110,
+                                "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -106,
-                                "point": 232.5
+                                "price": -110,
+                                "point": 233.5
                             }
                         ]
                     }
@@ -373,7 +373,7 @@
             },
             {
                 "bookmaker": "MyBookie.ag",
-                "last_updated": "2025-11-20T22:38:04Z",
+                "last_updated": "2025-11-20T23:40:56Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -396,12 +396,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 233.0
+                                "point": 233.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 233.0
+                                "point": 233.5
                             }
                         ]
                     }
@@ -409,20 +409,20 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -113,
-                                "point": 1.0
+                                "price": -110,
+                                "point": -1.0
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": -112,
-                                "point": -1.0
+                                "price": -114,
+                                "point": 1.0
                             }
                         ]
                     },
@@ -445,20 +445,20 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -104,
-                                "point": 1.0
+                                "price": -111,
+                                "point": 0.0
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": -108,
-                                "point": -1.0
+                                "price": -101,
+                                "point": 0.0
                             }
                         ]
                     },
@@ -467,13 +467,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -107,
-                                "point": 233.0
+                                "price": -105,
+                                "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -107,
-                                "point": 233.0
+                                "price": -109,
+                                "point": 233.5
                             }
                         ]
                     }
@@ -481,20 +481,20 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -108,
-                                "point": 1.0
+                                "price": -115,
+                                "point": 0.0
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": -112,
-                                "point": -1.0
+                                "price": -105,
+                                "point": 0.0
                             }
                         ]
                     },
@@ -503,13 +503,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 233.0
+                                "price": -108,
+                                "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 233.0
+                                "price": -112,
+                                "point": 233.5
                             }
                         ]
                     }
@@ -517,20 +517,20 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -120,
-                                "point": 1.5
+                                "price": -108,
+                                "point": -1.5
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": 100,
-                                "point": -1.5
+                                "price": -112,
+                                "point": 1.5
                             }
                         ]
                     },
@@ -539,12 +539,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -108,
                                 "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -112,
                                 "point": 233.5
                             }
                         ]
@@ -553,20 +553,20 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Atlanta Hawks",
-                                "price": -115,
-                                "point": 1.5
+                                "price": 100,
+                                "point": -1.5
                             },
                             {
                                 "name": "San Antonio Spurs",
-                                "price": -105,
-                                "point": -1.5
+                                "price": -120,
+                                "point": 1.5
                             }
                         ]
                     },
@@ -589,7 +589,7 @@
             },
             {
                 "bookmaker": "BetUS",
-                "last_updated": "2025-11-20T22:38:42Z",
+                "last_updated": "2025-11-20T23:35:41Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -603,21 +603,6 @@
                                 "name": "San Antonio Spurs",
                                 "price": -110,
                                 "point": -1.0
-                            }
-                        ]
-                    },
-                    {
-                        "market_key": "totals",
-                        "outcomes": [
-                            {
-                                "name": "Over",
-                                "price": -110,
-                                "point": 233.5
-                            },
-                            {
-                                "name": "Under",
-                                "price": -110,
-                                "point": 233.5
                             }
                         ]
                     }
@@ -625,7 +610,7 @@
             },
             {
                 "bookmaker": "Bovada",
-                "last_updated": "2025-11-20T22:39:14Z",
+                "last_updated": "2025-11-20T23:41:00Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -633,12 +618,12 @@
                             {
                                 "name": "Atlanta Hawks",
                                 "price": -110,
-                                "point": 1.0
+                                "point": -1.5
                             },
                             {
                                 "name": "San Antonio Spurs",
                                 "price": -110,
-                                "point": -1.0
+                                "point": 1.5
                             }
                         ]
                     },
@@ -647,13 +632,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 233.5
+                                "price": -115,
+                                "point": 233.0
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 233.5
+                                "price": -105,
+                                "point": 233.0
                             }
                         ]
                     }
@@ -668,19 +653,19 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Memphis Grizzlies",
-                                "price": -110,
+                                "price": -106,
                                 "point": -3.0
                             },
                             {
                                 "name": "Sacramento Kings",
-                                "price": -110,
+                                "price": -114,
                                 "point": 3.0
                             }
                         ]
@@ -690,12 +675,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -112,
                                 "point": 234.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -108,
                                 "point": 234.5
                             }
                         ]
@@ -704,7 +689,7 @@
             },
             {
                 "bookmaker": "MyBookie.ag",
-                "last_updated": "2025-11-20T22:38:04Z",
+                "last_updated": "2025-11-20T23:40:56Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -740,20 +725,20 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Memphis Grizzlies",
-                                "price": -114,
-                                "point": -3.5
+                                "price": -117,
+                                "point": -3.0
                             },
                             {
                                 "name": "Sacramento Kings",
-                                "price": -112,
-                                "point": 3.5
+                                "price": -109,
+                                "point": 3.0
                             }
                         ]
                     },
@@ -763,12 +748,12 @@
                             {
                                 "name": "Over",
                                 "price": -114,
-                                "point": 234.5
+                                "point": 235.0
                             },
                             {
                                 "name": "Under",
                                 "price": -112,
-                                "point": 234.5
+                                "point": 235.0
                             }
                         ]
                     }
@@ -776,7 +761,7 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -798,12 +783,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -108,
+                                "price": -112,
                                 "point": 234.5
                             },
                             {
                                 "name": "Under",
-                                "price": -112,
+                                "price": -108,
                                 "point": 234.5
                             }
                         ]
@@ -812,7 +797,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -834,12 +819,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -102,
+                                "price": -104,
                                 "point": 234.5
                             },
                             {
                                 "name": "Under",
-                                "price": -113,
+                                "price": -110,
                                 "point": 234.5
                             }
                         ]
@@ -848,7 +833,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -870,12 +855,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -105,
+                                "price": -107,
                                 "point": 234.5
                             },
                             {
                                 "name": "Under",
-                                "price": -115,
+                                "price": -113,
                                 "point": 234.5
                             }
                         ]
@@ -884,7 +869,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -920,7 +905,7 @@
             },
             {
                 "bookmaker": "Bovada",
-                "last_updated": "2025-11-20T22:39:14Z",
+                "last_updated": "2025-11-20T23:41:00Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -942,12 +927,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -115,
                                 "point": 235.0
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -105,
                                 "point": 235.0
                             }
                         ]
@@ -956,7 +941,7 @@
             },
             {
                 "bookmaker": "BetUS",
-                "last_updated": "2025-11-20T22:38:42Z",
+                "last_updated": "2025-11-20T23:40:57Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -999,7 +984,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1021,12 +1006,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -114,
+                                "price": -110,
                                 "point": 223.5
                             },
                             {
                                 "name": "Under",
-                                "price": -106,
+                                "price": -110,
                                 "point": 223.5
                             }
                         ]
@@ -1035,7 +1020,7 @@
             },
             {
                 "bookmaker": "MyBookie.ag",
-                "last_updated": "2025-11-20T22:38:04Z",
+                "last_updated": "2025-11-20T23:40:56Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1058,12 +1043,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 224.0
+                                "point": 223.0
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 224.0
+                                "point": 223.0
                             }
                         ]
                     }
@@ -1071,7 +1056,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1093,12 +1078,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -113,
+                                "price": -114,
                                 "point": 222.5
                             },
                             {
                                 "name": "Under",
-                                "price": -113,
+                                "price": -112,
                                 "point": 222.5
                             }
                         ]
@@ -1107,20 +1092,20 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Milwaukee Bucks",
-                                "price": -110,
-                                "point": 1.5
+                                "price": -115,
+                                "point": 2.5
                             },
                             {
                                 "name": "Philadelphia 76ers",
-                                "price": -110,
-                                "point": -1.5
+                                "price": -105,
+                                "point": -2.5
                             }
                         ]
                     },
@@ -1129,12 +1114,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -108,
                                 "point": 223.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -112,
                                 "point": 223.5
                             }
                         ]
@@ -1143,19 +1128,19 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Milwaukee Bucks",
-                                "price": -109,
+                                "price": -108,
                                 "point": 1.5
                             },
                             {
                                 "name": "Philadelphia 76ers",
-                                "price": -103,
+                                "price": -104,
                                 "point": -1.5
                             }
                         ]
@@ -1165,12 +1150,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -107,
+                                "price": -102,
                                 "point": 223.5
                             },
                             {
                                 "name": "Under",
-                                "price": -107,
+                                "price": -113,
                                 "point": 223.5
                             }
                         ]
@@ -1179,55 +1164,19 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Milwaukee Bucks",
-                                "price": -113,
+                                "price": -112,
                                 "point": 1.5
                             },
                             {
                                 "name": "Philadelphia 76ers",
-                                "price": -107,
-                                "point": -1.5
-                            }
-                        ]
-                    },
-                    {
-                        "market_key": "totals",
-                        "outcomes": [
-                            {
-                                "name": "Over",
-                                "price": -110,
-                                "point": 223.5
-                            },
-                            {
-                                "name": "Under",
-                                "price": -110,
-                                "point": 223.5
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
-                "markets": [
-                    {
-                        "market_key": "spreads",
-                        "outcomes": [
-                            {
-                                "name": "Milwaukee Bucks",
-                                "price": -110,
-                                "point": 1.5
-                            },
-                            {
-                                "name": "Philadelphia 76ers",
-                                "price": -110,
+                                "price": -108,
                                 "point": -1.5
                             }
                         ]
@@ -1250,21 +1199,21 @@
                 ]
             },
             {
-                "bookmaker": "BetUS",
-                "last_updated": "2025-11-20T22:38:42Z",
+                "bookmaker": "BetMGM",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Milwaukee Bucks",
-                                "price": -110,
-                                "point": 2.0
+                                "price": -105,
+                                "point": 1.5
                             },
                             {
                                 "name": "Philadelphia 76ers",
-                                "price": -110,
-                                "point": -2.0
+                                "price": -115,
+                                "point": -1.5
                             }
                         ]
                     },
@@ -1274,20 +1223,20 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 223.0
+                                "point": 223.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 223.0
+                                "point": 223.5
                             }
                         ]
                     }
                 ]
             },
             {
-                "bookmaker": "Bovada",
-                "last_updated": "2025-11-20T22:39:14Z",
+                "bookmaker": "BetUS",
+                "last_updated": "2025-11-20T23:40:57Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1320,6 +1269,42 @@
                         ]
                     }
                 ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2025-11-20T23:41:00Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -105,
+                                "point": 1.5
+                            },
+                            {
+                                "name": "Philadelphia 76ers",
+                                "price": -115,
+                                "point": -1.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 223.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 223.0
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -1330,7 +1315,7 @@
         "bookmakers": [
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1366,7 +1351,7 @@
             },
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1402,7 +1387,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1438,7 +1423,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1474,7 +1459,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1510,7 +1495,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1553,7 +1538,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1589,20 +1574,20 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Boston Celtics",
-                                "price": -110,
-                                "point": -15.5
+                                "price": -118,
+                                "point": -14.5
                             },
                             {
                                 "name": "Brooklyn Nets",
-                                "price": -110,
-                                "point": 15.5
+                                "price": -102,
+                                "point": 14.5
                             }
                         ]
                     },
@@ -1611,13 +1596,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 221.5
+                                "price": -105,
+                                "point": 222.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 221.5
+                                "price": -115,
+                                "point": 222.5
                             }
                         ]
                     }
@@ -1625,7 +1610,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1661,7 +1646,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1684,12 +1669,12 @@
                             {
                                 "name": "Over",
                                 "price": -107,
-                                "point": 221.5
+                                "point": 222.0
                             },
                             {
                                 "name": "Under",
                                 "price": -107,
-                                "point": 221.5
+                                "point": 222.0
                             }
                         ]
                     }
@@ -1697,7 +1682,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1720,12 +1705,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 221.5
+                                "point": 222.0
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 221.5
+                                "point": 222.0
                             }
                         ]
                     }
@@ -1733,7 +1718,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1755,13 +1740,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 221.5
+                                "price": -105,
+                                "point": 222.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 221.5
+                                "price": -115,
+                                "point": 222.5
                             }
                         ]
                     }
@@ -1776,7 +1761,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1812,20 +1797,20 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Toronto Raptors",
-                                "price": -115,
-                                "point": -13.5
+                                "price": -105,
+                                "point": -14.5
                             },
                             {
                                 "name": "Washington Wizards",
-                                "price": -105,
-                                "point": 13.5
+                                "price": -115,
+                                "point": 14.5
                             }
                         ]
                     },
@@ -1835,12 +1820,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 239.5
+                                "point": 240.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 239.5
+                                "point": 240.5
                             }
                         ]
                     }
@@ -1848,7 +1833,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1884,7 +1869,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1906,13 +1891,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -107,
-                                "point": 239.0
+                                "price": -113,
+                                "point": 240.0
                             },
                             {
                                 "name": "Under",
-                                "price": -107,
-                                "point": 239.0
+                                "price": -102,
+                                "point": 240.0
                             }
                         ]
                     }
@@ -1920,7 +1905,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -1942,13 +1927,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 239.0
+                                "price": -115,
+                                "point": 240.0
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 239.0
+                                "price": -105,
+                                "point": 240.0
                             }
                         ]
                     }
@@ -1956,20 +1941,20 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Toronto Raptors",
-                                "price": -115,
-                                "point": -13.5
+                                "price": -105,
+                                "point": -14.5
                             },
                             {
                                 "name": "Washington Wizards",
-                                "price": -105,
-                                "point": 13.5
+                                "price": -115,
+                                "point": 14.5
                             }
                         ]
                     },
@@ -1979,12 +1964,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 239.5
+                                "point": 240.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 239.5
+                                "point": 240.5
                             }
                         ]
                     }
@@ -1999,7 +1984,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2035,19 +2020,19 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Chicago Bulls",
-                                "price": -115,
+                                "price": -110,
                                 "point": -2.5
                             },
                             {
                                 "name": "Miami Heat",
-                                "price": -105,
+                                "price": -110,
                                 "point": 2.5
                             }
                         ]
@@ -2058,12 +2043,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 248.5
+                                "point": 247.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 248.5
+                                "point": 247.5
                             }
                         ]
                     }
@@ -2071,7 +2056,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2107,7 +2092,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2143,7 +2128,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2179,7 +2164,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2201,13 +2186,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -105,
-                                "point": 248.5
+                                "price": -110,
+                                "point": 247.5
                             },
                             {
                                 "name": "Under",
-                                "price": -115,
-                                "point": 248.5
+                                "price": -110,
+                                "point": 247.5
                             }
                         ]
                     }
@@ -2222,7 +2207,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2258,7 +2243,7 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2280,13 +2265,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 228.5
+                                "price": -108,
+                                "point": 229.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 228.5
+                                "price": -112,
+                                "point": 229.5
                             }
                         ]
                     }
@@ -2294,7 +2279,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2302,12 +2287,12 @@
                             {
                                 "name": "Dallas Mavericks",
                                 "price": -106,
-                                "point": -3.5
+                                "point": -2.5
                             },
                             {
                                 "name": "New Orleans Pelicans",
                                 "price": -106,
-                                "point": 3.5
+                                "point": 2.5
                             }
                         ]
                     },
@@ -2330,7 +2315,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2338,12 +2323,12 @@
                             {
                                 "name": "Dallas Mavericks",
                                 "price": -110,
-                                "point": -3.5
+                                "point": -2.5
                             },
                             {
                                 "name": "New Orleans Pelicans",
                                 "price": -110,
-                                "point": 3.5
+                                "point": 2.5
                             }
                         ]
                     },
@@ -2366,7 +2351,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2402,7 +2387,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2410,12 +2395,12 @@
                             {
                                 "name": "Dallas Mavericks",
                                 "price": -110,
-                                "point": -3.5
+                                "point": -2.5
                             },
                             {
                                 "name": "New Orleans Pelicans",
                                 "price": -110,
-                                "point": 3.5
+                                "point": 2.5
                             }
                         ]
                     },
@@ -2424,13 +2409,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -115,
-                                "point": 228.5
+                                "price": -110,
+                                "point": 229.5
                             },
                             {
                                 "name": "Under",
-                                "price": -105,
-                                "point": 228.5
+                                "price": -110,
+                                "point": 229.5
                             }
                         ]
                     }
@@ -2445,19 +2430,19 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Minnesota Timberwolves",
-                                "price": -115,
+                                "price": -110,
                                 "point": -3.5
                             },
                             {
                                 "name": "Phoenix Suns",
-                                "price": -105,
+                                "price": -110,
                                 "point": 3.5
                             }
                         ]
@@ -2481,20 +2466,20 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Minnesota Timberwolves",
-                                "price": -105,
-                                "point": -4.5
+                                "price": -115,
+                                "point": -2.5
                             },
                             {
                                 "name": "Phoenix Suns",
-                                "price": -115,
-                                "point": 4.5
+                                "price": -105,
+                                "point": 2.5
                             }
                         ]
                     },
@@ -2503,13 +2488,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 232.5
+                                "price": -115,
+                                "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 232.5
+                                "price": -105,
+                                "point": 233.5
                             }
                         ]
                     }
@@ -2517,7 +2502,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2553,7 +2538,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2589,7 +2574,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2625,7 +2610,7 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2633,12 +2618,12 @@
                             {
                                 "name": "Minnesota Timberwolves",
                                 "price": -115,
-                                "point": -3.5
+                                "point": -2.5
                             },
                             {
                                 "name": "Phoenix Suns",
                                 "price": -105,
-                                "point": 3.5
+                                "point": 2.5
                             }
                         ]
                     },
@@ -2647,12 +2632,12 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
+                                "price": -115,
                                 "point": 233.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
+                                "price": -105,
                                 "point": 233.5
                             }
                         ]
@@ -2668,20 +2653,20 @@
         "bookmakers": [
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Denver Nuggets",
-                                "price": -115,
-                                "point": 2.5
+                                "price": -105,
+                                "point": 1.5
                             },
                             {
                                 "name": "Houston Rockets",
-                                "price": -105,
-                                "point": -2.5
+                                "price": -115,
+                                "point": -1.5
                             }
                         ]
                     },
@@ -2691,12 +2676,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 233.5
+                                "point": 234.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 233.5
+                                "point": 234.5
                             }
                         ]
                     }
@@ -2704,7 +2689,7 @@
             },
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2740,7 +2725,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2776,7 +2761,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2812,7 +2797,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2848,19 +2833,19 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Denver Nuggets",
-                                "price": -105,
+                                "price": -102,
                                 "point": 1.5
                             },
                             {
                                 "name": "Houston Rockets",
-                                "price": -115,
+                                "price": -118,
                                 "point": -1.5
                             }
                         ]
@@ -2870,13 +2855,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -115,
-                                "point": 233.5
+                                "price": -110,
+                                "point": 234.5
                             },
                             {
                                 "name": "Under",
-                                "price": -105,
-                                "point": 233.5
+                                "price": -110,
+                                "point": 234.5
                             }
                         ]
                     }
@@ -2891,7 +2876,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -2927,19 +2912,19 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Golden State Warriors",
-                                "price": -108,
+                                "price": -110,
                                 "point": -6.5
                             },
                             {
                                 "name": "Portland Trail Blazers",
-                                "price": -112,
+                                "price": -110,
                                 "point": 6.5
                             }
                         ]
@@ -2963,7 +2948,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -3006,7 +2991,7 @@
         "bookmakers": [
             {
                 "bookmaker": "FanDuel",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:41:10Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -3042,7 +3027,7 @@
             },
             {
                 "bookmaker": "LowVig.ag",
-                "last_updated": "2025-11-20T22:39:09Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -3065,12 +3050,12 @@
                             {
                                 "name": "Over",
                                 "price": -107,
-                                "point": 236.0
+                                "point": 235.5
                             },
                             {
                                 "name": "Under",
                                 "price": -107,
-                                "point": 236.0
+                                "point": 235.5
                             }
                         ]
                     }
@@ -3078,7 +3063,7 @@
             },
             {
                 "bookmaker": "BetOnline.ag",
-                "last_updated": "2025-11-20T22:38:56Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -3101,12 +3086,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 236.0
+                                "point": 235.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 236.0
+                                "point": 235.5
                             }
                         ]
                     }
@@ -3114,7 +3099,7 @@
             },
             {
                 "bookmaker": "DraftKings",
-                "last_updated": "2025-11-20T22:39:08Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
@@ -3122,12 +3107,12 @@
                             {
                                 "name": "Oklahoma City Thunder",
                                 "price": -105,
-                                "point": -17.5
+                                "point": -16.5
                             },
                             {
                                 "name": "Utah Jazz",
                                 "price": -115,
-                                "point": 17.5
+                                "point": 16.5
                             }
                         ]
                     },
@@ -3136,13 +3121,13 @@
                         "outcomes": [
                             {
                                 "name": "Over",
-                                "price": -110,
-                                "point": 233.5
+                                "price": -108,
+                                "point": 235.5
                             },
                             {
                                 "name": "Under",
-                                "price": -110,
-                                "point": 233.5
+                                "price": -112,
+                                "point": 235.5
                             }
                         ]
                     }
@@ -3150,19 +3135,19 @@
             },
             {
                 "bookmaker": "BetMGM",
-                "last_updated": "2025-11-20T22:39:10Z",
+                "last_updated": "2025-11-20T23:40:43Z",
                 "markets": [
                     {
                         "market_key": "spreads",
                         "outcomes": [
                             {
                                 "name": "Oklahoma City Thunder",
-                                "price": -115,
+                                "price": -105,
                                 "point": -16.5
                             },
                             {
                                 "name": "Utah Jazz",
-                                "price": -105,
+                                "price": -115,
                                 "point": 16.5
                             }
                         ]
@@ -3173,12 +3158,12 @@
                             {
                                 "name": "Over",
                                 "price": -110,
-                                "point": 233.5
+                                "point": 235.5
                             },
                             {
                                 "name": "Under",
                                 "price": -110,
-                                "point": 233.5
+                                "point": 235.5
                             }
                         ]
                     }
@@ -3186,7 +3171,7 @@
             },
             {
                 "bookmaker": "BetRivers",
-                "last_updated": "2025-11-20T22:38:43Z",
+                "last_updated": "2025-11-20T23:40:44Z",
                 "markets": [
                     {
                         "market_key": "spreads",

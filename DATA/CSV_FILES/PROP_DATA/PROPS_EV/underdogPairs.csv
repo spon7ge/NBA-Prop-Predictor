@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Bobby Portis,Dominick Barlow,14.5,5.5,9.42,8.15,under,over,0,5.53,0.277,High,Med
-Kobe Sanders,Bobby Portis,9.5,14.5,12.7,9.42,over,under,0,4.81,0.241,High,High
-Tyus Jones,Dominick Barlow,3.5,5.5,4.46,8.15,over,over,0,3.84,0.192,Low,Med
+Tyus Jones,Bobby Portis,3.5,14.5,4.46,9.42,over,under,0,4.77,0.239,Low,High
+Tristan da Silva,Bobby Portis,11.5,14.5,14.73,9.42,over,under,0,4.67,0.233,High,High
 Tyus Jones,Kobe Sanders,3.5,9.5,4.46,12.7,over,over,0,3.48,0.174,Low,High
-Cam Spencer,VJ Edgecombe,12.5,14.5,9.37,17.21,under,over,0,1.68,0.084,High,High
-Tristan da Silva,Cam Spencer,12.5,12.5,14.73,9.37,over,under,0,1.67,0.084,High,High
-Zach Edey,VJ Edgecombe,12.5,14.5,14.88,17.21,over,over,0,1.65,0.082,Med,High
-Tristan da Silva,Zach Edey,12.5,12.5,14.73,14.88,over,over,0,1.31,0.065,High,Med
-Desmond Bane,Santi Aldama,21.5,16.5,19.4,13.8,under,under,0,0.61,0.031,High,High
-Nickeil Alexander-Walker,Santi Aldama,17.5,16.5,19.65,13.8,over,under,0,0.55,0.027,High,High
+Kobe Sanders,Santi Aldama,9.5,17.5,12.7,13.8,over,under,0,3.3,0.165,High,High
+Tristan da Silva,Santi Aldama,11.5,17.5,14.73,13.8,over,under,0,3.02,0.151,High,High
+Luke Kennard,VJ Edgecombe,5.5,14.5,7.28,17.21,over,over,0,2.25,0.112,Med,High
+Nickeil Alexander-Walker,VJ Edgecombe,16.5,14.5,19.65,17.21,over,over,0,1.57,0.079,High,High
+Luke Kennard,Malik Monk,5.5,13.5,7.28,11.09,over,under,0,1.54,0.077,Med,High
+Nickeil Alexander-Walker,Malik Monk,16.5,13.5,19.65,11.09,over,under,0,1.15,0.058,High,High
+Keldon Johnson,Zach Edey,14.5,13.5,12.54,14.88,under,over,0,-0.17,0.0,High,Med

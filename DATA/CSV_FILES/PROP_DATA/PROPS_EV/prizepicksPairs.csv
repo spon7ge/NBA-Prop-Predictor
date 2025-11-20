@@ -1,11 +1,11 @@
 NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Kobe Sanders,Bobby Portis,9.5,14.5,12.7,9.42,over,under,0,4.76,0.238,High,High
-Tyus Jones,Bobby Portis,3.5,14.5,4.46,9.42,over,under,0,4.72,0.236,Low,High
-Kobe Sanders,Tyus Jones,9.5,3.5,12.7,4.46,over,over,0,3.27,0.163,High,Low
-Nicolas Batum,Goga Bitadze,5.0,4.5,6.35,5.94,over,over,0,2.66,0.133,Med,Low
-Goga Bitadze,Zach Edey,4.5,12.5,5.94,14.88,over,over,0,2.52,0.126,Low,Med
-Nicolas Batum,VJ Edgecombe,5.0,14.5,6.35,17.21,over,over,0,2.09,0.105,Med,High
-Brook Lopez,Zach Edey,6.5,12.5,7.87,14.88,over,over,0,1.75,0.088,Med,Med
-Myles Turner,VJ Edgecombe,16.5,14.5,13.7,17.21,under,over,0,1.4,0.07,High,High
-Brook Lopez,Myles Turner,6.5,16.5,7.87,13.7,over,under,0,1.2,0.06,Med,High
-Tristan da Silva,Kris Dunn,12.5,7.5,14.73,8.8,over,over,0,0.94,0.047,High,Med
+Santi Aldama,Bobby Portis,18.5,14.5,13.8,9.42,under,under,1,5.66,0.283,High,High
+Kobe Sanders,Bobby Portis,9.5,14.5,12.7,9.42,over,under,0,4.95,0.247,High,High
+Tyus Jones,Santi Aldama,3.5,18.5,4.46,13.8,over,under,0,4.06,0.203,Low,High
+Kobe Sanders,Tyus Jones,9.5,3.5,12.7,4.46,over,over,0,3.47,0.174,High,Low
+Brook Lopez,Goga Bitadze,6.0,4.5,7.87,5.94,over,over,0,2.97,0.149,Med,Low
+Goga Bitadze,Luke Kennard,4.5,5.5,5.94,7.28,over,over,0,2.97,0.149,Low,Med
+Tristan da Silva,Brook Lopez,11.5,6.0,14.73,7.87,over,over,0,2.91,0.146,High,Med
+Tristan da Silva,Luke Kennard,11.5,5.5,14.73,7.28,over,over,0,2.88,0.144,High,Med
+Nicolas Batum,Zach Edey,5.0,12.5,6.35,14.88,over,over,0,2.26,0.113,Med,Med
+Nicolas Batum,Nickeil Alexander-Walker,5.0,16.5,6.35,19.65,over,over,0,2.23,0.112,Med,High

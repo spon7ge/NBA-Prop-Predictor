@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Tyus Jones,Bobby Portis,Dominick Barlow,3.5,14.5,5.5,4.46,9.42,8.15,over,under,over,0,9.63,0.193,Low,High,Med
-Kobe Sanders,Bobby Portis,Dominick Barlow,9.5,14.5,5.5,12.7,9.42,8.15,over,under,over,0,9.6,0.192,High,High,Med
-Tyus Jones,Kobe Sanders,Cam Spencer,3.5,9.5,12.5,4.46,12.7,9.37,over,over,under,0,6.17,0.123,Low,High,High
-Zach Edey,Cam Spencer,VJ Edgecombe,12.5,12.5,14.5,14.88,9.37,17.21,over,under,over,0,4.09,0.082,Med,High,High
-Zach Edey,Santi Aldama,VJ Edgecombe,12.5,16.5,14.5,14.88,13.8,17.21,over,under,over,0,3.42,0.068,Med,High,High
-Tristan da Silva,Nickeil Alexander-Walker,Santi Aldama,12.5,17.5,16.5,14.73,19.65,13.8,over,over,under,0,2.21,0.044,High,High,High
-Desmond Bane,Tristan da Silva,Nickeil Alexander-Walker,21.5,12.5,17.5,19.4,14.73,19.65,under,over,over,0,1.57,0.031,High,High,High
-Desmond Bane,Devin Vassell,Keldon Johnson,21.5,16.5,14.5,19.4,14.7,12.54,under,under,under,0,0.46,0.009,High,High,High
-Devin Vassell,Keldon Johnson,Ryan Rollins,16.5,14.5,20.5,14.7,12.54,18.88,under,under,under,0,0.06,0.001,High,High,High
-Russell Westbrook,Tyrese Maxey,Ryan Rollins,13.5,29.5,20.5,14.59,27.74,18.88,over,under,under,0,-0.53,0.0,High,High,High
+Tyus Jones,Kobe Sanders,Bobby Portis,3.5,9.5,14.5,4.46,12.7,9.42,over,over,under,0,8.76,0.175,Low,High,High
+Tyus Jones,Santi Aldama,Bobby Portis,3.5,17.5,14.5,4.46,13.8,9.42,over,under,under,0,8.55,0.171,Low,High,High
+Kobe Sanders,Luke Kennard,Santi Aldama,9.5,5.5,17.5,12.7,7.28,13.8,over,over,under,0,6.36,0.127,High,Med,High
+Tristan da Silva,Luke Kennard,Nickeil Alexander-Walker,11.5,5.5,16.5,14.73,7.28,19.65,over,over,over,0,5.41,0.108,High,Med,High
+Tristan da Silva,Nickeil Alexander-Walker,VJ Edgecombe,11.5,16.5,14.5,14.73,19.65,17.21,over,over,over,0,4.52,0.09,High,High,High
+Keldon Johnson,Malik Monk,VJ Edgecombe,14.5,13.5,14.5,12.54,11.09,17.21,under,under,over,0,1.9,0.038,High,High,High
+Keldon Johnson,Zach Edey,Malik Monk,14.5,13.5,13.5,12.54,14.88,11.09,under,over,under,0,0.91,0.018,High,Med,High
+Devin Vassell,Zach Edey,Andre Drummond,16.5,13.5,11.5,14.7,14.88,10.0,under,over,under,0,-0.14,0.0,High,Med,Med
+Devin Vassell,Tyrese Maxey,Andre Drummond,16.5,29.5,11.5,14.7,27.74,10.0,under,under,under,0,-0.37,0.0,High,High,Med
+Russell Westbrook,Tyrese Maxey,Trendon Watford,13.5,29.5,7.5,14.59,27.74,7.78,over,under,over,0,-0.74,0.0,High,High,Med

@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Kobe Sanders,Tyus Jones,Bobby Portis,9.5,3.5,14.5,12.7,4.46,9.42,over,over,under,0,8.76,0.175,High,Low,High
-Goga Bitadze,Tyus Jones,Bobby Portis,4.5,3.5,14.5,5.94,4.46,9.42,over,over,under,0,8.53,0.171,Low,Low,High
-Kobe Sanders,Goga Bitadze,Zach Edey,9.5,4.5,12.5,12.7,5.94,14.88,over,over,over,0,5.65,0.113,High,Low,Med
-Brook Lopez,Nicolas Batum,Zach Edey,6.5,5.0,12.5,7.87,6.35,14.88,over,over,over,0,4.22,0.084,Med,Med,Med
-Brook Lopez,Nicolas Batum,VJ Edgecombe,6.5,5.0,14.5,7.87,6.35,17.21,over,over,over,0,3.99,0.08,Med,Med,High
-Tristan da Silva,Myles Turner,VJ Edgecombe,12.5,16.5,14.5,14.73,13.7,17.21,over,under,over,0,2.92,0.058,High,High,High
-Tristan da Silva,Dyson Daniels,Myles Turner,12.5,11.5,16.5,14.73,9.47,13.7,over,under,under,0,2.51,0.05,High,Med,High
+Tyus Jones,Santi Aldama,Bobby Portis,3.5,18.5,14.5,4.46,13.8,9.42,over,under,under,0,9.85,0.197,Low,High,High
+Kobe Sanders,Santi Aldama,Bobby Portis,9.5,18.5,14.5,12.7,13.8,9.42,over,under,under,0,9.82,0.196,High,High,High
+Kobe Sanders,Tyus Jones,Luke Kennard,9.5,3.5,5.5,12.7,4.46,7.28,over,over,over,0,6.57,0.131,High,Low,Med
+Tristan da Silva,Goga Bitadze,Luke Kennard,11.5,4.5,5.5,14.73,5.94,7.28,over,over,over,0,6.05,0.121,High,Low,Med
+Tristan da Silva,Goga Bitadze,Nickeil Alexander-Walker,11.5,4.5,16.5,14.73,5.94,19.65,over,over,over,0,5.48,0.11,High,Low,High
+Brook Lopez,Nicolas Batum,Nickeil Alexander-Walker,6.0,5.0,16.5,7.87,6.35,19.65,over,over,over,0,5.1,0.102,Med,Med,High
+Brook Lopez,Nicolas Batum,Zach Edey,6.0,5.0,12.5,7.87,6.35,14.88,over,over,over,0,5.0,0.1,Med,Med,Med
+Zach Edey,Myles Turner,VJ Edgecombe,12.5,16.5,14.5,14.88,13.7,17.21,over,under,over,0,3.43,0.069,Med,High,High
+Dyson Daniels,Myles Turner,VJ Edgecombe,11.5,16.5,14.5,9.47,13.7,17.21,under,under,over,0,2.8,0.056,Med,High,High
 Kris Dunn,Dyson Daniels,Zaccharie Risacher,7.5,11.5,11.5,8.8,9.47,13.37,over,under,over,0,1.96,0.039,Med,Med,High
-Kris Dunn,Zaccharie Risacher,Kelly Olynyk,7.5,11.5,8.0,8.8,13.37,5.7,over,over,under,0,1.69,0.034,Med,High,Med
-Nickeil Alexander-Walker,Kelly Olynyk,Santi Aldama,17.5,8.0,16.0,19.65,5.7,13.8,over,under,under,0,1.31,0.026,High,Med,High
