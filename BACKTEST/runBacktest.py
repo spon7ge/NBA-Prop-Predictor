@@ -50,16 +50,27 @@ def main():
     mean_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_MEAN_MODEL_TEST.pkl'))
     variance_model = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_VAR_MODEL_TEST.pkl'))
     calibration_factor = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_CALIBRATION_FACTOR.pkl'))
+    
+    # Load isotonic regression calibrator (if available)
+    iso_calibrator_path = os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'NGBOOST_PTS_ISOTONIC_CALIBRATOR_TEST.pkl')
+    if os.path.exists(iso_calibrator_path):
+        isotonic_calibrator = joblib.load(iso_calibrator_path)
+        print("✓ Loaded isotonic regression calibrator")
+    else:
+        isotonic_calibrator = None
+        print("⚠ Isotonic calibrator not found - using uncalibrated predictions")
 
     models = {
         'mean': mean_model,
         'variance': variance_model,
-        'calibration_factor': calibration_factor
+        'calibration_factor': calibration_factor,
+        'isotonic_calibrator': isotonic_calibrator
     }
 
     features = joblib.load(os.path.join(project_root, 'MODELS', 'SAVED_MODELS', 'feature_list.pkl'))
 
     print(f"Loaded NGBoost models with calibration factor: {calibration_factor}")
+    print(f"Using isotonic calibration: {isotonic_calibrator is not None}")
     print(f"Number of features: {len(features)}")
 
     # Load and prepare data

@@ -163,18 +163,20 @@ def predictStats(playerName, data, models, features):
             mean_model = models['mean']
             variance_model = models['variance']
             calibration_factor = models.get('calibration_factor', 1.25)
+            isotonic_calibrator = models.get('isotonic_calibrator', None)
         else:
             raise ValueError("Models dict must contain 'mean' and 'variance' keys for NGBoost models")
     elif isinstance(models, tuple):
         mean_model = models[0]
         variance_model = models[1]
         calibration_factor = models[2] if len(models) > 2 else 1.25
+        isotonic_calibrator = models[3] if len(models) > 3 else None
     else:
         raise ValueError("Models must be a dict with 'mean' and 'variance' keys or a tuple of (mean_model, variance_model, calibration_factor)")
     
     # Get mean and variance predictions
     mu, variance = predict_mean_variance_split(
-        mean_model, variance_model, playerInput_df, features, calibration_factor
+        mean_model, variance_model, playerInput_df, features, calibration_factor, isotonic_calibrator
     )
     
     # Convert to scalars if arrays

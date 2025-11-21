@@ -29,14 +29,7 @@ def fit_ngboost_split(train_df: pd.DataFrame,
                      variance_lr: float = 0.01,
                      variance_max_depth: int = 8,
                      variance_n_estimators: int = 600,
-                     variance_calibration_factor: float = 0.95,
-                     clip_residuals_percentile: float = 99.0):
-    """
-    This approach trains separate models for mean and variance:
-    - Mean model uses recency weights to prioritize recent performance
-    - Variance model uses equal (or slight recency) weights to capture 
-      long-term volatility patterns
-    """
+                     variance_calibration_factor: float = 0.95):
     if 'GAME_DATE' in train_df.columns:
         train_df = train_df.sort_values('GAME_DATE').reset_index(drop=True)
     if val_df is not None and len(val_df) > 0 and 'GAME_DATE' in val_df.columns:
@@ -58,12 +51,12 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         X_va = X_va.fillna(X_tr.median())
     
     base_est_mean = DecisionTreeRegressor(
-        max_depth=5, 
-        min_samples_leaf=20  
+        max_depth=8, 
+        min_samples_leaf=10  
     )
     base_est_scale = DecisionTreeRegressor(
         max_depth=variance_max_depth,
-        min_samples_leaf=15
+        min_samples_leaf=10
     )
     
     early_stopping_params = {}
@@ -100,12 +93,8 @@ def fit_ngboost_split(train_df: pd.DataFrame,
     residuals = y_tr - y_pred_mean
     squared_residuals = residuals ** 2
     
-    # Clip extreme residuals to stabilize variance model
-    upper_limit = np.percentile(squared_residuals, clip_residuals_percentile)
-    squared_residuals_clipped = np.minimum(squared_residuals, upper_limit)
-    
     # Log-transform for stability (variance is multiplicative)
-    log_squared_residuals = np.log(squared_residuals_clipped + 1e-6)
+    log_squared_residuals = np.log(squared_residuals + 1e-6)
 
     # Build variance weights
     if variance_recent_weight == 1.0:
@@ -134,8 +123,7 @@ def fit_ngboost_split(train_df: pd.DataFrame,
         y_pred_mean_va = ngb_mean.predict(X_va)
         residuals_va = y_va - y_pred_mean_va
         squared_residuals_va = residuals_va ** 2
-        squared_residuals_va_clipped = np.minimum(squared_residuals_va, upper_limit)
-        log_squared_residuals_va = np.log(squared_residuals_va_clipped + 1e-6)
+        log_squared_residuals_va = np.log(squared_residuals_va + 1e-6)
         
         ngb_scale.fit(
             X_tr, log_squared_residuals,
@@ -160,100 +148,6 @@ def fit_ngboost_split(train_df: pd.DataFrame,
     # Return same 3 items as before
     return ngb_mean, ngb_scale, variance_calibration_factor
 
-
-def fit_ngboost_full(train_df: pd.DataFrame,
-                     val_df: pd.DataFrame | None,
-                     features: list[str],
-                     target_col: str,
-                     distribution: type = Normal,
-                     player_col: str = 'PLAYER_ID',
-                     recent_n: int = 30,
-                     recent_weight: float = 3.0,
-                     learning_rate: float = 0.08,
-                     max_depth: int = 4,
-                     n_estimators: int = 500,
-                     minibatch_frac: float = 0.8,
-                     random_state: int = 42):
-    """
-    Fit a single NGBoost model that learns both mean and variance together.
-    This is the standard NGBoost approach without splitting into separate models.
-    
-    Args:
-        train_df: Training DataFrame
-        val_df: Validation DataFrame (optional)
-        features: List of feature names
-        target_col: Name of target column
-        distribution: Distribution type (Normal, Poisson)
-        player_col: Column name for player ID (for recency weighting)
-        recent_n: Number of recent games to weight more heavily
-        recent_weight: Weight multiplier for recent games
-        learning_rate: Learning rate for NGBoost
-        max_depth: Max depth for base decision tree
-        n_estimators: Number of boosting rounds
-        minibatch_frac: Fraction of data to use per iteration
-        random_state: Random seed
-        
-    Returns:
-        Trained NGBRegressor model
-    """
-    if 'GAME_DATE' in train_df.columns:
-        train_df = train_df.sort_values('GAME_DATE').reset_index(drop=True)
-    if val_df is not None and len(val_df) > 0 and 'GAME_DATE' in val_df.columns:
-        val_df = val_df.sort_values('GAME_DATE').reset_index(drop=True)
-    
-    X_tr = train_df[features]
-    y_tr = train_df[target_col].to_numpy()
-    
-    X_va = None
-    y_va = None
-    if val_df is not None and len(val_df) > 0:
-        X_va = val_df[features]
-        y_va = val_df[target_col].to_numpy()
-    
-    # Handle infinite and NaN values
-    X_tr = X_tr.replace([np.inf, -np.inf], np.nan)
-    X_tr = X_tr.fillna(X_tr.median())
-    if X_va is not None:
-        X_va = X_va.replace([np.inf, -np.inf], np.nan)
-        X_va = X_va.fillna(X_tr.median())
-    
-    # Build base estimator
-    base_est = DecisionTreeRegressor(max_depth=max_depth)
-    
-    # Setup early stopping if validation data provided
-    early_stopping_params = {}
-    if val_df is not None and len(val_df) > 0:
-        early_stopping_params = {'early_stopping_rounds': 20}
-    
-    # Build recency weights
-    w_recent = build_recent_weights(train_df, player_col, recent_n, recent_weight)
-    w_recent_val = None
-    if X_va is not None:
-        w_recent_val = build_recent_weights(val_df, player_col, recent_n, recent_weight)
-    
-    # Create and train single NGBoost model
-    ngb = NGBRegressor(
-        Dist=distribution,
-        Score=MLE,
-        natural_gradient=True,
-        learning_rate=learning_rate,
-        n_estimators=n_estimators,
-        random_state=random_state,
-        minibatch_frac=minibatch_frac,
-        verbose=False,
-        **early_stopping_params,
-        Base=base_est
-    )
-    
-    # Fit the model
-    if X_va is not None:
-        ngb.fit(X_tr, y_tr, X_val=X_va, Y_val=y_va, sample_weight=w_recent, val_sample_weight=w_recent_val)
-    else:
-        ngb.fit(X_tr, y_tr, sample_weight=w_recent)
-    
-    return ngb
-
-
 def predict_mean_variance(model: NGBRegressor, df: pd.DataFrame, features: list[str]):
     """Return per-row mean and variance from NGBoost predictive distribution."""
     X = df[features]
@@ -269,8 +163,7 @@ def predict_mean_variance_split(mean_model: NGBRegressor,
                                  variance_model: NGBRegressor,
                                  df: pd.DataFrame, 
                                  features: list[str],
-                                 calibration_factor: float = 1.25,
-                                 isotonic_calibrator = None):
+                                 calibration_factor: float = 1.25):
     """Return per-row mean and variance from split models (mean + variance).
     
     Note: variance_model predicts log(variance), so we transform back via exp.
@@ -282,19 +175,14 @@ def predict_mean_variance_split(mean_model: NGBRegressor,
         df: DataFrame with features
         features: List of feature names
         calibration_factor: Factor to apply to variance
-        isotonic_calibrator: Optional IsotonicRegression calibrator for mean predictions
     
     Returns:
-        mean, variance: Calibrated mean and variance predictions
+        mean, variance: Mean and variance predictions
     """
     X = df[features]
     mean = mean_model.predict(X)
     bias_correction = getattr(mean_model, 'bias_correction_', 0.0)
     mean = mean + bias_correction
-    
-    # Apply isotonic calibration if provided
-    if isotonic_calibrator is not None:
-        mean = isotonic_calibrator.predict(mean)
     
     log_var_pred = variance_model.predict(X)  # Predicts log(variance)
     variance = np.exp(log_var_pred)  # Transform back to variance
@@ -349,7 +237,7 @@ def calibrate_predictions(model: NGBRegressor,
     
     if method == 'isotonic':
         # Fit isotonic regression
-        iso_reg = IsotonicRegression(out_of_bounds='clip', increasing=True)
+        iso_reg = IsotonicRegression(increasing=True)
         iso_reg.fit(pred_mean, y_train)
         return iso_reg
     elif method == 'bias':

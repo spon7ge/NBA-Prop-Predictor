@@ -209,7 +209,7 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
     return res
 
 def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStartingFive):
-    player_df = data[data['PLAYER_NAME'] == player_name]
+    player_df = data[data['PLAYER_NAME'] == player_name].copy()
     player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
     if player_df.empty:
         print(f"No data found for {player_name}")
@@ -392,8 +392,8 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
     return res
 
 
-def teamContext(player_name, data, teamStarPlayer, projectedStartingFive): 
-    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
+def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
+    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
@@ -410,7 +410,7 @@ def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     return res
 
 def playerVsOpp(player_name, data, current_date):
-    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
+    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
@@ -464,7 +464,7 @@ def playerVsOpp(player_name, data, current_date):
 
 
 def playerMatchup(player_name, data, current_date_str):
-    player_df = data[data['PLAYER_NAME']==player_name]
+    player_df = data[data['PLAYER_NAME']==player_name].copy()
     opp, home = findOpp(player_name, data, current_date_str)
     if player_df.empty:
         print(f"No data found for {player_name}")
@@ -493,7 +493,7 @@ def playerMatchup(player_name, data, current_date_str):
 
 
 def buildVector(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
-    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
+    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
@@ -506,7 +506,7 @@ def buildVector(player_name, data, current_date, projectedStartingFive, mainStar
     return res
 
 def makePrediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
-    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE')
+    player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None

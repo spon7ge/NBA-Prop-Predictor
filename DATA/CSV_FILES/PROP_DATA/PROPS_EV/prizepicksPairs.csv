@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Tristan da Silva,Justin Edwards,11.5,6.5,17.13,9.93,over,over,0,6.11,0.306,High,High
-Tristan da Silva,Zaccharie Risacher,11.5,11.5,17.13,15.56,over,over,0,5.68,0.284,High,High
-Onyeka Okongwu,Justin Edwards,12.5,6.5,17.13,9.93,over,over,0,4.85,0.242,High,High
-Onyeka Okongwu,Myles Turner,12.5,16.5,17.13,12.97,over,under,0,3.62,0.181,High,High
-Zaccharie Risacher,Myles Turner,11.5,16.5,15.56,12.97,over,under,0,3.5,0.175,High,High
-Luke Kennard,Russell Westbrook,5.5,13.5,6.97,16.61,over,over,0,2.43,0.121,Med,High
-Goga Bitadze,Russell Westbrook,4.5,13.5,5.74,16.61,over,over,0,2.4,0.12,Low,High
-Goga Bitadze,Nickeil Alexander-Walker,4.5,16.5,5.74,19.91,over,over,0,2.39,0.12,Low,High
-Nickeil Alexander-Walker,Bobby Portis,16.5,14.5,19.91,11.54,over,under,0,2.21,0.11,High,High
-Luke Kennard,Bobby Portis,5.5,14.5,6.97,11.54,over,under,0,2.09,0.105,Med,High
+NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
+Santi Aldama,Justin Edwards,18.5,6.5,14.52,9.96,0.74,0.778,under,over,0,6.91,0.346,High,Low
+Nickeil Alexander-Walker,Cedric Coward,16.5,16.5,20.73,13.52,0.728,0.682,over,under,0,4.6,0.23,High,High
+Jalen Johnson,Tyrese Maxey,22.5,29.5,25.84,26.3,0.692,0.674,over,under,0,3.71,0.186,High,High
+Tristan da Silva,Luke Kornet,11.5,9.5,14.14,7.26,0.667,0.685,over,under,0,3.44,0.172,High,Low
+Zaccharie Risacher,Kyle Kuzma,11.5,14.5,14.11,16.92,0.663,0.636,over,over,0,2.4,0.12,High,High
+Kobe Sanders,Julian Champagnie,9.5,10.5,7.73,7.99,0.635,0.662,under,under,0,2.35,0.117,Med,High
+Keldon Johnson,Bobby Portis,14.5,14.5,11.94,12.32,0.66,0.635,under,under,0,2.32,0.116,High,High
+Kristaps Porziņģis,Myles Turner,16.5,16.5,18.56,14.35,0.631,0.628,over,under,0,1.64,0.082,High,High
+Devin Vassell,Malik Monk,16.5,13.5,14.26,11.31,0.63,0.628,under,under,0,1.62,0.081,High,High
+Goga Bitadze,Russell Westbrook,4.5,13.5,6.0,15.66,0.626,0.625,over,over,0,1.51,0.076,Low,High
