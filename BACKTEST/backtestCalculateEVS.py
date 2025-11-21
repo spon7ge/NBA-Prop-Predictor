@@ -182,7 +182,7 @@ def predictStats(playerName, data, models, features):
     
     # Get mean and variance predictions
     mu, variance = predict_mean_variance_split(
-        mean_model, variance_model, playerInput_df, features, calibration_factor, isotonic_calibrator
+        mean_model, variance_model, playerInput_df, features, calibration_factor
     )
     
     # Convert to scalars if arrays
@@ -266,7 +266,7 @@ def backtestSingleBet(data, bookmakers, models, features, edge_threshold=0.05, s
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        recommendation = 1 if edge > edge_threshold else 0
+        recommendation = 1 if abs(line - mu) > edge_threshold and ev_total > 0 else 0
         
         # Confidence interval
         ci_lower = max(0, mu - 1.96 * sigma)
@@ -465,7 +465,7 @@ def backtest2legs(data, backtestData, gameDate, models, features, edge_threshold
         kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (edge1 > edge_threshold and edge2 > edge_threshold) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold) and ev_dollars > 0 else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
@@ -779,7 +779,7 @@ def backtest3Legs(data, backtestData, gameDate, models, features, edge_threshold
         kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (edge1 > edge_threshold and edge2 > edge_threshold and edge3 > edge_threshold) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold and abs(line3 - mu3) > edge_threshold) and ev_dollars > 0 else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
