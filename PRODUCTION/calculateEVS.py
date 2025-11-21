@@ -184,9 +184,9 @@ def calculateSingleBets(data, bookmakers, model, features, current_date,
         
         prediction_data = player_predictions[name]
         mu = prediction_data['prediction']
-        sigma = prediction_data['sigma']  # Already calibrated!
+        sigma = prediction_data['sigma']  
         
-        # Calculate probabilities analytically (fast & accurate)
+        # Calculate probabilities analytically
         p_over = float(1 - norm.cdf(line, loc=mu, scale=sigma))
         p_under = 1.0 - p_over
         
@@ -211,7 +211,7 @@ def calculateSingleBets(data, bookmakers, model, features, current_date,
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        recommendation = 1 if edge > edge_threshold else 0
+        recommendation = 1 if (abs(line - mu) > edge_threshold) and (ev_total > 0) else 0
         
         # Confidence interval
         ci_lower = max(0, mu - 1.96 * sigma)
@@ -415,7 +415,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (edge1 > edge_threshold and edge2 > edge_threshold) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold) and (ev_dollars > 0) else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
@@ -715,7 +715,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (edge1 > edge_threshold and edge2 > edge_threshold and edge3 > edge_threshold) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold and abs(line3 - mu3) > edge_threshold) and (ev_dollars > 0) else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
