@@ -1471,7 +1471,7 @@ function updateStats(data) {
         statsHTML = `
             <div class="stat-card">
                 <div class="stat-label">Probability</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">How confident the model is that the player will hit their prop line. <strong>Example:</strong> If a player has a line of 20.5 points and shows 65% probability, the model is 65% confident they will score over 20.5 points. Higher probabilities (above 50%) favor the over, lower probabilities favor the under.</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">How confident the model is that the player will hit their prop line.</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Projection</div>
