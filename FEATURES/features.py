@@ -299,6 +299,29 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     )
     return df_enhanced
 
+def getPlayerVolatilityToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    """
+    Vectorized version that calculates volatility (standard deviation) to date for each player.
+    FIXED: Properly shifted to prevent data leakage.
+    Similar structure to getPlayerAvgToDateVectorized but calculates expanding std instead of mean.
+    """
+    # Create copy and sort
+    df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
+    
+    # Define stats - same as avg function for consistency
+    stats_cols = ['PTS', 'FGA', 'FG3A', 'FTA', 'TS_PCT', 'USG_PCT', 'MIN', 'PACE', 'E_OFF_RATING', 'TCHS', 'POSS']
+    
+    for stat in stats_cols:
+        if stat in df_enhanced.columns:
+            df_enhanced[f'{stat}_VOLATILITY_TO_DATE'] = (
+                df_enhanced.groupby(player_id_col)[stat]
+                .transform(lambda x: x.shift(1).expanding(min_periods=2).std())
+                .round(2)
+            )
+        else:
+            print(f"Column {stat} not found in dataframe")
+    
+    return df_enhanced
 # ================================================================================================
 # HOME/AWAY AND MATCHUP SPECIFIC FEATURES - FIXED FOR DATA LEAKAGE
 # ================================================================================================
@@ -1045,17 +1068,69 @@ def sort_data_for_features(df):
 # ================================================================================================
 # LINEUP AND STARTER FEATURES
 # ================================================================================================
-def process_star_players_data(df, min_minutes=10):
+def process_star_players_data(df, min_minutes=10, min_games=5, name_dict=None):
+    """
+    Process star players data with optional name normalization.
+    
+    Args:
+        df: DataFrame with player game data
+        min_minutes: Minimum minutes to be considered active (default: 10)
+        min_games: Minimum number of active games to be eligible for star (default: 5)
+        name_dict: Optional dictionary to normalize player names (e.g., {'Luka Doncic': 'Luka Dončić'})
+                   If None, will try to import from PRODUCTION.teamInfo
+    """
     df = df.copy()
+    
+    # Try to import nameDict if not provided
+    if name_dict is None:
+        try:
+            from PRODUCTION.teamInfo import nameDict
+            name_dict = nameDict
+        except ImportError:
+            name_dict = None
+    
+    # Normalize player names if name_dict is provided
+    if name_dict is not None:
+        # Create reverse mapping for normalization (map variations to canonical form)
+        # Also create forward mapping for consistency
+        normalized_names = {}
+        for variant, canonical in name_dict.items():
+            normalized_names[variant] = canonical
+            # Also map canonical to itself if not already present
+            if canonical not in normalized_names:
+                normalized_names[canonical] = canonical
+        
+        # Normalize PLAYER_NAME column
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME'].map(lambda x: normalized_names.get(x, x))
+    else:
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME']
+    
     # Create ACTIVE column based on minutes played
     df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
 
     # Season-long team star by composite score (only among active players)
     active_players = df[df['ACTIVE'] == 1].copy()
     
-    # Calculate mean stats per player per team
+    # Count games per player per team to filter by min_games
+    player_game_counts = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .size()
+        .reset_index(name='GAME_COUNT')
+    )
+    
+    # Filter to only players with enough games
+    eligible_players = player_game_counts[player_game_counts['GAME_COUNT'] >= min_games]
+    
+    # Filter active_players to only eligible players using merge
+    active_players = active_players.merge(
+        eligible_players[['TEAM_ID', 'PLAYER_NAME_NORM']],
+        on=['TEAM_ID', 'PLAYER_NAME_NORM'],
+        how='inner'
+    )
+    
+    # Calculate mean stats per player per team (using normalized names)
     player_stats = (
-        active_players.groupby(['TEAM_ID', 'PLAYER_NAME'], dropna=False)
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
         .agg({
             'USG_PCT': 'mean',
             'TS_PCT': 'mean',
@@ -1065,6 +1140,7 @@ def process_star_players_data(df, min_minutes=10):
             'NET_RATING': 'mean',
         })
         .reset_index()
+        .rename(columns={'PLAYER_NAME_NORM': 'PLAYER_NAME'})
     )
     
     # Fill NaN values with 0 for missing metrics
@@ -1103,11 +1179,13 @@ def process_star_players_data(df, min_minutes=10):
         for _, row in star_rows.iterrows()
     }
 
+    # Map normalized star name back to dataframe
     df['STAR_NAME'] = df['TEAM_ID'].map(star_by_team)
-    df['PLAYER_IS_TEAM_STAR'] = (df['PLAYER_NAME'] == df['STAR_NAME']).astype(int)
+    # Compare using normalized names to handle name variations
+    df['PLAYER_IS_TEAM_STAR'] = (df['PLAYER_NAME_NORM'] == df['STAR_NAME']).astype(int)
 
     star_active_per_game = (
-        df[df['PLAYER_NAME'] == df['STAR_NAME']]
+        df[df['PLAYER_NAME_NORM'] == df['STAR_NAME']]
         .groupby(['GAME_ID', 'TEAM_ID'], as_index=False)['ACTIVE']
         .max()
         .rename(columns={'ACTIVE': 'STAR_ACTIVE'})
@@ -1116,17 +1194,20 @@ def process_star_players_data(df, min_minutes=10):
     df['STAR_ACTIVE'] = df['STAR_ACTIVE'].fillna(0).astype(int)
     df['STAR_SAT_OUT'] = ((df['PLAYER_IS_TEAM_STAR'] == 0) & (df['STAR_ACTIVE'] == 0)).astype(int)
 
-    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE'])
+    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE', 'PLAYER_NAME_NORM'])
 
     return df
 
-def add_opponent_star_status(df, min_minutes=10):
+def add_opponent_star_status(df, min_minutes=10, min_games=5, name_dict=None):
     """
     Add feature indicating if the opponent's star player is in or out.
     
     Args:
         df: DataFrame with player game data
         min_minutes: Minimum minutes played to be considered active (default: 10)
+        min_games: Minimum number of active games to be eligible for star (default: 5)
+        name_dict: Optional dictionary to normalize player names (e.g., {'Luka Doncic': 'Luka Dončić'})
+                   If None, will try to import from PRODUCTION.teamInfo
         
     Returns:
         DataFrame with OPP_STAR_OUT column added:
@@ -1134,6 +1215,25 @@ def add_opponent_star_status(df, min_minutes=10):
         - 0 if opponent star is in (active)
     """
     df = df.copy()
+    
+    # Try to import nameDict if not provided
+    if name_dict is None:
+        try:
+            from PRODUCTION.teamInfo import nameDict
+            name_dict = nameDict
+        except ImportError:
+            name_dict = None
+    
+    # Normalize player names if name_dict is provided
+    if name_dict is not None:
+        normalized_names = {}
+        for variant, canonical in name_dict.items():
+            normalized_names[variant] = canonical
+            if canonical not in normalized_names:
+                normalized_names[canonical] = canonical
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME'].map(lambda x: normalized_names.get(x, x))
+    else:
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME']
     
     # Check required columns
     required_cols = ['GAME_ID', 'OPP_TEAM_ID', 'PLAYER_NAME', 'MIN']
@@ -1149,16 +1249,26 @@ def add_opponent_star_status(df, min_minutes=10):
     # But we need to identify stars by OPP_TEAM_ID
     active_players = df[df['ACTIVE'] == 1].copy()
     
-    # Calculate mean stats per player per opponent team
-    # We need to group by OPP_TEAM_ID, but we need to get the opponent's players
-    # The challenge is that in the current row, we have the player's team, not the opponent's players
+    # Count games per player per team to filter by min_games
+    player_game_counts = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .size()
+        .reset_index(name='GAME_COUNT')
+    )
     
-    # Strategy: For each game, identify the opponent team's star
-    # We'll create a mapping of (GAME_ID, OPP_TEAM_ID) -> opponent star status
+    # Filter to only players with enough games
+    eligible_players = player_game_counts[player_game_counts['GAME_COUNT'] >= min_games]
+    
+    # Filter active_players to only eligible players using merge
+    active_players = active_players.merge(
+        eligible_players[['TEAM_ID', 'PLAYER_NAME_NORM']],
+        on=['TEAM_ID', 'PLAYER_NAME_NORM'],
+        how='inner'
+    )
     
     # First, identify stars per team (similar to process_star_players_data)
     player_stats = (
-        active_players.groupby(['TEAM_ID', 'PLAYER_NAME'], dropna=False)
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
         .agg({
             'USG_PCT': 'mean',
             'TS_PCT': 'mean',
@@ -1168,6 +1278,7 @@ def add_opponent_star_status(df, min_minutes=10):
             'NET_RATING': 'mean',
         })
         .reset_index()
+        .rename(columns={'PLAYER_NAME_NORM': 'PLAYER_NAME'})
     )
     
     # Fill NaN values with 0
@@ -1214,7 +1325,7 @@ def add_opponent_star_status(df, min_minutes=10):
         game_id = game_row['GAME_ID']
         opp_team_id = game_row['OPP_TEAM_ID']
         
-        # Get opponent star name
+        # Get opponent star name (normalized)
         opp_star_name = star_by_team.get(opp_team_id)
         
         if opp_star_name is None:
@@ -1223,11 +1334,11 @@ def add_opponent_star_status(df, min_minutes=10):
             continue
         
         # Check if opponent star is active in this game
-        # Look for rows where TEAM_ID == opp_team_id and PLAYER_NAME == opp_star_name
+        # Look for rows where TEAM_ID == opp_team_id and PLAYER_NAME_NORM == opp_star_name
         opp_star_in_game = df[
             (df['GAME_ID'] == game_id) & 
             (df['TEAM_ID'] == opp_team_id) & 
-            (df['PLAYER_NAME'] == opp_star_name)
+            (df['PLAYER_NAME_NORM'] == opp_star_name)
         ]
         
         if opp_star_in_game.empty:
@@ -1244,8 +1355,8 @@ def add_opponent_star_status(df, min_minutes=10):
         axis=1
     ).astype(int)
     
-    # Drop temporary ACTIVE column
-    df = df.drop(columns=['ACTIVE'])
+    # Drop temporary columns
+    df = df.drop(columns=['ACTIVE', 'PLAYER_NAME_NORM'])
     
     return df
 
@@ -1855,7 +1966,24 @@ def add_interaction_features(df):
     df['USG_PCT_5G_VS_20G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_20'] + eplison)
     df['TS_PCT_5G_VS_40G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_40'] + eplison)
     df['TS_PCT_5G_VS_20G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_20'] + eplison)
+    df['PTS_5G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_AVG_TO_DATE'] + eplison)
+    df['MIN_5G_VS_SEASON_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_AVG_TO_DATE'] + eplison)
+    df['FGA_5G_VS_SEASON_RATIO'] = df['FGA_ROLLING_AVG_5'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    df['USG_PCT_5G_VS_SEASON_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_AVG_TO_DATE'] + eplison)
+    df['TS_PCT_5G_VS_SEASON_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_AVG_TO_DATE'] + eplison)
+    df['PTS_10G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + eplison)
+    df['MIN_10G_VS_SEASON_RATIO'] = df['MIN_ROLLING_AVG_10'] / (df['MIN_AVG_TO_DATE'] + eplison)
+    df['FGA_10G_VS_SEASON_RATIO'] = df['FGA_ROLLING_AVG_10'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    df['USG_PCT_10G_VS_SEASON_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_AVG_TO_DATE'] + eplison)
+    df['TS_PCT_10G_VS_SEASON_RATIO'] = df['TS_PCT_ROLLING_AVG_10'] / (df['TS_PCT_AVG_TO_DATE'] + eplison)
     
+    # short vs long term volatility ratios
+    df['PTS_5G_VS_SEASON_VOLATILITY_RATIO'] = df['PTS_VOLATILITY_5_TO_DATE'] / (df['PTS_VOLATILITY_TO_DATE'] + eplison)
+    df['MIN_5G_VS_SEASON_VOLATILITY_RATIO'] = df['MIN_VOLATILITY_5_TO_DATE'] / (df['MIN_VOLATILITY_TO_DATE'] + eplison)
+    df['USG_PCT_5G_VS_SEASON_VOLATILITY_RATIO'] = df['USG_PCT_CV_5_TO_DATE'] / (df['USG_PCT_VOLATILITY_TO_DATE'] + eplison)
+    df['TS_PCT_5G_VS_SEASON_VOLATILITY_RATIO'] = df['TS_PCT_CV_5_TO_DATE'] / (df['TS_PCT_VOLATILITY_TO_DATE'] + eplison)
+    df['FGA_5G_VS_SEASON_VOLATILITY_RATIO'] = df['FGA_VOLATILITY_5_TO_DATE'] / (df['FGA_VOLATILITY_TO_DATE'] + eplison)
+
     # Consistency metrics (inverse of volatility)
     df['PTS_CONSISTENCY'] = 1 / (df['PTS_VOLATILITY_10_TO_DATE'] + eplison)
     df['MIN_CONSISTENCY'] = 1 / (df['MIN_VOLATILITY_10_TO_DATE'] + eplison)
@@ -1895,4 +2023,11 @@ def add_interaction_features(df):
         if 'FG3_PCT_AVG_TO_DATE' in df.columns:
             df['PLAYER_3PT_FG_PCT_X_OPP_CENTER_3PT_DEF_ALLOWED'] = df['CENTER'] * df['FG3_PCT_AVG_TO_DATE'] * df['OPP_CENTER_DEF_3PT_PCT_ALLOWED']
     
+    # ===== MISSED GAMES =====
+    df['GAMES_MISSED_LAST_5'] = df.groupby('PLAYER_ID')['PLAYER_MISSED_LAST'].transform(
+        lambda x: x.rolling(5, min_periods=1).sum().shift(1).fillna(0)
+    )
+    df['DAYS_REST_AFTER_MISSED'] = df['PLAYER_DAYS_REST'] * df['PLAYER_MISSED_LAST']
+    df['LONG_REST_INDICATOR'] = (df['PLAYER_DAYS_REST'] > 7).astype(int)
+
     return df

@@ -25,6 +25,12 @@ class NBADailyLineups:
         self.url = url
         self.soup = self._getSoup()
 
+    def _normalize_player_name(self, player_name):
+        """Normalize player name using nameDict from teamInfo.py"""
+        if player_name in nameDict:
+            return nameDict[player_name]
+        return player_name
+
     def __str__(self):
         result = ""
         for index, matchup in enumerate(self.data):
@@ -53,15 +59,15 @@ class NBADailyLineups:
             self.data.append({
                 "away": {
                     "team": matchup.find("a", {"class": "lineup__mteam is-visit white"}).text.split(None, 1)[0],
-                    "confirmed": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": "Very Likely To Play"})),
-                    "gtd": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": ["Toss Up To Play", "Likely To Play"]})),
-                    "out": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": "Very Unlikely To Play"})), 
+                    "confirmed": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": "Very Likely To Play"})),
+                    "gtd": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": ["Toss Up To Play", "Likely To Play"]})),
+                    "out": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-visit"}).find_all("li", {"title": "Very Unlikely To Play"})), 
                 },
                 "home": {
                     "team": matchup.find("a", {"class": "lineup__mteam is-home white"}).text.split(None, 1)[0],
-                    "confirmed": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": ["Very Likely To Play", "Likely To Play"]})),
-                    "gtd": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": "Toss Up To Play"})),
-                    "out": set(item.a['title'] for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": "Very Unlikely To Play"})), 
+                    "confirmed": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": ["Very Likely To Play", "Likely To Play"]})),
+                    "gtd": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": "Toss Up To Play"})),
+                    "out": set(self._normalize_player_name(item.a['title']) for item in matchup.find("ul", {"class": "lineup__list is-home"}).find_all("li", {"title": "Very Unlikely To Play"})), 
                 }
             })
     
@@ -90,7 +96,7 @@ class NBADailyLineups:
                 team_abbr = self.TEAM_ABBREVIATIONS.get(team_name)
                 
                 if team_abbr:
-                    confirmed_players = list(matchup[team_type]["confirmed"])
+                    confirmed_players = [self._normalize_player_name(p) for p in matchup[team_type]["confirmed"]]
                     # Take first 5 confirmed players (or all if less than 5)
                     if confirmed_players:
                         updated_lineups[team_abbr] = confirmed_players[:5] if len(confirmed_players) >= 5 else confirmed_players

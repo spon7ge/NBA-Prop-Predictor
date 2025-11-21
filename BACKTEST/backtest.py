@@ -16,8 +16,7 @@ from BACKTEST.backtestCalculateEVS import backtestSingleBet as calculateSingleBe
 from BACKTEST.backtestCalculateEVS import backtest3Legs as calculate3Legs
 
 def backtestSingle(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                  variance_inflation=1.1, use_monte_carlo=True, 
-                  n_simulations=10000, max_kelly=0.25, stake=100):
+                  stake=100, max_player_appearances: int = 1):
     
     data = data[data['GAME_DATE'] == gameDate]
     category = 'points'
@@ -33,14 +32,13 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
         features=features,
         edge_threshold=edge_threshold,
         stake=stake,
-        variance_inflation=variance_inflation,
-        use_monte_carlo=use_monte_carlo,
-        n_simulations=n_simulations,
-        max_kelly=max_kelly
+        stat_col='PTS',
+        top_n=top_n,
+        max_player_appearances=max_player_appearances
     )
     
-    # Sort by edge and take top bets
-    evData = results.sort_values(by='EV%', ascending=False).head(top_n)
+    # Sort by EV and take top bets
+    evData = results.sort_values(by='EV$', ascending=False).head(top_n)
     results = []
 
     for idx, row in evData.iterrows():
@@ -60,7 +58,7 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
         actual = playerData['PTS'].iloc[-1]
         
-        # Use the recommendation from the updated function (includes Kelly constraint)
+        # Use the recommendation from the updated function
         recommendation = row['RECOMMENDATION']
 
         # Determine if bet won
@@ -82,12 +80,10 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
             'edge': edge,  # Probability edge
             'model_prob': row['MODEL PROB'],  # Model probability for the side
             'market_prob': row['IMPLIED PROB'],  # Market implied probability
-            'ev_percent': row['EV%'],  # Expected value percentage
+            'ev_percent': row['EV$'],  # Expected value in dollars
             'kelly_fraction': row['KELLY_FRACTION'],  # Kelly as fraction
-            'kelly_dollars': row['KELLY_DOLLARS'],  # Kelly in dollars
             'recommendation': recommendation,
             'won': won,
-            'simulation_method': row['SIMULATION_METHOD'],  # Monte Carlo or Analytical
             'date': gameDate
         })
 
@@ -95,9 +91,7 @@ def backtestSingle(data, backtestData, gameDate, models, features, edge_threshol
 
 
 def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
-                 max_player_appearances: int = 3):
+                 stat_col='PTS', stake=100, max_player_appearances: int = 2):
     print(f"Starting backtest for pairs on {gameDate}")
     total_start = time.time()
 
@@ -117,11 +111,7 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
         features=features,
         edge_threshold=edge_threshold,
         top_n=top_n,
-        variance_inflation=variance_inflation,
         stat_col=stat_col,
-        use_monte_carlo=use_monte_carlo,
-        n_simulations=n_simulations,
-        max_kelly=max_kelly,
         stake=stake,
         max_player_appearances=max_player_appearances
     )
@@ -219,14 +209,17 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
             'EV$': row.get('EV$', row.get('ev_percent', 0)),
             'KELLY FULL': row.get('KELLY FULL', row.get('kelly_full', 0)),
             'RECOMMENDATION': row.get('RECOMMENDATION', row.get('recommendation')),
+            'CI 1': row.get('CI 1', None),
+            'CI 2': row.get('CI 2', None),
             'INTERVAL WIDTH 1': row.get('INTERVAL WIDTH 1', None),
             'INTERVAL WIDTH 2': row.get('INTERVAL WIDTH 2', None),
             'SIGMA 1': row.get('SIGMA 1', None),
             'SIGMA 2': row.get('SIGMA 2', None),
             'SIGMA FLAG 1': row.get('SIGMA FLAG 1', None),
             'SIGMA FLAG 2': row.get('SIGMA FLAG 2', None),
+            'CORRELATION': row.get('CORRELATION', None),
+            'SAME_GAME': row.get('SAME_GAME', None),
             'EXPECTED ROI': row.get('EXPECTED ROI', None),
-            'SIMULATION METHOD': row.get('SIMULATION METHOD', row.get('simulation_method')),
             # Backtest-specific columns
             'actual1': actual1,
             'actual2': actual2,
@@ -242,9 +235,7 @@ def backtestPairs(data, backtestData, gameDate, models, features, edge_threshold
     return pd.DataFrame(backtest_results)
 
 def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold=0.05, top_n=10, 
-                 variance_inflation=1.1, stat_col='PTS', 
-                 use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
-                 max_player_appearances: int = 2):
+                 stat_col='PTS', stake=100, max_player_appearances: int = 2):
     data = data[data['GAME_DATE'] == gameDate]
     if stat_col == 'PTS':
         category = 'player_points'
@@ -269,11 +260,7 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
         features=features,
         edge_threshold=edge_threshold,
         top_n=top_n,
-        variance_inflation=variance_inflation,
         stat_col=stat_col,
-        use_monte_carlo=use_monte_carlo,
-        n_simulations=n_simulations,
-        max_kelly=max_kelly,
         stake=stake,
         max_player_appearances=max_player_appearances
     )
@@ -383,9 +370,9 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
             'EV$': row.get('EV$', row.get('ev_percent', 0)),
             'KELLY FULL': row.get('KELLY FULL', row.get('kelly_full', 0)),
             'RECOMMENDATION': row.get('RECOMMENDATION', row.get('recommendation')),
-            'CONFIDENCE INTERVAL 1': row.get('CONFIDENCE INTERVAL 1', None),
-            'CONFIDENCE INTERVAL 2': row.get('CONFIDENCE INTERVAL 2', None),
-            'CONFIDENCE INTERVAL 3': row.get('CONFIDENCE INTERVAL 3', None),
+            'CI 1': row.get('CI 1', row.get('CONFIDENCE INTERVAL 1', None)),
+            'CI 2': row.get('CI 2', row.get('CONFIDENCE INTERVAL 2', None)),
+            'CI 3': row.get('CI 3', row.get('CONFIDENCE INTERVAL 3', None)),
             'INTERVAL WIDTH 1': row.get('INTERVAL WIDTH 1', None),
             'INTERVAL WIDTH 2': row.get('INTERVAL WIDTH 2', None),
             'INTERVAL WIDTH 3': row.get('INTERVAL WIDTH 3', None),
@@ -395,8 +382,9 @@ def backtestTrios(data, backtestData, gameDate, models, features, edge_threshold
             'SIGMA FLAG 1': row.get('SIGMA FLAG 1', None),
             'SIGMA FLAG 2': row.get('SIGMA FLAG 2', None),
             'SIGMA FLAG 3': row.get('SIGMA FLAG 3', None),
+            'CORRELATION': row.get('CORRELATION', None),
+            'SAME_GAME_PAIRS': row.get('SAME_GAME_PAIRS', None),
             'EXPECTED ROI': row.get('EXPECTED ROI', None),
-            'SIMULATION METHOD': row.get('SIMULATION METHOD', row.get('simulation_method')),
             # Backtest-specific columns
             'actual1': actual1,
             'actual2': actual2,
