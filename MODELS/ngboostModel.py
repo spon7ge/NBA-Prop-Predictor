@@ -269,16 +269,33 @@ def predict_mean_variance_split(mean_model: NGBRegressor,
                                  variance_model: NGBRegressor,
                                  df: pd.DataFrame, 
                                  features: list[str],
-                                 calibration_factor: float = 1.25):
+                                 calibration_factor: float = 1.25,
+                                 isotonic_calibrator = None):
     """Return per-row mean and variance from split models (mean + variance).
     
     Note: variance_model predicts log(variance), so we transform back via exp.
     The calibration_factor is applied to variance (not scale).
+    
+    Args:
+        mean_model: Trained mean model
+        variance_model: Trained variance model
+        df: DataFrame with features
+        features: List of feature names
+        calibration_factor: Factor to apply to variance
+        isotonic_calibrator: Optional IsotonicRegression calibrator for mean predictions
+    
+    Returns:
+        mean, variance: Calibrated mean and variance predictions
     """
     X = df[features]
     mean = mean_model.predict(X)
     bias_correction = getattr(mean_model, 'bias_correction_', 0.0)
     mean = mean + bias_correction
+    
+    # Apply isotonic calibration if provided
+    if isotonic_calibrator is not None:
+        mean = isotonic_calibrator.predict(mean)
+    
     log_var_pred = variance_model.predict(X)  # Predicts log(variance)
     variance = np.exp(log_var_pred)  # Transform back to variance
     variance = variance * calibration_factor  # Apply calibration to variance

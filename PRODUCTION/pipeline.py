@@ -372,9 +372,9 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
     #Shot Profile
     res.append(player_df['percentagePointsMidrange2pt'].mean())
     res.append(player_df['percentagePointsPaint'].mean())
-    res.append(player_df['FG3A'].mean() / (player_df['FGA'].mean() + 0.01))
-    res.append(player_df['FG3A'].mean() / team_df['TEAM_FG3A'].mean() + 0.01)
-    res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.01))
+    # res.append(player_df['FG3A'].mean() / (player_df['FGA'].mean() + 0.01))
+    # res.append(player_df['FG3A'].mean() / team_df['TEAM_FG3A'].mean() + 0.01)
+    # res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.01))
     
     #Star Dynamics
     res.append(player_df['PTS_DELTA_STAR_OUT'].iloc[-1])

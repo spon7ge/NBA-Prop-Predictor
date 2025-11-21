@@ -90,7 +90,24 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 
 _prediction_cache = {}
 
-def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
+def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer, isotonic_calibrator=None):
+    """
+    Get cached prediction for a player.
+    
+    Args:
+        player_name: Name of the player
+        data: Historical data
+        model: Model or tuple of (mean_model, variance_model, calibration_factor)
+        features: List of feature names
+        current_date: Current date for prediction
+        projectedStartingFive: Projected starting five
+        mainStartingFive: Main starting five
+        teamStarPlayer: Team star player info
+        isotonic_calibrator: Optional isotonic regression calibrator for mean predictions
+    
+    Returns:
+        Dictionary with 'prediction', 'sigma', and 'skew'
+    """
     cache_key = f"{player_name}_{current_date}"
     
     if cache_key not in _prediction_cache:
@@ -114,7 +131,10 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
                 variance_model = model[1]
                 calibration_factor = model[2] if len(model) > 2 else 1.25  # Use calibration factor if provided
                 from MODELS.ngboostModel import predict_mean_variance_split
-                mu, variance = predict_mean_variance_split(mean_model, variance_model, vector, features, calibration_factor)
+                mu, variance = predict_mean_variance_split(
+                    mean_model, variance_model, vector, features, 
+                    calibration_factor, isotonic_calibrator
+                )
                 pred = round(float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu), 3)
                 sigma = float(np.sqrt(variance[0] if isinstance(variance, (np.ndarray, pd.Series)) else variance))
                 skew = 0.0
@@ -147,8 +167,17 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
 def calculateSingleBets(data, bookmakers, model, features, current_date, edge_threshold=0.05, stake=100, 
                      variance_inflation=1.1, stat_col='PTS', 
                      use_monte_carlo=True, n_simulations=10000, max_kelly=0.25,
-                     enforce_downside_skew: bool = False, skew_override: float | None = None):
+                     enforce_downside_skew: bool = False, skew_override: float | None = None,
+                     isotonic_calibrator=None):
+    """
+    Calculate single bet opportunities with optional isotonic calibration.
+    
+    Args:
+        isotonic_calibrator: Optional isotonic regression calibrator for mean predictions
+    """
     print("Processing single bets with single model...")
+    if isotonic_calibrator is not None:
+        print("Using isotonic regression calibration")
     
     # Set random seed once before the loop for reproducibility
     np.random.seed(42)
@@ -162,7 +191,8 @@ def calculateSingleBets(data, bookmakers, model, features, current_date, edge_th
     for player in unique_players:
         mapped_player = nameDict.get(player, player)
         pred_data = get_cached_prediction(mapped_player, data, model, features, current_date, 
-                                         projectedStartingFive, mainStartingFive, teamStarPlayer)
+                                         projectedStartingFive, mainStartingFive, teamStarPlayer,
+                                         isotonic_calibrator)
         if pred_data is not None:
             player_predictions[player] = pred_data
     
@@ -296,8 +326,16 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
                  variance_inflation=1.1, 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
                  enforce_downside_skew: bool = False, skew_override: float | None = None,
-                 max_player_appearances: int = 3):
-
+                 max_player_appearances: int = 3, isotonic_calibrator=None):
+    """
+    Calculate 2-leg parlay opportunities with optional isotonic calibration.
+    
+    Args:
+        isotonic_calibrator: Optional isotonic regression calibrator for mean predictions
+    """
+    if isotonic_calibrator is not None:
+        print("Using isotonic regression calibration for 2-leg bets")
+    
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
     if bookmakers.empty:
@@ -329,7 +367,8 @@ def calculate2LegBets(data, bookmakers, model, features, current_date, edge_thre
         
         # Get prediction data
         pred_data = get_cached_prediction(mapped_player, data, model, features, current_date, 
-                                         projectedStartingFive, mainStartingFive, teamStarPlayer)
+                                         projectedStartingFive, mainStartingFive, teamStarPlayer,
+                                         isotonic_calibrator)
         if pred_data is None:
             continue
         
@@ -579,7 +618,16 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
                  variance_inflation=1.1, 
                  use_monte_carlo=True, n_simulations=10000, max_kelly=0.25, stake=100,
                  enforce_downside_skew: bool = False, skew_override: float | None = None,
-                 max_player_appearances: int = 2):
+                 max_player_appearances: int = 2, isotonic_calibrator=None):
+    """
+    Calculate 3-leg parlay opportunities with optional isotonic calibration.
+    
+    Args:
+        isotonic_calibrator: Optional isotonic regression calibrator for mean predictions
+    """
+    if isotonic_calibrator is not None:
+        print("Using isotonic regression calibration for 3-leg bets")
+    
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
     if bookmakers.empty:
@@ -607,7 +655,8 @@ def calculate3LegBets(data, bookmakers, model, features, current_date, edge_thre
         
         # Get prediction data
         pred_data = get_cached_prediction(mapped_player, data, model, features, current_date, 
-                                         projectedStartingFive, mainStartingFive, teamStarPlayer)
+                                         projectedStartingFive, mainStartingFive, teamStarPlayer,
+                                         isotonic_calibrator)
         if pred_data is None:
             continue
         

@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Tyus Jones,Santi Aldama,Bobby Portis,3.5,18.5,14.5,4.46,13.8,9.42,over,under,under,0,9.85,0.197,Low,High,High
-Kobe Sanders,Santi Aldama,Bobby Portis,9.5,18.5,14.5,12.7,13.8,9.42,over,under,under,0,9.82,0.196,High,High,High
-Kobe Sanders,Tyus Jones,Luke Kennard,9.5,3.5,5.5,12.7,4.46,7.28,over,over,over,0,6.57,0.131,High,Low,Med
-Tristan da Silva,Goga Bitadze,Luke Kennard,11.5,4.5,5.5,14.73,5.94,7.28,over,over,over,0,6.05,0.121,High,Low,Med
-Tristan da Silva,Goga Bitadze,Nickeil Alexander-Walker,11.5,4.5,16.5,14.73,5.94,19.65,over,over,over,0,5.48,0.11,High,Low,High
-Brook Lopez,Nicolas Batum,Nickeil Alexander-Walker,6.0,5.0,16.5,7.87,6.35,19.65,over,over,over,0,5.1,0.102,Med,Med,High
-Brook Lopez,Nicolas Batum,Zach Edey,6.0,5.0,12.5,7.87,6.35,14.88,over,over,over,0,5.0,0.1,Med,Med,Med
-Zach Edey,Myles Turner,VJ Edgecombe,12.5,16.5,14.5,14.88,13.7,17.21,over,under,over,0,3.43,0.069,Med,High,High
-Dyson Daniels,Myles Turner,VJ Edgecombe,11.5,16.5,14.5,9.47,13.7,17.21,under,under,over,0,2.8,0.056,Med,High,High
-Kris Dunn,Dyson Daniels,Zaccharie Risacher,7.5,11.5,11.5,8.8,9.47,13.37,over,under,over,0,1.96,0.039,Med,Med,High
+Tristan da Silva,Onyeka Okongwu,Justin Edwards,11.5,12.5,6.5,17.13,17.13,9.93,over,over,over,0,11.42,0.228,High,High,High
+Tristan da Silva,Zaccharie Risacher,Justin Edwards,11.5,11.5,6.5,17.13,15.56,9.93,over,over,over,0,11.08,0.222,High,High,High
+Goga Bitadze,Onyeka Okongwu,Zaccharie Risacher,4.5,12.5,11.5,5.74,17.13,15.56,over,over,over,0,8.03,0.161,Low,High,High
+Goga Bitadze,Nickeil Alexander-Walker,Myles Turner,4.5,16.5,16.5,5.74,19.91,12.97,over,over,under,0,5.07,0.101,Low,High,High
+Nickeil Alexander-Walker,Luke Kennard,Myles Turner,16.5,5.5,16.5,19.91,6.97,12.97,over,over,under,0,4.97,0.099,High,Med,High
+Luke Kennard,Russell Westbrook,Bobby Portis,5.5,13.5,14.5,6.97,16.61,11.54,over,over,under,0,4.66,0.093,Med,High,High
+Santi Aldama,Russell Westbrook,Bobby Portis,18.5,13.5,14.5,15.56,16.61,11.54,under,over,under,0,4.38,0.088,High,High,High
+Santi Aldama,VJ Edgecombe,Kyle Kuzma,18.5,14.5,14.5,15.56,17.42,17.42,under,over,over,0,3.79,0.076,High,High,High
+Kobe Sanders,VJ Edgecombe,Kyle Kuzma,9.5,14.5,14.5,11.54,17.42,17.42,over,over,over,0,3.59,0.072,Med,High,High
+Kobe Sanders,Brook Lopez,Jock Landale,9.5,6.0,8.5,11.54,6.97,9.93,over,over,over,0,2.76,0.055,Med,High,High
