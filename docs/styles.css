@@ -66,6 +66,16 @@ body {
     font-weight: 400;
 }
 
+.description-note {
+    color: #fbbf24;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 10px 0 0 0;
+    font-weight: 400;
+    font-style: italic;
+    opacity: 0.9;
+}
+
 .description-list {
     list-style: none;
     padding: 0;
@@ -87,6 +97,83 @@ body {
     left: 0;
     color: #667eea;
     font-weight: bold;
+}
+
+.description-details {
+    margin-top: 12px;
+}
+
+.description-summary {
+    color: #667eea;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.description-summary:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.description-summary::-webkit-details-marker {
+    display: none;
+}
+
+.description-summary::before {
+    content: "▶";
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+    font-size: 10px;
+}
+
+.description-details[open] .description-summary::before {
+    transform: rotate(90deg);
+}
+
+.description-content {
+    margin-top: 12px;
+    padding: 15px;
+    background: rgba(31, 38, 54, 0.5);
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.prop-info {
+    margin-bottom: 12px;
+}
+
+.prop-info:last-child {
+    margin-bottom: 0;
+}
+
+.prop-title {
+    color: #e8e8e8;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.prop-info p {
+    color: #c8c8c8;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.prop-info .tip {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fbbf24;
 }
 
 .filters {
