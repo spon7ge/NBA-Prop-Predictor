@@ -134,9 +134,8 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     
     df.sort_values([player_id_col, date_col], inplace=True)
 
-    stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 
-                'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt' ]
+    stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'UFG_PCT', 'CFG_PCT', 'SPD', 'DIST', 'EFG_PCT', 
+                'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT']
 
     for window in windows:
         for col in stats_cols:
@@ -155,13 +154,13 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     player_data.reset_index(drop=True, inplace=True)
     
     player_data = player_data.sort_values([player_id_col, date_col])
-    stats_lines = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt']
+    stats_lines = ['STARTING', 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
+                'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT', 'EFG_PCT']
     for stat_line in stats_lines:
         if stat_line not in player_data.columns:
             continue
             
-        for lag in range(1, 3):
+        for lag in range(1, 2):
             lag_col = f'{stat_line}_LAG_{lag}'
             player_data[lag_col] = player_data.groupby(player_id_col)[stat_line].shift(lag)
             rolling_mean = player_data.groupby(player_id_col)[stat_line].transform(
@@ -175,12 +174,12 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     return player_data
 
-def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[5, 10, 20, 40]):
+def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7,10,25,40]):
     df = df.copy()
     df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Metrics to calculate trends for
-    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT', 'TS_PCT']
+    trend_metrics = ['PTS', 'MIN', 'FGA', 'FG3A', 'USG_PCT', 'TS_PCT', 'FGM', 'FG3M', 'FTA', 'FTM', 'EFG_PCT', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', ]
     
     # Only process metrics that exist in the dataframe
     available_metrics = [m for m in trend_metrics if m in df.columns]
@@ -282,7 +281,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTA', 'FTM', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT',
-                'percentagePointsPaint', 'percentagePointsMidrange2pt', 'percentagePoints3pt']
+                'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'UFG_PCT', 'CFG_PCT', 'SPD', 'DIST', 'CFGA', 'UFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT', 'EFG_PCT']
     for stat in stats_cols:
         if stat in df_enhanced.columns:
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
@@ -309,7 +308,7 @@ def getPlayerVolatilityToDateVectorized(df, player_id_col='PLAYER_ID', date_col=
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats - same as avg function for consistency
-    stats_cols = ['PTS', 'FGA', 'FG3A', 'FTA', 'TS_PCT', 'USG_PCT', 'MIN', 'PACE', 'E_OFF_RATING', 'TCHS', 'POSS']
+    stats_cols = ['PTS', 'FGA', 'FG3A', 'FTA', 'TS_PCT', 'USG_PCT', 'MIN', 'PACE', 'E_OFF_RATING', 'TCHS', 'POSS', 'SPD', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM']
     
     for stat in stats_cols:
         if stat in df_enhanced.columns:
@@ -337,7 +336,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = [ 'PTS','FGA', 'FG3A','FTA','TS_PCT', 'USG_PCT','MIN']
+    metrics = [ 'PTS','FGA','FGM', 'FG3A','FG3M','FTA','FTM','TS_PCT', 'USG_PCT','MIN', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'POSS', 'TCHS', 'E_OFF_RATING', 'NET_RATING', 'SPD', 'DIST', 'DFGM', 'DFGA', 'DFG_PCT', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -414,7 +413,7 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     df.sort_values([player_id_col, 'GAME_DATE'], inplace=True)
     
     # Metrics to track historical performance against teams
-    metrics = ['PTS', 'MIN','USG_PCT', 'EFG_PCT', 'TS_PCT']
+    metrics = ['PTS', 'MIN','USG_PCT', 'EFG_PCT', 'TS_PCT', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'POSS', 'TCHS', 'E_OFF_RATING', 'NET_RATING', 'SPD', 'DIST', 'DFGM', 'DFGA', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM']
     
     # Available metrics only
     available_metrics = [m for m in metrics if m in df.columns]
@@ -945,7 +944,7 @@ def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DA
     return df
 
 
-def add_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[5, 10, 15]):
+def add_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', windows=[3, 5, 7, 10]):
     """
     Add rolling averages for player's team statistics over specified windows.
     Shows how the player's own team has been performing in their recent games.
@@ -1004,7 +1003,7 @@ def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
     df = df.copy()
     
     # Key stats to analyze for team form
-    form_stats = ['TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PTS']
+    form_stats = ['TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PTS', 'TEAM_PACE', 'TEAM_FGA', 'TEAM_FTA', 'TEAM_FG3A', 'TEAM_FG3M', 'TEAM_FTM', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL']
     
     for window in windows:
         for stat in form_stats:
@@ -1673,7 +1672,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     df = df.copy()
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
-    metrics = ['MIN', 'PTS', 'FGA', 'FG3A', 'TOV', 'USG_PCT', 'TS_PCT']
+    metrics = ['MIN', 'PTS', 'FGA', 'FG3A', 'TOV', 'USG_PCT', 'TS_PCT', 'TCHS']
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1888,15 +1887,30 @@ def add_interaction_features(df):
     
     # ===== GAME CONTEXT =====
     df['TEAM_OFF_MINUS_OPP_DEF'] = df['TEAM_OFF_RATING_AVG_TO_DATE'] - df['OPP_DEF_RATING_AVG_TO_DATE']
-    
+    df['SHOT_QUALITY_RATIO'] = (df['UFG_PCT_AVG_TO_DATE']  / (df['CFG_PCT_AVG_TO_DATE'] + eplison))
+    df['UNCONTESTED_SHOTS_RATIO'] = (df['UFGA_AVG_TO_DATE']  / (df['FGA_AVG_TO_DATE'] + eplison))
+    df['CONTESTED_SHOTS_RATIO'] = (df['CFGA_AVG_TO_DATE']  / (df['FGA_AVG_TO_DATE'] + eplison))
+
     # ===== POINTS PER MINUTE INTERACTIONS =====
     df['PTS_PER_MIN'] = df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison)
     df['PTS_PER_36'] = df['PTS_AVG_TO_DATE'] / 36.0
+    df['FGA_PER_36'] = df['FGA_AVG_TO_DATE'] / 36.0
+    df['FTA_PER_36'] = df['FTA_AVG_TO_DATE'] / 36.0
+    df['FG3A_PER_36'] = df['FG3A_AVG_TO_DATE'] / 36.0
+    df['FTM_PER_36'] = df['FTM_AVG_TO_DATE'] / 36.0
+    df['FG3M_PER_36'] = df['FG3M_AVG_TO_DATE'] / 36.0
+    df['FGM_PER_36'] = df['FGM_AVG_TO_DATE'] / 36.0
+    df['AST_PER_36'] = df['AST_AVG_TO_DATE'] / 36.0
+    df['USG_PCT_PER_36'] = df['USG_PCT_AVG_TO_DATE'] / 36.0
+    df['TCHS_PER_36'] = df['TCHS_AVG_TO_DATE'] / 36.0
     df['PTS_PER_MIN_X_USG'] = df['PTS_PER_MIN'] * df['USG_PCT_AVG_TO_DATE']
     df['GAMES_OVER_20_MIN'] = (df['MIN_AVG_TO_DATE'] > 20).astype(int)
     df['GAMES_OVER_30_MIN'] = (df['MIN_AVG_TO_DATE'] > 30).astype(int)
     df['GAMES_OVER_20_PTS'] = (df['PTS_AVG_TO_DATE'] > 20).astype(int)
     df['GAMES_OVER_30_PTS'] = (df['PTS_AVG_TO_DATE'] > 30).astype(int)
+    df['TCHS_PER_MIN'] = df['TCHS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison)
+    df['TCHS_X_USG'] = df['TCHS_PER_MIN'] * df['USG_PCT_AVG_TO_DATE']
+    df['DIST_PER_MIN'] = df['DIST_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + eplison)
     
     # ===== STAR PLAYER INTERACTIONS =====
     df['PTS_X_STAR_PLAYER'] = df['PTS_AVG_TO_DATE'] * df['PLAYER_IS_TEAM_STAR']
@@ -1955,27 +1969,20 @@ def add_interaction_features(df):
     df['TS_PCT_MIN_LAST_10'] = df.groupby('PLAYER_ID')['TS_PCT'].shift(1).rolling(10).min().values
     
     # Short-term vs long-term divergence
-    df['PTS_5G_VS_40G_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_40'] + eplison)
-    df['PTS_10G_VS_40G_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_ROLLING_AVG_40'] + eplison)
-    df['PTS_5G_VS_20G_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_20'] + eplison)
-    df['MIN_5G_VS_40G_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_40'] + eplison)
-    df['MIN_10G_VS_40G_RATIO'] = df['MIN_ROLLING_AVG_10'] / (df['MIN_ROLLING_AVG_40'] + eplison)
-    df['MIN_5G_VS_20G_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_ROLLING_AVG_20'] + eplison)
-    df['USG_PCT_5G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
-    df['USG_PCT_10G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
-    df['USG_PCT_5G_VS_20G_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_ROLLING_AVG_20'] + eplison)
-    df['TS_PCT_5G_VS_40G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_40'] + eplison)
-    df['TS_PCT_5G_VS_20G_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_ROLLING_AVG_20'] + eplison)
-    df['PTS_5G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_AVG_TO_DATE'] + eplison)
-    df['MIN_5G_VS_SEASON_RATIO'] = df['MIN_ROLLING_AVG_5'] / (df['MIN_AVG_TO_DATE'] + eplison)
-    df['FGA_5G_VS_SEASON_RATIO'] = df['FGA_ROLLING_AVG_5'] / (df['FGA_AVG_TO_DATE'] + eplison)
+    df['PTS_10G_VS_40G_RATIO'] = df['PTS_ROLLING_AVG_5'] / (df['PTS_ROLLING_AVG_40'] + eplison)
+    df['FGA_10G_VS_40G_RATIO'] = df['FGA_ROLLING_AVG_5'] / (df['FGA_ROLLING_AVG_40'] + eplison)
+    df['TCHS_10G_VS_40G_RATIO'] = df['TCHS_ROLLING_AVG_5'] / (df['TCHS_ROLLING_AVG_40'] + eplison)
     df['USG_PCT_5G_VS_SEASON_RATIO'] = df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_AVG_TO_DATE'] + eplison)
     df['TS_PCT_5G_VS_SEASON_RATIO'] = df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_AVG_TO_DATE'] + eplison)
     df['PTS_10G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + eplison)
     df['MIN_10G_VS_SEASON_RATIO'] = df['MIN_ROLLING_AVG_10'] / (df['MIN_AVG_TO_DATE'] + eplison)
+    df['MIN_10G_VS_40G_RATIO'] = df['MIN_ROLLING_AVG_10'] / (df['MIN_ROLLING_AVG_40'] + eplison)
     df['FGA_10G_VS_SEASON_RATIO'] = df['FGA_ROLLING_AVG_10'] / (df['FGA_AVG_TO_DATE'] + eplison)
     df['USG_PCT_10G_VS_SEASON_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_AVG_TO_DATE'] + eplison)
+    df['USG_PCT_10G_VS_40G_RATIO'] = df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_ROLLING_AVG_40'] + eplison)
     df['TS_PCT_10G_VS_SEASON_RATIO'] = df['TS_PCT_ROLLING_AVG_10'] / (df['TS_PCT_AVG_TO_DATE'] + eplison)
+    df['TS_PCT_10G_VS_40G_RATIO'] = df['TS_PCT_ROLLING_AVG_10'] / (df['TS_PCT_ROLLING_AVG_40'] + eplison)
+    df['TCHS_5G_VS_SEASON_RATIO'] = df['TCHS_ROLLING_AVG_5'] / (df['TCHS_AVG_TO_DATE'] + eplison)
     
     # short vs long term volatility ratios
     df['PTS_5G_VS_SEASON_VOLATILITY_RATIO'] = df['PTS_VOLATILITY_5_TO_DATE'] / (df['PTS_VOLATILITY_TO_DATE'] + eplison)
@@ -2029,5 +2036,7 @@ def add_interaction_features(df):
     )
     df['DAYS_REST_AFTER_MISSED'] = df['PLAYER_DAYS_REST'] * df['PLAYER_MISSED_LAST']
     df['LONG_REST_INDICATOR'] = (df['PLAYER_DAYS_REST'] > 7).astype(int)
+
+
 
     return df

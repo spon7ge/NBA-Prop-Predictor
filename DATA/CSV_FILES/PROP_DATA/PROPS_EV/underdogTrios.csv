@@ -1,11 +1,11 @@
-NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Jerami Grant,Karl-Anthony Towns,Miles McBride,22.5,21.5,8.5,17.1,26.94,14.76,0.847,0.79,0.834,under,over,over,1,20.14,0.403,Med,High,High
-Dillon Brooks,Alperen Sengun,Keyonte George,18.5,23.5,18.5,22.8,28.14,23.11,0.743,0.762,0.75,over,over,over,1,12.93,0.259,High,High,High
-Buddy Hield,Lauri Markkanen,Jordan Clarkson,7.5,24.5,9.5,10.83,28.53,13.22,0.724,0.72,0.728,over,over,over,0,10.5,0.21,Med,High,High
-Shai Gilgeous-Alexander,Jalen Suggs,Tristan da Silva,31.5,13.5,12.5,28.1,16.49,15.69,0.719,0.695,0.695,under,over,over,0,8.75,0.175,Med,Med,High
-Draymond Green,Mikal Bridges,Ryan Rollins,8.5,15.5,21.5,11.38,18.74,18.47,0.688,0.696,0.682,over,over,under,0,7.65,0.153,Med,High,High
-Nikola Jokić,Ace Bailey,Goga Bitadze,28.5,10.5,5.5,30.83,12.53,7.07,0.653,0.64,0.648,over,over,over,0,4.64,0.093,Med,Med,Low
-Devin Booker,Al Horford,Cade Cunningham,28.5,7.5,28.5,30.64,5.89,26.25,0.623,0.621,0.632,over,under,under,0,3.2,0.064,High,Med,High
-Josh Hart,Myles Turner,Bobby Portis,10.5,14.5,14.5,11.9,12.53,12.98,0.606,0.627,0.606,over,under,under,0,2.45,0.049,Med,High,Med
-Naz Reid,Stephen Curry,Anthony Black,12.5,27.5,11.5,14.04,25.76,13.04,0.601,0.605,0.6,over,under,over,0,1.77,0.035,High,High,High
-Jordan Goodwin,Kevin Durant,Amen Thompson,7.5,26.5,16.5,8.6,24.96,17.6,0.587,0.593,0.565,over,under,over,0,0.62,0.012,Low,High,High
+NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
+Miles McBride,Coby White,Peyton Watson,8.5,20.5,12.5,13.06,25.74,9.44,0.764,0.825,0.753,over,over,under,0,156.16,0.312,High,Med,Low
+Jonathan Isaac,Myles Turner,Cameron Johnson,3.5,15.5,13.5,6.04,12.32,10.05,0.711,0.697,0.728,over,under,under,0,94.81,0.19,Low,High,Med
+Karl-Anthony Towns,Landry Shamet,Duncan Robinson,22.5,9.5,10.5,25.82,12.17,13.07,0.68,0.697,0.664,over,over,over,0,69.94,0.14,High,Med,High
+Mitchell Robinson,Bobby Portis,Santi Aldama,4.5,15.5,17.5,6.43,13.15,14.94,0.66,0.651,0.66,over,under,under,0,53.15,0.106,Low,High,High
+Jordan Clarkson,Jeremiah Fears,Zach LaVine,10.5,16.5,18.5,12.76,18.78,20.85,0.645,0.64,0.639,over,over,over,0,42.54,0.085,High,High,High
+Jalen Brunson,Nickeil Alexander-Walker,DeMar DeRozan,28.5,18.5,17.5,26.59,20.56,15.35,0.618,0.619,0.628,under,over,under,0,29.65,0.059,High,High,High
+Mikal Bridges,Alex Sarr,Jamal Murray,15.5,17.5,23.5,17.39,19.36,25.47,0.612,0.61,0.607,over,over,over,0,22.49,0.045,High,High,High
+Goga Bitadze,Caris LeVert,Dennis Schröder,4.5,7.5,11.5,5.57,8.82,13.25,0.605,0.597,0.607,over,over,over,0,18.29,0.037,Low,Med,High
+Bilal Coulibaly,Brandon Williams,Bruce Brown,10.5,14.5,8.5,12.02,12.86,7.16,0.594,0.595,0.598,over,under,under,0,14.11,0.028,High,High,Med
+Saddiq Bey,Cam Whitmore,Cooper Flagg,12.5,10.5,17.5,14.04,9.41,19.04,0.591,0.589,0.59,over,under,over,0,11.03,0.022,High,Low,High

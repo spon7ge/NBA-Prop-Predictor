@@ -1,26 +1,25 @@
 # NBA Player Prop Predictor
 
-I built this to help me and my friends stop making decisions based on vibes and hot takes, so I created a tool that actually quantifies edge using probabilistic modeling. Now instead of guessing, we can see which props are actually +EV and make data-driven decisions.
+I built this NGBoost Model to help my friends and I stop making decisions based on vibes and hot takes, so I created a tool that actually quantifies edge using probabilistic modeling. Now instead of going off vibes, we can see which props have a positive EV and make data-driven decisions.
 
 ## Features
 
-- **Player Performance Prediction**: XGBoost models trained on historical data, game context, and opponent metrics
-- **Expected Value Calculation**: Monte Carlo simulation with configurable distributions using skew-normal
+- **Player Performance Prediction**: NGBoost model trained on historical data, game context, volatility, and opponent metrics to create mean and variance models
+- **Expected Value Calculation**: Using a normal distribution to find the probability of the prop hitting
 - **Smart Bet Sizing**: Kelly Criterion for optimal bankroll management
 - **Multiple Bet Types**: Single bets, 2-leg parlays, and 3-leg parlays
-- **Streamlit Dashboard**: Interactive web app for daily betting opportunities
+- **Dashboard**: Interactive web app for daily betting opportunities
 
 ## Tech Stack
 
-- **Machine Learning**: XGBoost, NGBoost
-- **Simulation**: Monte Carlo
-- **Visualization**: Streamlit
+- **Machine Learning**: NGBoost
+- **Distribution**: Normal
+- **Visualization**: HTML/CSS/JS
 - **Data Sources**: NBA API, The Odds API
 
 ## Project Structure
 
 ```
-├── app.py                    # Streamlit dashboard
 ├── MODELS/                   # Model training and inference
 ├── NOTEBOOKS/                # EV calculation and analysis
 ├── PRODUCTION/                # Where I calculate my EVs before displaying
@@ -34,8 +33,8 @@ I built this to help me and my friends stop making decisions based on vibes and 
 
 1. **Data Collection**: Scrapes player stats, team metrics, and betting lines from multiple sources
 2. **Feature Engineering**: Builds comprehensive feature sets including recent form, matchups, and game context
-3. **Model Training**: Trains quantile regression models to predict player performance distributions
-4. **EV Calculation**: Uses Monte Carlo simulation to estimate probabilities and calculate expected value
+3. **Model Training**: Trains NGBoost models to predict mean and variance of player performance distributions
+4. **EV Calculation**: Uses analytical normal distribution calculations to estimate probabilities and calculate expected value
 5. **Bet Selection**: Ranks opportunities by EV and provides Kelly-optimal bet sizing
 
 ## Usage

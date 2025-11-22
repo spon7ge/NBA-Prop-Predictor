@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Alperen Sengun,Jerami Grant,22.5,22.5,28.14,17.1,0.807,0.847,over,under,1,10.08,0.504,High,Med
-Keyonte George,Karl-Anthony Towns,17.5,21.5,23.11,26.94,0.795,0.79,over,over,1,8.46,0.423,High,High
-Aaron Gordon,Lauri Markkanen,16.5,23.5,21.33,28.53,0.785,0.766,over,over,1,7.69,0.385,High,High
-Dillon Brooks,Jordan Clarkson,18.5,9.5,22.8,13.22,0.743,0.728,over,over,0,5.9,0.295,High,High
-Buddy Hield,Brandon Miller,7.5,15.0,10.83,12.34,0.724,0.725,over,under,0,5.43,0.272,Med,Low
-Julius Randle,Shai Gilgeous-Alexander,22.5,31.5,26.17,28.1,0.707,0.719,over,under,0,4.94,0.247,High,Med
-Draymond Green,Mikal Bridges,8.5,15.5,11.38,18.74,0.688,0.696,over,over,0,4.08,0.204,Med,High
-Cameron Johnson,Jalen Suggs,11.5,13.5,9.12,16.49,0.669,0.695,under,over,0,3.67,0.183,Med,Med
-Nikola Jokić,Stephen Curry,28.5,28.5,30.83,25.76,0.653,0.663,over,under,0,2.73,0.136,Med,High
-Ace Bailey,Goga Bitadze,10.5,5.5,12.53,7.07,0.64,0.648,over,over,0,2.2,0.11,Med,Low
+NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
+Miles McBride,Coby White,8.5,20.5,13.06,25.74,0.764,0.825,over,over,1,85.31,0.427,High,Med
+Jalen Duren,Peyton Watson,17.5,12.5,22.25,9.44,0.755,0.753,over,under,0,67.07,0.335,High,Low
+Landry Shamet,Tobias Harris,9.0,10.5,12.17,14.89,0.73,0.751,over,over,0,61.07,0.305,Med,High
+Karl-Anthony Towns,Ausar Thompson,21.5,9.5,25.82,13.38,0.729,0.738,over,over,0,58.08,0.29,High,High
+Jonathan Isaac,Cameron Johnson,3.5,13.5,6.04,10.05,0.711,0.728,over,under,0,52.13,0.261,Low,Med
+Jalen Johnson,Myles Turner,22.5,15.5,25.33,12.32,0.666,0.697,over,under,0,36.47,0.182,High,High
+Duncan Robinson,Santi Aldama,10.5,17.5,13.07,14.94,0.664,0.66,over,under,0,28.89,0.144,High,High
+Mitchell Robinson,Jamal Murray,4.5,22.5,6.43,25.47,0.66,0.659,over,over,0,27.75,0.139,Low,High
+Jordan Clarkson,Jeremiah Fears,10.5,16.5,12.76,18.78,0.645,0.64,over,over,0,21.41,0.107,High,High
+Tristan da Silva,Zach LaVine,12.5,18.5,14.88,20.85,0.642,0.639,over,over,0,20.66,0.103,High,High

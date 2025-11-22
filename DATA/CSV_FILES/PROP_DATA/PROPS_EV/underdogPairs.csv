@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Jerami Grant,Miles McBride,22.5,8.5,17.1,14.76,0.847,0.834,under,over,1,10.77,0.538,Med,High
-Alperen Sengun,Karl-Anthony Towns,23.5,21.5,28.14,26.94,0.762,0.79,over,over,1,7.7,0.385,High,High
-Dillon Brooks,Keyonte George,18.5,18.5,22.8,23.11,0.743,0.75,over,over,1,6.38,0.319,High,High
-Buddy Hield,Jordan Clarkson,7.5,9.5,10.83,13.22,0.724,0.728,over,over,0,5.51,0.275,Med,High
-Lauri Markkanen,Mikal Bridges,24.5,15.5,28.53,18.74,0.72,0.696,over,over,0,4.73,0.236,High,High
-Shai Gilgeous-Alexander,Tristan da Silva,31.5,12.5,28.1,15.69,0.719,0.695,under,over,0,4.69,0.234,Med,High
-Draymond Green,Jalen Suggs,8.5,13.5,11.38,16.49,0.688,0.695,over,over,0,4.06,0.203,Med,Med
-Nikola Jokić,Ryan Rollins,28.5,21.5,30.83,18.47,0.653,0.682,over,under,0,3.11,0.155,Med,High
-Ace Bailey,Goga Bitadze,10.5,5.5,12.53,7.07,0.64,0.648,over,over,0,2.2,0.11,Med,Low
-Devin Booker,Cade Cunningham,28.5,28.5,30.64,26.25,0.623,0.632,over,under,0,1.58,0.079,High,High
+NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
+Miles McBride,Coby White,8.5,20.5,13.06,25.74,0.764,0.825,over,over,1,85.31,0.427,High,Med
+Jonathan Isaac,Peyton Watson,3.5,12.5,6.04,9.44,0.711,0.753,over,under,0,57.33,0.287,Low,Low
+Myles Turner,Cameron Johnson,15.5,13.5,12.32,10.05,0.697,0.728,under,under,0,49.16,0.246,High,Med
+Landry Shamet,Duncan Robinson,9.5,10.5,12.17,13.07,0.697,0.664,over,over,0,36.02,0.18,Med,High
+Karl-Anthony Towns,Santi Aldama,22.5,17.5,25.82,14.94,0.68,0.66,over,under,0,32.07,0.16,High,High
+Mitchell Robinson,Bobby Portis,4.5,15.5,6.43,13.15,0.66,0.651,over,under,0,26.26,0.131,Low,High
+Jordan Clarkson,Jeremiah Fears,10.5,16.5,12.76,18.78,0.645,0.64,over,over,0,21.41,0.107,High,High
+Nickeil Alexander-Walker,Zach LaVine,18.5,18.5,20.56,20.85,0.619,0.639,over,over,0,16.24,0.081,High,High
+Jalen Brunson,DeMar DeRozan,28.5,17.5,26.59,15.35,0.618,0.628,under,under,0,14.12,0.071,High,High
+Mikal Bridges,Alex Sarr,15.5,17.5,17.39,19.36,0.612,0.61,over,over,0,9.89,0.049,High,High
