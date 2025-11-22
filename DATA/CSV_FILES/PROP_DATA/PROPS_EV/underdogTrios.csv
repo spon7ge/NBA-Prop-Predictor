@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV$,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Evan Mobley,Tre Jones,Jerami Grant,19.5,9.5,22.5,14.84,14.89,17.1,0.776,0.823,0.847,under,over,under,1,19.19,0.384,High,Med,Med
-Bennedict Mathurin,Dillon Brooks,Alperen Sengun,20.5,18.5,23.5,25.16,22.8,28.14,0.768,0.743,0.762,over,over,over,1,13.48,0.27,High,High,High
-Isaac Okoro,Buddy Hield,Lauri Markkanen,7.5,7.5,24.5,11.22,10.83,28.82,0.733,0.724,0.734,over,over,over,0,11.05,0.221,Med,Med,High
-Cooper Flagg,D'Angelo Russell,Julius Randle,17.5,12.5,22.5,14.46,15.66,26.17,0.683,0.684,0.707,under,over,over,0,7.83,0.157,High,High,High
-Pascal Siakam,Andrew Nembhard,Saddiq Bey,22.5,15.5,8.5,25.36,18.42,11.87,0.665,0.663,0.7,over,over,over,0,6.68,0.134,High,High,High
-Khris Middleton,Jeremiah Fears,Keyonte George,10.5,14.5,18.5,12.73,17.24,21.23,0.663,0.656,0.654,over,over,over,0,5.37,0.107,Med,High,High
-Naji Marshall,Nikola Jokić,Will Richard,11.5,28.5,7.5,13.91,30.83,9.39,0.655,0.653,0.653,over,over,over,0,5.07,0.101,High,Med,Low
-Donovan Mitchell,Matas Buzelis,Shai Gilgeous-Alexander,28.5,14.5,31.5,26.01,17.2,29.41,0.641,0.652,0.644,under,over,under,0,4.53,0.091,High,High,Med
-Isaiah Jackson,Zion Williamson,Ace Bailey,7.5,23.5,10.5,9.24,21.41,12.53,0.633,0.63,0.64,over,under,over,0,3.77,0.075,Med,High,Med
-Simone Fontecchio,Derik Queen,Devin Booker,10.5,13.5,28.5,12.38,15.49,30.64,0.63,0.622,0.623,over,over,over,0,3.17,0.063,Med,High,High
+Tre Jones,Jerami Grant,Miles McBride,9.5,22.5,8.5,14.89,17.1,14.76,0.823,0.847,0.834,over,under,over,1,21.39,0.428,Med,Med,High
+Klay Thompson,Alperen Sengun,Karl-Anthony Towns,12.5,23.5,21.5,8.45,28.14,26.94,0.755,0.762,0.79,under,over,over,1,14.56,0.291,Med,High,High
+Dillon Brooks,Buddy Hield,Keyonte George,18.5,7.5,18.5,22.8,11.51,23.11,0.743,0.748,0.75,over,over,over,1,12.49,0.25,High,High,High
+Tristan Vukcevic,Isaac Okoro,Lauri Markkanen,12.5,7.5,24.5,9.12,11.22,28.82,0.732,0.733,0.734,under,over,over,0,11.27,0.225,Med,Med,High
+Will Richard,Bogdan Bogdanović,Jordan Clarkson,7.5,11.5,9.5,10.5,8.22,13.22,0.701,0.712,0.728,over,under,over,0,9.65,0.193,Med,Med,High
+Kevin Huerter,Saddiq Bey,Mikal Bridges,13.5,8.5,15.5,16.73,11.87,18.74,0.698,0.7,0.696,over,over,over,0,8.38,0.168,High,High,High
+Draymond Green,Jalen Suggs,Tristan da Silva,8.5,13.5,12.5,11.35,16.49,15.69,0.679,0.695,0.695,over,over,over,0,7.72,0.154,High,Med,High
+Khris Middleton,Jeremiah Fears,Nikola Jokić,10.5,14.5,28.5,12.73,17.24,30.83,0.663,0.656,0.653,over,over,over,0,5.34,0.107,Med,High,Med
+Matas Buzelis,Stephen Curry,Goga Bitadze,14.5,27.5,5.5,17.2,25.26,7.07,0.652,0.648,0.648,over,under,over,0,4.78,0.096,High,Med,Low
+Brandon Ingram,Zion Williamson,Tre Mann,21.5,23.5,8.5,23.71,21.41,10.67,0.635,0.63,0.629,over,under,over,0,3.57,0.071,High,High,High
