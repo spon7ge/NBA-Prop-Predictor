@@ -278,7 +278,7 @@ def csv_to_js_singles(csv_file, array_name):
                 'side': row['SIDE'],
                 'odds': int(row['ODDS']),
                 'recommendation': int(row['RECOMMENDATION']),
-                'ev': float(row['EV$']),
+                'ev': float(row.get('EV%', row.get('EV$', 0.0))),
                 'kelly': float(row['KELLY_FRACTION']),
                 'sigma': row['SIGMA FLAG']
             }

@@ -135,7 +135,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = [ 'PTS', 'AST', 'FGM', 'FGA', 'FG_PCT', 'FG3A', 'FG3_PCT', 'FTA', 'FT_PCT', 'TOV', 'TS_PCT', 'USG_PCT','MIN', 'PACE', 'PIE', 'UFG_PCT', 'CFG_PCT', 'SPD', 'DIST', 'EFG_PCT', 
-                'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints2pt', 'percentagePointsMidrange2pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT']
+                'E_OFF_RATING', 'NET_RATING', 'TCHS', 'POSS', 'EFG_PCT', 'percentageFieldGoalsAttempted2pt', 'percentageFieldGoalsAttempted3pt', 'percentagePoints3pt', 'percentagePointsFastBreak', 'percentagePointsFreeThrow', 'percentagePointsOffTurnovers', 'percentagePointsPaint', 'percentageAssisted2pt', 'percentageUnassisted2pt', 'percentageAssisted3pt', 'percentageUnassisted3pt', 'percentageAssistedFGM', 'percentageUnassistedFGM', 'UFGA', 'CFGA', 'UFGM', 'CFGM', 'DFGM', 'DFGA', 'DFG_PCT']
 
     for window in windows:
         for col in stats_cols:
@@ -160,7 +160,7 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
         if stat_line not in player_data.columns:
             continue
             
-        for lag in range(1, 2):
+        for lag in range(1, 4):
             lag_col = f'{stat_line}_LAG_{lag}'
             player_data[lag_col] = player_data.groupby(player_id_col)[stat_line].shift(lag)
             rolling_mean = player_data.groupby(player_id_col)[stat_line].transform(
