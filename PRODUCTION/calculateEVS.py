@@ -198,9 +198,8 @@ def calculateSingleBets(data, bookmakers, model, features, current_date,
         dec_odds = american_to_decimal(odds)
         b = dec_odds - 1.0
         
-        # EV calculations
-        ev_per_dollar = p * b - (1 - p)
-        ev_total = ev_per_dollar * stake
+        # EV calculations (as percentage per unit)
+        ev_percent = p * b - (1 - p)  # EV per unit as decimal
         
         # Kelly criterion
         kelly_fraction = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
@@ -211,7 +210,7 @@ def calculateSingleBets(data, bookmakers, model, features, current_date,
         edge = model_prob - market_prob
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (abs(line - mu) > edge_threshold) and (ev_total > 0) else 0
+        recommendation = 1 if (abs(line - mu) > edge_threshold) and (ev_percent > 0) else 0
         
         # Confidence interval
         ci_lower = max(0, mu - 1.96 * sigma)
@@ -233,18 +232,18 @@ def calculateSingleBets(data, bookmakers, model, features, current_date,
             'IMPLIED PROB': round(market_prob, 3),
             'MODEL PROB': round(model_prob, 3),
             'EDGE': round(edge, 3),
-            'EV$': round(ev_total, 2),
+            'EV%': round(ev_percent * 100, 2),
             'KELLY_FRACTION': round(kelly_fraction, 3),
             'SIGMA': round(sigma, 2),
             'SIGMA FLAG': sigma_flag,
             'CI': f"({ci_lower:.1f}, {ci_upper:.1f})",
-            'EXPECTED ROI': round((ev_total / stake) * 100, 1)
+            'EXPECTED ROI': round(ev_percent * 100, 1)
         })
     
     results_df = pd.DataFrame(results)
     
     # Sort by EV
-    results_df = results_df.sort_values('EV$', ascending=False)
+    results_df = results_df.sort_values('EV%', ascending=False)
     
     # Limit player appearances
     results_df = limit_player_appearances_single(results_df, max_appearances=max_player_appearances)
@@ -402,8 +401,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         # Calculate combined probability and EV
         p_both_raw = p1 * p2
         p_both = p_both_raw * corr_adjustment
-        ev = payout_multiple * p_both - 1
-        ev_dollars = ev * stake
+        ev_percent = payout_multiple * p_both - 1  # EV per unit as decimal
         
         # Edge calculations
         edge1 = p1 - market_prob
@@ -415,7 +413,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         kelly_full = max(0.0, (b * p_both - (1 - p_both)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold) and (ev_dollars > 0) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold) and (ev_percent > 0) else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
@@ -442,7 +440,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'EDGE 1': round(edge1, 3),
             'EDGE 2': round(edge2, 3),
             'COMBINED EDGE': round(combined_edge, 3),
-            'EV$': round(ev_dollars, 2),
+            'EV%': round(ev_percent * 100, 2),
             'KELLY FULL': round(kelly_full, 3),
             'RECOMMENDATION': recommendation,
             'SIGMA 1': round(sigma1, 2),
@@ -453,13 +451,13 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'CI 2': f"({ci2_lower:.1f}, {ci2_upper:.1f})",
             'CORRELATION': round(correlation, 3),
             'SAME_GAME': 1 if (team1 == opp2 or team2 == opp1) else 0,
-            'EXPECTED ROI': round((ev / 1.0) * 100, 1)
+            'EXPECTED ROI': round(ev_percent * 100, 1)
         })
     
     results_df = pd.DataFrame(results)
     
     # Sort by EV
-    results_df = results_df.sort_values('EV$', ascending=False)
+    results_df = results_df.sort_values('EV%', ascending=False)
     
     # Limit player appearances
     results_df = limit_player_appearances(results_df, max_appearances=max_player_appearances)
@@ -701,8 +699,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         # Calculate combined probability and EV
         p_all_three_raw = p1 * p2 * p3
         p_all_three = p_all_three_raw * corr_adjustment
-        ev = payout_multiple * p_all_three - 1
-        ev_dollars = ev * stake
+        ev_percent = payout_multiple * p_all_three - 1  # EV per unit as decimal
         
         # Edge calculations
         edge1 = p1 - market_prob
@@ -715,7 +712,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         kelly_full = max(0.0, (b * p_all_three - (1 - p_all_three)) / b)
         
         # Recommendation based on edge threshold
-        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold and abs(line3 - mu3) > edge_threshold) and (ev_dollars > 0) else 0
+        recommendation = 1 if (abs(line1 - mu1) > edge_threshold and abs(line2 - mu2) > edge_threshold and abs(line3 - mu3) > edge_threshold) and (ev_percent > 0) else 0
         
         # Confidence intervals
         ci1_lower = max(0, mu1 - 1.96 * sigma1)
@@ -751,7 +748,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'EDGE 2': round(edge2, 3),
             'EDGE 3': round(edge3, 3),
             'COMBINED EDGE': round(combined_edge, 3),
-            'EV$': round(ev_dollars, 2),
+            'EV%': round(ev_percent * 100, 2),
             'KELLY FULL': round(kelly_full, 3),
             'RECOMMENDATION': recommendation,
             'SIGMA 1': round(sigma1, 2),
@@ -765,13 +762,13 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'CI 3': f"({ci3_lower:.1f}, {ci3_upper:.1f})",
             'CORRELATION': round(correlation, 3),
             'SAME_GAME_PAIRS': same_game_count,
-            'EXPECTED ROI': round((ev / 1.0) * 100, 1)
+            'EXPECTED ROI': round(ev_percent * 100, 1)
         })
 
     results_df = pd.DataFrame(results)
     
     # Sort by EV
-    results_df = results_df.sort_values('EV$', ascending=False)
+    results_df = results_df.sort_values('EV%', ascending=False)
     
     # Limit player appearances
     results_df = limit_player_appearances_3leg(results_df, max_appearances=max_player_appearances)

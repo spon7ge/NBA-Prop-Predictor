@@ -1121,7 +1121,7 @@ function renderSinglesTable(data) {
             <th style="width: 10%">Proj.</th>
             <th style="width: 10%">Side</th>
             <th style="width: 8%">Odds</th>
-            <th style="width: 9%">EV $</th>
+            <th style="width: 9%">EV%</th>
             <th style="width: 9%">Kelly</th>
             <th style="width: 9%">Sigma</th>
         </tr>
@@ -1138,7 +1138,7 @@ function renderSinglesTable(data) {
                 <span class="side-badge side-${row.side.toLowerCase()}">${row.side}</span>
             </td>
             <td style="font-weight: 600; color: ${row.odds > 0 ? '#34d399' : '#f87171'};">${formatOdds(row.odds)}</td>
-            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
             <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td>
                 <span class="sigma-badge ${getSigmaClass(row.sigma)}">${row.sigma}</span>
@@ -1162,7 +1162,7 @@ function renderPairsTable(data) {
             <th style="width: 5%">Line </th>
             <th style="width: 5%">Proj. </th>
             <th style="width: 5%">Prob. </th>
-            <th style="width: 8%">EV $</th>
+            <th style="width: 8%">EV%</th>
             <th style="width: 7%">Kelly</th>
             <th style="width: 12%">Sigma</th>
             <th style="width: 3%">Rec</th>
@@ -1198,7 +1198,7 @@ function renderPairsTable(data) {
             <td style="font-weight: 600; color: ${(row.prob2 || 0) > 0.5 ? '#10b981' : '#f59e0b'}; font-size: 0.9rem;">
                 ${((row.prob2 || 0) * 100).toFixed(1)}%
             </td>
-            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
             <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td>
                 <span class="sigma-badge ${getSigmaClass(row.sigma1)}">${row.sigma1}</span>
@@ -1230,7 +1230,7 @@ function renderTriosTable(data) {
             <th style="width: 4%">Line </th>
             <th style="width: 4%">Proj. </th>
             <th style="width: 4%">Prob. </th>
-            <th style="width: 7%">EV $</th>
+            <th style="width: 7%">EV%</th>
             <th style="width: 7%">Kelly</th>
             <th style="width: 2%">Rec</th>
         </tr>
@@ -1278,7 +1278,7 @@ function renderTriosTable(data) {
             <td style="font-weight: 600; color: ${(row.prob3 || 0) > 0.5 ? '#10b981' : '#f59e0b'}; font-size: 0.85rem;">
                 ${((row.prob3 || 0) * 100).toFixed(1)}%
             </td>
-            <td class="ev-cell ${getEVClass(row.ev)}">$${row.ev.toFixed(2)}</td>
+            <td class="ev-cell ${getEVClass(row.ev)}">${row.ev.toFixed(2)}%</td>
             <td class="kelly-cell">${(row.kelly * 100).toFixed(1)}%</td>
             <td class="recommendation-cell">
                 <span class="rec-badge rec-${row.recommendation}"></span>
@@ -1337,8 +1337,8 @@ function updateStats(data) {
                 <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value given the context of the game and player performance</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Expected Value $</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake (Ex. If EV is $2.00, you can expect to win $2.00 per $10 bet on average)</div>
+                <div class="stat-label">Expected Value %</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value as a percentage of your stake (Ex. If EV% is 5%, you can expect to profit 5% of whatever stake you place on that bet on average.)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Kelly Criterion</div>
@@ -1383,8 +1383,8 @@ function updateStats(data) {
                 <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Model's projected value given the context of the game and player performance</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Expected Value $</div>
-                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value on a $10 stake (Ex. If EV is $2.00, you can expect to win $2.00 per $10 bet on average)</div>
+                <div class="stat-label">Expected Value %</div>
+                <div class="stat-value" style="font-size: 0.85rem; line-height: 1.3;">Expected value as a percentage of your stake (Ex. If EV% is 5%, you can expect to profit 5% of whatever stake you place on that bet on average.)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Sigma</div>
