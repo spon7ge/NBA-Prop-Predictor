@@ -441,6 +441,8 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'NAME 2': mapped_p2,
             'LINE 1': line1,
             'LINE 2': line2,
+            'ODDS 1': odds1,  # Add this
+            'ODDS 2': odds2,  # Add this
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'MODEL SIDE 1': model_side1,
@@ -823,6 +825,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'LINE 1': line1,
             'LINE 2': line2,
             'LINE 3': line3,
+            'ODDS 1': odds1,  # Add this
+            'ODDS 2': odds2,  # Add this
+            'ODDS 3': odds3,  # Add this
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'PREDICTION 3': round(mu3, 2),
