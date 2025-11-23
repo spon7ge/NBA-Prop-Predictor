@@ -333,66 +333,170 @@ def remove_highly_correlated_features(df, features_list, target_col='PTS', thres
     
     return cleaned_features
 
-def select_features_xgb_importance(
-    X,
-    y,
+def select_features_ngboost(
+    X, y,
     top_n=40,
-    n_runs=5,
-    include_context=True,
-    validate_permutation=False
+    n_runs=3,
+    validate_both_distributions=True
 ):
-    feature_scores = np.zeros(X.shape[1])
-
-    # Run multiple XGBoost fits to stabilize importance
+    """
+    Feature selection optimized for NGBoost (mean + variance modeling)
+    """
+    from ngboost import NGBRegressor
+    from ngboost.distns import Normal
+    from sklearn.model_selection import cross_val_score
+    
+    print("Selecting features for NGBoost (mean + variance)...")
+    
+    # 1. Standard feature importance (mean-focused)
+    mean_importance = np.zeros(X.shape[1])
+    
     for seed in range(n_runs):
-        xgb = XGBRegressor(
-            n_estimators=300,
+        ngb = NGBRegressor(
+            Dist=Normal,
+            n_estimators=100,
             learning_rate=0.05,
-            max_depth=6,
-            subsample=0.8,
-            colsample_bytree=0.8,
+            minibatch_frac=0.8,
+            random_state=42 + seed,
+            verbose=False
+        )
+        ngb.fit(X, y)
+        
+        # Handle 2D feature importances (mean + variance) or 1D (mean only)
+        feature_imp = ngb.feature_importances_
+        if feature_imp.ndim == 2:
+            # If 2D, use mean model importances (first row)
+            # Shape is typically (2, n_features) for mean and variance models
+            mean_importance += feature_imp[0]  # Mean model importances
+        else:
+            # If 1D, use directly
+            mean_importance += feature_imp
+    
+    mean_importance /= n_runs
+    
+    # 2. Variance-specific importance
+    # Features important for modeling uncertainty
+    if validate_both_distributions:
+        print("Analyzing variance modeling importance...")
+        variance_importance = compute_variance_importance(X, y, n_runs=n_runs)
+    else:
+        variance_importance = np.zeros(X.shape[1])
+    
+    # 3. Combine mean and variance importance
+    # Weight both aspects (adjust weights based on your use case)
+    combined_importance = 0.7 * mean_importance + 0.3 * variance_importance
+    
+    importance_df = pd.DataFrame({
+        'feature': X.columns,
+        'mean_importance': mean_importance,
+        'variance_importance': variance_importance,
+        'combined_importance': combined_importance
+    }).sort_values('combined_importance', ascending=False)
+    
+    # Select top features
+    top_features = importance_df.head(top_n)['feature'].tolist()
+    
+    print(f"\nSelected {len(top_features)} features")
+    print("\nTop 10 features (combined importance):")
+    print(importance_df.head(10).to_string(index=False))
+    
+    # Show features that are variance-heavy
+    variance_heavy = importance_df[
+        (importance_df['variance_importance'] > importance_df['mean_importance']) & 
+        (importance_df['variance_importance'] > 0.01)
+    ].head(5)
+    
+    if len(variance_heavy) > 0:
+        print("\n⚠️  Features especially important for uncertainty estimation:")
+        for _, row in variance_heavy.iterrows():
+            print(f"  - {row['feature']} (var: {row['variance_importance']:.4f}, mean: {row['mean_importance']:.4f})")
+    
+    return X[top_features], top_features, importance_df
+
+
+def compute_variance_importance(X, y, n_runs=3):
+    """
+    Estimate which features are important for variance prediction
+    by looking at how well features predict residual magnitudes
+    """
+    from ngboost import NGBRegressor
+    from ngboost.distns import Normal
+    
+    variance_scores = np.zeros(X.shape[1])
+    
+    for seed in range(n_runs):
+        # First, fit NGBoost to get residuals
+        ngb = NGBRegressor(
+            Dist=Normal,
+            n_estimators=200,
+            learning_rate=0.05,
+            random_state=42 + seed,
+            verbose=False
+        )
+        ngb.fit(X, y)
+        
+        # Get predictions and residuals
+        preds = ngb.predict(X)
+        residuals = np.abs(y - preds)  # Absolute residuals as proxy for variance
+        
+        # Fit XGBoost to predict residual magnitude
+        # Features important here help model heteroskedasticity
+        from xgboost import XGBRegressor
+        xgb = XGBRegressor(
+            n_estimators=100,
+            max_depth=4,
+            learning_rate=0.1,
             random_state=42 + seed,
             verbosity=0
         )
-        xgb.fit(X, y)
-        feature_scores += xgb.feature_importances_
+        xgb.fit(X, residuals)
+        variance_scores += xgb.feature_importances_
+    
+    return variance_scores / n_runs
 
-    importance_df = pd.DataFrame({
-        'feature': X.columns,
-        'importance': feature_scores / n_runs
-    }).sort_values('importance', ascending=False)
 
-    top_features = importance_df.head(top_n)['feature'].tolist()
-
-    # Add context features that improve stability and interpretability
-    if include_context:
-        context_features = []
-        for f in context_features:
-            if f in X.columns and f not in top_features:
-                top_features.append(f)
-
-    # Optional: Permutation importance validation
-    if validate_permutation:
-        print("Validating with permutation importance...")
-        model = XGBRegressor(n_estimators=300, random_state=42, verbosity=0)
-        model.fit(X[top_features], y)
-        perm = permutation_importance(model, X[top_features], y, n_repeats=5, random_state=42)
-        perm_df = pd.DataFrame({
-            'feature': top_features,
-            'perm_importance': perm.importances_mean
-        }).sort_values('perm_importance', ascending=False)
-
-        # Filter out weak features
-        perm_df = perm_df[perm_df['perm_importance'] > 0]
-        top_features = perm_df['feature'].tolist()
-
-    print(f"Selected {len(top_features)} total features")
-    print("Top 10 most important:")
-    for i, f in enumerate(top_features[:10]):
-        print(f"{i+1}. {f}")
-
-    return X[top_features], top_features
-
+def validate_feature_set_ngboost(X, y, features, cv=5):
+    """
+    Validate feature set using NGBoost-specific metrics:
+    - Mean prediction accuracy (RMSE)
+    - Calibration of uncertainty estimates (NLL)
+    """
+    from ngboost import NGBRegressor
+    from ngboost.distns import Normal
+    from sklearn.model_selection import cross_validate
+    
+    print(f"\nValidating {len(features)} features with {cv}-fold CV...")
+    
+    ngb = NGBRegressor(
+        Dist=Normal,
+        n_estimators=300,
+        learning_rate=0.05,
+        verbose=False
+    )
+    
+    # Custom scorer for negative log-likelihood (lower is better)
+    def ngboost_nll_scorer(estimator, X, y):
+        from ngboost.scores import LogScore
+        dist = estimator.pred_dist(X)
+        return -LogScore(dist).score(y).mean()  # Negative for minimization
+    
+    scoring = {
+        'neg_rmse': 'neg_root_mean_squared_error',
+        'nll': ngboost_nll_scorer  # Measures calibration
+    }
+    
+    scores = cross_validate(
+        ngb, X[features], y,
+        cv=cv,
+        scoring=scoring,
+        return_train_score=False
+    )
+    
+    print(f"RMSE: {-scores['test_neg_rmse'].mean():.4f} (+/- {scores['test_neg_rmse'].std():.4f})")
+    print(f"NLL:  {scores['test_nll'].mean():.4f} (+/- {scores['test_nll'].std():.4f})")
+    print("  ↳ NLL measures uncertainty calibration (lower = better)")
+    
+    return scores
 
 def get_residuals(model, test_df, features, target_col='PTS'):
     """Get residuals analysis for regression model."""
