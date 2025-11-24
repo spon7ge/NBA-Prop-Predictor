@@ -321,6 +321,14 @@ def validate_production_model(mean_model, variance_model, val_df, features, targ
 
 def remove_highly_correlated_features(df, features_list, target_col='PTS', threshold=0.95):
     available_features = [col for col in features_list if col in df.columns]
+    missing_features = [col for col in features_list if col not in df.columns]
+    
+    if missing_features:
+        print(f"\nWARNING: {len(missing_features)} features not found in dataframe:")
+        for feat in missing_features[:20]:  # Show first 20
+            print(f"  - {feat}")
+        if len(missing_features) > 20:
+            print(f"  ... and {len(missing_features) - 20} more")
     
     if target_col in df.columns and target_col not in available_features:
         available_features.append(target_col)
@@ -361,7 +369,8 @@ def remove_highly_correlated_features(df, features_list, target_col='PTS', thres
     
     print(f"\nSUMMARY:")
     print(f"Original features: {len(features_list)}")
-    print(f"Removed features: {len(features_to_remove)}")
+    print(f"Missing from dataframe: {len(missing_features)}")
+    print(f"Removed (high correlation): {len(features_to_remove)}")
     print(f"Final features: {len(cleaned_features)}")
     
     return cleaned_features

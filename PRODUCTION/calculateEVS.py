@@ -91,6 +91,72 @@ def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.03
 
 _prediction_cache = {}
 
+# Cache for player odds - stores hashmap per date
+_odds_cache = {}  # {date_str: {(player_name, line, side): worst_odds}}
+
+def _load_odds_cache(date_str):
+    """Load and cache odds data for a specific date. Returns hashmap for O(1) lookup."""
+    if date_str in _odds_cache:
+        return _odds_cache[date_str]
+    
+    try:
+        # Construct file path
+        csv_path = f'DATA/CSV_FILES/PROP_DATA/PLAYER_LINES/NBA_US_{date_str}.csv'
+        
+        # Try absolute path if relative doesn't work
+        if not os.path.exists(csv_path):
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            csv_path = os.path.join(script_dir, '..', 'DATA', 'CSV_FILES', 'PROP_DATA', 'PLAYER_LINES', f'NBA_US_{date_str}.csv')
+            csv_path = os.path.normpath(csv_path)
+        
+        # Check if file exists
+        if not os.path.exists(csv_path):
+            _odds_cache[date_str] = {}
+            return {}
+        
+        # Read CSV and filter to only player_points
+        df = pd.read_csv(csv_path)
+        
+        # Filter to only player_points category
+        if 'CATEGORY' in df.columns:
+            df = df[df['CATEGORY'] == 'player_points']
+        
+        if df.empty:
+            _odds_cache[date_str] = {}
+            return {}
+        
+        # Create hashmap: (player_name, line, side) -> worst_odds
+        odds_map = {}
+        
+        # Normalize OVER/UNDER column first to handle case variations
+        df['SIDE_NORMALIZED'] = df['OVER/UNDER'].str.upper().str.strip().apply(
+            lambda x: 'over' if str(x).startswith('O') else 'under'
+        )
+        
+        # Group by player, line, and normalized side, then get worst (minimum) odds
+        for (name, line, side_norm), group in df.groupby(['NAME', 'LINE', 'SIDE_NORMALIZED']):
+            line_float = float(line)
+            
+            # Get worst (minimum) odds for this combination
+            worst_odds = int(group['ODDS'].min())
+            
+            # Store in hashmap
+            key = (str(name), line_float, side_norm)
+            # If key already exists, keep the worst (minimum) odds
+            if key in odds_map:
+                odds_map[key] = min(odds_map[key], worst_odds)
+            else:
+                odds_map[key] = worst_odds
+        
+        # Cache the hashmap
+        _odds_cache[date_str] = odds_map
+        return odds_map
+    
+    except Exception as e:
+        # On error, cache empty dict to avoid repeated file reads
+        _odds_cache[date_str] = {}
+        return {}
+
 def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
     cache_key = f"{player_name}_{current_date}"
     
@@ -479,20 +545,15 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
     return results_df.head(top_n)
 
 
+def clear_odds_cache():
+    """Clear the odds cache. Useful when switching dates or reloading data."""
+    global _odds_cache
+    _odds_cache = {}
+
 def get_player_odds_from_csv(player_name, line, current_date, side='over'):
     """
-    Look up actual odds for a player and line from NBA_US CSV file.
-    Returns worst case scenario odds (lowest probability = worst for bettor).
-    If no odds found, returns -137 as default.
-    
-    Args:
-        player_name: Player name to look up
-        line: Line value (float)
-        current_date: Date string in format 'YYYY-MM-DD' or datetime
-        side: 'over' or 'under' (default: 'over')
-    
-    Returns:
-        int: American odds (worst case scenario, or -137 if not found)
+    Optimized O(1) lookup using pre-computed hashmap cache.
+    Only loads CSV once per date and filters to player_points category.
     """
     try:
         # Convert current_date to string if needed
@@ -504,40 +565,16 @@ def get_player_odds_from_csv(player_name, line, current_date, side='over'):
             if len(date_str) == 10:  # YYYY-MM-DD format
                 date_str = date_str.replace('-', '')
         
-        # Construct file path (relative to project root)
-        csv_path = f'DATA/CSV_FILES/PROP_DATA/PLAYER_LINES/NBA_US_{date_str}.csv'
+        # Normalize side to 'over' or 'under'
+        side_normalized = 'over' if str(side).upper().startswith('O') else 'under'
+        line_float = float(line)
         
-        # Try absolute path if relative doesn't work
-        if not os.path.exists(csv_path):
-            # Try from current directory
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            csv_path = os.path.join(script_dir, '..', 'DATA', 'CSV_FILES', 'PROP_DATA', 'PLAYER_LINES', f'NBA_US_{date_str}.csv')
-            csv_path = os.path.normpath(csv_path)
+        # Load cache for this date (will load once and cache)
+        odds_map = _load_odds_cache(date_str)
         
-        # Check if file exists
-        if not os.path.exists(csv_path):
-            return -137
-        
-        # Read CSV
-        df = pd.read_csv(csv_path)
-        
-        # Filter for player, line, and side
-        # Convert line to float for comparison (handle potential float precision issues)
-        filtered = df[
-            (df['NAME'] == player_name) &
-            (df['LINE'].astype(float) == float(line)) &
-            (df['OVER/UNDER'].str.upper().str.startswith(side.upper()[0]))
-        ]
-        
-        if filtered.empty:
-            return -137
-        
-        # Get all odds for this player/line/side
-        odds_list = filtered['ODDS'].astype(int).tolist()
-        
-        if not odds_list:
-            return -137
-        worst_odds = min(odds_list)
+        # O(1) lookup using hashmap
+        key = (str(player_name), line_float, side_normalized)
+        worst_odds = odds_map.get(key, -137)
         
         return int(worst_odds)
     

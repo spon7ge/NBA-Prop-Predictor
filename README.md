@@ -2,12 +2,13 @@
 
 I built this NGBoost Model to help my friends and I stop making decisions based on vibes and hot takes, so I created a tool that actually quantifies edge using probabilistic modeling. Now instead of going off vibes, we can see which props have a positive EV and make data-driven decisions.
 
+I gather odds from The Odds API for all DFS lines, then compare PrizePicks/Underdog lines to sharp bookmakers to better estimate each player's EV%.
 ## Features
 
 - **Player Performance Prediction**: NGBoost model trained on historical data, game context, volatility, and opponent metrics to create mean and variance models
 - **Expected Value Calculation**: Using a normal distribution to find the probability of the prop hitting
 - **Smart Bet Sizing**: Kelly Criterion for optimal bankroll management
-- **Multiple Bet Types**: Single bets, 2-leg parlays, and 3-leg parlays
+- **Multiple Bet Types**: 2-leg parlays and 3-leg parlays
 - **Dashboard**: Interactive web app for daily betting opportunities
 
 ## Tech Stack

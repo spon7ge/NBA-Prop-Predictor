@@ -1,7 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Rui Hachimura,Harrison Barnes,Bennedict Mathurin,11.5,13.5,20.5,15.43,16.76,25.31,0.728,0.699,0.769,over,over,over,0,111.52,0.223,High,High,High
-Kevin Love,Andrew Nembhard,Isaiah Jackson,4.5,17.5,7.5,7.45,20.73,10.1,0.726,0.686,0.681,over,over,over,0,83.21,0.166,Low,High,Med
-Deandre Ayton,Jalen Duren,Duncan Robinson,14.5,18.5,10.5,15.99,22.2,12.84,0.595,0.706,0.649,over,over,over,0,47.18,0.094,High,High,High
-Lauri Markkanen,Kyle Filipowski,Ausar Thompson,26.5,8.5,11.5,27.39,9.62,13.77,0.552,0.584,0.639,over,over,over,0,11.25,0.022,High,Med,High
-Luka Dončić,Pascal Siakam,Jarace Walker,31.5,23.5,8.5,32.42,24.21,8.18,0.565,0.542,0.521,over,over,under,0,-13.87,0.0,Med,High,Med
-Brice Sensabaugh,Svi Mykhailiuk,T.J. McConnell,8.5,8.5,7.5,8.14,9.24,7.21,0.53,0.548,0.521,under,over,under,0,-18.34,0.0,Low,High,Med
+Evan Mobley,Jaden Ivey,Pelle Larsson,21.5,8.5,12.5,18.18,11.83,15.66,0.679,0.756,0.68,under,over,over,0,88.35,0.177,High,Low,High
+Bennedict Mathurin,Miles McBride,Daniel Gafford,21.5,10.5,10.5,24.01,13.76,8.78,0.636,0.677,0.623,over,over,under,0,44.88,0.09,High,High,Med
+Duncan Robinson,Karl-Anthony Towns,Davion Mitchell,10.5,23.5,10.5,12.75,21.57,12.29,0.635,0.605,0.613,over,under,over,0,27.1,0.054,High,High,High
+Andrew Nembhard,Josh Hart,Simone Fontecchio,16.5,12.5,11.5,18.46,11.05,13.16,0.607,0.596,0.599,over,under,over,0,16.95,0.034,High,Med,High
+Gradey Dick,Tyrese Martin,Klay Thompson,8.5,8.5,10.5,9.78,9.83,12.01,0.591,0.586,0.587,over,over,over,0,9.87,0.02,Med,High,High
+Donovan Mitchell,Cade Cunningham,Bam Adebayo,30.5,26.5,21.5,29.14,27.43,20.48,0.573,0.56,0.559,under,over,under,0,-3.13,0.0,High,High,High
+Ja'Kobe Walter,Day'Ron Sharpe,D'Angelo Russell,7.5,6.5,12.5,6.92,7.11,13.42,0.547,0.548,0.55,under,over,over,0,-10.96,0.0,Low,Low,High
+Brandon Ingram,Pascal Siakam,Mikal Bridges,22.5,23.5,16.5,21.83,24.28,15.83,0.537,0.541,0.538,under,over,under,0,-15.63,0.0,High,High,High
+Scottie Barnes,Terance Mann,Drake Powell,19.5,8.5,6.5,19.1,8.86,6.08,0.523,0.525,0.533,under,over,under,0,-21.03,0.0,High,Med,Med
+Jakob Poeltl,Jalen Brunson,Brandon Williams,12.5,27.5,13.5,12.72,28.05,13.26,0.515,0.528,0.515,over,over,under,0,-24.4,0.0,Med,High,High
