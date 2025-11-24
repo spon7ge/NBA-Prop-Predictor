@@ -12,6 +12,7 @@ from itertools import combinations
 from collections import defaultdict
 from PRODUCTION.pipeline import calculate_volatility
 from PRODUCTION.teamInfo import nameDict
+import os
 
 
 # Convert UTC to ET and create game_date column
@@ -343,7 +344,6 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
     
     # Constants
     from scipy.stats import norm
-    market_prob = impliedProb(-137)
     payout_multiple = 3.0
     
     results = []
@@ -383,6 +383,17 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         else:
             model_side2 = 'under'
             p2 = 1 - p2_over
+        
+        # Look up actual odds from CSV (worst case scenario)
+        odds1 = get_player_odds_from_csv(player1, line1, current_date_str, model_side1)
+        odds2 = get_player_odds_from_csv(player2, line2, current_date_str, model_side2)
+        
+        # Calculate market probabilities from actual odds
+        market_prob1 = impliedProb(odds1)
+        market_prob2 = impliedProb(odds2)
+        
+        # Use average market prob for edge calculations
+        market_prob = (market_prob1 + market_prob2) / 2
         
         # Dynamic correlation adjustment
         team1 = player_teams[player1]
@@ -430,6 +441,8 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'NAME 2': mapped_p2,
             'LINE 1': line1,
             'LINE 2': line2,
+            'ODDS 1': odds1,  # Add this
+            'ODDS 2': odds2,  # Add this
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'MODEL SIDE 1': model_side1,
@@ -465,6 +478,72 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
     # Return top N
     return results_df.head(top_n)
 
+
+def get_player_odds_from_csv(player_name, line, current_date, side='over'):
+    """
+    Look up actual odds for a player and line from NBA_US CSV file.
+    Returns worst case scenario odds (lowest probability = worst for bettor).
+    If no odds found, returns -137 as default.
+    
+    Args:
+        player_name: Player name to look up
+        line: Line value (float)
+        current_date: Date string in format 'YYYY-MM-DD' or datetime
+        side: 'over' or 'under' (default: 'over')
+    
+    Returns:
+        int: American odds (worst case scenario, or -137 if not found)
+    """
+    try:
+        # Convert current_date to string if needed
+        if isinstance(current_date, datetime):
+            date_str = current_date.strftime('%Y%m%d')
+        else:
+            # Assume format is 'YYYY-MM-DD' or already 'YYYYMMDD'
+            date_str = str(current_date).replace('-', '')
+            if len(date_str) == 10:  # YYYY-MM-DD format
+                date_str = date_str.replace('-', '')
+        
+        # Construct file path (relative to project root)
+        csv_path = f'DATA/CSV_FILES/PROP_DATA/PLAYER_LINES/NBA_US_{date_str}.csv'
+        
+        # Try absolute path if relative doesn't work
+        if not os.path.exists(csv_path):
+            # Try from current directory
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            csv_path = os.path.join(script_dir, '..', 'DATA', 'CSV_FILES', 'PROP_DATA', 'PLAYER_LINES', f'NBA_US_{date_str}.csv')
+            csv_path = os.path.normpath(csv_path)
+        
+        # Check if file exists
+        if not os.path.exists(csv_path):
+            return -137
+        
+        # Read CSV
+        df = pd.read_csv(csv_path)
+        
+        # Filter for player, line, and side
+        # Convert line to float for comparison (handle potential float precision issues)
+        filtered = df[
+            (df['NAME'] == player_name) &
+            (df['LINE'].astype(float) == float(line)) &
+            (df['OVER/UNDER'].str.upper().str.startswith(side.upper()[0]))
+        ]
+        
+        if filtered.empty:
+            return -137
+        
+        # Get all odds for this player/line/side
+        odds_list = filtered['ODDS'].astype(int).tolist()
+        
+        if not odds_list:
+            return -137
+        worst_odds = min(odds_list)
+        
+        return int(worst_odds)
+    
+    except Exception as e:
+        # Silently return default on error
+        return -137
 
 def flag_sigma(s):
     """Categorize sigma values for volatility assessment"""
@@ -614,7 +693,6 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
     
     # Constants
     from scipy.stats import norm
-    market_prob = impliedProb(-137)
     payout_multiple = 6.0
     
     results = []
@@ -668,6 +746,19 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         else:
             model_side3 = 'under'
             p3 = 1 - p3_over
+        
+        # Look up actual odds from CSV (worst case scenario)
+        odds1 = get_player_odds_from_csv(player1, line1, current_date_str, model_side1)
+        odds2 = get_player_odds_from_csv(player2, line2, current_date_str, model_side2)
+        odds3 = get_player_odds_from_csv(player3, line3, current_date_str, model_side3)
+        
+        # Calculate market probabilities from actual odds
+        market_prob1 = impliedProb(odds1)
+        market_prob2 = impliedProb(odds2)
+        market_prob3 = impliedProb(odds3)
+        
+        # Use average market prob for edge calculations
+        market_prob = (market_prob1 + market_prob2 + market_prob3) / 3
         
         # Dynamic correlation adjustment
         team1 = player_teams[player1]
@@ -734,6 +825,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'LINE 1': line1,
             'LINE 2': line2,
             'LINE 3': line3,
+            'ODDS 1': odds1,  # Add this
+            'ODDS 2': odds2,  # Add this
+            'ODDS 3': odds3,  # Add this
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'PREDICTION 3': round(mu3, 2),

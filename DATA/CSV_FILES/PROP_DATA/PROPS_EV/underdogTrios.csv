@@ -1,11 +1,7 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Dyson Daniels,Rui Hachimura,Dillon Brooks,12.5,11.5,18.5,9.64,15.43,23.81,0.729,0.728,0.77,under,over,over,0,120.65,0.241,Low,High,High
-James Harden,Keyonte George,Kevin Love,24.5,20.5,4.5,20.91,24.8,7.45,0.727,0.728,0.726,under,over,over,0,107.58,0.215,Med,High,Low
-Deni Avdija,Jake LaRavia,Harrison Barnes,23.5,7.5,13.5,26.88,11.15,16.76,0.697,0.719,0.699,over,over,over,0,89.33,0.179,High,High,High
-Anthony Black,Brandon Ingram,Donovan Clingan,13.5,20.5,9.5,15.81,23.75,12.47,0.637,0.682,0.693,over,over,over,0,62.53,0.125,High,High,Med
-Ziaire Williams,Kawhi Leonard,Shai Gilgeous-Alexander,10.5,18.5,31.5,8.37,20.38,29.12,0.638,0.637,0.65,under,over,under,0,42.5,0.085,High,Med,High
-Noah Clowney,Evan Mobley,Ace Bailey,12.5,19.5,11.5,14.66,17.57,9.6,0.63,0.627,0.626,over,under,under,0,33.64,0.067,High,Med,Med
-Jalen Johnson,Jamal Shead,Jerami Grant,22.5,6.5,18.5,24.5,5.08,16.45,0.621,0.618,0.619,over,under,under,0,28.23,0.056,High,Low,High
-Donovan Mitchell,Darius Garland,Kyle Filipowski,27.5,17.5,8.5,29.0,15.51,9.62,0.588,0.616,0.584,over,under,over,0,14.32,0.029,High,High,Med
-Onyeka Okongwu,Luka Dončić,Collin Gillespie,17.5,31.5,13.5,16.45,32.42,12.16,0.565,0.565,0.579,under,over,under,0,-0.18,0.0,High,Med,High
-Franz Wagner,Lauri Markkanen,Svi Mykhailiuk,25.5,26.5,8.5,24.7,27.39,9.24,0.548,0.552,0.548,under,over,over,0,-10.53,0.0,High,High,High
+Rui Hachimura,Harrison Barnes,Bennedict Mathurin,11.5,13.5,20.5,15.43,16.76,25.31,0.728,0.699,0.769,over,over,over,0,111.52,0.223,High,High,High
+Kevin Love,Andrew Nembhard,Isaiah Jackson,4.5,17.5,7.5,7.45,20.73,10.1,0.726,0.686,0.681,over,over,over,0,83.21,0.166,Low,High,Med
+Deandre Ayton,Jalen Duren,Duncan Robinson,14.5,18.5,10.5,15.99,22.2,12.84,0.595,0.706,0.649,over,over,over,0,47.18,0.094,High,High,High
+Lauri Markkanen,Kyle Filipowski,Ausar Thompson,26.5,8.5,11.5,27.39,9.62,13.77,0.552,0.584,0.639,over,over,over,0,11.25,0.022,High,Med,High
+Luka Dončić,Pascal Siakam,Jarace Walker,31.5,23.5,8.5,32.42,24.21,8.18,0.565,0.542,0.521,over,over,under,0,-13.87,0.0,Med,High,Med
+Brice Sensabaugh,Svi Mykhailiuk,T.J. McConnell,8.5,8.5,7.5,8.14,9.24,7.21,0.53,0.548,0.521,under,over,under,0,-18.34,0.0,Low,High,Med

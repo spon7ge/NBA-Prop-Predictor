@@ -322,8 +322,6 @@ def update_dashboard(csv_files_map, script_file='script.js'):
                 js_arrays[array_name] = csv_to_js_pairs(csv_file, array_name, hit_rate_lookups)
             elif 'Trios' in array_name:
                 js_arrays[array_name] = csv_to_js_trios(csv_file, array_name, hit_rate_lookups)
-            elif 'singleBets' in array_name or 'Singles' in array_name:
-                js_arrays[array_name] = csv_to_js_singles(csv_file, array_name)
             elif any(combo in array_name for combo in ['PRA', 'PR', 'PA', 'RA', 'Turnovers', 'BlocksSteals']):
                 js_arrays[array_name] = csv_to_js_array_combo(csv_file, array_name)
             else:
@@ -418,7 +416,6 @@ if __name__ == "__main__":
     'prizepicksTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv',  
     'underdogPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv',  
     'underdogTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv',  
-    'prizepicksSinglesData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/singleBets.csv',
 }
     
     print("PrizePicks Dashboard Data Updater")
