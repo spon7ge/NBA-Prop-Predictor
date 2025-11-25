@@ -1,10 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Tyrese Maxey,LeBron James,Rui Hachimura,32.5,20.5,11.5,26.23,15.88,14.58,0.781,0.789,0.683,under,under,over,0,127.37,0.255,High,Med,High
-Anthony Black,Ivica Zubac,Brook Lopez,12.5,16.5,5.5,14.09,18.89,8.07,0.593,0.635,0.672,over,over,over,0,36.77,0.074,High,High,Med
-Trendon Watford,Austin Reaves,Marcus Smart,9.5,22.5,6.5,8.48,24.98,8.19,0.57,0.627,0.61,under,over,over,0,17.72,0.035,Med,High,High
-Zaccharie Risacher,Kawhi Leonard,Kris Dunn,11.5,20.5,6.5,12.6,22.5,8.16,0.561,0.605,0.62,over,over,over,0,13.71,0.027,High,High,Med
-Nickeil Alexander-Walker,Quentin Grimes,James Harden,18.5,17.5,24.5,19.61,16.47,25.99,0.559,0.554,0.59,over,under,over,0,-1.23,0.0,High,High,High
-Bilal Coulibaly,Luka Dončić,Jaxson Hayes,10.5,32.5,7.5,9.66,31.27,6.68,0.556,0.568,0.571,under,under,under,0,-2.51,0.0,Med,High,Low
-Kristaps Porziņģis,Jalen Suggs,Bogdan Bogdanović,18.5,16.5,8.5,17.54,15.85,9.01,0.554,0.542,0.532,under,under,over,0,-13.91,0.0,High,High,High
-Marvin Bagley III,Nicolas Batum,Kobe Sanders,7.5,5.5,7.5,8.01,5.15,7.19,0.539,0.528,0.522,over,under,under,0,-19.85,0.0,Med,Med,Med
-Desmond Bane,Franz Wagner,Gabe Vincent,20.5,24.5,4.5,20.1,24.15,4.77,0.521,0.518,0.523,under,under,over,0,-23.72,0.0,High,High,Low
+Tyrese Maxey,LeBron James,Jalen Duren,32.5,19.5,18.5,26.23,15.88,21.26,0.781,0.735,0.661,under,under,over,0,104.96,0.21,High,Med,High
+Alex Sarr,Anthony Black,Reed Sheppard,17.5,11.5,14.5,20.33,14.09,11.93,0.652,0.65,0.655,over,over,under,0,49.8,0.1,High,High,High
+Trendon Watford,Brook Lopez,Tobias Harris,10.5,5.5,11.5,8.48,7.49,14.15,0.637,0.634,0.646,under,over,over,0,40.96,0.082,Med,Med,High
+James Harden,Jordan Walsh,Moses Moody,24.5,5.5,11.5,27.11,6.86,13.58,0.634,0.626,0.617,over,over,over,0,32.08,0.064,High,Low,High
+Zaccharie Risacher,Austin Reaves,Ausar Thompson,10.5,22.5,10.5,12.6,24.98,12.33,0.615,0.627,0.609,over,over,over,0,26.71,0.053,High,High,High
+Nickeil Alexander-Walker,Kawhi Leonard,Duncan Robinson,17.5,20.5,10.5,19.61,22.06,12.18,0.611,0.589,0.601,over,over,over,0,16.97,0.034,High,High,High
+Kristaps Porziņģis,Franz Wagner,Jaxson Hayes,19.5,25.5,7.5,17.54,24.15,6.68,0.608,0.571,0.571,under,under,under,0,7.12,0.014,High,High,Low
+Luke Kennard,Luka Dončić,Payton Pritchard,6.5,32.5,16.5,7.62,31.27,17.53,0.583,0.568,0.555,over,under,over,0,-0.77,0.0,Med,High,High
+Justin Champagnie,Jaylen Brown,Alperen Sengun,6.5,27.5,22.5,5.61,28.27,23.22,0.576,0.54,0.537,under,over,over,0,-9.64,0.0,Low,High,High
+Tristan Vukcevic,Bogdan Bogdanović,Caris LeVert,8.5,8.5,8.5,8.12,8.03,8.9,0.528,0.53,0.528,under,under,over,0,-20.33,0.0,Med,High,Med

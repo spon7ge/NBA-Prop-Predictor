@@ -30,6 +30,48 @@ def impliedProb(odds):
 def american_to_decimal(odds):
     return 1 + (odds / 100.0) if odds > 0 else 1 + (100.0 / abs(odds))
 
+def decimal_to_american(decimal_odds):
+    """Convert decimal odds to American odds"""
+    if decimal_odds == 2.0:
+        return +100
+    elif decimal_odds > 2.0:
+        return round((decimal_odds - 1) * 100)
+    else:
+        return round(-100 / (decimal_odds - 1))
+
+def calculate_parlay_odds(odds_list, correlation_adjustment=1.0):
+    """
+    Calculate fair parlay odds from individual odds.
+    
+    Args:
+        odds_list: List of American odds for each leg
+        correlation_adjustment: Factor to adjust for correlation (default 1.0 = independent)
+                              If < 1.0, reduces probability (increases fair odds)
+    
+    Returns:
+        Fair parlay odds in American format
+    """
+    if len(odds_list) == 0:
+        return -137
+    
+    # Convert all to decimal odds
+    decimal_odds = [american_to_decimal(odds) for odds in odds_list]
+    
+    # Calculate combined decimal odds (multiply them)
+    combined_decimal = 1.0
+    for dec in decimal_odds:
+        combined_decimal *= dec
+    
+    # Apply correlation adjustment
+    # If correlation_adjustment < 1.0, the true probability is lower
+    # Lower probability = higher odds, so we multiply decimal odds by (1 / corr_adjustment)
+    if correlation_adjustment > 0:
+        adjusted_decimal = combined_decimal / correlation_adjustment
+    else:
+        adjusted_decimal = combined_decimal
+    
+    return decimal_to_american(adjusted_decimal)
+
 def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     netProfit = payout - stake
     probabilityOfLoss = 1 - probability
@@ -468,15 +510,23 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             odds1 = odds1_over if side1 == 'over' else odds1_under
             odds2 = odds2_over if side2 == 'over' else odds2_under
             
-            # Calculate market probabilities from actual odds
+            # Calculate market probabilities from individual odds
             market_prob1 = impliedProb(odds1)
             market_prob2 = impliedProb(odds2)
-            market_prob = (market_prob1 + market_prob2) / 2
             
-            # Calculate combined probability and EV
+            # Calculate fair parlay odds from individual odds (treating as independent)
+            fair_parlay_odds = calculate_parlay_odds([odds1, odds2], correlation_adjustment=corr_adjustment)
+            fair_parlay_prob = impliedProb(fair_parlay_odds)
+            
+            # Calculate model's combined probability
             p_both_raw = p1 * p2
             p_both = p_both_raw * corr_adjustment
+            
+            # Calculate EV using fixed payout (PrizePicks/Underdog pays 3x regardless)
             ev_percent = payout_multiple * p_both - 1  # EV per unit as decimal
+            
+            # Also calculate what the fair market probability would be
+            market_prob = fair_parlay_prob
             
             # Store this configuration if it's the best so far
             if ev_percent > best_ev:
@@ -490,6 +540,7 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
                     'odds2': odds2,
                     'market_prob1': market_prob1,
                     'market_prob2': market_prob2,
+                    'fair_parlay_prob': fair_parlay_prob,
                     'market_prob': market_prob,
                     'p_both_raw': p_both_raw,
                     'p_both': p_both,
@@ -506,15 +557,17 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         p2 = best_config['p2']
         odds1 = best_config['odds1']
         odds2 = best_config['odds2']
-        market_prob = best_config['market_prob']
+        market_prob1 = best_config['market_prob1']
+        market_prob2 = best_config['market_prob2']
+        fair_parlay_prob = best_config['fair_parlay_prob']
         p_both_raw = best_config['p_both_raw']
         p_both = best_config['p_both']
         ev_percent = best_config['ev_percent']
         
         # Edge calculations
-        edge1 = p1 - market_prob
-        edge2 = p2 - market_prob
-        combined_edge = p_both_raw - (market_prob ** 2)
+        edge1 = p1 - market_prob1  # Individual leg edge
+        edge2 = p2 - market_prob2  # Individual leg edge
+        combined_edge = p_both - fair_parlay_prob  # Combined edge using fair parlay probability
         
         # Kelly criterion
         b = payout_multiple - 1.0
@@ -716,44 +769,14 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         opp2 = player_opponents[p2]
         opp3 = player_opponents[p3]
         
-        # Prevent all 3 players from being on the same team
-        if team1 == team2 == team3:
-            continue
-        
-        # Prevent all 3 players from being in the same game
-        # For 3 players to be in the same game, they must be from exactly 2 teams
+        # Prevent ANY two players from being on the same team (all 3 must be different teams)
         unique_teams = set([team1, team2, team3])
-        if len(unique_teams) == 2:
-            # Check if the two teams are playing each other (same game)
-            # Get the two teams
-            teams_list = list(unique_teams)
-            team_a = teams_list[0]
-            team_b = teams_list[1]
-            
-            # Check if team_a's opponent is team_b and team_b's opponent is team_a
-            # Find which players are on which team
-            p1_team = team1
-            p2_team = team2
-            p3_team = team3
-            
-            # Get opponents for each team
-            if p1_team == team_a:
-                team_a_opp = opp1
-            elif p2_team == team_a:
-                team_a_opp = opp2
-            else:  # p3_team == team_a
-                team_a_opp = opp3
-            
-            if p1_team == team_b:
-                team_b_opp = opp1
-            elif p2_team == team_b:
-                team_b_opp = opp2
-            else:  # p3_team == team_b
-                team_b_opp = opp3
-            
-            # If team_a's opponent is team_b and team_b's opponent is team_a, they're in the same game
-            if team_a_opp == team_b and team_b_opp == team_a:
-                continue  # Skip - all 3 players are in the same game
+        if len(unique_teams) < 3:
+            continue  # Skip if any players share a team
+        
+        # Note: Since all 3 players must be from different teams, they cannot all be in the same game
+        # (a game only has 2 teams). However, 2 of them could still be in the same game.
+        # We allow this since they're from different teams and provides diversification.
         
         valid_combinations.append((p1, p2, p3))
     
@@ -849,15 +872,20 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             odds2 = odds2_over if side2 == 'over' else odds2_under
             odds3 = odds3_over if side3 == 'over' else odds3_under
             
-            # Calculate market probabilities from actual odds
+            # Calculate market probabilities from individual odds
             market_prob1 = impliedProb(odds1)
             market_prob2 = impliedProb(odds2)
             market_prob3 = impliedProb(odds3)
-            market_prob = (market_prob1 + market_prob2 + market_prob3) / 3
             
-            # Calculate combined probability and EV
+            # Calculate fair parlay odds from individual odds (treating as independent)
+            fair_parlay_odds = calculate_parlay_odds([odds1, odds2, odds3], correlation_adjustment=corr_adjustment)
+            fair_parlay_prob = impliedProb(fair_parlay_odds)
+            
+            # Calculate model's combined probability
             p_all_three_raw = p1 * p2 * p3
             p_all_three = p_all_three_raw * corr_adjustment
+            
+            # Calculate EV using fixed payout (PrizePicks/Underdog pays 6x regardless)
             ev_percent = payout_multiple * p_all_three - 1  # EV per unit as decimal
             
             # Store this configuration if it's the best so far
@@ -876,7 +904,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
                     'market_prob1': market_prob1,
                     'market_prob2': market_prob2,
                     'market_prob3': market_prob3,
-                    'market_prob': market_prob,
+                    'fair_parlay_prob': fair_parlay_prob,
                     'p_all_three_raw': p_all_three_raw,
                     'p_all_three': p_all_three,
                     'ev_percent': ev_percent
@@ -895,16 +923,19 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         odds1 = best_config['odds1']
         odds2 = best_config['odds2']
         odds3 = best_config['odds3']
-        market_prob = best_config['market_prob']
+        market_prob1 = best_config['market_prob1']
+        market_prob2 = best_config['market_prob2']
+        market_prob3 = best_config['market_prob3']
+        fair_parlay_prob = best_config['fair_parlay_prob']
         p_all_three_raw = best_config['p_all_three_raw']
         p_all_three = best_config['p_all_three']
         ev_percent = best_config['ev_percent']
         
         # Edge calculations
-        edge1 = p1 - market_prob
-        edge2 = p2 - market_prob
-        edge3 = p3 - market_prob
-        combined_edge = p_all_three_raw - (market_prob ** 3)
+        edge1 = p1 - market_prob1  # Individual leg edge
+        edge2 = p2 - market_prob2  # Individual leg edge
+        edge3 = p3 - market_prob3  # Individual leg edge
+        combined_edge = p_all_three - fair_parlay_prob  # Combined edge using fair parlay probability
         
         # Kelly criterion
         b = payout_multiple - 1.0
