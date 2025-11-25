@@ -431,37 +431,19 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         line1 = float(player_lines[player1]['LINE'])
         line2 = float(player_lines[player2]['LINE'])
         
-        # Calculate probabilities analytically (fast & accurate)
+        # Calculate probabilities analytically (fast & accurate) for BOTH sides
         p1_over = float(1 - norm.cdf(line1, loc=mu1, scale=sigma1))
+        p1_under = 1.0 - p1_over
         p2_over = float(1 - norm.cdf(line2, loc=mu2, scale=sigma2))
+        p2_under = 1.0 - p2_over
         
-        # Determine model sides
-        if mu1 > line1:
-            model_side1 = 'over'
-            p1 = p1_over
-        else:
-            model_side1 = 'under'
-            p1 = 1 - p1_over
-            
-        if mu2 > line2:
-            model_side2 = 'over'
-            p2 = p2_over
-        else:
-            model_side2 = 'under'
-            p2 = 1 - p2_over
+        # Look up worst-case odds for BOTH sides
+        odds1_over = get_player_odds_from_csv(player1, line1, current_date_str, 'over')
+        odds1_under = get_player_odds_from_csv(player1, line1, current_date_str, 'under')
+        odds2_over = get_player_odds_from_csv(player2, line2, current_date_str, 'over')
+        odds2_under = get_player_odds_from_csv(player2, line2, current_date_str, 'under')
         
-        # Look up actual odds from CSV (worst case scenario)
-        odds1 = get_player_odds_from_csv(player1, line1, current_date_str, model_side1)
-        odds2 = get_player_odds_from_csv(player2, line2, current_date_str, model_side2)
-        
-        # Calculate market probabilities from actual odds
-        market_prob1 = impliedProb(odds1)
-        market_prob2 = impliedProb(odds2)
-        
-        # Use average market prob for edge calculations
-        market_prob = (market_prob1 + market_prob2) / 2
-        
-        # Dynamic correlation adjustment
+        # Dynamic correlation adjustment (same for all combinations)
         team1 = player_teams[player1]
         team2 = player_teams[player2]
         opp1 = player_opponents[player1]
@@ -475,10 +457,59 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             corr_adjustment = 0.98  # Different games
             correlation = 0.05
         
-        # Calculate combined probability and EV
-        p_both_raw = p1 * p2
-        p_both = p_both_raw * corr_adjustment
-        ev_percent = payout_multiple * p_both - 1  # EV per unit as decimal
+        # Try all 4 side combinations and find the best EV
+        best_ev = float('-inf')
+        best_config = None
+        
+        for side1, side2 in [('over', 'over'), ('over', 'under'), ('under', 'over'), ('under', 'under')]:
+            # Get probabilities and odds for this combination
+            p1 = p1_over if side1 == 'over' else p1_under
+            p2 = p2_over if side2 == 'over' else p2_under
+            odds1 = odds1_over if side1 == 'over' else odds1_under
+            odds2 = odds2_over if side2 == 'over' else odds2_under
+            
+            # Calculate market probabilities from actual odds
+            market_prob1 = impliedProb(odds1)
+            market_prob2 = impliedProb(odds2)
+            market_prob = (market_prob1 + market_prob2) / 2
+            
+            # Calculate combined probability and EV
+            p_both_raw = p1 * p2
+            p_both = p_both_raw * corr_adjustment
+            ev_percent = payout_multiple * p_both - 1  # EV per unit as decimal
+            
+            # Store this configuration if it's the best so far
+            if ev_percent > best_ev:
+                best_ev = ev_percent
+                best_config = {
+                    'side1': side1,
+                    'side2': side2,
+                    'p1': p1,
+                    'p2': p2,
+                    'odds1': odds1,
+                    'odds2': odds2,
+                    'market_prob1': market_prob1,
+                    'market_prob2': market_prob2,
+                    'market_prob': market_prob,
+                    'p_both_raw': p_both_raw,
+                    'p_both': p_both,
+                    'ev_percent': ev_percent
+                }
+        
+        # Use the best configuration found
+        if best_config is None:
+            continue
+        
+        side1 = best_config['side1']
+        side2 = best_config['side2']
+        p1 = best_config['p1']
+        p2 = best_config['p2']
+        odds1 = best_config['odds1']
+        odds2 = best_config['odds2']
+        market_prob = best_config['market_prob']
+        p_both_raw = best_config['p_both_raw']
+        p_both = best_config['p_both']
+        ev_percent = best_config['ev_percent']
         
         # Edge calculations
         edge1 = p1 - market_prob
@@ -507,12 +538,12 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'NAME 2': mapped_p2,
             'LINE 1': line1,
             'LINE 2': line2,
-            'ODDS 1': odds1,  # Add this
-            'ODDS 2': odds2,  # Add this
+            'ODDS 1': odds1,
+            'ODDS 2': odds2,
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
-            'MODEL SIDE 1': model_side1,
-            'MODEL SIDE 2': model_side2,
+            'MODEL SIDE 1': side1,
+            'MODEL SIDE 2': side2,
             'PROB 1': round(p1, 3),
             'PROB 2': round(p2, 3),
             'PROB BOTH': round(p_both, 4),
@@ -757,47 +788,23 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         line2 = float(player_lines[player2]['LINE'])
         line3 = float(player_lines[player3]['LINE'])
         
-        # Calculate probabilities analytically (fast & accurate)
+        # Calculate probabilities analytically (fast & accurate) for BOTH sides
         p1_over = float(1 - norm.cdf(line1, loc=mu1, scale=sigma1))
+        p1_under = 1.0 - p1_over
         p2_over = float(1 - norm.cdf(line2, loc=mu2, scale=sigma2))
+        p2_under = 1.0 - p2_over
         p3_over = float(1 - norm.cdf(line3, loc=mu3, scale=sigma3))
+        p3_under = 1.0 - p3_over
         
-        # Determine model sides
-        if mu1 > line1:
-            model_side1 = 'over'
-            p1 = p1_over
-        else:
-            model_side1 = 'under'
-            p1 = 1 - p1_over
-            
-        if mu2 > line2:
-            model_side2 = 'over'
-            p2 = p2_over
-        else:
-            model_side2 = 'under'
-            p2 = 1 - p2_over
-            
-        if mu3 > line3:
-            model_side3 = 'over'
-            p3 = p3_over
-        else:
-            model_side3 = 'under'
-            p3 = 1 - p3_over
+        # Look up worst-case odds for BOTH sides
+        odds1_over = get_player_odds_from_csv(player1, line1, current_date_str, 'over')
+        odds1_under = get_player_odds_from_csv(player1, line1, current_date_str, 'under')
+        odds2_over = get_player_odds_from_csv(player2, line2, current_date_str, 'over')
+        odds2_under = get_player_odds_from_csv(player2, line2, current_date_str, 'under')
+        odds3_over = get_player_odds_from_csv(player3, line3, current_date_str, 'over')
+        odds3_under = get_player_odds_from_csv(player3, line3, current_date_str, 'under')
         
-        # Look up actual odds from CSV (worst case scenario)
-        odds1 = get_player_odds_from_csv(player1, line1, current_date_str, model_side1)
-        odds2 = get_player_odds_from_csv(player2, line2, current_date_str, model_side2)
-        odds3 = get_player_odds_from_csv(player3, line3, current_date_str, model_side3)
-        
-        # Calculate market probabilities from actual odds
-        market_prob1 = impliedProb(odds1)
-        market_prob2 = impliedProb(odds2)
-        market_prob3 = impliedProb(odds3)
-        
-        # Use average market prob for edge calculations
-        market_prob = (market_prob1 + market_prob2 + market_prob3) / 3
-        
-        # Dynamic correlation adjustment
+        # Dynamic correlation adjustment (same for all combinations)
         team1 = player_teams[player1]
         team2 = player_teams[player2]
         team3 = player_teams[player3]
@@ -805,7 +812,7 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         opp2 = player_opponents[player2]
         opp3 = player_opponents[player3]
         
-        # Count pairs in same game
+        # Count pairs in same game (same for all side combinations)
         same_game_count = 0
         if team1 == opp2 or team2 == opp1:
             same_game_count += 1
@@ -824,10 +831,74 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             corr_adjustment = 0.90  # Low correlation
             correlation = 0.10
         
-        # Calculate combined probability and EV
-        p_all_three_raw = p1 * p2 * p3
-        p_all_three = p_all_three_raw * corr_adjustment
-        ev_percent = payout_multiple * p_all_three - 1  # EV per unit as decimal
+        # Try all 8 side combinations (2^3) and find the best EV
+        best_ev = float('-inf')
+        best_config = None
+        
+        for side1, side2, side3 in [
+            ('over', 'over', 'over'), ('over', 'over', 'under'),
+            ('over', 'under', 'over'), ('over', 'under', 'under'),
+            ('under', 'over', 'over'), ('under', 'over', 'under'),
+            ('under', 'under', 'over'), ('under', 'under', 'under')
+        ]:
+            # Get probabilities and odds for this combination
+            p1 = p1_over if side1 == 'over' else p1_under
+            p2 = p2_over if side2 == 'over' else p2_under
+            p3 = p3_over if side3 == 'over' else p3_under
+            odds1 = odds1_over if side1 == 'over' else odds1_under
+            odds2 = odds2_over if side2 == 'over' else odds2_under
+            odds3 = odds3_over if side3 == 'over' else odds3_under
+            
+            # Calculate market probabilities from actual odds
+            market_prob1 = impliedProb(odds1)
+            market_prob2 = impliedProb(odds2)
+            market_prob3 = impliedProb(odds3)
+            market_prob = (market_prob1 + market_prob2 + market_prob3) / 3
+            
+            # Calculate combined probability and EV
+            p_all_three_raw = p1 * p2 * p3
+            p_all_three = p_all_three_raw * corr_adjustment
+            ev_percent = payout_multiple * p_all_three - 1  # EV per unit as decimal
+            
+            # Store this configuration if it's the best so far
+            if ev_percent > best_ev:
+                best_ev = ev_percent
+                best_config = {
+                    'side1': side1,
+                    'side2': side2,
+                    'side3': side3,
+                    'p1': p1,
+                    'p2': p2,
+                    'p3': p3,
+                    'odds1': odds1,
+                    'odds2': odds2,
+                    'odds3': odds3,
+                    'market_prob1': market_prob1,
+                    'market_prob2': market_prob2,
+                    'market_prob3': market_prob3,
+                    'market_prob': market_prob,
+                    'p_all_three_raw': p_all_three_raw,
+                    'p_all_three': p_all_three,
+                    'ev_percent': ev_percent
+                }
+        
+        # Use the best configuration found
+        if best_config is None:
+            continue
+        
+        side1 = best_config['side1']
+        side2 = best_config['side2']
+        side3 = best_config['side3']
+        p1 = best_config['p1']
+        p2 = best_config['p2']
+        p3 = best_config['p3']
+        odds1 = best_config['odds1']
+        odds2 = best_config['odds2']
+        odds3 = best_config['odds3']
+        market_prob = best_config['market_prob']
+        p_all_three_raw = best_config['p_all_three_raw']
+        p_all_three = best_config['p_all_three']
+        ev_percent = best_config['ev_percent']
         
         # Edge calculations
         edge1 = p1 - market_prob
@@ -862,15 +933,15 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'LINE 1': line1,
             'LINE 2': line2,
             'LINE 3': line3,
-            'ODDS 1': odds1,  # Add this
-            'ODDS 2': odds2,  # Add this
-            'ODDS 3': odds3,  # Add this
+            'ODDS 1': odds1,
+            'ODDS 2': odds2,
+            'ODDS 3': odds3,
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'PREDICTION 3': round(mu3, 2),
-            'MODEL SIDE 1': model_side1,
-            'MODEL SIDE 2': model_side2,
-            'MODEL SIDE 3': model_side3,
+            'MODEL SIDE 1': side1,
+            'MODEL SIDE 2': side2,
+            'MODEL SIDE 3': side3,
             'PROB 1': round(p1, 3),
             'PROB 2': round(p2, 3),
             'PROB 3': round(p3, 3),

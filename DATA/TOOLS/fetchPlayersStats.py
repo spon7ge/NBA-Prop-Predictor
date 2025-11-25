@@ -3,7 +3,13 @@ import numpy as np
 import time
 import os
 from datetime import datetime
-from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv3, teamgamelog, boxscoreplayertrackv3
+from nba_api.stats.endpoints import (
+    leaguegamelog,
+    boxscoreadvancedv3,
+    teamgamelog,
+    boxscoreplayertrackv3,
+    boxscoremiscv3,
+)
 from nba_api.stats.static import teams
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from FEATURES.featuresV2 import engineerPlayerPlaybyPlayBasics, cleanPlaybyPlay
@@ -342,6 +348,61 @@ class FetchPlayersStats:
                 else:
                     print(f"[ERROR] Failed fetching scoring for {normalized_game_id}: {e}")
                     return pd.DataFrame()
+
+    def fetchBoxScoreMisc(self, game_id, sleep_time=None, max_retries=3, timeout=60):
+        """Fetch BoxScoreMiscV3 data for a single game"""
+        sleep_time = sleep_time or self.sleep_time
+        normalized_game_id = self.normalize_game_id(game_id)
+        if not normalized_game_id:
+            print(f"[ERROR] Invalid game ID: {game_id}")
+            return pd.DataFrame()
+
+        for attempt in range(max_retries):
+            try:
+                time.sleep(sleep_time * (attempt + 1))
+                misc_endpoint = boxscoremiscv3.BoxScoreMiscV3(
+                    game_id=normalized_game_id,
+                    timeout=timeout
+                )
+                if hasattr(misc_endpoint, "player_stats") and misc_endpoint.player_stats is not None:
+                    df = misc_endpoint.player_stats.get_data_frame()
+                else:
+                    data_frames = misc_endpoint.get_data_frames()
+                    if not data_frames:
+                        return pd.DataFrame()
+                    df = data_frames[0]
+
+                if df.empty:
+                    return pd.DataFrame()
+
+                column_mapping = {
+                    'gameId': 'GAME_ID',
+                    'personId': 'PLAYER_ID',
+                    'pointsOffTurnovers': 'PTS_OFF_TOV',
+                    'pointsSecondChance': 'PTS_2ND_CHANCE',
+                    'pointsFastBreak': 'PTS_FB',
+                    'pointsPaint': 'PTS_PAINT',
+                    'oppPointsOffTurnovers': 'OPP_PTS_OFF_TOV',
+                    'oppPointsSecondChance': 'OPP_PTS_2ND_CHANCE',
+                    'oppPointsFastBreak': 'OPP_PTS_FB',
+                    'oppPointsPaint': 'OPP_PTS_PAINT',
+                    'blocks': 'BLK',
+                    'blocksAgainst': 'BLKA',
+                    'foulsPersonal': 'PF',
+                    'foulsDrawn': 'PFD',
+                }
+
+                cols = [col for col in column_mapping if col in df.columns]
+                misc_df = df[cols].rename(columns=column_mapping)
+                return misc_df
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"[RETRY {attempt+1}] Misc stats for {normalized_game_id}: {e}")
+                else:
+                    print(f"[ERROR] Failed fetching misc for {normalized_game_id}: {e}")
+                    return pd.DataFrame()
+
+        return pd.DataFrame()
 
     def fetchBoxScoreMatchups(self, game_id, sleep_time=None, max_retries=3, timeout=60):
         """Fetch BoxScoreMatchupsV3 data for a single game with defensive aggregations"""
@@ -722,6 +783,7 @@ class FetchPlayersStats:
         all_advanced = []
         all_tracking = []
         all_scoring = []
+        all_misc = []
         all_matchups = []
         all_playbyplay = []  # Add play-by-play stats array
 
@@ -737,6 +799,7 @@ class FetchPlayersStats:
                         'advanced': executor.submit(self.fetchAdvancedStats, game_id, sleep_time),
                         'tracking': executor.submit(self.fetchTrackingStats, game_id, sleep_time),
                         'scoring': executor.submit(self.fetchBoxScoreScoring, game_id, sleep_time),
+                        'misc': executor.submit(self.fetchBoxScoreMisc, game_id, sleep_time),
                         'matchups': executor.submit(self.fetchBoxScoreMatchups, game_id, sleep_time),
                     }
                     
@@ -755,6 +818,7 @@ class FetchPlayersStats:
                                 if stat_type == 'advanced': all_advanced.append(result)
                                 elif stat_type == 'tracking': all_tracking.append(result)
                                 elif stat_type == 'scoring': all_scoring.append(result)
+                                elif stat_type == 'misc': all_misc.append(result)
                                 elif stat_type == 'matchups': all_matchups.append(result)
                                 elif stat_type == 'playbyplay': all_playbyplay.append(result)  # Add play-by-play handling
                         except Exception as e:
@@ -800,6 +864,17 @@ class FetchPlayersStats:
                 merged_player, 
                 matchup_stats, 
                 on=['GAME_ID', 'PLAYER_ID'], 
+                how='left'
+            )
+
+        if all_misc:
+            misc_stats = pd.concat(all_misc, ignore_index=True)
+            # Drop TEAM_ID from misc_stats to avoid conflicts (already in base player stats)
+            misc_stats = misc_stats.drop(columns=['TEAM_ID'], errors='ignore')
+            merged_player = pd.merge(
+                merged_player,
+                misc_stats,
+                on=['GAME_ID', 'PLAYER_ID'],
                 how='left'
             )
 

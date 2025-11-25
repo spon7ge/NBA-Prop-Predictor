@@ -1,5 +1,5 @@
 projectedStartingFive = {
-    "ATL": ["Jalen Johnson", "Dyson Daniels", "Nickeil Alexander-Walker", "Zaccharie Risacher", "Onyeka Okongwu"],
+    "ATL": ["Dyson Daniels", "Jalen Johnson", "Zaccharie Risacher", "Nickeil Alexander-Walker", "Kristaps Porziņģis"],
     "BKN": ["Nic Claxton", "Egor Demin", "Terance Mann", "Michael Porter", "Noah Clowney"],
     "BOS": ["Jaylen Brown", "Payton Pritchard", "Jordan Walsh", "Derrick White", "Neemias Queta"],
     "CHA": ["Collin Sexton", "Mason Plumlee", "Kon Knueppel", "Miles Bridges", "Sion James"],
@@ -11,8 +11,8 @@ projectedStartingFive = {
     "GSW": ["Jimmy Butler", "Will Richard", "Quinten Post", "Stephen Curry", "Moses Moody"],
     "HOU": ["Amen Thompson", "Josh Okogie", "Alperen Sengun", "Jabari Smith"],
     "IND": ["Pascal Siakam", "Ben Sheppard", "Andrew Nembhard", "Tyrese Haliburton", "Bennedict Mathurin"],
-    "LAC": ["John Collins", "Bradley Beal", "Ivica Zubac", "Kawhi Leonard", "James Harden"],
-    "LAL": ["Deandre Ayton", "LeBron James", "Rui Hachimura", "Austin Reaves", "Luka Dončić"],
+    "LAC": ["Ivica Zubac", "Kris Dunn", "Kawhi Leonard", "Bradley Beal", "John Collins"],
+    "LAL": ["Austin Reaves", "Jaxson Hayes", "Rui Hachimura", "Luka Dončić", "LeBron James"],
     "MEM": ["Vince Williams", "Zach Edey", "Jaylen Wells", "Cedric Coward"],
     "MIA": ["Bam Adebayo", "Tyler Herro", "Pelle Larsson", "Davion Mitchell", "Jaime Jaquez"],
     "MIL": ["Bobby Portis", "Ryan Rollins", "Kyle Kuzma", "AJ Green", "Myles Turner"],
@@ -20,15 +20,15 @@ projectedStartingFive = {
     "NOP": ["Derik Queen", "Saddiq Bey", "Jeremiah Fears", "Trey Murphy", "Zion Williamson"],
     "NYK": ["Josh Hart", "Miles McBride", "Mikal Bridges", "Jalen Brunson", "Karl-Anthony Towns"],
     "OKC": ["Luguentz Dort", "Shai Gilgeous-Alexander", "Chet Holmgren", "Cason Wallace", "Isaiah Hartenstein"],
-    "ORL": ["Orlando Robinson", "Anthony Black", "Franz Wagner", "Tristan da Silva", "Desmond Bane"],
-    "PHI": ["Tyrese Maxey", "VJ Edgecombe", "Andre Drummond", "Paul George", "Quentin Grimes"],
+    "ORL": ["Franz Wagner", "Jalen Suggs", "Desmond Bane", "Tristan da Silva", "Wendell Carter"],
+    "PHI": ["Quentin Grimes", "Andre Drummond", "Dominick Barlow", "Justin Edwards", "Tyrese Maxey"],
     "PHX": ["Jordan Goodwin", "Devin Booker", "Royce O'Neale", "Dillon Brooks", "Nick Richards"],
     "POR": ["Sidy Cissoko", "Damian Lillard", "Deni Avdija", "Donovan Clingan", "Toumani Camara"],
     "SAC": ["Russell Westbrook", "Drew Eubanks", "Zach LaVine", "DeMar DeRozan", "Keegan Murray"],
     "SAS": ["Julian Champagnie", "Devin Vassell", "Luke Kornet", "De'Aaron Fox", "Harrison Barnes"],
     "TOR": ["Jakob Poeltl", "Gradey Dick", "Scottie Barnes", "Brandon Ingram", "Immanuel Quickley"],
     "UTA": ["Walker Kessler", "Jusuf Nurkic", "Lauri Markkanen", "Keyonte George", "Svi Mykhailiuk"],
-    "WAS": ["CJ McCollum", "Alex Sarr", "Kyshawn George", "Bilal Coulibaly"],
+    "WAS": ["CJ McCollum", "Khris Middleton", "Alex Sarr", "Bilal Coulibaly"],
 }
 
 mainStartingFive = {
