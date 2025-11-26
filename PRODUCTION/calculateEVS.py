@@ -40,17 +40,6 @@ def decimal_to_american(decimal_odds):
         return round(-100 / (decimal_odds - 1))
 
 def calculate_parlay_odds(odds_list, correlation_adjustment=1.0):
-    """
-    Calculate fair parlay odds from individual odds.
-    
-    Args:
-        odds_list: List of American odds for each leg
-        correlation_adjustment: Factor to adjust for correlation (default 1.0 = independent)
-                              If < 1.0, reduces probability (increases fair odds)
-    
-    Returns:
-        Fair parlay odds in American format
-    """
     if len(odds_list) == 0:
         return -137
     
@@ -635,10 +624,6 @@ def clear_odds_cache():
     _odds_cache = {}
 
 def get_player_odds_from_csv(player_name, line, current_date, side='over'):
-    """
-    Optimized O(1) lookup using pre-computed hashmap cache.
-    Only loads CSV once per date and filters to player_points category.
-    """
     try:
         # Convert current_date to string if needed
         if isinstance(current_date, datetime):

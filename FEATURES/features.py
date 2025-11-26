@@ -244,7 +244,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FG_PCT', 'FG3_PCT',
-    'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT',
+    'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS',
     'UFGA', 'UFGM', 'UFG_PCT', 'POSS', 'PLUS_MINUS', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
     for stat in stats_cols:
         if stat in df_enhanced.columns:
@@ -273,8 +273,8 @@ def getPlayerVolatilityToDateVectorized(df, player_id_col='PLAYER_ID', date_col=
     
     # Define stats - same as avg function for consistency
     stats_cols = ['PTS', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'MIN',
-    'AST', 'E_OFF_RATING', 'NET_RATING', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PLUS_MINUS',
-    
+    'AST', 'E_OFF_RATING', 'NET_RATING', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PLUS_MINUS', 'POSS',
+
     # Percentage stats (use CV)
     'FG_PCT', 'FG3_PCT', 'FT_PCT', 'TS_PCT', 'USG_PCT', 'EFG_PCT',]
     
@@ -307,7 +307,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
     'TS_PCT', 'USG_PCT', 'MIN', 'POSS',
     'UFGA', 'UFGM', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PLUS_MINUS',
-    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT',]
+    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -385,7 +385,7 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     # Metrics to track historical performance against teams
     metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
     'MIN', 'POSS', 'USG_PCT', 'EFG_PCT', 'TS_PCT',
-    'UFGA', 'UFGM','E_OFF_RATING', 'NET_RATING', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PLUS_MINUS']
+    'UFGA', 'UFGM','E_OFF_RATING', 'NET_RATING', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PLUS_MINUS', 'POSS']
     
     # Available metrics only
     available_metrics = [m for m in metrics if m in df.columns]
@@ -1522,18 +1522,46 @@ def add_interaction_features(df):
     df['PTS_PER_MIN_X_USG'] = (df['PTS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)) * df['USG_PCT_AVG_TO_DATE']
     df['USAGE_X_EFFICIENCY'] = df['USG_PCT_AVG_TO_DATE'] * df['TS_PCT_AVG_TO_DATE']
     df['USAGE_X_MINUTES'] = df['USG_PCT_AVG_TO_DATE'] * df['MIN_AVG_TO_DATE']
+    df['USAGE_X_E_OFF_RATING'] = df['USG_PCT_AVG_TO_DATE'] * df['E_OFF_RATING_AVG_TO_DATE']
+    df['USAGE_X_FGA'] = df['USG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE']
+    df['USAGE_X_PTS'] = df['USG_PCT_AVG_TO_DATE'] * df['PTS_AVG_TO_DATE']
+    df['USAGE_X_PLUS_MINUS'] = df['USG_PCT_AVG_TO_DATE'] * df['PLUS_MINUS_AVG_TO_DATE']
+    df[f'USAGE_X_FGA_X_TEAM_PACE'] = df['USG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE'] * df['TEAM_PACE_AVG_TO_DATE']
+    df[f'USAGE_X_FGA_X_OPP_DEF_RATING'] = df['USG_PCT_AVG_TO_DATE'] * df['FGA_AVG_TO_DATE'] * df['OPP_DEF_RATING_AVG_TO_DATE']
     
     # ===== POINTS PER POSSESSION =====
     df['PTS_PER_POSSESSION'] = df['PTS_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 0.44 * df.get('FTA_AVG_TO_DATE', 0) + epsilon)
     df['FGA_PER_MIN'] = df['FGA_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
+    df['FG3A_PER_MIN'] = df['FG3A_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
+    df['FTA_PER_MIN'] = df['FTA_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
+    df['POSS_PER_MIN'] = df['POSS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
 
+
+    df['PTS_PERCENTAGE_OF_TEAM'] = df['PTS_AVG_TO_DATE'] / df['TEAM_PTS_AVG_TO_DATE']
+    df['FGA_PERCENTAGE_OF_TEAM'] = df['FGA_AVG_TO_DATE'] / df['TEAM_FGA_AVG_TO_DATE']
+    df['FG3A_PERCENTAGE_OF_TEAM'] = df['FG3A_AVG_TO_DATE'] / df['TEAM_FG3A_AVG_TO_DATE']
+    df['FTA_PERCENTAGE_OF_TEAM'] = df['FTA_AVG_TO_DATE'] / df['TEAM_FTA_AVG_TO_DATE']
+    # df['MIN_PERCENTAGE_OF_TEAM'] = df['MIN_AVG_TO_DATE'] / df['TEAM_MIN_AVG_TO_DATE']
 
     # ===== TIERS =====
     df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 10).astype(int)
+    df['LOW_SCORER_X_USG'] = df['IS_LOW_SCORER'] * df['USG_PCT_AVG_TO_DATE']
+    df['LOW_SCORER_X_MIN'] = df['IS_LOW_SCORER'] * df['MIN_AVG_TO_DATE']
+    df['LOW_SCORER_X_FGA'] = df['IS_LOW_SCORER'] * df['FGA_AVG_TO_DATE']
+    df['LOW_SCORER_X_PTS'] = df['IS_LOW_SCORER'] * df['PTS_AVG_TO_DATE']
+    df['LOW_SCORER_X_PLUS_MINUS'] = df['IS_LOW_SCORER'] * df['PLUS_MINUS_AVG_TO_DATE']
     df['IS_MEDIUM_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 10) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 20).astype(int)
+    df['MEDIUM_SCORER_X_USG'] = df['IS_MEDIUM_SCORER'] * df['USG_PCT_AVG_TO_DATE']
+    df['MEDIUM_SCORER_X_MIN'] = df['IS_MEDIUM_SCORER'] * df['MIN_AVG_TO_DATE']
+    df['MEDIUM_SCORER_X_FGA'] = df['IS_MEDIUM_SCORER'] * df['FGA_AVG_TO_DATE']
+    df['MEDIUM_SCORER_X_PTS'] = df['IS_MEDIUM_SCORER'] * df['PTS_AVG_TO_DATE']
+    df['MEDIUM_SCORER_X_PLUS_MINUS'] = df['IS_MEDIUM_SCORER'] * df['PLUS_MINUS_AVG_TO_DATE']
     df['IS_HIGH_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 20) & (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 25).astype(int)
-    df['BUCKET_GETTER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') >= 25).astype(int)
-
+    df['HIGH_SCORER_X_USG'] = df['IS_HIGH_SCORER'] * df['USG_PCT_AVG_TO_DATE']
+    df['HIGH_SCORER_X_MIN'] = df['IS_HIGH_SCORER'] * df['MIN_AVG_TO_DATE']
+    df['HIGH_SCORER_X_FGA'] = df['IS_HIGH_SCORER'] * df['FGA_AVG_TO_DATE']
+    df['HIGH_SCORER_X_PTS'] = df['IS_HIGH_SCORER'] * df['PTS_AVG_TO_DATE']
+    df['HIGH_SCORER_X_PLUS_MINUS'] = df['IS_HIGH_SCORER'] * df['PLUS_MINUS_AVG_TO_DATE']
 
     # ===== SHORT VS LONG TERM DIVERGENCES =====
     df['PTS_10G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + epsilon)
@@ -1696,6 +1724,57 @@ def add_interaction_features(df):
         df['PTS_PAINT_EXPECTATION_LOCATION'] = (
             df['HOME_GAME'] * df.get('PLAYER_HOME_AVG_PTS_PAINT_TO_DATE', 0) +
             (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_AVG_PTS_PAINT_TO_DATE', 0)
+        )
+    
+    # Team star expectation features - use player's own averages when they are team star
+    if 'PLAYER_IS_TEAM_STAR' in df.columns:
+        df['PTS_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('PTS_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['MIN_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('MIN_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['AST_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('AST_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['USG_PCT_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('USG_PCT_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['E_OFF_RATING_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('E_OFF_RATING_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['NET_RATING_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('NET_RATING_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['FGA_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('FGA_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['FTA_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('FTA_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['FG3A_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('FG3A_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['TS_PCT_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('TS_PCT_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['POSS_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('POSS_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
+        )
+        df['PLUS_MINUS_EXPECTATION_TEAM_STAR'] = (
+            df['PLAYER_IS_TEAM_STAR'] * df.get('PLUS_MINUS_AVG_TO_DATE', 0) +
+            (1 - df['PLAYER_IS_TEAM_STAR']) * 0
         )
     
     return df
