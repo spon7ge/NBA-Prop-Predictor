@@ -67,6 +67,71 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
 
+def unified_betting_strategy(line, model_pred, use_adjustment=True):
+    """
+    Master betting function using decile analysis to adjust predictions.
+    
+    Returns:
+        tuple: (adjusted_prediction, bias_applied, confidence_level, reason)
+        
+    Note: bias_applied represents the AMOUNT ADDED to prediction
+          Positive bias = model overpredicts (subtract from prediction)
+          Negative bias = model underpredicts (add to prediction)
+    """
+    if not use_adjustment:
+        return model_pred, 0.0, 'MEDIUM', 'No adjustment applied'
+    
+    # Determine which bin and calculate adjustment
+    if line <= 7:
+        # Model OVERpredicts by ~4.5 points → SUBTRACT
+        adjustment = -4.5
+        confidence = 'LOW'
+        reason = 'Low scorer - massive overprediction'
+    
+    elif 7 < line <= 10:
+        # Model OVERpredicts by ~2.0 points → SUBTRACT
+        adjustment = -2.0
+        confidence = 'MEDIUM'
+        reason = 'Still overpredicting'
+    
+    elif 10 < line <= 15:
+        # SWEET SPOT - minimal bias
+        adjustment = -0.1
+        confidence = 'HIGH'
+        reason = 'Sweet spot - well calibrated'
+    
+    elif 15 < line <= 20:
+        # Model UNDERpredicts by ~1.1 points → ADD
+        adjustment = +1.1
+        confidence = 'HIGH'
+        reason = 'Good zone with bias correction'
+    
+    elif 20 < line <= 24:
+        # Model UNDERpredicts by ~2.2 points → ADD
+        adjustment = +2.2
+        confidence = 'MEDIUM'
+        reason = 'Underprediction zone'
+    
+    elif 24 < line < 28:
+        # Model UNDERpredicts by ~4.4 points → ADD
+        adjustment = +4.4
+        confidence = 'MEDIUM'
+        reason = 'High underprediction - overs only'
+    
+    else:  # line >= 28
+        # Model UNDERpredicts by ~8.3 points → ADD
+        adjustment = +8.3
+        confidence = 'LOW'
+        reason = 'Massive underprediction - stars unpredictable'
+    
+    adjusted_pred = model_pred + adjustment
+    
+    # For backwards compatibility, return bias as the value subtracted
+    # (negative adjustment means we subtracted, positive means we added)
+    bias_applied = -adjustment  
+    
+    return adjusted_pred, bias_applied, confidence, reason
+
 
 def estimate_skew_from_residuals(residuals: np.ndarray) -> float:
     """Estimate skew-normal shape parameter from residuals.
@@ -242,132 +307,10 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-def calculateSingleBets(data, bookmakers, model, features, current_date, 
-                       edge_threshold=0.05, stake=100, top_n=50, 
-                       max_player_appearances: int = 1):
-    """
-    Optimized single bet calculator using calibrated Normal distribution
-    """
-    from scipy.stats import norm
-    
-    print("Processing single bets...")
-    
-    # Pre-compute predictions for all unique players
-    unique_players = bookmakers['NAME'].unique()
-    player_predictions = {}
-    
-    print(f"Pre-computing predictions for {len(unique_players)} unique players...")
-    for player in unique_players:
-        mapped_player = nameDict.get(player, player)
-        pred_data = get_cached_prediction(
-            mapped_player, data, model, features, current_date, 
-            projectedStartingFive, mainStartingFive, teamStarPlayer
-        )
-        if pred_data is not None:
-            player_predictions[player] = pred_data
-    
-    results = []
-    
-    # Process each bet
-    for _, row in bookmakers.iterrows():
-        name = row['NAME']
-        bookmaker = row['BOOKMAKER']
-        line = float(row['LINE'])
-        side = row.get('OVER/UNDER', 'over')
-        odds = int(row['ODDS'])
-        
-        # Get pre-computed prediction data
-        if name not in player_predictions:
-            continue
-        
-        prediction_data = player_predictions[name]
-        mu = prediction_data['prediction']
-        sigma = prediction_data['sigma']  
-        
-        # Calculate probabilities analytically
-        p_over = float(1 - norm.cdf(line, loc=mu, scale=sigma))
-        p_under = 1.0 - p_over
-        
-        # Choose probability based on the offered side
-        is_over = str(side).upper().startswith('O')
-        p = p_over if is_over else p_under
-        
-        # Convert odds to decimal and calculate EV
-        dec_odds = american_to_decimal(odds)
-        b = dec_odds - 1.0
-        
-        # EV calculations (as percentage per unit)
-        ev_percent = p * b - (1 - p)  # EV per unit as decimal
-        
-        # Kelly criterion
-        kelly_fraction = max(0.0, (b * p - (1 - p)) / b) if b > 0 else 0.0
-        
-        # Edge calculation
-        market_prob = impliedProb(odds)
-        model_prob = p_over if is_over else p_under
-        edge = model_prob - market_prob
-        
-        # Recommendation based on edge threshold
-        recommendation = 1 if (abs(line - mu) > edge_threshold) and (ev_percent > 0) else 0
-        
-        # Confidence interval
-        ci_lower = max(0, mu - 1.96 * sigma)
-        ci_upper = mu + 1.96 * sigma
-        
-        # Sigma flag
-        sigma_flag = flag_sigma(sigma)
-        
-        results.append({
-            'NAME': name,
-            'BOOKMAKER': bookmaker,
-            'LINE': line,
-            'ODDS': odds,
-            'SIDE': side,
-            'PREDICTION': round(mu, 2),
-            'RECOMMENDATION': recommendation,
-            'OVER%': round(p_over, 3),
-            'UNDER%': round(p_under, 3),
-            'IMPLIED PROB': round(market_prob, 3),
-            'MODEL PROB': round(model_prob, 3),
-            'EDGE': round(edge, 3),
-            'EV%': round(ev_percent * 100, 2),
-            'KELLY_FRACTION': round(kelly_fraction, 3),
-            'SIGMA': round(sigma, 2),
-            'SIGMA FLAG': sigma_flag,
-            'CI': f"({ci_lower:.1f}, {ci_upper:.1f})",
-            'EXPECTED ROI': round(ev_percent * 100, 1)
-        })
-    
-    results_df = pd.DataFrame(results)
-    
-    # Sort by EV
-    results_df = results_df.sort_values('EV%', ascending=False)
-    
-    # Limit player appearances
-    results_df = limit_player_appearances_single(results_df, max_appearances=max_player_appearances)
-    
-    # Return top N
-    return results_df.head(top_n)
-
-def limit_player_appearances_single(results_df, max_appearances=1):
-    """Limit how many times each player appears in single bets"""
-    player_counts = {}
-    filtered_results = []
-    
-    for _, row in results_df.iterrows():
-        player = row['NAME']
-        count = player_counts.get(player, 0)
-        
-        if count < max_appearances:
-            filtered_results.append(row)
-            player_counts[player] = count + 1
-    
-    return pd.DataFrame(filtered_results)
-
     
 def calculate2LegBets(data, bookmakers, model, features, current_date, 
                      edge_threshold=0.05, top_n=10, 
-                     stake=100, max_player_appearances: int = 2):
+                     stake=100, max_player_appearances: int = 2, use_bias_adjustment: bool = True):
     """
     Optimized 2-leg bet calculator using calibrated Normal distribution
     """
@@ -454,15 +397,21 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         pred1_data = player_predictions[player1]
         pred2_data = player_predictions[player2]
         
-        mu1 = pred1_data['prediction']
-        mu2 = pred2_data['prediction']
+        mu1_raw = pred1_data['prediction']
+        mu2_raw = pred2_data['prediction']
         sigma1 = pred1_data['sigma']  # Already calibrated!
         sigma2 = pred2_data['sigma']
         
         line1 = float(player_lines[player1]['LINE'])
         line2 = float(player_lines[player2]['LINE'])
         
-        # Calculate probabilities analytically (fast & accurate) for BOTH sides
+        # Apply unified betting strategy adjustment based on lines
+        mu1_adjusted, bias1, conf1, reason1 = unified_betting_strategy(line1, mu1_raw, use_adjustment=use_bias_adjustment)
+        mu2_adjusted, bias2, conf2, reason2 = unified_betting_strategy(line2, mu2_raw, use_adjustment=use_bias_adjustment)
+        mu1 = mu1_adjusted
+        mu2 = mu2_adjusted
+        
+        # Calculate probabilities analytically (fast & accurate) for BOTH sides using adjusted predictions
         p1_over = float(1 - norm.cdf(line1, loc=mu1, scale=sigma1))
         p1_under = 1.0 - p1_over
         p2_over = float(1 - norm.cdf(line2, loc=mu2, scale=sigma2))
@@ -582,6 +531,14 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
             'LINE 2': line2,
             'ODDS 1': odds1,
             'ODDS 2': odds2,
+            'RAW PREDICTION 1': round(mu1_raw, 2),
+            'RAW PREDICTION 2': round(mu2_raw, 2),
+            'BIAS ADJUSTMENT 1': round(bias1, 2),
+            'BIAS ADJUSTMENT 2': round(bias2, 2),
+            'CONFIDENCE 1': conf1,
+            'CONFIDENCE 2': conf2,
+            'REASON 1': reason1,
+            'REASON 2': reason2,
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'MODEL SIDE 1': side1,
@@ -681,7 +638,7 @@ def limit_player_appearances(results_df, max_appearances=3):
 
 def calculate3LegBets(data, bookmakers, model, features, current_date, 
                      edge_threshold=0.05, top_n=10, 
-                     stake=100, max_player_appearances: int = 2):
+                     stake=100, max_player_appearances: int = 2, use_bias_adjustment: bool = True):
     """
     Optimized 3-leg bet calculator using calibrated Normal distribution
     """
@@ -785,9 +742,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         pred2_data = player_predictions[player2]
         pred3_data = player_predictions[player3]
         
-        mu1 = pred1_data['prediction']
-        mu2 = pred2_data['prediction']
-        mu3 = pred3_data['prediction']
+        mu1_raw = pred1_data['prediction']
+        mu2_raw = pred2_data['prediction']
+        mu3_raw = pred3_data['prediction']
         sigma1 = pred1_data['sigma']  # Already calibrated!
         sigma2 = pred2_data['sigma']
         sigma3 = pred3_data['sigma']
@@ -796,7 +753,15 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         line2 = float(player_lines[player2]['LINE'])
         line3 = float(player_lines[player3]['LINE'])
         
-        # Calculate probabilities analytically (fast & accurate) for BOTH sides
+        # Apply unified betting strategy adjustment based on lines
+        mu1_adjusted, bias1, conf1, reason1 = unified_betting_strategy(line1, mu1_raw, use_adjustment=use_bias_adjustment)
+        mu2_adjusted, bias2, conf2, reason2 = unified_betting_strategy(line2, mu2_raw, use_adjustment=use_bias_adjustment)
+        mu3_adjusted, bias3, conf3, reason3 = unified_betting_strategy(line3, mu3_raw, use_adjustment=use_bias_adjustment)
+        mu1 = mu1_adjusted
+        mu2 = mu2_adjusted
+        mu3 = mu3_adjusted
+        
+        # Calculate probabilities analytically (fast & accurate) for BOTH sides using adjusted predictions
         p1_over = float(1 - norm.cdf(line1, loc=mu1, scale=sigma1))
         p1_under = 1.0 - p1_over
         p2_over = float(1 - norm.cdf(line2, loc=mu2, scale=sigma2))
@@ -952,6 +917,18 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
             'ODDS 1': odds1,
             'ODDS 2': odds2,
             'ODDS 3': odds3,
+            'RAW PREDICTION 1': round(mu1_raw, 2),
+            'RAW PREDICTION 2': round(mu2_raw, 2),
+            'RAW PREDICTION 3': round(mu3_raw, 2),
+            'BIAS ADJUSTMENT 1': round(bias1, 2),
+            'BIAS ADJUSTMENT 2': round(bias2, 2),
+            'BIAS ADJUSTMENT 3': round(bias3, 2),
+            'CONFIDENCE 1': conf1,
+            'CONFIDENCE 2': conf2,
+            'CONFIDENCE 3': conf3,
+            'REASON 1': reason1,
+            'REASON 2': reason2,
+            'REASON 3': reason3,
             'PREDICTION 1': round(mu1, 2),
             'PREDICTION 2': round(mu2, 2),
             'PREDICTION 3': round(mu3, 2),
