@@ -172,20 +172,19 @@ def playerContext(player_name, data, current_date, projectedStartingFive, mainSt
     else:
         res.append(0)
 
-    # Team Star Player 
-    if player_name == teamStarPlayer[player_team]:
+    # Usual Starters Available
+    main_in_projected = len(set(mainStartingFive[player_team]) & set(projectedStartingFive[player_team]))
+    res.append(5 - main_in_projected)
+
+    # Star Sat Out
+    if teamStarPlayer[player_team] not in projectedStartingFive[player_team]:
         res.append(1)
     else:
         res.append(0)
 
-    # Usual Starters Available
-    main_in_projected = len(set(mainStartingFive[player_team]) & set(projectedStartingFive[player_team]))
-    res.append(main_in_projected)
-
-    if player_df.empty:
-        res.append(0)
-    else:
-        res.append(len(player_df))
+    # Player Days Rest
+    days_rested = (current_date_dt - player_df['GAME_DATE'].max()).days
+    res.append(days_rested)
 
     return res
 
@@ -202,119 +201,35 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
 
     # Rolling Averages
     res.append(player_df['PTS'].tail(3).mean())
-    res.append(player_df['PTS'].tail(5).mean())
-    res.append(player_df['MIN'].tail(3).mean())
-    res.append(player_df['MIN'].tail(5).mean())
-    res.append(player_df['USG_PCT'].tail(3).mean())
-    res.append(player_df['USG_PCT'].tail(5).mean())
+    res.append(player_df['PTS'].tail(7).mean())
+    res.append(player_df['PTS'].tail(20).mean())
     res.append(player_df['FGA'].tail(3).mean())
     res.append(player_df['FGA'].tail(5).mean())
-    res.append(player_df['FG3A'].tail(3).mean())
-    res.append(player_df['FG3A'].tail(5).mean())
-    res.append(player_df['E_OFF_RATING'].tail(3).mean())
-    res.append(player_df['E_OFF_RATING'].tail(5).mean())
-    res.append(player_df['E_OFF_RATING'].tail(10).mean())
-    res.append(player_df['NET_RATING'].tail(3).mean())
-    res.append(player_df['NET_RATING'].tail(5).mean())
-    res.append(player_df['NET_RATING'].tail(10).mean())
-    res.append(player_df['PLUS_MINUS'].tail(3).mean())
-    res.append(player_df['PLUS_MINUS'].tail(5).mean())
-    res.append(player_df['PLUS_MINUS'].tail(10).mean())
-
-    # Volatility
-    res.append(calculate_volatility(player_df, 'MIN', 15))
-    res.append(calculate_volatility(player_df, 'MIN', 20))
-    res.append(calculate_volatility(player_df, 'PTS', 15))
-    res.append(calculate_volatility(player_df, 'PTS', 20))
-    res.append(calculate_volatility(player_df, 'FGA', 10))
-    res.append(calculate_volatility(player_df, 'FGA', 15))
-    res.append(calculate_volatility(player_df, 'FGA', 20))
-    res.append(calculate_volatility(player_df, 'USG_PCT', 20, use_cv=True))
-    res.append(calculate_volatility(player_df, 'TS_PCT', 20, use_cv=True))
-    res.append(calculate_volatility(player_df, 'E_OFF_RATING', 10))
-    res.append(calculate_volatility(player_df, 'E_OFF_RATING', 20))
-    res.append(calculate_volatility(player_df, 'PLUS_MINUS', 15))
-    res.append(calculate_volatility(player_df, 'PLUS_MINUS', 20))
-
-    # standard deviation
-    res.append(player_df['PTS'].tail(3).std())
-    res.append(player_df['PTS'].tail(5).std())
-    res.append(player_df['PTS'].tail(7).std())
-    res.append(player_df['MIN'].tail(3).std())
-    res.append(player_df['MIN'].tail(5).std())
-    res.append(player_df['MIN'].tail(7).std())
-    res.append(player_df['FGA'].tail(3).std())
-    res.append(player_df['FGA'].tail(5).std())
-    res.append(player_df['FGA'].tail(7).std())
-    res.append(player_df['USG_PCT'].tail(3).std())
-    res.append(player_df['USG_PCT'].tail(5).std())
-    res.append(player_df['USG_PCT'].tail(7).std())
-    res.append(player_df['E_OFF_RATING'].tail(3).std())
-    res.append(player_df['E_OFF_RATING'].tail(5).std())
-    res.append(player_df['E_OFF_RATING'].tail(7).std())
-    res.append(player_df['TS_PCT'].tail(3).std())
-    res.append(player_df['TS_PCT'].tail(5).std())
-    res.append(player_df['TS_PCT'].tail(7).std())
-    res.append(player_df['NET_RATING'].tail(3).std())
-    res.append(player_df['NET_RATING'].tail(5).std())
-    res.append(player_df['NET_RATING'].tail(7).std())
-    res.append(player_df['PLUS_MINUS'].tail(3).std())
-    res.append(player_df['PLUS_MINUS'].tail(5).std())
-    res.append(player_df['PLUS_MINUS'].tail(7).std())
-
-    # short vs long term divergences
-    pts_mean = player_df['PTS'].mean()
-    pts_10_mean = player_df['PTS'].tail(10).mean()
-    pts_20_mean = player_df['PTS'].tail(40).mean()
-    fga_mean = player_df['FGA'].mean()
-    fga_10_mean = player_df['FGA'].tail(10).mean()
-    fga_20_mean = player_df['FGA'].tail(40).mean()
-    
-    res.append(pts_10_mean / pts_mean if pts_mean != 0 else 0.0)
-    res.append(pts_10_mean / pts_20_mean if pts_20_mean != 0 else 0.0)
-    res.append(fga_10_mean / fga_mean if fga_mean != 0 else 0.0)
-    res.append(fga_10_mean / fga_20_mean if fga_20_mean != 0 else 0.0)
-    
-    # variance stability metrics
-    def safe_divide(numerator, denominator):
-        return numerator / denominator if denominator != 0 else 0.0
-    
-    res.append(safe_divide(calculate_volatility(player_df, 'PTS', 10), calculate_volatility(player_df, 'PTS', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'USG_PCT', 10), calculate_volatility(player_df, 'USG_PCT', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'TS_PCT', 10), calculate_volatility(player_df, 'TS_PCT', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'FGA', 10), calculate_volatility(player_df, 'FGA', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'FG3A', 10), calculate_volatility(player_df, 'FG3A', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'PTS_OFF_TOV', 10), calculate_volatility(player_df, 'PTS_OFF_TOV', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'PTS_2ND_CHANCE', 10), calculate_volatility(player_df, 'PTS_2ND_CHANCE', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'PTS_FB', 10), calculate_volatility(player_df, 'PTS_FB', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'PTS_PAINT', 10), calculate_volatility(player_df, 'PTS_PAINT', 40)))
-    res.append(safe_divide(calculate_volatility(player_df, 'PLUS_MINUS', 10), calculate_volatility(player_df, 'PLUS_MINUS', 40)))
-
-    #Trends
-    res.append(calculate_slope(player_df, 'PTS', 3))
-    res.append(calculate_slope(player_df, 'PTS', 5))
-    res.append(calculate_slope(player_df, 'FGA', 3))
-    res.append(calculate_slope(player_df, 'FGA', 5))
-    res.append(calculate_slope(player_df, 'MIN', 3))
-    res.append(calculate_slope(player_df, 'MIN', 5))
-    res.append(calculate_slope(player_df, 'USG_PCT', 3))
-    res.append(calculate_slope(player_df, 'USG_PCT', 5))
-    res.append(calculate_slope(player_df, 'PLUS_MINUS', 3))
-    res.append(calculate_slope(player_df, 'PLUS_MINUS', 5))
+    res.append(player_df['FGA'].tail(7).mean())
+    res.append(player_df['FGA'].tail(20).mean())
+    res.append(player_df['FTM'].tail(5).mean())
+    res.append(player_df['FTM'].tail(10).mean())
+    res.append(player_df['FTA'].tail(3).mean())
+    res.append(player_df['FTA'].tail(5).mean())
+    res.append(player_df['FTA'].tail(7).mean())
+    res.append(player_df['MIN'].tail(3).mean())
+    res.append(player_df['USG_PCT'].tail(3).mean())
+    res.append(player_df['UFGA'].tail(10).mean())
+    res.append(player_df['UFGA'].tail(20).mean())
+    res.append(player_df['PTS_PAINT'].tail(3).mean())
+    res.append(player_df['POSS'].tail(3).mean())
     
     #Interactions
     res.append((player_df['PTS'].mean() / (player_df['MIN'].mean() + 0.01)) * player_df['USG_PCT'].mean())
-    res.append(player_df['USG_PCT'].mean() * player_df['TS_PCT'].mean())
     res.append(player_df['USG_PCT'].mean() * player_df['MIN'].mean())
-    res.append(player_df['USG_PCT'].mean() * player_df['E_OFF_RATING'].mean())
-    res.append(player_df['USG_PCT'].mean() * player_df['FGA'].mean())
     res.append(player_df['USG_PCT'].mean() * player_df['PTS'].mean())
     res.append(player_df['PTS'].mean() / (player_df['FGA'].mean() + 0.44 * player_df['FTA'].mean() + player_df['TOV'].mean() + 0.01))
     res.append(player_df['FGA'].mean()/(player_df['MIN'].mean() + 0.001))
-    res.append(player_df['FTA'].mean()/(player_df['MIN'].mean() + 0.001))
     res.append(player_df['FG3A'].mean()/(player_df['MIN'].mean() + 0.001))
-    res.append(player_df['POSS'].mean()/(player_df['MIN'].mean() + 0.001))
-    
+    playerTeamStar = 1 if player_name in teamStarPlayer[player_team] else 0
+    res.append(playerTeamStar * player_df['FG3A'].mean() + (1 - playerTeamStar) * 0)
+    res.append(player_df['FG3_PCT'].mean())
+
     #Star Dynamics
     starStatus = 1 if teamStarPlayer[player_team] not in projectedStartingFive[player_team] else 0
     starOut_df = player_df[player_df['STAR_SAT_OUT'] == 1]
@@ -322,20 +237,19 @@ def playerScoring(player_name, data, current_date, teamStarPlayer, projectedStar
     res.append(starStatus * (starOut_df['PTS'].mean() - starIn_df['PTS'].mean()))
     res.append(starStatus * (starOut_df['FGA'].mean() - starIn_df['FGA'].mean()))
     res.append(starStatus * (starOut_df['FGM'].mean() - starIn_df['FGM'].mean()))
-    res.append(starStatus * (starOut_df['FTA'].mean() - starIn_df['FTA'].mean()))
+    res.append(starStatus * (starOut_df['FTM'].mean() - starIn_df['FTA'].mean()))
     res.append(starStatus * (starOut_df['FG3M'].mean() - starIn_df['FG3M'].mean()))
-    res.append(starStatus * (starOut_df['PLUS_MINUS'].mean() - starIn_df['PLUS_MINUS'].mean()))
+    res.append(starOut_df['TS_PCT'].mean() - starIn_df['TS_PCT'].mean())
     res.append(len(starOut_df))
+    res.append(len(starIn_df))
 
     #Tiers
+    res.append(int(player_df['PTS'].mean() < 10))
     res.append(int(player_df['PTS'].mean() < 10) * player_df['MIN'].mean())
     res.append(int(player_df['PTS'].mean() < 10) * player_df['FGA'].mean())
-
-    res.append(int((player_df['PTS'].mean() >= 10) & (player_df['PTS'].mean() <= 20)) * player_df['MIN'].mean())
-    res.append(int((player_df['PTS'].mean() >= 10) & (player_df['PTS'].mean() <= 20)) * player_df['FGA'].mean())
+    res.append(int((player_df['PTS'].mean() >= 10) & (player_df['PTS'].mean() <= 20)) * player_df['PTS'].mean())
 
     return res
-
 
 def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
@@ -348,22 +262,26 @@ def teamContext(player_name, data, teamStarPlayer, projectedStartingFive):
     player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
     team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
     res.append(team_df['TEAM_PTS'].tail(3).mean())
-    res.append(team_df['TEAM_PTS'].tail(5).mean())
     res.append(team_df['TEAM_AST'].tail(3).mean())
-    res.append(team_df['TEAM_AST'].tail(5).mean())
-    res.append(team_df['TEAM_AST'].tail(10).mean())
-    res.append(team_df['TEAM_OFF_RATING'].tail(3).mean())
-    res.append(team_df['TEAM_OFF_RATING'].tail(5).mean())
-    res.append(team_df['TEAM_OFF_RATING'].tail(20).mean())
-    res.append(team_df['TEAM_OFF_RATING'].mean())
-    res.append(team_df['TEAM_PACE'].tail(3).mean())
     res.append(team_df['TEAM_DEF_RATING'].tail(3).mean())
-    res.append(team_df['TEAM_DEF_RATING'].tail(5).mean())
-    res.append(team_df['TEAM_FTA'].tail(3).mean())
+    res.append(team_df['TEAM_FG3M'].tail(3).mean())
+    res.append(team_df['TEAM_FTM'].tail(3).mean())
+    res.append(team_df['TEAM_GUARD_DEF_RATING'].mean())
     return res
+
+from nba_api.stats.endpoints import leaguedashteamstats
+league_df = leaguedashteamstats.LeagueDashTeamStats(
+    league_id_nullable='00',
+    per_mode_detailed='PerGame',
+    measure_type_detailed_defense='Advanced'
+).get_data_frames()[0]
+# Set TEAM_ID as index for efficient lookup
+if 'TEAM_ID' in league_df.columns:
+    league_df = league_df.set_index('TEAM_ID')
 
 def playerVsOpp(player_name, data, current_date):
     player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
+    team_id = player_df['TEAM_ID'].iloc[-1]
     if player_df.empty:
         print(f"No data found for {player_name}")
         return None
@@ -375,66 +293,44 @@ def playerVsOpp(player_name, data, current_date):
         return None
         
     opp_df = data[data['TEAM_ABBREVIATION'] == opp_team].sort_values(by='GAME_DATE', ascending=True)
+    opp_team_id = opp_df['TEAM_ID'].iloc[-1]
     opp_team_df = opp_df.drop_duplicates(subset=['GAME_ID'])
     player_team = player_df['TEAM_ABBREVIATION'].iloc[-1]
     team_df = data[data['TEAM_ABBREVIATION'] == player_team].drop_duplicates(subset=['GAME_ID']).sort_values(by='GAME_DATE')
 
     opp_guard_df = opp_df[(opp_df['GUARD'] == 1) & (opp_df.groupby('PLAYER_NAME')['MIN'].transform('mean') > 10)]
     opp_forward_df = opp_df[(opp_df['FORWARD'] == 1) & (opp_df.groupby('PLAYER_NAME')['MIN'].transform('mean') > 10)]
-    opp_center_df = opp_df[(opp_df['CENTER'] == 1) & (opp_df.groupby('PLAYER_NAME')['MIN'].transform('mean') > 10)]
-    fga_mean = player_df['FGA'].mean()
-    player_3PA_rate = (player_df['FG3A'].mean() / fga_mean if fga_mean != 0 else 0.0) + 0.01
-    playerFG_PCT = player_df['FG_PCT'].mean()
+
+    # Helper function to safely get league stats
+    def get_league_stat(team_id, stat_name, default=100.0):
+        try:
+            if team_id in league_df.index:
+                return league_df.at[team_id, stat_name]
+            else:
+                # Fallback: try to find by TEAM_ID column if index wasn't set properly
+                if 'TEAM_ID' in league_df.columns:
+                    team_row = league_df[league_df['TEAM_ID'] == team_id]
+                    if not team_row.empty:
+                        return team_row[stat_name].iloc[0]
+                return default
+        except (KeyError, IndexError):
+            return default
     
     # Team Stats
-    res.append(opp_team_df['TEAM_DEF_RATING'].mean())
-    res.append(opp_team_df['TEAM_PACE'].mean())
-    res.append(opp_team_df['TEAM_DEF_RATING'].tail(5).mean())
-    res.append(opp_team_df['TEAM_PACE'].tail(5).mean())
-    res.append(opp_team_df['TEAM_TOV'].mean())
-    res.append(opp_team_df['TEAM_BLK'].mean())
-    res.append(opp_team_df['TEAM_STL'].mean())
-    
-    # res.append(player_df['GUARD'] * (opp_guard_df['DEF_FG_PCT_ALLOWED'].mean() - playerFG_PCT))
-    # res.append(player_df['GUARD'] * player_3PA_rate * (opp_guard_df['DEF_3PT_PCT_ALLOWED'].mean()))
-    # res.append(player_df['GUARD'] * opp_guard_df['PTS_ALLOWED_PER_MIN'].mean())
+    opp_def_rating = get_league_stat(opp_team_id, 'DEF_RATING', 100.0)
+    res.append(player_df['FGA'].tail(10).mean() * opp_def_rating)
+    res.append(player_df['PTS'].tail(10).mean() * opp_def_rating)
+    res.append(player_df['USG_PCT'].tail(10).mean() * opp_def_rating)
+    res.append(player_df['USG_PCT'].tail(10).mean() * player_df['FGA'].tail(10).mean() * opp_def_rating)
     res.append(player_df['GUARD'] * opp_guard_df['DEF_RATING'].mean())
-
-    
-    # res.append(player_df['FORWARD'] * (opp_forward_df['DEF_FG_PCT_ALLOWED'].mean() - playerFG_PCT))
-    # res.append(player_df['FORWARD'] * player_3PA_rate * (opp_forward_df['DEF_3PT_PCT_ALLOWED'].mean()))
-    # res.append(player_df['FORWARD'] * opp_forward_df['PTS_ALLOWED_PER_MIN'].mean())
     res.append(player_df['FORWARD'] * opp_forward_df['DEF_RATING'].mean())
 
-    res.append(team_df['TEAM_OFF_RATING'].tail(3).mean() - opp_df['TEAM_DEF_RATING'].mean())
-    expected_pace = (team_df['TEAM_PACE'].mean() + opp_df['TEAM_PACE'].mean()) / 2
-    res.append(expected_pace)
+    team_pace = get_league_stat(team_id, 'PACE', 100.0)
+    opp_pace = get_league_stat(opp_team_id, 'PACE', 100.0)
+    expected_pace = (team_pace + opp_pace) / 2
     res.append(expected_pace * player_df['PTS'].mean())
-    res.append(expected_pace * player_df['FGA'].mean())
-    res.append(expected_pace * player_df['FG3A'].mean())
     res.append(expected_pace * player_df['USG_PCT'].mean())
-    res.append((team_df['TEAM_PACE'].mean() - opp_df['TEAM_PACE'].mean()))
     return res
-
-
-def playerMatchup(player_name, data, current_date_str):
-    player_df = data[data['PLAYER_NAME']==player_name].copy()
-    opp, home = findOpp(player_name, data, current_date_str)
-    if player_df.empty:
-        print(f"No data found for {player_name}")
-        return None
-    home_df = player_df[player_df['HOME_GAME'] == 1]
-    away_df = player_df[player_df['HOME_GAME'] == 0]
-    
-    res = []
-    res.append(home * home_df['PTS'].mean() + (1 - home) * away_df['PTS'].mean())
-    res.append(home * home_df['MIN'].mean() + (1 - home) * away_df['MIN'].mean())
-    res.append(home * home_df['AST'].mean() + (1 - home) * away_df['AST'].mean())
-    res.append(home * home_df['FGA'].mean() + (1 - home) * away_df['FGA'].mean())
-    res.append(home * home_df['FTA'].mean() + (1 - home) * away_df['FTA'].mean())
-    res.append(home * home_df['PTS_PAINT'].mean() + (1 - home) * away_df['PTS_PAINT'].mean())
-    return res
-
 
 def buildVector(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
     player_df = data[data['PLAYER_NAME']==player_name].sort_values(by='GAME_DATE').copy()
@@ -444,8 +340,7 @@ def buildVector(player_name, data, current_date, projectedStartingFive, mainStar
     res = [playerContext(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer) + 
     playerScoring(player_name, data, current_date, teamStarPlayer, projectedStartingFive) + 
     teamContext(player_name, data, teamStarPlayer, projectedStartingFive) + 
-    playerVsOpp(player_name, data, current_date) + 
-    playerMatchup(player_name, data, current_date)]
+    playerVsOpp(player_name, data, current_date)]
     
     return res
 

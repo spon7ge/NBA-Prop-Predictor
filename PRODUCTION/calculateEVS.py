@@ -1,16 +1,11 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import norm
-import scipy.stats as stats
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from scipy.stats import truncnorm
-from nba_api.stats.endpoints import scoreboardv2
 from PRODUCTION.teamInfo import *
-from PRODUCTION.pipeline import *
+from PRODUCTION.pipelineV2 import *
 from itertools import combinations
-from collections import defaultdict
-from PRODUCTION.pipeline import calculate_volatility
 from PRODUCTION.teamInfo import nameDict
 import os
 
@@ -68,70 +63,35 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     return max(0, round(kelly * kelly_fraction, 4))
 
 def unified_betting_strategy(line, model_pred, use_adjustment=True):
-    """
-    Master betting function using decile analysis to adjust predictions.
-    
-    Returns:
-        tuple: (adjusted_prediction, bias_applied, confidence_level, reason)
-        
-    Note: bias_applied represents the AMOUNT ADDED to prediction
-          Positive bias = model overpredicts (subtract from prediction)
-          Negative bias = model underpredicts (add to prediction)
-    """
     if not use_adjustment:
         return model_pred, 0.0, 'MEDIUM', 'No adjustment applied'
-    
-    # Determine which bin and calculate adjustment
-    if line <= 7:
-        # Model OVERpredicts by ~4.5 points → SUBTRACT
-        adjustment = -4.5
-        confidence = 'LOW'
-        reason = 'Low scorer - massive overprediction'
-    
-    elif 7 < line <= 10:
-        # Model OVERpredicts by ~2.0 points → SUBTRACT
-        adjustment = -2.0
-        confidence = 'MEDIUM'
-        reason = 'Still overpredicting'
-    
-    elif 10 < line <= 15:
-        # SWEET SPOT - minimal bias
-        adjustment = -0.1
-        confidence = 'HIGH'
-        reason = 'Sweet spot - well calibrated'
-    
-    elif 15 < line <= 20:
-        # Model UNDERpredicts by ~1.1 points → ADD
-        adjustment = +1.1
-        confidence = 'HIGH'
-        reason = 'Good zone with bias correction'
-    
-    elif 20 < line <= 24:
-        # Model UNDERpredicts by ~2.2 points → ADD
-        adjustment = +2.2
-        confidence = 'MEDIUM'
-        reason = 'Underprediction zone'
-    
-    elif 24 < line < 28:
-        # Model UNDERpredicts by ~4.4 points → ADD
-        adjustment = +4.4
-        confidence = 'MEDIUM'
-        reason = 'High underprediction - overs only'
-    
-    else:  # line >= 28
-        # Model UNDERpredicts by ~8.3 points → ADD
-        adjustment = +8.3
-        confidence = 'LOW'
-        reason = 'Massive underprediction - stars unpredictable'
-    
-    adjusted_pred = model_pred + adjustment
-    
-    # For backwards compatibility, return bias as the value subtracted
-    # (negative adjustment means we subtracted, positive means we added)
-    bias_applied = -adjustment  
-    
-    return adjusted_pred, bias_applied, confidence, reason
 
+    # Positive mean error => model overpredicts ⇒ subtract; negative ⇒ add
+    bins = [
+        (4.0,  -5.65, 'LOW',    '<Q10: massive overprediction (~5.6 pts)'),
+        (6.0,  -3.71, 'MEDIUM', 'Q10-Q20: heavy overprediction (~3.7 pts)'),
+        (8.0,  -2.47, 'HIGH',   'Q20‑Q30: consistent overprediction (~2.5 pts)'),
+        (10.0, -1.43, 'HIGH',   'Q30‑Q40: mild overprediction (~1.4 pts)'),
+        (12.0, -0.43, 'HIGH',   'Q40‑Q50: near neutral (‑0.4 pts)'),
+        (14.0, +0.56, 'HIGH',   'Q50‑Q60: slight underprediction (+0.6 pts)'),
+        (16.0, +1.00, 'MEDIUM', 'Q60‑Q70: underprediction (+1.0 pts)'),
+        (19.0, +2.12, 'MEDIUM', 'Q70‑Q80: notable underprediction (+2.1 pts)'),
+        (23.0, +4.16, 'LOW',    'Q80‑Q90: large underprediction (+4.2 pts)'),
+    ]
+    default_adjustment = (+7.79, 'LOW', '>Q90: massive underprediction (+7.8 pts)')
+
+    adjustment = bias = confidence = reason = None
+    for threshold, adj, conf, note in bins:
+        if line < threshold:
+            adjustment, confidence, reason = adj, conf, note
+            break
+    else:
+        adjustment, confidence, reason = default_adjustment
+
+    adjusted_pred = model_pred + adjustment
+    bias_applied = -adjustment  # keep legacy interpretation
+
+    return adjusted_pred, bias_applied, confidence, reason
 
 def estimate_skew_from_residuals(residuals: np.ndarray) -> float:
     """Estimate skew-normal shape parameter from residuals.

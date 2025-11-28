@@ -169,7 +169,7 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     return player_data
 
-def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7,10,20]):
+def add_trend_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE', windows=[3,5,7]):
     df = df.copy()
     df = df.sort_values([player_id_col, date_col]).reset_index(drop=True)
     
@@ -725,7 +725,7 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     team_df = df[df['TEAM_ABBREVIATION'] == team_abbreviation].copy()
     team_cols = [
         'GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION', 'OPP_ABBREVIATION', 
-        'TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS', 'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
+        'TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PACE', 'TEAM_PTS', 'TEAM_FGA', 'TEAM_FGM', 'TEAM_FG3A', 'TEAM_FG3M', 'TEAM_FTA', 'TEAM_FTM', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
     ]
     
     available_team_cols = [col for col in team_cols if col in team_df.columns]
@@ -741,6 +741,11 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     unique_games['PACE_AVG_TO_DATE'] = unique_games['TEAM_PACE'].shift(1).expanding().mean().round(2)
     unique_games['PTS_AVG_TO_DATE'] = unique_games['TEAM_PTS'].shift(1).expanding().mean().round(2)
     unique_games['FGA_AVG_TO_DATE'] = unique_games['TEAM_FGA'].shift(1).expanding().mean().round(2)
+    unique_games['FGM_AVG_TO_DATE'] = unique_games['TEAM_FGM'].shift(1).expanding().mean().round(2)
+    unique_games['FG3A_AVG_TO_DATE'] = unique_games['TEAM_FG3A'].shift(1).expanding().mean().round(2)
+    unique_games['FG3M_AVG_TO_DATE'] = unique_games['TEAM_FG3M'].shift(1).expanding().mean().round(2)
+    unique_games['FTA_AVG_TO_DATE'] = unique_games['TEAM_FTA'].shift(1).expanding().mean().round(2)
+    unique_games['FTM_AVG_TO_DATE'] = unique_games['TEAM_FTM'].shift(1).expanding().mean().round(2)
     unique_games['REB_AVG_TO_DATE'] = unique_games['TEAM_REB'].shift(1).expanding().mean().round(2)
     unique_games['AST_AVG_TO_DATE'] = unique_games['TEAM_AST'].shift(1).expanding().mean().round(2)
     unique_games['TOV_AVG_TO_DATE'] = unique_games['TEAM_TOV'].shift(1).expanding().mean().round(2)
@@ -751,7 +756,10 @@ def getOpponentStats(df, team_abbreviation='LAL'):
     output_cols = [
         'GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION', 'OPP_ABBREVIATION', 'GAMES_PLAYED',
         'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_PTS',
-        'DEF_RATING_AVG_TO_DATE', 'OFF_RATING_AVG_TO_DATE', 'PACE_AVG_TO_DATE', 'PTS_AVG_TO_DATE', 'FGA_AVG_TO_DATE', 'REB_AVG_TO_DATE', 'AST_AVG_TO_DATE', 'TOV_AVG_TO_DATE', 'BLK_AVG_TO_DATE', 'STL_AVG_TO_DATE'
+        'DEF_RATING_AVG_TO_DATE', 'OFF_RATING_AVG_TO_DATE', 'PACE_AVG_TO_DATE', 'PTS_AVG_TO_DATE', 
+        'FGA_AVG_TO_DATE', 'FGM_AVG_TO_DATE', 'FG3A_AVG_TO_DATE', 'FG3M_AVG_TO_DATE',
+        'FTA_AVG_TO_DATE', 'FTM_AVG_TO_DATE',
+        'REB_AVG_TO_DATE', 'AST_AVG_TO_DATE', 'TOV_AVG_TO_DATE', 'BLK_AVG_TO_DATE', 'STL_AVG_TO_DATE'
     ]
     
     available_cols = [col for col in output_cols if col in unique_games.columns]
@@ -771,7 +779,12 @@ def assign_opponent_team_stats_dict(df):
                 'OPP_OFF_RATING_AVG_TO_DATE': row.get('OFF_RATING_AVG_TO_DATE', None),
                 'OPP_PACE_AVG_TO_DATE': row['PACE_AVG_TO_DATE'],
                 'OPP_PTS_AVG_TO_DATE': row['PTS_AVG_TO_DATE'],
-                'OPP_FGA_AVG_TO_DATE': row['FGA_AVG_TO_DATE'],
+                'OPP_FGA_AVG_TO_DATE': row.get('FGA_AVG_TO_DATE', None),
+                'OPP_FGM_AVG_TO_DATE': row.get('FGM_AVG_TO_DATE', None),
+                'OPP_FG3A_AVG_TO_DATE': row.get('FG3A_AVG_TO_DATE', None),
+                'OPP_FG3M_AVG_TO_DATE': row.get('FG3M_AVG_TO_DATE', None),
+                'OPP_FTA_AVG_TO_DATE': row.get('FTA_AVG_TO_DATE', None),
+                'OPP_FTM_AVG_TO_DATE': row.get('FTM_AVG_TO_DATE', None),
                 'OPP_REB_AVG_TO_DATE': row['REB_AVG_TO_DATE'],
                 'OPP_AST_AVG_TO_DATE': row['AST_AVG_TO_DATE'],
                 'OPP_TOV_AVG_TO_DATE': row['TOV_AVG_TO_DATE'],
@@ -783,7 +796,11 @@ def assign_opponent_team_stats_dict(df):
     df_enhanced = df.copy()
     lookup_keys = list(zip(df_enhanced['GAME_ID'], df_enhanced['OPP_ABBREVIATION']))
     
-    for col in ['OPP_DEF_RATING_AVG_TO_DATE', 'OPP_OFF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 'OPP_PTS_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE', 'OPP_REB_AVG_TO_DATE', 'OPP_AST_AVG_TO_DATE', 'OPP_TOV_AVG_TO_DATE', 'OPP_BLK_AVG_TO_DATE', 'OPP_STL_AVG_TO_DATE']:
+    for col in ['OPP_DEF_RATING_AVG_TO_DATE', 'OPP_OFF_RATING_AVG_TO_DATE', 'OPP_PACE_AVG_TO_DATE', 
+                'OPP_PTS_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE', 'OPP_FGM_AVG_TO_DATE', 
+                'OPP_FG3A_AVG_TO_DATE', 'OPP_FG3M_AVG_TO_DATE', 'OPP_FTA_AVG_TO_DATE', 'OPP_FTM_AVG_TO_DATE',
+                'OPP_REB_AVG_TO_DATE', 'OPP_AST_AVG_TO_DATE', 'OPP_TOV_AVG_TO_DATE', 
+                'OPP_BLK_AVG_TO_DATE', 'OPP_STL_AVG_TO_DATE']:
         df_enhanced[col] = [team_stats_dict.get(key, {}).get(col, None) for key in lookup_keys]
     
     return df_enhanced
@@ -806,10 +823,19 @@ def teamContext(df):
     df['TEAM_FGA_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FGA'].transform(
         lambda x: x.shift(1).expanding().mean().round(2)
     )
+    df['TEAM_FGM_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FGM'].transform(
+        lambda x: x.shift(1).expanding().mean().round(2)
+    )
     df['TEAM_FG3A_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FG3A'].transform(
         lambda x: x.shift(1).expanding().mean().round(2)
     )
+    df['TEAM_FG3M_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FG3M'].transform(
+        lambda x: x.shift(1).expanding().mean().round(2)
+    )
     df['TEAM_FTA_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FTA'].transform(
+        lambda x: x.shift(1).expanding().mean().round(2)
+    )
+    df['TEAM_FTM_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_FTM'].transform(
         lambda x: x.shift(1).expanding().mean().round(2)
     )
     df['TEAM_REB_AVG_TO_DATE'] = df.groupby('TEAM_ID')['TEAM_REB'].transform(
@@ -833,8 +859,8 @@ def add_opponent_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DA
     
     # Define team stats to calculate rolling averages for
     team_stats = [
-        'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_PTS', 
-        'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL'
+        'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_PTS', 'TEAM_FG3A', 'TEAM_FTA',
+        'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL', 'TEAM_FGM', 'TEAM_FG3M', 'TEAM_FTM'
     ]
     
     # Filter to only available columns
@@ -917,7 +943,7 @@ def add_team_rolling_stats(df, team_id_col='TEAM_ID', date_col='GAME_DATE', wind
     team_stats = [
         'TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_OFF_RATING', 'TEAM_PTS', 
         'TEAM_FGA', 'TEAM_REB', 'TEAM_AST', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL',
-        'TEAM_FG3A', 'TEAM_FTA'
+        'TEAM_FG3A', 'TEAM_FTA', 'TEAM_FGM', 'TEAM_FG3M', 'TEAM_FTM'
     ]
     
     # Filter to only available columns
@@ -955,7 +981,7 @@ def add_opponent_team_form_indicators(df, windows=[3,5,7,10]):
     df = df.copy()
     
     # Key stats to analyze for team form
-    form_stats = ['TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PTS', 'TEAM_PACE', 'TEAM_FGA', 'TEAM_FTA', 'TEAM_FG3A', 'TEAM_FG3M', 'TEAM_FTM', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL']
+    form_stats = ['TEAM_DEF_RATING', 'TEAM_OFF_RATING', 'TEAM_PTS', 'TEAM_PACE', 'TEAM_FGA', 'TEAM_FTA', 'TEAM_FG3A','TEAM_FGM', 'TEAM_FG3M', 'TEAM_FTM', 'TEAM_TOV', 'TEAM_BLK', 'TEAM_STL']
     
     for window in windows:
         for stat in form_stats:
@@ -1536,12 +1562,12 @@ def add_interaction_features(df):
     df['FTA_PER_MIN'] = df['FTA_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
     df['POSS_PER_MIN'] = df['POSS_AVG_TO_DATE'] / (df['MIN_AVG_TO_DATE'] + epsilon)
 
-
-    df['PTS_PERCENTAGE_OF_TEAM'] = df['PTS_AVG_TO_DATE'] / df['TEAM_PTS_AVG_TO_DATE']
-    df['FGA_PERCENTAGE_OF_TEAM'] = df['FGA_AVG_TO_DATE'] / df['TEAM_FGA_AVG_TO_DATE']
-    df['FG3A_PERCENTAGE_OF_TEAM'] = df['FG3A_AVG_TO_DATE'] / df['TEAM_FG3A_AVG_TO_DATE']
-    df['FTA_PERCENTAGE_OF_TEAM'] = df['FTA_AVG_TO_DATE'] / df['TEAM_FTA_AVG_TO_DATE']
-    # df['MIN_PERCENTAGE_OF_TEAM'] = df['MIN_AVG_TO_DATE'] / df['TEAM_MIN_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_PTS'] = df['EXPECTED_PACE'] * df['PTS_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_MIN'] = df['EXPECTED_PACE'] * df['MIN_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_FGA'] = df['EXPECTED_PACE'] * df['FGA_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_FG3A'] = df['EXPECTED_PACE'] * df['FG3A_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_FTA'] = df['EXPECTED_PACE'] * df['FTA_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_USG'] = df['EXPECTED_PACE'] * df['USG_PCT_AVG_TO_DATE']
 
     # ===== TIERS =====
     df['IS_LOW_SCORER'] = (df.groupby('PLAYER_ID')['PTS_AVG_TO_DATE'].transform('mean') < 10).astype(int)
@@ -1777,4 +1803,16 @@ def add_interaction_features(df):
             (1 - df['PLAYER_IS_TEAM_STAR']) * 0
         )
     
+    # Team related - calculate opponent shooting percentages if columns exist
+    if all(col in df.columns for col in ['OPP_FGM_AVG_TO_DATE', 'OPP_FG3M_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE']):
+        epsilon = 1e-8
+        df['OPP_EFG_PCT_AVG_TO_DATE'] = (df['OPP_FGM_AVG_TO_DATE'] + 0.5 * df['OPP_FG3M_AVG_TO_DATE']) / (df['OPP_FGA_AVG_TO_DATE'] + epsilon)
+    else:
+        df['OPP_EFG_PCT_AVG_TO_DATE'] = np.nan
+    
+    if all(col in df.columns for col in ['OPP_PTS_AVG_TO_DATE', 'OPP_FGA_AVG_TO_DATE', 'OPP_FG3A_AVG_TO_DATE']):
+        epsilon = 1e-8
+        df['OPP_TS_PCT_AVG_TO_DATE'] = df['OPP_PTS_AVG_TO_DATE'] / (2 * (df['OPP_FGA_AVG_TO_DATE'] + epsilon) + 0.475 * (df.get('OPP_FG3A_AVG_TO_DATE', 0) + epsilon))
+    else:
+        df['OPP_TS_PCT_AVG_TO_DATE'] = np.nan
     return df
