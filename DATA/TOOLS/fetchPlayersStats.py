@@ -9,6 +9,7 @@ from nba_api.stats.endpoints import (
     teamgamelog,
     boxscoreplayertrackv3,
     boxscoremiscv3,
+    boxscorematchupsv3,
 )
 from nba_api.stats.static import teams
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -447,36 +448,6 @@ class FetchPlayersStats:
                     .reset_index()
                 )
                 
-                # Calculate defensive percentages and per-minute stats
-                def_df['DEF_FG_PCT_ALLOWED'] = def_df.apply(
-                    lambda row: round(row['matchupFieldGoalsMade'] / row['matchupFieldGoalsAttempted'], 3) 
-                    if row['matchupFieldGoalsAttempted'] > 0 else 0, axis=1
-                )
-                def_df['DEF_3PT_PCT_ALLOWED'] = def_df.apply(
-                    lambda row: round(row['matchupThreePointersMade'] / row['matchupThreePointersAttempted'], 3) 
-                    if row['matchupThreePointersAttempted'] > 0 else 0, axis=1
-                )
-                def_df['PTS_ALLOWED_PER_MIN'] = def_df.apply(
-                    lambda row: round(row['playerPoints'] / row['matchupMinutes'], 2) 
-                    if row['matchupMinutes'] > 0 else 0, axis=1
-                )
-                def_df['DEF_TOV_FORCED_PER_MIN'] = def_df.apply(
-                    lambda row: round(row['matchupTurnovers'] / row['matchupMinutes'], 2) 
-                    if row['matchupMinutes'] > 0 else 0, axis=1
-                )
-                def_df['DEF_BLOCKS_PER_MIN'] = def_df.apply(
-                    lambda row: round(row['matchupBlocks'] / row['matchupMinutes'], 2) 
-                    if row['matchupMinutes'] > 0 else 0, axis=1
-                )
-                def_df['DEF_SHOOTING_FOULS_PER_MIN'] = def_df.apply(
-                    lambda row: round(row['shootingFouls'] / row['matchupMinutes'], 2) 
-                    if row['matchupMinutes'] > 0 else 0, axis=1
-                )
-                def_df['DEF_AST_ALLOWED_PER_MIN'] = def_df.apply(
-                    lambda row: round(row['matchupAssists'] / row['matchupMinutes'], 2) 
-                    if row['matchupMinutes'] > 0 else 0, axis=1
-                )
-                
                 # Rename columns to match standard naming convention
                 column_mapping = {
                     'gameId': 'GAME_ID',
@@ -501,10 +472,7 @@ class FetchPlayersStats:
                     'matchupFieldGoalsMade', 'matchupFieldGoalsAttempted',
                     'matchupThreePointersMade', 'matchupThreePointersAttempted',
                     'playerPoints', 'matchupMinutes', 'matchupFieldGoalsPercentage',
-                    'matchupThreePointersPercentage', 'DEF_FG_PCT_ALLOWED',
-                    'DEF_3PT_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN',
-                    'DEF_TOV_FORCED_PER_MIN', 'DEF_BLOCKS_PER_MIN', 
-                    'DEF_SHOOTING_FOULS_PER_MIN', 'DEF_AST_ALLOWED_PER_MIN'
+                    'matchupThreePointersPercentage'
                 ]
                 
                 # Only select columns that exist in the dataframe
@@ -702,7 +670,7 @@ class FetchPlayersStats:
         
         # Key matchup stats columns that should be present
         matchup_cols = ['matchupFieldGoalsMade', 'matchupFieldGoalsAttempted', 
-                       'DEF_FG_PCT_ALLOWED', 'PTS_ALLOWED_PER_MIN', 'DEF_BLOCKS_PER_MIN']
+                       'matchupFieldGoalsPercentage', 'matchupMinutes']
         
         if os.path.exists(cache_file):
             cached = pd.read_csv(cache_file, dtype={'GAME_ID': str})
