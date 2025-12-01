@@ -126,9 +126,9 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     
     df.sort_values([player_id_col, date_col], inplace=True)
 
-    stats_cols = ['PTS', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
-    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 
-    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'TCHS']
+    stats_cols = ['PTS', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 
+    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 'DIST', 'SPD', 'PF', 
+    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT']
     for window in windows:
         for col in stats_cols:
             if col in df.columns:
@@ -147,7 +147,8 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     player_data = player_data.sort_values([player_id_col, date_col])
     stats_lines = ['STARTING', 'PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
-    'TS_PCT', 'USG_PCT', 'MIN', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'TCHS']
+    'DIST', 'SPD', 'PF', 
+    'TS_PCT', 'USG_PCT', 'MIN', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT']
     
     for stat_line in stats_lines:
         if stat_line not in player_data.columns:
@@ -174,8 +175,8 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     
     # Define stats
     stats_cols = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
-    'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 
-    'TCHS', 'PLUS_MINUS']
+    'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'DIST', 'SPD', 'PF', 
+    'TCHS', 'PLUS_MINUS', 'UFGA', 'UFGM', 'CFGA', 'CFGM']
     for stat in stats_cols:
         if stat in df_enhanced.columns:
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
@@ -206,10 +207,9 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
-    'TS_PCT', 'USG_PCT', 'MIN', 'POSS', 'TCHS',
-    'UFGA', 'UFGM', 'PLUS_MINUS',
-    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT']
+    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
+    'TS_PCT', 'USG_PCT', 'MIN', 'POSS', 'TCHS', 'DIST', 'SPD', 'PF', 'PLUS_MINUS',
+    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -296,9 +296,9 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     df.sort_values([player_id_col, 'GAME_DATE'], inplace=True)
     
     # Metrics to track historical performance against teams
-    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
-    'MIN', 'POSS', 'USG_PCT', 'EFG_PCT', 'TS_PCT',
-    'E_OFF_RATING', 'NET_RATING', 'PLUS_MINUS', 'POSS', 'TCHS']
+    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
+    'MIN', 'POSS', 'USG_PCT', 'EFG_PCT', 'TS_PCT', 'DIST', 'SPD', 'PF', 
+    'E_OFF_RATING', 'NET_RATING', 'PLUS_MINUS', 'POSS', 'TCHS', 'UFGA', 'UFGM', 'CFGA', 'CFGM']
     
     # Available metrics only
     available_metrics = [m for m in metrics if m in df.columns]
@@ -1262,6 +1262,103 @@ def add_usual_starters_availability(df, min_minutes=10, lookback_games=20):
         df = df.drop(columns=['PLAYED'])
     
     return df
+
+def add_lineup_usage_fga_share(df):
+    """
+    Calculate average USG_PCT and FGA share for starters in each game lineup.
+    Uses game_id to identify starters on each team and calculates LINEUP_USG_SHARE_AVG and LINEUP_FGA_SHARE_AVG.
+    
+    LINEUP_USG_SHARE_AVG: Average usage percentage of starters in the lineup
+    LINEUP_FGA_SHARE_AVG: Average field goal attempt share (percentage of team FGA) of starters
+    """
+    df = df.copy()
+    
+    # Check required columns exist
+    required_cols = ['GAME_ID', 'TEAM_ID', 'USG_PCT', 'FGA']
+    if not all(col in df.columns for col in required_cols):
+        print(f"Warning: Missing required columns. Need: {required_cols}")
+        return df
+    
+    # Identify starters - use START_POSITION if available, otherwise use STARTING column
+    if 'START_POSITION' in df.columns:
+        df['IS_STARTER'] = df['START_POSITION'].notna().astype(int)
+    elif 'STARTING' in df.columns:
+        df['IS_STARTER'] = df['STARTING'].astype(int)
+    else:
+        # Fallback: approximate by top 5 players by minutes per team per game
+        df['IS_STARTER'] = df.groupby(['GAME_ID', 'TEAM_ID']).apply(
+            lambda x: pd.Series(
+                (x['MIN'].rank(ascending=False, method='min') <= 5).astype(int).values,
+                index=x.index
+            )
+        ).reset_index(drop=True)
+    
+    # Calculate FGA share using historical averages (AVG_TO_DATE) if available
+    # First try using avg_to_date columns (predictive), otherwise fall back to current game data
+    if 'FGA_AVG_TO_DATE' in df.columns and 'TEAM_FGA_AVG_TO_DATE' in df.columns:
+        # Use historical averages: player's avg FGA / team's avg FGA
+        df['FGA_SHARE'] = (df['FGA_AVG_TO_DATE'] / (df['TEAM_FGA_AVG_TO_DATE'] + 1e-8) * 100).round(2)
+    elif 'TEAM_FGA' in df.columns:
+        # Fallback: Calculate each player's FGA as a percentage of team FGA from current game
+        df['FGA_SHARE'] = (df['FGA'] / (df['TEAM_FGA'] + 1e-8) * 100).round(2)
+    else:
+        # If TEAM_FGA not available, use raw FGA (will be average FGA instead of share)
+        df['FGA_SHARE'] = df.get('FGA_AVG_TO_DATE', df['FGA'])
+    
+    # Filter to starters only
+    starters = df[df['IS_STARTER'] == 1].copy()
+    
+    if starters.empty:
+        print("Warning: No starters found in dataframe")
+        df['LINEUP_USG_SHARE_AVG'] = np.nan
+        df['LINEUP_FGA_SHARE_AVG'] = np.nan
+        df = df.drop(columns=['IS_STARTER', 'FGA_SHARE'])
+        return df
+    
+    # Calculate average USG_PCT and FGA_SHARE for starters per game_id and team_id
+    # Use AVG_TO_DATE columns if available (predictive), otherwise use current game values
+    agg_dict = {}
+    if 'USG_PCT_AVG_TO_DATE' in starters.columns:
+        agg_dict['USG_PCT_AVG_TO_DATE'] = 'mean'
+    else:
+        agg_dict['USG_PCT'] = 'mean'
+    agg_dict['FGA_SHARE'] = 'mean'
+    
+    lineup_stats = (
+        starters.groupby(['GAME_ID', 'TEAM_ID'])
+        .agg(agg_dict)
+        .reset_index()
+    )
+    
+    # Rename columns appropriately
+    if 'USG_PCT_AVG_TO_DATE' in lineup_stats.columns:
+        lineup_stats = lineup_stats.rename(columns={'USG_PCT_AVG_TO_DATE': 'LINEUP_USG_SHARE_AVG'})
+    else:
+        lineup_stats = lineup_stats.rename(columns={'USG_PCT': 'LINEUP_USG_SHARE_AVG'})
+    
+    lineup_stats = lineup_stats.rename(columns={'FGA_SHARE': 'LINEUP_FGA_SHARE_AVG'})
+    
+    # Round to 2 decimal places
+    lineup_stats['LINEUP_USG_SHARE_AVG'] = lineup_stats['LINEUP_USG_SHARE_AVG'].round(2)
+    lineup_stats['LINEUP_FGA_SHARE_AVG'] = lineup_stats['LINEUP_FGA_SHARE_AVG'].round(2)
+    
+    # Merge back to original dataframe
+    df = df.merge(
+        lineup_stats[['GAME_ID', 'TEAM_ID', 'LINEUP_USG_SHARE_AVG', 'LINEUP_FGA_SHARE_AVG']],
+        on=['GAME_ID', 'TEAM_ID'],
+        how='left'
+    )
+    
+    # Fill NaN values with mean if any
+    if df['LINEUP_USG_SHARE_AVG'].isna().any():
+        df['LINEUP_USG_SHARE_AVG'] = df['LINEUP_USG_SHARE_AVG'].fillna(df['LINEUP_USG_SHARE_AVG'].mean())
+    if df['LINEUP_FGA_SHARE_AVG'].isna().any():
+        df['LINEUP_FGA_SHARE_AVG'] = df['LINEUP_FGA_SHARE_AVG'].fillna(df['LINEUP_FGA_SHARE_AVG'].mean())
+    
+    # Remove temporary columns
+    df = df.drop(columns=['IS_STARTER', 'FGA_SHARE'])
+    
+    return df
     
 ########################################################################################
 # UTILITY AND HELPER FUNCTIONS
@@ -1276,7 +1373,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
     
     metrics = ['MIN', 'PTS', 'FGA','FTA', 'FG3A', 'FG3M', 'FTM', 'FGM', 'TOV', 'USG_PCT', 'TS_PCT', 'EFG_PCT',
-    'UFGA', 'UFGM', 'PF', 'AST_TO_TOV', 'PLUS_MINUS',
+    'UFGA', 'UFGM', 'PF', 'AST_TO_TOV', 'PLUS_MINUS', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
     'E_OFF_RATING', 'NET_RATING']
     
     def calculate_without_star_stats(player_group):
@@ -1369,6 +1466,42 @@ def add_volatility_features(df, player_id_col='PLAYER_ID', date_col='GAME_DATE',
     return df
 
 
+def add_expectation_location_features(df, stats):
+    """
+    Generate features that combine baseline averages with home/away location deltas.
+    Creates features in the format: {STAT}_EXPECTATION_LOCATION
+    
+    Formula: baseline_avg + (HOME_GAME * home_delta) + ((1 - HOME_GAME) * away_delta)
+    
+    Args:
+        df: DataFrame with HOME_GAME column and required delta columns
+        stats: List of stat names (e.g., ['PTS', 'FGA', 'USG_PCT'])
+    
+    Returns:
+        DataFrame with new expectation location features added
+    """
+    df = df.copy()
+    
+    if 'HOME_GAME' not in df.columns:
+        return df
+    
+    for stat in stats:
+        avg_to_date_col = f'{stat}_AVG_TO_DATE'
+        home_delta_col = f'PLAYER_HOME_{stat}_DELTA'
+        away_delta_col = f'PLAYER_AWAY_{stat}_DELTA'
+        expectation_col = f'{stat}_EXPECTATION_LOCATION'
+        
+        # Only create feature if baseline column exists
+        if avg_to_date_col in df.columns:
+            df[expectation_col] = (
+                df.get(avg_to_date_col, 0) +
+                df['HOME_GAME'] * df.get(home_delta_col, 0) +
+                (1 - df['HOME_GAME']) * df.get(away_delta_col, 0)
+            )
+    
+    return df
+
+
 def get_standard_deviation(df, stats=None, windows=None, player_id_col='PLAYER_ID', date_col='GAME_DATE', 
                            min_periods=2, expanding=False, suffix='_STD'):
     df = df.copy()
@@ -1376,7 +1509,7 @@ def get_standard_deviation(df, stats=None, windows=None, player_id_col='PLAYER_I
     
     # Default stats if not provided
     if stats is None:
-        stats = ['PTS', 'MIN', 'FGA', 'FTA', 'USG_PCT', 'E_OFF_RATING', 'TS_PCT', 'NET_RATING', 'FG3A', 'PLUS_MINUS', 'PF', 'OREB', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
+        stats = ['PTS', 'MIN', 'FGA', 'FGM', 'FTA', 'USG_PCT', 'E_OFF_RATING', 'TS_PCT', 'NET_RATING', 'FG3A', 'PLUS_MINUS', 'PF', 'POSS', 'TCHS', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'FG_PCT', 'FG3_PCT', 'FT_PCT']
     
     # Filter to only stats that exist in dataframe
     stats = [stat for stat in stats if stat in df.columns]
@@ -1406,6 +1539,40 @@ def get_standard_deviation(df, stats=None, windows=None, player_id_col='PLAYER_I
     
     return df
 
+def add_rolling_over_baseline_features(df, stats, windows=[5, 7, 10], epsilon=1e-8):
+    """
+    Generate features that compare rolling averages to season-to-date averages.
+    Creates features in the format: {STAT}_L{window}_OVER_BASELINE
+    
+    Args:
+        df: DataFrame with rolling average and avg-to-date columns
+        stats: List of stat names (e.g., ['PTS', 'FGA', 'USG_PCT'])
+        windows: List of window sizes for rolling averages (default: [5, 7, 10])
+        epsilon: Small value to prevent division by zero (default: 1e-8)
+    
+    Returns:
+        DataFrame with new features added
+    """
+    df = df.copy()
+    
+    for stat in stats:
+        avg_to_date_col = f'{stat}_AVG_TO_DATE'
+        
+        # Only create features if the required columns exist
+        if avg_to_date_col not in df.columns:
+            continue
+        
+        for window in windows:
+            rolling_avg_col = f'{stat}_ROLLING_AVG_{window}'
+            
+            if rolling_avg_col in df.columns:
+                feature_name = f'{stat}_L{window}_OVER_BASELINE'
+                df[feature_name] = round(
+                    df[rolling_avg_col] / (df[avg_to_date_col] + epsilon), 2
+                )
+    
+    return df
+
 def add_interaction_features(df):
     epsilon = 1e-8
     df = df.copy()
@@ -1428,54 +1595,13 @@ def add_interaction_features(df):
     df['TEAM_PACE_L3_OVER_LEAGUE_AVG'] = round(df['TEAM_PACE_ROLLING_AVG_3'] / (df['LEAGUE_AVG_TEAM_PACE'] + epsilon), 2)
     df['TEAM_PACE_L5_OVER_LEAGUE_AVG'] = round(df['TEAM_PACE_ROLLING_AVG_5'] / (df['LEAGUE_AVG_TEAM_PACE'] + epsilon), 2)
 
-    df['PTS_L5_OVER_BASELINE'] = round(df['PTS_ROLLING_AVG_5'] / (df['PTS_AVG_TO_DATE'] + epsilon), 2)
-    df['PTS_L10_OVER_BASELINE'] = round(df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + epsilon), 2)
-    df['PTS_L7_OVER_BASELINE'] = round(df['PTS_ROLLING_AVG_7'] / (df['PTS_AVG_TO_DATE'] + epsilon), 2)
-    df['MIN_L5_OVER_BASELINE'] = round(df['MIN_ROLLING_AVG_5'] / (df['MIN_AVG_TO_DATE'] + epsilon), 2)
-    df['MIN_L10_OVER_BASELINE'] = round(df['MIN_ROLLING_AVG_10'] / (df['MIN_AVG_TO_DATE'] + epsilon), 2)
-    df['MIN_L7_OVER_BASELINE'] = round(df['MIN_ROLLING_AVG_7'] / (df['MIN_AVG_TO_DATE'] + epsilon), 2)
-    df['FGA_L5_OVER_BASELINE'] = round(df['FGA_ROLLING_AVG_5'] / (df['FGA_AVG_TO_DATE'] + epsilon), 2)
-    df['FGA_L10_OVER_BASELINE'] = round(df['FGA_ROLLING_AVG_10'] / (df['FGA_AVG_TO_DATE'] + epsilon), 2)
-    df['FGA_L7_OVER_BASELINE'] = round(df['FGA_ROLLING_AVG_7'] / (df['FGA_AVG_TO_DATE'] + epsilon), 2)
-    df['FG_PCT_L10_OVER_BASELINE'] = round(df['FG_PCT_ROLLING_AVG_10'] / (df['FG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FG_PCT_L5_OVER_BASELINE'] = round(df['FG_PCT_ROLLING_AVG_5'] / (df['FG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FG_PCT_L7_OVER_BASELINE'] = round(df['FG_PCT_ROLLING_AVG_7'] / (df['FG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3_PCT_L10_OVER_BASELINE'] = round(df['FG3_PCT_ROLLING_AVG_10'] / (df['FG3_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3_PCT_L5_OVER_BASELINE'] = round(df['FG3_PCT_ROLLING_AVG_5'] / (df['FG3_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3_PCT_L7_OVER_BASELINE'] = round(df['FG3_PCT_ROLLING_AVG_7'] / (df['FG3_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FT_PCT_L10_OVER_BASELINE'] = round(df['FT_PCT_ROLLING_AVG_10'] / (df['FT_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FT_PCT_L5_OVER_BASELINE'] = round(df['FT_PCT_ROLLING_AVG_5'] / (df['FT_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FT_PCT_L7_OVER_BASELINE'] = round(df['FT_PCT_ROLLING_AVG_7'] / (df['FT_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['FTA_L10_OVER_BASELINE'] = round(df['FTA_ROLLING_AVG_10'] / (df['FTA_AVG_TO_DATE'] + epsilon), 2)
-    df['FTA_L5_OVER_BASELINE'] = round(df['FTA_ROLLING_AVG_5'] / (df['FTA_AVG_TO_DATE'] + epsilon), 2)
-    df['FTA_L7_OVER_BASELINE'] = round(df['FTA_ROLLING_AVG_7'] / (df['FTA_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3A_L10_OVER_BASELINE'] = round(df['FG3A_ROLLING_AVG_10'] / (df['FG3A_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3A_L5_OVER_BASELINE'] = round(df['FG3A_ROLLING_AVG_5'] / (df['FG3A_AVG_TO_DATE'] + epsilon), 2)
-    df['FG3A_L7_OVER_BASELINE'] = round(df['FG3A_ROLLING_AVG_7'] / (df['FG3A_AVG_TO_DATE'] + epsilon), 2)
-    df['USG_PCT_L10_OVER_BASELINE'] = round(df['USG_PCT_ROLLING_AVG_10'] / (df['USG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['USG_PCT_L5_OVER_BASELINE'] = round(df['USG_PCT_ROLLING_AVG_5'] / (df['USG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['USG_PCT_L7_OVER_BASELINE'] = round(df['USG_PCT_ROLLING_AVG_7'] / (df['USG_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['TS_PCT_L10_OVER_BASELINE'] = round(df['TS_PCT_ROLLING_AVG_10'] / (df['TS_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['TS_PCT_L5_OVER_BASELINE'] = round(df['TS_PCT_ROLLING_AVG_5'] / (df['TS_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['TS_PCT_L7_OVER_BASELINE'] = round(df['TS_PCT_ROLLING_AVG_7'] / (df['TS_PCT_AVG_TO_DATE'] + epsilon), 2)
-    df['NET_RATING_L10_OVER_BASELINE'] = round(df['NET_RATING_ROLLING_AVG_10'] / (df['NET_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['NET_RATING_L5_OVER_BASELINE'] = round(df['NET_RATING_ROLLING_AVG_5'] / (df['NET_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['NET_RATING_L7_OVER_BASELINE'] = round(df['NET_RATING_ROLLING_AVG_7'] / (df['NET_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['E_OFF_RATING_L10_OVER_BASELINE'] = round(df['E_OFF_RATING_ROLLING_AVG_10'] / (df['E_OFF_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['E_OFF_RATING_L5_OVER_BASELINE'] = round(df['E_OFF_RATING_ROLLING_AVG_5'] / (df['E_OFF_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['E_OFF_RATING_L7_OVER_BASELINE'] = round(df['E_OFF_RATING_ROLLING_AVG_7'] / (df['E_OFF_RATING_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L10_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_10'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L5_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_5'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L7_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_7'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
-    df['PLUS_MINUS_L10_OVER_BASELINE'] = round(df['PLUS_MINUS_ROLLING_AVG_10'] / (df['PLUS_MINUS_AVG_TO_DATE'] + epsilon), 2)
-    df['PLUS_MINUS_L5_OVER_BASELINE'] = round(df['PLUS_MINUS_ROLLING_AVG_5'] / (df['PLUS_MINUS_AVG_TO_DATE'] + epsilon), 2)
-    df['PLUS_MINUS_L7_OVER_BASELINE'] = round(df['PLUS_MINUS_ROLLING_AVG_7'] / (df['PLUS_MINUS_AVG_TO_DATE'] + epsilon), 2)
-    df['POSS_L10_OVER_BASELINE'] = round(df['POSS_ROLLING_AVG_10'] / (df['POSS_AVG_TO_DATE'] + epsilon), 2)
-    df['POSS_L5_OVER_BASELINE'] = round(df['POSS_ROLLING_AVG_5'] / (df['POSS_AVG_TO_DATE'] + epsilon), 2)
-    df['POSS_L7_OVER_BASELINE'] = round(df['POSS_ROLLING_AVG_7'] / (df['POSS_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L10_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_10'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L5_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_5'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
-    df['TCHS_L7_OVER_BASELINE'] = round(df['TCHS_ROLLING_AVG_7'] / (df['TCHS_AVG_TO_DATE'] + epsilon), 2)
+    # Add rolling over baseline features using the helper function
+    stats_for_baseline = [
+        'PTS', 'MIN', 'FGA', 'FGM', 'FG3M', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
+        'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
+        'E_OFF_RATING', 'TCHS', 'PLUS_MINUS', 'POSS'
+    ]
+    df = add_rolling_over_baseline_features(df, stats_for_baseline, windows=[5, 7, 10], epsilon=epsilon)
 
     # ===== SHORT VS LONG TERM DIVERGENCES =====
     df['PTS_10G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + epsilon)
@@ -1496,7 +1622,8 @@ def add_interaction_features(df):
     df['FG_PCT_VARIANCE_STABILITY'] = df.get('FG_PCT_CV_10_TO_DATE', 0) / (df.get('FG_PCT_CV_40_TO_DATE', 1) + epsilon)
     df['FG3_PCT_VARIANCE_STABILITY'] = df.get('FG3_PCT_CV_10_TO_DATE', 0) / (df.get('FG3_PCT_CV_40_TO_DATE', 1) + epsilon)
     df['FT_PCT_VARIANCE_STABILITY'] = df.get('FT_PCT_CV_10_TO_DATE', 0) / (df.get('FT_PCT_CV_40_TO_DATE', 1) + epsilon)
-    df['TCHS_VARIANCE_STABILITY'] = df.get('TCHS_VOLATILITY_15_TO_DATE', 0) / (df.get('TCHS_VOLATILITY_40_TO_DATE', 1) + epsilon)    
+    df['TCHS_VARIANCE_STABILITY'] = df.get('TCHS_VOLATILITY_15_TO_DATE', 0) / (df.get('TCHS_VOLATILITY_40_TO_DATE', 1) + epsilon) 
+
 
     # ===== STAR DYNAMICS (Keep only what's in features) =====
     if 'STAR_SAT_OUT' in df.columns:
@@ -1518,108 +1645,15 @@ def add_interaction_features(df):
         df['PTS_2ND_CHANCE_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_2ND_CHANCE_DELTA_STAR_OUT', 0)
         df['PTS_FB_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_FB_DELTA_STAR_OUT', 0)
         df['PTS_PAINT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_PAINT_DELTA_STAR_OUT', 0)
+        df['FG_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FG_PCT_DELTA_STAR_OUT', 0)
+        df['FG3_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FG3_PCT_DELTA_STAR_OUT', 0)
+        df['FT_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FT_PCT_DELTA_STAR_OUT', 0)
     
     # ===== HOME/AWAY EXPECTATIONS (Keep only what's in features) =====
-    if 'HOME_GAME' in df.columns:
-        # Use deltas instead of raw averages: base_avg + location_delta
-        df['PTS_EXPECTATION_LOCATION'] = (
-            df.get('PTS_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PTS_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PTS_DELTA', 0)
-        )
-        df['MIN_EXPECTATION_LOCATION'] = (
-            df.get('MIN_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_MIN_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_MIN_DELTA', 0)
-        )
-        df['AST_EXPECTATION_LOCATION'] = (
-            df.get('AST_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_AST_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_AST_DELTA', 0)
-        )
-        df['USG_PCT_EXPECTATION_LOCATION'] = (
-            df.get('USG_PCT_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_USG_PCT_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_USG_PCT_DELTA', 0)
-        )
-        df['E_OFF_RATING_EXPECTATION_LOCATION'] = (
-            df.get('E_OFF_RATING_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_E_OFF_RATING_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_E_OFF_RATING_DELTA', 0)
-        )
-        df['NET_RATING_EXPECTATION_LOCATION'] = (
-            df.get('NET_RATING_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_NET_RATING_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_NET_RATING_DELTA', 0)
-        )
-        df['EFG_PCT_EXPECTATION_LOCATION'] = (
-            df.get('EFG_PCT_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_EFG_PCT_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_EFG_PCT_DELTA', 0)
-        )
-        df['FGA_EXPECTATION_LOCATION'] = (
-            df.get('FGA_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_FGA_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_FGA_DELTA', 0)
-        )
-        df['FGM_EXPECTATION_LOCATION'] = (
-            df.get('FGM_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_FGM_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_FGM_DELTA', 0)
-        )
-        df['FTA_EXPECTATION_LOCATION'] = (
-            df.get('FTA_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_FTA_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_FTA_DELTA', 0)
-        )
-        df['FG3A_EXPECTATION_LOCATION'] = (
-            df.get('FG3A_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_FG3A_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_FG3A_DELTA', 0)
-        )
-        df['FG3M_EXPECTATION_LOCATION'] = (
-            df.get('FG3M_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_FG3M_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_FG3M_DELTA', 0)
-        )
-        df['TS_PCT_EXPECTATION_LOCATION'] = (
-            df.get('TS_PCT_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_TS_PCT_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_TS_PCT_DELTA', 0)
-        )
-        df['POSS_EXPECTATION_LOCATION'] = (
-            df.get('POSS_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_POSS_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_POSS_DELTA', 0)
-        )
-        df['TCHS_EXPECTATION_LOCATION'] = (
-            df.get('TCHS_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_TCHS_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_TCHS_DELTA', 0)
-        )
-        df['PLUS_MINUS_EXPECTATION_LOCATION'] = (
-            df.get('PLUS_MINUS_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PLUS_MINUS_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PLUS_MINUS_DELTA', 0)
-        )
-        df['PTS_OFF_TOV_EXPECTATION_LOCATION'] = (
-            df.get('PTS_OFF_TOV_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PTS_OFF_TOV_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PTS_OFF_TOV_DELTA', 0)
-        )
-        df['PTS_2ND_CHANCE_EXPECTATION_LOCATION'] = (
-            df.get('PTS_2ND_CHANCE_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PTS_2ND_CHANCE_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PTS_2ND_CHANCE_DELTA', 0)
-        )
-        df['PTS_FB_EXPECTATION_LOCATION'] = (
-            df.get('PTS_FB_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PTS_FB_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PTS_FB_DELTA', 0)
-        )
-        df['PTS_PAINT_EXPECTATION_LOCATION'] = (
-            df.get('PTS_PAINT_AVG_TO_DATE', 0) +
-            df['HOME_GAME'] * df.get('PLAYER_HOME_PTS_PAINT_DELTA', 0) +
-            (1 - df['HOME_GAME']) * df.get('PLAYER_AWAY_PTS_PAINT_DELTA', 0)
-        )
+    stats_for_expectation = [
+        'PTS', 'MIN', 'AST', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
+        'FGA', 'FGM', 'FTA', 'FTM', 'FG3A', 'FG3M', 'TS_PCT', 'POSS', 'TCHS', 'PLUS_MINUS', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
+        'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT'
+    ]
+    df = add_expectation_location_features(df, stats_for_expectation)
     return df

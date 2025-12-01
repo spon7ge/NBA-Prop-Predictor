@@ -7,6 +7,7 @@ from PRODUCTION.teamInfo import *
 from PRODUCTION.pipelineV2 import *
 from itertools import combinations
 from PRODUCTION.teamInfo import nameDict
+from PRODUCTION.featureEngine.feature_engine import FeatureEngine
 import os
 
 
@@ -65,17 +66,6 @@ def kelly_criterion(probability, payout, stake, kelly_fraction=1.0):
     probabilityOfLoss = 1 - probability
     kelly = (netProfit * probability - probabilityOfLoss) / netProfit
     return max(0, round(kelly * kelly_fraction, 4))
-
-def estimate_skew_from_residuals(residuals: np.ndarray) -> float:
-    """Estimate skew-normal shape parameter from residuals.
-    Clips to a reasonable range for stability.
-    """
-    try:
-        from scipy.stats import skew as _skew
-        est = float(_skew(residuals, bias=False))
-        return float(np.clip(est, -4.0, 4.0))
-    except Exception:
-        return -2.0
 
 def fairProb(bookmakersData, name, line, category, over_under, fixed_buffer=0.035):
     df = bookmakersData[
@@ -186,7 +176,14 @@ def _load_odds_cache(date_str):
         _odds_cache[date_str] = {}
         return {}
 
-def get_cached_prediction(player_name, data, model, features, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer):
+def get_cached_prediction_v2(player_name, data, engine, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer, league_df, findOpp):
+    """
+    Prediction function using FeatureEngine with Poisson for points.
+    Uses XGBoost for MIN and USG, then Poisson for PTS (incorporating predicted MIN and USG).
+    Returns prediction dict with: prediction, sigma, mu_log, sigma_log
+    """
+    from PRODUCTION.featureEngine.poisson_points import predict_points_poisson
+    
     cache_key = f"{player_name}_{current_date}"
     
     if cache_key not in _prediction_cache:
@@ -195,164 +192,164 @@ def get_cached_prediction(player_name, data, model, features, current_date, proj
             if player_df.empty:
                 return None
             
-            vector = buildVector(player_name, data, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer)
-            if vector is None:
-                raise ValueError(f"buildVector returned None for {player_name}")
+            # First, get predicted minutes and usage from XGBoost models
+            pred_minutes = engine.predict_minutes(
+                player_name=player_name,
+                data=data,
+                date=current_date,
+                projectedStartingFive=projectedStartingFive,
+                mainStartingFive=mainStartingFive,
+                teamStarPlayer=teamStarPlayer,
+                league_df=league_df,
+                findOpp=findOpp
+            )
             
-            vector = [item for sublist in vector for item in sublist]
-            vector = pd.DataFrame([vector], columns=features)
+            pred_usage = engine.predict_usage(
+                player_name=player_name,
+                data=data,
+                date=current_date,
+                pred_minutes=pred_minutes,
+                projectedStartingFive=projectedStartingFive,
+                mainStartingFive=mainStartingFive,
+                teamStarPlayer=teamStarPlayer,
+                league_df=league_df,
+                findOpp=findOpp
+            )
             
-            for col in vector.columns:
-                vector[col] = pd.to_numeric(vector[col], errors='coerce')
+            # Get Poisson prediction for points (incorporating predicted minutes and usage)
+            poisson_result = predict_points_poisson(
+                player_name=player_name,
+                data=data,
+                date=current_date,
+                projectedStartingFive=projectedStartingFive,
+                mainStartingFive=mainStartingFive,
+                teamStarPlayer=teamStarPlayer,
+                league_df=league_df,
+                findOpp=findOpp,
+                predicted_minutes=pred_minutes,
+                predicted_usage=pred_usage
+            )
             
-            vector = vector.fillna(0)
+            if poisson_result is None:
+                return None
             
-            # Check if model is a tuple (split model: mean, variance, calibration_factor)
-            if isinstance(model, tuple):
-                mean_model = model[0]
-                variance_model = model[1]
-                calibration_factor = model[2] if len(model) > 2 else 1.25  # Use calibration factor if provided
-                # Check if score-dependent params are provided (4th element of tuple)
-                score_dependent_params = model[3] if len(model) > 3 else None
-                use_score_dependent = score_dependent_params is not None
-                
-                from MODELS.ngboostModel import predict_mean_variance_split
-                
-                # Get raw mean prediction in ORIGINAL space
-                raw_mean = mean_model.predict(vector[features])
-                bias_correction = getattr(mean_model, 'bias_correction_', 0.0)
-                if bias_correction is None:
-                    bias_correction = 0.0
-                
-                # Extract scalar
-                if isinstance(raw_mean, np.ndarray):
-                    raw_mean_val = raw_mean.flat[0]
-                elif isinstance(raw_mean, pd.Series):
-                    raw_mean_val = raw_mean.iloc[0]
-                else:
-                    raw_mean_val = raw_mean
-                
-                # Convert to log-space
-                mu_log = np.log1p(raw_mean_val + bias_correction)
-                
-                # Get variance in log space (UNCALIBRATED)
-                # variance_model predicts log(variance) where variance is Var[log(Y+1)]
-                X = vector[features].replace([np.inf, -np.inf], np.nan)
-                if X.isnull().any().any():
-                    X = X.fillna(X.median())
-                log_var_pred = variance_model.predict(X)  # This is log(variance of log(Y+1))
-                
-                # Extract log_var_pred scalar
-                if isinstance(log_var_pred, np.ndarray):
-                    log_var_val = log_var_pred.flat[0] if log_var_pred.size > 0 else None
-                elif isinstance(log_var_pred, pd.Series):
-                    log_var_val = log_var_pred.iloc[0]
-                else:
-                    log_var_val = log_var_pred
-                
-                if log_var_val is None or np.isnan(log_var_val) or np.isinf(log_var_val):
-                    raise ValueError(f"Invalid log_var_pred value for {player_name}: {log_var_val}")
-                
-                # Convert to variance and then to sigma (UNCALIBRATED)
-                # variance_log = exp(log_var_val) is the variance of log(Y+1) (in log space)
-                variance_log_uncalibrated = np.exp(log_var_val)
-                
-                # Extract uncalibrated variance
-                if isinstance(variance_log_uncalibrated, np.ndarray):
-                    var_log_val_uncalib = variance_log_uncalibrated.flat[0] if variance_log_uncalibrated.size > 0 else None
-                elif isinstance(variance_log_uncalibrated, pd.Series):
-                    var_log_val_uncalib = variance_log_uncalibrated.iloc[0]
-                else:
-                    var_log_val_uncalib = variance_log_uncalibrated
-                
-                if var_log_val_uncalib is None or np.isnan(var_log_val_uncalib) or var_log_val_uncalib <= 0:
-                    raise ValueError(f"Invalid variance_log_uncalibrated value for {player_name}: {var_log_val_uncalib}")
-                
-                # sigma_log_uncalibrated = sqrt(variance_log) is the standard deviation of log(Y+1) (in log space, uncalibrated)
-                sigma_log_uncalibrated = float(np.sqrt(var_log_val_uncalib))
-                
-                # mu_log is already a scalar (converted above)
-                # Validate before converting to float
-                if mu_log is None or np.isnan(mu_log) or np.isinf(mu_log):
-                    raise ValueError(f"Invalid mu_log value for {player_name}: {mu_log}")
-                
-                mu_log_val = float(mu_log)
-                
-                # Get transformed predictions for display (original space)
-                mu, variance = predict_mean_variance_split(
-                    mean_model, variance_model, vector, features, calibration_factor,
-                    prediction_type='mean',
-                    use_score_dependent_calibration=use_score_dependent,
-                    score_dependent_params=score_dependent_params
-                )
-                
-                # Extract transformed mean for display
-                if isinstance(mu, np.ndarray):
-                    pred = float(mu.flat[0])
-                elif isinstance(mu, pd.Series):
-                    pred = float(mu.iloc[0])
-                else:
-                    pred = float(mu)
-                pred = round(pred, 3)
-                
-                # Extract transformed sigma for display (but we'll use log-space for calculations)
-                if isinstance(variance, np.ndarray):
-                    sigma = float(np.sqrt(variance.flat[0]))
-                elif isinstance(variance, pd.Series):
-                    sigma = float(np.sqrt(variance.iloc[0]))
-                else:
-                    sigma = float(np.sqrt(variance))
-                
-                skew = 0.0
-            elif hasattr(model, "pred_dist"):
-                # Single NGBoost model with pred_dist
-                dist = model.pred_dist(vector)
-                pred = round(float(dist.loc[0]), 3)
-                sigma = float(dist.scale[0])
-                # For single model, we need to compute log-space params
-                mu_log_val = dist.loc[0]  # Already in log space if trained on log-transformed target
-                sigma_log_uncalibrated = dist.scale[0]
-                calibration_factor = 1.0
-                use_score_dependent = False
-                score_dependent_params = None
-                skew = 0.0
-            else:
-                # Point model (XGBoost or similar)
-                pred = round(float(model.predict(vector)[0]), 3)
-                # Use simple default sigma and neutral skew when model doesn't provide distribution
-                sigma = max(1.5, min(12.0, max(2.5, min(8.5, pred * 0.15))))
-                # For point model, estimate log-space params
-                mu_log_val = np.log1p(pred)
-                sigma_log_uncalibrated = 0.15  # Default uncertainty
-                calibration_factor = 1.0
-                use_score_dependent = False
-                score_dependent_params = None
-                skew = 0.0
+            # Get prediction and sigma from Poisson model
+            pred = round(float(poisson_result['predicted_points']), 3)
+            sigma = round(float(poisson_result['sigma']), 3)
+            
+            # For Poisson, the standard deviation is sqrt(lambda), but we use the posterior_std
+            # For probability calculations, use log-space approximation
+            mu_log = np.log1p(pred)
+            # Use sigma from Poisson model, convert to log-space approximation
+            # For Poisson, variance = lambda, so std = sqrt(lambda)
+            # In log space, we approximate sigma_log based on the relative uncertainty
+            sigma_log = max(0.10, min(0.25, sigma / pred)) if pred > 0 else 0.15
             
             _prediction_cache[cache_key] = {
-                'prediction': pred,  # Original space (for display)
-                'sigma': sigma,  # Original space (for display, calibrated)
-                'mu_log': mu_log_val,  # Log space (for probability calculations)
-                'sigma_log': sigma_log_uncalibrated,  # Log space (UNCALIBRATED, for probability calculations)
-                'calibration_factor': calibration_factor,  # Store for later use
-                'use_score_dependent': use_score_dependent,  # Store flag
-                'score_dependent_params': score_dependent_params.copy() if score_dependent_params else None,  # COPY the dict!
-                'skew': skew
+                'prediction': pred,  # Original space (for display) - this is lambda from Poisson
+                'sigma': sigma,  # Original space (for display) - posterior std from Poisson
+                'mu_log': mu_log,  # Log space (for probability calculations)
+                'sigma_log': sigma_log,  # Log space (for probability calculations)
             }
         except Exception as e:
             print(f"Error getting prediction for {player_name}: {e}")
             return None
     return _prediction_cache[cache_key]
 
+def clear_odds_cache():
+    """Clear the odds cache. Useful when switching dates or reloading data."""
+    global _odds_cache
+    _odds_cache = {}
 
+def get_player_odds_from_csv(player_name, line, current_date, side='over'):
+    try:
+        # Convert current_date to string if needed
+        if isinstance(current_date, datetime):
+            date_str = current_date.strftime('%Y%m%d')
+        else:
+            # Assume format is 'YYYY-MM-DD' or already 'YYYYMMDD'
+            date_str = str(current_date).replace('-', '')
+            if len(date_str) == 10:  # YYYY-MM-DD format
+                date_str = date_str.replace('-', '')
+        
+        # Normalize side to 'over' or 'under'
+        side_normalized = 'over' if str(side).upper().startswith('O') else 'under'
+        line_float = float(line)
+        
+        # Load cache for this date (will load once and cache)
+        odds_map = _load_odds_cache(date_str)
+        
+        # O(1) lookup using hashmap
+        key = (str(player_name), line_float, side_normalized)
+        best_odds = odds_map.get(key, -137)
+        
+        return int(best_odds)
+    
+    except Exception as e:
+        # Silently return default on error
+        return -137
+
+def flag_sigma(s):
+    """Categorize sigma values for volatility assessment"""
+    if s <= 5.0:
+        return 'Low'
+    elif s <= 6.0:
+        return 'Med'
+    else:
+        return 'High'
+
+def limit_player_appearances(results_df, max_appearances=3):
+    """Limit how many times each player appears"""
+    player_counts = {}
+    filtered_results = []
+    
+    for _, row in results_df.iterrows():
+        p1 = row['NAME 1']
+        p2 = row['NAME 2']
+        
+        count1 = player_counts.get(p1, 0)
+        count2 = player_counts.get(p2, 0)
+        
+        if count1 < max_appearances and count2 < max_appearances:
+            filtered_results.append(row)
+            player_counts[p1] = count1 + 1
+            player_counts[p2] = count2 + 1
+    
+    return pd.DataFrame(filtered_results)
+
+def limit_player_appearances_3leg(results_df, max_appearances=3):
+    """Limit how many times each player appears in 3-leg bets"""
+    player_counts = {}
+    filtered_results = []
+    
+    for _, row in results_df.iterrows():
+        p1 = row['NAME 1']
+        p2 = row['NAME 2']
+        p3 = row['NAME 3']
+        
+        count1 = player_counts.get(p1, 0)
+        count2 = player_counts.get(p2, 0)
+        count3 = player_counts.get(p3, 0)
+        
+        if (count1 < max_appearances and 
+            count2 < max_appearances and 
+            count3 < max_appearances):
+            filtered_results.append(row)
+            player_counts[p1] = count1 + 1
+            player_counts[p2] = count2 + 1
+            player_counts[p3] = count3 + 1
+    
+    return pd.DataFrame(filtered_results)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     
-def calculate2LegBets(data, bookmakers, model, features, current_date, 
+def calculate2LegBets(data, bookmakers, engine, current_date, 
                      edge_threshold=0.05, top_n=10, 
-                     stake=100, max_player_appearances: int = 2):
+                     stake=100, max_player_appearances: int = 2,
+                     projectedStartingFive=None, mainStartingFive=None, 
+                     teamStarPlayer=None, league_df=None, findOpp=None):
     """
-    Optimized 2-leg bet calculator using calibrated Normal distribution
+    Simplified 2-leg bet calculator using FeatureEngine predictions
     """
 
     category = 'player_points'
@@ -379,9 +376,9 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
     for player in available_players:
         mapped_player = nameDict.get(player, player)
         
-        pred_data = get_cached_prediction(
-            mapped_player, data, model, features, current_date, 
-            projectedStartingFive, mainStartingFive, teamStarPlayer
+        pred_data = get_cached_prediction_v2(
+            mapped_player, data, engine, current_date, 
+            projectedStartingFive, mainStartingFive, teamStarPlayer, league_df, findOpp
         )
         if pred_data is None:
             continue
@@ -437,80 +434,21 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
         pred1_data = player_predictions[player1]
         pred2_data = player_predictions[player2]
         
-        mu1_raw = pred1_data['prediction']
-        mu2_raw = pred2_data['prediction']
-        sigma1 = pred1_data['sigma']  # Already calibrated!
+        mu1 = pred1_data['prediction']
+        mu2 = pred2_data['prediction']
+        sigma1 = pred1_data['sigma']
         sigma2 = pred2_data['sigma']
         
         line1 = float(player_lines[player1]['LINE'])
         line2 = float(player_lines[player2]['LINE'])
         
-        # Use raw predictions directly
-        mu1 = mu1_raw
-        mu2 = mu2_raw
+        # Get log-space parameters for probability calculations
+        mu1_log = pred1_data['mu_log']
+        sigma1_log = pred1_data['sigma_log']
+        mu2_log = pred2_data['mu_log']
+        sigma2_log = pred2_data['sigma_log']
         
-        # Get uncalibrated log-space parameters from cache
-        mu1_log = pred1_data.get('mu_log', np.log1p(mu1_raw))
-        sigma1_log_uncalib = pred1_data.get('sigma_log', sigma1 / (mu1_raw + 1))
-        mu2_log = pred2_data.get('mu_log', np.log1p(mu2_raw))
-        sigma2_log_uncalib = pred2_data.get('sigma_log', sigma2 / (mu2_raw + 1))
-        
-        # Get calibration factors
-        cal_factor1 = pred1_data.get('calibration_factor', 1.25)
-        cal_factor2 = pred2_data.get('calibration_factor', 1.25)
-        use_score_dep1 = pred1_data.get('use_score_dependent', False)
-        use_score_dep2 = pred2_data.get('use_score_dependent', False)
-        score_dep_params1 = pred1_data.get('score_dependent_params', None)
-        score_dep_params2 = pred2_data.get('score_dependent_params', None)
-        
-        # Apply calibration consistently: multiply SIGMA by calibration factor
-        # (Score-dependent calibration returns sigma multipliers directly)
-        if use_score_dep1 and score_dep_params1:
-            from MODELS.ngboostModel import get_score_dependent_calibration_factor
-            temp_mean_orig1 = np.expm1(mu1_log)
-            temp_mean_orig1 = np.asarray(temp_mean_orig1)
-            temp_mean_orig1 = np.nan_to_num(temp_mean_orig1, nan=0.0, posinf=0.0, neginf=0.0)
-            
-            params1 = score_dep_params1.copy()
-            very_high_threshold1 = params1.pop('very_high_threshold', None)
-            very_high_factor1 = params1.pop('very_high_factor', None)
-            
-            cal_factors1 = get_score_dependent_calibration_factor(
-                np.array([temp_mean_orig1]),
-                base_factor=1.0,  # Use 1.0 as base since function returns absolute factors
-                very_high_threshold=very_high_threshold1,
-                very_high_factor=very_high_factor1,
-                **params1
-            )
-            sigma_multiplier1 = float(cal_factors1[0]) if isinstance(cal_factors1, np.ndarray) else float(cal_factors1)
-            sigma1_log = sigma1_log_uncalib * sigma_multiplier1
-        else:
-            # Base calibration: cal_factor applies to variance, so use sqrt for sigma
-            sigma1_log = sigma1_log_uncalib * np.sqrt(cal_factor1)
-        
-        if use_score_dep2 and score_dep_params2:
-            from MODELS.ngboostModel import get_score_dependent_calibration_factor
-            temp_mean_orig2 = np.expm1(mu2_log)
-            temp_mean_orig2 = np.asarray(temp_mean_orig2)
-            temp_mean_orig2 = np.nan_to_num(temp_mean_orig2, nan=0.0, posinf=0.0, neginf=0.0)
-            
-            params2 = score_dep_params2.copy()
-            very_high_threshold2 = params2.pop('very_high_threshold', None)
-            very_high_factor2 = params2.pop('very_high_factor', None)
-            
-            cal_factors2 = get_score_dependent_calibration_factor(
-                np.array([temp_mean_orig2]),
-                base_factor=1.0,
-                very_high_threshold=very_high_threshold2,
-                very_high_factor=very_high_factor2,
-                **params2
-            )
-            sigma_multiplier2 = float(cal_factors2[0]) if isinstance(cal_factors2, np.ndarray) else float(cal_factors2)
-            sigma2_log = sigma2_log_uncalib * sigma_multiplier2
-        else:
-            sigma2_log = sigma2_log_uncalib * np.sqrt(cal_factor2)
-        
-        # Calculate probabilities in log space (CORRECT for log-normal distribution)
+        # Calculate probabilities in log space
         p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
         p1_under = 1.0 - p1_over
         p2_over = float(1 - norm.cdf(np.log1p(line2), loc=mu2_log, scale=sigma2_log))
@@ -670,72 +608,13 @@ def calculate2LegBets(data, bookmakers, model, features, current_date,
     # Return top N
     return results_df.head(top_n)
 
-def clear_odds_cache():
-    """Clear the odds cache. Useful when switching dates or reloading data."""
-    global _odds_cache
-    _odds_cache = {}
-
-def get_player_odds_from_csv(player_name, line, current_date, side='over'):
-    try:
-        # Convert current_date to string if needed
-        if isinstance(current_date, datetime):
-            date_str = current_date.strftime('%Y%m%d')
-        else:
-            # Assume format is 'YYYY-MM-DD' or already 'YYYYMMDD'
-            date_str = str(current_date).replace('-', '')
-            if len(date_str) == 10:  # YYYY-MM-DD format
-                date_str = date_str.replace('-', '')
-        
-        # Normalize side to 'over' or 'under'
-        side_normalized = 'over' if str(side).upper().startswith('O') else 'under'
-        line_float = float(line)
-        
-        # Load cache for this date (will load once and cache)
-        odds_map = _load_odds_cache(date_str)
-        
-        # O(1) lookup using hashmap
-        key = (str(player_name), line_float, side_normalized)
-        best_odds = odds_map.get(key, -137)
-        
-        return int(best_odds)
-    
-    except Exception as e:
-        # Silently return default on error
-        return -137
-
-def flag_sigma(s):
-    """Categorize sigma values for volatility assessment"""
-    if s <= 5.0:
-        return 'Low'
-    elif s <= 6.0:
-        return 'Med'
-    else:
-        return 'High'
-
-def limit_player_appearances(results_df, max_appearances=3):
-    """Limit how many times each player appears"""
-    player_counts = {}
-    filtered_results = []
-    
-    for _, row in results_df.iterrows():
-        p1 = row['NAME 1']
-        p2 = row['NAME 2']
-        
-        count1 = player_counts.get(p1, 0)
-        count2 = player_counts.get(p2, 0)
-        
-        if count1 < max_appearances and count2 < max_appearances:
-            filtered_results.append(row)
-            player_counts[p1] = count1 + 1
-            player_counts[p2] = count2 + 1
-    
-    return pd.DataFrame(filtered_results)
-
-def calculate3LegBets(data, bookmakers, model, features, current_date, 
+def calculate3LegBets(data, bookmakers, engine, current_date, 
                      edge_threshold=0.05, top_n=10, 
-                     stake=100, max_player_appearances: int = 2):
+                     stake=100, max_player_appearances: int = 2,
+                     projectedStartingFive=None, mainStartingFive=None, 
+                     teamStarPlayer=None, league_df=None, findOpp=None):
     """
-    Optimized 3-leg bet calculator using calibrated Normal distribution
+    Simplified 3-leg bet calculator using FeatureEngine predictions
     """
     category = 'player_points'
     bookmakers = bookmakers[(bookmakers['CATEGORY'] == category)]
@@ -761,9 +640,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
     for player in available_players:
         mapped_player = nameDict.get(player, player)
         
-        pred_data = get_cached_prediction(
-            mapped_player, data, model, features, current_date, 
-            projectedStartingFive, mainStartingFive, teamStarPlayer
+        pred_data = get_cached_prediction_v2(
+            mapped_player, data, engine, current_date, 
+            projectedStartingFive, mainStartingFive, teamStarPlayer, league_df, findOpp
         )
         if pred_data is None:
             continue
@@ -830,9 +709,9 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         pred2_data = player_predictions[player2]
         pred3_data = player_predictions[player3]
         
-        mu1_raw = pred1_data['prediction']
-        mu2_raw = pred2_data['prediction']
-        mu3_raw = pred3_data['prediction']
+        mu1 = pred1_data['prediction']
+        mu2 = pred2_data['prediction']
+        mu3 = pred3_data['prediction']
         sigma1 = pred1_data['sigma']
         sigma2 = pred2_data['sigma']
         sigma3 = pred3_data['sigma']
@@ -841,95 +720,13 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
         line2 = float(player_lines[player2]['LINE'])
         line3 = float(player_lines[player3]['LINE'])
         
-        mu1 = mu1_raw
-        mu2 = mu2_raw
-        mu3 = mu3_raw
-        
-        # Get uncalibrated log-space parameters from cache
-        mu1_log = pred1_data.get('mu_log', np.log1p(mu1_raw))
-        sigma1_log_uncalib = pred1_data.get('sigma_log', sigma1 / (mu1_raw + 1))
-        mu2_log = pred2_data.get('mu_log', np.log1p(mu2_raw))
-        sigma2_log_uncalib = pred2_data.get('sigma_log', sigma2 / (mu2_raw + 1))
-        mu3_log = pred3_data.get('mu_log', np.log1p(mu3_raw))
-        sigma3_log_uncalib = pred3_data.get('sigma_log', sigma3 / (mu3_raw + 1))
-        
-        # Get calibration factors
-        cal_factor1 = pred1_data.get('calibration_factor', 1.25)
-        cal_factor2 = pred2_data.get('calibration_factor', 1.25)
-        cal_factor3 = pred3_data.get('calibration_factor', 1.25)
-        use_score_dep1 = pred1_data.get('use_score_dependent', False)
-        use_score_dep2 = pred2_data.get('use_score_dependent', False)
-        use_score_dep3 = pred3_data.get('use_score_dependent', False)
-        score_dep_params1 = pred1_data.get('score_dependent_params', None)
-        score_dep_params2 = pred2_data.get('score_dependent_params', None)
-        score_dep_params3 = pred3_data.get('score_dependent_params', None)
-        
-        # Apply calibration consistently for all 3 players
-        if use_score_dep1 and score_dep_params1:
-            from MODELS.ngboostModel import get_score_dependent_calibration_factor
-            temp_mean_orig1 = np.expm1(mu1_log)
-            temp_mean_orig1 = np.asarray(temp_mean_orig1)
-            temp_mean_orig1 = np.nan_to_num(temp_mean_orig1, nan=0.0, posinf=0.0, neginf=0.0)
-            
-            params1 = score_dep_params1.copy()
-            very_high_threshold1 = params1.pop('very_high_threshold', None)
-            very_high_factor1 = params1.pop('very_high_factor', None)
-            
-            cal_factors1 = get_score_dependent_calibration_factor(
-                np.array([temp_mean_orig1]),
-                base_factor=1.0,
-                very_high_threshold=very_high_threshold1,
-                very_high_factor=very_high_factor1,
-                **params1
-            )
-            sigma_multiplier1 = float(cal_factors1[0]) if isinstance(cal_factors1, np.ndarray) else float(cal_factors1)
-            sigma1_log = sigma1_log_uncalib * sigma_multiplier1
-        else:
-            sigma1_log = sigma1_log_uncalib * np.sqrt(cal_factor1)
-        
-        if use_score_dep2 and score_dep_params2:
-            from MODELS.ngboostModel import get_score_dependent_calibration_factor
-            temp_mean_orig2 = np.expm1(mu2_log)
-            temp_mean_orig2 = np.asarray(temp_mean_orig2)
-            temp_mean_orig2 = np.nan_to_num(temp_mean_orig2, nan=0.0, posinf=0.0, neginf=0.0)
-            
-            params2 = score_dep_params2.copy()
-            very_high_threshold2 = params2.pop('very_high_threshold', None)
-            very_high_factor2 = params2.pop('very_high_factor', None)
-            
-            cal_factors2 = get_score_dependent_calibration_factor(
-                np.array([temp_mean_orig2]),
-                base_factor=1.0,
-                very_high_threshold=very_high_threshold2,
-                very_high_factor=very_high_factor2,
-                **params2
-            )
-            sigma_multiplier2 = float(cal_factors2[0]) if isinstance(cal_factors2, np.ndarray) else float(cal_factors2)
-            sigma2_log = sigma2_log_uncalib * sigma_multiplier2
-        else:
-            sigma2_log = sigma2_log_uncalib * np.sqrt(cal_factor2)
-        
-        if use_score_dep3 and score_dep_params3:
-            from MODELS.ngboostModel import get_score_dependent_calibration_factor
-            temp_mean_orig3 = np.expm1(mu3_log)
-            temp_mean_orig3 = np.asarray(temp_mean_orig3)
-            temp_mean_orig3 = np.nan_to_num(temp_mean_orig3, nan=0.0, posinf=0.0, neginf=0.0)
-            
-            params3 = score_dep_params3.copy()
-            very_high_threshold3 = params3.pop('very_high_threshold', None)
-            very_high_factor3 = params3.pop('very_high_factor', None)
-            
-            cal_factors3 = get_score_dependent_calibration_factor(
-                np.array([temp_mean_orig3]),
-                base_factor=1.0,
-                very_high_threshold=very_high_threshold3,
-                very_high_factor=very_high_factor3,
-                **params3
-            )
-            sigma_multiplier3 = float(cal_factors3[0]) if isinstance(cal_factors3, np.ndarray) else float(cal_factors3)
-            sigma3_log = sigma3_log_uncalib * sigma_multiplier3
-        else:
-            sigma3_log = sigma3_log_uncalib * np.sqrt(cal_factor3)
+        # Get log-space parameters for probability calculations
+        mu1_log = pred1_data['mu_log']
+        sigma1_log = pred1_data['sigma_log']
+        mu2_log = pred2_data['mu_log']
+        sigma2_log = pred2_data['sigma_log']
+        mu3_log = pred3_data['mu_log']
+        sigma3_log = pred3_data['sigma_log']
         
         # Calculate probabilities in log space
         p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
@@ -1116,27 +913,3 @@ def calculate3LegBets(data, bookmakers, model, features, current_date,
     
     return results_df.head(top_n)
 
-
-def limit_player_appearances_3leg(results_df, max_appearances=3):
-    """Limit how many times each player appears in 3-leg bets"""
-    player_counts = {}
-    filtered_results = []
-    
-    for _, row in results_df.iterrows():
-        p1 = row['NAME 1']
-        p2 = row['NAME 2']
-        p3 = row['NAME 3']
-        
-        count1 = player_counts.get(p1, 0)
-        count2 = player_counts.get(p2, 0)
-        count3 = player_counts.get(p3, 0)
-        
-        if (count1 < max_appearances and 
-            count2 < max_appearances and 
-            count3 < max_appearances):
-            filtered_results.append(row)
-            player_counts[p1] = count1 + 1
-            player_counts[p2] = count2 + 1
-            player_counts[p3] = count3 + 1
-    
-    return pd.DataFrame(filtered_results)

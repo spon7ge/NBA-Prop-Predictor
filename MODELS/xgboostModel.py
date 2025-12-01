@@ -1,502 +1,332 @@
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import numpy as np
 import pandas as pd
 from xgboost import XGBRegressor
-from sklearn.model_selection import RandomizedSearchCV
-from skopt import BayesSearchCV
-from sklearn.inspection import permutation_importance
-from scipy.stats import uniform, randint
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import matplotlib.pyplot as plt
-import seaborn as sns
 import shap
 
-def build_recent_weights(df, player_col, recent_n=15, recent_weight=5.0):
-    w = np.ones(len(df), dtype=float)
-    df_reset = df.reset_index(drop=True)
-    idx = df_reset.groupby(player_col, sort=False).tail(recent_n).index
-    w[idx] = recent_weight
-    return w
+# ==============================================================================
+# STEP 1: HELPER FUNCTIONS
+# ==============================================================================
 
-def clean_feature_dtypes(X, cat_cols):
-    Xc = X.copy()
-    for c in Xc.columns:
-        col = Xc[c] 
-        if c in cat_cols:
-            continue
-        if col.dtype == bool:
-            Xc[c] = col.astype(int)
-        elif not np.issubdtype(col.dtype, np.number):
-            Xc[c] = pd.to_numeric(col, errors="coerce")
-    return Xc
+def create_recent_game_weights(df, player_column, recent_games=15, weight=3.0):
+    """
+    Give more importance to recent games when training the model.
+    
+    WHY? Recent games are more relevant for predicting future performance.
+    A player's stats from 3 months ago matter less than last week's games.
+    """
+    # Start with all games having weight = 1.0
+    weights = np.ones(len(df))
+    
+    # For each player, find their last N games and increase their weight
+    df_with_index = df.reset_index(drop=True)
+    
+    # Get the indices of the last N games for each player
+    recent_game_indices = df_with_index.groupby(player_column, sort=False).tail(recent_games).index
+    
+    # Increase the weight for those recent games
+    weights[recent_game_indices] = weight
+    
+    print(f"✓ Applied higher weight ({weight}x) to last {recent_games} games per player")
+    
+    return weights
 
 
-def xgb_regression_params(base=None, use_gpu=False):
-    """Default XGBoost regression parameters."""
-    p = dict(
-        objective="reg:pseudohubererror",  
-        eval_metric="rmse",
-        tree_method='hist',
-        booster='gbtree',
-        random_state=42,
-        n_jobs=-1,
+def ensure_features_list(features):
+    """Convert features to a list if it's not already one."""
+    if isinstance(features, list):
+        return features
+    elif hasattr(features, '__iter__') and not isinstance(features, str):
+        return list(features)
+    else:
+        return [features]
+
+
+def prepare_features(X):
+    """
+    Clean up feature data types to ensure XGBoost can use them.
+    
+    WHY? XGBoost needs numeric data. This converts any non-numeric columns.
+    """
+    X_clean = X.copy()
+    
+    for column in X_clean.columns:
+        # Convert boolean (True/False) to integers (1/0)
+        if X_clean[column].dtype == bool:
+            X_clean[column] = X_clean[column].astype(int)
         
+        # Convert any other non-numeric columns to numbers
+        elif not np.issubdtype(X_clean[column].dtype, np.number):
+            X_clean[column] = pd.to_numeric(X_clean[column], errors='coerce')
+    
+    return X_clean
+
+# ==============================================================================
+# STEP 2: TRAIN THE MODEL (THE MAIN FUNCTION)
+# ==============================================================================
+
+def train_model(train_data, val_data, features, target, date_column, player_column):
+    """
+    Train XGBoost model with proper NaN handling.
+    """
+    
+    print("\n" + "="*70)
+    print("TRAINING XGBOOST MODEL")
+    print("="*70)
+    
+    # Step 1: Sort by date
+    print("\n📅 Step 1: Sorting by date...")
+    train_data = train_data.sort_values(date_column).reset_index(drop=True)
+    val_data = val_data.sort_values(date_column).reset_index(drop=True)
+    
+    print(f"   Training: {train_data[date_column].min()} to {train_data[date_column].max()}")
+    print(f"   Validation: {val_data[date_column].min()} to {val_data[date_column].max()}")
+    
+    # Step 2: Remove rows where TARGET is missing (keep rows with NaN features!)
+    print("\n🧹 Step 2: Removing rows with missing target...")
+    train_data = train_data.dropna(subset=[target])
+    val_data = val_data.dropna(subset=[target])
+    
+    print(f"   Training samples: {len(train_data)}")
+    print(f"   Validation samples: {len(val_data)}")
+    
+    # Step 3: Prepare features
+    print("\n📊 Step 3: Preparing features...")
+    X_train = train_data[features].copy()
+    X_val = val_data[features].copy()
+    y_train = train_data[target].values
+    y_val = val_data[target].values
+    
+    # Step 4: Fill NaN in features (CRITICAL!)
+    print("\n🔧 Step 4: Handling NaN values in features...")
+    nan_train_before = X_train.isna().sum().sum()
+    nan_val_before = X_val.isna().sum().sum()
+    
+    X_train = X_train.fillna(0)
+    X_val = X_val.fillna(0)
+    
+    print(f"   • Filled {nan_train_before} NaN in training features")
+    print(f"   • Filled {nan_val_before} NaN in validation features")
+    print(f"   • Remaining NaN: {X_train.isna().sum().sum() + X_val.isna().sum().sum()}")
+    
+    # Step 5: Create sample weights
+    print("\n⚖️  Step 5: Creating sample weights...")
+    weights = np.ones(len(train_data))
+    df_reset = train_data.reset_index(drop=True)
+    recent_idx = df_reset.groupby(player_column, sort=False).tail(15).index
+    weights[recent_idx] = 3.0
+    print(f"   ✓ Applied 3x weight to last 15 games per player")
+    
+    # Step 6: Train model
+    print("\n🤖 Step 6: Training XGBoost...")
+    
+    model = XGBRegressor(
+        objective='reg:squarederror',  # Fixed! Was 'reg:pseudohubererror' which caused issues
         n_estimators=1500,
         learning_rate=0.015,
         max_depth=5,
         min_child_weight=4,
-        
-        subsample=0.75,
-        colsample_bytree=0.75,
-        
         gamma=0.8,
         reg_alpha=1.5,
         reg_lambda=8.0,
-        
-        early_stopping_rounds=75,
-        verbosity=1,
-    )
-    if base:
-        p.update(base)
-    if use_gpu:
-        p["tree_method"] = "hist"
-        p["device"] = "cuda"
-        p["n_jobs"] = 1
-    return p
-
-
-def tune_hyperparams(X_train, y_train, X_val, y_val, 
-                     sample_weight=None, use_gpu=False, n_iter=50):
-    """Tune hyperparameters for XGBoost regression model."""
-    base_params = xgb_regression_params(use_gpu=use_gpu)
-    base_params.pop("early_stopping_rounds", None)
-
-    xgb = XGBRegressor(**base_params)
-
-    param_dist = {
-        "max_depth": randint(3, 10),
-        "min_child_weight": randint(1, 10),
-        "subsample": uniform(0.5, 0.5),
-        "colsample_bytree": uniform(0.5, 0.5),
-        "gamma": uniform(0, 2),
-        "reg_alpha": uniform(0, 9),
-        "reg_lambda": uniform(1, 50),
-        "learning_rate": uniform(0.005, 0.02)
-    }
-
-    n_jobs = 1 if use_gpu else -1  
-    
-    search = BayesSearchCV(
-        estimator=xgb,
-        search_spaces=param_dist,
-        n_iter=n_iter,
-        scoring="neg_root_mean_squared_error",
-        n_jobs=n_jobs,
-        cv=[(range(len(y_train)), range(len(y_val)))],
+        subsample=0.75,
+        colsample_bytree=0.75,
         random_state=42,
-        verbose=1
+        tree_method='hist',
+        early_stopping_rounds=75,
+        n_jobs=-1
     )
-
-    X = pd.concat([X_train, X_val], ignore_index=True)
-    y = np.concatenate([y_train, y_val])
     
-    if sample_weight is not None:
-        val_weights = np.ones(len(y_val))
-        combined_sample_weight = np.concatenate([sample_weight, val_weights])
-    else:
-        combined_sample_weight = None
+    model.fit(
+        X_train, y_train,
+        sample_weight=weights,
+        eval_set=[(X_val, y_val)],
+        verbose=False
+    )
     
-    search.fit(X, y, sample_weight=combined_sample_weight)
-
-    print(f"Best params: {search.best_params_}")
-    print(f"Best RMSE: {np.sqrt(-search.best_score_):.3f}")
-
-    return search.best_params_
-
-
-def fit_model(train_df, val_df, features, target_col, date_col, player_col,
-              recent_n=30, recent_weight=3.0, use_gpu=False, 
-              tune_hyperparams_flag=False, tune_iters=50):
-    """Fit XGBoost regression model with optional hyperparameter tuning."""
-    train_df = train_df.sort_values(date_col).reset_index(drop=True)
+    best_iter = model.best_iteration if hasattr(model, 'best_iteration') and model.best_iteration else 1500
+    print(f"   ✓ Training stopped at iteration {best_iter}")
     
-    if val_df is None or len(val_df) == 0:
-        print("No validation data provided - using training data for early stopping")
-        val_df = train_df.copy()
-        use_train_for_val = True
-    else:
-        val_df = val_df.sort_values(date_col).reset_index(drop=True)
-        use_train_for_val = False
+    # Step 7: Evaluate
+    print("\n📈 Step 7: Evaluating on validation...")
+    val_preds = model.predict(X_val)
     
-    # Drop rows with NaN in key features
-    train_df = train_df.dropna(subset=[target_col] + [f for f in features if f in train_df.columns])
-    val_df = val_df.dropna(subset=[target_col] + [f for f in features if f in val_df.columns])
-
-    X_tr = train_df[features]
-    y_tr = train_df[target_col].to_numpy()
-    X_va = val_df[features]
-    y_va = val_df[target_col].to_numpy()
-
-    X_tr = clean_feature_dtypes(X_tr, set())
-    X_va = clean_feature_dtypes(X_va, set())
-    w_tr = build_recent_weights(train_df, player_col, recent_n, recent_weight)
+    rmse = np.sqrt(mean_squared_error(y_val, val_preds))
+    mae = mean_absolute_error(y_val, val_preds)
+    r2 = r2_score(y_val, val_preds)
     
-    print(f"Training XGBoost regression model...")
-    print(f"Training samples: {len(X_tr)}, Validation samples: {len(X_va)}")
+    print(f"\n   VALIDATION METRICS:")
+    print(f"   • RMSE: {rmse:.3f}")
+    print(f"   • MAE:  {mae:.3f}")
+    print(f"   • R²:   {r2:.3f}")
     
-    if tune_hyperparams_flag and not use_train_for_val:
-        print(f"Tuning hyperparameters...")
-        best_params = tune_hyperparams(
-            X_tr, y_tr, X_va, y_va,
-            sample_weight=w_tr, use_gpu=use_gpu, n_iter=tune_iters
-        )
-        p = xgb_regression_params(best_params, use_gpu=use_gpu)
-    else:
-        p = xgb_regression_params(use_gpu=use_gpu)
+    # Check predictions are reasonable
+    print(f"\n   Predictions: min={val_preds.min():.2f}, max={val_preds.max():.2f}, mean={val_preds.mean():.2f}")
+    print(f"   Actual:      min={y_val.min():.2f}, max={y_val.max():.2f}, mean={y_val.mean():.2f}")
     
-    model = XGBRegressor(**p)
+    # Step 8: Retrain on combined data
+    print("\n🔄 Step 8: Retraining on combined data...")
     
-    # Use different fitting approach based on validation data availability
-    if use_train_for_val:
-        # Train without early stopping when using training data as validation
-        p_no_early_stop = p.copy()
-        p_no_early_stop.pop("early_stopping_rounds", None)
-        model = XGBRegressor(**p_no_early_stop)
-        model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
-        best_iter = p["n_estimators"]
-    else:
-        model.fit(
-            X_tr, y_tr,
-            sample_weight=w_tr,
-            eval_set=[(X_va, y_va)],
-            verbose=False
-        )
-        best_iter = model.best_iteration if hasattr(model, 'best_iteration') else p["n_estimators"]
+    combined = pd.concat([train_data, val_data], ignore_index=True)
+    X_combined = combined[features].fillna(0)
+    y_combined = combined[target].values
     
-    p_final = xgb_regression_params(use_gpu=use_gpu)
-    p_final["n_estimators"] = int(best_iter)
-    p_final.pop("early_stopping_rounds", None)
+    # Combined weights
+    train_weights = np.ones(len(train_data))
+    train_reset = train_data.reset_index(drop=True)
+    train_recent = train_reset.groupby(player_column, sort=False).tail(15).index
+    train_weights[train_recent] = 3.0
     
-    # Final model training on combined data
-    if use_train_for_val:
-        final_model = XGBRegressor(**p_final)
-        final_model.fit(X_tr, y_tr, sample_weight=w_tr, verbose=False)
-    else:
-        full_df = pd.concat([train_df, val_df], ignore_index=True)
-        X_full = clean_feature_dtypes(full_df[features], set())
-        y_full = full_df[target_col].to_numpy()
-        
-        w_full = np.concatenate([
-            build_recent_weights(train_df, player_col, recent_n, recent_weight),
-            np.ones(len(val_df))
-        ])
-
-        final_model = XGBRegressor(**p_final)
-        final_model.fit(X_full, y_full, sample_weight=w_full, verbose=False)
+    val_weights = np.ones(len(val_data))
+    combined_weights = np.concatenate([train_weights, val_weights])
     
-    # Validation metrics
-    if use_train_for_val:
-        val_preds = model.predict(X_tr)
-        diff = val_preds - y_tr
-    else:
-        val_preds = model.predict(X_va)
-        diff = val_preds - y_va
+    # Final model
+    final_model = XGBRegressor(
+        objective='reg:squarederror',  # Fixed! Was 'reg:pseudohubererror'
+        n_estimators=int(best_iter),
+        learning_rate=0.05,
+        max_depth=6,
+        min_child_weight=4,
+        gamma=0.8,
+        reg_alpha=1.5,
+        reg_lambda=8.0,
+        subsample=0.75,
+        colsample_bytree=0.75,
+        random_state=42,
+        tree_method='hist',
+        n_jobs=-1
+    )
     
-    val_rmse = float(np.sqrt(np.mean(diff**2)))
-    val_mae = float(np.mean(np.abs(diff)))
-    val_r2 = float(r2_score(y_va if not use_train_for_val else y_tr, val_preds))
+    final_model.fit(X_combined, y_combined, sample_weight=combined_weights, verbose=False)
+    print(f"   ✓ Final model trained on {len(combined)} games")
     
-    print(f"Validation RMSE: {val_rmse:.3f}")
-    print(f"Validation MAE: {val_mae:.3f}")
-    print(f"Validation R²: {val_r2:.3f}")
+    print("\n" + "="*70)
+    print("✅ TRAINING COMPLETE!")
+    print("="*70 + "\n")
     
-    metrics = {
-        'RMSE': val_rmse, 
-        'MAE': val_mae, 
-        'R2': val_r2, 
-        'best_iteration': int(best_iter)
-    }
-    
-    return final_model, metrics
+    return final_model, {'RMSE': rmse, 'MAE': mae, 'R2': r2, 'best_iteration': int(best_iter)}
 
 
-def predict(model, test_df, features):
-    """Generate predictions from trained model."""
-    X_te = clean_feature_dtypes(test_df[features], set())
-    preds = model.predict(X_te)
-    return preds
+# ==============================================================================
+# STEP 3: MAKE PREDICTIONS
+# ==============================================================================
+
+def predict(model, test_data, features):
+    """Make predictions, handling NaN properly."""
+    X_test = test_data[features].fillna(0)
+    return model.predict(X_test)
 
 
-def evaluate_model(model, test_df, features, target_col):
-    """Evaluate model performance on test set."""
-    X_te = clean_feature_dtypes(test_df[features], set())
-    y_te = test_df[target_col].to_numpy()
+# ==============================================================================
+# STEP 4: EVALUATE MODEL PERFORMANCE
+# ==============================================================================
+
+def evaluate_predictions(model, test_data, features, target):
+    """
+    Calculate how well the model performs on test data.
     
-    preds = model.predict(X_te)
+    Args:
+        model: Trained XGBoost model
+        test_data: DataFrame with test games
+        features: List of feature column names
+        target: Target column name
     
-    rmse = float(np.sqrt(np.mean((preds - y_te) ** 2)))
-    mae = float(np.mean(np.abs(preds - y_te)))
-    r2 = float(r2_score(y_te, preds))
+    Returns:
+        Dictionary with performance metrics
+    """
+    print("\n" + "="*70)
+    print("EVALUATING MODEL ON TEST DATA")
+    print("="*70)
     
-    print(f"Test RMSE: {rmse:.3f}")
-    print(f"Test MAE: {mae:.3f}")
-    print(f"Test R²: {r2:.3f}")
+    # Get predictions
+    X_test = prepare_features(test_data[features])
+    y_test = test_data[target].values
+    predictions = model.predict(X_test)
+    
+    # Calculate metrics
+    rmse = np.sqrt(mean_squared_error(y_test, predictions))
+    mae = mean_absolute_error(y_test, predictions)
+    r2 = r2_score(y_test, predictions)
+    
+    print(f"\n   TEST SET RESULTS:")
+    print(f"   • RMSE: {rmse:.3f}")
+    print(f"   • MAE:  {mae:.3f}")
+    print(f"   • R²:   {r2:.3f}")
+    print("\n" + "="*70 + "\n")
     
     return {
         'RMSE': rmse,
-        'MAE': mae, 
+        'MAE': mae,
         'R2': r2
     }
 
 
-def correlation_analysis(df, features_list, target_col='PTS'):
-    # Filter to only include features that exist in the dataframe
-    available_features = [col for col in features_list if col in df.columns]
-    
-    # Add target column if not already in features
-    if target_col not in available_features:
-        available_features.append(target_col)
-    
-    # Create correlation matrix
-    corr_matrix = df[available_features].corr()
-    
-    # Create the plot
-    plt.figure(figsize=(15, 12))
-    
-    # Create heatmap
-    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))  # Mask upper triangle
-    sns.heatmap(corr_matrix, 
-                mask=mask,
-                annot=True, 
-                cmap='RdBu_r', 
-                center=0,
-                square=True,
-                fmt='.2f',
-                cbar_kws={"shrink": .8})
-    
-    plt.title('Feature Correlation Matrix', fontsize=16, pad=20)
-    plt.tight_layout()
-    plt.show()
-    
-    target_corrs = corr_matrix[target_col].drop(target_col).abs().sort_values(ascending=False)
-    
-    print("TOP 10 FEATURES MOST CORRELATED WITH TARGET:")
-    print("="*50)
-    for i, (feature, corr) in enumerate(target_corrs.head(10).items(), 1):
-        print(f"{i:2}. {feature:30} {corr:.3f}")
-    
-    return corr_matrix, target_corrs.head(10)
+# ==============================================================================
+# STEP 5: ANALYZE ERRORS (RESIDUALS)
+# ==============================================================================
 
-def remove_highly_correlated_features(df, features_list, target_col='PTS', threshold=0.95):
-    available_features = [col for col in features_list if col in df.columns]
-    
-    if target_col in df.columns and target_col not in available_features:
-        available_features.append(target_col)
-    
-    corr_matrix = df[available_features].corr()
-    
-    high_corr_pairs = []
-    for i in range(len(corr_matrix.columns)):
-        for j in range(i+1, len(corr_matrix.columns)):
-            corr_val = abs(corr_matrix.iloc[i, j])
-            if corr_val > threshold:
-                feat1 = corr_matrix.columns[i]
-                feat2 = corr_matrix.columns[j]
-                high_corr_pairs.append((feat1, feat2, corr_val))
-    
-    high_corr_pairs.sort(key=lambda x: x[2], reverse=True)
-    
-    features_to_remove = set()
-    
-    for feat1, feat2, corr in high_corr_pairs:
-        if feat1 in features_to_remove or feat2 in features_to_remove:
-            continue
-            
-        if feat1 == target_col or feat2 == target_col:
-            continue
-            
-        feat1_target_corr = abs(corr_matrix.loc[feat1, target_col])
-        feat2_target_corr = abs(corr_matrix.loc[feat2, target_col])
-        
-        if feat1_target_corr >= feat2_target_corr:
-            features_to_remove.add(feat2)
-            print(f"REMOVED: {feat2:30} (corr with {feat1}: {corr:.3f})")
-        else:
-            features_to_remove.add(feat1)
-            print(f"REMOVED: {feat1:30} (corr with {feat2}: {corr:.3f})")
-    
-    cleaned_features = [f for f in available_features if f not in features_to_remove and f != target_col]
-    
-    print(f"\nSUMMARY:")
-    print(f"Original features: {len(features_list)}")
-    print(f"Removed features: {len(features_to_remove)}")
-    print(f"Final features: {len(cleaned_features)}")
-    
-    return cleaned_features
-
-def select_features_ngboost(
-    X, y,
-    top_n=40,
-    n_runs=3,
-    validate_both_distributions=True
-):
+def analyze_prediction_errors(model, test_data, features, target):
     """
-    Feature selection optimized for NGBoost (mean + variance modeling)
+    Analyze where the model makes the biggest mistakes.
+    
+    This helps you understand:
+    - Which predictions are most accurate
+    - Which predictions are least accurate
+    - Patterns in the errors
+    
+    Args:
+        model: Trained XGBoost model
+        test_data: DataFrame with test games
+        features: List of feature column names
+        target: Target column name
+    
+    Returns:
+        DataFrame with actual values, predictions, and errors
     """
-    from ngboost import NGBRegressor
-    from ngboost.distns import Normal
-    from sklearn.model_selection import cross_val_score
+    print("\n" + "="*70)
+    print("ANALYZING PREDICTION ERRORS")
+    print("="*70)
     
-    print("Selecting features for NGBoost (mean + variance)...")
+    # Get predictions
+    X_test = prepare_features(test_data[features])
+    predictions = model.predict(X_test)
+    actual = test_data[target].values
     
-    # 1. Standard feature importance (mean-focused)
-    mean_importance = np.zeros(X.shape[1])
+    # Create results DataFrame
+    results = pd.DataFrame({
+        'actual': actual,
+        'predicted': predictions,
+        'error': actual - predictions,
+        'abs_error': np.abs(actual - predictions)
+    })
     
-    for seed in range(n_runs):
-        ngb = NGBRegressor(
-            Dist=Normal,
-            n_estimators=100,
-            learning_rate=0.05,
-            minibatch_frac=0.8,
-            random_state=42 + seed,
-            verbose=False
-        )
-        ngb.fit(X, y)
-        
-        # Handle 2D feature importances (mean + variance) or 1D (mean only)
-        feature_imp = ngb.feature_importances_
-        if feature_imp.ndim == 2:
-            # If 2D, use mean model importances (first row)
-            # Shape is typically (2, n_features) for mean and variance models
-            mean_importance += feature_imp[0]  # Mean model importances
-        else:
-            # If 1D, use directly
-            mean_importance += feature_imp
+    # Add player names and game info if available
+    info_columns = ['PLAYER_NAME', 'MATCHUP', 'MIN']
+    for col in info_columns:
+        if col in test_data.columns:
+            results[col] = test_data[col].values
     
-    mean_importance /= n_runs
+    # Print summary statistics
+    print(f"\n   ERROR STATISTICS:")
+    print(f"   • Mean Error:     {results['error'].mean():.3f}")
+    print(f"   • Std Dev Error:  {results['error'].std():.3f}")
+    print(f"   • Mean Abs Error: {results['abs_error'].mean():.3f}")
     
-    # 2. Variance-specific importance
-    # Features important for modeling uncertainty
-    if validate_both_distributions:
-        print("Analyzing variance modeling importance...")
-        variance_importance = compute_variance_importance(X, y, n_runs=n_runs)
+    # Show worst predictions
+    print(f"\n   WORST 10 PREDICTIONS:")
+    print("   " + "-"*66)
+    worst = results.nlargest(10, 'abs_error')
+    
+    if 'PLAYER_NAME' in worst.columns:
+        display_cols = ['PLAYER_NAME', 'actual', 'predicted', 'error', 'MIN']
+        print(worst[display_cols].to_string(index=False))
     else:
-        variance_importance = np.zeros(X.shape[1])
+        print(worst[['actual', 'predicted', 'error']].to_string(index=False))
     
-    # 3. Combine mean and variance importance
-    # Weight both aspects (adjust weights based on your use case)
-    combined_importance = 0.7 * mean_importance + 0.3 * variance_importance
+    print("\n" + "="*70 + "\n")
     
-    importance_df = pd.DataFrame({
-        'feature': X.columns,
-        'mean_importance': mean_importance,
-        'variance_importance': variance_importance,
-        'combined_importance': combined_importance
-    }).sort_values('combined_importance', ascending=False)
-    
-    # Select top features
-    top_features = importance_df.head(top_n)['feature'].tolist()
-    
-    print(f"\nSelected {len(top_features)} features")
-    print("\nTop 10 features (combined importance):")
-    print(importance_df.head(10).to_string(index=False))
-    
-    # Show features that are variance-heavy
-    variance_heavy = importance_df[
-        (importance_df['variance_importance'] > importance_df['mean_importance']) & 
-        (importance_df['variance_importance'] > 0.01)
-    ].head(5)
-    
-    if len(variance_heavy) > 0:
-        print("\n⚠️  Features especially important for uncertainty estimation:")
-        for _, row in variance_heavy.iterrows():
-            print(f"  - {row['feature']} (var: {row['variance_importance']:.4f}, mean: {row['mean_importance']:.4f})")
-    
-    return X[top_features], top_features, importance_df
-
-
-def compute_variance_importance(X, y, n_runs=3):
-    """
-    Estimate which features are important for variance prediction
-    by looking at how well features predict residual magnitudes
-    """
-    from ngboost import NGBRegressor
-    from ngboost.distns import Normal
-    
-    variance_scores = np.zeros(X.shape[1])
-    
-    for seed in range(n_runs):
-        # First, fit NGBoost to get residuals
-        ngb = NGBRegressor(
-            Dist=Normal,
-            n_estimators=200,
-            learning_rate=0.05,
-            random_state=42 + seed,
-            verbose=False
-        )
-        ngb.fit(X, y)
-        
-        # Get predictions and residuals
-        preds = ngb.predict(X)
-        residuals = np.abs(y - preds)  # Absolute residuals as proxy for variance
-        
-        # Fit XGBoost to predict residual magnitude
-        # Features important here help model heteroskedasticity
-        from xgboost import XGBRegressor
-        xgb = XGBRegressor(
-            n_estimators=100,
-            max_depth=4,
-            learning_rate=0.1,
-            random_state=42 + seed,
-            verbosity=0
-        )
-        xgb.fit(X, residuals)
-        variance_scores += xgb.feature_importances_
-    
-    return variance_scores / n_runs
-
-
-def validate_feature_set_ngboost(X, y, features, cv=5):
-    """
-    Validate feature set using NGBoost-specific metrics:
-    - Mean prediction accuracy (RMSE)
-    - Calibration of uncertainty estimates (NLL)
-    """
-    from ngboost import NGBRegressor
-    from ngboost.distns import Normal
-    from sklearn.model_selection import cross_validate
-    
-    print(f"\nValidating {len(features)} features with {cv}-fold CV...")
-    
-    ngb = NGBRegressor(
-        Dist=Normal,
-        n_estimators=300,
-        learning_rate=0.05,
-        verbose=False
-    )
-    
-    # Custom scorer for negative log-likelihood (lower is better)
-    def ngboost_nll_scorer(estimator, X, y):
-        from ngboost.scores import LogScore
-        dist = estimator.pred_dist(X)
-        return -LogScore(dist).score(y).mean()  # Negative for minimization
-    
-    scoring = {
-        'neg_rmse': 'neg_root_mean_squared_error',
-        'nll': ngboost_nll_scorer  # Measures calibration
-    }
-    
-    scores = cross_validate(
-        ngb, X[features], y,
-        cv=cv,
-        scoring=scoring,
-        return_train_score=False
-    )
-    
-    print(f"RMSE: {-scores['test_neg_rmse'].mean():.4f} (+/- {scores['test_neg_rmse'].std():.4f})")
-    print(f"NLL:  {scores['test_nll'].mean():.4f} (+/- {scores['test_nll'].std():.4f})")
-    print("  ↳ NLL measures uncertainty calibration (lower = better)")
-    
-    return scores
+    return results
 
 def get_residuals(model, test_df, features, target_col='PTS'):
     """Get residuals analysis for regression model."""
@@ -549,9 +379,38 @@ def analyze_residuals(model, test_df, features, target_col='PTS'):
 
 def analyze_shap(model, test_df, features, target_col='PTS'):
     """Generate SHAP analysis for model interpretability."""
-    X_test = test_df[features].copy()
+    
+    # Get the actual features the model expects
+    model_features = model.get_booster().feature_names
+    if model_features is None:
+        # If model doesn't have feature names, use the provided list
+        model_features = features
+    
+    # Check which features are missing from test_df
+    missing_features = [f for f in model_features if f not in test_df.columns]
+    if missing_features:
+        print(f"Warning: {len(missing_features)} features missing from test_df:")
+        for f in missing_features[:10]:  # Show first 10
+            print(f"   - {f}")
+        if len(missing_features) > 10:
+            print(f"   ... and {len(missing_features) - 10} more")
+        
+        # Create missing features with zeros
+        for f in missing_features:
+            test_df[f] = 0.0
+        print(f"   ✓ Filled missing features with 0.0")
+    
+    # Check which features in the list don't exist in model
+    extra_features = [f for f in features if f not in model_features]
+    if extra_features:
+        print(f"⚠️  Warning: {len(extra_features)} features in list not in model (will be ignored)")
+    
+    # Use only the features the model expects, in the correct order
+    X_test = test_df[model_features].copy()
     
     print(f"\nSHAP ANALYSIS:")
+    print(f"   Model expects: {len(model_features)} features")
+    print(f"   Test data has: {len(X_test.columns)} features")
     print("-" * 30)
     
     # Create SHAP explainer
@@ -561,7 +420,7 @@ def analyze_shap(model, test_df, features, target_col='PTS'):
     # Overall top features
     mean_shap = np.abs(shap_values).mean(axis=0)
     feature_importance = pd.DataFrame({
-        'feature': features,
+        'feature': model_features,
         'importance': mean_shap
     }).sort_values('importance', ascending=False)
     
@@ -577,3 +436,167 @@ def analyze_shap(model, test_df, features, target_col='PTS'):
     plt.show()
     
     return model
+
+
+# ==============================================================================
+# CASCADING MODEL: MIN -> USG_PCT -> PTS
+# ==============================================================================
+
+def train_cascading_model(train_data, val_data, 
+                          min_features, usg_features, pts_features,
+                          date_column='GAME_DATE', player_column='PLAYER_ID'):
+    """
+    Train a cascading model that predicts MIN -> USG_PCT -> PTS sequentially.
+    
+    Process:
+    1. Train MIN model using min_features
+    2. Predict MIN for train/val, add as feature
+    3. Train USG_PCT model using usg_features + predicted MIN
+    4. Predict USG_PCT for train/val, add as feature
+    5. Train PTS model using pts_features + predicted MIN + predicted USG_PCT
+    """
+    print("\n" + "="*70)
+    print("TRAINING CASCADING MODEL: MIN -> USG_PCT -> PTS")
+    print("="*70)
+    
+    # ==========================================================================
+    # STEP 1: Train MIN model
+    # ==========================================================================
+    print("\n" + "="*70)
+    print("STEP 1: Training MIN Model")
+    print("="*70)
+    
+    min_model, min_metrics = train_model(
+        train_data=train_data,
+        val_data=val_data,
+        features=min_features,
+        target='MIN',
+        date_column=date_column,
+        player_column=player_column
+    )
+    
+    # Predict MIN for train and val
+    print("\n📊 Predicting MIN for cascading features...")
+    train_min_pred = predict(min_model, train_data, min_features)
+    val_min_pred = predict(min_model, val_data, min_features)
+    
+    # Add predicted MIN to datasets
+    train_with_min = train_data.copy()
+    train_with_min['PREDICTED_MIN'] = train_min_pred
+    val_with_min = val_data.copy()
+    val_with_min['PREDICTED_MIN'] = val_min_pred
+    
+    print(f"   Train MIN predictions: min={train_min_pred.min():.2f}, max={train_min_pred.max():.2f}, mean={train_min_pred.mean():.2f}")
+    print(f"   Val MIN predictions:   min={val_min_pred.min():.2f}, max={val_min_pred.max():.2f}, mean={val_min_pred.mean():.2f}")
+    
+    # ==========================================================================
+    # STEP 2: Train USG_PCT model (with predicted MIN)
+    # ==========================================================================
+    print("\n" + "="*70)
+    print("STEP 2: Training USG_PCT Model (with PREDICTED_MIN)")
+    print("="*70)
+    
+    # Add PREDICTED_MIN to USG features
+    usg_features_with_min = usg_features + ['PREDICTED_MIN']
+    
+    usg_model, usg_metrics = train_model(
+        train_data=train_with_min,
+        val_data=val_with_min,
+        features=usg_features_with_min,
+        target='USG_PCT',
+        date_column=date_column,
+        player_column=player_column
+    )
+    
+    # Predict USG_PCT for train and val
+    print("\n📊 Predicting USG_PCT for cascading features...")
+    train_usg_pred = predict(usg_model, train_with_min, usg_features_with_min)
+    val_usg_pred = predict(usg_model, val_with_min, usg_features_with_min)
+    
+    # Add predicted USG_PCT to datasets
+    train_with_min_usg = train_with_min.copy()
+    train_with_min_usg['PREDICTED_USG_PCT'] = train_usg_pred
+    val_with_min_usg = val_with_min.copy()
+    val_with_min_usg['PREDICTED_USG_PCT'] = val_usg_pred
+    
+    print(f"   Train USG predictions: min={train_usg_pred.min():.2f}, max={train_usg_pred.max():.2f}, mean={train_usg_pred.mean():.2f}")
+    print(f"   Val USG predictions:   min={val_usg_pred.min():.2f}, max={val_usg_pred.max():.2f}, mean={val_usg_pred.mean():.2f}")
+    
+    # ==========================================================================
+    # STEP 3: Train PTS model (with predicted MIN + USG_PCT)
+    # ==========================================================================
+    print("\n" + "="*70)
+    print("STEP 3: Training PTS Model (with PREDICTED_MIN + PREDICTED_USG_PCT)")
+    print("="*70)
+    
+    # Add PREDICTED_MIN and PREDICTED_USG_PCT to PTS features
+    pts_features_with_cascade = pts_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
+    
+    pts_model, pts_metrics = train_model(
+        train_data=train_with_min_usg,
+        val_data=val_with_min_usg,
+        features=pts_features_with_cascade,
+        target='PTS',
+        date_column=date_column,
+        player_column=player_column
+    )
+    
+    # ==========================================================================
+    # FINAL SUMMARY
+    # ==========================================================================
+    print("\n" + "="*70)
+    print("CASCADING MODEL TRAINING COMPLETE!")
+    print("="*70)
+    print("\nFINAL METRICS SUMMARY:")
+    print(f"\n   MIN Model:")
+    print(f"      RMSE: {min_metrics['RMSE']:.3f}")
+    print(f"      MAE:  {min_metrics['MAE']:.3f}")
+    print(f"      R²:   {min_metrics['R2']:.3f}")
+    
+    print(f"\n   USG_PCT Model:")
+    print(f"      RMSE: {usg_metrics['RMSE']:.3f}")
+    print(f"      MAE:  {usg_metrics['MAE']:.3f}")
+    print(f"      R²:   {usg_metrics['R2']:.3f}")
+    
+    print(f"\n   PTS Model:")
+    print(f"      RMSE: {pts_metrics['RMSE']:.3f}")
+    print(f"      MAE:  {pts_metrics['MAE']:.3f}")
+    print(f"      R²:   {pts_metrics['R2']:.3f}")
+    print("="*70 + "\n")
+    
+    return {
+        'min_model': min_model,
+        'usg_model': usg_model,
+        'pts_model': pts_model,
+        'metrics': {
+            'MIN': min_metrics,
+            'USG_PCT': usg_metrics,
+            'PTS': pts_metrics
+        }
+    }
+
+
+def predict_cascading(models_dict, test_data, min_features, usg_features, pts_features):
+    """
+    Make predictions using the cascading model approach.
+    """
+    # Step 1: Predict MIN
+    min_pred = predict(models_dict['min_model'], test_data, min_features)
+    
+    # Step 2: Add predicted MIN and predict USG_PCT
+    test_with_min = test_data.copy()
+    test_with_min['PREDICTED_MIN'] = min_pred
+    usg_features_with_min = usg_features + ['PREDICTED_MIN']
+    usg_pred = predict(models_dict['usg_model'], test_with_min, usg_features_with_min)
+    
+    # Step 3: Add predicted USG_PCT and predict PTS
+    test_with_min_usg = test_with_min.copy()
+    test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
+    pts_features_with_cascade = pts_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
+    pts_pred = predict(models_dict['pts_model'], test_with_min_usg, pts_features_with_cascade)
+    
+    return {
+        'MIN': min_pred,
+        'USG_PCT': usg_pred,
+        'PTS': pts_pred
+    }
