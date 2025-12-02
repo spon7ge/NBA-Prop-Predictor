@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2, leaguedashteamstats
 from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive, nameDict
-from PRODUCTION.pipelineV2 import findOpp, getUpcomingGamesCached
+from PRODUCTION.helperFunctions import findOpp, getUpcomingGamesCached
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -94,28 +94,25 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res.append(int(player_name in projectedStartingFive[team]))
 
     # ============================
-    # 4 — Days Rest & B2B Flag
+    # 2 — Star Sat Out
+    # ============================
+    star_sat_out = int(teamStarPlayer[team] not in projectedStartingFive[team])
+    res.append(star_sat_out)
+
+    # ============================
+    # 3 — Days Rest
     # ============================
     last_game = pd.to_datetime(player_df["GAME_DATE"]).max()
     days_rested = (pd.to_datetime(current_date) - last_game).days
-    b2b = int(days_rested == 1)
-
-    res.append(b2b)
     res.append(days_rested)
 
     # ============================
-    # 5 — Usual Starters Available
+    # 4 — Usual Starters Available
     # ============================
     main_starters = set(mainStartingFive[team])
     projected_starters = set(projectedStartingFive[team])
     missing_starters = len(main_starters - projected_starters)
-
     res.append(missing_starters)
-
-    # ============================
-    # 6 — Games Played
-    # ============================
-    res.append(len(player_df))
 
     # ============================
     # NEW FEATURES — MIN Ceiling/Floor L5 & Interactions
@@ -166,7 +163,27 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res.append(star_missing * star_boost)
 
     # ============================
-    # 10 — Location: Home / Away
+    # 10 — SPD L5 and L10 Over Baseline
+    # ============================
+    if "SPD" in player_df.columns:
+        spd_avg_to_date = safe_mean(player_df["SPD"])
+        spd_l5 = safe_mean(player_df["SPD"].tail(5))
+        spd_l10 = safe_mean(player_df["SPD"].tail(10))
+        
+        # Calculate ratios (over baseline)
+        epsilon = 1e-8
+        spd_l5_over_baseline = round(spd_l5 / (spd_avg_to_date + epsilon), 2) if spd_avg_to_date > 0 else 1.0
+        spd_l10_over_baseline = round(spd_l10 / (spd_avg_to_date + epsilon), 2) if spd_avg_to_date > 0 else 1.0
+    else:
+        # If SPD column doesn't exist, use default values
+        spd_l5_over_baseline = 1.0
+        spd_l10_over_baseline = 1.0
+    
+    res.append(spd_l5_over_baseline)
+    res.append(spd_l10_over_baseline)
+
+    # ============================
+    # 11 — Location: Home / Away
     # ============================
     home_df = player_df[player_df["HOME_GAME"] == 1]
     away_df = player_df[player_df["HOME_GAME"] == 0]
@@ -177,12 +194,12 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res.append(home_flag * (home_min - avg_min) + (1 - home_flag) * (away_min - avg_min))
 
     # ============================
-    # 11 — Matchup MIN Delta
+    # 12 — Matchup MIN Delta
     # ============================
     res.append(safe_delta(matchup_df["MIN"], avg_min))
 
     # ============================
-    # 12 — Team Pace vs League Pace
+    # 13 — Team Pace vs League Pace
     # ============================
     league_pace_avg = safe_mean(league_df["PACE"])
     res.append(safe_mean(team_df["TEAM_PACE"]) - league_pace_avg)
@@ -192,7 +209,7 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res.append(expected_pace)
 
     # ============================
-    # 13 — Opponent Defensive Context
+    # 14 — Opponent Defensive Context
     # ============================
     league_def_avg = safe_mean(league_df["DEF_RATING"])
     opp_def_avg = safe_mean(opp_team_df["TEAM_DEF_RATING"])

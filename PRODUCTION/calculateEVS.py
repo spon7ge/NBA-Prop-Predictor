@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, nbinom, truncnorm
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from PRODUCTION.teamInfo import *
-from PRODUCTION.pipelineV2 import *
+from PRODUCTION.helperFunctions import *
 from itertools import combinations
 from PRODUCTION.teamInfo import nameDict
 from PRODUCTION.featureEngine.feature_engine import FeatureEngine
@@ -178,11 +178,11 @@ def _load_odds_cache(date_str):
 
 def get_cached_prediction_v2(player_name, data, engine, current_date, projectedStartingFive, mainStartingFive, teamStarPlayer, league_df, findOpp):
     """
-    Prediction function using FeatureEngine with Poisson for points.
-    Uses XGBoost for MIN and USG, then Poisson for PTS (incorporating predicted MIN and USG).
+    Prediction function using FeatureEngine with NGBOOST for points.
+    Uses XGBoost for MIN and USG, then NGBOOST for PTS (incorporating predicted MIN and USG).
     Returns prediction dict with: prediction, sigma, mu_log, sigma_log
     """
-    from PRODUCTION.featureEngine.poisson_points import predict_points_poisson
+    from PRODUCTION.featureEngine.ngboost_points import predict_points_ngboost
     
     cache_key = f"{player_name}_{current_date}"
     
@@ -216,8 +216,11 @@ def get_cached_prediction_v2(player_name, data, engine, current_date, projectedS
                 findOpp=findOpp
             )
             
-            # Get Poisson prediction for points (incorporating predicted minutes and usage)
-            poisson_result = predict_points_poisson(
+            # Get NGBOOST prediction for points (incorporating predicted minutes and usage)
+            # Pass model_wrapper from engine if available
+            model_wrapper = getattr(engine, 'ngboost_model_wrapper', None)
+            
+            ngboost_result = predict_points_ngboost(
                 player_name=player_name,
                 data=data,
                 date=current_date,
@@ -227,32 +230,47 @@ def get_cached_prediction_v2(player_name, data, engine, current_date, projectedS
                 league_df=league_df,
                 findOpp=findOpp,
                 predicted_minutes=pred_minutes,
-                predicted_usage=pred_usage
+                predicted_usage=pred_usage,
+                model_wrapper=model_wrapper
             )
             
-            if poisson_result is None:
+            if ngboost_result is None:
                 return None
             
-            # Get prediction and sigma from Poisson model
-            pred = round(float(poisson_result['predicted_points']), 3)
-            sigma = round(float(poisson_result['sigma']), 3)
+            # Get prediction and sigma from NGBOOST model
+            pred = round(float(ngboost_result['predicted_points']), 3)
+            sigma = round(float(ngboost_result.get('sigma', 0)), 3)
+            mu = float(ngboost_result.get('mu', pred))
+            variance = float(ngboost_result.get('variance', sigma ** 2))
             
-            # For Poisson, the standard deviation is sqrt(lambda), but we use the posterior_std
-            # For probability calculations, use log-space approximation
+            # For backward compatibility, calculate log-space parameters
             mu_log = np.log1p(pred)
-            # Use sigma from Poisson model, convert to log-space approximation
-            # For Poisson, variance = lambda, so std = sqrt(lambda)
-            # In log space, we approximate sigma_log based on the relative uncertainty
             sigma_log = max(0.10, min(0.25, sigma / pred)) if pred > 0 else 0.15
             
-            _prediction_cache[cache_key] = {
-                'prediction': pred,  # Original space (for display) - this is lambda from Poisson
-                'sigma': sigma,  # Original space (for display) - posterior std from Poisson
-                'mu_log': mu_log,  # Log space (for probability calculations)
-                'sigma_log': sigma_log,  # Log space (for probability calculations)
+            # Store NGBOOST parameters
+            # Check if using Negative Binomial distribution
+            distribution_type = ngboost_result.get('distribution', 'normal')
+            
+            result_dict = {
+                'prediction': pred,  # Original space (for display) - this is mu from NGBOOST
+                'sigma': sigma,  # Original space (for display) - std from NGBOOST
+                'mu_log': mu_log,  # Log space (for backward compatibility)
+                'sigma_log': sigma_log,  # Log space (for backward compatibility)
+                'mu': mu,  # Mean (mu) from NGBOOST
+                'variance': variance,  # Variance from NGBOOST
+                'distribution': distribution_type,  # Distribution type
             }
+            
+            # Add Negative Binomial parameters if available
+            if 'n' in ngboost_result and 'p' in ngboost_result:
+                result_dict['n'] = ngboost_result['n']
+                result_dict['p'] = ngboost_result['p']
+            
+            _prediction_cache[cache_key] = result_dict
         except Exception as e:
             print(f"Error getting prediction for {player_name}: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     return _prediction_cache[cache_key]
 
@@ -297,6 +315,22 @@ def flag_sigma(s):
         return 'Med'
     else:
         return 'High'
+
+def prob_over_truncnorm(line, mu, sigma, lower_bound=0, upper_bound=50):
+    """
+    Calculate probability of going over a line using truncated normal distribution.
+    """
+    # Convert to standardized bounds
+    a = (lower_bound - mu) / sigma
+    b = (upper_bound - mu) / sigma
+    
+    # Create truncated distribution
+    dist = truncnorm(a, b, loc=mu, scale=sigma)
+    
+    # Calculate probability of going over (using 0.5 adjustment for line)
+    prob_over = 1 - dist.cdf(line + 0.5)
+    
+    return float(prob_over)
 
 def limit_player_appearances(results_df, max_appearances=3):
     """Limit how many times each player appears"""
@@ -420,7 +454,6 @@ def calculate2LegBets(data, bookmakers, engine, current_date,
     print(f"Generated {len(valid_combinations)} valid 2-leg combinations")
     
     # Constants
-    from scipy.stats import norm
     payout_multiple = 3.0
     
     results = []
@@ -442,17 +475,66 @@ def calculate2LegBets(data, bookmakers, engine, current_date,
         line1 = float(player_lines[player1]['LINE'])
         line2 = float(player_lines[player2]['LINE'])
         
-        # Get log-space parameters for probability calculations
-        mu1_log = pred1_data['mu_log']
-        sigma1_log = pred1_data['sigma_log']
-        mu2_log = pred2_data['mu_log']
-        sigma2_log = pred2_data['sigma_log']
+        # Get distribution parameters - prioritize Negative Binomial, then Normal
+        distribution1 = pred1_data.get('distribution', 'normal')
+        distribution2 = pred2_data.get('distribution', 'normal')
         
-        # Calculate probabilities in log space
-        p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
-        p1_under = 1.0 - p1_over
-        p2_over = float(1 - norm.cdf(np.log1p(line2), loc=mu2_log, scale=sigma2_log))
-        p2_under = 1.0 - p2_over
+        # Calculate probabilities using Negative Binomial if available (more accurate for count data)
+        if distribution1 == 'negative_binomial':
+            n1 = pred1_data.get('n', None)
+            p1 = pred1_data.get('p', None)
+            if n1 is not None and p1 is not None:
+                line1_int = int(np.floor(line1))
+                p1_over = float(nbinom.sf(line1_int, n1, p1))
+                p1_under = 1.0 - p1_over
+            else:
+                # Fallback to Truncated Normal if n/p not available
+                mu1 = pred1_data.get('mu', pred1_data['prediction'])
+                sigma1 = pred1_data.get('sigma', sigma1)
+                p1_over = prob_over_truncnorm(line1, mu1, sigma1)
+                p1_under = 1.0 - p1_over
+        elif distribution1 == 'normal':
+            # NGBOOST provides mu and sigma in original space
+            mu1 = pred1_data.get('mu', pred1_data['prediction'])
+            sigma1 = pred1_data.get('sigma', sigma1)
+            p1_over = prob_over_truncnorm(line1, mu1, sigma1)
+            p1_under = 1.0 - p1_over
+        else:
+            # Final fallback to log-normal approximation
+            mu1 = pred1_data.get('mu', pred1_data['prediction'])
+            mu1_log = pred1_data.get('mu_log', np.log1p(mu1))
+            sigma1 = pred1_data.get('sigma', sigma1)
+            sigma1_log = pred1_data.get('sigma_log', sigma1 / mu1 if mu1 > 0 else 0.15)
+            p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
+            p1_under = 1.0 - p1_over
+        
+        if distribution2 == 'negative_binomial':
+            n2 = pred2_data.get('n', None)
+            p2 = pred2_data.get('p', None)
+            if n2 is not None and p2 is not None:
+                line2_int = int(np.floor(line2))
+                p2_over = float(nbinom.sf(line2_int, n2, p2))
+                p2_under = 1.0 - p2_over
+            else:
+                # Fallback to Truncated Normal if n/p not available
+                mu2 = pred2_data.get('mu', pred2_data['prediction'])
+                sigma2 = pred2_data.get('sigma', sigma2)
+                p2_over = prob_over_truncnorm(line2, mu2, sigma2)
+                p2_under = 1.0 - p2_over
+        elif distribution2 == 'normal':
+            # NGBOOST provides mu and sigma in original space
+            mu2 = pred2_data.get('mu', pred2_data['prediction'])
+            sigma2 = pred2_data.get('sigma', sigma2)
+            p2_over = prob_over_truncnorm(line2, mu2, sigma2)
+            p2_under = 1.0 - p2_over
+        else:
+            # Final fallback to log-normal approximation
+            mu2 = pred2_data.get('mu', pred2_data['prediction'])
+            mu2_log = pred2_data.get('mu_log', np.log1p(mu2))
+            sigma2 = pred2_data.get('sigma', sigma2)
+            sigma2_log = pred2_data.get('sigma_log', sigma2 / mu2 if mu2 > 0 else 0.15)
+            p2_over = float(1 - norm.cdf(np.log1p(line2), loc=mu2_log, scale=sigma2_log))
+            p2_under = 1.0 - p2_over
         
         # Look up worst-case odds for BOTH sides
         odds1_over = get_player_odds_from_csv(player1, line1, current_date_str, 'over')
@@ -692,7 +774,6 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
     print(f"Generated {len(valid_combinations)} valid 3-leg combinations")
     
     # Constants
-    from scipy.stats import norm
     payout_multiple = 6.0
     
     results = []
@@ -720,21 +801,91 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
         line2 = float(player_lines[player2]['LINE'])
         line3 = float(player_lines[player3]['LINE'])
         
-        # Get log-space parameters for probability calculations
-        mu1_log = pred1_data['mu_log']
-        sigma1_log = pred1_data['sigma_log']
-        mu2_log = pred2_data['mu_log']
-        sigma2_log = pred2_data['sigma_log']
-        mu3_log = pred3_data['mu_log']
-        sigma3_log = pred3_data['sigma_log']
+        # Get distribution parameters - prioritize Negative Binomial, then Normal
+        distribution1 = pred1_data.get('distribution', 'normal')
+        distribution2 = pred2_data.get('distribution', 'normal')
+        distribution3 = pred3_data.get('distribution', 'normal')
         
-        # Calculate probabilities in log space
-        p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
-        p1_under = 1.0 - p1_over
-        p2_over = float(1 - norm.cdf(np.log1p(line2), loc=mu2_log, scale=sigma2_log))
-        p2_under = 1.0 - p2_over
-        p3_over = float(1 - norm.cdf(np.log1p(line3), loc=mu3_log, scale=sigma3_log))
-        p3_under = 1.0 - p3_over
+        # Calculate probabilities using Negative Binomial if available
+        if distribution1 == 'negative_binomial':
+            n1 = pred1_data.get('n', None)
+            p1 = pred1_data.get('p', None)
+            if n1 is not None and p1 is not None:
+                line1_int = int(np.floor(line1))
+                p1_over = float(nbinom.sf(line1_int, n1, p1))
+                p1_under = 1.0 - p1_over
+            else:
+                # Fallback to Truncated Normal if n/p not available
+                mu1 = pred1_data.get('mu', pred1_data['prediction'])
+                sigma1 = pred1_data.get('sigma', sigma1)
+                p1_over = prob_over_truncnorm(line1, mu1, sigma1)
+                p1_under = 1.0 - p1_over
+        elif distribution1 == 'normal':
+            # NGBOOST provides mu and sigma in original space
+            mu1 = pred1_data.get('mu', pred1_data['prediction'])
+            sigma1 = pred1_data.get('sigma', sigma1)
+            p1_over = prob_over_truncnorm(line1, mu1, sigma1)
+            p1_under = 1.0 - p1_over
+        else:
+            # Final fallback to log-normal approximation
+            mu1 = pred1_data.get('mu', pred1_data['prediction'])
+            mu1_log = pred1_data.get('mu_log', np.log1p(mu1))
+            sigma1 = pred1_data.get('sigma', sigma1)
+            sigma1_log = pred1_data.get('sigma_log', sigma1 / mu1 if mu1 > 0 else 0.15)
+            p1_over = float(1 - norm.cdf(np.log1p(line1), loc=mu1_log, scale=sigma1_log))
+            p1_under = 1.0 - p1_over
+        
+        if distribution2 == 'negative_binomial':
+            n2 = pred2_data.get('n', None)
+            p2 = pred2_data.get('p', None)
+            if n2 is not None and p2 is not None:
+                line2_int = int(np.floor(line2))
+                p2_over = float(nbinom.sf(line2_int, n2, p2))
+                p2_under = 1.0 - p2_over
+            else:
+                # Fallback to Truncated Normal if n/p not available
+                mu2 = pred2_data.get('mu', pred2_data['prediction'])
+                sigma2 = pred2_data.get('sigma', sigma2)
+                p2_over = prob_over_truncnorm(line2, mu2, sigma2)
+                p2_under = 1.0 - p2_over
+        elif distribution2 == 'normal':
+            mu2 = pred2_data.get('mu', pred2_data['prediction'])
+            sigma2 = pred2_data.get('sigma', sigma2)
+            p2_over = prob_over_truncnorm(line2, mu2, sigma2)
+            p2_under = 1.0 - p2_over
+        else:
+            mu2 = pred2_data.get('mu', pred2_data['prediction'])
+            mu2_log = pred2_data.get('mu_log', np.log1p(mu2))
+            sigma2 = pred2_data.get('sigma', sigma2)
+            sigma2_log = pred2_data.get('sigma_log', sigma2 / mu2 if mu2 > 0 else 0.15)
+            p2_over = float(1 - norm.cdf(np.log1p(line2), loc=mu2_log, scale=sigma2_log))
+            p2_under = 1.0 - p2_over
+        
+        if distribution3 == 'negative_binomial':
+            n3 = pred3_data.get('n', None)
+            p3 = pred3_data.get('p', None)
+            if n3 is not None and p3 is not None:
+                line3_int = int(np.floor(line3))
+                p3_over = float(nbinom.sf(line3_int, n3, p3))
+                p3_under = 1.0 - p3_over
+            else:
+                # Fallback to Truncated Normal if n/p not available
+                mu3 = pred3_data.get('mu', pred3_data['prediction'])
+                sigma3 = pred3_data.get('sigma', sigma3)
+                p3_over = prob_over_truncnorm(line3, mu3, sigma3)
+                p3_under = 1.0 - p3_over
+        elif distribution3 == 'normal':
+            mu3 = pred3_data.get('mu', pred3_data['prediction'])
+            sigma3 = pred3_data.get('sigma', sigma3)
+            p3_over = prob_over_truncnorm(line3, mu3, sigma3)
+            p3_under = 1.0 - p3_over
+        else:
+            mu3 = pred3_data.get('mu', pred3_data['prediction'])
+            mu3_log = pred3_data.get('mu_log', np.log1p(mu3))
+            sigma3 = pred3_data.get('sigma', sigma3)
+            sigma3_log = pred3_data.get('sigma_log', sigma3 / mu3 if mu3 > 0 else 0.15)
+            p3_over = float(1 - norm.cdf(np.log1p(line3), loc=mu3_log, scale=sigma3_log))
+            p3_under = 1.0 - p3_over
         
         # Look up worst-case odds for BOTH sides
         odds1_over = get_player_odds_from_csv(player1, line1, current_date_str, 'over')

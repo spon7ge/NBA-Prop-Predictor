@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from nba_api.stats.endpoints import scoreboardv2, scheduleleaguev2, leaguedashteamstats
 from PRODUCTION.teamInfo import mainStartingFive, teamStarPlayer, projectedStartingFive, nameDict
-from PRODUCTION.pipelineV2 import findOpp, getUpcomingGamesCached
+from PRODUCTION.helperFunctions import findOpp, getUpcomingGamesCached
 
 today = datetime.today().strftime('%Y-%m-%d')
 
@@ -98,12 +98,19 @@ def player_usg_features(player_name, data, current_date, projectedStartingFive, 
     res.append(int(player_name in projectedStartingFive[team]))
 
     # ==========================================================
-    # 2 — Games Played
+    # 2 — PLAYER_IS_TEAM_STAR
     # ==========================================================
-    res.append(len(player_df))
+    player_is_team_star = int(player_name == teamStarPlayer.get(team, None))
+    res.append(player_is_team_star)
 
     # ==========================================================
-    # 3 — LINEUP_FGA_SHARE_AVG (new)
+    # 3 — STAR_SAT_OUT
+    # ==========================================================
+    star_sat_out = int(teamStarPlayer.get(team, None) not in projectedStartingFive.get(team, []))
+    res.append(star_sat_out)
+
+    # ==========================================================
+    # 4 — LINEUP_FGA_SHARE_AVG
     # ==========================================================
     # Calculate average FGA share of projected starters
     projected_starters = projectedStartingFive[team]
@@ -124,13 +131,21 @@ def player_usg_features(player_name, data, current_date, projectedStartingFive, 
     res.append(lineup_fga_share_avg)
 
     # ==========================================================
-    # 4 — USG_PCT_AVG_TO_DATE
+    # 5 — USG_PCT_AVG_TO_DATE
     # ==========================================================
     usg_avg = safe_mean(player_df["USG_PCT"])
     res.append(usg_avg)
 
     # ==========================================================
-    # 5 — USG_PER_MIN
+    # 6 — USG_PCT_L5_OVER_BASELINE
+    # ==========================================================
+    usg_l5 = safe_mean(player_df["USG_PCT"].tail(5))
+    epsilon = 1e-8
+    usg_l5_over_baseline = round(usg_l5 / (usg_avg + epsilon), 2) if usg_avg > 0 else 1.0
+    res.append(usg_l5_over_baseline)
+
+    # ==========================================================
+    # 7 — USG_PER_MIN
     # ==========================================================
     min_avg = safe_mean(player_df["MIN"])
     usg_per_min = round((usg_avg / min_avg) + 0.001, 2) if min_avg > 0 else 0.0

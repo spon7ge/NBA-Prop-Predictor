@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
-Isaiah Jackson,Pelle Larsson,Jordan Goodwin,6.5,7.5,5.5,9.03,10.21,9.37,0.998,0.997,1.0,over,over,over,0,437.49,0.875,Low,Low,Low
-Spencer Jones,Keyonte George,Rui Hachimura,5.5,19.5,11.5,4.04,25.37,14.86,0.979,0.994,0.991,under,over,over,0,421.28,0.843,Low,Low,Low
-Duncan Robinson,Brandon Miller,Svi Mykhailiuk,11.5,19.5,7.5,14.28,15.92,9.72,0.978,0.973,0.99,over,under,over,0,408.27,0.817,Low,Low,Low
-Kawhi Leonard,Miles Bridges,Austin Reaves,22.5,19.5,23.5,26.75,23.03,28.63,0.952,0.944,0.971,over,over,over,0,371.29,0.743,Low,Low,Low
-Norman Powell,Anthony Davis,LeBron James,20.5,19.5,19.5,24.32,16.67,16.08,0.949,0.932,0.935,over,under,under,0,346.58,0.693,Low,Low,Low
-Khris Middleton,Kel'el Ware,Goga Bitadze,11.5,11.5,5.5,9.79,13.61,6.54,0.929,0.941,0.931,under,over,over,0,339.52,0.679,Low,Low,Low
-Caris LeVert,Klay Thompson,Reed Sheppard,8.5,10.5,13.5,9.93,12.23,15.76,0.92,0.919,0.926,over,over,over,0,322.67,0.645,Low,Low,Low
-Jay Huff,Andrew Wiggins,Jalen Suggs,10.5,15.5,16.5,9.11,17.94,14.31,0.901,0.916,0.91,under,over,under,0,305.49,0.611,Low,Low,Low
-John Collins,Nikola Vučević,Brandon Williams,14.5,17.5,13.5,12.51,15.23,11.8,0.916,0.905,0.894,under,under,under,0,300.06,0.6,Low,Low,Low
-Nicolas Batum,Collin Sexton,Cameron Johnson,5.5,13.5,15.5,4.68,15.26,13.65,0.883,0.874,0.883,under,over,under,0,267.89,0.536,Low,Low,Low
+VJ Edgecombe,Jaden McDaniels,Aaron Wiggins,13.5,13.5,10.5,21.49,22.08,18.89,0.855,0.89,0.875,over,over,over,1,259.87,0.52,High,High,High
+Jordan Walsh,Zion Williamson,Jaylin Williams,5.5,22.5,4.5,10.68,15.67,9.0,0.852,0.87,0.842,over,under,over,1,237.21,0.474,Low,High,Low
+Cam Whitmore,Toumani Camara,Trey Murphy III,13.5,12.5,19.5,9.98,18.61,14.09,0.822,0.777,0.821,under,over,under,0,183.24,0.366,Low,High,High
+Marvin Bagley III,Neemias Queta,Derik Queen,13.5,9.5,12.5,10.18,14.78,18.81,0.803,0.776,0.798,under,over,over,0,168.59,0.337,Low,High,High
+Bilal Coulibaly,Jaylen Wells,Julius Randle,11.5,12.5,21.5,17.41,18.26,27.64,0.772,0.768,0.793,over,over,over,1,153.87,0.308,High,High,High
+Jerami Grant,Naz Reid,Will Richard,18.5,13.5,6.5,23.62,19.38,9.84,0.768,0.788,0.765,over,over,over,0,149.66,0.299,High,High,Low
+Jared McCain,Jamal Shead,Cam Spencer,13.5,6.5,10.5,11.92,9.83,15.08,0.726,0.738,0.731,under,over,over,0,111.36,0.223,Low,Low,High
+Tyrese Maxey,Cedric Coward,Moses Moody,32.5,13.5,12.5,29.53,17.99,17.22,0.714,0.728,0.722,under,over,over,0,102.48,0.205,High,High,High
+Jakob Poeltl,Julian Champagnie,Chet Holmgren,10.5,11.5,16.5,14.27,16.17,21.14,0.713,0.716,0.72,over,over,over,0,98.4,0.197,High,High,High
+Keldon Johnson,Saddiq Bey,Buddy Hield,12.5,14.5,8.5,16.49,18.44,11.24,0.684,0.676,0.675,over,over,over,0,68.69,0.137,High,High,Med
