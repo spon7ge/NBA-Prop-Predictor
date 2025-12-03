@@ -93,24 +93,19 @@ def player_usg_features(player_name, data, current_date, projectedStartingFive, 
     res = []
 
     # ==========================================================
-    # 1 — STARTING STATUS
-    # ==========================================================
-    res.append(int(player_name in projectedStartingFive[team]))
-
-    # ==========================================================
-    # 2 — PLAYER_IS_TEAM_STAR
+    # 1 — PLAYER_IS_TEAM_STAR
     # ==========================================================
     player_is_team_star = int(player_name == teamStarPlayer.get(team, None))
     res.append(player_is_team_star)
 
     # ==========================================================
-    # 3 — STAR_SAT_OUT
+    # 2 — STAR_SAT_OUT
     # ==========================================================
     star_sat_out = int(teamStarPlayer.get(team, None) not in projectedStartingFive.get(team, []))
     res.append(star_sat_out)
 
     # ==========================================================
-    # 4 — LINEUP_FGA_SHARE_AVG
+    # 3 — LINEUP_FGA_SHARE_AVG
     # ==========================================================
     # Calculate average FGA share of projected starters
     projected_starters = projectedStartingFive[team]
@@ -131,13 +126,13 @@ def player_usg_features(player_name, data, current_date, projectedStartingFive, 
     res.append(lineup_fga_share_avg)
 
     # ==========================================================
-    # 5 — USG_PCT_AVG_TO_DATE
+    # 4 — USG_PCT_AVG_TO_DATE
     # ==========================================================
     usg_avg = safe_mean(player_df["USG_PCT"])
     res.append(usg_avg)
 
     # ==========================================================
-    # 6 — USG_PCT_L5_OVER_BASELINE
+    # 5 — USG_PCT_L5_OVER_BASELINE
     # ==========================================================
     usg_l5 = safe_mean(player_df["USG_PCT"].tail(5))
     epsilon = 1e-8
@@ -145,11 +140,39 @@ def player_usg_features(player_name, data, current_date, projectedStartingFive, 
     res.append(usg_l5_over_baseline)
 
     # ==========================================================
-    # 7 — USG_PER_MIN
+    # 6 — USG_PER_MIN
     # ==========================================================
     min_avg = safe_mean(player_df["MIN"])
     usg_per_min = round((usg_avg / min_avg) + 0.001, 2) if min_avg > 0 else 0.0
     res.append(usg_per_min)
+
+    # ==========================================================
+    # 7 — PASSES_PER_TOUCHES
+    # ==========================================================
+    # Calculate averages first
+    pass_avg = safe_mean(player_df["PASS"]) if "PASS" in player_df.columns else 0.0
+    tchs_avg = safe_mean(player_df["TCHS"]) if "TCHS" in player_df.columns else 0.0
+    
+    # Calculate ratio
+    epsilon = 1e-8
+    passes_per_touches = round(pass_avg / (tchs_avg + epsilon), 2) if tchs_avg > 0 else 0.0
+    res.append(passes_per_touches)
+
+    # ==========================================================
+    # 8 — PASS_AVG_TO_DATE
+    # ==========================================================
+    res.append(round(pass_avg, 2))
+
+    # ==========================================================
+    # 9 — SAST_AVG_TO_DATE
+    # ==========================================================
+    sast_avg = safe_mean(player_df["SAST"]) if "SAST" in player_df.columns else 0.0
+    res.append(round(sast_avg, 2))
+
+    # ==========================================================
+    # 10 — TCHS_AVG_TO_DATE
+    # ==========================================================
+    res.append(round(tchs_avg, 2))
 
     return res
 

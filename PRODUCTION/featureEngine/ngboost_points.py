@@ -161,28 +161,46 @@ def build_ngboost_points_features(
     matchup_pts = safe_mean(matchup_df['PTS'])
     
     features['PTS_AVG_TO_DATE'] = pts_avg
-    features['PTS_L5_OVER_BASELINE'] = safe_delta(player_df['PTS'].tail(5), pts_avg)
-    features['PTS_L10_OVER_BASELINE'] = safe_delta(player_df['PTS'].tail(10), pts_avg)
     features['PTS_STD_5_TO_DATE'] = safe_std(player_df['PTS'].tail(5))
     features['PTS_BOOST_STAR_OUT'] = (int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, [])) * 
                                      (safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['PTS']) - pts_avg))
     features['PTS_EXPECTATION_LOCATION'] = (home_flag * (home_pts - pts_avg) + 
                                            (1 - home_flag) * (away_pts - pts_avg))
     
-    # 6. FGA stats
+    # 5b. PTS breakdown stats (OFF_TOV, 2ND_CHANCE, FB, PAINT)
+    pts_off_tov_avg = safe_mean(player_df['PTS_OFF_TOV']) if 'PTS_OFF_TOV' in player_df.columns else 0.0
+    pts_2nd_chance_avg = safe_mean(player_df['PTS_2ND_CHANCE']) if 'PTS_2ND_CHANCE' in player_df.columns else 0.0
+    pts_fb_avg = safe_mean(player_df['PTS_FB']) if 'PTS_FB' in player_df.columns else 0.0
+    pts_paint_avg = safe_mean(player_df['PTS_PAINT']) if 'PTS_PAINT' in player_df.columns else 0.0
+    
+    features['PTS_2ND_CHANCE_L5_OVER_BASELINE'] = safe_delta(player_df['PTS_2ND_CHANCE'].tail(5), pts_2nd_chance_avg) if 'PTS_2ND_CHANCE' in player_df.columns else 0.0
+    features['PTS_2ND_CHANCE_L10_OVER_BASELINE'] = safe_delta(player_df['PTS_2ND_CHANCE'].tail(10), pts_2nd_chance_avg) if 'PTS_2ND_CHANCE' in player_df.columns else 0.0
+    features['PTS_FB_L5_OVER_BASELINE'] = safe_delta(player_df['PTS_FB'].tail(5), pts_fb_avg) if 'PTS_FB' in player_df.columns else 0.0
+    features['PTS_FB_L10_OVER_BASELINE'] = safe_delta(player_df['PTS_FB'].tail(10), pts_fb_avg) if 'PTS_FB' in player_df.columns else 0.0
+    features['PTS_PAINT_L5_OVER_BASELINE'] = safe_delta(player_df['PTS_PAINT'].tail(5), pts_paint_avg) if 'PTS_PAINT' in player_df.columns else 0.0
+    features['PTS_PAINT_L10_OVER_BASELINE'] = safe_delta(player_df['PTS_PAINT'].tail(10), pts_paint_avg) if 'PTS_PAINT' in player_df.columns else 0.0
+    
+    # 6. CFGA stats
+    cfga_avg = safe_mean(player_df['CFGA']) if 'CFGA' in player_df.columns else 0.0
+    features['CFGA_AVG_TO_DATE'] = cfga_avg
+    
+    # 7. UFGA stats
+    ufga_avg = safe_mean(player_df['UFGA']) if 'UFGA' in player_df.columns else 0.0
+    features['UFGA_AVG_TO_DATE'] = ufga_avg
+    features['UFGA_L5_OVER_BASELINE'] = safe_delta(player_df['UFGA'].tail(5), ufga_avg) if 'UFGA' in player_df.columns else 0.0
+    
+    # 8. FGA stats
     fga_avg = safe_mean(player_df['FGA'])
     home_fga = safe_mean(player_df[player_df['HOME_GAME'] == 1]['FGA'])
     away_fga = safe_mean(player_df[player_df['HOME_GAME'] == 0]['FGA'])
     
     features['FGA_AVG_TO_DATE'] = fga_avg
-    features['FGA_L5_OVER_BASELINE'] = safe_delta(player_df['FGA'].tail(5), fga_avg)
-    features['FGA_L10_OVER_BASELINE'] = safe_delta(player_df['FGA'].tail(10), fga_avg)
     features['FGA_BOOST_STAR_OUT'] = (int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, [])) * 
                                      (safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FGA']) - fga_avg))
     features['FGA_EXPECTATION_LOCATION'] = (home_flag * (home_fga - fga_avg) + 
                                            (1 - home_flag) * (away_fga - fga_avg))
     
-    # 7. FTA stats
+    # 9. FTA stats
     fta_avg = safe_mean(player_df['FTA'])
     home_fta = safe_mean(player_df[player_df['HOME_GAME'] == 1]['FTA'])
     away_fta = safe_mean(player_df[player_df['HOME_GAME'] == 0]['FTA'])
@@ -195,7 +213,7 @@ def build_ngboost_points_features(
     features['FTA_EXPECTATION_LOCATION'] = (home_flag * (home_fta - fta_avg) + 
                                            (1 - home_flag) * (away_fta - fta_avg))
     
-    # 8. FG3A stats
+    # 10. FG3A stats
     fg3a_avg = safe_mean(player_df['FG3A'])
     home_fg3a = safe_mean(player_df[player_df['HOME_GAME'] == 1]['FG3A'])
     away_fg3a = safe_mean(player_df[player_df['HOME_GAME'] == 0]['FG3A'])
@@ -229,9 +247,6 @@ def build_ngboost_points_features(
     
     features['FG_PCT_AVG_TO_DATE'] = fg_pct_avg
     features['FG_PCT_L5_OVER_BASELINE'] = safe_delta(player_df['FG_PCT'].tail(5), fg_pct_avg)
-    features['FG_PCT_L10_OVER_BASELINE'] = safe_delta(player_df['FG_PCT'].tail(10), fg_pct_avg)
-    features['FG_PCT_BOOST_STAR_OUT'] = (int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, [])) * 
-                                         (safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FG_PCT']) - fg_pct_avg))
     features['FG_PCT_EXPECTATION_LOCATION'] = (home_flag * (home_fg_pct - fg_pct_avg) + 
                                                (1 - home_flag) * (away_fg_pct - fg_pct_avg))
     features['MATCHUP_FG_PCT_DELTA'] = matchup_fg_pct - fg_pct_avg if not matchup_df.empty else 0.0
@@ -243,12 +258,6 @@ def build_ngboost_points_features(
     matchup_fg3_pct = safe_mean(matchup_df['FG3_PCT'])
     
     features['FG3_PCT_AVG_TO_DATE'] = fg3_pct_avg
-    features['FG3_PCT_L5_OVER_BASELINE'] = safe_delta(player_df['FG3_PCT'].tail(5), fg3_pct_avg)
-    features['FG3_PCT_L10_OVER_BASELINE'] = safe_delta(player_df['FG3_PCT'].tail(10), fg3_pct_avg)
-    features['FG3_PCT_BOOST_STAR_OUT'] = (int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, [])) * 
-                                          (safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FG3_PCT']) - fg3_pct_avg))
-    features['FG3_PCT_EXPECTATION_LOCATION'] = (home_flag * (home_fg3_pct - fg3_pct_avg) + 
-                                                (1 - home_flag) * (away_fg3_pct - fg3_pct_avg))
     features['MATCHUP_FG3_PCT_DELTA'] = matchup_fg3_pct - fg3_pct_avg if not matchup_df.empty else 0.0
     
     # 12. FT_PCT stats
@@ -264,7 +273,6 @@ def build_ngboost_points_features(
                                          (safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FT_PCT']) - ft_pct_avg))
     features['FT_PCT_EXPECTATION_LOCATION'] = (home_flag * (home_ft_pct - ft_pct_avg) + 
                                                (1 - home_flag) * (away_ft_pct - ft_pct_avg))
-    features['MATCHUP_FT_PCT_DELTA'] = matchup_ft_pct - ft_pct_avg if not matchup_df.empty else 0.0
     
     # 13. TS_PCT stats
     ts_pct_avg = safe_mean(player_df['TS_PCT'])
@@ -314,8 +322,6 @@ def build_ngboost_points_features(
     features['FGA_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'FGA')
     features['FTA_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'FTA')
     features['FG3A_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'FG3A')
-    features['POSS_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'POSS')
-    features['USG_PCT_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'USG_PCT')
     features['TS_PCT_VARIANCE_STABILITY'] = calculate_variance_stability(player_df, 'TS_PCT')
     
     # 15. Team/Opponent context
@@ -331,14 +337,12 @@ def build_ngboost_points_features(
     features['TEAM_OFF_RATING_OVER_LEAGUE_AVG'] = team_off - league_off_avg
     features['TEAM_PACE_OVER_LEAGUE_AVG'] = team_pace - league_pace_avg
     features['EXPECTED_PACE'] = (team_pace + opp_pace) / 2
-    features['OPP_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
     features['OPP_PACE_OVER_LEAGUE_AVG'] = opp_pace - league_pace_avg
     
     # 16. Positional defense (simplified - would need position data)
     # For now, use team defense as proxy
     features['GUARD_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
     features['FORWARD_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
-    features['CENTER_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
     
     return features
 

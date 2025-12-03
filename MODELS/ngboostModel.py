@@ -929,3 +929,78 @@ def remove_highly_correlated_features(df, features_list, target_col='PTS', thres
     
     return cleaned_features
 
+# Get feature importance from mean model
+def get_ngboost_feature_importance(model, features):
+    """
+    Extract feature importance from NGBoost model.
+    NGBoost aggregates importance from all base estimators.
+    """
+    importances = np.zeros(len(features))
+    
+    # Sum importances from all base estimators
+    for estimator in model.estimators_:
+        if hasattr(estimator, 'feature_importances_'):
+            importances += estimator.feature_importances_
+    
+    # Normalize
+    if importances.sum() > 0:
+        importances = importances / importances.sum()
+    
+    # Create DataFrame
+    importance_df = pd.DataFrame({
+        'feature': features,
+        'importance': importances
+    }).sort_values('importance', ascending=False)
+    
+    return importance_df
+
+import shap
+
+def analyze_ngboost_shap(mean_model, variance_model, test_df, features, sample_size=1000):
+    """
+    Generate SHAP analysis for NGBoost models.
+    """
+    # Sample data if too large
+    if len(test_df) > sample_size:
+        test_sample = test_df.sample(n=sample_size, random_state=42)
+    else:
+        test_sample = test_df.copy()
+    
+    X_test = test_sample[features].fillna(0)
+    
+    # SHAP for mean model
+    print("🔍 SHAP Analysis for Mean Model:")
+    print("-" * 50)
+    explainer_mean = shap.TreeExplainer(mean_model)
+    shap_values_mean = explainer_mean.shap_values(X_test)
+    
+    # Mean absolute SHAP values
+    mean_shap = np.abs(shap_values_mean).mean(axis=0)
+    importance_df_mean = pd.DataFrame({
+        'feature': features,
+        'importance': mean_shap
+    }).sort_values('importance', ascending=False)
+    
+    print("\nTop 20 Features by SHAP importance (Mean Model):")
+    for idx, row in importance_df_mean.head(20).iterrows():
+        print(f"  {row['feature']:40s} {row['importance']:8.4f}")
+    
+    # SHAP for variance model
+    print("\n🔍 SHAP Analysis for Variance Model:")
+    print("-" * 50)
+    explainer_var = shap.TreeExplainer(variance_model)
+    shap_values_var = explainer_var.shap_values(X_test)
+    
+    # Mean absolute SHAP values
+    mean_shap_var = np.abs(shap_values_var).mean(axis=0)
+    importance_df_var = pd.DataFrame({
+        'feature': features,
+        'importance': mean_shap_var
+    }).sort_values('importance', ascending=False)
+    
+    print("\nTop 20 Features by SHAP importance (Variance Model):")
+    for idx, row in importance_df_var.head(20).iterrows():
+        print(f"  {row['feature']:40s} {row['importance']:8.4f}")
+    
+    return importance_df_mean, importance_df_var, shap_values_mean, shap_values_var
+
