@@ -328,7 +328,7 @@ def analyze_prediction_errors(model, test_data, features, target):
     
     return results
 
-def get_residuals(model, test_df, features, target_col='PTS'):
+def get_residuals(model, test_df, features, target_col):
     """Get residuals analysis for regression model."""
     X_test = test_df[features].copy()
     y_test = test_df[target_col].values
@@ -351,7 +351,7 @@ def get_residuals(model, test_df, features, target_col='PTS'):
     
     return residuals_df
 
-def analyze_residuals(model, test_df, features, target_col='PTS'):
+def analyze_residuals(model, test_df, features, target_col):
     """Analyze residuals for regression model and show worst predictions."""
     
     # Get residuals
@@ -377,7 +377,7 @@ def analyze_residuals(model, test_df, features, target_col='PTS'):
     
     return residuals_df
 
-def analyze_shap(model, test_df, features, target_col='PTS'):
+def analyze_shap(model, test_df, features, target_col):
     """Generate SHAP analysis for model interpretability."""
     
     # Get the actual features the model expects
@@ -439,42 +439,22 @@ def analyze_shap(model, test_df, features, target_col='PTS'):
 
 
 # ==============================================================================
-# CASCADING MODEL: MIN -> USG_PCT -> PTS
+# CASCADING MODEL: MIN -> USG_PCT
 # ==============================================================================
 
 def train_cascading_model(train_data, val_data, 
-                          min_features, usg_features, pts_features=None,
+                          min_features, usg_features,
                           date_column='GAME_DATE', player_column='PLAYER_ID'):
     """
-    Train a cascading model that predicts MIN -> USG_PCT -> (optionally PTS) sequentially.
-    
-    Process:
-    1. Train MIN model using min_features
-    2. Predict MIN for train/val, add as feature
-    3. Train USG_PCT model using usg_features + predicted MIN
-    4. Predict USG_PCT for train/val, add as feature
-    5. (Optional) Train PTS model using pts_features + predicted MIN + predicted USG_PCT
-    
-    Args:
-        pts_features: Optional. If None, PTS model training is skipped (use Negative Binomial for PTS instead)
+    Train a cascading model that predicts MIN -> USG_PCT sequentially.
+    PTS predictions use NGBOOST model separately.
     """
-    if pts_features is None:
-        print("\n" + "="*70)
-        print("TRAINING CASCADING MODEL: MIN -> USG_PCT")
-        print("(PTS will use Negative Binomial model separately)")
-        print("="*70)
-    else:
-        print("\n" + "="*70)
-        print("TRAINING CASCADING MODEL: MIN -> USG_PCT -> PTS")
-        print("="*70)
+    print("TRAINING CASCADING MODEL: MIN -> USG_PCT")
+    print("(PTS will use NGBOOST model separately)")
     
     # ==========================================================================
     # STEP 1: Train MIN model
     # ==========================================================================
-    print("\n" + "="*70)
-    print("STEP 1: Training MIN Model")
-    print("="*70)
-    
     min_model, min_metrics = train_model(
         train_data=train_data,
         val_data=val_data,
@@ -501,10 +481,6 @@ def train_cascading_model(train_data, val_data,
     # ==========================================================================
     # STEP 2: Train USG_PCT model (with predicted MIN)
     # ==========================================================================
-    print("\n" + "="*70)
-    print("STEP 2: Training USG_PCT Model (with PREDICTED_MIN)")
-    print("="*70)
-    
     # Add PREDICTED_MIN to USG features
     usg_features_with_min = usg_features + ['PREDICTED_MIN']
     
@@ -532,37 +508,8 @@ def train_cascading_model(train_data, val_data,
     print(f"   Val USG predictions:   min={val_usg_pred.min():.2f}, max={val_usg_pred.max():.2f}, mean={val_usg_pred.mean():.2f}")
     
     # ==========================================================================
-    # STEP 3: Train PTS model (with predicted MIN + USG_PCT) - OPTIONAL
-    # ==========================================================================
-    if pts_features is not None:
-        print("\n" + "="*70)
-        print("STEP 3: Training PTS Model (with PREDICTED_MIN + PREDICTED_USG_PCT)")
-        print("="*70)
-        
-        # Add PREDICTED_MIN and PREDICTED_USG_PCT to PTS features
-        pts_features_with_cascade = pts_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
-        
-        pts_model, pts_metrics = train_model(
-            train_data=train_with_min_usg,
-            val_data=val_with_min_usg,
-            features=pts_features_with_cascade,
-            target='PTS',
-            date_column=date_column,
-            player_column=player_column
-        )
-    else:
-        pts_model = None
-        pts_metrics = None
-        print("\n" + "="*70)
-        print("STEP 3: Skipped (Using Negative Binomial for PTS)")
-        print("="*70)
-    
-    # ==========================================================================
     # FINAL SUMMARY
     # ==========================================================================
-    print("\n" + "="*70)
-    print("CASCADING MODEL TRAINING COMPLETE!")
-    print("="*70)
     print("\nFINAL METRICS SUMMARY:")
     print(f"\n   MIN Model:")
     print(f"      RMSE: {min_metrics['RMSE']:.3f}")
@@ -574,13 +521,7 @@ def train_cascading_model(train_data, val_data,
     print(f"      MAE:  {usg_metrics['MAE']:.3f}")
     print(f"      R²:   {usg_metrics['R2']:.3f}")
     
-    if pts_model is not None:
-        print(f"\n   PTS Model:")
-        print(f"      RMSE: {pts_metrics['RMSE']:.3f}")
-        print(f"      MAE:  {pts_metrics['MAE']:.3f}")
-        print(f"      R²:   {pts_metrics['R2']:.3f}")
-    else:
-        print(f"\n   PTS Model: Skipped (use Negative Binomial model separately)")
+    print(f"\n   PTS Model: Use NGBOOST model separately")
     
     print("="*70 + "\n")
     
@@ -591,27 +532,26 @@ def train_cascading_model(train_data, val_data,
             'MIN': min_metrics,
             'USG_PCT': usg_metrics
         },
-        'train_with_min_usg': train_with_min_usg,  # Return this for Negative Binomial training
-        'val_with_min_usg': val_with_min_usg  # Return this for Negative Binomial training
+        'train_with_min_usg': train_with_min_usg,  # Return this for NGBOOST training
+        'val_with_min_usg': val_with_min_usg  # Return this for NGBOOST training
     }
-    
-    if pts_model is not None:
-        result['pts_model'] = pts_model
-        result['metrics']['PTS'] = pts_metrics
     
     return result
 
 
-def predict_cascading(models_dict, test_data, min_features, usg_features, pts_features=None):
+def predict_cascading(models_dict, test_data, min_features, usg_features):
     """
     Make predictions using the cascading model approach.
     
     Args:
-        models_dict: Dictionary containing 'min_model' and 'usg_model' (and optionally 'pts_model')
+        models_dict: Dictionary containing 'min_model' and 'usg_model'
         test_data: Test dataframe
         min_features: List of features for MIN prediction
         usg_features: List of features for USG prediction
-        pts_features: Optional. List of features for PTS prediction. If None, PTS prediction is skipped.
+    
+    Returns:
+        Dictionary with 'MIN', 'USG_PCT' predictions and 'test_with_min_usg' 
+        dataframe for use with NGBOOST PTS model
     """
     # Step 1: Predict MIN
     min_pred = predict(models_dict['min_model'], test_data, min_features)
@@ -622,23 +562,14 @@ def predict_cascading(models_dict, test_data, min_features, usg_features, pts_fe
     usg_features_with_min = usg_features + ['PREDICTED_MIN']
     usg_pred = predict(models_dict['usg_model'], test_with_min, usg_features_with_min)
     
+    # Prepare dataframe with predicted MIN and USG for NGBOOST
+    test_with_min_usg = test_with_min.copy()
+    test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
+    
     result = {
         'MIN': min_pred,
         'USG_PCT': usg_pred,
-        'test_with_min_usg': None  # Return this for use with Negative Binomial
+        'test_with_min_usg': test_with_min_usg  # Return this for use with NGBOOST
     }
-    
-    # Step 3: Add predicted USG_PCT and predict PTS (if pts_model exists)
-    if pts_features is not None and 'pts_model' in models_dict:
-        test_with_min_usg = test_with_min.copy()
-        test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
-        pts_features_with_cascade = pts_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
-        pts_pred = predict(models_dict['pts_model'], test_with_min_usg, pts_features_with_cascade)
-        result['PTS'] = pts_pred
-    else:
-        # Prepare dataframe with predicted MIN and USG for Negative Binomial
-        test_with_min_usg = test_with_min.copy()
-        test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
-        result['test_with_min_usg'] = test_with_min_usg
     
     return result
