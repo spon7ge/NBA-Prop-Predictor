@@ -1,11 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,PROB 1,PROB 2,PROB 3,MODEL SIDE 1,MODEL SIDE 2,MODEL SIDE 3,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2,SIGMA FLAG 3
 VJ Edgecombe,Jeremy Sochan,Derik Queen,12.5,5.5,13.5,20.77,11.75,22.8,0.904,0.875,0.89,over,over,over,1,280.15,0.56,Med,Med,High
-Paul George,Jaden McDaniels,Draymond Green,15.5,13.5,9.5,21.84,20.19,17.37,0.832,0.844,0.866,over,over,over,1,228.33,0.457,High,High,High
-Donte DiVincenzo,Jordan Walsh,Jalen Williams,13.5,5.5,18.5,19.3,9.8,24.34,0.828,0.8,0.819,over,over,over,1,193.25,0.386,Med,Low,Med
-Kyshawn George,Devin Vassell,Cason Wallace,15.0,17.5,7.5,21.72,24.34,12.89,0.785,0.794,0.799,over,over,over,1,169.15,0.338,High,High,High
-Luke Kornet,Saddiq Bey,Quinten Post,7.5,15.5,8.0,11.38,21.39,12.54,0.762,0.763,0.765,over,over,over,0,140.1,0.28,Low,High,Med
-Jared McCain,Jordan Hawkins,Neemias Queta,14.5,5.5,9.5,11.76,8.79,13.82,0.757,0.76,0.748,under,over,over,0,132.41,0.265,Low,Low,Med
-Marvin Bagley III,Naz Reid,Will Richard,12.5,13.5,6.5,10.88,18.13,9.41,0.734,0.755,0.722,under,over,over,0,116.28,0.233,Low,Med,Low
-Gradey Dick,Kentavious Caldwell-Pope,Trey Murphy III,6.5,7.5,20.5,9.28,10.71,16.18,0.711,0.715,0.735,over,over,under,0,101.56,0.203,Low,Med,High
-Andre Drummond,Julian Champagnie,Anfernee Simons,8.5,11.5,11.5,11.08,15.41,15.28,0.702,0.69,0.696,over,over,over,0,82.02,0.164,Low,High,High
-Quentin Grimes,Harrison Barnes,Isaiah Joe,17.5,12.5,9.5,15.14,16.25,12.48,0.698,0.678,0.676,under,over,over,0,72.89,0.146,Med,High,Med
+Paul George,Jaden McDaniels,Jalen Williams,15.5,13.5,18.5,21.84,20.19,24.34,0.832,0.844,0.819,over,over,over,1,210.81,0.422,High,High,Med
+Donte DiVincenzo,Jordan Walsh,Cason Wallace,13.5,5.5,7.5,19.3,9.8,12.89,0.828,0.8,0.799,over,over,over,1,186.08,0.372,Med,Low,High
+Kyshawn George,Devin Vassell,Quinten Post,15.0,17.5,8.0,21.72,24.34,12.54,0.785,0.794,0.765,over,over,over,1,157.62,0.315,High,High,Med
+Jared McCain,Luke Kornet,Saddiq Bey,14.5,7.5,15.5,11.76,11.38,21.39,0.757,0.762,0.763,under,over,over,0,137.64,0.275,Low,Low,High
+Marvin Bagley III,Jordan Hawkins,Neemias Queta,12.5,5.5,9.5,10.88,8.79,13.82,0.734,0.76,0.748,under,over,over,0,125.33,0.251,Low,Low,Med
+Kentavious Caldwell-Pope,Naz Reid,Will Richard,7.5,13.5,6.5,10.71,18.13,9.41,0.715,0.755,0.722,over,over,over,0,110.65,0.221,Med,Med,Low
+Andre Drummond,Gradey Dick,Trey Murphy III,8.5,6.5,20.5,11.08,9.28,16.18,0.702,0.711,0.735,over,over,under,0,97.9,0.196,Low,Low,High
+Quentin Grimes,Julian Champagnie,Anfernee Simons,17.5,11.5,11.5,15.14,15.41,15.28,0.698,0.69,0.696,under,over,over,0,80.97,0.162,Med,High,High
+Jamal Shead,Harrison Barnes,Isaiah Joe,6.5,12.5,9.5,8.46,16.25,12.48,0.653,0.678,0.676,over,over,over,0,61.67,0.123,Low,High,Med
