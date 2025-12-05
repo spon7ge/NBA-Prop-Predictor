@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""
-Script to update the PrizePicks dashboard with new CSV data.
-Place your CSV files in the same directory and run this script.
-"""
-
 import csv
 import json
+import os
 from pathlib import Path
+
+# Get project root by navigating up from this file's location
+# This file is in docs/, so go up 1 level to reach project root
+current_file = Path(__file__).resolve()
+project_root = current_file.parent.parent
+project_root_str = str(project_root)
 
 def csv_to_js_array(csv_file, array_name):
     """Convert CSV file to JavaScript array format."""
@@ -72,8 +74,8 @@ def load_hit_rate_lookup():
     prop_types = ['points', 'assists', 'rebounds', 'blocks', 'steals']
     
     for prop_type in prop_types:
-        for platform_key, platform_dir in [('prizepicks', 'PRIZEPICKS'), ('underdog', 'UNDERDOG')]:
-            csv_path = f'../DATA/CSV_FILES/PROP_DATA/OVER_RATES_{platform_dir}/player_{prop_type}.csv'
+        for platform_key, platform_dir in [('prizepicks', 'prizepicks'), ('underdog', 'underdog')]:
+            csv_path = os.path.join(project_root_str, 'data', 'props', platform_dir, f'player_{prop_type}.csv')
             if Path(csv_path).exists():
                 try:
                     with open(csv_path, 'r', encoding='utf-8', errors='replace') as f:
@@ -292,15 +294,17 @@ def csv_to_js_singles(csv_file, array_name):
     
     return js_code
 
-def update_dashboard(csv_files_map, script_file='script.js'):
+def update_dashboard(csv_files_map, script_file=None):
     """
     Update the script.js file with new CSV data.
     
     Args:
         csv_files_map: Dict mapping array names to CSV file paths
                       e.g., {'prizepicksPointsHitRates': 'player_points.csv'}
-        script_file: Path to the JavaScript file
+        script_file: Path to the JavaScript file (defaults to docs/script.js)
     """
+    if script_file is None:
+        script_file = os.path.join(project_root_str, 'docs', 'script.js')
     
     # Read the current script.js file
     with open(script_file, 'r', encoding='utf-8', errors='replace') as f:
@@ -385,41 +389,43 @@ def update_dashboard(csv_files_map, script_file='script.js'):
     print(f"\nYou can now open display.html in your browser.")
 
 if __name__ == "__main__":
+    # Build paths relative to project root
     csv_files_map = {
-    'prizepicksPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points.csv',
-    'prizepicksAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_assists.csv',  
-    'prizepicksReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_rebounds.csv',
-    'prizepicksBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_blocks.csv',
-    'prizepicksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_steals.csv',
-    'prizepicksPRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_rebounds_assists.csv',
-    'prizepicksPRHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_rebounds.csv',
-    'prizepicksPAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_points_assists.csv',
-    'prizepicksRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_rebounds_assists.csv',
-    'prizepicksTurnoversHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_turnovers.csv',
-    'prizepicksBlocksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_PRIZEPICKS/player_blocks_steals.csv',
+    'prizepicksPointsHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_points.csv'),
+    'prizepicksAssistsHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_assists.csv'),  
+    'prizepicksReboundsHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_rebounds.csv'),
+    'prizepicksBlocksHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_blocks.csv'),
+    'prizepicksStealsHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_steals.csv'),
+    'prizepicksPRAHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_points_rebounds_assists.csv'),
+    'prizepicksPRHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_points_rebounds.csv'),
+    'prizepicksPAHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_points_assists.csv'),
+    'prizepicksRAHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_rebounds_assists.csv'),
+    'prizepicksTurnoversHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_turnovers.csv'),
+    'prizepicksBlocksStealsHitRates': os.path.join(project_root_str, 'data', 'props', 'prizepicks', 'player_blocks_steals.csv'),
     
     # Underdog
-    'underdogPointsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points.csv',
-    'underdogAssistsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_assists.csv',
-    'underdogReboundsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_rebounds.csv',
-    'underdogBlocksHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_blocks.csv',
-    'underdogStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_steals.csv',
-    'underdogPRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_rebounds_assists.csv',
-    'underdogPRHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_rebounds.csv',
-    'underdogPAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_points_assists.csv',
-    'underdogRAHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_rebounds_assists.csv',
-    'underdogTurnoversHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_turnovers.csv',
-    'underdogBlocksStealsHitRates': '../DATA/CSV_FILES/PROP_DATA/OVER_RATES_UNDERDOG/player_blocks_steals.csv',
+    'underdogPointsHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_points.csv'),
+    'underdogAssistsHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_assists.csv'),
+    'underdogReboundsHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_rebounds.csv'),
+    'underdogBlocksHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_blocks.csv'),
+    'underdogStealsHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_steals.csv'),
+    'underdogPRAHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_points_rebounds_assists.csv'),
+    'underdogPRHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_points_rebounds.csv'),
+    'underdogPAHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_points_assists.csv'),
+    'underdogRAHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_rebounds_assists.csv'),
+    'underdogTurnoversHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_turnovers.csv'),
+    'underdogBlocksStealsHitRates': os.path.join(project_root_str, 'data', 'props', 'underdog', 'player_blocks_steals.csv'),
 
     # Pairs and Trios
-    'prizepicksPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksPairs.csv',  
-    'prizepicksTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/prizepicksTrios.csv',  
-    'underdogPairsData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogPairs.csv',  
-    'underdogTriosData': '../DATA/CSV_FILES/PROP_DATA/PROPS_EV/underdogTrios.csv',  
+    'prizepicksPairsData': os.path.join(project_root_str, 'data', 'props', 'ev_analysis', 'prizepicksPairs.csv'),  
+    'prizepicksTriosData': os.path.join(project_root_str, 'data', 'props', 'ev_analysis', 'prizepicksTrios.csv'),  
+    'underdogPairsData': os.path.join(project_root_str, 'data', 'props', 'ev_analysis', 'underdogPairs.csv'),  
+    'underdogTriosData': os.path.join(project_root_str, 'data', 'props', 'ev_analysis', 'underdogTrios.csv'),  
 }
     
     print("PrizePicks Dashboard Data Updater")
     print("=" * 50)
     
     # Update the dashboard
-    update_dashboard(csv_files_map, 'script.js')
+    script_file = os.path.join(project_root_str, 'docs', 'script.js')
+    update_dashboard(csv_files_map, script_file)
