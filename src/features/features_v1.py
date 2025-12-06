@@ -1031,6 +1031,78 @@ def sort_data_for_features(df):
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE']).reset_index(drop=True)
     
     return df
+
+def add_team_usage_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    
+    df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
+    
+    df['USG_PCT_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['USG_PCT']
+        .transform(lambda x: x.shift(1).expanding().mean())
+    )
+    df['USG_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['USG_PCT_AVG_TO_GAME']
+        .rank(method='dense', ascending=False, na_option='keep')
+        .astype('Int64')
+    )
+    
+    df = df.drop(columns=['USG_PCT_AVG_TO_GAME'])
+    return df
+
+def add_team_pts_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    
+    df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
+    
+    df['PTS_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['PTS']
+        .transform(lambda x: x.shift(1).expanding().mean())
+    )
+    df['PTS_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['PTS_AVG_TO_GAME']
+        .rank(method='dense', ascending=False, na_option='keep')
+        .astype('Int64')
+    )
+    
+    df = df.drop(columns=['PTS_AVG_TO_GAME'])
+    return df
+
+def add_team_min_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    
+    df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
+    
+    df['MIN_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['MIN']
+        .transform(lambda x: x.shift(1).expanding().mean())
+    )
+    df['MIN_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['MIN_AVG_TO_GAME']
+        .rank(method='dense', ascending=False, na_option='keep')
+        .astype('Int64')
+    )
+    
+    df = df.drop(columns=['MIN_AVG_TO_GAME'])
+    return df
+
+def add_team_fga_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    
+    df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
+    
+    df['FGA_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['FGA']
+        .transform(lambda x: x.shift(1).expanding().mean())
+    )
+    df['FGA_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['FGA_AVG_TO_GAME']
+        .rank(method='dense', ascending=False, na_option='keep')
+        .astype('Int64')
+    )
+    
+    df = df.drop(columns=['FGA_AVG_TO_GAME'])
+    return df
     
 # ================================================================================================
 # LINEUP AND STARTER FEATURES
@@ -1644,13 +1716,13 @@ def add_interaction_features(df):
         df['E_OFF_RATING_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('E_OFF_RATING_DELTA_STAR_OUT', 0)
         df['NET_RATING_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('NET_RATING_DELTA_STAR_OUT', 0)
         df['PLUS_MINUS_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PLUS_MINUS_DELTA_STAR_OUT', 0)
-        df['PTS_OFF_TOV_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_OFF_TOV_DELTA_STAR_OUT', 0)
-        df['PTS_2ND_CHANCE_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_2ND_CHANCE_DELTA_STAR_OUT', 0)
-        df['PTS_FB_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_FB_DELTA_STAR_OUT', 0)
-        df['PTS_PAINT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('PTS_PAINT_DELTA_STAR_OUT', 0)
         df['FG_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FG_PCT_DELTA_STAR_OUT', 0)
         df['FG3_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FG3_PCT_DELTA_STAR_OUT', 0)
         df['FT_PCT_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('FT_PCT_DELTA_STAR_OUT', 0)
+        df['TCHS_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('TCHS_DELTA_STAR_OUT', 0)
+        df['POSS_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('POSS_DELTA_STAR_OUT', 0)
+        df['AST_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('AST_DELTA_STAR_OUT', 0)
+        df['TOV_BOOST_STAR_OUT'] = df['STAR_SAT_OUT'] * df.get('TOV_DELTA_STAR_OUT', 0)
     
     # ===== HOME/AWAY EXPECTATIONS (Keep only what's in features) =====
     stats_for_expectation = [
@@ -1672,18 +1744,42 @@ def add_interaction_features(df):
         lambda x: x.shift(1).rolling(window=5, min_periods=1).min().round(2))
     df['PTS_CEILING_L5_DELTA'] = (df['PTS_CEILING_L5'] - df['PTS_AVG_TO_DATE']).round(2)
     df['PTS_FLOOR_L5_DELTA'] = (df['PTS_FLOOR_L5'] - df['PTS_AVG_TO_DATE']).round(2)
-    df['USG_CEILING_L5'] = df.groupby('PLAYER_ID')['USG_PCT'].transform(
-        lambda x: x.shift(1).rolling(window=5, min_periods=1).max().round(2))
-    df['USG_FLOOR_L5'] = df.groupby('PLAYER_ID')['USG_PCT'].transform(
-        lambda x: x.shift(1).rolling(window=5, min_periods=1).min().round(2))
-    df['USG_CEILING_L5_DELTA'] = (df['USG_CEILING_L5'] - df['USG_PCT_AVG_TO_DATE']).round(2)
-    df['USG_FLOOR_L5_DELTA'] = (df['USG_FLOOR_L5'] - df['USG_PCT_AVG_TO_DATE']).round(2)
     df['STARTING_x_MIN_AVG'] = df['STARTING'] * df['MIN_AVG_TO_DATE']
     df['STARTING_x_MIN_CEILING'] = df['STARTING'] * df['MIN_CEILING_L5']
-    df['USG_PER_MIN'] = df['USG_PCT_AVG_TO_DATE'] / df['MIN_AVG_TO_DATE'] + 0.001
-    df['SPD_L5_OVER_BASELINE'] = df['SPD_ROLLING_AVG_5'] - df['SPD_AVG_TO_DATE']
-    df['SPD_L10_OVER_BASELINE'] = df['SPD_ROLLING_AVG_10'] - df['SPD_AVG_TO_DATE']
     df['PASSES_PER_TOUCHES'] = df['PASS_AVG_TO_DATE'] / df['TCHS_AVG_TO_DATE']
-    df['SAST_PER_TOUCHES'] = df['SAST_AVG_TO_DATE'] / df['TCHS_AVG_TO_DATE']
 
+    # ===== TESTING FEATURES =====
+    df['EXPECTED_PACE_x_FGA_AVG_TO_DATE'] = df['EXPECTED_PACE'] * df['FGA_AVG_TO_DATE']
+    df['OPP_DEF_RATING_OVER_LEAGUE_AVG_x_FGA_AVG_TO_DATE'] = df['OPP_DEF_RATING_OVER_LEAGUE_AVG'] * df['FGA_AVG_TO_DATE']
+    df['OPP_DEF_RATING_OVER_LEAGUE_AVG_x_PTS_AVG_TO_DATE'] = df['OPP_DEF_RATING_OVER_LEAGUE_AVG'] * df['PTS_AVG_TO_DATE']
+
+    return df
+
+def test_features(df):
+    df = df.copy()
+
+    # ===== TESTING FEATURES for USG_PCT model =====
+    df['EXPECTED_PACE_X_USG_PCT'] = df['EXPECTED_PACE'] * df['USG_PCT_AVG_TO_DATE']    
+    df['OPP_DEF_RATING_OVER_LEAGUE_x_USG_PCT'] = df['OPP_DEF_RATING_OVER_LEAGUE_AVG'] * df['USG_PCT_AVG_TO_DATE']
+    # ===== TESTING FEATURES for FGA model =====
+    df['HIGH_FGA_PLAYER'] = (df['FGA_AVG_TO_DATE'] >= 15).astype(int) #new
+    df['MEDIUM_FGA_PLAYER'] = (df['FGA_AVG_TO_DATE'] >= 7).astype(int) & (df['FGA_AVG_TO_DATE'] < 15).astype(int) #new
+    df['LOW_FGA_PLAYER'] = (df['FGA_AVG_TO_DATE'] < 7).astype(int) #new
+    df['FGA_AVG_TO_DATE_x_TS_PCT_AVG_TO_DATE'] = df['FGA_AVG_TO_DATE'] * df['TS_PCT_AVG_TO_DATE']
+    df['FG3A_PCT_OF_FGA'] = df['FG3A_AVG_TO_DATE'] / df['FGA_AVG_TO_DATE']
+    df['PERCENTAGE_OF_TEAM_FGA'] = df['FGA_AVG_TO_DATE'] / df['TEAM_FGA_AVG_TO_DATE']
+    # ===== TESTING FEATURES for MIN model =====
+    df['HIGH_MIN_PLAYER'] = (df['MIN_AVG_TO_DATE'] >= 25).astype(int)
+    df['MEDIUM_MIN_PLAYER'] = (df['MIN_AVG_TO_DATE'] >= 12).astype(int) & (df['MIN_AVG_TO_DATE'] < 25).astype(int)
+    df['LOW_MIN_PLAYER'] = (df['MIN_AVG_TO_DATE'] < 12).astype(int)
+    df['B2B_X_MIN'] = df['IS_BACK_TO_BACK'] * df['MIN_AVG_TO_DATE']
+    df['PLAYER_MISSED_LAST_GAME_X_MIN'] = df['PLAYER_MISSED_LAST'] * df['MIN_AVG_TO_DATE']
+    df['OPP_DEF_RATING_OVER_LEAGUE_x_MIN'] = df['OPP_DEF_RATING_OVER_LEAGUE_AVG'] * df['MIN_AVG_TO_DATE']
+    df['EXPECTED_PACE_X_MIN'] = df['EXPECTED_PACE'] * df['MIN_AVG_TO_DATE']
+    df['PERCENTAGE_OF_TEAM_MIN'] = df['MIN_AVG_TO_DATE'] / df['TEAM_MIN']
+    # ===== TESTING FEATURES for PTS model =====
+    df['HIGH_SCORING_PLAYER'] = (df['PTS_AVG_TO_DATE'] >= 20).astype(int)
+    df['MEDIUM_SCORING_PLAYER'] = (df['PTS_AVG_TO_DATE'] >= 10).astype(int) & (df['PTS_AVG_TO_DATE'] < 20).astype(int)
+    df['LOW_SCORING_PLAYER'] = (df['PTS_AVG_TO_DATE'] < 10).astype(int)
+    df['PERCENTAGE_OF_TEAM_PTS'] = df['PTS_AVG_TO_DATE'] / df['TEAM_PTS_AVG_TO_DATE']
     return df

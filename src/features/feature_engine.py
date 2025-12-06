@@ -1,50 +1,53 @@
-# PRODUCTION/feature_engine/feature_engine.py
-
 import joblib
 from .min_features import MinutesFeatureBuilder
 from .usg_features import UsageFeatureBuilder
+from .fga_features import FGAFeatureBuilder
 from .ngboost_points import predict_points_ngboost, load_trained_ngboost_models
 
 class FeatureEngine:
 
     def __init__(self, paths):
-        """
-        paths = {
-            'min_model': '../MODELS/SAVED_MODELS/min_model.pkl',
-            'usg_model': '../MODELS/SAVED_MODELS/usg_model.pkl',
-            'ngboost_model_paths': {  # Optional - NGBOOST model paths
-                'mean_model': '../MODELS/SAVED_MODELS/NGBOOST_PTS_MEAN_MODEL_PRODUCTION.pkl',
-                'variance_model': '../MODELS/SAVED_MODELS/NGBOOST_PTS_VAR_MODEL_PRODUCTION.pkl',
-                'calibration_factor': '../MODELS/SAVED_MODELS/NGBOOST_PTS_CALIBRATION_FACTOR_PRODUCTION.pkl',
-                'calibration_params': '../MODELS/SAVED_MODELS/NGBOOST_PTS_CALIBRATION_PARAMS_PRODUCTION.pkl',  # Optional - for score-dependent calibration
-                'features': '../MODELS/SAVED_MODELS/pts_features.pkl'
-            }
-        }
-        """
         self.min_model = joblib.load(paths["min_model"])
         self.usg_model = joblib.load(paths["usg_model"])
+        self.fga_model = joblib.load(paths.get("fga_model", paths.get("fga_model_path")))
         
-        # Load NGBOOST models
-        ngboost_paths = paths.get("ngboost_model_paths", None)
-        self.ngboost_model_wrapper = load_trained_ngboost_models(ngboost_paths)
+        # Load model wrapper (can be a path string or dict with model_wrapper key)
+        if "ngboost_model_wrapper" in paths:
+            model_wrapper_path = {"model_wrapper": paths["ngboost_model_wrapper"]}
+        elif "ngboost_model_paths" in paths:
+            # Support legacy format or new model_wrapper key
+            if "model_wrapper" in paths["ngboost_model_paths"]:
+                model_wrapper_path = {"model_wrapper": paths["ngboost_model_paths"]["model_wrapper"]}
+            else:
+                model_wrapper_path = paths["ngboost_model_paths"]
+        else:
+            model_wrapper_path = None
+        
+        self.ngboost_model_wrapper = load_trained_ngboost_models(model_wrapper_path)
 
         self.minutes_builder = MinutesFeatureBuilder()
-        self.usage_builder   = UsageFeatureBuilder()
-        # Points prediction now uses NGBOOST model (see predict_points_ngboost)
+        self.usage_builder = UsageFeatureBuilder()
+        self.fga_builder = FGAFeatureBuilder()
 
     def predict_minutes(self, player_name, data, date, **kwargs):
         X = self.minutes_builder.build(player_name, data, date, **kwargs)
+        if X is None:
+            return None
         return float(self.min_model.predict([X])[0])
 
     def predict_usage(self, player_name, data, date, pred_minutes, **kwargs):
         X = self.usage_builder.build(player_name, data, date, predicted_minutes=pred_minutes, **kwargs)
+        if X is None:
+            return None
         return float(self.usg_model.predict([X])[0])
 
+    def predict_fga(self, player_name, data, date, pred_minutes, pred_usage, **kwargs):
+        X = self.fga_builder.build(player_name, data, date, predicted_minutes=pred_minutes, predicted_usage=pred_usage, **kwargs)
+        if X is None:
+            return None
+        return float(self.fga_model.predict([X])[0])
+
     def predict_points(self, player_name, data, date, pred_minutes=None, pred_usage=None, **kwargs):
-        """
-        Predict points using NGBOOST model.
-        Uses predicted_minutes and predicted_usage if provided to adjust the prediction.
-        """
         result = predict_points_ngboost(
             player_name=player_name,
             data=data,
@@ -61,14 +64,18 @@ class FeatureEngine:
         return float(result['predicted_points'])
 
     def project_player(self, player_name, data, date, **kwargs):
-        """
-        Full chain:
-        MIN (XGBoost) → USG (XGBoost) → PTS (NGBOOST using predicted MIN and USG)
-        """
         pred_min = self.predict_minutes(player_name, data, date, **kwargs)
+        if pred_min is None:
+            return None
+            
         pred_usg = self.predict_usage(player_name, data, date, pred_min, **kwargs)
+        if pred_usg is None:
+            return None
+            
+        pred_fga = self.predict_fga(player_name, data, date, pred_min, pred_usg, **kwargs)
+        if pred_fga is None:
+            return None
         
-        # Use NGBOOST for points prediction, incorporating predicted minutes and usage
         pts_result = predict_points_ngboost(
             player_name=player_name,
             data=data,
@@ -87,5 +94,6 @@ class FeatureEngine:
         return {
             "predicted_minutes": pred_min,
             "predicted_usage": pred_usg,
+            "predicted_fga": pred_fga,
             "predicted_points": pred_pts
         }

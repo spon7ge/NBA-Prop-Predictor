@@ -89,101 +89,168 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res = []
 
     # ============================
-    # 1 — Starting
+    # Calculate avg_min early (needed for multiple features)
     # ============================
-    res.append(int(player_name in projectedStartingFive[team]))
+    avg_min = safe_mean(player_df["MIN"])
 
     # ============================
-    # 2 — Star Sat Out
+    # 1 — STARTING_X_MIN
     # ============================
-    star_sat_out = int(teamStarPlayer[team] not in projectedStartingFive[team])
+    starting_flag = int(player_name in projectedStartingFive.get(team, []))
+    starting_x_min = round(starting_flag * avg_min, 2)
+    res.append(starting_x_min)
+
+    # ============================
+    # 2 — STAR_SAT_OUT
+    # ============================
+    star_sat_out = int(teamStarPlayer.get(team, None) not in projectedStartingFive.get(team, []))
     res.append(star_sat_out)
 
     # ============================
-    # 3 — Days Rest
+    # 3 — PLAYER_DAYS_REST
     # ============================
     last_game = pd.to_datetime(player_df["GAME_DATE"]).max()
-    days_rested = (pd.to_datetime(current_date) - last_game).days
-    res.append(days_rested)
+    player_days_rest = (pd.to_datetime(current_date) - last_game).days
+    res.append(player_days_rest)
 
     # ============================
-    # 4 — Usual Starters Available
+    # 4 — USUAL_STARTERS_AVAILABLE
     # ============================
-    main_starters = set(mainStartingFive[team])
-    projected_starters = set(projectedStartingFive[team])
-    missing_starters = len(main_starters - projected_starters)
-    res.append(missing_starters)
+    main_starters = set(mainStartingFive.get(team, []))
+    projected_starters = set(projectedStartingFive.get(team, []))
+    usual_starters_available = len(main_starters - projected_starters)
+    res.append(usual_starters_available)
 
     # ============================
-    # NEW FEATURES — MIN Ceiling/Floor L5 & Interactions
+    # 5 — B2B_X_MIN (Back to Back interaction with MIN)
+    # ============================
+    is_back_to_back = int(player_days_rest <= 1)
+    b2b_x_min = round(is_back_to_back * avg_min, 2)
+    res.append(b2b_x_min)
+
+    # ============================
+    # 6 — PLAYER_MISSED_LAST_GAME_X_MIN
+    # ============================
+    # Check if player missed the last team game
+    # Logic: if there was a previous team game and the player didn't play in it
+    if len(team_df) > 1 and len(player_df) > 0:
+        # Get the most recent team game
+        last_team_game_date = pd.to_datetime(team_df["GAME_DATE"]).iloc[-1]
+        # Get the most recent player game
+        last_player_game_date = pd.to_datetime(player_df["GAME_DATE"]).iloc[-1]
+        # Check if the last team game exists and player didn't play in it
+        player_missed_last = int(last_team_game_date > last_player_game_date)
+    else:
+        player_missed_last = 0
+    player_missed_last_x_min = round(player_missed_last * avg_min, 2)
+    res.append(player_missed_last_x_min)
+
+    # ============================
+    # 7 — PERCENTAGE_OF_TEAM_MIN
+    # ============================
+    # Calculate team total minutes (average team minutes per game)
+    team_min_avg = safe_mean(team_df["TEAM_MIN"]) if "TEAM_MIN" in team_df.columns else 240.0
+    epsilon = 1e-8
+    percentage_of_team_min = round(avg_min / (team_min_avg + epsilon), 4) if team_min_avg > 0 else 0.0
+    res.append(percentage_of_team_min)
+
+    # ============================
+    # 8 — MIN_TEAM_RANK
+    # ============================
+    # Calculate MIN rank among all players on the team
+    # Get all players on the team with their MIN averages
+    team_players_df = data[data["TEAM_ABBREVIATION"] == team].copy()
+    if not team_players_df.empty:
+        # Calculate MIN_AVG_TO_DATE for each player on the team
+        team_min_avgs = {}
+        for team_player_name in team_players_df["PLAYER_NAME"].unique():
+            team_player_df = data[data["PLAYER_NAME"] == team_player_name].sort_values("GAME_DATE")
+            if not team_player_df.empty:
+                team_min_avgs[team_player_name] = safe_mean(team_player_df["MIN"])
+        
+        # Create a series and rank (ascending=False means rank 1 = highest MIN)
+        if team_min_avgs:
+            min_series = pd.Series(team_min_avgs)
+            min_ranks = min_series.rank(method='dense', ascending=False)
+            min_team_rank = float(min_ranks.get(player_name, len(team_min_avgs) + 1))
+        else:
+            min_team_rank = 1.0
+    else:
+        min_team_rank = 1.0
+    res.append(min_team_rank)
+
+    # ============================
+    # 9 — MIN_CEILING_L5_DELTA
     # ============================
     min_last_5 = player_df["MIN"].tail(5)
     min_ceiling_l5 = float(min_last_5.max()) if min_last_5.size > 0 else 0.0
-    min_floor_l5 = float(min_last_5.min()) if min_last_5.size > 0 else 0.0
-    
-    # Calculate avg_min first (needed for deltas)
-    avg_min = safe_mean(player_df["MIN"])
-    
-    # Calculate deltas
     min_ceiling_l5_delta = round(min_ceiling_l5 - avg_min, 2) if min_last_5.size > 0 else 0.0
-    min_floor_l5_delta = round(min_floor_l5 - avg_min, 2) if min_last_5.size > 0 else 0.0
-    
-    # Calculate interaction features
-    starting_flag = int(player_name in projectedStartingFive[team])
-    starting_x_min_avg = round(starting_flag * avg_min, 2)
-    starting_x_min_ceiling = round(starting_flag * min_ceiling_l5, 2)
-    
     res.append(min_ceiling_l5_delta)
+
+    # ============================
+    # 10 — MIN_FLOOR_L5_DELTA
+    # ============================
+    min_floor_l5 = float(min_last_5.min()) if min_last_5.size > 0 else 0.0
+    min_floor_l5_delta = round(min_floor_l5 - avg_min, 2) if min_last_5.size > 0 else 0.0
     res.append(min_floor_l5_delta)
+
+    # ============================
+    # 11 — STARTING_x_MIN_AVG
+    # ============================
+    starting_x_min_avg = round(starting_flag * avg_min, 2)
     res.append(starting_x_min_avg)
+
+    # ============================
+    # 12 — STARTING_x_MIN_CEILING
+    # ============================
+    starting_x_min_ceiling = round(starting_flag * min_ceiling_l5, 2)
     res.append(starting_x_min_ceiling)
 
     # ============================
-    # 7 — MIN averages & trend
+    # 13 — HIGH_MIN_PLAYER
+    # ============================
+    high_min_player = int(avg_min >= 25)
+    res.append(high_min_player)
+
+    # ============================
+    # 14 — MEDIUM_MIN_PLAYER
+    # ============================
+    medium_min_player = int(avg_min >= 12 and avg_min < 25)
+    res.append(medium_min_player)
+
+    # ============================
+    # 15 — LOW_MIN_PLAYER
+    # ============================
+    low_min_player = int(avg_min < 12)
+    res.append(low_min_player)
+
+    # ============================
+    # 16 — MIN_AVG_TO_DATE
     # ============================
     res.append(avg_min)
-    res.append(safe_delta(player_df["MIN"].tail(5), avg_min))
-    res.append(safe_delta(player_df["MIN"].tail(7), avg_min))
-    res.append(safe_delta(player_df["MIN"].tail(10), avg_min))
 
     # ============================
-    # 8 — Variability
+    # 17 — MIN_L5_OVER_BASELINE
+    # ============================
+    res.append(safe_delta(player_df["MIN"].tail(5), avg_min))
+
+    # ============================
+    # 18 — MIN_STD_5_TO_DATE
     # ============================
     res.append(safe_std(player_df["MIN"].tail(5)))
-    res.append(safe_std(player_df["MIN"].tail(10)))
 
     # ============================
-    # 9 — Star Out Boost
+    # 19 — MIN_BOOST_STAR_OUT
     # ============================
-    star_missing = int(teamStarPlayer[team] not in projectedStartingFive[team])
-    starOut = player_df[player_df["STAR_SAT_OUT"] == 1]
-    starIn = player_df[player_df["STAR_SAT_OUT"] == 0]
+    star_missing = int(teamStarPlayer.get(team, None) not in projectedStartingFive.get(team, []))
+    starOut = player_df[player_df.get("STAR_SAT_OUT", pd.Series([0])) == 1]
+    starIn = player_df[player_df.get("STAR_SAT_OUT", pd.Series([0])) == 0]
 
     star_boost = safe_mean(starOut["MIN"]) - safe_mean(starIn["MIN"])
     res.append(star_missing * star_boost)
 
     # ============================
-    # 10 — SPD L5 and L10 Over Baseline
-    # ============================
-    if "SPD" in player_df.columns:
-        spd_avg_to_date = safe_mean(player_df["SPD"])
-        spd_l5 = safe_mean(player_df["SPD"].tail(5))
-        spd_l10 = safe_mean(player_df["SPD"].tail(10))
-        
-        # Calculate ratios (over baseline)
-        epsilon = 1e-8
-        spd_l5_over_baseline = round(spd_l5 / (spd_avg_to_date + epsilon), 2) if spd_avg_to_date > 0 else 1.0
-        spd_l10_over_baseline = round(spd_l10 / (spd_avg_to_date + epsilon), 2) if spd_avg_to_date > 0 else 1.0
-    else:
-        # If SPD column doesn't exist, use default values
-        spd_l5_over_baseline = 1.0
-        spd_l10_over_baseline = 1.0
-    
-    res.append(spd_l5_over_baseline)
-    res.append(spd_l10_over_baseline)
-
-    # ============================
-    # 11 — Location: Home / Away
+    # 20 — MIN_EXPECTATION_LOCATION
     # ============================
     home_df = player_df[player_df["HOME_GAME"] == 1]
     away_df = player_df[player_df["HOME_GAME"] == 0]
@@ -194,28 +261,48 @@ def player_min_features(player_name, data, current_date, projectedStartingFive, 
     res.append(home_flag * (home_min - avg_min) + (1 - home_flag) * (away_min - avg_min))
 
     # ============================
-    # 12 — Matchup MIN Delta
+    # 21 — MATCHUP_MIN_DELTA
     # ============================
     res.append(safe_delta(matchup_df["MIN"], avg_min))
 
     # ============================
-    # 13 — Team Pace vs League Pace
+    # 22 — TEAM_PACE_OVER_LEAGUE_AVG
     # ============================
-    league_pace_avg = safe_mean(league_df["PACE"])
-    res.append(safe_mean(team_df["TEAM_PACE"]) - league_pace_avg)
+    league_pace_avg = safe_mean(league_df["PACE"]) if "PACE" in league_df.columns else 100.0
+    team_pace_over_league = safe_mean(team_df["TEAM_PACE"]) - league_pace_avg
+    res.append(team_pace_over_league)
 
-    # Expected Pace (team + opp) / 2
+    # ============================
+    # 23 — EXPECTED_PACE
+    # ============================
     expected_pace = (safe_mean(team_df["TEAM_PACE"]) + safe_mean(opp_team_df["TEAM_PACE"])) / 2
     res.append(expected_pace)
 
     # ============================
-    # 14 — Opponent Defensive Context
+    # 24 — EXPECTED_PACE_X_MIN (new)
     # ============================
-    league_def_avg = safe_mean(league_df["DEF_RATING"])
-    opp_def_avg = safe_mean(opp_team_df["TEAM_DEF_RATING"])
+    expected_pace_x_min = round(expected_pace * avg_min, 2)
+    res.append(expected_pace_x_min)
 
-    res.append(opp_def_avg - league_def_avg)
-    res.append(safe_mean(opp_team_df["TEAM_PACE"]) - league_pace_avg)
+    # ============================
+    # 25 — OPP_DEF_RATING_OVER_LEAGUE_AVG
+    # ============================
+    league_def_avg = safe_mean(league_df["DEF_RATING"]) if "DEF_RATING" in league_df.columns else 110.0
+    opp_def_avg = safe_mean(opp_team_df["TEAM_DEF_RATING"])
+    opp_def_rating_over_league = opp_def_avg - league_def_avg
+    res.append(opp_def_rating_over_league)
+
+    # ============================
+    # 26 — OPP_DEF_RATING_OVER_LEAGUE_x_MIN (new)
+    # ============================
+    opp_def_rating_over_league_x_min = round(opp_def_rating_over_league * avg_min, 2)
+    res.append(opp_def_rating_over_league_x_min)
+
+    # ============================
+    # 27 — OPP_PACE_OVER_LEAGUE_AVG
+    # ============================
+    opp_pace_over_league = safe_mean(opp_team_df["TEAM_PACE"]) - league_pace_avg
+    res.append(opp_pace_over_league)
 
     return res
 
