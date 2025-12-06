@@ -578,6 +578,6 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
     results_df = results_df.sort_values('TOTAL_EDGE', ascending=False)
     
     # Limit player appearances
-    results_df = limit_player_appearances(results_df, max_appearances=max_player_appearances)
+    results_df = limit_player_appearances_3leg(results_df, max_appearances=max_player_appearances)
     
     return results_df.head(top_n)
