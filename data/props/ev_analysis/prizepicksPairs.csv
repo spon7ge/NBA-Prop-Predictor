@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,PREDICTION 1,PREDICTION 2,PROB 1,PROB 2,MODEL SIDE 1,MODEL SIDE 2,RECOMMENDATION,EV%,KELLY FULL,SIGMA FLAG 1,SIGMA FLAG 2
-Day'Ron Sharpe,Jaden McDaniels,6.5,13.5,14.18,21.78,0.902,0.914,over,over,1,142.54,0.713,Med,Med
-Payton Pritchard,Donte DiVincenzo,22.5,13.5,16.91,21.12,0.87,0.885,under,over,1,126.54,0.633,Med,Med
-Tyrese Martin,Derik Queen,10.0,14.5,18.18,23.16,0.87,0.871,over,over,1,122.72,0.614,High,High
-Svi Mykhailiuk,Mike Conley,8.5,4.5,13.83,8.37,0.825,0.865,over,over,0,109.98,0.55,Med,Low
-Isaiah Collier,Saddiq Bey,7.0,14.5,11.61,23.07,0.822,0.864,over,over,1,108.86,0.544,Low,High
-Ziaire Williams,Deandre Ayton,10.5,15.5,15.73,11.63,0.807,0.81,over,under,0,92.17,0.461,Med,Low
-VJ Edgecombe,Jordan Hawkins,10.5,7.0,17.48,11.66,0.8,0.8,over,over,1,88.29,0.441,High,Med
-Quinten Post,Brice Sensabaugh,7.5,9.5,11.88,13.94,0.772,0.768,over,over,1,74.25,0.371,Med,Med
-Draymond Green,Naz Reid,9.5,13.5,13.57,17.43,0.724,0.724,over,over,0,54.08,0.27,High,Med
-Quentin Grimes,Josh Minott,16.5,7.5,13.2,10.25,0.711,0.715,under,over,0,49.6,0.248,High,Low
+NAME 1,NAME 2,LINE 1,LINE 2,SIDE 1,SIDE 2,PREDICTION 1,PREDICTION 2,EDGE 1,EDGE 2,ODDS 1,ODDS 2,IMPLIED_PROB 1,IMPLIED_PROB 2,TOTAL_EDGE
+Jaden McDaniels,Jaime Jaquez Jr.,12.5,13.5,over,over,19.39,22.29,6.89,8.79,-120,-114,0.53,0.52,15.68
+Marvin Bagley III,Tyler Herro,13.5,23.5,under,over,7.07,30.0,6.43,6.5,-113,-110,0.52,0.51,12.93
+Danny Wolf,Kevin Porter Jr.,11.5,20.5,under,under,5.5,14.42,6.0,6.08,-112,-104,0.52,0.5,12.08
+Noah Clowney,Julius Randle,16.5,20.5,under,over,10.74,26.11,5.76,5.61,-110,-110,0.51,0.51,11.370000000000001
+Maxime Raynaud,Aaron Holiday,10.5,9.5,under,under,5.19,4.21,5.31,5.29,-105,-110,0.5,0.51,10.6
+Nickeil Alexander-Walker,Ryan Nembhard,20.5,9.5,over,under,25.3,4.54,4.8,4.96,-118,-137,0.53,0.56,9.76
+Kyshawn George,Jalen Duren,15.5,18.5,under,under,10.77,13.9,4.73,4.6,-118,100,0.53,0.49,9.33
+Trey Murphy III,Ryan Rollins,20.5,20.5,over,under,25.03,15.91,4.53,4.59,-135,-105,0.56,0.5,9.120000000000001
+Saddiq Bey,Jimmy Butler III,17.5,20.5,under,under,13.26,16.22,4.24,4.28,-117,110,0.53,0.46,8.52
+Andrew Wiggins,Kevin Durant,16.5,25.5,over,under,20.63,21.32,4.13,4.18,-104,-110,0.5,0.51,8.309999999999999

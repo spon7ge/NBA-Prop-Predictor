@@ -145,6 +145,7 @@ def process_season_features(season_df, prop_type, year):
     df = HomeAwayAverages(df, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     df = getPlayerAvgToDateVectorized(df) 
     df = features_teamContext(df)
+    df = addLagFeatures(df)
     df = assign_opponent_team_stats_dict(df)
     df = add_volatility_features(df, windows=[10,20,40])
     df = assign_team_opp_def_by_position(df, min_minutes=1)
@@ -160,5 +161,61 @@ def process_season_features(season_df, prop_type, year):
     df = get_standard_deviation(df, windows=[5,10,15])
     df = add_lineup_usage_fga_share(df)
     df = add_interaction_features(df)
-
+    df = test_features(df)
+    df = add_team_usage_rank(df)
+    df = add_team_min_rank(df)
+    df = add_team_fga_rank(df)
+    df = add_team_pts_rank(df)
     return df
+
+
+def count_line_hits(player_df, line, category, game_windows=[5, 10, 15]):
+    results = {}
+    player_df_sorted = player_df.sort_values('GAME_DATE')
+    total_games = len(player_df_sorted)
+
+    for window in game_windows:
+        # Handle players with fewer games
+        if total_games < window:
+            last_n_games = player_df_sorted
+        else:
+            last_n_games = player_df_sorted.tail(window)
+
+        if category == 'player_points':
+            hits = (last_n_games['PTS'] > line).sum()
+        elif category == 'player_assists':
+            hits = (last_n_games['AST'] > line).sum()
+        elif category == 'player_rebounds':
+            hits = (last_n_games['REB'] > line).sum()
+        elif category == 'player_threes':
+            hits = (last_n_games['FG3M'] > line).sum()
+        elif category == 'player_blocks':
+            hits = (last_n_games['BLK'] > line).sum()
+        elif category == 'player_steals':
+            hits = (last_n_games['STL'] > line).sum()
+        elif category == 'player_field_goals':
+            hits = (last_n_games['FGM'] > line).sum()
+        elif category == 'player_frees_made':
+            hits = (last_n_games['FTM'] > line).sum()
+        elif category == 'player_points_rebounds_assists':
+            hits = (last_n_games['PTS'] + last_n_games['REB'] + last_n_games['AST'] > line).sum()
+        elif category == 'player_points_rebounds':
+            hits = (last_n_games['PTS'] + last_n_games['REB'] > line).sum()
+        elif category == 'player_points_assists':
+            hits = (last_n_games['PTS'] + last_n_games['AST'] > line).sum()
+        elif category == 'player_rebounds_assists':
+            hits = (last_n_games['REB'] + last_n_games['AST'] > line).sum()
+        elif category == 'player_turnovers':
+            hits = (last_n_games['TOV'] > line).sum()
+        elif category == 'player_blocks_steals':
+            hits = (last_n_games['BLK'] + last_n_games['STL'] > line).sum()
+        else:
+            hits = 0
+
+        results['NAME'] = player_df_sorted['PLAYER_NAME'].iloc[0] if total_games > 0 else 'Unknown'
+        results['CATEGORY'] = category
+        results['LINE'] = line
+        results[f'L-{window}'] = round(hits / window, 2)
+
+
+    return results

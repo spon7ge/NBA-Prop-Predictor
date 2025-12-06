@@ -1,5 +1,5 @@
 from collections import defaultdict
-from scrapers.Odds_Scraper import Odds_Scraper
+from src.scrapers.Odds_Scraper import Odds_Scraper
 import pandas as pd
 import os
 from pathlib import Path
