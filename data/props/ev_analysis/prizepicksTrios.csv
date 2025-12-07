@@ -1,11 +1,11 @@
-NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,SIDE 1,SIDE 2,SIDE 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,EDGE 1,EDGE 2,EDGE 3,ODDS 1,ODDS 2,ODDS 3,IMPLIED_PROB 1,IMPLIED_PROB 2,IMPLIED_PROB 3,TOTAL_EDGE
-Marvin Bagley III,Jaime Jaquez Jr.,Aaron Holiday,13.5,14.5,10.5,under,over,under,7.05,22.29,4.21,6.45,7.79,6.29,100,-108,-107,0.49,0.51,0.5,20.53
-Kevin Porter Jr.,Jaden McDaniels,Maxime Raynaud,20.5,13.5,10.5,under,over,under,14.42,19.39,5.19,6.08,5.89,5.31,-108,-106,-110,0.51,0.5,0.51,17.279999999999998
-Danny Wolf,Julius Randle,Kevin Durant,10.5,20.5,26.5,under,over,under,5.5,26.11,21.32,5.0,5.61,5.18,-108,-102,-115,0.51,0.49,0.52,15.79
-Noah Clowney,Jalen Duren,Ryan Nembhard,15.5,18.5,9.5,under,under,under,10.74,13.9,4.54,4.76,4.6,4.96,100,-120,-115,0.49,0.53,0.52,14.32
-Trey Murphy III,Nickeil Alexander-Walker,Anthony Davis,20.5,21.0,20.5,over,over,under,25.03,25.3,15.56,4.53,4.3,4.94,-114,-137,-110,0.52,0.56,0.51,13.77
-Cam Whitmore,Andrew Wiggins,P.J. Washington,10.5,16.5,13.5,under,over,over,6.6,20.63,17.49,3.9,4.13,3.99,-104,-110,-106,0.5,0.51,0.5,12.02
-Kyshawn George,Darius Garland,Bam Adebayo,14.5,16.5,20.5,under,under,over,10.77,12.62,24.4,3.73,3.88,3.9,-103,-105,-110,0.5,0.5,0.51,11.51
-Saddiq Bey,Ryan Rollins,Ivica Zubac,16.5,19.5,14.5,under,under,over,13.26,15.91,17.94,3.24,3.59,3.44,-105,-103,-105,0.5,0.5,0.5,10.27
-Myles Turner,Naz Reid,Josh Okogie,12.5,13.5,6.5,under,over,under,9.13,16.63,3.59,3.37,3.13,2.91,-108,-103,100,0.51,0.5,0.49,9.41
-Mouhamed Gueye,Caris LeVert,Russell Westbrook,7.5,8.5,13.5,under,under,under,4.99,5.34,10.73,2.51,3.16,2.77,-116,-113,-106,0.52,0.52,0.5,8.44
+NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,ODDS 1,ODDS 2,ODDS 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL_PROB 1,MODEL_PROB 2,MODEL_PROB 3,SIDE 1,SIDE 2,SIDE 3,PARLAY_PROB,PARLAY_ODDS,EV_PERCENT,KELLY_QUARTER
+Ja'Kobe Walter,Tidjane Salaün,Jake LaRavia,7.5,7.5,4.5,110,101,-120,2.91,2.17,9.42,0.765,0.841,0.906,under,under,over,0.583,674,350.89,0.1302
+KJ Simpson,VJ Edgecombe,Kenrich Williams,11.5,10.0,7.5,-125,-137,-122,3.09,14.51,2.55,0.912,0.837,0.836,under,over,under,0.638,467,262.01,0.1403
+Jordan Walsh,Cameron Johnson,Ace Bailey,7.5,13.5,12.5,-108,114,-115,3.88,8.83,6.91,0.717,0.719,0.772,under,under,under,0.398,671,206.54,0.077
+Anfernee Simons,Brandon Miller,Jalen Williams,11.5,21.5,23.5,-110,-108,-110,14.38,15.33,16.7,0.717,0.753,0.746,over,under,under,0.403,602,182.81,0.0759
+Peyton Watson,Josh Giddey,Jaylin Williams,12.5,21.5,8.0,-104,-104,-137,8.53,16.98,3.08,0.681,0.696,0.798,under,under,under,0.378,566,151.75,0.067
+Deni Avdija,Will Richard,Jusuf Nurkić,25.5,8.5,9.5,-119,-114,112,20.3,4.61,6.07,0.711,0.696,0.621,under,under,under,0.308,632,125.37,0.0496
+Nikola Jokić,Jaren Jackson Jr.,Jimmy Butler III,29.5,19.5,21.5,-118,105,-120,23.79,15.99,16.52,0.693,0.634,0.693,under,under,under,0.304,594,111.11,0.0468
+Sion James,Santi Aldama,Keyonte George,6.5,11.5,21.5,104,-105,-107,3.89,13.0,17.69,0.602,0.646,0.647,under,over,under,0.252,671,94.14,0.0351
+Cam Spencer,Tyrese Maxey,Aaron Wiggins,11.5,27.5,15.5,100,100,-104,8.49,28.28,17.14,0.605,0.58,0.611,under,over,over,0.214,685,68.2,0.0249
+Sam Hauser,Draymond Green,Lauri Markkanen,6.5,9.5,23.5,-105,-110,-125,7.06,6.57,25.62,0.59,0.603,0.646,over,under,over,0.23,571,54.11,0.0237
