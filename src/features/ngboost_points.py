@@ -40,7 +40,8 @@ def predict_points_ngboost(
     predicted_minutes=None,
     predicted_usage=None,
     model_wrapper=None,
-    model_paths=None
+    model_paths=None,
+    use_calibration=True
 ):
     if model_wrapper is None:
         model_wrapper = load_trained_ngboost_models(model_paths)
@@ -50,6 +51,13 @@ def predict_points_ngboost(
     
     mean_model = model_wrapper['mean_model']
     features_list = model_wrapper['features']
+    
+    # Get variance calibration and bins from model_wrapper if available
+    variance_calibration = None
+    bins = None
+    if use_calibration:
+        variance_calibration = model_wrapper.get('variance_calibration')
+        bins = model_wrapper.get('bins')
     
     feature_dict = build_ngboost_points_features(
         player_name=player_name,
@@ -73,7 +81,14 @@ def predict_points_ngboost(
     feature_df = feature_df.replace([np.inf, -np.inf], np.nan)
     
     try:
-        mu = predict_mean(mean_model, feature_df, features_list, return_type='median')
+        mu = predict_mean(
+            mean_model, 
+            feature_df, 
+            features_list, 
+            return_type='median',
+            variance_calibration=variance_calibration,
+            bins=bins
+        )
         mu = float(mu[0] if isinstance(mu, (np.ndarray, pd.Series)) else mu)
         mu = max(0.0, mu)
         

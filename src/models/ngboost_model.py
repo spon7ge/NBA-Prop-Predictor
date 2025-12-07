@@ -86,7 +86,7 @@ def train_ngboost_model(train_df: pd.DataFrame,
     return ngb
 
 def predict_mean(model: NGBRegressor, df: pd.DataFrame, features: list[str], 
-                return_type: str = 'mean', variance_calibration: dict = None):
+                return_type: str = 'mean', variance_calibration: dict = None, bins: list = None):
     X = df[features].replace([np.inf, -np.inf], np.nan).fillna(df[features].median())
     dist = model.pred_dist(X)
     
@@ -97,13 +97,19 @@ def predict_mean(model: NGBRegressor, df: pd.DataFrame, features: list[str],
     if variance_calibration:
         median_pred = np.expm1(mean)
         
-        low_mask = median_pred < 7
-        medium_mask = (median_pred >= 7) & (median_pred < 15)
-        high_mask = median_pred >= 15
+        if bins and len(bins) >= 3:
+            low_bin, medium_bin, high_bin = bins[0], bins[1], bins[2]
+            low_mask = (median_pred >= low_bin[0]) & (median_pred < low_bin[1])
+            medium_mask = (median_pred >= medium_bin[0]) & (median_pred < medium_bin[1])
+            high_mask = (median_pred >= high_bin[0]) & (median_pred < high_bin[1])
+        else:
+            low_mask = median_pred < 7
+            medium_mask = (median_pred >= 7) & (median_pred < 15)
+            high_mask = median_pred >= 15
 
-        var[low_mask] *= variance_calibration.get('low', 2.5)
-        var[medium_mask] *= variance_calibration.get('medium', 1.8)
-        var[high_mask] *= variance_calibration.get('high', 1.5)
+        var[low_mask] *= variance_calibration.get('low', 1.0)
+        var[medium_mask] *= variance_calibration.get('medium', 1.0)
+        var[high_mask] *= variance_calibration.get('high', 1.0)
     
     if return_type == 'median':
         return np.expm1(mean)

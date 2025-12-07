@@ -11,7 +11,7 @@ class FeatureEngine:
         self.usg_model = joblib.load(paths["usg_model"])
         self.fga_model = joblib.load(paths.get("fga_model", paths.get("fga_model_path")))
         
-        # Load model wrapper (can be a path string or dict with model_wrapper key)
+        # Load model wrapper - expects a dict with keys: mean_model, features, variance_calibration, bins
         if "ngboost_model_wrapper" in paths:
             model_wrapper_path = {"model_wrapper": paths["ngboost_model_wrapper"]}
         elif "ngboost_model_paths" in paths:
@@ -24,6 +24,14 @@ class FeatureEngine:
             model_wrapper_path = None
         
         self.ngboost_model_wrapper = load_trained_ngboost_models(model_wrapper_path)
+        
+        # Validate model_wrapper structure matches new format
+        if self.ngboost_model_wrapper is not None:
+            required_keys = ['mean_model', 'features', 'variance_calibration', 'bins']
+            missing_keys = [key for key in required_keys if key not in self.ngboost_model_wrapper]
+            if missing_keys:
+                raise ValueError(f"Model wrapper missing required keys: {missing_keys}. "
+                               f"Expected keys: {required_keys}")
 
         self.minutes_builder = MinutesFeatureBuilder()
         self.usage_builder = UsageFeatureBuilder()
