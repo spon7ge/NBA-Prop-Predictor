@@ -85,14 +85,18 @@ def csv_to_js_pairs(csv_file, array_name):
                 'name2': name2,
                 'line1': line1,
                 'line2': line2,
+                'odds1': int(row.get('ODDS 1', -137)),
+                'odds2': int(row.get('ODDS 2', -137)),
                 'prediction1': float(row.get('PREDICTION 1', 0.0)),
                 'prediction2': float(row.get('PREDICTION 2', 0.0)),
+                'modelProb1': float(row.get('MODEL_PROB 1', 0.0)),
+                'modelProb2': float(row.get('MODEL_PROB 2', 0.0)),
                 'side1': side1,
                 'side2': side2,
-                'edge1': float(row.get('EDGE 1', 0.0)),
-                'edge2': float(row.get('EDGE 2', 0.0)),
-                'impliedProb1': float(row.get('IMPLIED_PROB 1', 0.0)),
-                'impliedProb2': float(row.get('IMPLIED_PROB 2', 0.0))
+                'parlayProb': float(row.get('PARLAY_PROB', 0.0)),
+                'parlayOdds': int(row.get('PARLAY_ODDS', -137)),
+                'evPercent': float(row.get('EV_PERCENT', 0.0)),
+                'kellyQuarter': float(row.get('KELLY_QUARTER', 0.0))
             }
             data.append(data_point)
     
@@ -128,18 +132,22 @@ def csv_to_js_trios(csv_file, array_name):
                 'line1': line1,
                 'line2': line2,
                 'line3': line3,
+                'odds1': int(row.get('ODDS 1', -137)),
+                'odds2': int(row.get('ODDS 2', -137)),
+                'odds3': int(row.get('ODDS 3', -137)),
                 'prediction1': float(row.get('PREDICTION 1', 0.0)),
                 'prediction2': float(row.get('PREDICTION 2', 0.0)),
                 'prediction3': float(row.get('PREDICTION 3', 0.0)),
+                'modelProb1': float(row.get('MODEL_PROB 1', 0.0)),
+                'modelProb2': float(row.get('MODEL_PROB 2', 0.0)),
+                'modelProb3': float(row.get('MODEL_PROB 3', 0.0)),
                 'side1': side1,
                 'side2': side2,
                 'side3': side3,
-                'edge1': float(row.get('EDGE 1', 0.0)),
-                'edge2': float(row.get('EDGE 2', 0.0)),
-                'edge3': float(row.get('EDGE 3', 0.0)),
-                'impliedProb1': float(row.get('IMPLIED_PROB 1', 0.0)),
-                'impliedProb2': float(row.get('IMPLIED_PROB 2', 0.0)),
-                'impliedProb3': float(row.get('IMPLIED_PROB 3', 0.0))
+                'parlayProb': float(row.get('PARLAY_PROB', 0.0)),
+                'parlayOdds': int(row.get('PARLAY_ODDS', -137)),
+                'evPercent': float(row.get('EV_PERCENT', 0.0)),
+                'kellyQuarter': float(row.get('KELLY_QUARTER', 0.0))
             }
             data.append(data_point)
     
