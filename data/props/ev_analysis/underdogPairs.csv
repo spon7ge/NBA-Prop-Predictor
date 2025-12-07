@@ -1,11 +1,11 @@
-NAME 1,NAME 2,LINE 1,LINE 2,SIDE 1,SIDE 2,PREDICTION 1,PREDICTION 2,EDGE 1,EDGE 2,ODDS 1,ODDS 2,IMPLIED_PROB 1,IMPLIED_PROB 2,TOTAL_EDGE
-Marvin Bagley III,Jaime Jaquez Jr.,13.5,14.5,under,over,7.05,22.29,6.45,7.79,100,-108,0.49,0.51,14.24
-Kevin Porter Jr.,Jaden McDaniels,20.5,13.5,under,over,14.42,19.39,6.08,5.89,-108,-106,0.51,0.5,11.969999999999999
-Noah Clowney,Julius Randle,16.5,20.5,under,over,10.74,26.11,5.76,5.61,-130,-102,0.55,0.49,11.370000000000001
-Maxime Raynaud,Kevin Durant,10.5,26.5,under,under,5.19,21.32,5.31,5.18,-110,-115,0.51,0.52,10.489999999999998
-Danny Wolf,Ryan Nembhard,10.5,9.5,under,under,5.5,4.54,5.0,4.96,-108,-115,0.51,0.52,9.96
-Saddiq Bey,Nickeil Alexander-Walker,17.5,20.5,under,over,13.26,25.3,4.24,4.8,-118,-118,0.53,0.53,9.04
-Kyshawn George,P.J. Washington,15.5,13.5,under,over,10.77,17.49,4.73,3.99,-128,-106,0.55,0.5,8.72
-Darius Garland,Bam Adebayo,16.5,20.5,under,over,12.62,24.4,3.88,3.9,-105,-110,0.5,0.51,7.779999999999999
-Bryce McGowens,Ivica Zubac,8.5,14.5,under,over,4.84,17.94,3.66,3.44,105,-105,0.48,0.5,7.1
-Myles Turner,Naz Reid,12.5,13.5,under,over,9.13,16.63,3.37,3.13,-108,-103,0.51,0.5,6.5
+NAME 1,NAME 2,LINE 1,LINE 2,ODDS 1,ODDS 2,PREDICTION 1,PREDICTION 2,MODEL_PROB 1,MODEL_PROB 2,SIDE 1,SIDE 2,PARLAY_PROB,PARLAY_ODDS,EV_PERCENT,KELLY_QUARTER
+KJ Simpson,VJ Edgecombe,11.5,10.5,-125,110,3.09,14.51,0.912,0.806,under,over,0.735,278,178.01,0.1601
+Spencer Jones,Jaylin Williams,6.5,8.5,-137,-127,1.21,3.08,0.923,0.822,under,under,0.758,209,134.27,0.1606
+Cameron Johnson,Ace Bailey,13.5,12.5,114,-115,8.83,6.91,0.719,0.772,under,under,0.555,300,121.94,0.1016
+Brandon Miller,Jalen Williams,20.5,23.5,115,-110,15.33,16.7,0.71,0.746,under,under,0.529,310,116.88,0.0943
+Jordan Walsh,Josh Giddey,7.5,21.5,-108,-104,3.88,16.98,0.717,0.696,under,under,0.499,278,88.54,0.0796
+Peyton Watson,Jimmy Butler III,12.5,20.5,-104,105,8.53,16.52,0.681,0.644,under,under,0.438,302,76.22,0.0631
+Deni Avdija,Will Richard,25.5,8.5,-119,-114,20.3,4.61,0.711,0.696,under,under,0.495,245,70.91,0.0724
+Nikola Jokić,Santi Aldama,29.5,11.5,-118,-105,23.79,13.0,0.693,0.646,under,over,0.448,261,61.55,0.059
+Cam Spencer,Keyonte George,11.5,21.5,100,-107,8.49,17.69,0.605,0.647,under,under,0.391,287,51.47,0.0448
+Tyrese Maxey,Aaron Wiggins,27.5,15.5,100,-104,28.28,17.14,0.58,0.611,over,over,0.354,292,38.81,0.0332
