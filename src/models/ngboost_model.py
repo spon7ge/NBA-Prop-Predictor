@@ -200,6 +200,7 @@ def remove_highly_correlated_features(df, features_list, target_col='PTS', thres
             features_to_remove.add(feat1)
     
     cleaned_features = [f for f in available_features if f not in features_to_remove and f != target_col]
+    print(f"Features to remove: {features_to_remove}")
     print(f"Removed {len(features_to_remove)} highly correlated features. Final: {len(cleaned_features)}")
     
     return cleaned_features

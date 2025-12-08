@@ -546,10 +546,11 @@ def calculate2LegBets(data, bookmakers, engine, current_date,
     
     # Convert to DataFrame and sort by EV (descending)
     results_df = pd.DataFrame(results)
-    results_df['TOTAL_EDGE'] = results_df['EDGE 1'] + results_df['EDGE 2']
-    results_df = results_df.sort_values('EV', ascending=False)
-    
-    # Limit player appearances
+
+    if results_df.empty or 'EV_PERCENT' not in results_df.columns:
+        return results_df
+
+    results_df = results_df.sort_values('EV_PERCENT', ascending=False)
     results_df = limit_player_appearances(results_df, max_appearances=max_player_appearances)
     
     return results_df.head(top_n)
@@ -681,126 +682,133 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
     # Build results
     results = []
     for player1, player2, player3 in valid_combinations:
-        mapped_p1 = nameDict.get(player1, player1)
-        mapped_p2 = nameDict.get(player2, player2)
-        mapped_p3 = nameDict.get(player3, player3)
-        
-        prediction1 = player_predictions[player1]
-        prediction2 = player_predictions[player2]
-        prediction3 = player_predictions[player3]
-        
-        mean_log1, std_log1 = player_distributions[player1]
-        mean_log2, std_log2 = player_distributions[player2]
-        mean_log3, std_log3 = player_distributions[player3]
-        
-        line1 = player_lines[player1]
-        line2 = player_lines[player2]
-        line3 = player_lines[player3]
-        
-        # Determine side based on prediction vs line
-        side1 = 'over' if prediction1 > line1 else 'under'
-        side2 = 'over' if prediction2 > line2 else 'under'
-        side3 = 'over' if prediction3 > line3 else 'under'
-        
-        # Calculate probabilities using log-normal distribution
-        model_prob1 = prob_lognorm_calibrated(line1, mean_log1, std_log1, side1)
-        model_prob2 = prob_lognorm_calibrated(line2, mean_log2, std_log2, side2)
-        model_prob3 = prob_lognorm_calibrated(line3, mean_log3, std_log3, side3)
-        
-        # Calculate edge
-        if prediction1 > line1:
-            edge1 = prediction1 - line1
-        else:
-            edge1 = line1 - prediction1
+        try:
+            mapped_p1 = nameDict.get(player1, player1)
+            mapped_p2 = nameDict.get(player2, player2)
+            mapped_p3 = nameDict.get(player3, player3)
+            
+            prediction1 = player_predictions[player1]
+            prediction2 = player_predictions[player2]
+            prediction3 = player_predictions[player3]
+            
+            mean_log1, std_log1 = player_distributions[player1]
+            mean_log2, std_log2 = player_distributions[player2]
+            mean_log3, std_log3 = player_distributions[player3]
+            
+            line1 = player_lines[player1]
+            line2 = player_lines[player2]
+            line3 = player_lines[player3]
+            
+            # Determine side based on prediction vs line
+            side1 = 'over' if prediction1 > line1 else 'under'
+            side2 = 'over' if prediction2 > line2 else 'under'
+            side3 = 'over' if prediction3 > line3 else 'under'
+            
+            # Calculate probabilities using log-normal distribution
+            model_prob1 = prob_lognorm_calibrated(line1, mean_log1, std_log1, side1)
+            model_prob2 = prob_lognorm_calibrated(line2, mean_log2, std_log2, side2)
+            model_prob3 = prob_lognorm_calibrated(line3, mean_log3, std_log3, side3)
+            
+            # Calculate edge
+            if prediction1 > line1:
+                edge1 = prediction1 - line1
+            else:
+                edge1 = line1 - prediction1
 
-        if prediction2 > line2:
-            edge2 = prediction2 - line2
-        else:
-            edge2 = line2 - prediction2
+            if prediction2 > line2:
+                edge2 = prediction2 - line2
+            else:
+                edge2 = line2 - prediction2
 
-        if prediction3 > line3:
-            edge3 = prediction3 - line3
-        else:
-            edge3 = line3 - prediction3
+            if prediction3 > line3:
+                edge3 = prediction3 - line3
+            else:
+                edge3 = line3 - prediction3
 
-        # Get odds and calculate implied probability
-        odds1 = get_player_odds_from_csv(player1, line1, current_date, side1)
-        odds2 = get_player_odds_from_csv(player2, line2, current_date, side2)
-        odds3 = get_player_odds_from_csv(player3, line3, current_date, side3)
-        implied_prob1 = round(impliedProb(odds1), 2)
-        implied_prob2 = round(impliedProb(odds2), 2)
-        implied_prob3 = round(impliedProb(odds3), 2)
-        
-        # Calculate parlay probability using model probabilities
-        parlay_prob = model_prob1 * model_prob2 * model_prob3
-        
-        # Calculate parlay odds from individual bookmaker odds
-        parlay_odds = calculate_parlay_odds([odds1, odds2, odds3])
-        
-        # Convert parlay odds to decimal for EV calculation
-        parlay_decimal = american_to_decimal(parlay_odds)
-        
-        # Calculate Expected Value using bookmaker odds
-        # EV = (probability of winning * payout) - (probability of losing * stake)
-        # For a $1 bet: EV = (parlay_prob * (parlay_decimal - 1)) - ((1 - parlay_prob) * 1)
-        # Simplified: EV = parlay_prob * parlay_decimal - 1
-        ev = (parlay_prob * parlay_decimal) - 1
-        
-        # Also calculate edge (model prob vs implied prob)
-        parlay_implied_prob = implied_prob1 * implied_prob2 * implied_prob3
-        parlay_edge = parlay_prob - parlay_implied_prob
-        
-        # Calculate EV percentage (return on investment)
-        ev_percent = ev * 100
-        
-        # Calculate Kelly fraction (quarter Kelly = 0.25)
-        # Kelly = (probability * payout - 1) / (payout - 1)
-        # For parlay: kelly = (parlay_prob * parlay_decimal - 1) / (parlay_decimal - 1)
-        if parlay_decimal > 1:
-            kelly_full = (parlay_prob * parlay_decimal - 1) / (parlay_decimal - 1)
-            kelly_quarter = max(0, kelly_full * 0.25)  # Quarter Kelly
-        else:
-            kelly_quarter = 0
+            # Get odds and calculate implied probability
+            odds1 = get_player_odds_from_csv(player1, line1, current_date, side1)
+            odds2 = get_player_odds_from_csv(player2, line2, current_date, side2)
+            odds3 = get_player_odds_from_csv(player3, line3, current_date, side3)
+            implied_prob1 = round(impliedProb(odds1), 2)
+            implied_prob2 = round(impliedProb(odds2), 2)
+            implied_prob3 = round(impliedProb(odds3), 2)
+            
+            # Calculate parlay probability using model probabilities
+            parlay_prob = model_prob1 * model_prob2 * model_prob3
+            
+            # Calculate parlay odds from individual bookmaker odds
+            parlay_odds = calculate_parlay_odds([odds1, odds2, odds3])
+            
+            # Convert parlay odds to decimal for EV calculation
+            parlay_decimal = american_to_decimal(parlay_odds)
+            
+            # Calculate Expected Value using bookmaker odds
+            # EV = (probability of winning * payout) - (probability of losing * stake)
+            # For a $1 bet: EV = (parlay_prob * (parlay_decimal - 1)) - ((1 - parlay_prob) * 1)
+            # Simplified: EV = parlay_prob * parlay_decimal - 1
+            ev = (parlay_prob * parlay_decimal) - 1
+            
+            # Also calculate edge (model prob vs implied prob)
+            parlay_implied_prob = implied_prob1 * implied_prob2 * implied_prob3
+            parlay_edge = parlay_prob - parlay_implied_prob
+            
+            # Calculate EV percentage (return on investment)
+            ev_percent = ev * 100
+            
+            # Calculate Kelly fraction (quarter Kelly = 0.25)
+            # Kelly = (probability * payout - 1) / (payout - 1)
+            # For parlay: kelly = (parlay_prob * parlay_decimal - 1) / (parlay_decimal - 1)
+            if parlay_decimal > 1:
+                kelly_full = (parlay_prob * parlay_decimal - 1) / (parlay_decimal - 1)
+                kelly_quarter = max(0, kelly_full * 0.25)  # Quarter Kelly
+            else:
+                kelly_quarter = 0
 
-        results.append({
-            'NAME 1': mapped_p1,
-            'NAME 2': mapped_p2,
-            'NAME 3': mapped_p3,
-            'LINE 1': line1,
-            'LINE 2': line2,
-            'LINE 3': line3,
-            'SIDE 1': side1,
-            'SIDE 2': side2,
-            'SIDE 3': side3,
-            'PREDICTION 1': round(prediction1, 2),
-            'PREDICTION 2': round(prediction2, 2),
-            'PREDICTION 3': round(prediction3, 2),
-            'MODEL_PROB 1': round(model_prob1, 3),
-            'MODEL_PROB 2': round(model_prob2, 3),
-            'MODEL_PROB 3': round(model_prob3, 3),
-            'IMPLIED_PROB 1': implied_prob1,
-            'IMPLIED_PROB 2': implied_prob2,
-            'IMPLIED_PROB 3': implied_prob3,
-            'PARLAY_PROB': round(parlay_prob, 3),
-            'PARLAY_IMPLIED_PROB': round(parlay_implied_prob, 3),
-            'PARLAY_EDGE': round(parlay_edge, 3),
-            'EDGE 1': round(edge1, 2),
-            'EDGE 2': round(edge2, 2),
-            'EDGE 3': round(edge3, 2),
-            'ODDS 1': odds1,
-            'ODDS 2': odds2,
-            'ODDS 3': odds3,
-            'PARLAY_ODDS': parlay_odds,
-            'PARLAY_DECIMAL': round(parlay_decimal, 3),
-            'EV': round(ev, 4),
-            'EV_PERCENT': round(ev_percent, 2),
-            'KELLY_QUARTER': round(kelly_quarter, 4),
-        })
+            results.append({
+                'NAME 1': mapped_p1,
+                'NAME 2': mapped_p2,
+                'NAME 3': mapped_p3,
+                'LINE 1': line1,
+                'LINE 2': line2,
+                'LINE 3': line3,
+                'SIDE 1': side1,
+                'SIDE 2': side2,
+                'SIDE 3': side3,
+                'PREDICTION 1': round(prediction1, 2),
+                'PREDICTION 2': round(prediction2, 2),
+                'PREDICTION 3': round(prediction3, 2),
+                'MODEL_PROB 1': round(model_prob1, 3),
+                'MODEL_PROB 2': round(model_prob2, 3),
+                'MODEL_PROB 3': round(model_prob3, 3),
+                'IMPLIED_PROB 1': implied_prob1,
+                'IMPLIED_PROB 2': implied_prob2,
+                'IMPLIED_PROB 3': implied_prob3,
+                'PARLAY_PROB': round(parlay_prob, 3),
+                'PARLAY_IMPLIED_PROB': round(parlay_implied_prob, 3),
+                'PARLAY_EDGE': round(parlay_edge, 3),
+                'EDGE 1': round(edge1, 2),
+                'EDGE 2': round(edge2, 2),
+                'EDGE 3': round(edge3, 2),
+                'ODDS 1': odds1,
+                'ODDS 2': odds2,
+                'ODDS 3': odds3,
+                'PARLAY_ODDS': parlay_odds,
+                'PARLAY_DECIMAL': round(parlay_decimal, 3),
+                'EV': round(ev, 4),
+                'EV_PERCENT': round(ev_percent, 2),
+                'KELLY_QUARTER': round(kelly_quarter, 4),
+            })
+        except Exception as e:
+            print(f"Error processing combination ({player1}, {player2}, {player3}): {e}")
+            continue
     
     # Convert to DataFrame and sort by EV (descending)
     results_df = pd.DataFrame(results)
-    results_df['TOTAL_EDGE'] = results_df['EDGE 1'] + results_df['EDGE 2'] + results_df['EDGE 3']
-    results_df = results_df.sort_values('EV', ascending=False)
+    
+    if results_df.empty or 'EV_PERCENT' not in results_df.columns:
+        return results_df
+    
+    results_df = results_df.sort_values('EV_PERCENT', ascending=False)
     
     # Limit player appearances
     results_df = limit_player_appearances_3leg(results_df, max_appearances=max_player_appearances)

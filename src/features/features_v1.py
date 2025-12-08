@@ -127,7 +127,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = ['PTS', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 
-    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 'SPD', 'PF', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV',
+    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 'SPD', 'PF', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV', 'PACE',
     'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
     for window in windows:
         for col in stats_cols:
@@ -148,7 +148,7 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     player_data = player_data.sort_values([player_id_col, date_col])
     stats_lines = ['STARTING', 'PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
     'DIST', 'SPD', 'PF', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT',
-    'TS_PCT', 'USG_PCT', 'MIN', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT']
+    'TS_PCT', 'USG_PCT', 'MIN', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PACE']
     
     for stat_line in stats_lines:
         if stat_line not in player_data.columns:
@@ -177,7 +177,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     stats_cols = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
     'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'DIST', 'SPD', 'PF', 
     'TCHS', 'PLUS_MINUS', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
-    'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
+    'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE']
     for stat in stats_cols:
         if stat in df_enhanced.columns:
             df_enhanced[f'{stat}_AVG_TO_DATE'] = (
@@ -210,7 +210,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
 
     metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
     'TS_PCT', 'USG_PCT', 'MIN', 'POSS', 'TCHS', 'DIST', 'SPD', 'PF', 'PLUS_MINUS', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
-    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
+    'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE']
     
     metrics = [m for m in metrics if m in df.columns]
     if not metrics:
@@ -299,7 +299,7 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     # Metrics to track historical performance against teams
     metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
     'MIN', 'POSS', 'USG_PCT', 'EFG_PCT', 'TS_PCT', 'DIST', 'SPD', 'PF', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
-    'E_OFF_RATING', 'NET_RATING', 'PLUS_MINUS', 'POSS', 'TCHS', 'UFGA', 'UFGM', 'CFGA', 'CFGM']
+    'E_OFF_RATING', 'NET_RATING', 'PLUS_MINUS', 'POSS', 'TCHS', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'PACE']
     
     # Available metrics only
     available_metrics = [m for m in metrics if m in df.columns]
@@ -1447,7 +1447,7 @@ def add_performance_without_stars_columns(df, min_games=2):
     
     metrics = ['MIN', 'PTS', 'FGA','FTA', 'FG3A', 'FG3M', 'FTM', 'FGM', 'TOV', 'USG_PCT', 'TS_PCT', 'EFG_PCT',
     'UFGA', 'UFGM', 'PF', 'AST_TO_TOV', 'PLUS_MINUS', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'CFGA', 'CFGM',
-    'E_OFF_RATING', 'NET_RATING', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV']
+    'E_OFF_RATING', 'NET_RATING', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV', 'PACE']
     
     def calculate_without_star_stats(player_group):
         player_group = player_group.copy()
@@ -1613,19 +1613,6 @@ def get_standard_deviation(df, stats=None, windows=None, player_id_col='PLAYER_I
     return df
 
 def add_rolling_over_baseline_features(df, stats, windows=[5, 7, 10], epsilon=1e-8):
-    """
-    Generate features that compare rolling averages to season-to-date averages.
-    Creates features in the format: {STAT}_L{window}_OVER_BASELINE
-    
-    Args:
-        df: DataFrame with rolling average and avg-to-date columns
-        stats: List of stat names (e.g., ['PTS', 'FGA', 'USG_PCT'])
-        windows: List of window sizes for rolling averages (default: [5, 7, 10])
-        epsilon: Small value to prevent division by zero (default: 1e-8)
-    
-    Returns:
-        DataFrame with new features added
-    """
     df = df.copy()
     
     for stat in stats:
@@ -1673,7 +1660,7 @@ def add_interaction_features(df):
         'PTS', 'MIN', 'FGA', 'FGM', 'FG3M', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
         'FTA', 'FG3A', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
         'E_OFF_RATING', 'TCHS', 'PLUS_MINUS', 'POSS', 'PASS', 'SAST', 'AST', 'REB','TOV',
-        'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT'
+        'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE'
     ]
     df = add_rolling_over_baseline_features(df, stats_for_baseline, windows=[5, 7, 10], epsilon=epsilon)
 
@@ -1728,7 +1715,7 @@ def add_interaction_features(df):
     stats_for_expectation = [
         'PTS', 'MIN', 'AST', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
         'FGA', 'FGM', 'FTA', 'FTM', 'FG3A', 'FG3M', 'TS_PCT', 'POSS', 'TCHS', 'PLUS_MINUS', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
-        'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV'
+        'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV', 'PACE'
     ]
     df = add_expectation_location_features(df, stats_for_expectation)
 
