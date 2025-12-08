@@ -272,30 +272,30 @@ def train_cascading_model(train_data, val_data,
     train_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
         train_with_min_usg['PREDICTED_MIN'] * train_with_min_usg['PREDICTED_USG_PCT']
     )
-    train_with_min_usg['PREDICTED_USG_PCT_x_TEAM_PACE_OVER_LEAGUE_AVG'] = (
-        train_with_min_usg['PREDICTED_USG_PCT'] * train_with_min_usg['TEAM_PACE_OVER_LEAGUE_AVG']
-    )
-    train_with_min_usg['FGA_BOOST_STAR_OUT_x_PREDICTED_USG_PCT'] = (
-        train_with_min_usg['FGA_BOOST_STAR_OUT'] * train_with_min_usg['PREDICTED_USG_PCT']
-    )
     train_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
         train_with_min_usg['EXPECTED_PACE'] * train_with_min_usg['PREDICTED_MIN']
     )
+    # Calculate FGA_PER_MIN using predicted MIN
+    train_with_min_usg['FGA_PER_MIN'] = (
+        train_with_min_usg['FGA_AVG_TO_DATE'] / (train_with_min_usg['PREDICTED_MIN'] + 1e-8)
+    ).round(3)
+    train_with_min_usg['FGA_PER_MIN'] = train_with_min_usg['FGA_PER_MIN'].fillna(0.0)
+
     
     val_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
         val_with_min_usg['PREDICTED_MIN'] * val_with_min_usg['PREDICTED_USG_PCT']
     )
-    val_with_min_usg['PREDICTED_USG_PCT_x_TEAM_PACE_OVER_LEAGUE_AVG'] = (
-        val_with_min_usg['PREDICTED_USG_PCT'] * val_with_min_usg['TEAM_PACE_OVER_LEAGUE_AVG']
-    )
-    val_with_min_usg['FGA_BOOST_STAR_OUT_x_PREDICTED_USG_PCT'] = (
-        val_with_min_usg['FGA_BOOST_STAR_OUT'] * val_with_min_usg['PREDICTED_USG_PCT']
-    )
     val_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
         val_with_min_usg['EXPECTED_PACE'] * val_with_min_usg['PREDICTED_MIN']
     )
+    # Calculate FGA_PER_MIN using predicted MIN
+    val_with_min_usg['FGA_PER_MIN'] = (
+        val_with_min_usg['FGA_AVG_TO_DATE'] / (val_with_min_usg['PREDICTED_MIN'] + 1e-8)
+    ).round(3)
+    val_with_min_usg['FGA_PER_MIN'] = val_with_min_usg['FGA_PER_MIN'].fillna(0.0)
     
-    fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
+    # Add FGA_PER_MIN to feature list (it should already be in fga_features, but ensure it's included)
+    fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT', 'FGA_PER_MIN', 'PREDICTED_MIN_x_PREDICTED_USG_PCT']
     fga_model, fga_metrics = train_model(
         train_data=train_with_min_usg,
         val_data=val_with_min_usg,
@@ -334,6 +334,26 @@ def predict_cascading(models_dict, test_data, min_features, usg_features, fga_fe
     
     test_with_min_usg = test_with_min.copy()
     test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
+    
+    # Calculate interaction features for FGA model (matching training)
+    test_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
+        test_with_min_usg['PREDICTED_MIN'] * test_with_min_usg['PREDICTED_USG_PCT']
+    )
+    test_with_min_usg['PREDICTED_USG_PCT_x_TEAM_PACE_OVER_LEAGUE_AVG'] = (
+        test_with_min_usg['PREDICTED_USG_PCT'] * test_with_min_usg['TEAM_PACE_OVER_LEAGUE_AVG']
+    )
+    test_with_min_usg['FGA_BOOST_STAR_OUT_x_PREDICTED_USG_PCT'] = (
+        test_with_min_usg['FGA_BOOST_STAR_OUT'] * test_with_min_usg['PREDICTED_USG_PCT']
+    )
+    test_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
+        test_with_min_usg['EXPECTED_PACE'] * test_with_min_usg['PREDICTED_MIN']
+    )
+    # Calculate FGA_PER_MIN using predicted MIN
+    test_with_min_usg['FGA_PER_MIN'] = (
+        test_with_min_usg['FGA_AVG_TO_DATE'] / (test_with_min_usg['PREDICTED_MIN'] + 1e-8)
+    ).round(3)
+    test_with_min_usg['FGA_PER_MIN'] = test_with_min_usg['FGA_PER_MIN'].fillna(0.0)
+    
     fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
     fga_pred = predict(models_dict['fga_model'], test_with_min_usg, fga_features_with_min_usg)
     

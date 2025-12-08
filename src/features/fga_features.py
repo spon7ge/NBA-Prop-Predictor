@@ -12,21 +12,17 @@ project_root = current_file.parent.parent.parent
 class FGAFeatureBuilder(BaseFeatureBuilder):
 
     def __init__(self):
-        # Load base features (without PREDICTED_MIN and PREDICTED_USG_PCT)
         try:
             base_features = joblib.load(project_root / 'src' / 'models' / 'saved' / 'fga_features.pkl')
         except FileNotFoundError:
-            # If pickle file doesn't exist, use empty list (will be set during training)
             base_features = []
-        # Add PREDICTED_MIN and PREDICTED_USG_PCT at the end to match training feature order
-        # During training: fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
-        self.feature_names = base_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
+
+        self.feature_names = base_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT', 'FGA_PER_MIN', 'PREDICTED_MIN_x_PREDICTED_USG_PCT']
 
     def build(self, player_name, data, date, predicted_minutes, predicted_usage, projectedStartingFive=None, mainStartingFive=None, teamStarPlayer=None, league_df=None, findOpp=None, **kwargs):
         """
         Build FGA features using historical data + predicted minutes and usage.
         """
-        # Extract from kwargs if not provided directly
         if projectedStartingFive is None:
             projectedStartingFive = kwargs.get('projectedStartingFive')
         if mainStartingFive is None:
@@ -38,7 +34,6 @@ class FGAFeatureBuilder(BaseFeatureBuilder):
         if findOpp is None:
             findOpp = kwargs.get('findOpp')
         
-        # Import required dependencies if not provided
         if projectedStartingFive is None:
             from src.utils.team_info import projectedStartingFive
         if mainStartingFive is None:
@@ -48,7 +43,6 @@ class FGAFeatureBuilder(BaseFeatureBuilder):
         if findOpp is None:
             from src.utils.helper_functions import findOpp
         
-        # Get league_df if not provided (avoid API calls if already passed)
         if league_df is None:
             from nba_api.stats.endpoints import leaguedashteamstats
             league_df = leaguedashteamstats.LeagueDashTeamStats(
@@ -74,12 +68,13 @@ class FGAFeatureBuilder(BaseFeatureBuilder):
         if base is None:
             return None
         
-        # Convert feature dict to list in the order of feature_names
-        # Add PREDICTED_MIN and PREDICTED_USG_PCT at the end to match training feature order
-        # During training: fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
-        feature_list = [base.get(f, 0.0) for f in self.feature_names[:-2]]  # All except last 2
-        feature_list.append(float(predicted_minutes))  # PREDICTED_MIN
-        feature_list.append(float(predicted_usage))     # PREDICTED_USG_PCT
+        fga_per_min = base.get('FGA_PER_MIN', 0.0)
+        
+        feature_list = [base.get(f, 0.0) for f in self.feature_names[:-4]]
+        
+        feature_list.append(float(predicted_minutes))
+        feature_list.append(float(predicted_usage))
+        feature_list.append(float(fga_per_min))
+        feature_list.append(float(predicted_minutes) * float(predicted_usage))
         
         return feature_list
-
