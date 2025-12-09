@@ -733,26 +733,14 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
             implied_prob2 = round(impliedProb(odds2), 2)
             implied_prob3 = round(impliedProb(odds3), 2)
             
-            # Calculate parlay probability using model probabilities
             parlay_prob = model_prob1 * model_prob2 * model_prob3
             
-            # Calculate parlay odds from individual bookmaker odds
             parlay_odds = calculate_parlay_odds([odds1, odds2, odds3])
             
-            # Convert parlay odds to decimal for EV calculation
             parlay_decimal = american_to_decimal(parlay_odds)
-            
-            # Calculate Expected Value using bookmaker odds
-            # EV = (probability of winning * payout) - (probability of losing * stake)
-            # For a $1 bet: EV = (parlay_prob * (parlay_decimal - 1)) - ((1 - parlay_prob) * 1)
-            # Simplified: EV = parlay_prob * parlay_decimal - 1
             ev = (parlay_prob * parlay_decimal) - 1
-            
-            # Also calculate edge (model prob vs implied prob)
             parlay_implied_prob = implied_prob1 * implied_prob2 * implied_prob3
             parlay_edge = parlay_prob - parlay_implied_prob
-            
-            # Calculate EV percentage (return on investment)
             ev_percent = ev * 100
             
             # Calculate Kelly fraction (quarter Kelly = 0.25)
@@ -814,3 +802,202 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
     results_df = limit_player_appearances_3leg(results_df, max_appearances=max_player_appearances)
     
     return results_df.head(top_n)
+
+def calculateSingleBets(data, bookmakers, engine, current_date, 
+                        top_n=10, max_player_appearances=1,
+                        projectedStartingFive=None, mainStartingFive=None, 
+                        teamStarPlayer=None, league_df=None, findOpp=None):
+    # Filter for player points category
+    bookmakers = bookmakers[bookmakers['CATEGORY'] == 'player_points']
+    if bookmakers.empty:
+        print("No bets found for player_points")
+        return pd.DataFrame()
+
+    available_players = bookmakers['NAME'].unique()
+    if len(available_players) < 1:
+        print("No players available for single bets")
+        return pd.DataFrame()
+
+    # Store predictions, distributions, and metadata for each player
+    player_predictions = {}
+    player_distributions = {}  # Store (mean_log, std_log) for each player
+    player_teams = {}
+    player_opponents = {}
+    player_lines = {}
+    
+    print(f"Computing predictions for {len(available_players)} players...")
+    current_date_str = pd.to_datetime(current_date).strftime('%Y-%m-%d')
+    
+    # Get predictions and distributions for all available players
+    for player in available_players:
+        mapped_player = nameDict.get(player, player)
+        
+        try:
+            result = engine.project_player(
+                player_name=mapped_player,
+                data=data,
+                date=current_date_str,
+                projectedStartingFive=projectedStartingFive,
+                mainStartingFive=mainStartingFive,
+                teamStarPlayer=teamStarPlayer,
+                league_df=league_df,
+                findOpp=findOpp
+            )
+            
+            if result is None:
+                continue
+                
+            # Get distribution parameters with calibrations
+            dist_params = get_calibrated_distribution_params(
+                engine=engine,
+                player_name=mapped_player,
+                data=data,
+                date=current_date_str,
+                predicted_minutes=result['predicted_minutes'],
+                predicted_usage=result['predicted_usage'],
+                projectedStartingFive=projectedStartingFive,
+                mainStartingFive=mainStartingFive,
+                teamStarPlayer=teamStarPlayer,
+                league_df=league_df,
+                findOpp=findOpp
+            )
+            
+            if dist_params is None:
+                continue
+            
+            mean_log, std_log, _ = dist_params
+            
+            # Use the prediction from engine.project_player() which uses predict_mean
+            # This ensures consistency with what predict_mean actually returns
+            median_pred = result['predicted_points']
+                
+            # Get player's team and opponent
+            player_data = data[data['PLAYER_NAME'] == mapped_player]
+            if player_data.empty:
+                continue
+                
+            player_team = player_data['TEAM_ABBREVIATION'].iloc[-1]
+            opp_team, _ = findOpp(mapped_player, player_data, current_date_str)
+            if opp_team is None:
+                continue
+                
+            # Get line from bookmakers
+            player_bets = bookmakers[bookmakers['NAME'] == player]
+            if player_bets.empty:
+                continue
+                
+            # Store everything - use result['predicted_points'] to match what predict_mean returns
+            player_predictions[player] = result['predicted_points']
+            player_distributions[player] = (mean_log, std_log)
+            player_teams[player] = player_team
+            player_opponents[player] = opp_team
+            player_lines[player] = float(player_bets.iloc[0]['LINE'])
+            
+        except Exception as e:
+            print(f"Error processing {player}: {e}")
+            continue
+    
+    # Filter to players with valid data
+    available_players = [p for p in available_players 
+                        if p in player_predictions and p in player_distributions
+                        and p in player_teams and p in player_opponents 
+                        and p in player_lines]
+    
+    if len(available_players) < 1:
+        print("Not enough players with valid predictions for single bets")
+        return pd.DataFrame()
+    
+    print(f"Found {len(available_players)} valid players")
+    
+    # Build results
+    results = []
+    for player in available_players:
+        mapped_player = nameDict.get(player, player)
+        
+        prediction = player_predictions[player]
+        mean_log, std_log = player_distributions[player]
+        line = player_lines[player]
+        
+        # Determine side based on prediction vs line
+        side = 'over' if prediction > line else 'under'
+        
+        # Calculate probability using log-normal distribution
+        model_prob = prob_lognorm_calibrated(line, mean_log, std_log, side)
+        
+        # Calculate edge
+        if prediction > line:
+            edge = prediction - line
+        else:
+            edge = line - prediction
+
+        # Get odds and calculate implied probability
+        odds = get_player_odds_from_csv(player, line, current_date, side)
+        implied_prob = round(impliedProb(odds), 2)
+        
+        # Convert odds to decimal for EV calculation
+        decimal_odds = american_to_decimal(odds)
+        
+        # Calculate Expected Value using bookmaker odds
+        # EV = (probability of winning * payout) - (probability of losing * stake)
+        # For a $1 bet: EV = (model_prob * (decimal_odds - 1)) - ((1 - model_prob) * 1)
+        # Simplified: EV = model_prob * decimal_odds - 1
+        ev = (model_prob * decimal_odds) - 1
+        
+        # Also calculate edge (model prob vs implied prob)
+        bet_edge = model_prob - implied_prob
+        
+        # Calculate EV percentage (return on investment)
+        ev_percent = ev * 100
+        
+        # Calculate Kelly fraction (quarter Kelly = 0.25)
+        # Kelly = (probability * payout - 1) / (payout - 1)
+        # For single bet: kelly = (model_prob * decimal_odds - 1) / (decimal_odds - 1)
+        if decimal_odds > 1:
+            kelly_full = (model_prob * decimal_odds - 1) / (decimal_odds - 1)
+            kelly_quarter = max(0, kelly_full * 0.25)  # Quarter Kelly
+        else:
+            kelly_quarter = 0
+
+        results.append({
+            'NAME': mapped_player,
+            'LINE': line,
+            'SIDE': side,
+            'PREDICTION': round(prediction, 2),
+            'MODEL_PROB': round(model_prob, 3),
+            'IMPLIED_PROB': implied_prob,
+            'EDGE': round(edge, 2),
+            'BET_EDGE': round(bet_edge, 3),
+            'ODDS': odds,
+            'DECIMAL_ODDS': round(decimal_odds, 3),
+            'EV': round(ev, 4),
+            'EV_PERCENT': round(ev_percent, 2),
+            'KELLY_QUARTER': round(kelly_quarter, 4),
+            'TEAM': player_teams[player],
+            'OPPONENT': player_opponents[player],
+        })
+    
+    # Convert to DataFrame and sort by EV (descending)
+    results_df = pd.DataFrame(results)
+
+    if results_df.empty or 'EV_PERCENT' not in results_df.columns:
+        return results_df
+
+    results_df = results_df.sort_values('EV_PERCENT', ascending=False)
+    
+    # Limit player appearances (though for single bets this is less critical)
+    # Still useful if same player has multiple lines
+    if max_player_appearances > 0:
+        player_counts = {}
+        filtered_results = []
+        
+        for _, row in results_df.iterrows():
+            player_name = row['NAME']
+            count = player_counts.get(player_name, 0)
+            
+            if count < max_player_appearances:
+                filtered_results.append(row)
+                player_counts[player_name] = count + 1
+        
+        results_df = pd.DataFrame(filtered_results)
+    
+    return results_df
