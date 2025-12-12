@@ -1,8 +1,11 @@
 NAME 1,NAME 2,NAME 3,LINE 1,LINE 2,LINE 3,ODDS 1,ODDS 2,ODDS 3,PREDICTION 1,PREDICTION 2,PREDICTION 3,MODEL_PROB 1,MODEL_PROB 2,MODEL_PROB 3,SIDE 1,SIDE 2,SIDE 3,PARLAY_PROB,PARLAY_ODDS,EV_PERCENT,KELLY_QUARTER
-Jaime Jaquez Jr.,Jalen Brunson,Isaiah Joe,10.5,27.5,7.5,100,105,-105,20.78,28.93,14.38,0.97,0.595,0.891,over,over,over,0.514,700,311.19,0.1111
-Kel'el Ware,Sandro Mamukelashvili,Mark Williams,8.5,9.5,9.5,-102,-115,-122,12.99,6.67,13.29,0.85,0.602,0.809,over,under,over,0.414,574,178.88,0.0779
-Anthony Black,Mikal Bridges,Devin Booker,15.5,15.5,22.5,-110,-102,-115,10.22,16.03,26.48,0.756,0.564,0.745,under,over,over,0.318,607,124.51,0.0513
-Dru Smith,Brandon Ingram,Dillon Brooks,4.5,23.5,18.5,-110,-116,-137,6.64,20.65,22.74,0.716,0.587,0.788,over,under,over,0.331,515,103.79,0.0504
-Jalen Suggs,Immanuel Quickley,Grayson Allen,18.5,17.5,15.5,-110,-104,-115,12.2,17.54,17.27,0.709,0.53,0.646,under,over,over,0.243,600,69.93,0.0291
-Tyler Herro,Scottie Barnes,Luguentz Dort,22.5,20.5,7.5,100,102,-102,24.51,19.25,8.18,0.642,0.485,0.593,over,under,over,0.185,700,47.66,0.017
-Paolo Banchero,Karl-Anthony Towns,Royce O'Neale,20.5,22.5,8.5,-136,-120,-114,15.75,22.19,9.51,0.702,0.437,0.616,under,under,over,0.189,497,12.82,0.0064
+Anfernee Simons,Jabari Smith Jr.,Maxime Raynaud,11.5,14.5,11.5,-118,100,-101,16.62,20.02,5.31,0.829,0.831,0.83,over,over,under,0.571,635,319.88,0.1259
+Amen Thompson,Shaedon Sharpe,Nique Clifford,16.5,22.5,8.5,-111,-121,-123,22.75,28.95,2.67,0.866,0.828,0.829,over,over,under,0.595,529,274.03,0.1295
+Kawhi Leonard,Russell Westbrook,Paolo Banchero,22.5,17.5,21.5,-122,-115,-110,27.68,10.85,15.31,0.809,0.792,0.773,over,under,under,0.495,549,221.16,0.1007
+Payton Pritchard,Jamal Murray,Stephen Curry,16.5,24.5,24.5,-110,-105,-106,20.87,29.23,29.99,0.763,0.754,0.749,over,over,over,0.431,624,211.93,0.0849
+Josh Minott,Tobias Harris,De'Anthony Melton,5.5,13.5,8.5,-129,-108,-137,9.19,16.88,11.79,0.816,0.726,0.787,over,over,over,0.467,491,175.77,0.0895
+Jaylen Brown,Jonas Valančiūnas,Jalen Suggs,29.5,8.5,17.5,100,-110,-110,34.59,10.9,12.4,0.716,0.703,0.696,over,over,under,0.35,629,155.5,0.0618
+Ivica Zubac,Saddiq Bey,Cameron Johnson,14.5,16.5,14.5,-115,-113,-119,16.83,12.11,9.79,0.695,0.688,0.696,over,under,under,0.333,549,115.89,0.0528
+Sam Hauser,Kobe Sanders,Buddy Hield,7.5,4.5,8.5,-110,-137,-122,9.4,6.99,4.5,0.661,0.726,0.692,over,over,under,0.332,501,99.49,0.0496
+Jerami Grant,Jalen Duren,De'Aaron Fox,21.5,18.5,20.5,-118,-110,-112,16.89,14.65,22.51,0.667,0.653,0.65,under,under,over,0.283,568,88.97,0.0392
+Toumani Camara,Tim Hardaway Jr.,Chet Holmgren,13.5,12.5,16.5,-105,-105,-112,15.27,13.85,13.36,0.625,0.61,0.629,over,over,under,0.24,622,73.25,0.0294
