@@ -127,7 +127,7 @@ def rollingAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'
     df.sort_values([player_id_col, date_col], inplace=True)
 
     stats_cols = ['PTS', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 
-    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 'SPD', 'PF', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV', 'PACE',
+    'USG_PCT', 'MIN', 'POSS', 'PLUS_MINUS', 'TS_PCT', 'SPD', 'PF', 'PASS', 'SAST', 'AST', 'REB', 'OREB', 'DREB', 'TOV', 'PACE', 'E_DEF_RATING', 'PIE',
     'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT']
     for window in windows:
         for col in stats_cols:
@@ -147,7 +147,7 @@ def addLagFeatures(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE')
     
     player_data = player_data.sort_values([player_id_col, date_col])
     stats_lines = ['STARTING', 'PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM',
-    'DIST', 'SPD', 'PF', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT',
+    'DIST', 'SPD', 'PF', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'E_DEF_RATING', 'PIE',
     'TS_PCT', 'USG_PCT', 'MIN', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'TCHS', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PACE']
     
     for stat_line in stats_lines:
@@ -174,7 +174,7 @@ def getPlayerAvgToDateVectorized(df, player_id_col='PLAYER_ID', date_col='GAME_D
     df_enhanced = df.copy().sort_values([player_id_col, date_col]).reset_index(drop=True)
     
     # Define stats
-    stats_cols = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
+    stats_cols = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'E_DEF_RATING', 'PIE',
     'FTA', 'FTM', 'MIN','TS_PCT', 'USG_PCT', 'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'POSS', 'DIST', 'SPD', 'PF', 
     'TCHS', 'PLUS_MINUS', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
     'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE']
@@ -208,7 +208,7 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
     if 'HOME_GAME' not in df.columns:
         return df
 
-    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM',
+    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'E_DEF_RATING', 'PIE',
     'TS_PCT', 'USG_PCT', 'MIN', 'POSS', 'TCHS', 'DIST', 'SPD', 'PF', 'PLUS_MINUS', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
     'E_OFF_RATING', 'NET_RATING', 'EFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE']
     
@@ -297,7 +297,7 @@ def statAgainstTeam(player_data, player_id_col='PLAYER_ID', opp_col='OPP_ABBREVI
     df.sort_values([player_id_col, 'GAME_DATE'], inplace=True)
     
     # Metrics to track historical performance against teams
-    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'FG_PCT', 'FG3_PCT', 'FT_PCT',
+    metrics = ['PTS', 'AST', 'FGA', 'FGM', 'FG3A', 'FG3M', 'FTA', 'FTM', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'E_DEF_RATING', 'PIE',
     'MIN', 'POSS', 'USG_PCT', 'EFG_PCT', 'TS_PCT', 'DIST', 'SPD', 'PF', 'PASS', 'SAST', 'REB', 'OREB', 'DREB', 'TOV',
     'E_OFF_RATING', 'NET_RATING', 'PLUS_MINUS', 'POSS', 'TCHS', 'UFGA', 'UFGM', 'CFGA', 'CFGM', 'PACE']
     
@@ -1032,22 +1032,21 @@ def sort_data_for_features(df):
     
     return df
 
-def add_team_usage_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+def add_team_fg3a_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
     df = df.copy()
-    
     df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
     
-    df['USG_PCT_AVG_TO_GAME'] = (
-        df.groupby(player_id_col)['USG_PCT']
+    df['FG3A_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['FG3A']
         .transform(lambda x: x.shift(1).expanding().mean())
     )
-    df['USG_TEAM_RANK'] = (
-        df.groupby([team_id_col, date_col])['USG_PCT_AVG_TO_GAME']
+    df['FG3A_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['FG3A_AVG_TO_GAME']
         .rank(method='dense', ascending=False, na_option='keep')
         .astype('Int64')
     )
     
-    df = df.drop(columns=['USG_PCT_AVG_TO_GAME'])
+    df = df.drop(columns=['FG3A_AVG_TO_GAME'])
     return df
 
 def add_team_pts_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
@@ -1103,21 +1102,27 @@ def add_team_fga_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date
     
     df = df.drop(columns=['FGA_AVG_TO_GAME'])
     return df
+
+def add_team_fta_rank(df, player_id_col='PLAYER_ID', team_id_col='TEAM_ID', date_col='GAME_DATE'):
+    df = df.copy()
+    df = df.sort_values([team_id_col, date_col, player_id_col]).reset_index(drop=True)
     
+    df['FTA_AVG_TO_GAME'] = (
+        df.groupby(player_id_col)['FTA']
+        .transform(lambda x: x.shift(1).expanding().mean())
+    )
+    df['FTA_TEAM_RANK'] = (
+        df.groupby([team_id_col, date_col])['FTA_AVG_TO_GAME']
+        .rank(method='dense', ascending=False, na_option='keep')
+        .astype('Int64')
+    )
+    
+    df = df.drop(columns=['FTA_AVG_TO_GAME'])
+    return df
 # ================================================================================================
 # LINEUP AND STARTER FEATURES
 # ================================================================================================
 def process_star_players_data(df, min_minutes=10, min_games=5, name_dict=None):
-    """
-    Process star players data with optional name normalization.
-    
-    Args:
-        df: DataFrame with player game data
-        min_minutes: Minimum minutes to be considered active (default: 10)
-        min_games: Minimum number of active games to be eligible for star (default: 5)
-        name_dict: Optional dictionary to normalize player names (e.g., {'Luka Doncic': 'Luka Dončić'})
-                   If None, will try to import from src.utils.team_info
-    """
     df = df.copy()
     
     # Try to import nameDict if not provided
@@ -1437,6 +1442,53 @@ def add_lineup_usage_fga_share(df):
 # UTILITY AND HELPER FUNCTIONS
 ########################################################################################
 
+def process_matchup_defensive_stats(df):
+    df = df.copy()
+    
+    # Calculate defensive percentages using available columns
+    df['DEF_FG_PCT_ALLOWED'] = df.apply(
+        lambda row: round(row['matchupFieldGoalsMade'] / row['matchupFieldGoalsAttempted'], 3) 
+        if row['matchupFieldGoalsAttempted'] > 0 else 0, axis=1
+    )
+    df['DEF_3PT_PCT_ALLOWED'] = df.apply(
+        lambda row: round(row['matchupThreePointersMade'] / row['matchupThreePointersAttempted'], 3) 
+        if row['matchupThreePointersAttempted'] > 0 else 0, axis=1
+    )
+    
+    # Calculate matchup field goal and 3pt percentages (same as DEF_FG_PCT_ALLOWED for consistency)
+    df['matchupFieldGoalsPercentage'] = df.apply(
+        lambda row: round(row['matchupFieldGoalsMade'] / row['matchupFieldGoalsAttempted'], 3) 
+        if row['matchupFieldGoalsAttempted'] > 0 else 0, axis=1
+    )
+    df['matchupThreePointersPercentage'] = df.apply(
+        lambda row: round(row['matchupThreePointersMade'] / row['matchupThreePointersAttempted'], 3) 
+        if row['matchupThreePointersAttempted'] > 0 else 0, axis=1
+    )
+    
+    # Rename columns to match standard naming convention
+    column_mapping = {
+        'gameId': 'GAME_ID',
+        'personIdDef': 'PLAYER_ID',
+        'teamId': 'TEAM_ID'
+    }
+    df = df.rename(columns=column_mapping)
+    
+    # Select the columns we want to keep (only those available from fetch_player_stats.py)
+    cols = [
+        'GAME_ID', 'PLAYER_ID',
+        'matchupFieldGoalsMade', 'matchupFieldGoalsAttempted',
+        'matchupThreePointersMade', 'matchupThreePointersAttempted',
+        'playerPoints', 'matchupMinutes', 'matchupFieldGoalsPercentage',
+        'matchupThreePointersPercentage', 'DEF_FG_PCT_ALLOWED',
+        'DEF_3PT_PCT_ALLOWED'
+    ]
+    
+    # Only keep columns that exist in the dataframe
+    cols_to_keep = [col for col in cols if col in df.columns]
+    df = df[cols_to_keep]
+    
+    return df
+
 def add_performance_without_stars_columns(df, min_games=2):
     """
     Add columns showing player performance delta when star teammates are out.
@@ -1497,6 +1549,129 @@ def add_performance_without_stars_columns(df, min_games=2):
     
     # Apply to each player
     result = df.groupby('PLAYER_NAME', group_keys=False).apply(calculate_without_star_stats)
+    
+    return result
+
+
+def add_performance_without_top_ranked_columns(df, stat='PTS', min_games=2, min_minutes_out=10):
+    df = df.copy()
+    
+    # Check if rank column exists
+    rank_col = f'{stat}_TEAM_RANK'
+    if rank_col not in df.columns:
+        print(f"Warning: {rank_col} not found in dataframe. Skipping function.")
+        return df
+    
+    # Ensure data is sorted
+    df = df.sort_values(['PLAYER_NAME', 'GAME_DATE']).reset_index(drop=True)
+    
+    # Only calculate delta for the stat being analyzed
+    if stat not in df.columns:
+        print(f"Warning: {stat} column not found in dataframe. Skipping function.")
+        return df
+    
+    metrics = [stat]  # Only track the stat being analyzed
+    
+    # Identify when top 1-3 ranked players (by stat) are out for each team/game
+    # Create a column indicating if any top 3 ranked player (by this stat) is out
+    df['TOP_RANK_OUT'] = 0
+    
+    # Process by team and game
+    for (team_id, game_id), game_group in df.groupby(['TEAM_ID', 'GAME_ID']):
+        # Get rank column for this game
+        if rank_col not in game_group.columns:
+            continue
+        
+        # Get game indices
+        game_indices = game_group.index
+        
+        # Find players ranked 1, 2, or 3 by this stat (using rank column)
+        top_ranked_mask = game_group[rank_col].isin([1, 2, 3])
+        top_ranked_players = game_group[top_ranked_mask]
+        
+        # Check if any of these top ranked players are "out" (MIN < threshold)
+        if 'MIN' in game_group.columns and len(top_ranked_players) > 0:
+            # Convert MIN to float if it's in time format
+            min_values = game_group['MIN'].copy()
+            if min_values.dtype == 'object':
+                try:
+                    # Try to use helper function if available
+                    from src.utils.helper_functions import convert_min_to_float
+                    min_values = min_values.apply(convert_min_to_float)
+                except ImportError:
+                    # Fallback to manual conversion
+                    try:
+                        min_values = min_values.apply(lambda x: float(x) if isinstance(x, (int, float)) else 0)
+                    except:
+                        min_values = pd.to_numeric(min_values, errors='coerce').fillna(0)
+            
+            # Check if any top ranked player is out (MIN < threshold)
+            top_ranked_indices = top_ranked_players.index
+            top_ranked_minutes = min_values.loc[top_ranked_indices]
+            any_top_ranked_out = (top_ranked_minutes < min_minutes_out).any()
+            
+            if any_top_ranked_out:
+                # At least one top 3 ranked player is out in this game
+                df.loc[game_indices, 'TOP_RANK_OUT'] = 1
+    
+    def calculate_without_top_rank_stats(player_group):
+        """Calculate performance delta when top ranked players are out"""
+        player_group = player_group.copy()
+        
+        # Shift to avoid lookahead bias (use previous game's status)
+        player_group['TOP_RANK_OUT_SHIFTED'] = player_group['TOP_RANK_OUT'].shift(1)
+        
+        # Only calculate if this player is NOT in the top 3 (we want to see how others benefit)
+        # But we still track the flag for all players for consistency
+        top_rank_out_mask = player_group['TOP_RANK_OUT_SHIFTED'] == 1
+        top_rank_in_mask = player_group['TOP_RANK_OUT_SHIFTED'] == 0
+        
+        if top_rank_out_mask.sum() >= min_games and top_rank_in_mask.sum() >= min_games:
+            top_rank_out_data = player_group[top_rank_out_mask]
+            top_rank_in_data = player_group[top_rank_in_mask]
+            
+            baseline_performance = {}
+            for metric in metrics:
+                if metric in player_group.columns:
+                    baseline_performance[metric] = top_rank_in_data[metric].mean()
+            
+            top_rank_out_performance = {}
+            for metric in metrics:
+                if metric in player_group.columns:
+                    top_rank_out_performance[metric] = top_rank_out_data[metric].mean()
+            
+            # Calculate delta (performance when top ranked out - baseline performance)
+            for metric in metrics:
+                if metric in player_group.columns:
+                    baseline = baseline_performance[metric]
+                    top_out = top_rank_out_performance[metric]
+                    delta = top_out - baseline if not pd.isna(baseline) and not pd.isna(top_out) else np.nan
+                    player_group[f'{metric}_DELTA_TOP{stat}_RANK_OUT'] = round(delta, 2)
+                else:
+                    player_group[f'{metric}_DELTA_TOP{stat}_RANK_OUT'] = np.nan
+            
+            player_group[f'GAMES_WITHOUT_TOP{stat}_RANK'] = top_rank_out_mask.sum()
+            player_group[f'GAMES_WITH_TOP{stat}_RANK'] = top_rank_in_mask.sum()
+        else:
+            # Set to NaN for all metrics if insufficient games
+            for metric in metrics:
+                player_group[f'{metric}_DELTA_TOP{stat}_RANK_OUT'] = np.nan
+            
+            player_group[f'GAMES_WITHOUT_TOP{stat}_RANK'] = 0
+            player_group[f'GAMES_WITH_TOP{stat}_RANK'] = 0
+        
+        # Drop temporary column
+        if 'TOP_RANK_OUT_SHIFTED' in player_group.columns:
+            player_group = player_group.drop('TOP_RANK_OUT_SHIFTED', axis=1)
+        
+        return player_group
+    
+    # Apply to each player
+    result = df.groupby('PLAYER_NAME', group_keys=False).apply(calculate_without_top_rank_stats)
+    
+    # Drop the temporary TOP_RANK_OUT column
+    if 'TOP_RANK_OUT' in result.columns:
+        result = result.drop('TOP_RANK_OUT', axis=1)
     
     return result
 
@@ -1662,7 +1837,7 @@ def add_interaction_features(df):
         'E_OFF_RATING', 'TCHS', 'PLUS_MINUS', 'POSS', 'PASS', 'SAST', 'AST', 'REB','TOV',
         'PTS_OFF_TOV', 'PTS_2ND_CHANCE', 'PTS_FB', 'PTS_PAINT', 'PACE'
     ]
-    df = add_rolling_over_baseline_features(df, stats_for_baseline, windows=[5, 7, 10], epsilon=epsilon)
+    df = add_rolling_over_baseline_features(df, stats_for_baseline, windows=[3,5,7,10], epsilon=epsilon)
 
     # ===== SHORT VS LONG TERM DIVERGENCES =====
     df['PTS_10G_VS_SEASON_RATIO'] = df['PTS_ROLLING_AVG_10'] / (df['PTS_AVG_TO_DATE'] + epsilon)
@@ -1745,9 +1920,11 @@ def add_interaction_features(df):
 def test_features(df):
     df = df.copy()
 
-    # ===== TESTING FEATURES for USG_PCT model =====
+    # ===== TESTING FEATURES for FG3A model =====
     df['EXPECTED_PACE_X_USG_PCT'] = df['EXPECTED_PACE'] * df['USG_PCT_AVG_TO_DATE']    
     df['OPP_DEF_RATING_OVER_LEAGUE_x_USG_PCT'] = df['OPP_DEF_RATING_OVER_LEAGUE_AVG'] * df['USG_PCT_AVG_TO_DATE']
+    df['STARTING_X_FG3A'] = df['STARTING'] * df['FG3A_AVG_TO_DATE']
+
     # ===== TESTING FEATURES for FGA model =====
     df['HIGH_FGA_PLAYER'] = (df['FGA_AVG_TO_DATE'] >= 15).astype(int) #new
     df['MEDIUM_FGA_PLAYER'] = (df['FGA_AVG_TO_DATE'] >= 7).astype(int) & (df['FGA_AVG_TO_DATE'] < 15).astype(int) #new
@@ -1769,4 +1946,13 @@ def test_features(df):
     df['MEDIUM_SCORING_PLAYER'] = (df['PTS_AVG_TO_DATE'] >= 10).astype(int) & (df['PTS_AVG_TO_DATE'] < 20).astype(int)
     df['LOW_SCORING_PLAYER'] = (df['PTS_AVG_TO_DATE'] < 10).astype(int)
     df['PERCENTAGE_OF_TEAM_PTS'] = df['PTS_AVG_TO_DATE'] / df['TEAM_PTS_AVG_TO_DATE']
+    df['STARTING_X_MIN'] = df['STARTING'] * df['MIN_AVG_TO_DATE']
+    df['STARTING_X_FGA'] = df['STARTING'] * df['FGA_AVG_TO_DATE']
+    df['STARTING_X_FG3A'] = df['STARTING'] * df['FG3A_AVG_TO_DATE']
+    df['STARTING_X_PTS'] = df['STARTING'] * df['PTS_AVG_TO_DATE']
+    df['FTA_PER_FGA'] = df['FTA_AVG_TO_DATE'] / (df['FGA_AVG_TO_DATE'] + 1e-8)
+    #new
+    df['STARTER_X_DAYS_REST'] = df['STARTING_X_MIN'] * df['PLAYER_DAYS_REST']
+    df['STARTER_X_STAR_OUT'] = df['STARTING_X_MIN'] * df['STAR_SAT_OUT']
+    df['B2B_X_STARTER'] = df['IS_BACK_TO_BACK'] * df['STARTING_X_MIN']
     return df

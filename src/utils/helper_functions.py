@@ -147,7 +147,7 @@ def process_season_features(season_df, prop_type, year):
     df = features_teamContext(df)
     df = addLagFeatures(df)
     df = assign_opponent_team_stats_dict(df)
-    df = add_volatility_features(df, windows=[10,20,40])
+    df = add_volatility_features(df, windows=[7,10,20,40])
     df = assign_team_opp_def_by_position(df, min_minutes=1)
     df = process_star_players_data(df, min_minutes=20, min_games=5)
     df = add_performance_without_stars_columns(df, min_games=1)
@@ -162,10 +162,16 @@ def process_season_features(season_df, prop_type, year):
     df = add_lineup_usage_fga_share(df)
     df = add_interaction_features(df)
     df = test_features(df)
-    df = add_team_usage_rank(df)
     df = add_team_min_rank(df)
     df = add_team_fga_rank(df)
     df = add_team_pts_rank(df)
+    df = add_team_fg3a_rank(df)
+    df = add_team_fta_rank(df)
+    df = add_performance_without_top_ranked_columns(df, stat='MIN')
+    df = add_performance_without_top_ranked_columns(df, stat='PTS')
+    df = add_performance_without_top_ranked_columns(df, stat='FGA')
+    df = add_performance_without_top_ranked_columns(df, stat='FG3A')
+    df = add_performance_without_top_ranked_columns(df, stat='FTA')
     return df
 
 

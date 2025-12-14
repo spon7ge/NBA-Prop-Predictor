@@ -139,14 +139,36 @@ class FetchPlayersStats:
         team_df['GAME_ID'] = team_df['GAME_ID'].astype(str).apply(self.normalize_game_id)
         team_df = team_df.dropna(subset=['GAME_ID'])  # Remove any invalid game IDs
         
+        # Check if TEAM_ID exists in player_df, if not try to get it from TEAM_ABBREVIATION
+        if 'TEAM_ID' not in player_df.columns:
+            if 'TEAM_ABBREVIATION' in player_df.columns and 'TEAM_ABBREVIATION' in team_df.columns:
+                # Create a mapping from TEAM_ABBREVIATION to TEAM_ID using team_df
+                team_mapping = team_df[['TEAM_ABBREVIATION', 'TEAM_ID']].drop_duplicates()
+                # Merge to get TEAM_ID based on TEAM_ABBREVIATION
+                player_df = player_df.merge(
+                    team_mapping,
+                    on='TEAM_ABBREVIATION',
+                    how='left'
+                )
+            else:
+                print("Warning: TEAM_ID and TEAM_ABBREVIATION not found in player_df. Cannot merge team stats.")
+                return player_df
+        
         # Ensure TEAM_IDs are int for merging
-        player_df['TEAM_ID'] = player_df['TEAM_ID'].astype(int)
-        team_df['TEAM_ID'] = team_df['TEAM_ID'].astype(int)
+        if 'TEAM_ID' in player_df.columns:
+            player_df['TEAM_ID'] = player_df['TEAM_ID'].astype(int)
+        if 'TEAM_ID' in team_df.columns:
+            team_df['TEAM_ID'] = team_df['TEAM_ID'].astype(int)
         
         # Drop TEAM_ABBREVIATION from team_df to avoid duplicates
         team_df = team_df.drop(columns=['TEAM_ABBREVIATION'], errors='ignore')
         
-        return player_df.merge(team_df, on=['GAME_ID', 'TEAM_ID'], how='left')
+        # Only merge if TEAM_ID exists in both dataframes
+        if 'TEAM_ID' in player_df.columns and 'TEAM_ID' in team_df.columns:
+            return player_df.merge(team_df, on=['GAME_ID', 'TEAM_ID'], how='left')
+        else:
+            print("Warning: TEAM_ID missing. Merging only on GAME_ID.")
+            return player_df.merge(team_df, on='GAME_ID', how='left')
 
     def fetchPlayerStats(self, season=None, season_type='Regular Season'):
         season = season or self.default_season

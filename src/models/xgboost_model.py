@@ -220,6 +220,10 @@ def analyze_shap(model, test_df, features, target_col='PTS'):
     for idx, row in feature_importance.head(25).iterrows():
         print(f"  {row['feature']:30} {row['importance']:.4f}")
     
+    print("Bottom 25 Features by SHAP importance:")
+    for idx, row in feature_importance.tail(25).iterrows():
+        print(f"  {row['feature']:30} {row['importance']:.4f}")
+    
     plt.figure(figsize=(12, 8))
     shap.summary_plot(shap_values, X_test, max_display=25, show=False)
     plt.title('SHAP Summary Plot', fontsize=14, fontweight='bold')
@@ -229,7 +233,7 @@ def analyze_shap(model, test_df, features, target_col='PTS'):
     return model
 
 def train_cascading_model(train_data, val_data, 
-                          min_features, usg_features, fga_features,
+                          min_features, fga_features, fg3a_features, fta_features,
                           date_column='GAME_DATE', player_column='PLAYER_ID'):
     
     min_model, min_metrics = train_model(
@@ -249,122 +253,173 @@ def train_cascading_model(train_data, val_data,
     val_with_min = val_data.copy()
     val_with_min['PREDICTED_MIN'] = val_min_pred
     
-    usg_features_with_min = usg_features + ['PREDICTED_MIN']
+    # Calculate interaction features for FGA model
+    train_with_min['EXPECTED_PACE_x_PREDICTED_MIN'] = (
+        train_with_min['EXPECTED_PACE'] * train_with_min['PREDICTED_MIN']
+    )
+    # Calculate FGA_PER_MIN using predicted MIN
+    train_with_min['FGA_PER_MIN'] = (
+        train_with_min['FGA_ROLLING_AVG_10'] / (train_with_min['PREDICTED_MIN'] + 1e-8)
+    ).round(3)
+    train_with_min['FGA_PER_MIN'] = train_with_min['FGA_PER_MIN'].fillna(0.0)
+
+    val_with_min['EXPECTED_PACE_x_PREDICTED_MIN'] = (
+        val_with_min['EXPECTED_PACE'] * val_with_min['PREDICTED_MIN']
+    )
+    # Calculate FGA_PER_MIN using predicted MIN
+    val_with_min['FGA_PER_MIN'] = (
+        val_with_min['FGA_ROLLING_AVG_10'] / (val_with_min['PREDICTED_MIN'] + 1e-8)
+    ).round(3)
+    val_with_min['FGA_PER_MIN'] = val_with_min['FGA_PER_MIN'].fillna(0.0)
     
-    usg_model, usg_metrics = train_model(
+    fga_features_with_min = fga_features + ['PREDICTED_MIN', 'FGA_PER_MIN']
+    fga_model, fga_metrics = train_model(
         train_data=train_with_min,
         val_data=val_with_min,
-        features=usg_features_with_min,
-        target='USG_PCT',
-        date_column=date_column,
-        player_column=player_column
-    )
-    
-    train_usg_pred = predict(usg_model, train_with_min, usg_features_with_min)
-    val_usg_pred = predict(usg_model, val_with_min, usg_features_with_min)
-    
-    train_with_min_usg = train_with_min.copy()
-    train_with_min_usg['PREDICTED_USG_PCT'] = train_usg_pred
-    val_with_min_usg = val_with_min.copy()
-    val_with_min_usg['PREDICTED_USG_PCT'] = val_usg_pred
-    
-    # Calculate interaction features for FGA model
-    train_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
-        train_with_min_usg['PREDICTED_MIN'] * train_with_min_usg['PREDICTED_USG_PCT']
-    )
-    train_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
-        train_with_min_usg['EXPECTED_PACE'] * train_with_min_usg['PREDICTED_MIN']
-    )
-    # Calculate FGA_PER_MIN using predicted MIN
-    train_with_min_usg['FGA_PER_MIN'] = (
-        train_with_min_usg['FGA_AVG_TO_DATE'] / (train_with_min_usg['PREDICTED_MIN'] + 1e-8)
-    ).round(3)
-    train_with_min_usg['FGA_PER_MIN'] = train_with_min_usg['FGA_PER_MIN'].fillna(0.0)
-
-    
-    val_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
-        val_with_min_usg['PREDICTED_MIN'] * val_with_min_usg['PREDICTED_USG_PCT']
-    )
-    val_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
-        val_with_min_usg['EXPECTED_PACE'] * val_with_min_usg['PREDICTED_MIN']
-    )
-    # Calculate FGA_PER_MIN using predicted MIN
-    val_with_min_usg['FGA_PER_MIN'] = (
-        val_with_min_usg['FGA_AVG_TO_DATE'] / (val_with_min_usg['PREDICTED_MIN'] + 1e-8)
-    ).round(3)
-    val_with_min_usg['FGA_PER_MIN'] = val_with_min_usg['FGA_PER_MIN'].fillna(0.0)
-    
-    # Add FGA_PER_MIN to feature list (it should already be in fga_features, but ensure it's included)
-    fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT', 'FGA_PER_MIN', 'PREDICTED_MIN_x_PREDICTED_USG_PCT']
-    fga_model, fga_metrics = train_model(
-        train_data=train_with_min_usg,
-        val_data=val_with_min_usg,
-        features=fga_features_with_min_usg,
+        features=fga_features_with_min,
         target='FGA',
         date_column=date_column,
         player_column=player_column
     )
     
+    train_fga_pred = predict(fga_model, train_with_min, fga_features_with_min)
+    val_fga_pred = predict(fga_model, val_with_min, fga_features_with_min)
+    
+    train_with_min_fga = train_with_min.copy()
+    train_with_min_fga['PREDICTED_FGA'] = train_fga_pred
+    val_with_min_fga = val_with_min.copy()
+    val_with_min_fga['PREDICTED_FGA'] = val_fga_pred
+    
+    # Calculate interaction features for FG3A model
+    train_with_min_fga['EXPECTED_PACE_x_PREDICTED_FGA'] = (
+        train_with_min_fga['EXPECTED_PACE'] * train_with_min_fga['PREDICTED_FGA']
+    )
+    # Calculate FG3A_PER_MIN using predicted FGA
+    train_with_min_fga['FG3A_PER_MIN'] = (
+        train_with_min_fga['FG3A_ROLLING_AVG_10'] / (train_with_min_fga['PREDICTED_FGA'] + 1e-8)
+    ).round(3)
+
+    val_with_min_fga['EXPECTED_PACE_x_PREDICTED_FGA'] = (
+        val_with_min_fga['EXPECTED_PACE'] * val_with_min_fga['PREDICTED_FGA']
+    )
+    # Calculate FG3A_PER_MIN using predicted FGA
+    val_with_min_fga['FG3A_PER_MIN'] = (
+        val_with_min_fga['FG3A_ROLLING_AVG_10'] / (val_with_min_fga['PREDICTED_FGA'] + 1e-8)
+    ).round(3)
+    train_with_min_fga['FG3A_PER_MIN'] = train_with_min_fga['FG3A_PER_MIN'].fillna(0.0)
+    val_with_min_fga['FG3A_PER_MIN'] = val_with_min_fga['FG3A_PER_MIN'].fillna(0.0)
+
+    fg3a_features_with_min_fga = fg3a_features + ['PREDICTED_MIN', 'PREDICTED_FGA', 'FG3A_PER_MIN']
+    fg3a_model, fg3a_metrics = train_model(
+        train_data=train_with_min_fga,
+        val_data=val_with_min_fga,
+        features=fg3a_features_with_min_fga,
+        target='FG3A',
+        date_column=date_column,
+        player_column=player_column
+    )
+    
+    train_fg3a_pred = predict(fg3a_model, train_with_min_fga, fg3a_features_with_min_fga)
+    val_fg3a_pred = predict(fg3a_model, val_with_min_fga, fg3a_features_with_min_fga)
+    
+    train_with_min_fga_fg3a = train_with_min_fga.copy()
+    train_with_min_fga_fg3a['PREDICTED_FG3A'] = train_fg3a_pred
+    val_with_min_fga_fg3a = val_with_min_fga.copy()
+    val_with_min_fga_fg3a['PREDICTED_FG3A'] = val_fg3a_pred
+    
+
+    # Calculate interaction features for FTA model
+    train_with_min_fga_fg3a['EXPECTED_PACE_x_PREDICTED_FGA_x_PREDICTED_FG3A'] = (
+        train_with_min_fga_fg3a['EXPECTED_PACE'] * train_with_min_fga_fg3a['PREDICTED_FGA'] * train_with_min_fga_fg3a['PREDICTED_FG3A']
+    )
+    # Calculate FTA_PER_MIN using predicted FGA and FG3A
+    train_with_min_fga_fg3a['FTA_PER_MIN'] = (
+        train_with_min_fga_fg3a['FTA_ROLLING_AVG_10'] / (train_with_min_fga_fg3a['PREDICTED_FGA'] * train_with_min_fga_fg3a['PREDICTED_FG3A'] + 1e-8)
+    ).round(3)
+    train_with_min_fga_fg3a['FTA_PER_MIN'] = train_with_min_fga_fg3a['FTA_PER_MIN'].fillna(0.0)
+
+    val_with_min_fga_fg3a['EXPECTED_PACE_x_PREDICTED_FGA_x_PREDICTED_FG3A'] = (
+        val_with_min_fga_fg3a['EXPECTED_PACE'] * val_with_min_fga_fg3a['PREDICTED_FGA'] * val_with_min_fga_fg3a['PREDICTED_FG3A']
+    )
+    # Calculate FTA_PER_MIN using predicted FGA and FG3A
+    val_with_min_fga_fg3a['FTA_PER_MIN'] = (
+        val_with_min_fga_fg3a['FTA_ROLLING_AVG_10'] / (val_with_min_fga_fg3a['PREDICTED_FGA'] * val_with_min_fga_fg3a['PREDICTED_FG3A'] + 1e-8)
+    ).round(3)
+    val_with_min_fga_fg3a['FTA_PER_MIN'] = val_with_min_fga_fg3a['FTA_PER_MIN'].fillna(0.0)
+    train_with_min_fga_fg3a['FTA_PER_MIN'] = train_with_min_fga_fg3a['FTA_PER_MIN'].fillna(0.0)
+    
+    fta_features_with_min_fga_fg3a = fta_features + ['PREDICTED_MIN', 'PREDICTED_FGA', 'PREDICTED_FG3A', 'FTA_PER_MIN']
+    fta_model, fta_metrics = train_model(
+        train_data=train_with_min_fga_fg3a,
+        val_data=val_with_min_fga_fg3a,
+        features=fta_features_with_min_fga_fg3a,
+        target='FTA',
+        date_column=date_column,
+        player_column=player_column
+    )
+    
     print(f"\nMIN Model - RMSE: {min_metrics['RMSE']:.3f}, MAE: {min_metrics['MAE']:.3f}, R²: {min_metrics['R2']:.3f}")
-    print(f"USG_PCT Model - RMSE: {usg_metrics['RMSE']:.3f}, MAE: {usg_metrics['MAE']:.3f}, R²: {usg_metrics['R2']:.3f}")
     print(f"FGA Model - RMSE: {fga_metrics['RMSE']:.3f}, MAE: {fga_metrics['MAE']:.3f}, R²: {fga_metrics['R2']:.3f}")
+    print(f"FG3A Model - RMSE: {fg3a_metrics['RMSE']:.3f}, MAE: {fg3a_metrics['MAE']:.3f}, R²: {fg3a_metrics['R2']:.3f}")
+    print(f"FTA Model - RMSE: {fta_metrics['RMSE']:.3f}, MAE: {fta_metrics['MAE']:.3f}, R²: {fta_metrics['R2']:.3f}")
     
     result = {
         'min_model': min_model,
-        'usg_model': usg_model,
         'fga_model': fga_model,
+        'fg3a_model': fg3a_model,
+        'fta_model': fta_model,
         'metrics': {
             'MIN': min_metrics,
-            'USG_PCT': usg_metrics,
-            'FGA': fga_metrics
+            'FGA': fga_metrics,
+            'FG3A': fg3a_metrics,
+            'FTA': fta_metrics
         },
-        'train_with_min_usg': train_with_min_usg,
-        'val_with_min_usg': val_with_min_usg
+        'train_with_min_fga_fg3a': train_with_min_fga_fg3a,
+        'val_with_min_fga_fg3a': val_with_min_fga_fg3a
     }
     
     return result
 
-def predict_cascading(models_dict, test_data, min_features, usg_features, fga_features):
+def predict_cascading(models_dict, test_data, min_features, fga_features, fg3a_features, fta_features):
     min_pred = predict(models_dict['min_model'], test_data, min_features)
     
     test_with_min = test_data.copy()
     test_with_min['PREDICTED_MIN'] = min_pred
-    usg_features_with_min = usg_features + ['PREDICTED_MIN']
-    usg_pred = predict(models_dict['usg_model'], test_with_min, usg_features_with_min)
-    
-    test_with_min_usg = test_with_min.copy()
-    test_with_min_usg['PREDICTED_USG_PCT'] = usg_pred
     
     # Calculate interaction features for FGA model (matching training)
-    test_with_min_usg['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = (
-        test_with_min_usg['PREDICTED_MIN'] * test_with_min_usg['PREDICTED_USG_PCT']
-    )
-    test_with_min_usg['PREDICTED_USG_PCT_x_TEAM_PACE_OVER_LEAGUE_AVG'] = (
-        test_with_min_usg['PREDICTED_USG_PCT'] * test_with_min_usg['TEAM_PACE_OVER_LEAGUE_AVG']
-    )
-    test_with_min_usg['FGA_BOOST_STAR_OUT_x_PREDICTED_USG_PCT'] = (
-        test_with_min_usg['FGA_BOOST_STAR_OUT'] * test_with_min_usg['PREDICTED_USG_PCT']
-    )
-    test_with_min_usg['EXPECTED_PACE_x_PREDICTED_MIN'] = (
-        test_with_min_usg['EXPECTED_PACE'] * test_with_min_usg['PREDICTED_MIN']
+    test_with_min['EXPECTED_PACE_x_PREDICTED_MIN'] = (
+        test_with_min['EXPECTED_PACE'] * test_with_min['PREDICTED_MIN']
     )
     # Calculate FGA_PER_MIN using predicted MIN
-    test_with_min_usg['FGA_PER_MIN'] = (
-        test_with_min_usg['FGA_AVG_TO_DATE'] / (test_with_min_usg['PREDICTED_MIN'] + 1e-8)
+    test_with_min['FGA_PER_MIN'] = (
+        test_with_min['FGA_AVG_TO_DATE'] / (test_with_min['PREDICTED_MIN'] + 1e-8)
     ).round(3)
-    test_with_min_usg['FGA_PER_MIN'] = test_with_min_usg['FGA_PER_MIN'].fillna(0.0)
+    test_with_min['FGA_PER_MIN'] = test_with_min['FGA_PER_MIN'].fillna(0.0)
     
-    fga_features_with_min_usg = fga_features + ['PREDICTED_MIN', 'PREDICTED_USG_PCT']
-    fga_pred = predict(models_dict['fga_model'], test_with_min_usg, fga_features_with_min_usg)
+    fga_features_with_min = fga_features + ['PREDICTED_MIN', 'FGA_PER_MIN']
+    fga_pred = predict(models_dict['fga_model'], test_with_min, fga_features_with_min)
     
-    test_with_min_usg_fga = test_with_min_usg.copy()
-    test_with_min_usg_fga['PREDICTED_FGA'] = fga_pred
+    test_with_min_fga = test_with_min.copy()
+    test_with_min_fga['PREDICTED_FGA'] = fga_pred
+    
+    fg3a_features_with_min_fga = fg3a_features + ['PREDICTED_MIN', 'PREDICTED_FGA']
+    fg3a_pred = predict(models_dict['fg3a_model'], test_with_min_fga, fg3a_features_with_min_fga)
+    
+    test_with_min_fga_fg3a = test_with_min_fga.copy()
+    test_with_min_fga_fg3a['PREDICTED_FG3A'] = fg3a_pred
+    
+    fta_features_with_min_fga_fg3a = fta_features + ['PREDICTED_MIN', 'PREDICTED_FGA', 'PREDICTED_FG3A']
+    fta_pred = predict(models_dict['fta_model'], test_with_min_fga_fg3a, fta_features_with_min_fga_fg3a)
+    
+    test_with_min_fga_fg3a_fta = test_with_min_fga_fg3a.copy()
+    test_with_min_fga_fg3a_fta['PREDICTED_FTA'] = fta_pred
     
     result = {
         'MIN': min_pred,
-        'USG_PCT': usg_pred,
         'FGA': fga_pred,
-        'test_with_min_usg_fga': test_with_min_usg_fga
+        'FG3A': fg3a_pred,
+        'FTA': fta_pred,
+        'test_with_min_fga_fg3a_fta': test_with_min_fga_fg3a_fta
     }
     
     return result
