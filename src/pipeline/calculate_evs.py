@@ -194,7 +194,8 @@ def prob_lognorm(line, mu, sigma):
     return float(1 - dist.cdf(line + 0.5))
 
 def get_calibrated_distribution_params(engine, player_name, data, date, 
-                                      predicted_minutes=None, predicted_usage=None,
+                                      predicted_minutes=None, predicted_fga=None,
+                                      predicted_fg3a=None, predicted_fta=None,
                                       projectedStartingFive=None, mainStartingFive=None,
                                       teamStarPlayer=None, league_df=None, findOpp=None):
     """
@@ -220,7 +221,9 @@ def get_calibrated_distribution_params(engine, player_name, data, date,
         league_df=league_df,
         findOpp=findOpp,
         predicted_minutes=predicted_minutes,
-        predicted_usage=predicted_usage
+        predicted_fga=predicted_fga,
+        predicted_fg3a=predicted_fg3a,
+        predicted_fta=predicted_fta
     )
     
     if feature_dict is None:
@@ -377,7 +380,9 @@ def calculate2LegBets(data, bookmakers, engine, current_date,
                 data=data,
                 date=current_date_str,
                 predicted_minutes=result['predicted_minutes'],
-                predicted_usage=result['predicted_usage'],
+                predicted_fga=result['predicted_fga'],
+                predicted_fg3a=result.get('predicted_fg3a'),
+                predicted_fta=result.get('predicted_fta'),
                 projectedStartingFive=projectedStartingFive,
                 mainStartingFive=mainStartingFive,
                 teamStarPlayer=teamStarPlayer,
@@ -606,7 +611,9 @@ def calculate3LegBets(data, bookmakers, engine, current_date,
                 data=data,
                 date=current_date_str,
                 predicted_minutes=result['predicted_minutes'],
-                predicted_usage=result['predicted_usage'],
+                predicted_fga=result['predicted_fga'],
+                predicted_fg3a=result.get('predicted_fg3a'),
+                predicted_fta=result.get('predicted_fta'),
                 projectedStartingFive=projectedStartingFive,
                 mainStartingFive=mainStartingFive,
                 teamStarPlayer=teamStarPlayer,
@@ -854,7 +861,9 @@ def calculateSingleBets(data, bookmakers, engine, current_date,
                 data=data,
                 date=current_date_str,
                 predicted_minutes=result['predicted_minutes'],
-                predicted_usage=result['predicted_usage'],
+                predicted_fga=result['predicted_fga'],
+                predicted_fg3a=result.get('predicted_fg3a'),
+                predicted_fta=result.get('predicted_fta'),
                 projectedStartingFive=projectedStartingFive,
                 mainStartingFive=mainStartingFive,
                 teamStarPlayer=teamStarPlayer,

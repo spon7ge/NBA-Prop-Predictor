@@ -197,20 +197,20 @@ def engineerPlayerPlaybyPlayBasics(game_id, player_id, game_pbp_data=None):
         # close shots
         closeShotsMade, closeShotsAttempted = 0, 0
         for _,row in quarterData.iterrows():
-            if row['shotResult'] == 'Made' and row['shotDistance'] <= 8:
+            if row['shotResult'] == 'Made' and row['shotDistance'] <= 9:
                 closeShotsMade += 1
                 closeShotsAttempted += 1
-            elif row['shotResult'] == 'Missed' and row['shotDistance'] <= 8:
+            elif row['shotResult'] == 'Missed' and row['shotDistance'] <= 9:
                 closeShotsAttempted += 1
         closeShotsPCT = round(closeShotsMade / closeShotsAttempted, 2) if closeShotsAttempted > 0 else 0
         
         # mid range shots 
         midRangeMade, midRangeAttempted = 0, 0
         for _,row in quarterData.iterrows():
-            if row['shotResult'] == 'Made' and row['shotDistance'] > 8 and row['shotDistance'] <= 22:
+            if row['shotResult'] == 'Made' and row['shotDistance'] >= 10 and row['shotDistance'] <= 22:
                 midRangeMade += 1
                 midRangeAttempted += 1
-            elif row['shotResult'] == 'Missed' and row['shotDistance'] > 8 and row['shotDistance'] <= 22:
+            elif row['shotResult'] == 'Missed' and row['shotDistance'] >= 10 and row['shotDistance'] <= 22:
                 midRangeAttempted += 1
         midRangePCT = round(midRangeMade / midRangeAttempted, 2) if midRangeAttempted > 0 else 0
         

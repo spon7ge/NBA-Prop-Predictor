@@ -12,8 +12,7 @@ def build_fga_features(
     teamStarPlayer,
     league_df,
     findOpp,
-    predicted_minutes=None,
-    predicted_usage=None
+    predicted_minutes=None
 ):
     player_df = data[data['PLAYER_NAME'] == player_name].sort_values('GAME_DATE')
     if player_df.empty:
@@ -43,15 +42,14 @@ def build_fga_features(
             return 0.0
         return float(series.mean() - baseline)
     
+    # Get the most recent row (for features that are already calculated in the dataframe)
+    latest_row = player_df.iloc[-1] if len(player_df) > 0 else None
+    
     # Calculate values needed for multiple features
     fga_avg = safe_mean(player_df['FGA'])
     starting_flag = int(player_name in projectedStartingFive.get(team, []))
+    star_out_flag = int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, []))
     
-    # Get predicted_minutes for FGA_PER_MIN calculation (used internally but not in base features)
-    predicted_min = float(predicted_minutes) if predicted_minutes is not None else safe_mean(player_df['MIN'])
-    
-    # Calculate FGA_PER_MIN (this will be returned in the dict but added separately during training)
-    fga_per_min = round(fga_avg / (predicted_min + 1e-8), 3) if predicted_min > 0 else 0.0
     
     # Calculate team FGA rank
     team_players_df = data[data['TEAM_ABBREVIATION'] == team].copy()
@@ -71,156 +69,191 @@ def build_fga_features(
     else:
         fga_team_rank = 1.0
     
-    # Calculate various averages and deltas
-    fga_std_10 = safe_std(player_df['FGA'].tail(10)) if len(player_df) >= 10 else 0.0
-    fga_last_5 = player_df['FGA'].tail(5)
-    fga_last_10 = player_df['FGA'].tail(10)
+    # Calculate various FGA statistics
+    fga_l3 = player_df['FGA'].tail(3)
+    fga_l5 = player_df['FGA'].tail(5)
+    fga_l10 = player_df['FGA'].tail(10)
+    
     fga_star_out = safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FGA'])
     
+    # CFGA and UFGA calculations
     cfga_avg = safe_mean(player_df['CFGA']) if 'CFGA' in player_df.columns else 0.0
     ufga_avg = safe_mean(player_df['UFGA']) if 'UFGA' in player_df.columns else 0.0
-    ufga_last_5 = player_df['UFGA'].tail(5) if 'UFGA' in player_df.columns else pd.Series()
     
+    # FG3A calculations
     fg3a_avg = safe_mean(player_df['FG3A'])
-    fg3a_last_5 = player_df['FG3A'].tail(5)
-    fg3a_star_out = safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FG3A'])
     
-    fg_pct_avg = safe_mean(player_df['FG_PCT'])
-    fg_pct_last_5 = player_df['FG_PCT'].tail(5)
+    # Calculate FG3A team rank
+    if not team_players_df.empty:
+        team_fg3a_avgs = {}
+        for team_player_name in team_players_df['PLAYER_NAME'].unique():
+            team_player_df = data[data['PLAYER_NAME'] == team_player_name].sort_values('GAME_DATE')
+            if not team_player_df.empty:
+                team_fg3a_avgs[team_player_name] = safe_mean(team_player_df['FG3A'])
+        
+        if team_fg3a_avgs:
+            fg3a_series = pd.Series(team_fg3a_avgs)
+            fg3a_ranks = fg3a_series.rank(method='dense', ascending=False)
+            fg3a_team_rank = float(fg3a_ranks.get(player_name, len(team_fg3a_avgs) + 1))
+        else:
+            fg3a_team_rank = 1.0
+    else:
+        fg3a_team_rank = 1.0
     
-    ts_pct_avg = safe_mean(player_df['TS_PCT'])
-    ts_pct_last_5 = player_df['TS_PCT'].tail(5)
-    
-    pace_avg = safe_mean(player_df['PACE']) if 'PACE' in player_df.columns else safe_mean(team_df['TEAM_PACE'])
-    pace_last_5 = player_df['PACE'].tail(5) if 'PACE' in player_df.columns else team_df['TEAM_PACE'].tail(5)
-    
+    # FTA calculations
     fta_avg = safe_mean(player_df['FTA'])
-    fta_last_5 = player_df['FTA'].tail(5)
     
+    # AST and TOV calculations
     ast_avg = safe_mean(player_df['AST']) if 'AST' in player_df.columns else 0.0
     tov_avg = safe_mean(player_df['TOV']) if 'TOV' in player_df.columns else 0.0
     
-    # Star out flag
-    star_out_flag = int(teamStarPlayer.get(team, '') not in projectedStartingFive.get(team, []))
+    # USG_PCT calculations
+    usg_pct_avg = safe_mean(player_df['USG_PCT'])
+    usg_pct_star_out = safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['USG_PCT'])
     
-    # Team context calculations
+    # MIN calculations
+    min_avg = safe_mean(player_df['MIN'])
+    min_l5 = player_df['MIN'].tail(5)
+    
+    # Calculate LINEUP_FGA_SHARE_AVG
+    projected_starters = projectedStartingFive.get(team, [])
+    lineup_fga_shares = []
+    team_fga_avg = safe_mean(team_df['TEAM_FGA']) if 'TEAM_FGA' in team_df.columns else 0.0
+    
+    for starter_name in projected_starters:
+        starter_df = data[data['PLAYER_NAME'] == starter_name]
+        if not starter_df.empty:
+            starter_fga_avg = safe_mean(starter_df['FGA'])
+            if team_fga_avg > 0:
+                fga_share = (starter_fga_avg / team_fga_avg) * 100
+                lineup_fga_shares.append(fga_share)
+    
+    lineup_fga_share_avg = round(safe_mean(pd.Series(lineup_fga_shares)), 2) if lineup_fga_shares else 0.0
+    
+    # Team FGA calculations
+    team_fga_avg_to_date = safe_mean(team_df['TEAM_FGA']) if 'TEAM_FGA' in team_df.columns else 0.0
+    
+    # Pace calculations
+    team_pace_avg = safe_mean(team_df['TEAM_PACE'])
     league_pace_avg = safe_mean(league_df['PACE']) if 'PACE' in league_df.columns else 100.0
+    opp_pace_avg = safe_mean(opp_team_df['TEAM_PACE'])
+    expected_pace = (team_pace_avg + opp_pace_avg) / 2
+    
+    team_pace_l3 = team_df['TEAM_PACE'].tail(3)
+    
+    # Team offensive rating
+    team_off_avg = safe_mean(team_df['TEAM_OFF_RATING'])
     league_off_avg = safe_mean(league_df['OFF_RATING']) if 'OFF_RATING' in league_df.columns else 110.0
+    team_off_l3 = team_df['TEAM_OFF_RATING'].tail(3)
+    
+    # Opponent defensive rating
+    opp_def_avg = safe_mean(opp_team_df['TEAM_DEF_RATING'])
     league_def_avg = safe_mean(league_df['DEF_RATING']) if 'DEF_RATING' in league_df.columns else 110.0
     
-    team_pace = safe_mean(team_df['TEAM_PACE'])
-    team_off = safe_mean(team_df['TEAM_OFF_RATING'])
-    opp_pace = safe_mean(opp_team_df['TEAM_PACE'])
-    opp_def = safe_mean(opp_team_df['TEAM_DEF_RATING'])
+    # Other stats
+    poss_avg = safe_mean(player_df['POSS']) if 'POSS' in player_df.columns else 0.0
+    tchs_avg = safe_mean(player_df['TCHS']) if 'TCHS' in player_df.columns else 0.0
+    e_off_rating_avg = safe_mean(player_df['E_OFF_RATING']) if 'E_OFF_RATING' in player_df.columns else 0.0
     
-    # Build features dict in the EXACT order from FGA_features
+    # Build features dict in the EXACT order from fga_features
     features = {}
     
-    # 1: STARTING_X_FGA
-    features['STARTING_X_FGA'] = round(starting_flag * fga_avg, 2)
+    # 1: FGA_ROLLING_AVG_10
+    if latest_row is not None and 'FGA_ROLLING_AVG_10' in latest_row:
+        features['FGA_ROLLING_AVG_10'] = float(latest_row['FGA_ROLLING_AVG_10'])
+    else:
+        features['FGA_ROLLING_AVG_10'] = safe_mean(fga_l10)
     
-    # 2: GAMES_PLAYED_TO_DATE
-    features['GAMES_PLAYED_TO_DATE'] = len(player_df)
+    # 2: USG_PCT_AVG_TO_DATE
+    features['USG_PCT_AVG_TO_DATE'] = usg_pct_avg
     
     # 3: FGA_TEAM_RANK
     features['FGA_TEAM_RANK'] = fga_team_rank
     
-    # 4: FGA_AVG_TO_DATE
-    features['FGA_AVG_TO_DATE'] = fga_avg
+    # 4: STARTING_X_FGA
+    features['STARTING_X_FGA'] = round(starting_flag * fga_avg, 2)
     
-    # 5: FGA_STD_10_TO_DATE
-    features['FGA_STD_10_TO_DATE'] = fga_std_10
+    # 5: POSS_AVG_TO_DATE
+    features['POSS_AVG_TO_DATE'] = poss_avg
     
-    # 6: FGA_L5_OVER_BASELINE
-    features['FGA_L5_OVER_BASELINE'] = safe_delta(fga_last_5, fga_avg)
+    # 6: STARTING_X_MIN
+    features['STARTING_X_MIN'] = round(starting_flag * min_avg, 2)
     
-    # 7: FGA_L10_OVER_BASELINE
-    features['FGA_L10_OVER_BASELINE'] = safe_delta(fga_last_10, fga_avg)
+    # 7: LINEUP_FGA_SHARE_AVG
+    features['LINEUP_FGA_SHARE_AVG'] = lineup_fga_share_avg
     
     # 8: FGA_BOOST_STAR_OUT
     features['FGA_BOOST_STAR_OUT'] = star_out_flag * (fga_star_out - fga_avg)
     
-    # 9: CFGA_AVG_TO_DATE
-    features['CFGA_AVG_TO_DATE'] = cfga_avg
-    
-    # 10: UFGA_AVG_TO_DATE
+    # 9: UFGA_AVG_TO_DATE
     features['UFGA_AVG_TO_DATE'] = ufga_avg
     
-    # 11: UFGA_L5_OVER_BASELINE
-    features['UFGA_L5_OVER_BASELINE'] = safe_delta(ufga_last_5, ufga_avg)
+    # 10: MIN_L5_OVER_BASELINE
+    features['MIN_L5_OVER_BASELINE'] = safe_delta(min_l5, min_avg)
     
-    # 12: FG3A_AVG_TO_DATE
-    features['FG3A_AVG_TO_DATE'] = fg3a_avg
+    # 11: USG_PCT_BOOST_STAR_OUT
+    features['USG_PCT_BOOST_STAR_OUT'] = star_out_flag * (usg_pct_star_out - usg_pct_avg)
     
-    # 13: FG3A_L5_OVER_BASELINE
-    features['FG3A_L5_OVER_BASELINE'] = safe_delta(fg3a_last_5, fg3a_avg)
-    
-    # 14: FG3A_BOOST_STAR_OUT
-    features['FG3A_BOOST_STAR_OUT'] = star_out_flag * (fg3a_star_out - fg3a_avg)
-    
-    # 15: FG_PCT_AVG_TO_DATE
-    features['FG_PCT_AVG_TO_DATE'] = fg_pct_avg
-    
-    # 16: FG_PCT_L5_OVER_BASELINE
-    features['FG_PCT_L5_OVER_BASELINE'] = safe_delta(fg_pct_last_5, fg_pct_avg)
-    
-    # 17: TS_PCT_AVG_TO_DATE
-    features['TS_PCT_AVG_TO_DATE'] = ts_pct_avg
-    
-    # 18: TS_PCT_L5_OVER_BASELINE
-    features['TS_PCT_L5_OVER_BASELINE'] = safe_delta(ts_pct_last_5, ts_pct_avg)
-    
-    # 19: PACE_AVG_TO_DATE
-    features['PACE_AVG_TO_DATE'] = pace_avg
-    
-    # 20: PACE_L5_OVER_BASELINE
-    features['PACE_L5_OVER_BASELINE'] = safe_delta(pace_last_5, pace_avg)
-    
-    # 21: FTA_AVG_TO_DATE
-    features['FTA_AVG_TO_DATE'] = fta_avg
-    
-    # 22: FTA_L5_OVER_BASELINE
-    features['FTA_L5_OVER_BASELINE'] = safe_delta(fta_last_5, fta_avg)
-    
-    # 23: AST_AVG_TO_DATE
-    features['AST_AVG_TO_DATE'] = ast_avg
-    
-    # 24: TOV_AVG_TO_DATE
-    features['TOV_AVG_TO_DATE'] = tov_avg
-    
-    # 25: FGA_VARIANCE_STABILITY
-    if 'FGA_VARIANCE_STABILITY' in player_df.columns:
-        features['FGA_VARIANCE_STABILITY'] = float(player_df['FGA_VARIANCE_STABILITY'].iloc[-1]) if len(player_df) > 0 else 0.0
+    # 12: TEAM_PACE_L3_OVER_LEAGUE_AVG
+    if len(team_pace_l3) > 0:
+        team_pace_l3_avg = safe_mean(team_pace_l3)
+        features['TEAM_PACE_L3_OVER_LEAGUE_AVG'] = team_pace_l3_avg - league_pace_avg
     else:
-        features['FGA_VARIANCE_STABILITY'] = 0.0
+        features['TEAM_PACE_L3_OVER_LEAGUE_AVG'] = team_pace_avg - league_pace_avg
     
-    # 26: FG3A_VARIANCE_STABILITY
-    if 'FG3A_VARIANCE_STABILITY' in player_df.columns:
-        features['FG3A_VARIANCE_STABILITY'] = float(player_df['FG3A_VARIANCE_STABILITY'].iloc[-1]) if len(player_df) > 0 else 0.0
-    else:
-        features['FG3A_VARIANCE_STABILITY'] = 0.0
+    # 13: FG3A_TEAM_RANK
+    features['FG3A_TEAM_RANK'] = fg3a_team_rank
     
-    # 27: TEAM_OFF_RATING_OVER_LEAGUE_AVG
-    features['TEAM_OFF_RATING_OVER_LEAGUE_AVG'] = team_off - league_off_avg
+    # 14: OPP_DEF_RATING_OVER_LEAGUE_AVG
+    features['OPP_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def_avg - league_def_avg
     
-    # 28: TEAM_PACE_OVER_LEAGUE_AVG
-    features['TEAM_PACE_OVER_LEAGUE_AVG'] = team_pace - league_pace_avg
+    # 15: FGA_LAG_1
+    features['FGA_LAG_1'] = float(player_df['FGA'].iloc[-1]) if len(player_df) >= 1 else 0.0
     
-    # 29: EXPECTED_PACE
-    expected_pace = (team_pace + opp_pace) / 2
+    # 16: E_OFF_RATING_AVG_TO_DATE
+    features['E_OFF_RATING_AVG_TO_DATE'] = e_off_rating_avg
+    
+    # 17: TCHS_AVG_TO_DATE
+    features['TCHS_AVG_TO_DATE'] = tchs_avg
+    
+    # 18: TEAM_FGA_AVG_TO_DATE
+    features['TEAM_FGA_AVG_TO_DATE'] = team_fga_avg_to_date
+    
+    # 19: PACE_DIFFERENTIAL
+    features['PACE_DIFFERENTIAL'] = team_pace_avg - opp_pace_avg
+    
+    # 20: EXPECTED_PACE
     features['EXPECTED_PACE'] = expected_pace
     
-    # 30: OPP_PACE_OVER_LEAGUE_AVG
-    features['OPP_PACE_OVER_LEAGUE_AVG'] = opp_pace - league_pace_avg
+    # 21: FGA_L3_OVER_BASELINE
+    features['FGA_L3_OVER_BASELINE'] = safe_delta(fga_l3, fga_avg)
     
-    # 31: OPP_DEF_RATING_OVER_LEAGUE_AVG
-    features['OPP_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
+    # 22: CENTER_DEF_RATING_OVER_LEAGUE_AVG
+    features['CENTER_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def_avg - league_def_avg
     
-    # 32: GUARD_DEF_RATING_OVER_LEAGUE_AVG
-    features['GUARD_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
+    # 23: TEAM_OFF_RATING_AVG_TO_DATE
+    features['TEAM_OFF_RATING_AVG_TO_DATE'] = team_off_avg
     
-    # 33: FORWARD_DEF_RATING_OVER_LEAGUE_AVG
-    features['FORWARD_DEF_RATING_OVER_LEAGUE_AVG'] = opp_def - league_def_avg
+    # 24: TEAM_OFF_RATING_L3_OVER_LEAGUE_AVG
+    if len(team_off_l3) > 0:
+        team_off_l3_avg = safe_mean(team_off_l3)
+        features['TEAM_OFF_RATING_L3_OVER_LEAGUE_AVG'] = team_off_l3_avg - league_off_avg
+    else:
+        features['TEAM_OFF_RATING_L3_OVER_LEAGUE_AVG'] = team_off_avg - league_off_avg
     
-    features['FGA_PER_MIN'] = fga_per_min
+    # 25: FG3A_AVG_TO_DATE
+    features['FG3A_AVG_TO_DATE'] = fg3a_avg
+    
+    # 26: CFGA_AVG_TO_DATE
+    features['CFGA_AVG_TO_DATE'] = cfga_avg
+    
+    # 27: AST_AVG_TO_DATE
+    features['AST_AVG_TO_DATE'] = ast_avg
+    
+    # 28: TOV_AVG_TO_DATE
+    features['TOV_AVG_TO_DATE'] = tov_avg
+    
+    # 29: FTA_AVG_TO_DATE
+    features['FTA_AVG_TO_DATE'] = fta_avg
+    
     return features

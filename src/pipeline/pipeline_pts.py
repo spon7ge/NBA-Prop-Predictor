@@ -13,8 +13,9 @@ def build_ngboost_points_features(
     league_df,
     findOpp,
     predicted_minutes=None,
-    predicted_usage=None,
-    predicted_fga=None
+    predicted_fga=None,
+    predicted_fg3a=None,
+    predicted_fta=None
 ):
     player_df = data[data['PLAYER_NAME'] == player_name].sort_values('GAME_DATE')
     if player_df.empty:
@@ -51,8 +52,9 @@ def build_ngboost_points_features(
     
     # Predicted upstream values
     predicted_min = float(predicted_minutes) if predicted_minutes is not None else safe_mean(player_df['MIN'])
-    predicted_usg_pct = float(predicted_usage) if predicted_usage is not None else safe_mean(player_df['USG_PCT'])
     predicted_fga = float(predicted_fga) if predicted_fga is not None else safe_mean(player_df['FGA'])
+    predicted_fg3a = float(predicted_fg3a) if predicted_fg3a is not None else safe_mean(player_df['FG3A'])
+    predicted_fta = float(predicted_fta) if predicted_fta is not None else fta_avg
     
     # Calculate expected_pace early (needed for multiple features)
     expected_pace = (safe_mean(team_df['TEAM_PACE']) + safe_mean(opp_team_df['TEAM_PACE'])) / 2
@@ -68,6 +70,7 @@ def build_ngboost_points_features(
     # Calculate other values needed
     pts_l5_over_baseline = safe_delta(pts_last_5, pts_avg)
     ts_pct_avg = safe_mean(player_df['TS_PCT'])
+    fta_avg = safe_mean(player_df['FTA'])
     opp_def_rating_over_league = opp_def - league_def_avg
     
     # Calculate team PTS rank
@@ -96,7 +99,6 @@ def build_ngboost_points_features(
     ufga_avg = safe_mean(player_df['UFGA']) if 'UFGA' in player_df.columns else 0.0
     ufga_last_5 = player_df['UFGA'].tail(5) if 'UFGA' in player_df.columns else pd.Series()
     
-    fta_avg = safe_mean(player_df['FTA'])
     fta_last_5 = player_df['FTA'].tail(5)
     fta_star_out = safe_mean(player_df[player_df.get('STAR_SAT_OUT', pd.Series([0])) == 1]['FTA'])
     home_fta = safe_mean(player_df[player_df['HOME_GAME'] == 1]['FTA'])
@@ -127,9 +129,10 @@ def build_ngboost_points_features(
     
     # 1-4: Predicted upstream values and interaction features (most important)
     features['PREDICTED_MIN'] = predicted_min
-    features['PREDICTED_USG_PCT'] = predicted_usg_pct
     features['PREDICTED_FGA'] = predicted_fga
-    features['PREDICTED_MIN_x_PREDICTED_USG_PCT'] = predicted_min * predicted_usg_pct
+    features['PREDICTED_FG3A'] = predicted_fg3a
+    features['PREDICTED_FTA'] = predicted_fta
+    features['PREDICTED_MIN_x_PREDICTED_FGA'] = predicted_min * predicted_fga
     
     # 5: PTS_PER_MIN
     features['PTS_PER_MIN'] = round(pts_avg / (predicted_min + 1e-8), 3) if predicted_min > 0 else 0.0
@@ -137,20 +140,24 @@ def build_ngboost_points_features(
     # 6: PTS_L5_OVER_BASELINE_x_PREDICTED_MIN
     features['PTS_L5_OVER_BASELINE_x_PREDICTED_MIN'] = pts_l5_over_baseline * predicted_min
     
-    # 7-8: EXPECTED_PACE interactions
-    features['EXPECTED_PACE_x_PREDICTED_USG_PCT'] = expected_pace * predicted_usg_pct
+    # 7-9: EXPECTED_PACE interactions
+    features['EXPECTED_PACE_x_PREDICTED_MIN'] = expected_pace * predicted_min
     features['EXPECTED_PACE_x_PREDICTED_FGA'] = expected_pace * predicted_fga
+    features['EXPECTED_PACE_x_PREDICTED_FTA'] = expected_pace * predicted_fta
     
-    # 9: PREDICTED_FGA_x_TS_PCT_AVG_TO_DATE
-    features['PREDICTED_FGA_x_TS_PCT_AVG_TO_DATE'] = predicted_fga * ts_pct_avg
+    # 10: PREDICTED_FGA_x_PREDICTED_FTA
+    features['PREDICTED_FGA_x_PREDICTED_FTA'] = predicted_fga * predicted_fta
     
-    # 10: OPP_DEF_RATING_OVER_LEAGUE_AVG_x_PTS_AVG_TO_DATE
+    # 11: PREDICTED_FG3A_x_FG3_PCT_AVG_TO_DATE
+    features['PREDICTED_FG3A_x_FG3_PCT_AVG_TO_DATE'] = predicted_fg3a * fg3_pct_avg
+    
+    # 12: OPP_DEF_RATING_OVER_LEAGUE_AVG_x_PTS_AVG_TO_DATE
     features['OPP_DEF_RATING_OVER_LEAGUE_AVG_x_PTS_AVG_TO_DATE'] = opp_def_rating_over_league * pts_avg
     
-    # 11: STARTING_X_PTS
+    # 13: STARTING_X_PTS
     features['STARTING_X_PTS'] = round(starting_flag * pts_avg, 2)
     
-    # 12: GAMES_PLAYED_TO_DATE
+    # 14: GAMES_PLAYED_TO_DATE
     features['GAMES_PLAYED_TO_DATE'] = len(player_df)
     
     # 13: PTS_CEILING_L5_DELTA

@@ -38,7 +38,9 @@ def predict_points_ngboost(
     league_df=None,
     findOpp=None,
     predicted_minutes=None,
-    predicted_usage=None,
+    predicted_fga=None,
+    predicted_fg3a=None,
+    predicted_fta=None,
     model_wrapper=None,
     model_paths=None,
     use_calibration=True
@@ -69,7 +71,9 @@ def predict_points_ngboost(
         league_df=league_df,
         findOpp=findOpp,
         predicted_minutes=predicted_minutes,
-        predicted_usage=predicted_usage
+        predicted_fga=predicted_fga,
+        predicted_fg3a=predicted_fg3a,
+        predicted_fta=predicted_fta
     )
     
     if feature_dict is None:

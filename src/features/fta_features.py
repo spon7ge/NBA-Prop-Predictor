@@ -1,7 +1,7 @@
-# PRODUCTION/feature_engine/fga_features.py
+# PRODUCTION/feature_engine/fta_features.py
 
 from .base import BaseFeatureBuilder
-from src.pipeline.pipeline_fga import build_fga_features
+from src.pipeline.pipeline_fta import build_fta_features
 import joblib
 from pathlib import Path
 
@@ -9,19 +9,19 @@ from pathlib import Path
 current_file = Path(__file__).resolve()
 project_root = current_file.parent.parent.parent
 
-class FGAFeatureBuilder(BaseFeatureBuilder):
+class FTAFeatureBuilder(BaseFeatureBuilder):
 
     def __init__(self):
         try:
-            base_features = joblib.load(project_root / 'src' / 'models' / 'saved' / 'fga_features.pkl')
+            base_features = joblib.load(project_root / 'src' / 'models' / 'saved' / 'fta_features.pkl')
         except FileNotFoundError:
             base_features = []
 
-        self.feature_names = base_features + ['PREDICTED_MIN', 'FGA_PER_MIN']
+        self.feature_names = base_features + ['PREDICTED_MIN', 'PREDICTED_FGA', 'PREDICTED_FG3A']
 
-    def build(self, player_name, data, date, predicted_minutes, projectedStartingFive=None, mainStartingFive=None, teamStarPlayer=None, league_df=None, findOpp=None, **kwargs):
+    def build(self, player_name, data, date, predicted_minutes, predicted_fga, predicted_fg3a, projectedStartingFive=None, mainStartingFive=None, teamStarPlayer=None, league_df=None, findOpp=None, **kwargs):
         """
-        Build FGA features using historical data + predicted minutes.
+        Build FTA features using historical data + predicted minutes, FGA, and FG3A.
         """
         if projectedStartingFive is None:
             projectedStartingFive = kwargs.get('projectedStartingFive')
@@ -53,7 +53,7 @@ class FGAFeatureBuilder(BaseFeatureBuilder):
             if 'TEAM_ID' in league_df.columns:
                 league_df = league_df.set_index('TEAM_ID')
         
-        base = build_fga_features(
+        base = build_fta_features(
             player_name=player_name,
             data=data,
             current_date=date,
@@ -62,16 +62,18 @@ class FGAFeatureBuilder(BaseFeatureBuilder):
             teamStarPlayer=teamStarPlayer,
             league_df=league_df,
             findOpp=findOpp,
-            predicted_minutes=predicted_minutes
+            predicted_minutes=predicted_minutes,
+            predicted_fga=predicted_fga,
+            predicted_fg3a=predicted_fg3a
         )
         if base is None:
             return None
         
-        fga_per_min = base.get('FGA_PER_MIN', 0.0)
-        
-        feature_list = [base.get(f, 0.0) for f in self.feature_names[:-2]]
+        feature_list = [base.get(f, 0.0) for f in self.feature_names[:-3]]
         
         feature_list.append(float(predicted_minutes))
-        feature_list.append(float(fga_per_min))
+        feature_list.append(float(predicted_fga))
+        feature_list.append(float(predicted_fg3a))
         
         return feature_list
+
