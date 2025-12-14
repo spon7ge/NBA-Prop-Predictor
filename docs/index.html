@@ -52,10 +52,6 @@
                             <p style="margin-top: 10px;">This probabilistic approach means we don't just predict 23.5 points—we predict the full distribution, allowing us to calculate accurate probabilities for any line (over 20.5, over 25.5, etc.) with calibrated confidence intervals.</p>
                         </div>
                         <div class="prop-info">
-                            <h4 class="prop-title">Other Props</h4>
-                            <p>Select "Performance Tracker" to view historical statistics for assists, rebounds, blocks, steals, and combo props. <strong>I would recommend using this tool in conjunction with other sources to make your final decision.</strong></p>
-                        </div>
-                        <div class="prop-info">
                             <p class="tip"><strong>Tip:</strong> Best used 15 minutes before tipoff after lineups are released.</p>
                         </div>
                     </div>
@@ -63,38 +59,7 @@
             </div>
             
             <div class="filters">
-                <div class="platform-toggle" id="platformToggle">
-                    <button class="btn active" data-platform="prizepicks">PrizePicks</button>
-                    <button class="btn" data-platform="underdog">Underdog</button>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">Bet Type:</label>
-                    <select class="dropdown" id="betTypeSelect">
-                        <option value="pairs">Pairs</option>
-                        <option value="trios">Trios</option>
-                        <option value="hitrates">Performance Tracker</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group" id="propTypeGroup" style="display: none;">
-                    <label class="filter-label">Prop Type:</label>
-                    <select class="dropdown" id="propTypeSelect">
-                        <option value="points">Points</option>
-                        <option value="assists">Assists</option>
-                        <option value="rebounds">Rebounds</option>
-                        <option value="blocks">Blocks</option>
-                        <option value="steals">Steals</option>
-                        <option value="PRA">Points + Rebounds + Assists</option>
-                        <option value="PR">Points + Rebounds</option>
-                        <option value="PA">Points + Assists</option>
-                        <option value="RA">Rebounds + Assists</option>
-                        <option value="Turnovers">Turnovers</option>
-                        <option value="BlocksSteals">Blocks + Steals</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group" id="searchGroup" style="display: none;">
+                <div class="filter-group" id="searchGroup" style="display: flex;">
                     <input type="text" id="playerSearch" class="dropdown" placeholder="Search players..." style="min-width: 200px;">
                 </div>
             </div>
