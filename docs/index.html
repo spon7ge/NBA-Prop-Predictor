@@ -37,25 +37,6 @@
                 <p class="description-note">
                     <strong>Note:</strong> Don't focus too much on the exact projected numbers. NBA games have inherent uncertainty, making it difficult to predict precisely how a player will perform on any given night.
                 </p>
-                <details class="description-details">
-                    <summary class="description-summary">How It Works</summary>
-                    <div class="description-content">
-                        <div class="prop-info">
-                            <h4 class="prop-title">Currently My Model Focuses on Point Props</h4>
-                            <p><strong>My 4-Model Pipeline:</strong></p>
-                            <ol style="margin-left: 20px; line-height: 1.8;">
-                                <li><strong>Minutes Model (XGBoost):</strong> Predicts playing time based on rotation patterns, back-to-backs, and blowout risk</li>
-                                <li><strong>Usage Model (XGBoost):</strong> Forecasts offensive load using teammate availability and matchup pace</li>
-                                <li><strong>FGA Model (XGBoost):</strong> Projects shot attempts from usage, pace, and defensive matchups</li>
-                                <li><strong>Points Model (NGBoost):</strong> Combines predictions 1-3 with shooting efficiency data to generate a probabilistic distribution—capturing both the median prediction and uncertainty (variance)</li>
-                            </ol>
-                            <p style="margin-top: 10px;">This probabilistic approach means we don't just predict 23.5 points—we predict the full distribution, allowing us to calculate accurate probabilities for any line (over 20.5, over 25.5, etc.) with calibrated confidence intervals.</p>
-                        </div>
-                        <div class="prop-info">
-                            <p class="tip"><strong>Tip:</strong> Best used 15 minutes before tipoff after lineups are released.</p>
-                        </div>
-                    </div>
-                </details>
             </div>
             
             <div class="filters">
