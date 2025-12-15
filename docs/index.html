@@ -39,6 +39,16 @@
                 </p>
             </div>
             
+            <!-- Tab Switcher -->
+            <div class="tab-container">
+                <button id="prizepicksTab" class="tab-button active" onclick="switchTab('prizepicks')">
+                    PrizePicks
+                </button>
+                <button id="underdogTab" class="tab-button" onclick="switchTab('underdog')">
+                    Underdog
+                </button>
+            </div>
+            
             <div class="filters">
                 <div class="filter-group" id="searchGroup" style="display: flex;">
                     <input type="text" id="playerSearch" class="dropdown" placeholder="Search players..." style="min-width: 200px;">
@@ -70,6 +80,6 @@
         </p>
     </div>
 
-    <script src="script.js?v=1.1"></script>
+    <script src="script.js?v=1.2"></script>
 </body>
 </html>
