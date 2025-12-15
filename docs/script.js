@@ -1,6 +1,9 @@
 // Global variables
 let searchFilter = '';
 let csvData = [];
+let prizepicksData = [];
+let underdogData = [];
+let activeTab = 'prizepicks'; // 'prizepicks' or 'underdog'
 
 // CSV parsing function with proper handling of quoted fields
 function parseCSV(csvText) {
@@ -66,14 +69,22 @@ function parseCSV(csvText) {
     return data;
 }
 
-// Load CSV data
-function loadCSVData() {
-    const paths = [
-        'data/props/ev_analysis/prizepicks.csv',
-        '../data/props/ev_analysis/prizepicks.csv',
-        './data/props/ev_analysis/prizepicks.csv'
-    ];
+// Load CSV data for a specific platform
+function loadCSVData(platform = 'prizepicks') {
+    const paths = {
+        'prizepicks': [
+            'data/props/ev_analysis/prizepicks.csv',
+            '../data/props/ev_analysis/prizepicks.csv',
+            './data/props/ev_analysis/prizepicks.csv'
+        ],
+        'underdog': [
+            'data/props/ev_analysis/underdog.csv',
+            '../data/props/ev_analysis/underdog.csv',
+            './data/props/ev_analysis/underdog.csv'
+        ]
+    };
     
+    const platformPaths = paths[platform] || paths['prizepicks'];
     let pathIndex = 0;
     
     function tryLoad(path) {
@@ -85,23 +96,80 @@ function loadCSVData() {
                 return response.text();
             })
             .then(csvText => {
-                csvData = parseCSV(csvText);
+                const data = parseCSV(csvText);
                 // Sort by EV_PERCENT descending
-                csvData.sort((a, b) => (b.EV_PERCENT || 0) - (a.EV_PERCENT || 0));
+                data.sort((a, b) => (b.EV_PERCENT || 0) - (a.EV_PERCENT || 0));
+                
+                // Store in appropriate variable
+                if (platform === 'prizepicks') {
+                    prizepicksData = data;
+                } else {
+                    underdogData = data;
+                }
+                
+                // Update active data and render
+                updateActiveData();
                 render();
             })
             .catch(error => {
                 console.error(`Error loading CSV from ${path}:`, error);
                 pathIndex++;
-                if (pathIndex < paths.length) {
-                    tryLoad(paths[pathIndex]);
+                if (pathIndex < platformPaths.length) {
+                    tryLoad(platformPaths[pathIndex]);
                 } else {
-                    console.error('Failed to load CSV from all paths');
+                    console.error(`Failed to load CSV from all paths for ${platform}`);
+                    // Set empty data for this platform
+                    if (platform === 'prizepicks') {
+                        prizepicksData = [];
+                    } else {
+                        underdogData = [];
+                    }
+                    updateActiveData();
+                    render();
                 }
             });
     }
     
-    tryLoad(paths[0]);
+    tryLoad(platformPaths[0]);
+}
+
+// Update active data based on current tab
+function updateActiveData() {
+    if (activeTab === 'prizepicks') {
+        csvData = prizepicksData;
+    } else {
+        csvData = underdogData;
+    }
+}
+
+// Switch between tabs
+function switchTab(platform) {
+    activeTab = platform;
+    
+    // Update tab button styles
+    const prizepicksTab = document.getElementById('prizepicksTab');
+    const underdogTab = document.getElementById('underdogTab');
+    
+    if (prizepicksTab && underdogTab) {
+        if (platform === 'prizepicks') {
+            prizepicksTab.classList.add('active');
+            underdogTab.classList.remove('active');
+        } else {
+            underdogTab.classList.add('active');
+            prizepicksTab.classList.remove('active');
+        }
+    }
+    
+    // Load data if not already loaded
+    if (platform === 'prizepicks' && prizepicksData.length === 0) {
+        loadCSVData('prizepicks');
+    } else if (platform === 'underdog' && underdogData.length === 0) {
+        loadCSVData('underdog');
+    } else {
+        // Data already loaded, just switch
+        updateActiveData();
+        render();
+    }
 }
 
 // Utility functions
@@ -209,7 +277,8 @@ function render() {
     // Update picks count
     const picksCountEl = document.getElementById('picksCount');
     if (picksCountEl) {
-        picksCountEl.textContent = `Showing ${data.length} single props from PrizePicks EV Analysis`;
+        const platformName = activeTab === 'prizepicks' ? 'PrizePicks' : 'Underdog';
+        picksCountEl.textContent = `Showing ${data.length} single props from ${platformName} EV Analysis`;
     }
 }
 
@@ -280,6 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial load
     updateLastUpdated();
-    loadCSVData();
+    loadCSVData('prizepicks');
+    loadCSVData('underdog'); // Load both datasets
     render();
 });
