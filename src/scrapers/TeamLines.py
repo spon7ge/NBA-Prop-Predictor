@@ -14,6 +14,7 @@ def fetchTeamLines(api_key, date=None, save_dir=None):
     # Use today's date if none provided
     if date is None:
         date = datetime.now().strftime("%Y%m%d")
+    time = datetime.now().strftime("%H%M%S")
     
     url = "https://api.the-odds-api.com/v4/sports/basketball_nba/odds"
     
@@ -62,7 +63,7 @@ def fetchTeamLines(api_key, date=None, save_dir=None):
 
     # Create directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
-    file_path = os.path.join(save_dir, f"NBA_{date}.json")
+    file_path = os.path.join(save_dir, f"NBA_{date}_{time}.json")
     with open(file_path, "w") as f:
         json.dump(games_data, f, indent=4)
 
