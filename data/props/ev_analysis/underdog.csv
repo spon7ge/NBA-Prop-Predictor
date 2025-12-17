@@ -1,24 +1,77 @@
 NAME,TEAM,LINE,SIDE,PREDICTION,STD,MODEL_PROB,FAIR_PROB,PRIZEPICKS_ODDS,PRIZEPICKS_IMPLIED,BEST_US_ODDS,BEST_US_BOOK,EDGE_VS_FAIR,EDGE_VS_PP,EV,EV_PERCENT,KELLY_QUARTER,USAGE_ADJ,USAGE_REASON,L5,L10,L15
-Keldon Johnson,SAS,7.5,Over,12.6,3.0,0.88,0.477,-137,0.578,104,FanDuel,0.3913,0.38,0.7952,79.52,0.1912,1.0793343550986974,Victor Wembanyama OUT (bench): +8%,80.0,90.0,80.0
-Santi Aldama,MEM,15.5,Under,13.6,3.2,0.731,,-137,0.578,-137,Default (-137),0.3104,0.2308,0.2642,26.42,0.0905,1.3,Ja Morant OUT (starter): +18%; Zach Edey OUT (starter): +13%; Expanded role: +5%,60.0,70.0,66.7
-Cedric Coward,MEM,14.5,Under,14.4,3.0,0.692,,-137,0.578,-137,Default (-137),0.2704,0.1923,0.1976,19.76,0.0677,1.3,Ja Morant OUT (same pos): +18%; Zach Edey OUT (starter): +11%,60.0,80.0,73.3
-Dean Wade,CLE,6.5,Under,6.4,3.3,0.72,0.502,-137,0.578,-104,DraftKings,0.2341,0.22,0.4123,41.23,0.1072,1.2389999999999999,Evan Mobley OUT (starter): +18%; Expanded role: +5%,60.0,70.0,73.3
-Ja Morant,MEM,18.5,Under,14.6,4.6,0.806,,-137,0.578,-137,Default (-137),0.2278,0.3059,0.3941,39.41,0.135,0.8760391981905334,Zach Edey OUT (bench): +3%; Not starting tonight: -15%,80.0,70.0,57.1
-Julian Champagnie,SAS,6.5,Over,11.7,3.0,0.76,0.564,-137,0.578,-125,Bovada,0.2065,0.26,0.368,36.8,0.115,1.18,Victor Wembanyama OUT (same pos): +18%,80.0,80.0,80.0
-Ayo Dosunmu,CHI,10.5,Over,14.2,3.6,0.75,0.53,-137,0.578,-123,BetOnline.ag,0.2012,0.25,0.3598,35.98,0.1106,1.0,Full strength,60.0,70.0,73.3
-De'Aaron Fox,SAS,20.5,Over,24.5,4.5,0.715,0.513,-137,0.578,-108,FanDuel,0.1956,0.2148,0.3767,37.67,0.1017,1.1279458768378436,Victor Wembanyama OUT (starter): +13%,60.0,70.0,73.3
-Kevin Huerter,CHI,9.5,Over,10.6,3.8,0.7,0.511,-137,0.578,-114,BetOnline.ag,0.1723,0.2,0.314,31.4,0.0895,1.0,Full strength,60.0,50.0,60.0
-Darius Garland,CLE,20.5,Under,18.2,4.2,0.706,0.522,-137,0.578,-117,DraftKings,0.1673,0.2065,0.3103,31.03,0.0908,1.1032476860422067,Evan Mobley OUT (starter): +10%,60.0,80.0,81.8
-Jaylen Wells,MEM,14.5,Under,14.1,3.1,0.615,0.52,-137,0.578,-120,FanDuel,0.1608,0.1154,0.1282,12.82,0.0385,1.3,Ja Morant OUT (starter): +18%; Zach Edey OUT (starter): +13%,0.0,20.0,40.0
-Harrison Barnes,SAS,10.5,Over,14.6,3.2,0.6,0.479,-137,0.578,110,Bovada,0.1388,0.1,0.26,26.0,0.0591,1.18,Victor Wembanyama OUT (same pos): +18%,60.0,60.0,66.7
-Coby White,CHI,21.5,Under,20.1,3.9,0.642,0.504,-137,0.578,-108,DraftKings,0.1227,0.142,0.2364,23.64,0.0638,1.0,Full strength,60.0,44.4,44.4
-Stephon Castle,SAS,17.5,Over,19.5,4.5,0.581,0.515,-137,0.578,-105,Bovada,0.0719,0.0806,0.1335,13.35,0.035,1.1435910721402949,Victor Wembanyama OUT (starter): +14%,60.0,50.0,53.3
-Isaac Okoro,CHI,7.5,Over,7.8,3.5,0.561,0.496,-137,0.578,-107,BetRivers,0.0492,0.0613,0.0859,8.59,0.023,1.0,Full strength,60.0,50.0,60.0
-Josh Giddey,CHI,19.5,Under,18.6,3.8,0.478,0.519,-137,0.578,-117,DraftKings,0.0324,-0.0217,-0.113,-11.3,0.0,1.0,Full strength,60.0,50.0,53.3
-Jalen Brunson,NYK,30.5,Over,34.5,6.3,0.522,0.507,-137,0.578,100,Bovada,0.0217,0.0217,0.0435,4.35,0.0109,1.3,Miles McBride OUT (same pos): +16%; Landry Shamet OUT (same pos): +13%; Mitchell Robinson OUT (starter): +4%,60.0,50.0,53.3
-OG Anunoby,NYK,17.5,Over,19.9,5.4,0.424,0.492,-137,0.578,140,Bovada,0.0144,-0.076,0.0176,1.76,0.0031,1.3,Miles McBride OUT (same pos): +18%; Landry Shamet OUT (same pos): +18%; Mitchell Robinson OUT (starter): +5%,40.0,40.0,40.0
-Victor Wembanyama,SAS,19.5,Over,20.0,4.3,0.543,0.545,-137,0.578,-115,FanDuel,0.0079,0.0427,0.0147,1.47,0.0042,0.85,Not starting tonight: -15%,80.0,70.0,76.9
-Donovan Mitchell,CLE,30.5,Over,32.0,5.9,0.52,0.5,-137,0.578,-109,BetOnline.ag,-0.0015,0.02,-0.0029,-0.29,0.0,1.0750503256364714,Evan Mobley OUT (starter): +8%,40.0,50.0,53.3
-Rudy Gobert,MIN,10.5,Over,11.5,3.4,0.538,0.529,-137,0.578,-124,DraftKings,-0.0118,0.0385,-0.0273,-2.73,0.0,0.9411070381231671,Anthony Edwards OUT (bench): +11%; Not starting tonight: -15%,60.0,60.0,60.0
-Jaden McDaniels,MIN,15.5,Over,18.4,4.1,0.44,0.491,-137,0.578,-105,BetOnline.ag,-0.0698,-0.06,-0.141,-14.1,0.0,1.2888739571589627,Anthony Edwards OUT (starter): +18%; Rudy Gobert OUT (starter): +9%,60.0,40.0,33.3
-Matas Buzelis,CHI,12.5,Under,11.9,3.9,0.4,0.496,-137,0.578,-106,BetRivers,-0.0807,-0.1,-0.2226,-22.26,0.0,1.0,Full strength,40.0,50.0,46.7
+Ace Bailey,UTA,13.5,Under,10.9,3.9,0.8,,-137,0.578,-137,Default (-137),0.3831,0.3,0.3839,38.39,0.1315,1.203204733034906,Svi Mykhailiuk OUT (starter): +8%; Jusuf Nurkic OUT (starter): +11%,100.0,80.0,66.7
+Jeremiah Fears,NOP,12.5,Over,18.4,4.0,0.815,,-137,0.578,-137,Default (-137),0.2388,0.3148,0.4096,40.96,0.1403,1.2656044915981228,Trey Murphy III OUT (starter): +11%; Zion Williamson OUT (starter): +14%,80.0,80.0,80.0
+Peyton Watson,DEN,11.5,Under,8.9,4.2,0.64,,-137,0.578,-137,Default (-137),0.2245,0.14,0.1072,10.72,0.0367,0.9044237762237761,Aaron Gordon OUT (bench): +6%; Not starting tonight: -15%,80.0,50.0,53.3
+Ayo Dosunmu,CHI,10.5,Over,10.7,3.1,0.75,0.52,-137,0.578,-115,FanDuel,0.2179,0.25,0.4022,40.22,0.1156,0.75,Player is QUESTIONABLE: -25%,60.0,70.0,73.3
+Keegan Murray,SAC,15.5,Over,18.9,4.1,0.792,,-137,0.578,-137,Default (-137),0.2144,0.2924,0.3709,37.09,0.127,1.3,Zach LaVine OUT (starter): +15%; Domantas Sabonis OUT (same pos): +18%,20.0,50.0,45.5
+Brandon Ingram,TOR,24.5,Under,23.0,4.4,0.63,,-137,0.578,-137,Default (-137),0.2077,0.1296,0.0892,8.92,0.0306,1.1015449046067938,RJ Barrett OUT (starter): +10%,40.0,50.0,60.0
+Jordan Poole,NOP,15.5,Over,18.8,4.4,0.775,,-137,0.578,-137,Default (-137),0.1971,0.2752,0.341,34.1,0.1168,1.1061912980977395,Trey Murphy III OUT (bench): +5%; Zion Williamson OUT (bench): +6%,60.0,66.7,66.7
+LaMelo Ball,CHA,18.5,Under,15.5,4.1,0.609,,-137,0.578,-137,Default (-137),0.1916,0.1093,0.054,5.4,0.0185,0.85,Not starting tonight: -15%,80.0,80.0,66.7
+Andrew Wiggins,MIA,17.5,Under,17.1,3.5,0.609,,-137,0.578,-137,Default (-137),0.1868,0.1087,0.053,5.3,0.0182,1.0937161936560935,Pelle Larsson OUT (starter): +9%,80.0,70.0,66.7
+John Collins,LAC,9.5,Over,10.8,2.8,0.731,,-137,0.578,-137,Default (-137),0.1543,0.2308,0.2642,26.42,0.0905,1.1340782122905029,Kriss Dunn OUT (starter): +13%,80.0,80.0,73.3
+Chet Holmgren,OKC,14.5,Over,15.3,3.7,0.727,,-137,0.578,-137,Default (-137),0.1518,0.2273,0.2581,25.81,0.0884,0.8733755954048753,Cason Wallace OUT (bench): +3%; Not starting tonight: -15%,100.0,70.0,73.3
+Rui Hachimura,LAL,11.5,Over,15.4,3.5,0.708,,-137,0.578,-137,Default (-137),0.1323,0.2083,0.2254,22.54,0.0772,1.18,Austin Reaves OUT (starter): +18%,60.0,70.0,66.7
+Ivica Zubac,LAC,13.5,Over,15.9,3.7,0.692,,-137,0.578,-137,Default (-137),0.1317,0.1923,0.1976,19.76,0.0677,1.128022759601707,Kriss Dunn OUT (starter): +13%,60.0,60.0,73.3
+Tyler Herro,MIA,21.5,Over,23.9,4.4,0.706,,-137,0.578,-137,Default (-137),0.1277,0.2058,0.2209,22.09,0.0757,1.18,Pelle Larsson OUT (same pos): +18%,60.0,66.7,66.7
+Isaiah Hartenstein,OKC,9.5,Over,15.4,3.7,0.7,,-137,0.578,-137,Default (-137),0.1246,0.2,0.2109,21.09,0.0722,1.2788832443970117,Cason Wallace OUT (starter): +8%; Chet Holmgren OUT (same pos): +18%,60.0,70.0,80.0
+Saddiq Bey,NOP,10.5,Over,14.9,4.0,0.692,,-137,0.578,-137,Default (-137),0.1185,0.1923,0.1976,19.76,0.0677,1.3,Trey Murphy III OUT (starter): +14%; Zion Williamson OUT (starter): +18%; Expanded role: +5%,80.0,90.0,80.0
+Kris Murray,POR,5.5,Under,5.4,2.7,0.5,,-137,0.578,-137,Default (-137),0.0961,0.0,-0.135,-13.5,0.0,1.1102160056657224,Jrue Holiday OUT (bench): +11%,80.0,60.0,53.3
+Noah Clowney,BKN,15.5,Under,14.6,4.3,0.56,0.52,-137,0.578,-112,DraftKings,0.0934,0.06,0.06,6.0,0.0168,1.18,Michael Porter Jr. OUT (same pos): +18%,40.0,30.0,40.0
+Luguentz Dort,OKC,6.5,Over,9.1,4.2,0.645,,-137,0.578,-137,Default (-137),0.0888,0.1451,0.116,11.6,0.0397,1.3,Cason Wallace OUT (same pos): +18%; Chet Holmgren OUT (starter): +18%,60.0,60.0,53.3
+Cason Wallace,OKC,6.5,Over,6.6,2.7,0.64,,-137,0.578,-137,Default (-137),0.0797,0.14,0.1072,10.72,0.0367,0.9272707590422823,Chet Holmgren OUT (bench): +9%; Not starting tonight: -15%,60.0,70.0,66.7
+Jose Alvarado,NOP,5.5,Over,8.8,3.5,0.615,,-137,0.578,-137,Default (-137),0.0671,0.1154,0.0646,6.46,0.0221,1.1528619238217206,Trey Murphy III OUT (bench): +7%; Zion Williamson OUT (bench): +8%,60.0,80.0,73.3
+Darius Garland,CLE,20.5,Over,21.5,4.6,0.584,0.512,-137,0.578,-110,BetMGM,0.0604,0.0842,0.1153,11.53,0.0317,1.3,Max Strus OUT (starter): +10%; Sam Merrill OUT (same pos): +18%; Evan Mobley OUT (starter): +10%; Larry Nance OUT (starter): +10%,40.0,20.0,18.2
+Ryan Kalkbrenner,CHA,7.5,Over,10.8,3.0,0.625,,-137,0.578,-137,Default (-137),0.0491,0.125,0.0812,8.12,0.0278,1.18,LaMelo Ball OUT (starter): +18%,60.0,50.0,60.0
+Devin Booker,PHX,24.5,Under,24.3,5.5,0.522,0.506,-137,0.578,-109,DraftKings,0.0484,0.0217,0.0004,0.04,0.0001,1.0571548117154812,Royce O'Neale OUT (starter): +6%,80.0,80.0,73.3
+Toumani Camara,POR,11.5,Over,13.7,3.2,0.615,,-137,0.578,-137,Default (-137),0.0389,0.1154,0.0646,6.46,0.0221,1.1583298007630352,Jrue Holiday OUT (starter): +16%,60.0,60.0,60.0
+Deni Avdija,POR,24.5,Over,27.7,5.3,0.615,,-137,0.578,-137,Default (-137),0.0373,0.1154,0.0646,6.46,0.0221,1.0909866017052376,Jrue Holiday OUT (starter): +9%,60.0,60.0,60.0
+Aaron Holiday,HOU,7.5,Over,9.7,4.9,0.589,,-137,0.578,-137,Default (-137),0.0346,0.0892,0.0193,1.93,0.0066,1.0559952038369305,Jabari Smith Jr. OUT (bench): +6%,60.0,70.0,66.7
+Malik Monk,SAC,14.5,Over,16.6,4.1,0.609,,-137,0.578,-137,Default (-137),0.0343,0.1087,0.053,5.3,0.0182,1.2380485893416928,Zach LaVine OUT (same pos): +18%; Domantas Sabonis OUT (bench): +5%,60.0,60.0,53.3
+Buddy Hield,GSW,7.5,Over,7.8,2.9,0.593,,-137,0.578,-137,Default (-137),0.0324,0.0926,0.0251,2.51,0.0086,1.18,Will Richard OUT (same pos): +18%,80.0,70.0,60.0
+LeBron James,LAL,21.5,Under,21.0,3.9,0.553,0.499,-137,0.578,-110,FanDuel,0.0292,0.053,0.0557,5.57,0.0153,1.137664275466284,Austin Reaves OUT (starter): +14%,60.0,66.7,66.7
+Julius Randle,MIN,22.5,Over,23.9,4.6,0.538,0.498,-137,0.578,-105,Bovada,0.0263,0.0385,0.0513,5.13,0.0135,1.1266556995575123,Mike Conley OUT (starter): +5%; Anthony Edwards QUESTIONABLE (starter): +7% (50% weighted),80.0,40.0,46.7
+Kevin Durant,HOU,24.5,Over,28.5,5.8,0.524,0.481,-137,0.578,-101,DraftKings,0.0245,0.0238,0.0424,4.24,0.0107,1.18,Jabari Smith Jr. OUT (same pos): +18%,60.0,60.0,53.3
+Mark Williams,PHX,11.5,Over,14.4,3.4,0.591,,-137,0.578,-137,Default (-137),0.0147,0.0909,0.0222,2.22,0.0076,1.0974554102259215,Royce O'Neale OUT (starter): +10%,60.0,80.0,66.7
+Donovan Clingan,POR,8.5,Over,10.3,2.6,0.591,,-137,0.578,-137,Default (-137),0.0129,0.0909,0.0222,2.22,0.0076,1.1595472020504058,Jrue Holiday OUT (starter): +16%,60.0,70.0,66.7
+Coby White,CHI,21.5,Over,21.9,4.2,0.536,0.513,-137,0.578,-110,BetMGM,0.0121,0.0359,0.0231,2.31,0.0064,1.09,Ayo Dosunmu QUESTIONABLE (same pos): +9% (50% weighted),40.0,55.6,55.6
+Lauri Markkanen,UTA,25.5,Over,29.3,5.9,0.583,,-137,0.578,-137,Default (-137),0.0082,0.0833,0.0091,0.91,0.0031,1.1451659881369889,Svi Mykhailiuk OUT (starter): +6%; Jusuf Nurkic OUT (starter): +8%,80.0,50.0,60.0
+Zaccharie Risacher,ATL,10.5,Over,11.5,2.9,0.583,,-137,0.578,-137,Default (-137),0.0069,0.0833,0.0091,0.91,0.0031,1.18,Kristaps Porziņģis OUT (same pos): +18%,40.0,50.0,53.3
+Collin Gillespie,PHX,12.5,Over,14.2,3.9,0.577,,-137,0.578,-137,Default (-137),0.0029,0.0769,-0.002,-0.2,0.0,1.1411631355932204,Royce O'Neale OUT (starter): +9%; Expanded role: +5%,60.0,70.0,66.7
+Kon Knueppel,CHA,18.5,Over,21.0,4.4,0.577,,-137,0.578,-137,Default (-137),0.0011,0.0769,-0.002,-0.2,0.0,1.18,LaMelo Ball OUT (same pos): +18%,60.0,50.0,60.0
+Donovan Mitchell,CLE,30.5,Over,38.6,7.1,0.52,0.504,-137,0.578,-108,FanDuel,0.0008,0.02,0.0015,0.15,0.0004,1.3,Max Strus OUT (starter): +7%; Sam Merrill OUT (same pos): +15%; Evan Mobley OUT (starter): +8%; Larry Nance OUT (starter): +7%,40.0,50.0,53.3
+Shai Gilgeous-Alexander,OKC,30.5,Over,35.1,6.8,0.56,0.54,-137,0.578,-130,FanDuel,-0.0022,0.06,-0.0092,-0.92,0.0,1.2298415755804128,Cason Wallace OUT (same pos): +13%; Chet Holmgren OUT (starter): +9%,40.0,70.0,60.0
+Reed Sheppard,HOU,11.5,Over,13.2,3.7,0.565,,-137,0.578,-137,Default (-137),-0.0091,0.0652,-0.0222,-2.22,0.0,1.049505300353357,Jabari Smith Jr. OUT (bench): +5%,40.0,40.0,60.0
+Keyonte George,UTA,22.5,Over,26.0,5.4,0.56,,-137,0.578,-137,Default (-137),-0.0145,0.06,-0.0312,-3.12,0.0,1.2208449472417306,Svi Mykhailiuk OUT (same pos): +14%; Jusuf Nurkic OUT (starter): +7%,60.0,70.0,60.0
+Brandon Miller,CHA,19.5,Over,20.3,5.2,0.563,,-137,0.578,-137,Default (-137),-0.0146,0.0635,-0.0252,-2.52,0.0,1.1251275343361673,LaMelo Ball OUT (starter): +13%,20.0,40.0,40.0
+Kawhi Leonard,LAC,23.5,Under,22.1,4.5,0.418,0.54,-137,0.578,-130,FanDuel,-0.0148,-0.0815,-0.2596,-25.96,0.0,1.0791904971403432,Kriss Dunn OUT (starter): +8%,60.0,50.0,40.0
+Brandin Podziemski,GSW,10.5,Over,13.6,3.4,0.556,,-137,0.578,-137,Default (-137),-0.02,0.0556,-0.0389,-3.89,0.0,1.18,Will Richard OUT (same pos): +18%,40.0,60.0,53.3
+Ziaire Williams,BKN,8.5,Over,9.2,3.4,0.545,,-137,0.578,-137,Default (-137),-0.0284,0.0455,-0.0564,-5.64,0.0,1.18,Michael Porter Jr. OUT (same pos): +18%,60.0,50.0,60.0
+Lonzo Ball,CLE,6.5,Over,6.9,2.2,0.45,0.496,-137,0.578,100,FanDuel,-0.05,-0.05,-0.1,-10.0,0.0,1.3,Max Strus OUT (bench): +7%; Sam Merrill OUT (same pos): +18%; Evan Mobley OUT (bench): +8%; Larry Nance OUT (bench): +7%,20.0,40.0,46.7
+Deandre Ayton,LAL,15.5,Over,19.6,4.6,0.522,,-137,0.578,-137,Default (-137),-0.0522,0.0217,-0.0974,-9.74,0.0,1.18,Austin Reaves OUT (starter): +18%,40.0,50.0,46.7
+Norman Powell,MIA,24.5,Over,27.4,5.2,0.524,,-137,0.578,-137,Default (-137),-0.0542,0.0238,-0.0938,-9.38,0.0,1.1778256462240244,Pelle Larsson OUT (same pos): +18%,40.0,50.0,53.3
+Jakob Poeltl,TOR,9.5,Over,11.7,3.0,0.5,,-137,0.578,-137,Default (-137),-0.0613,0.0,-0.135,-13.5,0.0,1.18,RJ Barrett OUT (starter): +18%,60.0,40.0,60.0
+Trey Murphy III,NOP,19.5,Under,18.2,3.7,0.36,,-137,0.578,-137,Default (-137),-0.0619,-0.14,-0.3772,-37.72,0.0,1.003,Zion Williamson OUT (same pos): +18%; Not starting tonight: -15%,0.0,20.0,20.0
+Kevin Porter Jr.,MIL,19.5,Over,19.6,5.5,0.506,,-137,0.578,-137,Default (-137),-0.0717,0.0064,-0.124,-12.4,0.0,1.2313798980037687,AJ Green OUT (same pos): +15%; Giannis Antetokounmpo OUT (bench): +7%,60.0,50.0,50.0
+Tristan da Silva,ORL,10.5,Over,10.8,3.5,0.5,,-137,0.578,-137,Default (-137),-0.0741,0.0,-0.135,-13.5,0.0,1.3,Franz Wagner OUT (same pos): +18%; Wendell Carter Jr. OUT (same pos): +18%,40.0,20.0,40.0
+Jaylen Wells,MEM,13.5,Over,15.2,3.3,0.423,0.497,-137,0.578,100,BetOnline.ag,-0.0769,-0.0769,-0.1538,-15.38,0.0,1.3,John Konchar OUT (starter): +5%; Cam Spencer OUT (starter): +12%; Scotty Pippen OUT (starter): +14%; Ty Jerome OUT (starter): +14%; Zach Edey OUT (starter): +13%; Javon Small OUT (starter): +10%; Ja Morant OUT (starter): +18%; Brandon Clarke QUESTIONABLE (starter): +7% (50% weighted),100.0,80.0,60.0
+Moses Moody,GSW,10.5,Over,13.1,4.1,0.48,,-137,0.578,-137,Default (-137),-0.0779,-0.02,-0.1696,-16.96,0.0,1.18,Will Richard OUT (same pos): +18%,80.0,60.0,53.3
+Miles Bridges,CHA,20.5,Over,22.1,4.4,0.5,,-137,0.578,-137,Default (-137),-0.0781,0.0,-0.135,-13.5,0.0,1.1550824101594164,LaMelo Ball OUT (starter): +16%,40.0,50.0,53.3
+Myles Turner,MIL,11.5,Over,14.7,3.3,0.481,,-137,0.578,-137,Default (-137),-0.0802,-0.0185,-0.1671,-16.71,0.0,1.2863245991396166,AJ Green OUT (starter): +9%; Giannis Antetokounmpo OUT (same pos): +18%,40.0,40.0,46.7
+Grayson Allen,PHX,14.5,Over,16.7,4.4,0.484,,-137,0.578,-137,Default (-137),-0.0889,-0.0157,-0.1623,-16.23,0.0,1.075353968740423,Royce O'Neale OUT (starter): +8%,0.0,30.0,40.0
+Josh Okogie,HOU,7.5,Over,7.9,3.2,0.478,,-137,0.578,-137,Default (-137),-0.0959,-0.0217,-0.1726,-17.26,0.0,1.1791369206180073,Jabari Smith Jr. OUT (starter): +18%,40.0,30.0,26.7
+Jalen Johnson,ATL,23.5,Over,26.0,5.2,0.458,,-137,0.578,-137,Default (-137),-0.1173,-0.0417,-0.2071,-20.71,0.0,1.18,Kristaps Porziņģis OUT (same pos): +18%,40.0,50.0,66.7
+Bam Adebayo,MIA,19.5,Over,19.5,4.8,0.45,,-137,0.578,-137,Default (-137),-0.1233,-0.05,-0.2215,-22.15,0.0,1.080493260682535,Pelle Larsson OUT (starter): +8%,60.0,40.0,40.0
+Immanuel Quickley,TOR,16.5,Over,18.0,3.6,0.423,,-137,0.578,-137,Default (-137),-0.155,-0.0769,-0.2681,-26.81,0.0,1.18,RJ Barrett OUT (same pos): +18%,40.0,40.0,46.7
+Jerami Grant,POR,20.5,Over,24.3,5.3,0.4,,-137,0.578,-137,Default (-137),-0.1589,-0.1,-0.308,-30.8,0.0,1.156165403356795,Jrue Holiday OUT (starter): +10%; Expanded role: +5%,60.0,50.0,46.7
+Ryan Rollins,MIL,16.5,Over,20.2,4.4,0.407,,-137,0.578,-137,Default (-137),-0.1679,-0.0926,-0.2952,-29.52,0.0,1.3,AJ Green OUT (same pos): +15%; Giannis Antetokounmpo OUT (starter): +17%,20.0,20.0,40.0
+Russell Westbrook,SAC,14.5,Over,16.9,4.3,0.385,,-137,0.578,-137,Default (-137),-0.1741,-0.1154,-0.3346,-33.46,0.0,1.3,Zach LaVine OUT (same pos): +18%; Domantas Sabonis OUT (starter): +11%,40.0,50.0,33.3
+Kyle Kuzma,MIL,14.5,Over,15.0,4.1,0.385,,-137,0.578,-137,Default (-137),-0.1742,-0.1154,-0.3346,-33.46,0.0,1.2620621792936915,AJ Green OUT (starter): +7%; Giannis Antetokounmpo OUT (same pos): +18%,40.0,40.0,40.0
+Oso Ighodaro,PHX,4.5,Over,5.7,3.1,0.385,,-137,0.578,-137,Default (-137),-0.1895,-0.1154,-0.3346,-33.46,0.0,1.18,Royce O'Neale OUT (same pos): +18%,40.0,50.0,46.7
+Cedric Coward,MEM,15.5,Over,15.6,3.1,0.308,0.499,-137,0.578,100,BetOnline.ag,-0.1923,-0.1923,-0.3846,-38.46,0.0,1.3,John Konchar OUT (same pos): +11%; Cam Spencer OUT (same pos): +18%; Scotty Pippen OUT (starter): +11%; Ty Jerome OUT (starter): +11%; Zach Edey OUT (starter): +11%; Javon Small OUT (same pos): +18%; Ja Morant OUT (same pos): +18%; Brandon Clarke QUESTIONABLE (starter): +6% (50% weighted),40.0,20.0,26.7
+Scottie Barnes,TOR,19.5,Over,21.9,4.2,0.37,,-137,0.578,-137,Default (-137),-0.1927,-0.1296,-0.3593,-35.93,0.0,1.18,RJ Barrett OUT (same pos): +18%,20.0,40.0,33.3
+Draymond Green,GSW,8.5,Over,8.8,3.3,0.381,,-137,0.578,-137,Default (-137),-0.1933,-0.119,-0.341,-34.1,0.0,1.0836594473487677,Will Richard OUT (starter): +8%,60.0,50.0,40.0
+DeMar DeRozan,SAC,19.5,Over,22.4,5.2,0.346,,-137,0.578,-137,Default (-137),-0.212,-0.1538,-0.4012,-40.12,0.0,1.3,Zach LaVine OUT (same pos): +18%; Domantas Sabonis OUT (starter): +14%,20.0,30.0,26.7
+Anthony Black,ORL,15.5,Over,15.6,3.7,0.308,,-137,0.578,-137,Default (-137),-0.2677,-0.1923,-0.4677,-46.77,0.0,1.2880476949485204,Franz Wagner OUT (starter): +14%; Wendell Carter Jr. OUT (starter): +7%; Expanded role: +5%,0.0,30.0,40.0
+Shaedon Sharpe,POR,23.5,Over,23.9,4.8,0.273,,-137,0.578,-137,Default (-137),-0.2886,-0.2273,-0.5282,-52.82,0.0,1.18,Jrue Holiday OUT (same pos): +18%,40.0,40.0,40.0
+Bobby Portis,MIL,13.5,Over,14.0,3.2,0.259,,-137,0.578,-137,Default (-137),-0.3024,-0.2407,-0.5515,-55.15,0.0,1.2118560179977502,AJ Green OUT (bench): +3%; Giannis Antetokounmpo OUT (same pos): +18%,40.0,30.0,33.3
+Steven Adams,HOU,5.5,Over,6.9,3.1,0.225,,-137,0.578,-137,Default (-137),-0.3342,-0.2749,-0.6106,-61.06,0.0,1.0743630573248408,Jabari Smith Jr. OUT (bench): +7%,40.0,40.0,33.3
