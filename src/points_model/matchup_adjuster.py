@@ -21,10 +21,9 @@ class MatchupAdjuster:
     Calculates multipliers for projections based on opponent matchup.
     """
     
-    # League average baselines (update each season)
     LEAGUE_AVG_PACE = 100.0
-    LEAGUE_AVG_DRTG = 114.0  # 2024-25 season average
-    LEAGUE_AVG_FOUL_RATE = 0.30
+    LEAGUE_AVG_DRTG = 114.0 
+    LEAGUE_AVG_FOUL_RATE = 21.8  
     
     def __init__(
         self,
@@ -41,6 +40,7 @@ class MatchupAdjuster:
             fetch_team_stats: If True, fetch current team stats from NBA API
         """
         self.team_stats = None
+        self.fouls_per_game = {}  # Dictionary mapping team_id -> fouls per game
         if fetch_team_stats:
             self._fetch_team_stats()
             if self.team_stats is not None:
@@ -119,6 +119,37 @@ class MatchupAdjuster:
         if team_data is not None and 'DEF_RATING' in team_data:
             return float(team_data['DEF_RATING'])
         return None
+    
+    def set_fouls_per_game(self, fouls_dict: Dict[int, float], league_avg: float = None):
+        """
+        Set fouls per game data from league_base_df.
+        
+        Args:
+            fouls_dict: Dictionary mapping team_id -> fouls per game
+            league_avg: League average fouls per game (auto-calculated if not provided)
+        """
+        self.fouls_per_game = fouls_dict
+        if league_avg is not None:
+            self.league_avg_foul_rate = league_avg
+        elif fouls_dict:
+            # Calculate league average from provided data
+            self.league_avg_foul_rate = sum(fouls_dict.values()) / len(fouls_dict)
+    
+    def get_opponent_foul_rate(self, team_id: int) -> Optional[float]:
+        """
+        Get opponent foul rate (fouls per game) by team ID.
+        
+        Args:
+            team_id: NBA team ID
+            
+        Returns:
+            Fouls per game (float), or league average if not found
+        """
+        if not self.fouls_per_game:
+            return self.league_avg_foul_rate
+        
+        team_id_int = int(team_id)
+        return self.fouls_per_game.get(team_id_int, self.league_avg_foul_rate)
         
     def pace_adjustment(self, opp_pace: float) -> float:
         """
