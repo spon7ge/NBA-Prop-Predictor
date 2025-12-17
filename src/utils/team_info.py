@@ -3,8 +3,8 @@ projectedStartingFive = {
     "BKN": ["Terance Mann", "Nic Claxton", "Noah Clowney", "Egor Demin", "Michael Porter"],
     "BOS": ["Jaylen Brown", "Derrick White", "Jordan Walsh", "Neemias Queta", "Payton Pritchard"],
     "CHA": ["Kon Knueppel", "Brandon Miller", "Ryan Kalkbrenner", "Sion James", "Miles Bridges"],
-    "CHI": ["Nikola Vučević", "Coby White", "Isaac Okoro", "Matas Buzelis", "Josh Giddey"],
-    "CLE": ["De'Andre Hunter", "Darius Garland", "Dean Wade", "Donovan Mitchell", "Jarrett Allen"],
+    "CHI": ["Isaac Okoro", "Josh Giddey", "Nikola Vučević", "Matas Buzelis", "Coby White"],
+    "CLE": ["Jarrett Allen", "Donovan Mitchell", "De'Andre Hunter", "Dean Wade", "Darius Garland"],
     "DAL": ["Cooper Flagg", "Naji Marshall", "Daniel Gafford", "Ryan Nembhard", "P.J. Washington"],
     "DEN": ["Spencer Jones", "Nikola Jokić", "Cameron Johnson", "Jamal Murray"],
     "DET": ["Cade Cunningham", "Duncan Robinson", "Ausar Thompson", "Jalen Duren", "Tobias Harris"],
@@ -13,10 +13,10 @@ projectedStartingFive = {
     "IND": ["Jay Huff", "Andrew Nembhard", "Pascal Siakam", "Bennedict Mathurin", "Ethan Thompson"],
     "LAC": ["Kawhi Leonard", "James Harden", "Kris Dunn", "John Collins", "Ivica Zubac"],
     "LAL": ["Marcus Smart", "Deandre Ayton", "LeBron James", "Rui Hachimura", "Luka Dončić"],
-    "MEM": ["Santi Aldama", "Cedric Coward", "Jaylen Wells", "Jaren Jackson Jr."],
+    "MEM": ["Jaren Jackson Jr.", "Jaylen Wells", "Cedric Coward", "Santi Aldama", "Vince Williams"],
     "MIA": ["Bam Adebayo", "Simone Fontecchio", "Andrew Wiggins", "Norman Powell", "Davion Mitchell"],
     "MIL": ["Ryan Rollins", "Gary Trent", "Kevin Porter", "Myles Turner", "Kyle Kuzma"],
-    "MIN": ["Donte DiVincenzo", "Jaden McDaniels", "Julius Randle", "Bones Hyland"],
+    "MIN": ["Jaden McDaniels", "Donte DiVincenzo", "Rudy Gobert", "Julius Randle"],
     "NOP": ["Derik Queen", "Trey Murphy", "Jeremiah Fears", "Saddiq Bey", "Herbert Jones"],
     "NYK": ["Jalen Brunson", "Mikal Bridges", "Josh Hart", "Karl-Anthony Towns", "OG Anunoby"],
     "OKC": ["Jalen Williams", "Thomas Sorber", "Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Luguentz Dort"],
@@ -131,5 +131,8 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
+    "CHI": ["Ayo Dosunmu"],
+    "MEM": ["Brandon Clarke"],
+    "MIN": ["Anthony Edwards"],
 }
 
