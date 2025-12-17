@@ -10,7 +10,8 @@ Factors:
 1. Usage rate baseline
 2. Teammate availability (usage increases when stars out)
 3. Opponent defense (DRTG, pace)
-4. Game script (more shots when trailing)
+4. Opponent foul rate (affects FTA)
+5. Game script (more shots when trailing)
 """
 
 import numpy as np
@@ -104,7 +105,8 @@ class ShotVolumeModel:
         projected_minutes: float,
         usage_adjustment: float = 1.0,
         pace_adjustment: float = 1.0,
-        defense_adjustment: float = 1.0
+        defense_adjustment: float = 1.0,
+        foul_rate_adjustment: float = 1.0
     ) -> Optional[Dict]:
         """
         Project shot attempts given minutes projection.
@@ -115,6 +117,7 @@ class ShotVolumeModel:
             usage_adjustment: Multiplier for usage (e.g., 1.1 when star teammate out)
             pace_adjustment: Multiplier for pace differential
             defense_adjustment: Multiplier for opponent defense
+            foul_rate_adjustment: Multiplier for opponent foul rate (affects FTA)
             
         Returns:
             Dictionary with shot volume projections or None if player not found
@@ -132,8 +135,8 @@ class ShotVolumeModel:
         adj_fga_rate = rates['fga_per_min'] * usage_adjustment * pace_adjustment * defense_adjustment
         adj_fg3a_rate = rates['fg3a_per_min'] * usage_adjustment * pace_adjustment * defense_adjustment
         
-        # FTA less affected by pace (more about driving/style)
-        adj_fta_rate = rates['fta_per_min'] * usage_adjustment * defense_adjustment
+        # FTA affected by usage, defense, and opponent foul rate
+        adj_fta_rate = rates['fta_per_min'] * usage_adjustment * defense_adjustment * foul_rate_adjustment
         
         # Project totals
         expected_fga = adj_fga_rate * projected_minutes
@@ -168,6 +171,7 @@ class ShotVolumeModel:
                 'usage': usage_adjustment,
                 'pace': pace_adjustment,
                 'defense': defense_adjustment,
+                'foul_rate': foul_rate_adjustment,
             },
             'sample_size': rates['sample_size'],
         }

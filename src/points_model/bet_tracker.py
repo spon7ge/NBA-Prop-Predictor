@@ -31,12 +31,13 @@ class LineTracker:
         self.lines_directory = lines_directory
         self.line_history = {}
         
-    def load_all_lines(self, date_filter: str = None) -> pd.DataFrame:
+    def load_all_lines(self, date_filter: str = None, file_type: str = 'DFS') -> pd.DataFrame:
         """
         Load all player lines files and combine with timestamps.
         
         Args:
             date_filter: Optional date string (YYYYMMDD) to filter files
+            file_type: 'DFS' or 'US' to filter file type (default: 'DFS')
             
         Returns:
             Combined DataFrame with all lines and timestamps
@@ -46,6 +47,13 @@ class LineTracker:
         for filename in os.listdir(self.lines_directory):
             if not filename.endswith('.csv'):
                 continue
+            
+            # Filter by file type (DFS or US)
+            if file_type == 'DFS' and not filename.startswith('NBA_DFS_'):
+                continue
+            elif file_type == 'US' and not filename.startswith('NBA_US_'):
+                continue
+            
             if date_filter and date_filter not in filename:
                 continue
                 
@@ -70,7 +78,8 @@ class LineTracker:
         self, 
         player_name: str, 
         prop_type: str = 'player_points',
-        game_date: str = None
+        game_date: str = None,
+        file_type: str = 'DFS'  # Add parameter
     ) -> Dict:
         """
         Get opening and closing lines for a player prop.
@@ -79,11 +88,12 @@ class LineTracker:
             player_name: Player name
             prop_type: Prop category (default: player_points)
             game_date: Game date to filter (YYYY-MM-DD format)
+            file_type: 'DFS' or 'US' to filter file type (default: 'DFS')
             
         Returns:
             Dictionary with opening/closing line info by bookmaker
         """
-        lines = self.load_all_lines()
+        lines = self.load_all_lines(file_type=file_type)  # Pass file_type
         
         if lines.empty:
             return {}
@@ -133,7 +143,8 @@ class LineTracker:
         player_name: str,
         side: str,
         line_at_bet: float,
-        game_date: str = None
+        game_date: str = None,
+        file_type: str = 'DFS'  # Add parameter
     ) -> Dict:
         """
         Calculate Closing Line Value.
@@ -146,11 +157,16 @@ class LineTracker:
             side: 'OVER' or 'UNDER'
             line_at_bet: The line when you placed your bet
             game_date: Game date
+            file_type: 'DFS' or 'US' to filter file type (default: 'DFS')
             
         Returns:
             CLV analysis dictionary
         """
-        line_info = self.get_opening_closing_lines(player_name, game_date=game_date)
+        line_info = self.get_opening_closing_lines(
+            player_name, 
+            game_date=game_date,
+            file_type=file_type  # Pass file_type
+        )
         
         if not line_info:
             return {'clv': None, 'error': 'No line data found'}
@@ -193,7 +209,33 @@ class PropBetTracker:
     def _load_bets(self) -> pd.DataFrame:
         """Load existing bets or create empty DataFrame."""
         if os.path.exists(self.filepath):
-            return pd.read_csv(self.filepath, parse_dates=['date', 'bet_time'])
+            try:
+                df = pd.read_csv(self.filepath, parse_dates=['date', 'bet_time'])
+                # Check if DataFrame is empty (no rows)
+                if len(df) == 0:
+                    return pd.DataFrame(columns=[
+                        'date', 'bet_time', 'player', 'player_id', 'team', 'opponent',
+                        'prop_type', 'side', 'bookmaker',
+                        'line_at_bet', 'odds_at_bet', 'opening_line', 'closing_line', 'closing_odds',
+                        'projection', 'projection_std', 'predicted_prob', 'predicted_edge',
+                        'actual_result', 'won', 'units_bet', 'units_won',
+                        'mins_proj', 'mins_actual', 'fga_proj', 'fga_actual',
+                        'opp_pace', 'opp_drtg', 'team_score', 'opp_score',
+                        'edge_sources', 'notes'
+                    ])
+                return df
+            except (pd.errors.EmptyDataError, ValueError):
+                # File exists but is empty or has parsing errors
+                return pd.DataFrame(columns=[
+                    'date', 'bet_time', 'player', 'player_id', 'team', 'opponent',
+                    'prop_type', 'side', 'bookmaker',
+                    'line_at_bet', 'odds_at_bet', 'opening_line', 'closing_line', 'closing_odds',
+                    'projection', 'projection_std', 'predicted_prob', 'predicted_edge',
+                    'actual_result', 'won', 'units_bet', 'units_won',
+                    'mins_proj', 'mins_actual', 'fga_proj', 'fga_actual',
+                    'opp_pace', 'opp_drtg', 'team_score', 'opp_score',
+                    'edge_sources', 'notes'
+                ])
         else:
             return pd.DataFrame(columns=[
                 'date', 'bet_time', 'player', 'player_id', 'team', 'opponent',
@@ -202,7 +244,7 @@ class PropBetTracker:
                 'projection', 'projection_std', 'predicted_prob', 'predicted_edge',
                 'actual_result', 'won', 'units_bet', 'units_won',
                 'mins_proj', 'mins_actual', 'fga_proj', 'fga_actual',
-                'opp_pace', 'opp_drtg',
+                'opp_pace', 'opp_drtg', 'team_score', 'opp_score',
                 'edge_sources', 'notes'
             ])
     
@@ -238,7 +280,8 @@ class PropBetTracker:
         if 'opening_line' not in bet_data:
             line_info = self.line_tracker.get_opening_closing_lines(
                 bet_data.get('player'),
-                game_date=str(bet_data.get('date'))[:10] if bet_data.get('date') else None
+                game_date=str(bet_data.get('date'))[:10] if bet_data.get('date') else None,
+                file_type='DFS'  # Explicitly use DFS
             )
             if line_info:
                 # Use first bookmaker's opening line as reference
@@ -273,7 +316,8 @@ class PropBetTracker:
                 bet['player'],
                 bet['side'],
                 bet['line_at_bet'],
-                str(bet['date'])[:10] if pd.notna(bet['date']) else None
+                str(bet['date'])[:10] if pd.notna(bet['date']) else None,
+                file_type='DFS'  # Explicitly use DFS
             )
             if clv_info.get('closing_line'):
                 closing_line = clv_info['closing_line']

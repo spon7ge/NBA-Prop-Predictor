@@ -84,7 +84,8 @@ class PointsProjector:
                 opp_pace = self.matchup_adjuster.get_opponent_pace(opp_team_id)
             if opp_drtg is None:
                 opp_drtg = self.matchup_adjuster.get_opponent_drtg(opp_team_id)
-            # Note: Foul rate not available from NBA API, so keep manual/default
+            if opp_foul_rate is None:
+                opp_foul_rate = self.matchup_adjuster.get_opponent_foul_rate(opp_team_id)
         
         # Step 2: Get matchup adjustments
         matchup = self.matchup_adjuster.get_all_adjustments(opp_pace, opp_drtg, opp_foul_rate)
@@ -105,7 +106,8 @@ class PointsProjector:
             projected_minutes=mins_proj['expected'],
             usage_adjustment=usage_adjustment * matchup['defense'],
             pace_adjustment=matchup['pace'],
-            defense_adjustment=1.0  # Already factored into usage
+            defense_adjustment=1.0,  # Already factored into usage
+            foul_rate_adjustment=matchup['foul_rate']
         )
         if volume_proj is None:
             return None
