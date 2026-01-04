@@ -1,0 +1,1998 @@
+[
+    {
+        "home_team": "Orlando Magic",
+        "away_team": "Indiana Pacers",
+        "commence_time": "2026-01-04T20:11:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -138,
+                                "point": 3.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": 104,
+                                "point": -3.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -130,
+                                "point": 268.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -102,
+                                "point": 268.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -125,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -105,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -125,
+                                "point": 266.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 266.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -115,
+                                "point": 2.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -115,
+                                "point": -2.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 268.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -125,
+                                "point": 268.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -110,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -110,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -115,
+                                "point": 228.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 228.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -110,
+                                "point": 2.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -115,
+                                "point": -2.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -118,
+                                "point": 268.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 268.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Indiana Pacers",
+                                "price": -121,
+                                "point": 2.5
+                            },
+                            {
+                                "name": "Orlando Magic",
+                                "price": -113,
+                                "point": -2.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Brooklyn Nets",
+        "away_team": "Denver Nuggets",
+        "commence_time": "2026-01-04T20:41:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -148,
+                                "point": -11.5
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": 112,
+                                "point": 11.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -108,
+                                "point": 238.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -122,
+                                "point": 238.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -105,
+                                "point": -12.5
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": -125,
+                                "point": 12.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -118,
+                                "point": 232.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -111,
+                                "point": 232.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -105,
+                                "point": -12.5
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": -125,
+                                "point": 12.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 236.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -125,
+                                "point": 236.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -110,
+                                "point": 2.0
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": -110,
+                                "point": -2.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 225.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 225.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -130,
+                                "point": -12.5
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": -102,
+                                "point": 12.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -118,
+                                "point": 234.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 234.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Brooklyn Nets",
+                                "price": -115,
+                                "point": -12.5
+                            },
+                            {
+                                "name": "Denver Nuggets",
+                                "price": -118,
+                                "point": 12.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Miami Heat",
+        "away_team": "New Orleans Pelicans",
+        "commence_time": "2026-01-04T23:10:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -112,
+                                "point": -8.5
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -108,
+                                "point": 8.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 247.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 247.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -106,
+                                "point": -8.0
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -106,
+                                "point": 8.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -107,
+                                "point": 248.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -107,
+                                "point": 248.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -110,
+                                "point": -8.0
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -110,
+                                "point": 8.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 248.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 248.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -102,
+                                "point": -8.5
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -118,
+                                "point": 8.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 248.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -115,
+                                "point": 248.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-01-04T22:13:07Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -110,
+                                "point": -8.0
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -110,
+                                "point": 8.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 248.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 248.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -110,
+                                "point": -8.5
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -110,
+                                "point": 8.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 248.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 248.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": 100,
+                                "point": -9.0
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -120,
+                                "point": 9.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 246.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -115,
+                                "point": 246.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -105,
+                                "point": -8.5
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -115,
+                                "point": 8.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -115,
+                                "point": 247.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 247.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Miami Heat",
+                                "price": -109,
+                                "point": -9.0
+                            },
+                            {
+                                "name": "New Orleans Pelicans",
+                                "price": -117,
+                                "point": 9.0
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Washington Wizards",
+        "away_team": "Minnesota Timberwolves",
+        "commence_time": "2026-01-04T23:10:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -115,
+                                "point": -11.0
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -105,
+                                "point": 11.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -112,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -108,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -110,
+                                "point": -11.0
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -110,
+                                "point": 11.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -106,
+                                "point": -11.0
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -106,
+                                "point": 11.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -107,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -107,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -110,
+                                "point": -11.0
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -110,
+                                "point": 11.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -102,
+                                "point": -11.5
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -118,
+                                "point": 11.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -110,
+                                "point": -11.5
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -110,
+                                "point": 11.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-01-04T22:13:07Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -110,
+                                "point": -11.5
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -110,
+                                "point": 11.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -105,
+                                "point": -11.5
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -115,
+                                "point": 11.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 239.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 239.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Minnesota Timberwolves",
+                                "price": -113,
+                                "point": -11.0
+                            },
+                            {
+                                "name": "Washington Wizards",
+                                "price": -113,
+                                "point": 11.0
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Phoenix Suns",
+        "away_team": "Oklahoma City Thunder",
+        "commence_time": "2026-01-05T01:10:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -110,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -106,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -114,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -116,
+                                "point": -9.0
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -104,
+                                "point": 9.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -115,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -112,
+                                "point": -9.0
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": 100,
+                                "point": 9.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -113,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -102,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -110,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 232.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 232.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -115,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -105,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -110,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 232.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 232.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-01-04T22:13:07Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -110,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -110,
+                                "point": 9.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -115,
+                                "point": 231.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 231.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -113,
+                                "point": -9.5
+                            },
+                            {
+                                "name": "Phoenix Suns",
+                                "price": -113,
+                                "point": 9.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Sacramento Kings",
+        "away_team": "Milwaukee Bucks",
+        "commence_time": "2026-01-05T02:10:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -110,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -110,
+                                "point": 6.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -108,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -112,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -110,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -110,
+                                "point": 6.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -102,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -118,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -108,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -112,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -110,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -110,
+                                "point": 6.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -106,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -106,
+                                "point": 6.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -107,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -107,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -115,
+                                "point": -7.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -105,
+                                "point": 7.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 228.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 228.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-01-04T22:13:07Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -110,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -110,
+                                "point": 6.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 228.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 228.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -102,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -118,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 227.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 227.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Milwaukee Bucks",
+                                "price": -114,
+                                "point": -6.0
+                            },
+                            {
+                                "name": "Sacramento Kings",
+                                "price": -112,
+                                "point": 6.0
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Los Angeles Lakers",
+        "away_team": "Memphis Grizzlies",
+        "commence_time": "2026-01-05T02:40:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-01-04T22:12:55Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -112,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -108,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -112,
+                                "point": 240.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -108,
+                                "point": 240.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -110,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -110,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -115,
+                                "point": 240.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -105,
+                                "point": 240.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -106,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -106,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -113,
+                                "point": 240.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -102,
+                                "point": 240.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-01-04T22:11:51Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -110,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -110,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 241.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 241.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-01-04T22:12:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -118,
+                                "point": -4.5
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -102,
+                                "point": 4.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 241.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -115,
+                                "point": 241.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-01-04T22:13:07Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -110,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -110,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 241.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 241.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-01-04T22:12:17Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -110,
+                                "point": -5.0
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -110,
+                                "point": 5.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 240.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 240.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -115,
+                                "point": -4.5
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -105,
+                                "point": 4.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 241.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -115,
+                                "point": 241.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-01-04T22:12:41Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Los Angeles Lakers",
+                                "price": -110,
+                                "point": -5.5
+                            },
+                            {
+                                "name": "Memphis Grizzlies",
+                                "price": -115,
+                                "point": 5.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
