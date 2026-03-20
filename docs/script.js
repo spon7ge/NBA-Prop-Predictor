@@ -41,7 +41,10 @@ function parseCSV(csvText) {
         'Odds Over', 'Odds Under',
         'Implied Over', 'Implied Under',
         'EV Over', 'EV Under',
+        // Backward compatible: older exports used Pts naming
         'Avg Pts L5', 'Std Pts L5',
+        // New all-props exports use generic stat naming
+        'Avg Stat L5', 'Std Stat L5',
         'Prob Over', 'Prob Under',
         'OVER L5', 'OVER L10', 'OVER L15',
         'Avg Min L5',
