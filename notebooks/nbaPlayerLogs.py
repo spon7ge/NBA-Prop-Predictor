@@ -206,12 +206,11 @@ class NBAGameLogs:
 
         # 6. Join team + opp onto player rows
         final = player_merged.merge(team_merged, on=['GAME_ID', 'TEAM_ID'], how='left')
-        final = final.merge(
-            opp_team,
-            left_on=['GAME_ID', 'TEAM_ID'],
-            right_on=['GAME_ID', 'OPP_TEAM_ID'],
-            how='left'
-        )
+        # opp_team rows are "team T's box score in game G" → OPP_TEAM_ID == T.
+        # Joining on (GAME_ID, TEAM_ID) == (GAME_ID, OPP_TEAM_ID) re-attaches the *player's*
+        # team; we need the *other* team in the same game.
+        final = final.merge(opp_team, on='GAME_ID', how='left')
+        final = final.loc[final['TEAM_ID'] != final['OPP_TEAM_ID']]
 
         self.final = self._clean(final)
         print(f"✓ Built — shape: {self.final.shape}")
