@@ -1,5 +1,6 @@
 // Global variables
 let searchFilter = '';
+let propFilter = ''; // empty = all props
 let csvData = [];
 let prizepicksData = [];
 let underdogData = [];
@@ -45,9 +46,12 @@ function parseCSV(csvText) {
         'Avg Pts L5', 'Std Pts L5',
         // New all-props exports use generic stat naming
         'Avg Stat L5', 'Std Stat L5',
+        'Z Score',
         'Prob Over', 'Prob Under',
         'OVER L5', 'OVER L10', 'OVER L15',
-        'Avg Min L5',
+        'Avg Min L5', 'Std Min L5',
+        'Avg USG% L5', 'Std USG% L5',
+        'Avg Stat vs Matchup', 'Matchup Games',
         'Spread', 'Total',
         'Opp Def Rating', 'Opp Def Rank',
         'Opp Pace', 'Opp Pace Rank'
@@ -99,7 +103,7 @@ function loadCSVData(platform = 'prizepicks') {
     let pathIndex = 0;
 
     function tryLoad(path) {
-        fetch(path)
+        fetch(path, { cache: 'no-store' })
             .then(response => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 return response.text();
@@ -124,6 +128,7 @@ function loadCSVData(platform = 'prizepicks') {
                 }
 
                 updateActiveData();
+                syncPropFilterOptions();
                 render();
             })
             .catch(error => {
@@ -141,6 +146,7 @@ function loadCSVData(platform = 'prizepicks') {
                         underdogHeaders = [];
                     }
                     updateActiveData();
+                    syncPropFilterOptions();
                     render();
                 }
             });
@@ -169,12 +175,54 @@ function switchTab(platform) {
     // Re-render immediately so the UI always matches the selected tab,
     // even if the CSV is still loading (it may be empty temporarily).
     updateActiveData();
+    syncPropFilterOptions();
     render();
 
     if (platform === 'prizepicks' && prizepicksData.length === 0) {
         loadCSVData('prizepicks');
     } else if (platform === 'underdog' && underdogData.length === 0) {
         loadCSVData('underdog');
+    }
+}
+
+// ─── Prop filter (dropdown options from active platform data) ───────────────
+
+function uniquePropsFromRows(rows) {
+    const seen = new Set();
+    for (const row of rows) {
+        const p = row['Prop'];
+        if (p == null) continue;
+        const s = String(p).trim();
+        if (s) seen.add(s);
+    }
+    return Array.from(seen).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+}
+
+function syncPropFilterOptions() {
+    const sel = document.getElementById('propFilter');
+    if (!sel) return;
+
+    const rows = activeTab === 'prizepicks' ? prizepicksData : underdogData;
+    const props = uniquePropsFromRows(rows);
+    const prev = propFilter;
+
+    sel.replaceChildren();
+    const allOpt = document.createElement('option');
+    allOpt.value = '';
+    allOpt.textContent = 'All props';
+    sel.appendChild(allOpt);
+    for (const p of props) {
+        const opt = document.createElement('option');
+        opt.value = p;
+        opt.textContent = p;
+        sel.appendChild(opt);
+    }
+
+    if (prev && props.includes(prev)) {
+        sel.value = prev;
+    } else {
+        sel.value = '';
+        if (prev && !props.includes(prev)) propFilter = '';
     }
 }
 
@@ -241,6 +289,10 @@ function formatCell(header, value) {
     }
     if (header === 'Prob Over' || header === 'Prob Under') {
         // CSV stores Prob Over/Under as 0-1
+        return `${(value * 100).toFixed(1)}%`;
+    }
+    if (header === 'Avg USG% L5' || header === 'Std USG% L5') {
+        // Stored as fraction (e.g. 0.33 => 33%)
         return `${(value * 100).toFixed(1)}%`;
     }
     if (header.startsWith('OVER L')) {
@@ -356,6 +408,10 @@ function render() {
         );
     }
 
+    if (propFilter) {
+        data = data.filter(row => String(row['Prop'] || '').trim() === propFilter);
+    }
+
     renderSinglesTable(data);
     updateStats(data);
 
@@ -390,6 +446,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (playerSearch) {
         playerSearch.addEventListener('input', function () {
             searchFilter = this.value;
+            render();
+        });
+    }
+
+    const propFilterEl = document.getElementById('propFilter');
+    if (propFilterEl) {
+        propFilterEl.addEventListener('change', function () {
+            propFilter = this.value;
             render();
         });
     }
