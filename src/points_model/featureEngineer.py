@@ -19,9 +19,9 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PIE', 'PLUS_MINUS', 'POSS']
+    cols = ['MIN', 'PTS', 'USG_PCT', 'PF', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PF_PER_MIN', 'TS_PCT', 'AST_TO', 'NET_RATING']
 
-    for window in [5, 7, 10, 20]:
+    for window in [3,5,10]:
         for col in cols:
             df[f'{col}_roll{window}'] = (
                 df.groupby('PLAYER_ID')[col]
@@ -87,7 +87,6 @@ def _efficiency_trends(df: pd.DataFrame) -> pd.DataFrame:
 # ── 6. Team context ───────────────────────────────────────────────────────────
 
 def _team_context(df: pd.DataFrame) -> pd.DataFrame:
-
     # ── Team pace: one row per team per game, then map back ──────────────────
     team_pace = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
@@ -101,6 +100,12 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
         .groupby('TEAM_ID')['TEAM_PTS']
         .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
     )
+    team_net_rating = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_NET_RATING']
+        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+    )
 
     team_pace_map = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
@@ -112,9 +117,16 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
         .sort_values(['TEAM_ID', 'GAME_DATE'])
         .assign(TEAM_PTS_roll5=team_pts.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PTS_roll5']]
     )
+    team_net_rating_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_NET_RATING_roll5=team_net_rating.values)[['TEAM_ID', 'GAME_ID', 'TEAM_NET_RATING_roll5']]
+    )    
 
     df = df.merge(team_pace_map, on=['TEAM_ID', 'GAME_ID'], how='left')
     df = df.merge(team_pts_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_net_rating_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+
     # ── MIN share and POSS share are player-level so these are fine as-is ─────
     df["MIN_share_proxy"] = round(df["MIN_roll5"] / (48 * 5), 2)
     #percentage of team's points scored by the player
@@ -149,12 +161,8 @@ def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 9. Volatility ─────────────────────────────────────────────────────────────
 
 def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
-    df['PTS_std5'] = (
-        df.groupby('PLAYER_ID')['PTS']
-        .transform(lambda x: x.shift(1).rolling(5).std().round(2))
-    )
-    df['PTS_std10'] = (
-        df.groupby('PLAYER_ID')['PTS']
+    df['MIN_std10'] = (
+        df.groupby('PLAYER_ID')['MIN']
         .transform(lambda x: x.shift(1).rolling(10).std().round(2))
     )
 
