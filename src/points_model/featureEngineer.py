@@ -12,6 +12,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _team_context(df)
     df = _schedule_features(df)
     df = _volatility_features(df)
+    df = _opponent_stats(df)
 
     return df
 
@@ -167,6 +168,36 @@ def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     return df
+# ---- Opponent stats ---------------------------------------------------------------
+def _opponent_stats(df):
+    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS']
+    available_stat_cols = [c for c in stat_cols if c in df.columns]
+
+    team_game = (
+        df[['GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION'] + available_stat_cols]
+        .drop_duplicates(subset=['GAME_ID', 'TEAM_ABBREVIATION'])
+        .sort_values(['TEAM_ABBREVIATION', 'GAME_DATE'])
+    )
+
+    opp_cols = []
+    for col in available_stat_cols:
+        base = col.replace('TEAM_', '')
+        for window in [5, 10]:
+            avg_col = f'{base}_roll{window}'
+            team_game[avg_col] = (
+                team_game.groupby('TEAM_ABBREVIATION')[col]
+                .transform(lambda x, w=window: x.shift(1).rolling(w, min_periods=1).mean().round(2))
+            )
+            opp_cols.append(avg_col)
+
+    opp_rename = {col: f'OPP_{col}' for col in opp_cols}
+
+    team_game_opp = (
+        team_game[['GAME_ID', 'TEAM_ABBREVIATION'] + opp_cols]
+        .rename(columns={**{'TEAM_ABBREVIATION': 'OPP_OPP_ABBREVIATION_base'}, **opp_rename})
+    )
+
+    return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')
 
 
 
