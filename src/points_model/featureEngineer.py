@@ -13,6 +13,8 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
+    df = _expectedPace(df)
+    df = _detect_star_players(df)
 
     return df
 
@@ -20,7 +22,9 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PF', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PF_PER_MIN', 'TS_PCT', 'AST_TO', 'NET_RATING']
+    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 
+    'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN',
+    ]
 
     for window in [3,5,10]:
         for col in cols:
@@ -34,7 +38,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS']
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT"]
 
     for lag in [1, 2]:
         for col in cols:
@@ -198,6 +202,134 @@ def _opponent_stats(df):
     )
 
     return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')
+
+# ---- Expected Pace and Points -----------------------
+def _expectedPace(df):
+    df = df.copy()
+    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll5'] + df['OPP_PACE_roll5']) / 2).round(2)
+    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll5'] - df['OPP_PACE_roll5']    
+    return df
+
+# ---- Finding Star Players -----------------------
+def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
+    df = df.copy()
+    
+    # Try to import nameDict if not provided
+    if name_dict is None:
+        try:
+            from src.utils.team_info import nameDict
+            name_dict = nameDict
+        except ImportError:
+            name_dict = None
+    
+    # Normalize player names if name_dict is provided
+    if name_dict is not None:
+        # Create reverse mapping for normalization (map variations to canonical form)
+        # Also create forward mapping for consistency
+        normalized_names = {}
+        for variant, canonical in name_dict.items():
+            normalized_names[variant] = canonical
+            # Also map canonical to itself if not already present
+            if canonical not in normalized_names:
+                normalized_names[canonical] = canonical
+        
+        # Normalize PLAYER_NAME column
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME'].map(lambda x: normalized_names.get(x, x))
+    else:
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME']
+    
+    # Create ACTIVE column based on minutes played
+    df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
+
+    # Season-long team star by composite score (only among active players)
+    active_players = df[df['ACTIVE'] == 1].copy()
+    
+    # Count games per player per team to filter by min_games
+    player_game_counts = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .size()
+        .reset_index(name='GAME_COUNT')
+    )
+    
+    # Filter to only players with enough games
+    eligible_players = player_game_counts[player_game_counts['GAME_COUNT'] >= min_games]
+    
+    # Filter active_players to only eligible players using merge
+    active_players = active_players.merge(
+        eligible_players[['TEAM_ID', 'PLAYER_NAME_NORM']],
+        on=['TEAM_ID', 'PLAYER_NAME_NORM'],
+        how='inner'
+    )
+    
+    # Calculate mean stats per player per team (using normalized names)
+    player_stats = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .agg({
+            'USG_PCT': 'mean',
+            'TS_PCT': 'mean',
+            'EFG_PCT': 'mean',
+            'PTS': 'mean',
+            'PIE': 'mean',  # Player Impact Estimate
+            'NET_RATING': 'mean',
+        })
+        .reset_index()
+        .rename(columns={'PLAYER_NAME_NORM': 'PLAYER_NAME'})
+    )
+    
+    # Fill NaN values with 0 for missing metrics
+    player_stats = player_stats.fillna(0)
+    
+    # Normalize metrics within each team (0-1 scale per team)
+    normalized_stats = player_stats.copy()
+    
+    for stat in ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']:
+        # Group by team and normalize
+        normalized_stats[f'{stat}_NORM'] = (
+            player_stats.groupby('TEAM_ID')[stat]
+            .transform(lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else 0)
+        )
+    
+    # Calculate composite star score with weighted metrics
+    # Weights prioritize usage, efficiency, and scoring
+    normalized_stats['STAR_SCORE'] = (
+        0.25 * normalized_stats['USG_PCT_NORM'] +      # Usage - how involved they are
+        0.20 * normalized_stats['TS_PCT_NORM'] +       # True shooting - efficiency
+        0.15 * normalized_stats['EFG_PCT_NORM'] +      # Effective FG% - shooting efficiency
+        0.20 * normalized_stats['PTS_NORM'] +          # Points - scoring volume
+        0.15 * normalized_stats['PIE_NORM'] +          # Player impact
+        0.05 * normalized_stats['NET_RATING_NORM']     # Net rating
+    )
+    
+    # Select highest scoring player per team as star
+    star_rows = (
+        normalized_stats.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
+        .groupby(['TEAM_ID'], as_index=False)
+        .first()
+    )
+    
+    star_by_team = {
+        row.TEAM_ID: row.PLAYER_NAME
+        for _, row in star_rows.iterrows()
+    }
+
+    # Map normalized star name back to dataframe
+    df['STAR_NAME'] = df['TEAM_ID'].map(star_by_team)
+    # Compare using normalized names to handle name variations
+    df['PLAYER_IS_TEAM_STAR'] = (df['PLAYER_NAME_NORM'] == df['STAR_NAME']).astype(int)
+
+    star_active_per_game = (
+        df[df['PLAYER_NAME_NORM'] == df['STAR_NAME']]
+        .groupby(['GAME_ID', 'TEAM_ID'], as_index=False)['ACTIVE']
+        .max()
+        .rename(columns={'ACTIVE': 'STAR_ACTIVE'})
+    )
+    df = df.merge(star_active_per_game, on=['GAME_ID', 'TEAM_ID'], how='left')
+    df['STAR_ACTIVE'] = df['STAR_ACTIVE'].fillna(0).astype(int)
+    df['STAR_SAT_OUT'] = ((df['PLAYER_IS_TEAM_STAR'] == 0) & (df['STAR_ACTIVE'] == 0)).astype(int)
+
+    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE', 'PLAYER_NAME_NORM'])
+
+    return df
 
 
 

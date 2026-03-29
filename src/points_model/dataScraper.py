@@ -159,6 +159,11 @@ def generalized_best_bets(
         prop_lines = prop_lines.drop_duplicates('PLAYER_NAME')
 
         merged = latest.merge(prop_lines, on='PLAYER_NAME', how='inner')
+        # S26 uses `Position`; downstream columns expect `POSITION` (per player, from latest row).
+        if 'Position' in merged.columns:
+            merged['POSITION'] = merged['Position']
+        elif 'POSITION' not in merged.columns:
+            merged['POSITION'] = np.nan
         merged['CATEGORY'] = category
 
         real_odds = us_df[us_df['CATEGORY'] == category].rename(columns={'NAME': 'PLAYER_NAME'}).copy()
@@ -238,6 +243,7 @@ def generalized_best_bets(
 
         output_cat = merged[[
             'PLAYER_NAME',
+            'POSITION',
             'TEAM_NAME',
             'OPPONENT',
             'HOME_AWAY',
@@ -311,7 +317,7 @@ def generalized_best_bets(
     final = _output.merge(_opp, on='_OPP_MATCH_KEY', how='left').drop(columns='_OPP_MATCH_KEY')
 
     final = final[[
-        'PLAYER_NAME', 'LINE', 'CATEGORY', 'OPPONENT',
+        'PLAYER_NAME', 'POSITION', 'LINE', 'CATEGORY', 'OPPONENT',
         'TEAM_SPREAD', 'GAME_TOTAL', 'OPP_DEF_RATING', 'OPP_RANK_DEF_RATING', 'OPP_PACE', 'OPP_PACE_RANK',
         'ODDS_OVER', 'ODDS_UNDER',
         'IMP_PROB_OVER', 'IMP_PROB_UNDER',
