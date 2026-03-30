@@ -23,7 +23,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 
-    'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN',
+    'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV'
     ]
 
     for window in [3,5,10]:
@@ -153,7 +153,7 @@ def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     df['IS_B2B']  = (df['DAYS_REST'] == 1).astype(int)
-    df['IS_HOME'] = df['MATCHUP'].str.contains('vs').astype(int)
+    df['IS_HOME'] = df['MATCHUP'].str.contains('vs', na=False).astype(int)
 
     df['GAME_NUMBER'] = (
         df.groupby(['PLAYER_ID', 'SEASON_YEAR'])
