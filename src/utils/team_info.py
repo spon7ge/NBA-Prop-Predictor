@@ -6,29 +6,29 @@ projectedStartingFive = {
     "CHI": ["Isaac Okoro", "Guerschon Yabusele", "Tre Jones"],
     "CLE": ["Sam Merrill", "Donovan Mitchell", "Jarrett Allen", "Jaylon Tyson", "James Harden"],
     "DAL": ["Khris Middleton", "Daniel Gafford", "Max Christie", "P.J. Washington", "Cooper Flagg"],
-    "DEN": ["Aaron Gordon", "Jamal Murray", "Nikola Jokić", "Christian Braun", "Cameron Johnson"],
-    "DET": ["Ausar Thompson", "Duncan Robinson", "Jalen Duren", "Daniss Jenkins", "Tobias Harris"],
+    "DEN": ["Cameron Johnson", "Jamal Murray", "Aaron Gordon", "Christian Braun", "Nikola Jokić"],
+    "DET": ["Daniss Jenkins", "Tobias Harris", "Ausar Thompson", "Duncan Robinson", "Jalen Duren"],
     "GSW": ["Draymond Green", "Kristaps Porziņģis", "De'Anthony Melton", "Gui Santos", "Brandin Podziemski"],
     "HOU": ["Alperen Sengun", "Amen Thompson", "Jabari Smith", "Tari Eason", "Kevin Durant"],
     "IND": ["Kam Jones", "Obi Toppin", "Aaron Nesmith", "Jay Huff"],
     "LAC": ["Brook Lopez", "Kawhi Leonard", "Derrick Jones", "Kris Dunn", "John Collins"],
     "LAL": ["Luka Dončić", "Marcus Smart", "Deandre Ayton", "Austin Reaves"],
     "MEM": ["Jaylen Wells", "Olivier-Maxence Prosper", "Taylor Hendricks", "Cedric Coward", "Ty Jerome"],
-    "MIA": ["Myron Gardner", "Bam Adebayo", "Davion Mitchell", "Pelle Larsson"],
+    "MIA": ["Pelle Larsson", "Andrew Wiggins", "Davion Mitchell", "Simone Fontecchio", "Bam Adebayo"],
     "MIL": ["Ryan Rollins", "Ousmane Dieng", "AJ Green", "Myles Turner", "Giannis Antetokounmpo"],
     "MIN": ["Donte DiVincenzo", "Rudy Gobert", "Jaden McDaniels", "Ayo Dosunmu", "Julius Randle"],
     "NOP": ["Derik Queen", "Herbert Jones", "Saddiq Bey", "Trey Murphy", "Zion Williamson"],
     "NYK": ["OG Anunoby", "Landry Shamet", "Jalen Brunson", "Karl-Anthony Towns", "Mikal Bridges"],
     "OKC": ["Cason Wallace", "Chet Holmgren", "Aaron Wiggins", "Luguentz Dort", "Jaylin Williams"],
     "ORL": ["Paolo Banchero", "Anthony Black", "Desmond Bane", "Jalen Suggs", "Wendell Carter"],
-    "PHI": ["Kelly Oubre", "VJ Edgecombe", "Dominick Barlow", "Adem Bona", "Quentin Grimes"],
+    "PHI": ["Tyrese Maxey", "Kelly Oubre", "VJ Edgecombe", "Andre Drummond", "Paul George"],
     "PHX": ["Royce O'Neale", "Oso Ighodaro", "Jalen Green", "Collin Gillespie", "Devin Booker"],
     "POR": ["Toumani Camara", "Jerami Grant", "Jrue Holiday", "Deni Avdija", "Donovan Clingan"],
     "SAC": ["DeMar DeRozan", "Precious Achiuwa", "Nique Clifford", "Maxime Raynaud", "Russell Westbrook"],
-    "SAS": ["De'Aaron Fox", "Stephon Castle", "Victor Wembanyama", "Devin Vassell", "Julian Champagnie"],
+    "SAS": ["Julian Champagnie", "Devin Vassell", "Stephon Castle", "Victor Wembanyama", "De'Aaron Fox"],
     "TOR": ["Immanuel Quickley", "Scottie Barnes", "Jakob Poeltl", "Brandon Ingram", "RJ Barrett"],
     "UTA": ["Ace Bailey", "Kyle Filipowski", "Isaiah Collier", "Cody Williams", "Jusuf Nurkić"],
-    "WAS": ["Alex Sarr", "Leaky Black", "Bilal Coulibaly", "Bub Carrington", "Tre Johnson"],
+    "WAS": ["Will Riley", "Tre Johnson", "Bilal Coulibaly", "Bub Carrington", "Anthony Gill"],
 }
 
 mainStartingFive = {
@@ -131,9 +131,7 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "BKN": ["Ziaire Williams"],
-    "GSW": ["Quinten Post"],
-    "MIN": ["Naz Reid"],
-    "POR": ["Vít Krejčí"],
+    "DEN": ["Bruce Brown"],
+    "PHI": ["Cameron Payne"],
 }
 
