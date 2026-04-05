@@ -1,5 +1,38 @@
+import numpy as np
+
 from src.utils.team_info import *
 from src.utils.helper_functions import *
+
+# Match ppm_quantile_model.ipynb `apply_bayesian_ppm(..., confidence_k=20)`
+_BAYES_PPM_CONFIDENCE_K = 20
+
+
+def _bayes_ppm_proj_for_player(df, pid: int, confidence_k: int = 20, min_minutes: float = 1.0) -> float:
+    """Shrink player PTS/MIN toward a (pos, STARTING) role prior; same construction as training."""
+    d = df.copy()
+    d["_ppm"] = np.where(d["MIN"] >= min_minutes, d["PTS"] / d["MIN"], np.nan)
+    priors = d.groupby(["pos", "STARTING"], dropna=False)["_ppm"].mean().to_dict()
+    stats = d.groupby("PLAYER_ID", as_index=False).agg(
+        player_mean_ppm=("_ppm", "mean"),
+        games_played=("_ppm", "count"),
+    )
+    last = d[d["PLAYER_ID"] == pid].sort_values("GAME_DATE").iloc[-1]
+    s = stats.loc[stats["PLAYER_ID"] == pid]
+    if s.empty:
+        return float("nan")
+    player_mean = float(s["player_mean_ppm"].iloc[0])
+    games_played = float(s["games_played"].iloc[0])
+    key = (last["pos"], last["STARTING"])
+    pv = priors.get(key)
+    if pv is None or (isinstance(pv, float) and np.isnan(pv)):
+        prior_ppm = float(d["_ppm"].mean())
+    else:
+        prior_ppm = float(pv)
+    return round(
+        (games_played * player_mean + confidence_k * prior_ppm) / (games_played + confidence_k),
+        4,
+    )
+
 
 def ppm_pipeline(df, name, date):
     df = df.sort_values(["GAME_DATE", "PLAYER_ID"]).copy()
@@ -12,6 +45,8 @@ def ppm_pipeline(df, name, date):
     res.append(pts_ewm_l10[pid])
     res.append(pts_ewm_l5[pid])
     res.append(pts_ewm_l3[pid])
+
+    res.append(_bayes_ppm_proj_for_player(df, pid, confidence_k=_BAYES_PPM_CONFIDENCE_K))
 
     pts_per_min_ewm_l10 = df.groupby('PLAYER_ID')['PTS_PER_MIN'].apply(lambda x: x.tail(10).ewm(span=10, adjust=False).mean().iloc[-1])
     pts_per_min_ewm_l5 = df.groupby('PLAYER_ID')['PTS_PER_MIN'].apply(lambda x: x.tail(5).ewm(span=5, adjust=False).mean().iloc[-1])
