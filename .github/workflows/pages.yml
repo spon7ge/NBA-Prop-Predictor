@@ -30,11 +30,13 @@ jobs:
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           sed -i "s/BUILD_TIMESTAMP/$TIMESTAMP/g" docs/index.html
       
-      - name: Copy CSV data to docs folder
+      - name: Copy EV data (CSV + 2-leg JSON slates) to docs folder
         run: |
           mkdir -p docs/data/props/ev_analysis
           cp data/props/ev_analysis/prizepicks.csv docs/data/props/ev_analysis/prizepicks.csv
           cp data/props/ev_analysis/underdog.csv docs/data/props/ev_analysis/underdog.csv
+          cp data/props/ev_analysis/prizepicks.json docs/data/props/ev_analysis/prizepicks.json
+          cp data/props/ev_analysis/underdog.json docs/data/props/ev_analysis/underdog.json
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
