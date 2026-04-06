@@ -1,6 +1,9 @@
 var SLATE_PRIZEPICKS = [];
 var SLATE_UNDERDOG = [];
 var activeBook = "prizepicks";
+var activeView = "pairs";
+var ALL_LINE_PROBS = [];
+var lineProbsState = "idle";
 
 function jsonUrls(filename) {
   var a = "data/props/ev_analysis/" + filename;
@@ -14,6 +17,46 @@ function jsonUrls(filename) {
     return [b, a];
   }
   return [a, b];
+}
+
+function parseJsonl(text) {
+  var lines = String(text).split(/\r?\n/);
+  var out = [];
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (!line) continue;
+    try {
+      out.push(JSON.parse(line));
+    } catch (e) {
+      /* skip bad lines */
+    }
+  }
+  return out;
+}
+
+function fetchLineProbsWithFallback(urls) {
+  return new Promise(function (resolve) {
+    var i = 0;
+    function tryNext() {
+      if (i >= urls.length) {
+        resolve([]);
+        return;
+      }
+      var url = urls[i++];
+      fetch(url, { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.text();
+        })
+        .then(function (text) {
+          resolve(parseJsonl(text));
+        })
+        .catch(function () {
+          tryNext();
+        });
+    }
+    tryNext();
+  });
 }
 
 function fetchSlateWithFallback(urls) {
@@ -82,9 +125,150 @@ function initBookToggle() {
       for (var k = 0; k < btns.length; k++) {
         btns[k].classList.toggle("active", btns[k].getAttribute("data-book") === activeBook);
       }
-      render();
+      if (activeView === "pairs") render();
     });
   }
+}
+
+function setActiveView(view) {
+  if (!view || view === activeView) return;
+  activeView = view;
+  var tabs = document.querySelectorAll(".nav-tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle("active", tabs[i].getAttribute("data-view") === activeView);
+  }
+  var secPairs = document.getElementById("sectionPairs");
+  var secPlayers = document.getElementById("sectionPlayers");
+  if (secPairs) secPairs.hidden = activeView !== "pairs";
+  if (secPlayers) secPlayers.hidden = activeView !== "players";
+  if (activeView === "pairs") {
+    render();
+  } else {
+    loadLineProbs();
+  }
+}
+
+function initMainNav() {
+  var tabs = document.querySelectorAll(".nav-tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener("click", function () {
+      var v = this.getAttribute("data-view");
+      if (v) setActiveView(v);
+    });
+  }
+}
+
+function loadLineProbs() {
+  var panel = document.getElementById("playersPanel");
+  if (lineProbsState === "loading") return;
+  if (lineProbsState === "loaded") {
+    renderPlayersPanel();
+    return;
+  }
+  lineProbsState = "loading";
+  if (panel) panel.innerHTML = '<p class="load-msg">Loading player lines…</p>';
+  fetchLineProbsWithFallback(jsonUrls("all_line_probs.json")).then(function (rows) {
+    ALL_LINE_PROBS = rows;
+    lineProbsState = "loaded";
+    renderPlayersPanel();
+  });
+}
+
+function fmtSignedEv(x) {
+  var n = Number(x);
+  var sign = n >= 0 ? "+" : "-";
+  return sign + fmtEv(Math.abs(n));
+}
+
+/** Historical hit rate for the same side as Best (over uses OVER_RATE_L*; under uses 1 − that rate). */
+function fmtBestSideHitPct(overRate, bestIsOver) {
+  if (overRate == null || overRate === "") return "—";
+  var n = Number(overRate);
+  if (isNaN(n)) return "—";
+  var p = bestIsOver ? n : 1 - n;
+  return Math.round(p * 100) + "%";
+}
+
+function filterPlayerRows(rows, query) {
+  var q = String(query || "")
+    .trim()
+    .toLowerCase();
+  if (!q) return rows.slice();
+  var parts = q.split(/\s+/).filter(Boolean);
+  return rows.filter(function (r) {
+    var name = String(r.PLAYER_NAME || "").toLowerCase();
+    for (var i = 0; i < parts.length; i++) {
+      if (name.indexOf(parts[i]) === -1) return false;
+    }
+    return true;
+  });
+}
+
+function renderPlayersPanel() {
+  var el = document.getElementById("playersPanel");
+  if (!el) return;
+  if (!ALL_LINE_PROBS.length) {
+    el.innerHTML =
+      '<p class="load-msg load-err">No rows in <code>all_line_probs.json</code> or file not found. Export JSONL to <code>data/props/ev_analysis/all_line_probs.json</code>.</p>';
+    return;
+  }
+  var searchEl = document.getElementById("playerSearch");
+  var q = searchEl ? searchEl.value : "";
+  var sorted = ALL_LINE_PROBS.slice().sort(function (a, b) {
+    var ba = Math.max(Number(a.EV_OVER), Number(a.EV_UNDER));
+    var bb = Math.max(Number(b.EV_OVER), Number(b.EV_UNDER));
+    return bb - ba;
+  });
+  var filtered = filterPlayerRows(sorted, q);
+  var html =
+    '<div class="players-wrap"><table class="players-table"><thead><tr>' +
+    "<th>Player</th><th>Mkt</th>" +
+    '<th class="num">Line</th><th class="num">Proj</th>' +
+    '<th class="num">O</th><th class="num">U</th>' +
+    '<th class="num">EV O</th><th class="num">EV U</th>' +
+    "<th>Best</th>" +
+    '<th class="num" title="Hit rate on best side (last 5 games)">L5</th>' +
+    '<th class="num" title="Hit rate on best side (last 10 games)">L10</th>' +
+    '<th class="num" title="Hit rate on best side (last 15 games)">L15</th>' +
+    "</tr></thead><tbody>";
+  if (!filtered.length) {
+    html +=
+      '<tr><td colspan="12" class="players-empty">No rows match your search.</td></tr>';
+  }
+  for (var i = 0; i < filtered.length; i++) {
+    var r = filtered[i];
+    var oEv = Number(r.EV_OVER);
+    var uEv = Number(r.EV_UNDER);
+    var bestOver = oEv >= uEv;
+    var bestSide = bestOver ? "over" : "under";
+    html +=
+      "<tr>" +
+      "<td>" + escapeHtml(r.PLAYER_NAME || "") + "</td>" +
+      "<td>" + escapeHtml(r.MARKET || r.CATEGORY || "") + "</td>" +
+      '<td class="num">' + fmt1(r.LINE) + "</td>" +
+      '<td class="num">' + fmt1(r.STAT_Q50) + "</td>" +
+      '<td class="num">' + (r.ODDS_OVER != null ? String(r.ODDS_OVER) : "—") + "</td>" +
+      '<td class="num">' + (r.ODDS_UNDER != null ? String(r.ODDS_UNDER) : "—") + "</td>" +
+      '<td class="num ' + (bestOver ? "ev-best" : "ev-muted") + '">' + fmtSignedEv(oEv) + "%</td>" +
+      '<td class="num ' + (!bestOver ? "ev-best" : "ev-muted") + '">' + fmtSignedEv(uEv) + "%</td>" +
+      "<td>" +
+      '<span class="side-tag ' + bestSide + '">' + escapeHtml(bestSide.toUpperCase()) + "</span>" +
+      "</td>" +
+      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L5, bestOver) + "</td>" +
+      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L10, bestOver) + "</td>" +
+      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L15, bestOver) + "</td>" +
+      "</tr>";
+  }
+  html += "</tbody></table></div>";
+  el.innerHTML = html;
+}
+
+function initPlayerSearch() {
+  var input = document.getElementById("playerSearch");
+  if (!input) return;
+  input.addEventListener("input", function () {
+    if (lineProbsState === "loaded") renderPlayersPanel();
+  });
 }
 
 function currentSlate() {
@@ -177,10 +361,10 @@ function renderLeg(leg) {
       '<p class="model-line">Model predicts ' + fmt1(prediction) +
       ' <span class="' + diffClass + '">(' + diffDisplay(side, prediction, line) + ")</span></p>" +
       '<div class="mini-grid">' +
-        "<span>L10 avg</span><span>" + fmt1(avgL10) + "</span>" +
+        "<span>L10 Stat Avg.</span><span>" + fmt1(avgL10) + "</span>" +
         "<span>vs matchup</span><span>" + fmt1(avgVs) + " (" + matchupGames + " games)</span>" +
-        "<span>Minutes L10</span><span>" + fmt1(avgMin) + "</span>" +
-        "<span>Opp def rank</span><span>" + ordSuffix(defRank) + "</span>" +
+        "<span>Minutes Avg.</span><span>" + fmt1(avgMin) + "</span>" +
+        "<span>Opp Def Rank</span><span>" + ordSuffix(defRank) + "</span>" +
       "</div>" +
       '<div class="hit-wrap">' +
         '<div class="hit-label-row">' +
@@ -239,6 +423,7 @@ function mapRow(row) {
 }
 
 function render() {
+  if (activeView !== "pairs") return;
   const sorted = currentSlate();
   const el = document.getElementById("cards");
   if (!sorted.length) {
@@ -313,4 +498,6 @@ function render() {
   el.innerHTML = html;
 }
 
+initMainNav();
+initPlayerSearch();
 loadSlates();
