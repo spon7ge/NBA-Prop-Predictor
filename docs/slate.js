@@ -164,8 +164,11 @@ function renderLeg(leg) {
 
   return (
     '<div class="leg">' +
-      '<p class="player-name">' + escapeHtml(name) + "</p>" +
-      '<p class="subtitle">vs ' + escapeHtml(opponent) + " · " + escapeHtml(team) + "</p>" +
+      '<p class="player-name">' +
+        escapeHtml(name) +
+        ' <span class="player-team">- ' + escapeHtml(team) + "</span>" +
+      "</p>" +
+      '<p class="subtitle">vs ' + escapeHtml(opponent) + "</p>" +
       '<div class="line-row">' +
         '<span class="line-num">' + fmt1(line) + "</span>" +
         '<span class="market-lbl">' + escapeHtml(market) + "</span>" +
