@@ -37,13 +37,12 @@ jobs:
           SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
           sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" docs/index.html
       
-      - name: Copy EV data (CSV + 2-leg JSON slates) to docs folder
+      - name: Copy EV data (JSON slates + all line probs) to docs folder
         run: |
           mkdir -p docs/data/props/ev_analysis
-          cp data/props/ev_analysis/prizepicks.csv docs/data/props/ev_analysis/prizepicks.csv
-          cp data/props/ev_analysis/underdog.csv docs/data/props/ev_analysis/underdog.csv
           cp data/props/ev_analysis/prizepicks.json docs/data/props/ev_analysis/prizepicks.json
           cp data/props/ev_analysis/underdog.json docs/data/props/ev_analysis/underdog.json
+          cp data/props/ev_analysis/all_line_probs.json docs/data/props/ev_analysis/all_line_probs.json
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
