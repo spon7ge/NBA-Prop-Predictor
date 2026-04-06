@@ -11,7 +11,17 @@
 <body>
   <div class="page">
     <header class="slate-header">
-      <h1 class="slate-title">NBA PROP PREDICTOR</h1>
+      <div class="slate-header-row">
+        <h1 class="slate-title">NBA PROP PREDICTOR</h1>
+        <nav class="main-nav" role="navigation" aria-label="Main">
+          <div class="main-nav-inner">
+            <button type="button" class="nav-tab active" id="navPairs" data-view="pairs">Top pair EVs</button>
+            <button type="button" class="nav-tab" id="navPlayers" data-view="players">All players</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <section id="sectionPairs" class="view-section" aria-labelledby="navPairs">
       <div class="slate-desc" role="region" aria-label="About this view">
         <p>
           This view lists <strong>2-leg parlays</strong> ranked by highest <strong>EV</strong> for the book you select. Each card is one pair of props with
@@ -23,14 +33,27 @@
           recent and matchup stats, opponent defense rank, and L10 hit rate on selected side.
         </p>
       </div>
-    </header>
-    <div class="toolbar book-toolbar">
-      <div class="book-filter" role="group" aria-label="Bookmaker">
-        <button type="button" id="bookPrizePicks" class="book-btn active" data-book="prizepicks">PrizePicks</button>
-        <button type="button" id="bookUnderdog" class="book-btn" data-book="underdog">Underdog</button>
+      <div class="toolbar book-toolbar">
+        <div class="book-filter" role="group" aria-label="Bookmaker">
+          <button type="button" id="bookPrizePicks" class="book-btn active" data-book="prizepicks">PrizePicks</button>
+          <button type="button" id="bookUnderdog" class="book-btn" data-book="underdog">Underdog</button>
+        </div>
       </div>
-    </div>
-    <div id="cards"><p class="load-msg" id="loadMsg">Loading slate…</p></div>
+      <div id="cards"><p class="load-msg" id="loadMsg">Loading slate…</p></div>
+    </section>
+    <section id="sectionPlayers" class="view-section" hidden aria-labelledby="navPlayers">
+      <div class="slate-desc players-desc" role="region" aria-label="About all players">
+        <p>
+          Every player line from <code>all_line_probs.json</code>: model probabilities, implied odds, and EV for over and under. Rows are sorted by best single-side EV (higher first).
+          <strong>L5</strong>, <strong>L10</strong>, and <strong>L15</strong> are historical hit rates for the <strong>Best</strong> side (over vs under) over the last 5, 10, and 15 games.
+        </p>
+      </div>
+      <div class="players-toolbar">
+        <label class="player-search-label" for="playerSearch">Search player</label>
+        <input type="search" id="playerSearch" class="player-search" placeholder="Search by player name…" autocomplete="off" spellcheck="false" />
+      </div>
+      <div id="playersPanel"></div>
+    </section>
   </div>
   <script src="slate.js?v=PAGES_ASSET_VERSION"></script>
 </body>

@@ -288,6 +288,8 @@ def build_greedy_slate(
             "SIDE 2":       side2,
             "PREDICTION 1": round(float(r1["STAT_Q50"]), 1),
             "PREDICTION 2": round(float(r2["STAT_Q50"]), 1),
+            'MIN PREDICTION 1': round(float(r1["MIN_Q50"]), 1),
+            'MIN PREDICTION 2': round(float(r2["MIN_Q50"]), 1),
             "MODEL_PROB 1": round(p1, 3),
             "MODEL_PROB 2": round(p2, 3),
             "PARLAY_PROB":  round(parlay_p, 3),
