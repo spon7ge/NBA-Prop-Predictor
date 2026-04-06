@@ -141,6 +141,30 @@ body {
 }
 .side-tag.over { background: #EAF3DE; color: #27500A; }
 .side-tag.under { background: #FCEBEB; color: #791F1F; }
+.book-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.book-pill.book-prizepicks {
+  background: #1e2a3d;
+  color: #9ec5ff;
+  border: 0.5px solid #3d5a8a;
+}
+.book-pill.book-underdog {
+  background: #2a2318;
+  color: #e8c48a;
+  border: 0.5px solid #6a5538;
+}
+.book-pill.book-unknown {
+  background: #1a1a1a;
+  color: #9a9a92;
+  border: 0.5px solid #3a3a38;
+}
 .slate-title {
   margin: 0;
   font-size: 28px;

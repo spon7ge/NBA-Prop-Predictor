@@ -204,6 +204,20 @@ function filterPlayerRows(rows, query) {
   });
 }
 
+function bookPillClass(book) {
+  var b = String(book || "").toLowerCase();
+  if (b.indexOf("prize") !== -1) return "book-prizepicks";
+  if (b.indexOf("underdog") !== -1) return "book-underdog";
+  return "book-unknown";
+}
+
+function htmlBookPill(book) {
+  var label = String(book || "").trim() || "—";
+  return (
+    '<span class="book-pill ' + bookPillClass(book) + '">' + escapeHtml(label) + "</span>"
+  );
+}
+
 function renderPlayersPanel() {
   var el = document.getElementById("playersPanel");
   if (!el) return;
@@ -217,12 +231,18 @@ function renderPlayersPanel() {
   var sorted = ALL_LINE_PROBS.slice().sort(function (a, b) {
     var ba = Math.max(Number(a.EV_OVER), Number(a.EV_UNDER));
     var bb = Math.max(Number(b.EV_OVER), Number(b.EV_UNDER));
-    return bb - ba;
+    if (bb !== ba) return bb - ba;
+    var cmp = String(a.PLAYER_NAME || "").localeCompare(String(b.PLAYER_NAME || ""));
+    if (cmp) return cmp;
+    cmp = String(a.MARKET || a.CATEGORY || "").localeCompare(String(b.MARKET || b.CATEGORY || ""));
+    if (cmp) return cmp;
+    if (Number(a.LINE) !== Number(b.LINE)) return Number(a.LINE) - Number(b.LINE);
+    return String(a.LINE_BOOKMAKER || "").localeCompare(String(b.LINE_BOOKMAKER || ""));
   });
   var filtered = filterPlayerRows(sorted, q);
   var html =
     '<div class="players-wrap"><table class="players-table"><thead><tr>' +
-    "<th>Player</th><th>Mkt</th>" +
+    "<th>Player</th><th>Book</th><th>Mkt</th>" +
     '<th class="num">Line</th><th class="num">Proj</th>' +
     '<th class="num">O</th><th class="num">U</th>' +
     '<th class="num">EV O</th><th class="num">EV U</th>' +
@@ -233,7 +253,7 @@ function renderPlayersPanel() {
     "</tr></thead><tbody>";
   if (!filtered.length) {
     html +=
-      '<tr><td colspan="12" class="players-empty">No rows match your search.</td></tr>';
+      '<tr><td colspan="13" class="players-empty">No rows match your search.</td></tr>';
   }
   for (var i = 0; i < filtered.length; i++) {
     var r = filtered[i];
@@ -244,6 +264,7 @@ function renderPlayersPanel() {
     html +=
       "<tr>" +
       "<td>" + escapeHtml(r.PLAYER_NAME || "") + "</td>" +
+      "<td>" + htmlBookPill(r.LINE_BOOKMAKER) + "</td>" +
       "<td>" + escapeHtml(r.MARKET || r.CATEGORY || "") + "</td>" +
       '<td class="num">' + fmt1(r.LINE) + "</td>" +
       '<td class="num">' + fmt1(r.STAT_Q50) + "</td>" +
