@@ -28,7 +28,14 @@ jobs:
       - name: Update last updated timestamp
         run: |
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          sed -i "s/BUILD_TIMESTAMP/$TIMESTAMP/g" docs/index.html
+          if [ -f docs/index.html ]; then
+            sed -i "s/BUILD_TIMESTAMP/$TIMESTAMP/g" docs/index.html
+          fi
+      
+      - name: Cache-bust slate assets (avoid stale CSS/JS on GitHub Pages)
+        run: |
+          SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
+          sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" docs/slate.html
       
       - name: Copy EV data (CSV + 2-leg JSON slates) to docs folder
         run: |
