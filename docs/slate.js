@@ -179,7 +179,7 @@ function renderLeg(leg) {
       '<div class="mini-grid">' +
         "<span>L10 avg</span><span>" + fmt1(avgL10) + "</span>" +
         "<span>vs matchup</span><span>" + fmt1(avgVs) + " (" + matchupGames + " games)</span>" +
-        "<span>Minutes</span><span>" + fmt1(avgMin) + "</span>" +
+        "<span>Minutes L10</span><span>" + fmt1(avgMin) + "</span>" +
         "<span>Opp def rank</span><span>" + ordSuffix(defRank) + "</span>" +
       "</div>" +
       '<div class="hit-wrap">' +
