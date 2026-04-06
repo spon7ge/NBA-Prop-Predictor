@@ -1,39 +1,32 @@
 # NBA Player Prop Predictor
 
-Tools for NBA player prop analysis and expected value. The live site focuses on **historical context** for each prop: rolling performance, usage, matchup and team factors, and how those line up with book prices.
+This repo runs a **live prop model** (quantile-style projections and EV math) and ships results to a **static site** in `docs/`. The model scores book lines, builds **2-leg parlays**, and exports JSON that the browser loads—no API on the site itself.
 
-Modeling is evolving toward **per-minute rates** (points, assists, rebounds) combined with a **minutes** forecast.
+### Top Pairs
 
-## What the website shows (today)
+- Ranks **2-leg parlays** by **expected value** using the **live model’s** projections, implied odds, and parlay math.
+- **PrizePicks** and **Underdog** each have their own slate: toggle the book to swap between `prizepicks.json` and `underdog.json` under `data/props/ev_analysis/` (the deploy workflow copies them into `docs/data/...`; see `.github/workflows/pages.yml`).
+- Each card shows EV, hit probability, Kelly, both legs (line, side, model vs line, form, matchup, defense rank, L10 hit rate), plus game total and spread context.
 
-The dashboard surfaces tables in the same spirit as the bookmaker analysis pipeline—player and prop context with recent form and market edges. Typical columns include:
+### All Players
 
-- **Prop & market:** player, position, prop type, line, opponent, over/under odds, implied probabilities, EV over/under
-- **Recent form:** average/median/std of the stat over the last 10 games, z-score, model prob over/under, hit rates over last 5 / 10 / 15 games
-- **Role & usage:** average minutes and usage (and variability) over recent games
-- **Matchup:** average stat vs this opponent, games in sample
-- **Game & opponent context:** spread, total, opponent defensive rating/rank, opponent pace/rank
+- Lists **every modeled line**, not just pairs: **`all_line_probs.json`** (JSON Lines—one object per row).
+- **PrizePicks** and **Underdog** can both appear for the same player/market (`LINE_BOOKMAKER`); the **Book** column uses logo assets (`prizepicks.webp`, `underdog.webp`).
+- Search filters by player name; the table includes O/U odds, EV over/under, **Best** side, and L5/L10/L15 hit rates aligned to that best side.
 
-(See `src/historical_analysis/bookmakers.ipynb` for the full column set and export flow.)
-
-## Roadmap: minutes + per-minute models
-
-- **In progress:** an **XGBoost** model to predict **minutes**, paired with a **per-minute** model (e.g. points per minute) so projected stat totals combine role (minutes) and efficiency (rate).
-- **Goal:** extend the same pattern to **points, assists, and rebounds** on a per-minute basis, then combine with predicted minutes for full stat projections.
-
-Earlier experiments used **NGBoost** and normal-distribution EV math in notebooks and pipelines; the direction above is the current modeling focus.
+---
 
 ## Features
 
-- Historical prop tables with rolling stats, usage, matchup, and team context
-- Expected value vs book/DFS lines (where wired into the pipeline)
-- Kelly Criterion bet sizing (in analysis flows)
-- Support for 2-leg and 3-leg parlays (in tooling)
-- Interactive dashboard
+- **Live model** driving projections and EV for props and 2-leg parlays
+- **Public site:** **Top Pairs** (per bookmaker) + **All Players** tab with search
+- **Dual bookmaker** support on the site (PrizePicks & Underdog JSON slates)
+- Historical prop tables, rolling stats, usage, matchup, and team context (notebooks / exports)
+- Kelly Criterion and parlay tooling in the analysis pipeline
 
 ## Tech Stack
 
-- **ML:** NGBoost (legacy/experiments), **XGBoost** (minutes and per-minute work in progress)
+- **XGBoost** (minutes and per-minute work in progress)
 - Normal distribution for probability estimation where used
 - HTML/CSS/JS for visualization
 - NBA API and The Odds API for data
@@ -47,20 +40,9 @@ Earlier experiments used **NGBoost** and normal-distribution EV math in notebook
 │   ├── pipeline/        # Pipelines used for live predicting
 │   └── scrapers/        # Data scraping modules
 ├── notebooks/           # Analysis and exploration
-├── data/                # Training and prop data
-└── docs/                # Dashboard files
+├── data/                # Training data + ev_analysis JSON consumed by the site
+└── docs/                # Static website (GitHub Pages artifact)
 ```
-
-## How it works (high level)
-
-1. Ingest player stats, team metrics, and betting lines.
-2. Engineer features from history and game context.
-3. **Today:** rank and display historical + market context (EV where computed).
-4. **Next:** predict minutes (XGBoost) and per-minute rates, then combine for PTS/AST/REB projections.
-
-## Usage
-
-The dashboard highlights top EV parlay opportunities and hit-rate style historical views, depending on which export/pipeline you run.
 
 ## Disclaimer
 
