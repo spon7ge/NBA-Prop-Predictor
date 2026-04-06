@@ -165,6 +165,7 @@ def generalized_best_bets(
         elif 'POSITION' not in merged.columns:
             merged['POSITION'] = np.nan
         merged['CATEGORY'] = category
+        merged['LINE_BOOKMAKER'] = line_bookmaker
 
         real_odds = us_df[us_df['CATEGORY'] == category].rename(columns={'NAME': 'PLAYER_NAME'}).copy()
         real_odds['LINE'] = real_odds['LINE'].astype(float)
@@ -249,6 +250,7 @@ def generalized_best_bets(
             'TEAM_SPREAD',
             'GAME_TOTAL',
             'CATEGORY',
+            'LINE_BOOKMAKER',
             'LINE',
             'ODDS_OVER',
             'ODDS_UNDER',
@@ -316,7 +318,7 @@ def generalized_best_bets(
     final = _output.merge(_opp, on='_OPP_MATCH_KEY', how='left').drop(columns='_OPP_MATCH_KEY')
 
     final = final[[
-        'PLAYER_NAME', 'LINE', 'CATEGORY', 'OPPONENT',
+        'PLAYER_NAME', 'LINE', 'CATEGORY', 'LINE_BOOKMAKER', 'OPPONENT',
         'TEAM_SPREAD', 'GAME_TOTAL', 'OPP_DEF_RATING', 'OPP_RANK_DEF_RATING', 'OPP_PACE', 'OPP_PACE_RANK',
         'ODDS_OVER', 'ODDS_UNDER',
         'IMP_PROB_OVER', 'IMP_PROB_UNDER',
