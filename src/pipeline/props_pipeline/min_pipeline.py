@@ -74,162 +74,141 @@ MIN_FEATURES = [
 
 
 def min_pipeline(df, name):
-    df = df.sort_values(["GAME_DATE", "PLAYER_ID"]).copy()
-    if "GAME_DATE" in df.columns:
-        df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
-
-    if "STARTING_lag1" not in df.columns:
-        df["STARTING_lag1"] = df.groupby("PLAYER_ID")["STARTING"].shift(1)
-    if "STARTER_ROLL10_PCT" not in df.columns:
-        df["STARTER_ROLL10_PCT"] = df.groupby("PLAYER_ID")["STARTING"].transform(
-            lambda x: x.shift(1).rolling(10).mean().round(2)
-        )
-    if "POSS_roll5" not in df.columns and "POSS" in df.columns:
-        df["POSS_roll5"] = df.groupby("PLAYER_ID")["POSS"].transform(
-            lambda x: x.shift(1).rolling(5).mean().round(2)
-        )
-    if "MIN_roll5" not in df.columns and "MIN" in df.columns:
-        df["MIN_roll5"] = df.groupby("PLAYER_ID")["MIN"].transform(
-            lambda x: x.shift(1).rolling(5).mean().round(2)
-        )
-    if "PTS_roll5" not in df.columns and "PTS" in df.columns:
-        df["PTS_roll5"] = df.groupby("PLAYER_ID")["PTS"].transform(
-            lambda x: x.shift(1).rolling(5).mean().round(2)
-        )
-    if "USG_PCT_roll5" not in df.columns and "USG_PCT" in df.columns:
-        df["USG_PCT_roll5"] = df.groupby("PLAYER_ID")["USG_PCT"].transform(
-            lambda x: x.shift(1).rolling(5).mean().round(2)
-        )
-
-    if "MIN_roll5" in df.columns:
-        df["TEAM_MIN_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])[
-            "MIN_roll5"
-        ].rank(ascending=False, method="dense")
-    if "POSS_roll5" in df.columns:
-        df["TEAM_POSS_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])[
-            "POSS_roll5"
-        ].rank(ascending=False, method="dense")
-        if "pos" in df.columns:
-            df["TEAM_POSS_RANK_BY_POS_L5"] = df.groupby(
-                ["TEAM_ID", "GAME_DATE", "pos"]
-            )["POSS_roll5"].rank(ascending=False, method="dense")
-    if "PTS_roll5" in df.columns:
-        df["TEAM_PTS_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])[
-            "PTS_roll5"
-        ].rank(ascending=False, method="dense")
-    if "USG_PCT_roll5" in df.columns:
-        df["TEAM_USG_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])[
-            "USG_PCT_roll5"
-        ].rank(ascending=False, method="dense")
-
-    df["MIN_EWM_L12"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).ewm(span=12, adjust=False).mean()
-    )
-    df["MIN_EWM_L5"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).ewm(span=5, adjust=False).mean()
-    )
-    df["MIN_EWM_L3"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).ewm(span=3, adjust=False).mean()
-    )
-    df["MIN_MAX_L5"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).rolling(5).max()
-    )
-    df["MIN_MIN_L5"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).rolling(5).min()
-    )
-    if "USG_PCT" in df.columns:
-        df["USG_EWM_L5"] = df.groupby("PLAYER_ID")["USG_PCT"].transform(
-            lambda x: x.shift(1).ewm(span=5, adjust=False).mean()
-        )
-
-    df["HIGH_MIN_TIER"] = np.nan
-    mask = df["MIN_EWM_L12"].notna()
-    df.loc[mask, "HIGH_MIN_TIER"] = pd.cut(
-        df.loc[mask, "MIN_EWM_L12"],
-        bins=[0, 20, 25, 30, 34, 100],
-        labels=[0, 1, 2, 3, 4],
-        include_lowest=True,
-    ).astype(int)
-
-    df["MIN_season_avg"] = df.groupby(["PLAYER_ID", "SEASON_YEAR"])["MIN"].transform(
-        lambda x: x.shift(1).expanding().mean().round(2)
-    )
-    df["MEDIAN_MIN_L10"] = df.groupby("PLAYER_ID")["MIN"].transform(
-        lambda x: x.shift(1).rolling(10).median()
-    )
-
-    if "MIN_share_proxy" not in df.columns and "MIN_roll5" in df.columns:
-        df["MIN_share_proxy"] = round(df["MIN_roll5"] / (48 * 5), 2)
-
-    if "DAYS_REST" not in df.columns:
-        df["DAYS_REST"] = (
-            df.groupby("PLAYER_ID")["GAME_DATE"].diff().dt.days.fillna(3)
-        )
-    if "IS_B2B" not in df.columns:
-        df["IS_B2B"] = (df["DAYS_REST"] == 1).astype(int)
-    if "IS_HOME" not in df.columns and "MATCHUP" in df.columns:
-        df["IS_HOME"] = df["MATCHUP"].str.contains("vs", na=False).astype(int)
-
-    df["STARTER_X_MIN_AVG"] = df["STARTING"] * df["MIN_season_avg"]
-    if "age" in df.columns:
-        df["AGE_X_B2B"] = df["age"] * df["IS_B2B"]
-    if "IS_HOME" in df.columns:
-        df["HOME_X_MIN_AVG"] = df["IS_HOME"] * df["MIN_season_avg"]
-
-    if "MIN_std10" not in df.columns:
-        df["MIN_std10"] = df.groupby("PLAYER_ID")["MIN"].transform(
-            lambda x: x.shift(1).rolling(10).std().round(2)
-        )
-    if "STARTER_ROLL10_PCT" in df.columns:
-        df["ROLE_LOCK"] = df["STARTER_ROLL10_PCT"] * (
-            1 / df["MIN_std10"].replace(0, np.nan)
-        )
-
-    if "MIN_lag1" not in df.columns:
-        df["MIN_lag1"] = df.groupby("PLAYER_ID")["MIN"].shift(1)
-    if "PLUS_MINUS_lag1" not in df.columns and "PLUS_MINUS" in df.columns:
-        df["PLUS_MINUS_lag1"] = df.groupby("PLAYER_ID")["PLUS_MINUS"].shift(1)
-    if "PLUS_MINUS_lag1" in df.columns and "MIN_lag1" in df.columns:
-        df["_PM_PER_MIN"] = df["PLUS_MINUS_lag1"] / df["MIN_lag1"].replace(0, np.nan)
-        df["PM_PER_MIN_R10"] = df.groupby("PLAYER_ID")["_PM_PER_MIN"].transform(
-            lambda x: x.shift(1).rolling(10).mean()
-        )
-        df = df.drop(columns=["_PM_PER_MIN"], errors="ignore")
-
-    if "POSITION_ENC" not in df.columns and "pos" in df.columns:
-        le = LabelEncoder()
-        df["POSITION_ENC"] = le.fit_transform(df["pos"].astype(str))
-
-    pdf = df[df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
-    if len(pdf) < 10:
-        return None
+    pdf = df[df['PLAYER_NAME'] == name].sort_values('GAME_DATE').copy()
+    pid = int(pdf["PLAYER_ID"].iloc[-1])
+    player_pos = pdf["pos"].iloc[-1]
+    res = []
 
     last = pdf.iloc[-1]
-    team = last["TEAM_ABBREVIATION"]
+
+    # --- Tier 1: Core role ---
+
+    # BAYES_MIN_PROJ
     canon_name = nameDict.get(name, name)
-    projected = projectedStartingFive.get(team, [])
-    starting_proj = int(canon_name in projected or name in projected)
+    player_team = last["TEAM_ABBREVIATION"]
+    projected = projectedStartingFive.get(player_team, [])
+    starting_override = 1 if (canon_name in projected or name in projected) else 0
+    res.append(_bayes_min_proj_for_row(pdf, last, _BAYES_MIN_CONFIDENCE_K, starting_override=starting_override))
 
-    bayes_min_proj = _bayes_min_proj_for_row(
-        df,
-        last,
-        confidence_k=_BAYES_MIN_CONFIDENCE_K,
-        starting_override=starting_proj,
+    # STARTER_X_MIN_AVG: starting flag × career avg minutes
+    min_avg = float(pdf["MIN"].mean())
+    res.append(float(starting_override) * min_avg)
+
+    # MIN_EWM_L12, MIN_EWM_L3
+    min_ewm12 = pdf["MIN"].astype(float).ewm(span=12).mean().iloc[-1]
+    res.append(float(min_ewm12) if pd.notna(min_ewm12) else float("nan"))
+    min_ewm3 = pdf["MIN"].astype(float).ewm(span=3).mean().iloc[-1]
+    res.append(float(min_ewm3) if pd.notna(min_ewm3) else float("nan"))
+
+    # STARTING_lag1: previous game's starting status
+    starting_lag1 = float(pdf["STARTING"].iloc[-2]) if len(pdf) >= 2 else float("nan")
+    res.append(starting_lag1)
+
+    # STARTER_ROLL10_PCT: fraction of last 10 games as starter
+    starter_roll10_pct = float(pdf["STARTING"].tail(10).mean())
+    res.append(starter_roll10_pct if pd.notna(starter_roll10_pct) else float("nan"))
+
+    # ROLE_LOCK: 1 if player is consistently a starter or bench player (>=90% either way)
+    role_lock = float(1 if starter_roll10_pct >= 0.9 or starter_roll10_pct <= 0.1 else 0)
+    res.append(role_lock)
+
+    # MEDIAN_MIN_L10
+    res.append(float(pdf["MIN"].tail(10).median()))
+
+    # MIN_MIN_L5, MIN_MAX_L5
+    res.append(float(pdf["MIN"].tail(5).min()))
+    res.append(float(pdf["MIN"].tail(5).max()))
+
+    # HIGH_MIN_TIER: 1 if player averages >= 28 MIN over last 10
+    high_min_tier = float(1 if pdf["MIN"].tail(10).mean() >= 28.0 else 0)
+    res.append(high_min_tier)
+
+    # --- Tier 2: Team context ---
+
+    # Gameday snapshot for within-team ranks
+    gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
+
+    # TEAM_MIN_RANK_L5
+    min_rank_l5 = gameday["MIN_roll5"].rank(ascending=False, method="dense")
+    team_min_rank_l5 = float(min_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_min_rank_l5 if pd.notna(team_min_rank_l5) else float("nan"))
+
+    # TEAM_POSS_RANK_L5
+    poss_rank_l5 = gameday["POSS_roll5"].rank(ascending=False, method="dense")
+    team_poss_rank_l5 = float(poss_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_poss_rank_l5 if pd.notna(team_poss_rank_l5) else float("nan"))
+
+    # TEAM_PTS_RANK_L5
+    pts_rank_l5 = gameday["PTS_roll5"].rank(ascending=False, method="dense")
+    team_pts_rank_l5 = float(pts_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_pts_rank_l5 if pd.notna(team_pts_rank_l5) else float("nan"))
+
+    # TEAM_USG_RANK_L5
+    usg_rank_l5 = gameday["USG_PCT_roll5"].rank(ascending=False, method="dense")
+    team_usg_rank_l5 = float(usg_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_usg_rank_l5 if pd.notna(team_usg_rank_l5) else float("nan"))
+
+    # POSS_roll5: player's own possession roll5
+    res.append(float(pdf["POSS_roll5"].iloc[-1]) if pd.notna(pdf["POSS_roll5"].iloc[-1]) else float("nan"))
+
+    # --- Tier 3: Situational ---
+
+    # DAYS_REST: derived from last two game dates in player history
+    if len(pdf) >= 2:
+        last_date = pd.Timestamp(pdf["GAME_DATE"].iloc[-1]).normalize()
+        prev_date = pd.Timestamp(pdf["GAME_DATE"].iloc[-2]).normalize()
+        days_rest = int((last_date - prev_date).days)
+    else:
+        days_rest = 1
+    res.append(float(days_rest))
+
+    # AGE_X_B2B: age × back-to-back flag
+    is_b2b = float(1 if days_rest == 1 else 0)
+    age = float(last["AGE"]) if "AGE" in last.index and pd.notna(last["AGE"]) else float("nan")
+    res.append(age * is_b2b)
+
+    # USG_EWM_L5
+    usg_ewm5 = pdf["USG_PCT"].astype(float).ewm(span=5).mean().iloc[-1]
+    res.append(float(usg_ewm5) if pd.notna(usg_ewm5) else float("nan"))
+
+    # PM_PER_MIN_R10: plus-minus per minute over last 10 games
+    tail10 = pdf.tail(10)
+    total_min = tail10["MIN"].sum()
+    pm_per_min_r10 = (
+        float(tail10["PLUS_MINUS"].sum() / total_min) if total_min > 0 else float("nan")
     )
+    res.append(pm_per_min_r10)
 
-    def g(col, default=np.nan):
-        if col == "BAYES_MIN_PROJ":
-            return bayes_min_proj if pd.notna(bayes_min_proj) else default
-        if col == "STARTER_X_MIN_AVG":
-            if "MIN_season_avg" not in last.index:
-                return default
-            msa = last["MIN_season_avg"]
-            if pd.isna(msa):
-                return default
-            return float(starting_proj * msa)
-        if col not in pdf.columns:
-            return default
-        v = last[col]
-        return float(v) if pd.notna(v) else default
+    # POSITION_ENC
+    if player_pos == "PG":
+        res.append(0)
+    elif player_pos == "SG":
+        res.append(1)
+    elif player_pos == "SF":
+        res.append(2)
+    elif player_pos == "PF":
+        res.append(3)
+    elif player_pos == "C":
+        res.append(4)
+    else:
+        res.append(float("nan"))
 
-    return [g(col) for col in MIN_FEATURES]
+    # HOME_X_MIN_AVG: last game's home flag × career avg minutes
+    home_flag = float(last["HOME"]) if "HOME" in last.index and pd.notna(last["HOME"]) else 0.0
+    res.append(home_flag * min_avg)
+
+    # MIN_share_proxy: player MIN_ewm12 / sum of team minutes on gameday
+    team_min_sum = gameday["MIN"].sum()
+    min_share_proxy = (
+        float(min_ewm12) / team_min_sum if (pd.notna(min_ewm12) and team_min_sum > 0) else float("nan")
+    )
+    res.append(min_share_proxy)
+
+    # TEAM_POSS_RANK_BY_POS_L5: rank within same-position teammates by POSS_roll5
+    player_pos = last["pos"] if "pos" in last.index else last.get("POSITION", None)
+    pos_group = gameday[gameday["pos"] == player_pos] if player_pos is not None else gameday
+    poss_rank_by_pos = pos_group["POSS_roll5"].rank(ascending=False, method="dense")
+    poss_rank_by_pos_val = poss_rank_by_pos[pos_group["PLAYER_NAME"] == name]
+    res.append(float(poss_rank_by_pos_val.iloc[0]) if not poss_rank_by_pos_val.empty else float("nan"))
+
+    return res

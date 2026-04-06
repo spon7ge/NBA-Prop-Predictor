@@ -243,7 +243,6 @@ def generalized_best_bets(
 
         output_cat = merged[[
             'PLAYER_NAME',
-            'POSITION',
             'TEAM_NAME',
             'OPPONENT',
             'HOME_AWAY',
@@ -317,7 +316,7 @@ def generalized_best_bets(
     final = _output.merge(_opp, on='_OPP_MATCH_KEY', how='left').drop(columns='_OPP_MATCH_KEY')
 
     final = final[[
-        'PLAYER_NAME', 'POSITION', 'LINE', 'CATEGORY', 'OPPONENT',
+        'PLAYER_NAME', 'LINE', 'CATEGORY', 'OPPONENT',
         'TEAM_SPREAD', 'GAME_TOTAL', 'OPP_DEF_RATING', 'OPP_RANK_DEF_RATING', 'OPP_PACE', 'OPP_PACE_RANK',
         'ODDS_OVER', 'ODDS_UNDER',
         'IMP_PROB_OVER', 'IMP_PROB_UNDER',
