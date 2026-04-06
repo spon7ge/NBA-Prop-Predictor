@@ -8,7 +8,6 @@ from src.utils.helper_functions import *
 from itertools import combinations
 from src.utils.team_info import nameDict
 from scipy.stats import lognorm
-from src.pipeline.pipeline_pts import build_ngboost_points_features
 
 
 def convert_to_et(utc_time):

@@ -9,33 +9,6 @@ from src.utils.team_info import nameDict, projectedStartingFive
 # Match rpm_quantile_model.ipynb `apply_bayesian_rpm(..., confidence_k=20)`
 _BAYES_RPM_CONFIDENCE_K = 20
 
-# Aligned with rpm_quantile_model.ipynb `RPM_FEATURES`
-RPM_FEATURES = [
-    "BAYES_RPM_PROJ",
-    "REB_PCT_roll5",
-    "OREB_PCT_roll5",
-    "DREB_PCT_roll5",
-    "REB_PER_MIN_roll5",
-    "OREB_PER_MIN_roll5",
-    "DREB_PER_MIN_roll5",
-    "MIN_ewm10",
-    "MIN_ewm5",
-    "TEAM_REB_PER_MIN_RANK_L5",
-    "TEAM_REB_RANK_L5",
-    "TEAM_FG_PCT_roll5",
-    "TEAM_PACE_roll5",
-    "OPP_PACE_roll5",
-    "OPP_DEF_RATING_roll5",
-    "OPP_FG_PCT_roll5",
-    "OPP_FG3A_roll5",
-    "DAYS_REST",
-    "IS_B2B",
-    "STARTING",
-    "POSITION_ENC",
-    "GP",
-]
-
-
 def _bayes_rpm_proj_for_player(
     df: pd.DataFrame, pid: int, confidence_k: int = 20, min_minutes: float = 1.0
 ) -> float:
@@ -65,112 +38,59 @@ def _bayes_rpm_proj_for_player(
     )
 
 
-def _ewm_next_row(series: pd.Series, span: int) -> float:
-    """shift(1).ewm(span) value for the row after the last observation (training-aligned)."""
-    s = series.reset_index(drop=True).astype(float)
-    extended = pd.concat([s, pd.Series([np.nan])], ignore_index=True)
-    v = extended.shift(1).ewm(span=span, adjust=False).mean().iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
-
-
-def _ensure_rpm_training_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Mirror notebook: rpm_features + team rebound ranks + position encoding."""
-    if "REB_PER_MIN" not in df.columns:
-        df["REB_PER_MIN"] = df["REB"] / df["MIN"].replace(0, np.nan)
-    if "OREB_PER_MIN" not in df.columns:
-        df["OREB_PER_MIN"] = df["OREB"] / df["MIN"].replace(0, np.nan)
-    if "DREB_PER_MIN" not in df.columns:
-        df["DREB_PER_MIN"] = df["DREB"] / df["MIN"].replace(0, np.nan)
-    if "REB_PCT_roll5" not in df.columns:
-        df = rpm_features(df)
-    if "TEAM_REB_RANK_L5" not in df.columns:
-        df["TEAM_REB_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])["REB_roll5"].rank(
-            ascending=False, method="dense"
-        )
-    if "TEAM_REB_PER_MIN_RANK_L5" not in df.columns:
-        df["TEAM_REB_PER_MIN_RANK_L5"] = df.groupby(["TEAM_ID", "GAME_DATE"])[
-            "REB_PER_MIN_roll5"
-        ].rank(ascending=False, method="dense")
-    if "POSITION_ENC" not in df.columns and "pos" in df.columns:
-        le = LabelEncoder()
-        df["POSITION_ENC"] = le.fit_transform(df["pos"].astype(str))
-    return df
-
-
 def rpm_pipeline(df, name, date):
-    df = df.sort_values(["GAME_DATE", "PLAYER_ID"]).copy()
-    df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
-    slate = pd.Timestamp(date)
-    date_str = date if isinstance(date, str) else pd.Timestamp(date).strftime("%Y-%m-%d")
-
-    pdf = df[df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
-    if len(pdf) < 1:
-        raise ValueError("No rows for player name in dataframe")
+    pdf = df[df['PLAYER_NAME'] == name].sort_values('GAME_DATE').copy()
     pid = int(pdf["PLAYER_ID"].iloc[-1])
-
-    df = _ensure_rpm_training_columns(df)
-    pdf = df[df["PLAYER_ID"] == pid].sort_values("GAME_DATE")
-    last = pdf.iloc[-1]
-
     res = []
-    res.append(_bayes_rpm_proj_for_player(df, pid, confidence_k=_BAYES_RPM_CONFIDENCE_K))
+    res.append(_bayes_rpm_proj_for_player(pdf, pid, confidence_k=_BAYES_RPM_CONFIDENCE_K))
+    res.append(float(pdf["REB_PCT"].tail(5).mean()))
+    res.append(float(pdf["OREB_PCT"].tail(5).mean()))
+    res.append(float(pdf["DREB_PCT"].tail(5).mean()))
+    pdf['REB_PER_MIN'] = pdf['REB'] / pdf['MIN'].replace(0, np.nan)
+    pdf['OREB_PER_MIN'] = pdf['OREB'] / pdf['MIN'].replace(0, np.nan)
+    pdf['DREB_PER_MIN'] = pdf['DREB'] / pdf['MIN'].replace(0, np.nan)
+    res.append(float(pdf["REB_PER_MIN"].tail(5).mean()))
+    res.append(float(pdf["OREB_PER_MIN"].tail(5).mean()))
+    res.append(float(pdf["DREB_PER_MIN"].tail(5).mean()))
+    res.append(float(pdf["REB_PER_MIN"].tail(5).median()))
+    min_10_ewm = pdf["MIN"].astype(float).ewm(span=10).mean().iloc[-1]
+    res.append(float(min_10_ewm) if pd.notna(min_10_ewm) else float("nan"))
+    min_5_ewm = pdf["MIN"].astype(float).ewm(span=5).mean().iloc[-1]
+    res.append(float(min_5_ewm) if pd.notna(min_5_ewm) else float("nan"))
 
-    res.append(float(last["REB_PCT_roll5"]))
-    res.append(float(last["OREB_PCT_roll5"]))
-    res.append(float(last["DREB_PCT_roll5"]))
-    res.append(float(last["REB_PER_MIN_roll5"]))
-    res.append(float(last["OREB_PER_MIN_roll5"]))
-    res.append(float(last["DREB_PER_MIN_roll5"]))
+    last = pdf.iloc[-1]
+    gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
+    r = gameday["REB_PER_MIN_roll5"].rank(ascending=False, method="dense")
+    team_reb_per_min_rank_l5 = float(r[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_reb_per_min_rank_l5 if pd.notna(team_reb_per_min_rank_l5) else float("nan"))
+    reb_rank_l10 = gameday["REB_roll10"].rank(ascending=False, method="dense")
+    team_reb_rank_l10 = float(reb_rank_l10[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_reb_rank_l10 if pd.notna(team_reb_rank_l10) else float("nan"))
 
-    res.append(_ewm_next_row(pdf["MIN"], 10))
-    res.append(_ewm_next_row(pdf["MIN"], 5))
+    player_team = pdf["TEAM_ABBREVIATION"].iloc[-1]
+    player_team_df = df[df["TEAM_ABBREVIATION"] == player_team].sort_values("GAME_DATE")
+    player_team_df = player_team_df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+    team_fg_pct_roll5 = float(player_team_df["TEAM_FG_PCT_roll5"].tail(5).mean())
+    res.append(team_fg_pct_roll5 if pd.notna(team_fg_pct_roll5) else float("nan"))
+    team_pace_roll5 = float(player_team_df["TEAM_PACE_roll5"].tail(5).mean())
+    res.append(team_pace_roll5 if pd.notna(team_pace_roll5) else float("nan"))
 
-    res.append(float(last["TEAM_REB_PER_MIN_RANK_L5"]))
-    res.append(float(last["TEAM_REB_RANK_L5"]))
-    res.append(float(last["TEAM_FG_PCT_roll5"]))
-    res.append(float(last["TEAM_PACE_roll5"]))
-
-    opp, _ = findOpp(name, pdf, date_str, max_days_ahead=3)
-    if opp is None:
-        res.extend([float("nan")] * 4)
-    else:
-        opp_team = df[df["TEAM_ABBREVIATION"] == opp].sort_values("GAME_DATE")
-        opp_team = opp_team.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
-        opp_team_pace_roll5 = (
-            opp_team.groupby("TEAM_ID")["TEAM_PACE"]
-            .rolling(5, min_periods=1)
-            .mean()
-            .round(2)
-            .reset_index(level=0, drop=True)
-        )
-        opp_team_def_rating_roll5 = (
-            opp_team.groupby("TEAM_ID")["TEAM_DEF_RATING"]
-            .rolling(5, min_periods=1)
-            .mean()
-            .round(2)
-            .reset_index(level=0, drop=True)
-        )
-        opp_team_fg_pct_roll5 = (
-            opp_team.groupby("TEAM_ID")["TEAM_FG_PCT"]
-            .rolling(5, min_periods=1)
-            .mean()
-            .round(2)
-            .reset_index(level=0, drop=True)
-        )
-        opp_team_fg3a_roll5 = (
-            opp_team.groupby("TEAM_ID")["TEAM_FG3A"]
-            .rolling(5, min_periods=1)
-            .mean()
-            .round(2)
-            .reset_index(level=0, drop=True)
-        )
-        res.append(float(opp_team_pace_roll5.iloc[-1]))
-        res.append(float(opp_team_def_rating_roll5.iloc[-1]))
-        res.append(float(opp_team_fg_pct_roll5.iloc[-1]))
-        res.append(float(opp_team_fg3a_roll5.iloc[-1]))
+    opp_abbr, _ = findOpp(name, pdf, date, max_days_ahead=3)
+    opp_team = df[df["TEAM_ABBREVIATION"] == opp_abbr].sort_values("GAME_DATE")
+    opp_team = opp_team.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+    opp_pace_roll5 = float(opp_team["TEAM_PACE"].tail(5).mean())
+    res.append(opp_pace_roll5 if pd.notna(opp_pace_roll5) else float("nan"))
+    opp_def_rating_roll5 = float(opp_team["TEAM_DEF_RATING"].tail(5).mean())
+    res.append(opp_def_rating_roll5 if pd.notna(opp_def_rating_roll5) else float("nan"))
+    opp_fg_pct_roll5 = float(opp_team["TEAM_FG_PCT"].tail(5).mean())
+    res.append(opp_fg_pct_roll5 if pd.notna(opp_fg_pct_roll5) else float("nan"))
+    opp_fg3a_roll5 = float(opp_team["TEAM_FG3A"].tail(5).mean())
+    res.append(opp_fg3a_roll5 if pd.notna(opp_fg3a_roll5) else float("nan"))
 
     last_date = pdf["GAME_DATE"].iloc[-1]
-    days_rest = int((slate.normalize() - last_date.normalize()).days)
+    slate = pd.Timestamp(date).normalize()
+    last_norm = pd.Timestamp(last_date).normalize()
+    days_rest = int((slate - last_norm).days)
     res.append(float(days_rest))
     res.append(float(1 if days_rest == 1 else 0))
 
@@ -179,12 +99,19 @@ def rpm_pipeline(df, name, date):
     projected = projectedStartingFive.get(team, [])
     starting_flag = float(1 if (canon_name in projected or name in projected) else 0)
     res.append(starting_flag)
-
-    if "POSITION_ENC" in last.index and pd.notna(last["POSITION_ENC"]):
-        res.append(float(last["POSITION_ENC"]))
+    # POSITION_ENC
+    player_pos = pdf["pos"].iloc[-1]
+    if player_pos == "PG":
+        res.append(0)
+    elif player_pos == "SG":
+        res.append(1)
+    elif player_pos == "SF":
+        res.append(2)
+    elif player_pos == "PF":
+        res.append(3)
+    elif player_pos == "C":
+        res.append(4)
     else:
         res.append(float("nan"))
-
     res.append(float(len(pdf) - 1))
-
     return res
