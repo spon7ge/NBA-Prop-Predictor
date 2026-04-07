@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0d0d" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <title>NBA Prop Predictor — 2-leg slate</title>
@@ -21,16 +22,48 @@
         </nav>
       </div>
     </header>
-    <section id="sectionPairs" class="view-section" aria-labelledby="navPairs">
+    <section id="sectionPairs" class="view-section" aria-labelledby="headingPairs">
+      <header class="view-section-head view-section-head--pairs">
+        <h2 class="view-section-title" id="headingPairs">Top Pairs</h2>
+      </header>
       <div class="toolbar book-toolbar">
-        <div class="book-filter" role="group" aria-label="Bookmaker">
-          <button type="button" id="bookPrizePicks" class="book-btn active" data-book="prizepicks">PrizePicks</button>
-          <button type="button" id="bookUnderdog" class="book-btn" data-book="underdog">Underdog</button>
+        <div class="book-filter">
+          <label class="book-filter-label" id="bookFilterLabel" for="bookDropdownTrigger">Book</label>
+          <div class="book-dropdown" id="bookDropdown">
+            <button
+              type="button"
+              class="book-dropdown-trigger"
+              id="bookDropdownTrigger"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="bookDropdownMenu"
+            >
+              <span class="book-dropdown-value" id="bookDropdownValue">PrizePicks</span>
+              <span class="book-dropdown-chevron" aria-hidden="true"></span>
+            </button>
+            <div
+              class="book-dropdown-menu"
+              id="bookDropdownMenu"
+              role="listbox"
+              hidden
+              aria-labelledby="bookFilterLabel"
+            >
+              <button type="button" class="book-dropdown-option" role="option" data-book="prizepicks">
+                PrizePicks
+              </button>
+              <button type="button" class="book-dropdown-option" role="option" data-book="underdog">
+                Underdog
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div id="cards"><p class="load-msg" id="loadMsg">Loading slate…</p></div>
     </section>
-    <section id="sectionPlayers" class="view-section" hidden aria-labelledby="navPlayers">
+    <section id="sectionPlayers" class="view-section" hidden aria-labelledby="headingPlayers">
+      <header class="view-section-head view-section-head--players">
+        <h2 class="view-section-title" id="headingPlayers">All Players</h2>
+      </header>
       <div class="players-toolbar">
         <div class="players-search-group">
           <label class="player-search-label" for="playerSearch">Search player</label>
