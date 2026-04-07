@@ -1,4 +1,4 @@
-# NBA Prop Predictor
+# HoopVista
 
 ## What the website does
 

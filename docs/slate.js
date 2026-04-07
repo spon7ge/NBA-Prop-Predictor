@@ -192,13 +192,22 @@ function initBookToggle() {
   });
 }
 
+function updateSlateNavAria() {
+  var tabs = document.querySelectorAll("[data-view]");
+  for (var i = 0; i < tabs.length; i++) {
+    var t = tabs[i];
+    if (t.getAttribute("data-view") === activeView) {
+      t.setAttribute("aria-current", "page");
+    } else {
+      t.removeAttribute("aria-current");
+    }
+  }
+}
+
 function setActiveView(view) {
   if (!view || view === activeView) return;
   activeView = view;
-  var tabs = document.querySelectorAll(".nav-tab");
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.toggle("active", tabs[i].getAttribute("data-view") === activeView);
-  }
+  updateSlateNavAria();
   var secPairs = document.getElementById("sectionPairs");
   var secPlayers = document.getElementById("sectionPlayers");
   if (secPairs) secPairs.hidden = activeView !== "pairs";
@@ -211,7 +220,7 @@ function setActiveView(view) {
 }
 
 function initMainNav() {
-  var tabs = document.querySelectorAll(".nav-tab");
+  var tabs = document.querySelectorAll("[data-view]");
   for (var i = 0; i < tabs.length; i++) {
     tabs[i].addEventListener("click", function () {
       var v = this.getAttribute("data-view");
@@ -621,4 +630,13 @@ function render() {
 initMainNav();
 initPlayerSearch();
 initPlayerStatFilter();
+try {
+  var q = new URLSearchParams(window.location.search);
+  var viewParam = q.get("view");
+  if (viewParam === "players" || viewParam === "pairs") {
+    setActiveView(viewParam);
+  }
+} catch (e) {
+  /* ignore */
+}
 loadSlates();
