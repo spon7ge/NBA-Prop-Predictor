@@ -63,63 +63,76 @@ body {
   justify-content: space-between;
   gap: 14px 20px;
 }
-.main-nav {
-  flex-shrink: 0;
-  margin: 0;
+.slate-title-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  max-width: 100%;
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: color 0.15s ease, filter 0.15s ease;
 }
-.main-nav-inner {
+.slate-title-link:hover {
+  color: #ffffff;
+  filter: brightness(1.06);
+}
+.header-links {
+  --nav-link-size: 13px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+.slate-header-links {
+  flex-shrink: 0;
+  justify-content: flex-end;
+  max-width: min(100%, 520px);
+}
+/* One typography for <a> and <button> — do not use font: inherit on buttons here */
+.header-link {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 2px 8px rgba(0, 0, 0, 0.25);
-}
-.nav-tab {
-  font-family: system-ui, sans-serif;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--nav-link-size);
   font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  padding: 9px 18px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
   color: #8e8e86;
-  cursor: pointer;
-  transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.12s ease;
+  text-decoration: none;
+  padding: 6px 2px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
 }
-.nav-tab:hover {
+a.header-link:visited {
+  color: #8e8e86;
+}
+button.header-link {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.header-link:hover {
   color: #e8e8e4;
   background: rgba(255, 255, 255, 0.05);
 }
-.nav-tab:active {
-  transform: scale(0.98);
-}
-.nav-tab.active {
-  color: #f4f4f0;
-  background: linear-gradient(
-    165deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-.nav-tab:focus {
+.header-link:focus {
   outline: none;
 }
-.nav-tab:focus-visible {
+.header-link:focus-visible {
   outline: 2px solid rgba(120, 160, 220, 0.55);
   outline-offset: 2px;
+}
+.header-link[aria-current="page"],
+a.header-link[aria-current="page"]:visited {
+  color: #e8e8e4;
+  font-weight: 600;
 }
 .view-section {
   margin-top: 12px;
@@ -265,12 +278,30 @@ body {
 }
 .slate-title {
   margin: 0;
-  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #ecece8;
+  font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
+  font-size: clamp(2.125rem, 6vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f2f2ec;
   min-width: 0;
-  line-height: 1.2;
+  line-height: 1.02;
+}
+.static-page {
+  padding: 4px 0 32px;
+}
+.static-page-title {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #e8e8e4;
+}
+.static-page-lead {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #9a9a92;
 }
 .players-toolbar {
   display: flex;
@@ -650,7 +681,7 @@ body {
 button,
 .book-dropdown-trigger,
 .book-dropdown-option,
-.nav-tab,
+.header-link[data-view],
 .stat-pill {
   touch-action: manipulation;
 }
@@ -670,21 +701,18 @@ button,
   .slate-title {
     text-align: center;
   }
-  .main-nav {
+  .slate-header-links {
+    justify-content: center;
+    max-width: none;
     width: 100%;
+    gap: 8px 18px;
+    --nav-link-size: 14px;
   }
-  .main-nav-inner {
-    display: flex;
-    width: 100%;
-    justify-content: stretch;
-    gap: 6px;
-    padding: 5px;
-  }
-  .nav-tab {
-    flex: 1 1 0;
+  .header-link {
     min-height: 44px;
-    padding: 10px 12px;
-    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 10px;
   }
   .view-section-head {
     padding: 12px 14px 12px 18px;

@@ -35,7 +35,10 @@ jobs:
       - name: Cache-bust slate assets (avoid stale CSS/JS on GitHub Pages)
         run: |
           SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
-          sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" docs/index.html
+          for f in docs/*.html; do
+            [ -f "$f" ] || continue
+            sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" "$f"
+          done
       
       - name: Copy EV data (JSON slates + all line probs) to docs folder
         run: |
