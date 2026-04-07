@@ -4,6 +4,8 @@ var activeBook = "prizepicks";
 var activeView = "pairs";
 var ALL_LINE_PROBS = [];
 var lineProbsState = "idle";
+/** null = all stats; otherwise MARKET key e.g. PTS, AST, REB */
+var activePlayerStat = null;
 
 function jsonUrls(filename) {
   var a = "data/props/ev_analysis/" + filename;
@@ -204,6 +206,15 @@ function filterPlayerRows(rows, query) {
   });
 }
 
+function filterPlayerRowsByStat(rows, stat) {
+  if (!stat) return rows.slice();
+  var want = String(stat).toUpperCase();
+  return rows.filter(function (r) {
+    var m = String(r.MARKET || r.CATEGORY || "").toUpperCase();
+    return m === want;
+  });
+}
+
 function bookPillClass(book) {
   var b = String(book || "").toLowerCase();
   if (b.indexOf("prize") !== -1) return "book-prizepicks";
@@ -239,7 +250,8 @@ function renderPlayersPanel() {
     if (Number(a.LINE) !== Number(b.LINE)) return Number(a.LINE) - Number(b.LINE);
     return String(a.LINE_BOOKMAKER || "").localeCompare(String(b.LINE_BOOKMAKER || ""));
   });
-  var filtered = filterPlayerRows(sorted, q);
+  var byStat = filterPlayerRowsByStat(sorted, activePlayerStat);
+  var filtered = filterPlayerRows(byStat, q);
   var html =
     '<div class="players-wrap"><table class="players-table"><thead><tr>' +
     "<th>Player</th><th>Book</th><th>Mkt</th>" +
@@ -288,6 +300,33 @@ function initPlayerSearch() {
   var input = document.getElementById("playerSearch");
   if (!input) return;
   input.addEventListener("input", function () {
+    if (lineProbsState === "loaded") renderPlayersPanel();
+  });
+}
+
+function syncStatPillUi() {
+  var pills = document.querySelectorAll(".stat-pill");
+  for (var i = 0; i < pills.length; i++) {
+    var s = pills[i].getAttribute("data-stat");
+    var on = s === "ALL" ? !activePlayerStat : s === activePlayerStat;
+    pills[i].classList.toggle("active", on);
+    pills[i].setAttribute("aria-pressed", on ? "true" : "false");
+  }
+}
+
+function initPlayerStatFilter() {
+  var bar = document.querySelector(".stat-filter");
+  if (!bar) return;
+  bar.addEventListener("click", function (e) {
+    var t = e.target && e.target.closest(".stat-pill");
+    if (!t) return;
+    var s = t.getAttribute("data-stat");
+    if (s === "ALL") {
+      activePlayerStat = null;
+    } else {
+      activePlayerStat = activePlayerStat === s ? null : s;
+    }
+    syncStatPillUi();
     if (lineProbsState === "loaded") renderPlayersPanel();
   });
 }
@@ -521,4 +560,5 @@ function render() {
 
 initMainNav();
 initPlayerSearch();
+initPlayerStatFilter();
 loadSlates();

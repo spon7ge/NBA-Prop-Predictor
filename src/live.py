@@ -47,6 +47,7 @@ def predict_min_times_rate(
             r50 = float(rate_quantile_models[q50].predict(rate_arr)[0])
             r90 = float(rate_quantile_models[q90].predict(rate_arr)[0])
 
+
             s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
             row = {
                 "PLAYER_NAME": name,
@@ -73,20 +74,68 @@ def predict_min_times_rate(
 # 1. THE CORE SIMULATION ENGINE (POISSON-BASED)
 # ---------------------------------------------------------
 
-def triangular_clip(row, q10, q50, q90, lo_scale=0.70, hi_scale=1.30, low=0.0, high=np.inf, n_sims=10_000):
-    """
-    Generates a triangular distribution based on XGBoost quantiles.
-    Widening the scales (lo_scale, hi_scale) introduces 'NBA Chaos' (fouls, blowouts).
-    """
-    mode = float(row[q50])
-    left = min(float(row[q10]) * lo_scale, mode - 0.001)
-    right = max(float(row[q90]) * hi_scale, mode + 0.001)
+# def triangular_clip(row, q10, q50, q90, lo_scale=0.70, hi_scale=1.30, low=0.0, high=np.inf, n_sims=10_000):
+#     """
+#     Generates a triangular distribution based on XGBoost quantiles.
+#     Widening the scales (lo_scale, hi_scale) introduces 'NBA Chaos' (fouls, blowouts).
+#     """
+#     mode = float(row[q50])
+#     left = min(float(row[q10]) * lo_scale, mode - 0.001)
+#     right = max(float(row[q90]) * hi_scale, mode + 0.001)
     
-    if not (np.isfinite(left) and np.isfinite(mode) and np.isfinite(right)):
-        return np.full(n_sims, mode if np.isfinite(mode) else 0.0)
+#     if not (np.isfinite(left) and np.isfinite(mode) and np.isfinite(right)):
+#         return np.full(n_sims, mode if np.isfinite(mode) else 0.0)
     
+#     samples = np.random.triangular(left, mode, right, size=n_sims)
+#     return np.clip(samples, low, high)
+def triangular_clip(
+    row,
+    q10,
+    q50,
+    q90,
+    lo_scale=0.80,
+    hi_scale=1.20,
+    low=0.0,
+    high=np.inf,
+    n_sims=10000,
+):
+    """
+    Triangular distribution using model quantiles.
+    Designed for minutes simulation.
+    """
+
+    q10_val = float(row[q10])
+    q50_val = float(row[q50])
+    q90_val = float(row[q90])
+
+    # Fallback if bad values
+    if not (np.isfinite(q10_val) and np.isfinite(q50_val) and np.isfinite(q90_val)):
+        base = q50_val if np.isfinite(q50_val) else 0.0
+        return np.full(n_sims, base)
+
+    # --- 1. Base bounds ---
+    left = q10_val * lo_scale
+    mode = q50_val
+    right = q90_val * hi_scale
+
+    # --- 2. Enforce valid ordering ---
+    left = min(left, mode)
+    right = max(right, mode)
+
+    # --- 3. Optional skew (minutes tend to downside risk) ---
+    # small right shift to reflect foul trouble / blowouts
+    mode = mode * 1.03
+
+    # ensure still valid after shift
+    mode = min(max(mode, left), right)
+
+    # --- 4. Sample ---
     samples = np.random.triangular(left, mode, right, size=n_sims)
-    return np.clip(samples, low, high)
+
+    # --- 5. Clip to realistic bounds ---
+    samples = np.clip(samples, low, high)
+
+    return samples
 
 def run_stat_simulation(row, n_sims=10_000):
     """
@@ -114,6 +163,46 @@ def run_stat_simulation(row, n_sims=10_000):
     
     return sim_counts
 
+# def run_stat_simulation(row, rate_history, rate_weights=None, n_sims=10000, corr=-0.15):
+#     # --- Minutes ---
+#     sim_min = triangular_clip(
+#         row,
+#         "MIN_Q10", "MIN_Q50", "MIN_Q90",
+#         lo_scale=0.80, hi_scale=1.20,
+#         low=0, high=48,
+#         n_sims=n_sims,
+#     )
+
+#     # --- Empirical Rate ---
+#     rate_history = np.array(rate_history)
+
+#     if rate_weights is not None:
+#         rate_weights = rate_weights / rate_weights.sum()
+#         sim_rate = np.random.choice(rate_history, size=n_sims, p=rate_weights)
+#     else:
+#         sim_rate = np.random.choice(rate_history, size=n_sims)
+
+#     # --- Correlation ---
+#     if corr != 0:
+#         order = np.argsort(sim_min)
+#         rate_sorted = np.sort(sim_rate)
+#         sim_rate[order] = rate_sorted
+
+#     # --- Expected value ---
+#     expected_val = sim_min * sim_rate
+
+#     # --- Overdispersion ---
+#     noise = np.random.lognormal(mean=0, sigma=0.15, size=n_sims)
+#     expected_val = expected_val * noise
+
+#     # --- Clip ---
+#     expected_val = np.clip(expected_val, 0, 25)
+
+#     # --- Poisson ---
+#     sim_counts = np.random.poisson(lam=expected_val)
+
+#     return sim_counts
+
 def run_pts_simulation(row, n_sims=10_000):
     """
     Paired Simulation: Minutes * PPM.
@@ -134,7 +223,46 @@ def run_pts_simulation(row, n_sims=10_000):
     # Return the continuous point totals
     return sim_min * sim_ppm
 
+# def run_pts_simulation(row, ppm_history, ppm_weights=None, n_sims=10000, corr=-0.2):
+#     """
+#     Returns simulated point outcomes only.
+#     """
+#     # --- 1. Simulate Minutes ---
+#     sim_min = triangular_clip(
+#         row,
+#         "MIN_Q10", "MIN_Q50", "MIN_Q90",
+#         lo_scale=0.75, hi_scale=1.25,
+#         low=0, high=48,
+#         n_sims=n_sims,
+#     )
 
+#     # --- 2. Empirical PPM Sampling ---
+#     ppm_history = np.array(ppm_history)
+
+#     if ppm_weights is not None:
+#         ppm_weights = np.array(ppm_weights)
+#         ppm_weights = ppm_weights / ppm_weights.sum()
+#         sim_ppm = np.random.choice(ppm_history, size=n_sims, p=ppm_weights)
+#     else:
+#         sim_ppm = np.random.choice(ppm_history, size=n_sims)
+
+#     # --- 3. Impose Correlation ---
+#     if corr != 0:
+#         order = np.argsort(sim_min)
+#         ppm_sorted = np.sort(sim_ppm)
+
+#         noise_idx = np.random.permutation(n_sims)
+#         split = int((1 + corr) / 2 * n_sims)
+
+#         sim_ppm_corr = np.empty(n_sims)
+#         sim_ppm_corr[order[:split]] = ppm_sorted[:split]
+#         sim_ppm_corr[order[split:]] = ppm_sorted[noise_idx[split:]]
+
+#         sim_ppm = sim_ppm_corr
+
+#     # --- 4. Final Simulation ---
+#     sim_pts = sim_min * sim_ppm
+#     return sim_pts
 # ---------------------------------------------------------
 # 2. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------
