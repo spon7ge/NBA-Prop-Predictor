@@ -47,6 +47,11 @@ def predict_min_times_rate(
             r50 = float(rate_quantile_models[q50].predict(rate_arr)[0])
             r90 = float(rate_quantile_models[q90].predict(rate_arr)[0])
 
+            pdf = prop_stats_df[prop_stats_df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
+            rate_col = f"{stat_prefix}_PER_MIN"  # "PTS_PER_MIN", "AST_PER_MIN", "REB_PER_MIN"
+            rate_history = pdf[rate_col].dropna().tail(15).tolist()
+
+
 
             s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
             row = {
@@ -61,6 +66,7 @@ def predict_min_times_rate(
                 f"STAT_Q10": round(s10, 2),
                 f"STAT_Q50": round(s50, 2),
                 f"STAT_Q90": round(s90, 2),
+                f"RATE_HISTORY": rate_history,
             }
         except Exception as e:
             if verbose:
@@ -73,21 +79,6 @@ def predict_min_times_rate(
 # ---------------------------------------------------------
 # 1. THE CORE SIMULATION ENGINE (POISSON-BASED)
 # ---------------------------------------------------------
-
-# def triangular_clip(row, q10, q50, q90, lo_scale=0.70, hi_scale=1.30, low=0.0, high=np.inf, n_sims=10_000):
-#     """
-#     Generates a triangular distribution based on XGBoost quantiles.
-#     Widening the scales (lo_scale, hi_scale) introduces 'NBA Chaos' (fouls, blowouts).
-#     """
-#     mode = float(row[q50])
-#     left = min(float(row[q10]) * lo_scale, mode - 0.001)
-#     right = max(float(row[q90]) * hi_scale, mode + 0.001)
-    
-#     if not (np.isfinite(left) and np.isfinite(mode) and np.isfinite(right)):
-#         return np.full(n_sims, mode if np.isfinite(mode) else 0.0)
-    
-#     samples = np.random.triangular(left, mode, right, size=n_sims)
-#     return np.clip(samples, low, high)
 def triangular_clip(
     row,
     q10,
@@ -137,132 +128,134 @@ def triangular_clip(
 
     return samples
 
-def run_stat_simulation(row, n_sims=10_000):
-    """
-    Paired simulation: Minutes × per-minute rate (RATE_Q*), then Poisson.
-    STAT_Q* from predict_min_times_rate is already MIN×RATE — do not multiply STAT by MIN again.
-    """
-    # Simulate Minutes
+def run_stat_simulation(
+    row,
+    n_sims: int = 10_000,
+    anchor_weight: float = 0.3,
+    decay: float = 0.85,
+    min_history: int = 5,
+) -> np.ndarray:
+    if not 0.0 <= anchor_weight <= 1.0:
+        raise ValueError(f"anchor_weight must be in [0, 1], got {anchor_weight}")
+    if n_sims < 1:
+        raise ValueError(f"n_sims must be >= 1, got {n_sims}")
+
+    # --- Minutes simulation ---
     sim_min = triangular_clip(
         row,
         "MIN_Q10", "MIN_Q50", "MIN_Q90",
-        lo_scale=0.75, hi_scale=1.25, low=0, high=48, n_sims=n_sims,
+        lo_scale=0.75, hi_scale=1.25,
+        low=0, high=48,
+        n_sims=n_sims,
     )
 
-    # Per-minute rate (APM / RPM quantiles from live predictions)
-    sim_rate = triangular_clip(
-        row,
-        "RATE_Q10", "RATE_Q50", "RATE_Q90",
-        lo_scale=0.70, hi_scale=1.30, low=0, high=np.inf, n_sims=n_sims,
-    )
+    # --- Rate simulation ---
+    rate_history = row.get("RATE_HISTORY") if isinstance(row, (dict, pd.Series)) else None
 
-    expected_val = sim_min * sim_rate
-    
-    # Poisson Sampling: The 'Counting' Step
-    sim_counts = np.random.poisson(lam=expected_val)
-    
-    return sim_counts
+    if rate_history is not None and len(rate_history) >= min_history:
+        h = np.array(rate_history, dtype=float)
 
-# def run_stat_simulation(row, rate_history, rate_weights=None, n_sims=10000, corr=-0.15):
-#     # --- Minutes ---
-#     sim_min = triangular_clip(
-#         row,
-#         "MIN_Q10", "MIN_Q50", "MIN_Q90",
-#         lo_scale=0.80, hi_scale=1.20,
-#         low=0, high=48,
-#         n_sims=n_sims,
-#     )
+        # Recency weights: most recent game gets highest weight
+        weights = np.array([decay ** i for i in range(len(h) - 1, -1, -1)])
+        weights /= weights.sum()
 
-#     # --- Empirical Rate ---
-#     rate_history = np.array(rate_history)
+        n_anchor = int(n_sims * anchor_weight)
+        n_empirical = n_sims - n_anchor
 
-#     if rate_weights is not None:
-#         rate_weights = rate_weights / rate_weights.sum()
-#         sim_rate = np.random.choice(rate_history, size=n_sims, p=rate_weights)
-#     else:
-#         sim_rate = np.random.choice(rate_history, size=n_sims)
+        # Empirical draws with mild jitter to smooth inter-game variance
+        empirical_samples = np.random.choice(h, size=n_empirical, p=weights)
+        jitter_std = np.std(h) * 0.05
+        empirical_samples = np.clip(
+            empirical_samples + np.random.normal(0, jitter_std, size=n_empirical),
+            0, None,
+        )
 
-#     # --- Correlation ---
-#     if corr != 0:
-#         order = np.argsort(sim_min)
-#         rate_sorted = np.sort(sim_rate)
-#         sim_rate[order] = rate_sorted
+        # Anchor draws: triangular distribution centred on Q50 rather than a point mass
+        anchor_samples = triangular_clip(
+            row,
+            "RATE_Q10", "RATE_Q50", "RATE_Q90",
+            lo_scale=0.85, hi_scale=1.15,
+            low=0, high=None,
+            n_sims=n_anchor,
+        ) if n_anchor > 0 else np.empty(0)
 
-#     # --- Expected value ---
-#     expected_val = sim_min * sim_rate
+        sim_rate = np.concatenate([empirical_samples, anchor_samples])
 
-#     # --- Overdispersion ---
-#     noise = np.random.lognormal(mean=0, sigma=0.15, size=n_sims)
-#     expected_val = expected_val * noise
+    else:
+        sim_rate = triangular_clip(
+            row,
+            "RATE_Q10", "RATE_Q50", "RATE_Q90",
+            lo_scale=0.70, hi_scale=1.30,
+            low=0, high=None,
+            n_sims=n_sims,
+        )
+    # --- Poisson draw ---
+    # Clip lambda to (0, inf) — np.random.poisson raises on negative lam
+    expected_val = np.clip(sim_min * sim_rate, 0, None)
+    return np.random.poisson(lam=expected_val)
 
-#     # --- Clip ---
-#     expected_val = np.clip(expected_val, 0, 25)
+def run_pts_simulation(
+    row,
+    n_sims: int = 10_000,
+    anchor_weight: float = 0.3,
+    decay: float = 0.85,
+    min_history: int = 5,
+) -> np.ndarray:
+    if not 0.0 <= anchor_weight <= 1.0:
+        raise ValueError(f"anchor_weight must be in [0, 1], got {anchor_weight}")
+    if n_sims < 1:
+        raise ValueError(f"n_sims must be >= 1, got {n_sims}")
 
-#     # --- Poisson ---
-#     sim_counts = np.random.poisson(lam=expected_val)
-
-#     return sim_counts
-
-def run_pts_simulation(row, n_sims=10_000):
-    """
-    Paired Simulation: Minutes * PPM.
-    Maintains continuous distribution for scoring.
-    """
+    # --- Minutes simulation (unchanged) ---
     sim_min = triangular_clip(
         row,
         "MIN_Q10", "MIN_Q50", "MIN_Q90",
-        lo_scale=0.75, hi_scale=1.25, low=0, high=48, n_sims=n_sims,
+        lo_scale=0.75, hi_scale=1.25,
+        low=0, high=48,
+        n_sims=n_sims,
     )
-    
-    sim_ppm = triangular_clip(
-        row,
-        "RATE_Q10", "RATE_Q50", "RATE_Q90",
-        lo_scale=0.70, hi_scale=1.30, low=0, high=np.inf, n_sims=n_sims,
-    )
-    
-    # Return the continuous point totals
+
+    # --- PPM simulation ---
+    rate_history = row.get("RATE_HISTORY") if isinstance(row, (dict, pd.Series)) else None
+
+    if rate_history is not None and len(rate_history) >= min_history:
+        h = np.array(rate_history, dtype=float)
+
+        # Recency weights: most recent game gets highest weight
+        weights = np.array([decay ** i for i in range(len(h) - 1, -1, -1)])
+        weights /= weights.sum()
+
+        n_anchor = int(n_sims * anchor_weight)
+        n_empirical = n_sims - n_anchor
+
+        # Empirical draws with mild jitter to smooth inter-game variance
+        empirical_samples = np.random.choice(h, size=n_empirical, p=weights)
+        jitter_std = np.std(h) * 0.05
+        empirical_samples = np.clip(empirical_samples + np.random.normal(0, jitter_std, size=n_empirical), 0, None)
+
+        # Anchor draws: triangular distribution centred on Q50 rather than a point mass
+        anchor_samples = triangular_clip(
+            row,
+            "RATE_Q10", "RATE_Q50", "RATE_Q90",
+            lo_scale=0.85, hi_scale=1.15,
+            low=0, high=None,
+            n_sims=n_anchor,
+        ) if n_anchor > 0 else np.empty(0)
+
+        sim_ppm = np.concatenate([empirical_samples, anchor_samples])
+
+    else:
+        sim_ppm = triangular_clip(
+            row,
+            "RATE_Q10", "RATE_Q50", "RATE_Q90",
+            lo_scale=0.70, hi_scale=1.30,
+            low=0, high=None,
+            n_sims=n_sims,
+        )
+
+    # Paired multiply — no shuffle needed; both arrays are already independently random
     return sim_min * sim_ppm
 
-# def run_pts_simulation(row, ppm_history, ppm_weights=None, n_sims=10000, corr=-0.2):
-#     """
-#     Returns simulated point outcomes only.
-#     """
-#     # --- 1. Simulate Minutes ---
-#     sim_min = triangular_clip(
-#         row,
-#         "MIN_Q10", "MIN_Q50", "MIN_Q90",
-#         lo_scale=0.75, hi_scale=1.25,
-#         low=0, high=48,
-#         n_sims=n_sims,
-#     )
-
-#     # --- 2. Empirical PPM Sampling ---
-#     ppm_history = np.array(ppm_history)
-
-#     if ppm_weights is not None:
-#         ppm_weights = np.array(ppm_weights)
-#         ppm_weights = ppm_weights / ppm_weights.sum()
-#         sim_ppm = np.random.choice(ppm_history, size=n_sims, p=ppm_weights)
-#     else:
-#         sim_ppm = np.random.choice(ppm_history, size=n_sims)
-
-#     # --- 3. Impose Correlation ---
-#     if corr != 0:
-#         order = np.argsort(sim_min)
-#         ppm_sorted = np.sort(sim_ppm)
-
-#         noise_idx = np.random.permutation(n_sims)
-#         split = int((1 + corr) / 2 * n_sims)
-
-#         sim_ppm_corr = np.empty(n_sims)
-#         sim_ppm_corr[order[:split]] = ppm_sorted[:split]
-#         sim_ppm_corr[order[split:]] = ppm_sorted[noise_idx[split:]]
-
-#         sim_ppm = sim_ppm_corr
-
-#     # --- 4. Final Simulation ---
-#     sim_pts = sim_min * sim_ppm
-#     return sim_pts
 # ---------------------------------------------------------
 # 2. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------
