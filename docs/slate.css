@@ -76,17 +76,10 @@ body {
 .view-section[hidden] {
   display: none !important;
 }
-/* Same vertical rhythm: description → control row (book tabs or search) → content */
-.view-section > .slate-desc {
-  margin-bottom: 12px;
-}
+/* Same vertical rhythm: control row (book tabs or search) → content */
 .view-section > .toolbar,
 .view-section > .players-toolbar {
   margin-bottom: 12px;
-}
-.players-desc code {
-  font-size: 12px;
-  color: #c8c8c0;
 }
 .players-wrap {
   overflow-x: auto;
@@ -175,7 +168,57 @@ body {
 }
 .players-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 12px 14px;
+}
+.players-search-group {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 320px;
+}
+.players-search-group .player-search {
+  max-width: none;
+  width: 100%;
+}
+.stat-filter-divider {
+  width: 1px;
+  height: 28px;
+  background: #3a3a38;
+  flex-shrink: 0;
+}
+@media (max-width: 520px) {
+  .stat-filter-divider {
+    display: none;
+  }
+}
+.stat-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.stat-pill {
+  font-family: system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 0.5px solid #4a4a44;
+  background: transparent;
+  color: #e8e8e4;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.stat-pill:hover {
+  color: #f4f4f0;
+  border-color: #5a5a52;
+  background: #0f0f0f;
+}
+.stat-pill.active {
+  background: #3d4d5c;
+  border-color: #4d5d6c;
+  color: #f4f4f0;
 }
 .player-search-label {
   position: absolute;
@@ -206,25 +249,6 @@ body {
   outline: none;
   border-color: #5a5a52;
   box-shadow: 0 0 0 1px #3a3a38;
-}
-.slate-desc {
-  border: 0.5px solid #2e2e2c;
-  border-radius: 12px;
-  background: #000000;
-  padding: 14px 16px;
-  font-size: 16px;
-  color: #a8a8a0;
-  line-height: 1.5;
-}
-.slate-desc p {
-  margin: 0 0 10px;
-}
-.slate-desc p:last-child {
-  margin-bottom: 0;
-}
-.slate-desc strong {
-  font-weight: 500;
-  color: #d8d8d0;
 }
 .page {
   max-width: min(960px, 100%);

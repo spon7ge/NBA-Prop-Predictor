@@ -22,17 +22,6 @@
       </div>
     </header>
     <section id="sectionPairs" class="view-section" aria-labelledby="navPairs">
-      <div class="slate-desc" role="region" aria-label="About this view">
-        <p>
-          This view lists <strong>2-leg parlays</strong> ranked by highest <strong>EV</strong> for the book you select. Each card is one pair of props with
-          model predictions, implied win rates, and game context. Switch between <strong>PrizePicks</strong> and <strong>Underdog</strong> to load that slate’s top edges.
-        </p>
-        <p>
-          <strong>EV</strong> is expected value (%), <strong>Hit prob</strong> is the model’s combined chance both legs hit,
-          and <strong>Kelly</strong> is half-Kelly as a % of bankroll. Each leg shows the line, side (over/under), projection vs. line,
-          recent and matchup stats, opponent defense rank, and L10 hit rate on selected side.
-        </p>
-      </div>
       <div class="toolbar book-toolbar">
         <div class="book-filter" role="group" aria-label="Bookmaker">
           <button type="button" id="bookPrizePicks" class="book-btn active" data-book="prizepicks">PrizePicks</button>
@@ -42,15 +31,18 @@
       <div id="cards"><p class="load-msg" id="loadMsg">Loading slate…</p></div>
     </section>
     <section id="sectionPlayers" class="view-section" hidden aria-labelledby="navPlayers">
-      <div class="slate-desc players-desc" role="region" aria-label="About all players">
-        <p>
-          Every player line from <code>all_line_probs.json</code> (PrizePicks and Underdog each get their own row when both list a prop). Model probabilities, implied odds, and EV for over and under. Rows are sorted by best single-side EV (higher first).
-          <strong>L5</strong>, <strong>L10</strong>, and <strong>L15</strong> are historical hit rates for the <strong>Best</strong> side (over vs under) over the last 5, 10, and 15 games.
-        </p>
-      </div>
       <div class="players-toolbar">
-        <label class="player-search-label" for="playerSearch">Search player</label>
-        <input type="search" id="playerSearch" class="player-search" placeholder="Search by player name…" autocomplete="off" spellcheck="false" />
+        <div class="players-search-group">
+          <label class="player-search-label" for="playerSearch">Search player</label>
+          <input type="search" id="playerSearch" class="player-search" placeholder="Search by player name…" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="stat-filter-divider" aria-hidden="true"></div>
+        <div class="stat-filter" role="group" aria-label="Filter by stat">
+          <button type="button" class="stat-pill" data-stat="ALL" aria-pressed="true">All</button>
+          <button type="button" class="stat-pill" data-stat="PTS" aria-pressed="false">Pts</button>
+          <button type="button" class="stat-pill" data-stat="AST" aria-pressed="false">Ast</button>
+          <button type="button" class="stat-pill" data-stat="REB" aria-pressed="false">Rebs</button>
+        </div>
       </div>
       <div id="playersPanel"></div>
     </section>
