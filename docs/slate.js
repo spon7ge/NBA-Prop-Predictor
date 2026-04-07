@@ -117,19 +117,79 @@ function loadSlates() {
     });
 }
 
+function bookDisplayLabel(book) {
+  return book === "underdog" ? "Underdog" : "PrizePicks";
+}
+
 function initBookToggle() {
-  var btns = document.querySelectorAll(".book-btn");
-  for (var j = 0; j < btns.length; j++) {
-    btns[j].addEventListener("click", function () {
+  var root = document.getElementById("bookDropdown");
+  var trigger = document.getElementById("bookDropdownTrigger");
+  var menu = document.getElementById("bookDropdownMenu");
+  var valueEl = document.getElementById("bookDropdownValue");
+  var opts = document.querySelectorAll(".book-dropdown-option");
+  if (!root || !trigger || !menu || !valueEl) return;
+
+  function syncUi() {
+    valueEl.textContent = bookDisplayLabel(activeBook);
+    for (var i = 0; i < opts.length; i++) {
+      var b = opts[i].getAttribute("data-book");
+      var on = b === activeBook;
+      opts[i].setAttribute("aria-selected", on ? "true" : "false");
+      opts[i].classList.toggle("book-dropdown-option--current", on);
+    }
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.classList.remove("book-dropdown-trigger--open");
+  }
+
+  function openMenu() {
+    menu.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    trigger.classList.add("book-dropdown-trigger--open");
+  }
+
+  function toggleMenu() {
+    if (menu.hidden) openMenu();
+    else closeMenu();
+  }
+
+  syncUi();
+
+  trigger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  for (var j = 0; j < opts.length; j++) {
+    opts[j].addEventListener("click", function () {
       var book = this.getAttribute("data-book");
-      if (!book || book === activeBook) return;
-      activeBook = book;
-      for (var k = 0; k < btns.length; k++) {
-        btns[k].classList.toggle("active", btns[k].getAttribute("data-book") === activeBook);
+      if (!book) return;
+      if (book !== activeBook) {
+        activeBook = book;
+        syncUi();
+        if (activeView === "pairs") render();
       }
-      if (activeView === "pairs") render();
+      closeMenu();
     });
   }
+
+  root.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", function () {
+    if (!menu.hidden) closeMenu();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !menu.hidden) {
+      closeMenu();
+      trigger.focus();
+    }
+  });
 }
 
 function setActiveView(view) {
