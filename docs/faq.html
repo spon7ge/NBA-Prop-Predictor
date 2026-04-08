@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <link rel="icon" type="image/svg+xml" href="HV_ICON.png">
-  <meta name="theme-color" content="#0d0d0d" />
+  <meta name="theme-color" content="#000000" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
-  <title>FAQ </title>
+  <title>FAQ — HoopVista</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="slate.css?v=PAGES_ASSET_VERSION" />
 </head>
-<body>
+<body class="faq-page-body">
   <div class="page">
     <header class="slate-header">
       <div class="slate-header-row">
@@ -29,9 +29,52 @@
         </nav>
       </div>
     </header>
-    <main class="static-page">
-      <h2 class="static-page-title">FAQ</h2>
-      <p class="static-page-lead">Common questions and answers will go here.</p>
+    <main class="static-page faq-page">
+      <div class="faq-wrap">
+        <h2 class="faq-title">FAQ</h2>
+        <p class="faq-subtitle">Frequently asked questions about the platform</p>
+        <hr class="faq-divider" />
+        <div class="faq-accordion">
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-question">What is HoopVista?</span>
+              <span class="faq-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                HoopVista is a research tool for NBA DFS player props. It surfaces model projections,
+                expected value, hit-rate context, and ranked pair ideas so you can evaluate props with
+                more than a gut feel.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-question">What sports do you cover?</span>
+              <span class="faq-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                We focus on <strong>NBA</strong> basketball—player props such as points, rebounds,
+                assists, and related markets for the current slate.
+              </p>
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span class="faq-question">What sportsbooks do you support?</span>
+              <span class="faq-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Top Pairs and exports are set up for <strong>PrizePicks</strong>, <strong>Underdog</strong>,
+                <strong>DraftKings Pick 6</strong>, and <strong>Betr</strong>. Use the Book menu on
+                Top Pairs to switch slates.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
     </main>
   </div>
 </body>

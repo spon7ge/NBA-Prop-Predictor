@@ -314,17 +314,20 @@ a.header-link[aria-current="page"]:visited {
   color: #9a9a92;
 }
 
-/* Contact page — black canvas, centered form card */
-body.contact-page-body {
+/* Contact / FAQ — black canvas */
+body.contact-page-body,
+body.faq-page-body {
   background: #000000;
 }
-body.contact-page-body .slate-header {
+body.contact-page-body .slate-header,
+body.faq-page-body .slate-header {
   background: rgba(0, 0, 0, 0.88);
   border-bottom-color: rgba(255, 255, 255, 0.07);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
 }
 @supports not (backdrop-filter: blur(1px)) {
-  body.contact-page-body .slate-header {
+  body.contact-page-body .slate-header,
+  body.faq-page-body .slate-header {
     background: #000000;
   }
 }
@@ -445,6 +448,109 @@ body.contact-page-body .slate-header {
 .contact-submit:active {
   transform: scale(0.99);
 }
+
+/* FAQ page — accordion */
+.faq-page {
+  padding-top: 8px;
+  padding-bottom: 48px;
+}
+.faq-wrap {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.faq-title {
+  margin: 0 0 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(2.25rem, 6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1.1;
+  text-align: center;
+}
+.faq-subtitle {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #9a9a92;
+  text-align: center;
+}
+.faq-divider {
+  border: none;
+  border-top: 1px solid #2a2a28;
+  margin: 24px 0 0;
+}
+.faq-accordion {
+  margin-top: 0;
+}
+.faq-item {
+  border-bottom: 1px solid #2a2a28;
+}
+.faq-item:last-child {
+  border-bottom: none;
+}
+.faq-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 4px 18px 0;
+  list-style: none;
+  cursor: pointer;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.35;
+}
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+.faq-summary::marker {
+  content: "";
+}
+.faq-summary:focus {
+  outline: none;
+}
+.faq-summary:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.faq-question {
+  flex: 1;
+  text-align: left;
+}
+.faq-chevron {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(45deg);
+  margin-top: -4px;
+  opacity: 0.9;
+  transition: transform 0.2s ease;
+}
+.faq-item[open] .faq-chevron {
+  transform: rotate(225deg);
+  margin-top: 2px;
+}
+.faq-answer {
+  padding: 0 28px 18px 0;
+  color: #b4b4ae;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.faq-answer p {
+  margin: 0;
+}
+.faq-answer strong {
+  color: #e8e8e4;
+  font-weight: 600;
+}
+
 .players-toolbar {
   display: flex;
   flex-wrap: wrap;
