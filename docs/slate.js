@@ -360,6 +360,9 @@ function renderPlayersPanel() {
     '<div class="players-wrap"><table class="players-table"><thead><tr>' +
     "<th>Player</th><th>Book</th><th>Mkt</th>" +
     '<th class="num">Line</th><th class="num">Proj</th>' +
+    '<th class="num" title="Average minutes last 10 games">MIN L10</th>' +
+    '<th class="num" title="Average stat last 10 games">STAT L10</th>' +
+    '<th class="num" title="Average stat vs this opponent (matchup history)">Matchup Avg.</th>' +
     '<th class="num">O</th><th class="num">U</th>' +
     '<th class="num">EV O</th><th class="num">EV U</th>' +
     "<th>Best</th>" +
@@ -369,7 +372,7 @@ function renderPlayersPanel() {
     "</tr></thead><tbody>";
   if (!filtered.length) {
     html +=
-      '<tr><td colspan="13" class="players-empty">No rows match your search.</td></tr>';
+      '<tr><td colspan="16" class="players-empty">No rows match your search.</td></tr>';
   }
   for (var i = 0; i < filtered.length; i++) {
     var r = filtered[i];
@@ -384,6 +387,9 @@ function renderPlayersPanel() {
       "<td>" + escapeHtml(r.MARKET || r.CATEGORY || "") + "</td>" +
       '<td class="num">' + fmt1(r.LINE) + "</td>" +
       '<td class="num">' + fmt1(r.STAT_Q50) + "</td>" +
+      '<td class="num">' + fmtNumOrDash(r.AVG_MIN_L10) + "</td>" +
+      '<td class="num">' + fmtNumOrDash(r.AVG_STAT_L10) + "</td>" +
+      '<td class="num">' + fmtNumOrDash(r.AVG_STAT_VS_MATCHUP) + "</td>" +
       '<td class="num">' + (r.ODDS_OVER != null ? String(r.ODDS_OVER) : "—") + "</td>" +
       '<td class="num">' + (r.ODDS_UNDER != null ? String(r.ODDS_UNDER) : "—") + "</td>" +
       '<td class="num ' + (bestOver ? "ev-best" : "ev-muted") + '">' + fmtSignedEv(oEv) + "%</td>" +
@@ -478,6 +484,14 @@ function pct0(x) {
 
 function fmt1(x) {
   return Number(x).toFixed(1);
+}
+
+/** One decimal, or em dash if missing / invalid. */
+function fmtNumOrDash(x) {
+  if (x == null || x === "") return "—";
+  var n = Number(x);
+  if (isNaN(n)) return "—";
+  return fmt1(n);
 }
 
 function fmtEv(x) {
