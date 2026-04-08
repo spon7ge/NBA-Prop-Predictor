@@ -45,6 +45,8 @@ jobs:
           mkdir -p docs/data/props/ev_analysis
           cp data/props/ev_analysis/prizepicks.json docs/data/props/ev_analysis/prizepicks.json
           cp data/props/ev_analysis/underdog.json docs/data/props/ev_analysis/underdog.json
+          cp data/props/ev_analysis/draftKings.json docs/data/props/ev_analysis/draftKings.json
+          cp data/props/ev_analysis/betr.json docs/data/props/ev_analysis/betr.json
           cp data/props/ev_analysis/all_line_probs.json docs/data/props/ev_analysis/all_line_probs.json
       
       - name: Setup Pages
