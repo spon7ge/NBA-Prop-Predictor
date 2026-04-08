@@ -1,5 +1,7 @@
 var SLATE_PRIZEPICKS = [];
 var SLATE_UNDERDOG = [];
+var SLATE_DRAFTKINGS = [];
+var SLATE_BETR = [];
 var activeBook = "prizepicks";
 var activeView = "pairs";
 var ALL_LINE_PROBS = [];
@@ -98,14 +100,23 @@ function loadSlates() {
 
   Promise.all([
     fetchSlateWithFallback(jsonUrls("prizepicks.json")),
-    fetchSlateWithFallback(jsonUrls("underdog.json"))
+    fetchSlateWithFallback(jsonUrls("underdog.json")),
+    fetchSlateWithFallback(jsonUrls("draftKings.json")),
+    fetchSlateWithFallback(jsonUrls("betr.json"))
   ])
     .then(function (results) {
       SLATE_PRIZEPICKS = sortByEvDesc(results[0]);
       SLATE_UNDERDOG = sortByEvDesc(results[1]);
-      if (!SLATE_PRIZEPICKS.length && !SLATE_UNDERDOG.length) {
+      SLATE_DRAFTKINGS = sortByEvDesc(results[2]);
+      SLATE_BETR = sortByEvDesc(results[3]);
+      if (
+        !SLATE_PRIZEPICKS.length &&
+        !SLATE_UNDERDOG.length &&
+        !SLATE_DRAFTKINGS.length &&
+        !SLATE_BETR.length
+      ) {
         cards.innerHTML =
-          '<p class="load-msg load-err">Could not load <code>prizepicks.json</code> or <code>underdog.json</code>. Serve the site over HTTP and place both files under <code>data/props/ev_analysis/</code>.</p>';
+          '<p class="load-msg load-err">Could not load slate JSON. Serve the site over HTTP and place <code>prizepicks.json</code>, <code>underdog.json</code>, <code>draftKings.json</code>, and <code>betr.json</code> under <code>data/props/ev_analysis/</code>.</p>';
         return;
       }
       initBookToggle();
@@ -118,7 +129,29 @@ function loadSlates() {
 }
 
 function bookDisplayLabel(book) {
-  return book === "underdog" ? "Underdog" : "PrizePicks";
+  switch (book) {
+    case "underdog":
+      return "Underdog";
+    case "draftkings":
+      return "DraftKings Pick 6";
+    case "betr":
+      return "Betr";
+    default:
+      return "PrizePicks";
+  }
+}
+
+function activeSlateJsonFile() {
+  switch (activeBook) {
+    case "underdog":
+      return "underdog.json";
+    case "draftkings":
+      return "draftKings.json";
+    case "betr":
+      return "betr.json";
+    default:
+      return "prizepicks.json";
+  }
 }
 
 function initBookToggle() {
@@ -288,6 +321,8 @@ function bookPillClass(book) {
   var b = String(book || "").toLowerCase();
   if (b.indexOf("prize") !== -1) return "book-prizepicks";
   if (b.indexOf("underdog") !== -1) return "book-underdog";
+  if (b.indexOf("draft") !== -1) return "book-draftkings";
+  if (b.indexOf("betr") !== -1) return "book-betr";
   return "book-unknown";
 }
 
@@ -401,7 +436,16 @@ function initPlayerStatFilter() {
 }
 
 function currentSlate() {
-  return activeBook === "underdog" ? SLATE_UNDERDOG : SLATE_PRIZEPICKS;
+  switch (activeBook) {
+    case "underdog":
+      return SLATE_UNDERDOG;
+    case "draftkings":
+      return SLATE_DRAFTKINGS;
+    case "betr":
+      return SLATE_BETR;
+    default:
+      return SLATE_PRIZEPICKS;
+  }
 }
 
 function ordSuffix(n) {
@@ -556,10 +600,10 @@ function render() {
   const sorted = currentSlate();
   const el = document.getElementById("cards");
   if (!sorted.length) {
-    var label = activeBook === "underdog" ? "Underdog" : "PrizePicks";
+    var label = bookDisplayLabel(activeBook);
     el.innerHTML =
       '<p class="load-msg">No parlays in the ' + label + " slate. Export <code>" +
-      (activeBook === "underdog" ? "underdog.json" : "prizepicks.json") +
+      activeSlateJsonFile() +
       "</code> into <code>data/props/ev_analysis/</code>.</p>";
     return;
   }

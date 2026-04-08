@@ -250,8 +250,8 @@ a.header-link[aria-current="page"]:visited {
   font-weight: 500;
   text-transform: uppercase;
 }
-.side-tag.over { background: #EAF3DE; color: #27500A; }
-.side-tag.under { background: #FCEBEB; color: #791F1F; }
+.side-tag.over { background: #15803d; color: #ffffff; }
+.side-tag.under { background: #b91c1c; color: #ffffff; }
 .book-pill {
   display: inline-block;
   padding: 3px 8px;
@@ -262,14 +262,24 @@ a.header-link[aria-current="page"]:visited {
   white-space: nowrap;
 }
 .book-pill.book-prizepicks {
-  background: #1e2a3d;
-  color: #9ec5ff;
-  border: 0.5px solid #3d5a8a;
+  background: #251a35;
+  color: #c4a8ff;
+  border: 0.5px solid #5c3d8a;
 }
 .book-pill.book-underdog {
-  background: #2a2318;
-  color: #e8c48a;
-  border: 0.5px solid #6a5538;
+  background: #2a1c10;
+  color: #ffb04a;
+  border: 0.5px solid #8a5520;
+}
+.book-pill.book-draftkings {
+  background: #102418;
+  color: #5ee39a;
+  border: 0.5px solid #2a7a4a;
+}
+.book-pill.book-betr {
+  background: #101e2e;
+  color: #6eb8ff;
+  border: 0.5px solid #2a5a8a;
 }
 .book-pill.book-unknown {
   background: #1a1a1a;
@@ -618,8 +628,8 @@ a.header-link[aria-current="page"]:visited {
   font-weight: 500;
   text-transform: uppercase;
 }
-.side-over { background: #EAF3DE; color: #27500A; }
-.side-under { background: #FCEBEB; color: #791F1F; }
+.side-over { background: #15803d; color: #ffffff; }
+.side-under { background: #b91c1c; color: #ffffff; }
 .model-line {
   font-size: 13px;
   margin: 0 0 10px;
