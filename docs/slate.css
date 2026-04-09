@@ -906,6 +906,10 @@ body.faq-page-body .slate-header {
 }
 @media (min-width: 560px) {
   .legs { grid-template-columns: 1fr 1fr; }
+  /* 3-leg parlays: one row, no empty cell in the grid */
+  .card--3leg .legs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 .leg {
   display: flex;
@@ -916,6 +920,9 @@ body.faq-page-body .slate-header {
 @media (min-width: 560px) {
   .leg:first-of-type { border-right: 0.5px solid #2e2e2c; }
   .leg { border-top: none; }
+  .card--3leg .leg:nth-child(2) {
+    border-right: 0.5px solid #2e2e2c;
+  }
 }
 .player-name {
   font-size: 15px;
@@ -1002,7 +1009,14 @@ body.faq-page-body .slate-header {
   color: #9a9a92;
 }
 @media (min-width: 560px) {
-  .card-footer { grid-template-columns: 1fr 1fr; }
+  .card-footer:not(.card-footer--triple) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 560px) {
+  .card-footer--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 .load-msg {
   font-size: 14px;
