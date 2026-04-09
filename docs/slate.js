@@ -3,6 +3,8 @@ var SLATE_UNDERDOG = [];
 var SLATE_DRAFTKINGS = [];
 var SLATE_BETR = [];
 var activeBook = "prizepicks";
+/** Parlay size: 2, 3, or 4 legs (only 2-leg data is wired today). */
+var activeLegs = 2;
 var activeView = "pairs";
 var ALL_LINE_PROBS = [];
 var lineProbsState = "idle";
@@ -120,6 +122,7 @@ function loadSlates() {
         return;
       }
       initBookToggle();
+      initLegsToggle();
       render();
     })
     .catch(function () {
@@ -202,6 +205,86 @@ function initBookToggle() {
       if (!book) return;
       if (book !== activeBook) {
         activeBook = book;
+        syncUi();
+        if (activeView === "pairs") render();
+      }
+      closeMenu();
+    });
+  }
+
+  root.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("click", function () {
+    if (!menu.hidden) closeMenu();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !menu.hidden) {
+      closeMenu();
+      trigger.focus();
+    }
+  });
+}
+
+function legsDisplayLabel(legs) {
+  var n = Number(legs);
+  if (n === 3) return "3-Leg";
+  if (n === 4) return "4-Leg";
+  return "2-Leg";
+}
+
+function initLegsToggle() {
+  var root = document.getElementById("legsDropdown");
+  var trigger = document.getElementById("legsDropdownTrigger");
+  var menu = document.getElementById("legsDropdownMenu");
+  var valueEl = document.getElementById("legsDropdownValue");
+  var opts = document.querySelectorAll(".legs-dropdown-option");
+  if (!root || !trigger || !menu || !valueEl) return;
+
+  function syncUi() {
+    valueEl.textContent = legsDisplayLabel(activeLegs);
+    for (var i = 0; i < opts.length; i++) {
+      var legN = parseInt(opts[i].getAttribute("data-legs"), 10);
+      var on = legN === activeLegs;
+      opts[i].setAttribute("aria-selected", on ? "true" : "false");
+      opts[i].classList.toggle("legs-dropdown-option--current", on);
+    }
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.classList.remove("legs-dropdown-trigger--open");
+  }
+
+  function openMenu() {
+    menu.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    trigger.classList.add("legs-dropdown-trigger--open");
+  }
+
+  function toggleMenu() {
+    if (menu.hidden) openMenu();
+    else closeMenu();
+  }
+
+  syncUi();
+
+  trigger.addEventListener("click", function (e) {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  for (var j = 0; j < opts.length; j++) {
+    opts[j].addEventListener("click", function () {
+      var raw = this.getAttribute("data-legs");
+      if (raw == null) return;
+      var legN = parseInt(raw, 10);
+      if (isNaN(legN)) return;
+      if (legN !== activeLegs) {
+        activeLegs = legN;
         syncUi();
         if (activeView === "pairs") render();
       }
@@ -466,6 +549,13 @@ function ordSuffix(n) {
   }
 }
 
+function fmtOrdinalRank(n) {
+  if (n == null || n === "") return "—";
+  var v = Number(n);
+  if (isNaN(v)) return "—";
+  return ordSuffix(v);
+}
+
 function spreadFmt(n) {
   const v = Number(n);
   const sign = v > 0 ? "+" : "";
@@ -511,6 +601,18 @@ function diffDisplay(side, prediction, line) {
   return sign + fmt1(d);
 }
 
+/** Row label for last-10 stat average from slate MARKET (PTS / AST / REB / …). */
+function l10StatAvgLabel(market) {
+  var m = String(market || "")
+    .trim()
+    .toUpperCase();
+  if (m === "PTS") return "L10 PTS Avg.";
+  if (m === "AST") return "L10 AST Avg.";
+  if (m === "REB" || m === "REBS") return "L10 REB Avg.";
+  if (!m) return "L10 Stat Avg.";
+  return "L10 " + escapeHtml(String(market).trim()) + " Avg.";
+}
+
 function renderLeg(leg) {
   const name = leg.name;
   const team = leg.team;
@@ -521,7 +623,7 @@ function renderLeg(leg) {
   const opponent = leg.opponent;
   const defRank = leg.defRank;
   const avgL10 = leg.avgStatL10;
-  const avgMin = leg.avgMinL10;
+  const oppPaceRank = leg.oppPaceRank;
   const avgVs = leg.avgVsMatchup;
   const matchupGames = leg.matchupGames;
   const overRate = leg.overRateL10;
@@ -548,9 +650,9 @@ function renderLeg(leg) {
       '<p class="model-line">Model predicts ' + fmt1(prediction) +
       ' <span class="' + diffClass + '">(' + diffDisplay(side, prediction, line) + ")</span></p>" +
       '<div class="mini-grid">' +
-        "<span>L10 Stat Avg.</span><span>" + fmt1(avgL10) + "</span>" +
+        "<span>" + l10StatAvgLabel(market) + "</span><span>" + fmt1(avgL10) + "</span>" +
         "<span>vs matchup</span><span>" + fmt1(avgVs) + " (" + matchupGames + " games)</span>" +
-        "<span>Minutes Avg.</span><span>" + fmt1(avgMin) + "</span>" +
+        "<span>Opp Pace Rank</span><span>" + fmtOrdinalRank(oppPaceRank) + "</span>" +
         "<span>Opp Def Rank</span><span>" + ordSuffix(defRank) + "</span>" +
       "</div>" +
       '<div class="hit-wrap">' +
@@ -583,8 +685,8 @@ function mapRow(row) {
     spread1: row["SPREAD 1"],
     total1: row["TOTAL 1"],
     defRank1: row["OPP_DEF_RANK 1"],
+    paceRank1: row["OPP_PACE_RANK 1"],
     avgStatL101: row["AVG_STAT_L10 1"],
-    avgMinL101: row["AVG_MIN_L10 1"],
     avgVsMatchup1: row["AVG_STAT_VS_MATCHUP 1"],
     matchupGames1: row["MATCHUP_GAMES 1"],
     overRateL101: row["OVER_RATE_L10 1"],
@@ -598,8 +700,8 @@ function mapRow(row) {
     spread2: row["SPREAD 2"],
     total2: row["TOTAL 2"],
     defRank2: row["OPP_DEF_RANK 2"],
+    paceRank2: row["OPP_PACE_RANK 2"],
     avgStatL102: row["AVG_STAT_L10 2"],
-    avgMinL102: row["AVG_MIN_L10 2"],
     avgVsMatchup2: row["AVG_STAT_VS_MATCHUP 2"],
     matchupGames2: row["MATCHUP_GAMES 2"],
     overRateL102: row["OVER_RATE_L10 2"],
@@ -611,8 +713,16 @@ function mapRow(row) {
 
 function render() {
   if (activeView !== "pairs") return;
-  const sorted = currentSlate();
   const el = document.getElementById("cards");
+  if (activeLegs !== 2) {
+    var label = legsDisplayLabel(activeLegs);
+    el.innerHTML =
+      '<p class="load-msg">No ' +
+      escapeHtml(label) +
+      " slate is available yet. Export JSON for this leg count into <code>data/props/ev_analysis/</code>.</p>";
+    return;
+  }
+  const sorted = currentSlate();
   if (!sorted.length) {
     var label = bookDisplayLabel(activeBook);
     el.innerHTML =
@@ -642,7 +752,7 @@ function render() {
       total: r.total1,
       defRank: r.defRank1,
       avgStatL10: r.avgStatL101,
-      avgMinL10: r.avgMinL101,
+      oppPaceRank: r.paceRank1,
       avgVsMatchup: r.avgVsMatchup1,
       matchupGames: r.matchupGames1,
       overRateL10: r.overRateL101
@@ -659,7 +769,7 @@ function render() {
       total: r.total2,
       defRank: r.defRank2,
       avgStatL10: r.avgStatL102,
-      avgMinL10: r.avgMinL102,
+      oppPaceRank: r.paceRank2,
       avgVsMatchup: r.avgVsMatchup2,
       matchupGames: r.matchupGames2,
       overRateL10: r.overRateL102
