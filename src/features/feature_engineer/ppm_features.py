@@ -22,7 +22,7 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 
+    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PTS_PER_POSS',
     'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV'
     ]
 
@@ -97,48 +97,59 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
         .groupby('TEAM_ID')['TEAM_PACE']
-        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
     )
     team_pts = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
         .groupby('TEAM_ID')['TEAM_PTS']
-        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
     )
-    team_net_rating = (
+    team_poss = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .groupby('TEAM_ID')['TEAM_NET_RATING']
-        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+        .groupby('TEAM_ID')['TEAM_POSS']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    team_ts_pct = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_TS_PCT']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
     )
 
     team_pace_map = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .assign(TEAM_PACE_roll5=team_pace.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PACE_roll5']]
+        .assign(TEAM_PACE_roll10=team_pace.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PACE_roll10']]
     )
     team_pts_map = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .assign(TEAM_PTS_roll5=team_pts.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PTS_roll5']]
+        .assign(TEAM_PTS_roll10=team_pts.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PTS_roll10']]
     )
-    team_net_rating_map = (
+    team_poss_map = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .assign(TEAM_NET_RATING_roll5=team_net_rating.values)[['TEAM_ID', 'GAME_ID', 'TEAM_NET_RATING_roll5']]
-    )    
+        .assign(TEAM_POSS_roll10=team_poss.values)[['TEAM_ID', 'GAME_ID', 'TEAM_POSS_roll10']]
+    )
+    team_ts_pct_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_TS_PCT_roll10=team_ts_pct.values)[['TEAM_ID', 'GAME_ID', 'TEAM_TS_PCT_roll10']]
+    )
 
     df = df.merge(team_pace_map, on=['TEAM_ID', 'GAME_ID'], how='left')
     df = df.merge(team_pts_map, on=['TEAM_ID', 'GAME_ID'], how='left')
-    df = df.merge(team_net_rating_map, on=['TEAM_ID', 'GAME_ID'], how='left')
-
+    df = df.merge(team_poss_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_ts_pct_map, on=['TEAM_ID', 'GAME_ID'], how='left')
     # ── MIN share and POSS share are player-level so these are fine as-is ─────
-    df["MIN_share_proxy"] = round(df["MIN_roll5"] / (48 * 5), 2)
+    df["MIN_share_proxy"] = round(df["MIN_roll10"] / (48 * 10), 2)
     #percentage of team's points scored by the player
-    df["PTS_share_proxy"] = round(df["PTS_roll5"] / (df["TEAM_PTS_roll5"]), 2)
+    df["PTS_share_proxy"] = round(df["PTS_roll10"] / (df["TEAM_PTS_roll10"]), 2)
 
-    df["TEAM_POSS_roll5"] = df.groupby(["TEAM_ID", "SEASON_YEAR"])["POSS"].transform(lambda x: x.shift(1).rolling(5).mean().round(2))
-    df["TEAM_POSS_share"] = df["POSS_roll5"] / (df["TEAM_POSS_roll5"] + 1e-6)
+    # df["TEAM_POSS_roll5"] = df.groupby(["TEAM_ID", "SEASON_YEAR"])["POSS"].transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+    # df["TEAM_POSS_share"] = df["POSS_roll5"] / (df["TEAM_POSS_roll5"] + 1e-6)
 
     return df
 
@@ -206,8 +217,8 @@ def _opponent_stats(df):
 # ---- Expected Pace and Points -----------------------
 def _expectedPace(df):
     df = df.copy()
-    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll5'] + df['OPP_PACE_roll5']) / 2).round(2)
-    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll5'] - df['OPP_PACE_roll5']    
+    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
+    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
     return df
 
 # ---- Finding Star Players -----------------------
