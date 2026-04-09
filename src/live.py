@@ -523,3 +523,178 @@ def _pick_side_and_prob(row) -> tuple[str, float]:
     if q50 < line:
         return "under", pu
     return ("over", po) if po >= pu else ("under", pu)
+
+def build_greedy_slate_3leg(
+    prob_df: pd.DataFrame,
+    min_df: pd.DataFrame,
+    min_ev: float = 0.0,
+    min_kelly: float = 0.0,
+    top_n: int = 10,
+    kelly_fraction: float = 0.5,
+    *,
+    win_profit_units: float = 5.0,
+    json_path: str | Path = "greedy_slate_3leg.json",
+) -> str:
+    """
+    Greedy 3-leg slate from model probabilities (same schema extension as 2-leg).
+
+    win_profit_units: net profit if the 3-leg wins, per 1 unit staked (book-specific).
+        Your 2-leg builder uses 2.0 here implicitly. Set this to match your 3-leg payout.
+    """
+    latest_team = (
+        min_df.sort_values("GAME_DATE")
+        .groupby("PLAYER_NAME", sort=False)["TEAM_ABBREVIATION"]
+        .last()
+    )
+
+    legs = prob_df.dropna(subset=["LINE", "P_OVER", "P_UNDER"]).copy()
+    legs["LINE"] = legs["LINE"].astype(float)
+    legs["TEAM"] = legs["PLAYER_NAME"].map(latest_team)
+    legs = legs.dropna(subset=["TEAM"]).reset_index(drop=True)
+    legs["PROP_KEY"] = list(zip(legs["PLAYER_NAME"], legs["MARKET"]))
+
+    b = float(win_profit_units)
+    records = []
+    for i, j, k in combinations(legs.index, 3):
+        r1, r2, r3 = legs.loc[i], legs.loc[j], legs.loc[k]
+
+        names = {r1["PLAYER_NAME"], r2["PLAYER_NAME"], r3["PLAYER_NAME"]}
+        if len(names) < 3:
+            continue
+        teams = {r1["TEAM"], r2["TEAM"], r3["TEAM"]}
+        if len(teams) < 3:
+            continue
+
+        side1, p1 = _pick_side_and_prob(r1)
+        side2, p2 = _pick_side_and_prob(r2)
+        side3, p3 = _pick_side_and_prob(r3)
+
+        parlay_p = p1 * p2 * p3
+        ev = (parlay_p * b) - ((1 - parlay_p) * 1)
+        kelly = max((b * parlay_p - (1 - parlay_p)) / b, 0) * kelly_fraction
+
+        if ev < min_ev or kelly < min_kelly:
+            continue
+
+        def leg_fields(r, side, p, n: int):
+            sn = str(n)
+            return {
+                f"NAME {n}": r["PLAYER_NAME"],
+                f"TEAM {n}": r["TEAM"],
+                f"MARKET {n}": r["MARKET"],
+                f"PROP_KEY_{n}": r["PROP_KEY"],
+                f"LINE {n}": r["LINE"],
+                f"SIDE {n}": side,
+                f"PREDICTION {n}": round(float(r["STAT_Q50"]), 1),
+                f"MIN PREDICTION {n}": round(float(r["MIN_Q50"]), 1),
+                f"MODEL_PROB {n}": round(p, 3),
+                f"OPPONENT {n}": r["OPPONENT"],
+                f"SPREAD {n}": r["TEAM_SPREAD"],
+                f"TOTAL {n}": r["GAME_TOTAL"],
+                f"OPP_DEF_RATING {n}": r["OPP_DEF_RATING"],
+                f"OPP_DEF_RANK {n}": r["OPP_RANK_DEF_RATING"],
+                f"OPP_PACE {n}": r["OPP_PACE"],
+                f"OPP_PACE_RANK {n}": r["OPP_PACE_RANK"],
+                f"ODDS_OVER {n}": r["ODDS_OVER"],
+                f"ODDS_OVER {n}": r["ODDS_OVER"],
+                f"ODDS_UNDER {n}": r["ODDS_UNDER"],
+                f"IMP_PROB_OVER {n}": round(float(r["IMP_PROB_OVER"]), 3),
+                f"IMP_PROB_UNDER {n}": round(float(r["IMP_PROB_UNDER"]), 3),
+                f"EDGE {n}": round(float(r["EDGE"]), 3),
+                f"MED_EDGE {n}": round(float(r["MED_EDGE"]), 3),
+                f"Z_SCORE {n}": round(float(r["Z_SCORE"]), 3),
+                f"EV_OVER {n}": round(float(r["EV_OVER"]), 3),
+                f"EV_UNDER {n}": round(float(r["EV_UNDER"]), 3),
+                f"AVG_STAT_L10 {n}": round(float(r["AVG_STAT_L10"]), 1),
+                f"MED_STAT_L10 {n}": round(float(r["MED_STAT_L10"]), 1),
+                f"STD_STAT_L10 {n}": round(float(r["STD_STAT_L10"]), 1),
+                f"OVER_RATE_L5 {n}": round(float(r["OVER_RATE_L5"]), 3),
+                f"OVER_RATE_L10 {n}": round(float(r["OVER_RATE_L10"]), 3),
+                f"OVER_RATE_L15 {n}": round(float(r["OVER_RATE_L15"]), 3),
+                f"OVER_RATE_SEASON {n}": round(float(r["OVER_RATE_SEASON"]), 3),
+                f"AVG_MIN_L10 {n}": round(float(r["AVG_MIN_L10"]), 1),
+                f"STD_MIN_L10 {n}": round(float(r["STD_MIN_L10"]), 1),
+                f"AVG_USG_L10 {n}": round(float(r["AVG_USG_L10"]), 3),
+                f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
+                f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
+                f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
+            }
+
+        row = {
+            **leg_fields(r1, side1, p1, 1),
+            **leg_fields(r2, side2, p2, 2),
+            **leg_fields(r3, side3, p3, 3),
+            "PARLAY_PROB": round(parlay_p, 3),
+            "EV": round(ev * 100, 2),
+            "KELLY": round(kelly * 100, 2),
+        }
+        records.append(row)
+
+    triple_sorted = sorted(records, key=lambda r: r["PARLAY_PROB"], reverse=True)
+
+    used_props: set = set()
+    slate_rows = []
+    for row in triple_sorted:
+        k1, k2, k3 = row["PROP_KEY_1"], row["PROP_KEY_2"], row["PROP_KEY_3"]
+        if k1 in used_props or k2 in used_props or k3 in used_props:
+            continue
+        used_props.add(k1)
+        used_props.add(k2)
+        used_props.add(k3)
+        slate_rows.append(row)
+
+    slate_list = sorted(slate_rows, key=lambda r: r["EV"], reverse=True)[:top_n]
+
+    out_path = Path(json_path).expanduser().resolve()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(
+        json.dumps(_json_ready(slate_list), indent=2),
+        encoding="utf-8",
+    )
+    print(
+        f"Legs: {len(legs)}  |  Triples: {len(records)}  |  Slate: {len(slate_list)}  |  JSON: {out_path}"
+    )
+    return str(out_path)
+
+# Helper function for leg_fields
+def leg_fields(r, side, p, n: int):
+    return {
+        f"NAME {n}": r["PLAYER_NAME"],
+        f"TEAM {n}": r["TEAM"],
+        f"MARKET {n}": r["MARKET"],
+        f"PROP_KEY_{n}": r["PROP_KEY"],
+        f"LINE {n}": r["LINE"],
+        f"SIDE {n}": side,
+        f"PREDICTION {n}": round(float(r["STAT_Q50"]), 1),
+        f"MIN PREDICTION {n}": round(float(r["MIN_Q50"]), 1),
+        f"MODEL_PROB {n}": round(p, 3),
+        f"OPPONENT {n}": r["OPPONENT"],
+        f"SPREAD {n}": r["TEAM_SPREAD"],
+        f"TOTAL {n}": r["GAME_TOTAL"],
+        f"OPP_DEF_RATING {n}": r["OPP_DEF_RATING"],
+        f"OPP_DEF_RANK {n}": r["OPP_RANK_DEF_RATING"],
+        f"OPP_PACE {n}": r["OPP_PACE"],
+        f"OPP_PACE_RANK {n}": r["OPP_PACE_RANK"],
+        f"ODDS_OVER {n}": r["ODDS_OVER"],
+        f"ODDS_UNDER {n}": r["ODDS_UNDER"],
+        f"IMP_PROB_OVER {n}": round(float(r["IMP_PROB_OVER"]), 3),
+        f"IMP_PROB_UNDER {n}": round(float(r["IMP_PROB_UNDER"]), 3),
+        f"EDGE {n}": round(float(r["EDGE"]), 3),
+        f"MED_EDGE {n}": round(float(r["MED_EDGE"]), 3),
+        f"Z_SCORE {n}": round(float(r["Z_SCORE"]), 3),
+        f"EV_OVER {n}": round(float(r["EV_OVER"]), 3),
+        f"EV_UNDER {n}": round(float(r["EV_UNDER"]), 3),
+        f"AVG_STAT_L10 {n}": round(float(r["AVG_STAT_L10"]), 1),
+        f"MED_STAT_L10 {n}": round(float(r["MED_STAT_L10"]), 1),
+        f"STD_STAT_L10 {n}": round(float(r["STD_STAT_L10"]), 1),
+        f"OVER_RATE_L5 {n}": round(float(r["OVER_RATE_L5"]), 3),
+        f"OVER_RATE_L10 {n}": round(float(r["OVER_RATE_L10"]), 3),
+        f"OVER_RATE_L15 {n}": round(float(r["OVER_RATE_L15"]), 3),
+        f"OVER_RATE_SEASON {n}": round(float(r["OVER_RATE_SEASON"]), 3),
+        f"AVG_MIN_L10 {n}": round(float(r["AVG_MIN_L10"]), 1),
+        f"STD_MIN_L10 {n}": round(float(r["STD_MIN_L10"]), 1),
+        f"AVG_USG_L10 {n}": round(float(r["AVG_USG_L10"]), 3),
+        f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
+        f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
+        f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
+    }

@@ -2,8 +2,12 @@ var SLATE_PRIZEPICKS = [];
 var SLATE_UNDERDOG = [];
 var SLATE_DRAFTKINGS = [];
 var SLATE_BETR = [];
+var SLATE_PRIZEPICKS_3 = [];
+var SLATE_UNDERDOG_3 = [];
+var SLATE_DRAFTKINGS_3 = [];
+var SLATE_BETR_3 = [];
 var activeBook = "prizepicks";
-/** Parlay size: 2, 3, or 4 legs (only 2-leg data is wired today). */
+/** Parlay size: 2, 3, or 4 legs. */
 var activeLegs = 2;
 var activeView = "pairs";
 var ALL_LINE_PROBS = [];
@@ -104,21 +108,34 @@ function loadSlates() {
     fetchSlateWithFallback(jsonUrls("prizepicks.json")),
     fetchSlateWithFallback(jsonUrls("underdog.json")),
     fetchSlateWithFallback(jsonUrls("draftKings.json")),
-    fetchSlateWithFallback(jsonUrls("betr.json"))
+    fetchSlateWithFallback(jsonUrls("betr.json")),
+    fetchSlateWithFallback(jsonUrls("prizepicks_3leg.json")),
+    fetchSlateWithFallback(jsonUrls("underdog_3leg.json")),
+    fetchSlateWithFallback(jsonUrls("draftKings_3leg.json")),
+    fetchSlateWithFallback(jsonUrls("betr_3leg.json"))
   ])
     .then(function (results) {
       SLATE_PRIZEPICKS = sortByEvDesc(results[0]);
       SLATE_UNDERDOG = sortByEvDesc(results[1]);
       SLATE_DRAFTKINGS = sortByEvDesc(results[2]);
       SLATE_BETR = sortByEvDesc(results[3]);
-      if (
-        !SLATE_PRIZEPICKS.length &&
-        !SLATE_UNDERDOG.length &&
-        !SLATE_DRAFTKINGS.length &&
-        !SLATE_BETR.length
-      ) {
+      SLATE_PRIZEPICKS_3 = sortByEvDesc(results[4]);
+      SLATE_UNDERDOG_3 = sortByEvDesc(results[5]);
+      SLATE_DRAFTKINGS_3 = sortByEvDesc(results[6]);
+      SLATE_BETR_3 = sortByEvDesc(results[7]);
+      var has2 =
+        SLATE_PRIZEPICKS.length ||
+        SLATE_UNDERDOG.length ||
+        SLATE_DRAFTKINGS.length ||
+        SLATE_BETR.length;
+      var has3 =
+        SLATE_PRIZEPICKS_3.length ||
+        SLATE_UNDERDOG_3.length ||
+        SLATE_DRAFTKINGS_3.length ||
+        SLATE_BETR_3.length;
+      if (!has2 && !has3) {
         cards.innerHTML =
-          '<p class="load-msg load-err">Could not load slate JSON. Serve the site over HTTP and place <code>prizepicks.json</code>, <code>underdog.json</code>, <code>draftKings.json</code>, and <code>betr.json</code> under <code>data/props/ev_analysis/</code>.</p>';
+          '<p class="load-msg load-err">Could not load slate JSON. Serve the site over HTTP and place 2-leg files (<code>prizepicks.json</code>, …) and/or 3-leg files (<code>prizepicks_3leg.json</code>, …) under <code>data/props/ev_analysis/</code>.</p>';
         return;
       }
       initBookToggle();
@@ -145,6 +162,18 @@ function bookDisplayLabel(book) {
 }
 
 function activeSlateJsonFile() {
+  if (activeLegs === 3) {
+    switch (activeBook) {
+      case "underdog":
+        return "underdog_3leg.json";
+      case "draftkings":
+        return "draftKings_3leg.json";
+      case "betr":
+        return "betr_3leg.json";
+      default:
+        return "prizepicks_3leg.json";
+    }
+  }
   switch (activeBook) {
     case "underdog":
       return "underdog.json";
@@ -525,6 +554,18 @@ function initPlayerStatFilter() {
 }
 
 function currentSlate() {
+  if (activeLegs === 3) {
+    switch (activeBook) {
+      case "underdog":
+        return SLATE_UNDERDOG_3;
+      case "draftkings":
+        return SLATE_DRAFTKINGS_3;
+      case "betr":
+        return SLATE_BETR_3;
+      default:
+        return SLATE_PRIZEPICKS_3;
+    }
+  }
   switch (activeBook) {
     case "underdog":
       return SLATE_UNDERDOG;
@@ -711,86 +752,188 @@ function mapRow(row) {
   };
 }
 
+function mapRow3(row) {
+  var base = mapRow(row);
+  return Object.assign(base, {
+    name3: row["NAME 3"],
+    team3: row["TEAM 3"],
+    market3: row["MARKET 3"],
+    line3: row["LINE 3"],
+    side3: row["SIDE 3"],
+    prediction3: row["PREDICTION 3"],
+    opponent3: row["OPPONENT 3"],
+    spread3: row["SPREAD 3"],
+    total3: row["TOTAL 3"],
+    defRank3: row["OPP_DEF_RANK 3"],
+    paceRank3: row["OPP_PACE_RANK 3"],
+    avgStatL103: row["AVG_STAT_L10 3"],
+    avgVsMatchup3: row["AVG_STAT_VS_MATCHUP 3"],
+    matchupGames3: row["MATCHUP_GAMES 3"],
+    overRateL103: row["OVER_RATE_L10 3"]
+  });
+}
+
 function render() {
   if (activeView !== "pairs") return;
   const el = document.getElementById("cards");
-  if (activeLegs !== 2) {
-    var label = legsDisplayLabel(activeLegs);
+  if (activeLegs !== 2 && activeLegs !== 3) {
+    var legLabel = legsDisplayLabel(activeLegs);
     el.innerHTML =
       '<p class="load-msg">No ' +
-      escapeHtml(label) +
+      escapeHtml(legLabel) +
       " slate is available yet. Export JSON for this leg count into <code>data/props/ev_analysis/</code>.</p>";
     return;
   }
   const sorted = currentSlate();
   if (!sorted.length) {
-    var label = bookDisplayLabel(activeBook);
+    var bookLabel = bookDisplayLabel(activeBook);
     el.innerHTML =
-      '<p class="load-msg">No parlays in the ' + label + " slate. Export <code>" +
+      '<p class="load-msg">No parlays in the ' + bookLabel + " slate. Export <code>" +
       activeSlateJsonFile() +
       "</code> into <code>data/props/ev_analysis/</code>.</p>";
     return;
   }
   let html = "";
-  for (let i = 0; i < sorted.length; i++) {
-    const r = mapRow(sorted[i]);
-    const rank = i + 1;
-    const evNum = Number(r.ev);
-    const evStr = (evNum >= 0 ? "+" : "-") + fmtEv(Math.abs(evNum));
-    const probPct = pct0(r.parlayProb);
-    const kellyPct = fmt1(r.kelly);
+  if (activeLegs === 2) {
+    for (let i = 0; i < sorted.length; i++) {
+      const r = mapRow(sorted[i]);
+      const rank = i + 1;
+      const evNum = Number(r.ev);
+      const evStr = (evNum >= 0 ? "+" : "-") + fmtEv(Math.abs(evNum));
+      const probPct = pct0(r.parlayProb);
+      const kellyPct = fmt1(r.kelly);
 
-    const leg1 = renderLeg({
-      name: r.name1,
-      team: r.team1,
-      market: r.market1,
-      line: r.line1,
-      side: r.side1,
-      prediction: r.prediction1,
-      opponent: r.opponent1,
-      spread: r.spread1,
-      total: r.total1,
-      defRank: r.defRank1,
-      avgStatL10: r.avgStatL101,
-      oppPaceRank: r.paceRank1,
-      avgVsMatchup: r.avgVsMatchup1,
-      matchupGames: r.matchupGames1,
-      overRateL10: r.overRateL101
-    });
-    const leg2 = renderLeg({
-      name: r.name2,
-      team: r.team2,
-      market: r.market2,
-      line: r.line2,
-      side: r.side2,
-      prediction: r.prediction2,
-      opponent: r.opponent2,
-      spread: r.spread2,
-      total: r.total2,
-      defRank: r.defRank2,
-      avgStatL10: r.avgStatL102,
-      oppPaceRank: r.paceRank2,
-      avgVsMatchup: r.avgVsMatchup2,
-      matchupGames: r.matchupGames2,
-      overRateL10: r.overRateL102
-    });
+      const leg1 = renderLeg({
+        name: r.name1,
+        team: r.team1,
+        market: r.market1,
+        line: r.line1,
+        side: r.side1,
+        prediction: r.prediction1,
+        opponent: r.opponent1,
+        spread: r.spread1,
+        total: r.total1,
+        defRank: r.defRank1,
+        avgStatL10: r.avgStatL101,
+        oppPaceRank: r.paceRank1,
+        avgVsMatchup: r.avgVsMatchup1,
+        matchupGames: r.matchupGames1,
+        overRateL10: r.overRateL101
+      });
+      const leg2 = renderLeg({
+        name: r.name2,
+        team: r.team2,
+        market: r.market2,
+        line: r.line2,
+        side: r.side2,
+        prediction: r.prediction2,
+        opponent: r.opponent2,
+        spread: r.spread2,
+        total: r.total2,
+        defRank: r.defRank2,
+        avgStatL10: r.avgStatL102,
+        oppPaceRank: r.paceRank2,
+        avgVsMatchup: r.avgVsMatchup2,
+        matchupGames: r.matchupGames2,
+        overRateL10: r.overRateL102
+      });
 
-    html +=
-      '<article class="card">' +
-        '<div class="card-header">' +
-          '<span class="rank-label">#' + rank + " pick</span>" +
-          '<div class="badges">' +
-            '<span class="pill pill-ev">EV ' + evStr + "%</span>" +
-            '<span class="pill pill-prob">Hit prob ' + probPct + "%</span>" +
-            '<span class="pill pill-kelly">Kelly ' + kellyPct + "%</span>" +
+      html +=
+        '<article class="card">' +
+          '<div class="card-header">' +
+            '<span class="rank-label">#' + rank + " pick</span>" +
+            '<div class="badges">' +
+              '<span class="pill pill-ev">EV ' + evStr + "%</span>" +
+              '<span class="pill pill-prob">Hit prob ' + probPct + "%</span>" +
+              '<span class="pill pill-kelly">Kelly ' + kellyPct + "%</span>" +
+            "</div>" +
           "</div>" +
-        "</div>" +
-        '<div class="legs">' + leg1 + leg2 + "</div>" +
-        '<div class="card-footer">' +
-          "<div>Game total " + fmt1(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
-          "<div>Game total " + fmt1(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
-        "</div>" +
-      "</article>";
+          '<div class="legs">' + leg1 + leg2 + "</div>" +
+          '<div class="card-footer">' +
+            "<div>Game total " + fmt1(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
+            "<div>Game total " + fmt1(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
+          "</div>" +
+        "</article>";
+    }
+  } else {
+    for (let j = 0; j < sorted.length; j++) {
+      const r = mapRow3(sorted[j]);
+      const rank = j + 1;
+      const evNum3 = Number(r.ev);
+      const evStr3 = (evNum3 >= 0 ? "+" : "-") + fmtEv(Math.abs(evNum3));
+      const probPct3 = pct0(r.parlayProb);
+      const kellyPct3 = fmt1(r.kelly);
+
+      const leg1 = renderLeg({
+        name: r.name1,
+        team: r.team1,
+        market: r.market1,
+        line: r.line1,
+        side: r.side1,
+        prediction: r.prediction1,
+        opponent: r.opponent1,
+        spread: r.spread1,
+        total: r.total1,
+        defRank: r.defRank1,
+        avgStatL10: r.avgStatL101,
+        oppPaceRank: r.paceRank1,
+        avgVsMatchup: r.avgVsMatchup1,
+        matchupGames: r.matchupGames1,
+        overRateL10: r.overRateL101
+      });
+      const leg2 = renderLeg({
+        name: r.name2,
+        team: r.team2,
+        market: r.market2,
+        line: r.line2,
+        side: r.side2,
+        prediction: r.prediction2,
+        opponent: r.opponent2,
+        spread: r.spread2,
+        total: r.total2,
+        defRank: r.defRank2,
+        avgStatL10: r.avgStatL102,
+        oppPaceRank: r.paceRank2,
+        avgVsMatchup: r.avgVsMatchup2,
+        matchupGames: r.matchupGames2,
+        overRateL10: r.overRateL102
+      });
+      const leg3 = renderLeg({
+        name: r.name3,
+        team: r.team3,
+        market: r.market3,
+        line: r.line3,
+        side: r.side3,
+        prediction: r.prediction3,
+        opponent: r.opponent3,
+        spread: r.spread3,
+        total: r.total3,
+        defRank: r.defRank3,
+        avgStatL10: r.avgStatL103,
+        oppPaceRank: r.paceRank3,
+        avgVsMatchup: r.avgVsMatchup3,
+        matchupGames: r.matchupGames3,
+        overRateL10: r.overRateL103
+      });
+
+      html +=
+        '<article class="card card--3leg">' +
+          '<div class="card-header">' +
+            '<span class="rank-label">#' + rank + " pick</span>" +
+            '<div class="badges">' +
+              '<span class="pill pill-ev">EV ' + evStr3 + "%</span>" +
+              '<span class="pill pill-prob">Hit prob ' + probPct3 + "%</span>" +
+              '<span class="pill pill-kelly">Kelly ' + kellyPct3 + "%</span>" +
+            "</div>" +
+          "</div>" +
+          '<div class="legs">' + leg1 + leg2 + leg3 + "</div>" +
+          '<div class="card-footer card-footer--triple">' +
+            "<div>Game total " + fmt1(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
+            "<div>Game total " + fmt1(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
+            "<div>Game total " + fmt1(r.total3) + "<br />Spread " + spreadFmt(r.spread3) + "</div>" +
+          "</div>" +
+        "</article>";
+    }
   }
   el.innerHTML = html;
 }
