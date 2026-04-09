@@ -31,7 +31,7 @@ def predict_min_times_rate(
             name = name_dict[raw_name]
 
         try:
-            min_feats = min_pipeline(min_stats_df, name)
+            min_feats = min_pipeline(min_stats_df, name, current_date)
             if min_feats is None:
                 raise ValueError("min_pipeline returned None (need >= 10 games)")
 

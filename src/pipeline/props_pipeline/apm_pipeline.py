@@ -161,5 +161,6 @@ def apm_pipeline(df, name, date):
 
     # GP
     res.append(float(len(pdf) - 1))
+    res.append(pdf['POSITION_ENC'].iloc[-1])
 
     return res

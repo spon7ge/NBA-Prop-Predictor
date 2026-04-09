@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 from src.utils.team_info import nameDict, projectedStartingFive
+from src.utils.helper_functions import findOpp
 
 # Match min_quantile_model.ipynb `apply_bayesian_minutes(..., confidence_k=20)`
 _BAYES_MIN_CONFIDENCE_K = 20
@@ -73,7 +74,7 @@ MIN_FEATURES = [
 ]
 
 
-def min_pipeline(df, name):
+def min_pipeline(df, name, current_date):
     pdf = df[df['PLAYER_NAME'] == name].sort_values('GAME_DATE').copy()
     pid = int(pdf["PLAYER_ID"].iloc[-1])
     player_pos = pdf["pos"].iloc[-1]
@@ -94,64 +95,59 @@ def min_pipeline(df, name):
     min_avg = float(pdf["MIN"].mean())
     res.append(float(starting_override) * min_avg)
 
-    # MIN_EWM_L12, MIN_EWM_L3
-    min_ewm12 = pdf["MIN"].astype(float).ewm(span=12).mean().iloc[-1]
-    res.append(float(min_ewm12) if pd.notna(min_ewm12) else float("nan"))
+    # MIN_EWM_L10, MIN_EWM_L3
+    min_ewm10 = pdf["MIN"].astype(float).ewm(span=10).mean().iloc[-1]
+    res.append(float(min_ewm10) if pd.notna(min_ewm10) else float("nan"))
     min_ewm3 = pdf["MIN"].astype(float).ewm(span=3).mean().iloc[-1]
-    res.append(float(min_ewm3) if pd.notna(min_ewm3) else float("nan"))
 
-    # STARTING_lag1: previous game's starting status
-    starting_lag1 = float(pdf["STARTING"].iloc[-2]) if len(pdf) >= 2 else float("nan")
-    res.append(starting_lag1)
+    # MIN_TREND
+    res.append(min_ewm3 - min_ewm10)
 
     # STARTER_ROLL10_PCT: fraction of last 10 games as starter
     starter_roll10_pct = float(pdf["STARTING"].tail(10).mean())
     res.append(starter_roll10_pct if pd.notna(starter_roll10_pct) else float("nan"))
 
-    # ROLE_LOCK: 1 if player is consistently a starter or bench player (>=90% either way)
-    role_lock = float(1 if starter_roll10_pct >= 0.9 or starter_roll10_pct <= 0.1 else 0)
-    res.append(role_lock)
+    # MIN_ROLE_Z_SCORE (expanding stats are Series; take value through last row)
+    season_mean = float(pdf["MIN"].expanding().mean().iloc[-1])
+    season_std = float(pdf["MIN"].expanding().std().iloc[-1])
+    recent_mean = float(pdf["MIN"].tail(10).mean())
+    if pd.isna(season_std) or season_std == 0:
+        res.append(float("nan"))
+    else:
+        res.append((recent_mean - season_mean) / season_std)
 
-    # MEDIAN_MIN_L10
-    res.append(float(pdf["MIN"].tail(10).median()))
-
-    # MIN_MIN_L5, MIN_MAX_L5
-    res.append(float(pdf["MIN"].tail(5).min()))
-    res.append(float(pdf["MIN"].tail(5).max()))
+    # ROLE_LOCK
+    roll10_std = pdf["MIN"].tail(10).std()
+    role_lock = (
+        float(starter_roll10_pct) / float(roll10_std)
+        if pd.notna(roll10_std) and roll10_std != 0
+        else float("nan")
+    )
+    res.append(float(role_lock) if pd.notna(role_lock) else float("nan"))
 
     # HIGH_MIN_TIER: 1 if player averages >= 28 MIN over last 10
-    high_min_tier = float(1 if pdf["MIN"].tail(10).mean() >= 28.0 else 0)
-    res.append(high_min_tier)
-
-    # --- Tier 2: Team context ---
+    # high_min_tier = float(1 if pdf["MIN"].tail(10).mean() >= 28.0 else 0)
+    # res.append(high_min_tier)
 
     # Gameday snapshot for within-team ranks
     gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
 
-    # TEAM_MIN_RANK_L5
-    min_rank_l5 = gameday["MIN_roll5"].rank(ascending=False, method="dense")
-    team_min_rank_l5 = float(min_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
-    res.append(team_min_rank_l5 if pd.notna(team_min_rank_l5) else float("nan"))
+    # TEAM_MIN_RANK_L10
+    min_rank_l10 = gameday["MIN_roll10"].rank(ascending=False, method="dense")
+    team_min_rank_l10 = float(min_rank_l10[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_min_rank_l10 if pd.notna(team_min_rank_l10) else float("nan"))
 
-    # TEAM_POSS_RANK_L5
-    poss_rank_l5 = gameday["POSS_roll5"].rank(ascending=False, method="dense")
-    team_poss_rank_l5 = float(poss_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
-    res.append(team_poss_rank_l5 if pd.notna(team_poss_rank_l5) else float("nan"))
+    # TEAM_USG_RANK_L10
+    usg_rank_l10 = gameday["USG_PCT_roll10"].rank(ascending=False, method="dense")
+    team_usg_rank_l10 = float(usg_rank_l10[gameday["PLAYER_NAME"] == name].iloc[0])
+    res.append(team_usg_rank_l10 if pd.notna(team_usg_rank_l10) else float("nan"))
 
-    # TEAM_PTS_RANK_L5
-    pts_rank_l5 = gameday["PTS_roll5"].rank(ascending=False, method="dense")
-    team_pts_rank_l5 = float(pts_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
-    res.append(team_pts_rank_l5 if pd.notna(team_pts_rank_l5) else float("nan"))
-
-    # TEAM_USG_RANK_L5
-    usg_rank_l5 = gameday["USG_PCT_roll5"].rank(ascending=False, method="dense")
-    team_usg_rank_l5 = float(usg_rank_l5[gameday["PLAYER_NAME"] == name].iloc[0])
-    res.append(team_usg_rank_l5 if pd.notna(team_usg_rank_l5) else float("nan"))
-
-    # POSS_roll5: player's own possession roll5
-    res.append(float(pdf["POSS_roll5"].iloc[-1]) if pd.notna(pdf["POSS_roll5"].iloc[-1]) else float("nan"))
-
-    # --- Tier 3: Situational ---
+    # MIN_share_proxy: player MIN_ewm10 / sum of team minutes on gameday
+    team_min_sum = gameday["MIN"].sum()
+    min_share_proxy = (
+        float(pdf["MIN"].tail(10).mean()) / team_min_sum if (pd.notna(pdf["MIN"].tail(10).mean()) and team_min_sum > 0) else float("nan")
+    )
+    res.append(min_share_proxy)
 
     # DAYS_REST: derived from last two game dates in player history
     if len(pdf) >= 2:
@@ -167,48 +163,30 @@ def min_pipeline(df, name):
     age = float(last["AGE"]) if "AGE" in last.index and pd.notna(last["AGE"]) else float("nan")
     res.append(age * is_b2b)
 
-    # USG_EWM_L5
-    usg_ewm5 = pdf["USG_PCT"].astype(float).ewm(span=5).mean().iloc[-1]
-    res.append(float(usg_ewm5) if pd.notna(usg_ewm5) else float("nan"))
+    # MIN VOLATILITY_L10
+    min_volatility_l10 = pdf["MIN"].tail(10).std()
+    res.append(min_volatility_l10)
 
-    # PM_PER_MIN_R10: plus-minus per minute over last 10 games
-    tail10 = pdf.tail(10)
-    total_min = tail10["MIN"].sum()
-    pm_per_min_r10 = (
-        float(tail10["PLUS_MINUS"].sum() / total_min) if total_min > 0 else float("nan")
-    )
-    res.append(pm_per_min_r10)
+    # ROTATION_GAP_L5
+    min_max_l10 = pdf["MIN"].tail(10).max()
+    min_min_l10 = pdf["MIN"].tail(10).min()
+    res.append(min_max_l10 - min_min_l10)
 
     # POSITION_ENC
-    if player_pos == "PG":
-        res.append(0)
-    elif player_pos == "SG":
-        res.append(1)
-    elif player_pos == "SF":
-        res.append(2)
-    elif player_pos == "PF":
-        res.append(3)
-    elif player_pos == "C":
-        res.append(4)
-    else:
-        res.append(float("nan"))
+    res.append(pdf['POSITION_ENC'].iloc[-1])
 
-    # HOME_X_MIN_AVG: last game's home flag × career avg minutes
-    home_flag = float(last["HOME"]) if "HOME" in last.index and pd.notna(last["HOME"]) else 0.0
-    res.append(home_flag * min_avg)
+    # PACE_DIFFERENTIAL
+    opp_abbr, _ = findOpp(name, pdf, current_date, max_days_ahead=3)
+    opp_team = df[df["TEAM_ABBREVIATION"] == opp_abbr].sort_values("GAME_DATE")
+    opp_team = opp_team.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+    opp_pace_roll10 = float(opp_team["TEAM_PACE"].tail(10).mean().round(2))
+    player_team = pdf["TEAM_ABBREVIATION"].iloc[-1]
+    player_team_df = df[df["TEAM_ABBREVIATION"] == player_team].sort_values("GAME_DATE")
+    player_team_df = player_team_df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+    player_team_pace_roll10 = float(player_team_df["TEAM_PACE"].tail(10).mean().round(2))
+    res.append(player_team_pace_roll10 - opp_pace_roll10)
 
-    # MIN_share_proxy: player MIN_ewm12 / sum of team minutes on gameday
-    team_min_sum = gameday["MIN"].sum()
-    min_share_proxy = (
-        float(min_ewm12) / team_min_sum if (pd.notna(min_ewm12) and team_min_sum > 0) else float("nan")
-    )
-    res.append(min_share_proxy)
-
-    # TEAM_POSS_RANK_BY_POS_L5: rank within same-position teammates by POSS_roll5
-    player_pos = last["pos"] if "pos" in last.index else last.get("POSITION", None)
-    pos_group = gameday[gameday["pos"] == player_pos] if player_pos is not None else gameday
-    poss_rank_by_pos = pos_group["POSS_roll5"].rank(ascending=False, method="dense")
-    poss_rank_by_pos_val = poss_rank_by_pos[pos_group["PLAYER_NAME"] == name]
-    res.append(float(poss_rank_by_pos_val.iloc[0]) if not poss_rank_by_pos_val.empty else float("nan"))
+    # Games Played
+    res.append(len(pdf))
 
     return res
