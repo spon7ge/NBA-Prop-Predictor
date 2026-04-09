@@ -48,6 +48,12 @@ jobs:
           cp data/props/ev_analysis/draftKings.json docs/data/props/ev_analysis/draftKings.json
           cp data/props/ev_analysis/betr.json docs/data/props/ev_analysis/betr.json
           cp data/props/ev_analysis/all_line_probs.json docs/data/props/ev_analysis/all_line_probs.json
+          # 3-leg slates (optional files are skipped if not present yet, e.g. betr_3leg.json)
+          for f in prizepicks_3leg.json underdog_3leg.json draftKings_3leg.json betr_3leg.json; do
+            if [ -f "data/props/ev_analysis/$f" ]; then
+              cp "data/props/ev_analysis/$f" "docs/data/props/ev_analysis/$f"
+            fi
+          done
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
