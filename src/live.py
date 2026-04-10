@@ -304,8 +304,12 @@ def line_probs_for_market(preds_df, lines_df, name_dict, sim_fn, n_sims=10_000):
         line_f = float(line)
         rows.append({
             "PLAYER_NAME": name, "MARKET": market, "LINE": line_f,
+            "MIN_Q10": round(row["MIN_Q10"], 2),
             "MIN_Q50": round(row["MIN_Q50"], 2),
+            "MIN_Q90": round(row["MIN_Q90"], 2),
+            "STAT_Q10": round(row["STAT_Q10"], 2),
             "STAT_Q50": round(row["STAT_Q50"], 2),
+            "STAT_Q90": round(row["STAT_Q90"], 2),
             "P_OVER": round(float(np.mean(sims > line_f)), 3),
             "P_UNDER": round(float(np.mean(sims < line_f)), 3),
         })

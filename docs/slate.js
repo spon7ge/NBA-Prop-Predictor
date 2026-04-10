@@ -396,13 +396,12 @@ function fmtSignedEv(x) {
   return sign + fmtEv(Math.abs(n));
 }
 
-/** Historical hit rate for the same side as Best (over uses OVER_RATE_L*; under uses 1 − that rate). */
-function fmtBestSideHitPct(overRate, bestIsOver) {
+/** Over hit rate (0–1) as a percentage. */
+function fmtOverRatePct(overRate) {
   if (overRate == null || overRate === "") return "—";
   var n = Number(overRate);
   if (isNaN(n)) return "—";
-  var p = bestIsOver ? n : 1 - n;
-  return Math.round(p * 100) + "%";
+  return Math.round(n * 100) + "%";
 }
 
 function filterPlayerRows(rows, query) {
@@ -471,27 +470,21 @@ function renderPlayersPanel() {
   var html =
     '<div class="players-wrap"><table class="players-table"><thead><tr>' +
     "<th>Player</th><th>Book</th><th>Mkt</th>" +
-    '<th class="num">Line</th><th class="num">Proj</th>' +
+    '<th class="num">Line</th><th class="num">Stat Proj.</th>' +
+    '<th class="num" title="Projected minutes (Q50)">Min Proj.</th>' +
+    '<th class="num" title="Over hit rate (last 5 games)">L5</th>' +
+    '<th class="num" title="Over hit rate (last 10 games)">L10</th>' +
+    '<th class="num" title="Over hit rate (last 15 games)">L15</th>' +
     '<th class="num" title="Average minutes last 10 games">MIN L10</th>' +
     '<th class="num" title="Average stat last 10 games">STAT L10</th>' +
     '<th class="num" title="Average stat vs this opponent (matchup history)">Matchup Avg.</th>' +
-    '<th class="num">O</th><th class="num">U</th>' +
-    '<th class="num">EV O</th><th class="num">EV U</th>' +
-    "<th>Best</th>" +
-    '<th class="num" title="Hit rate on best side (last 5 games)">L5</th>' +
-    '<th class="num" title="Hit rate on best side (last 10 games)">L10</th>' +
-    '<th class="num" title="Hit rate on best side (last 15 games)">L15</th>' +
     "</tr></thead><tbody>";
   if (!filtered.length) {
     html +=
-      '<tr><td colspan="16" class="players-empty">No rows match your search.</td></tr>';
+      '<tr><td colspan="12" class="players-empty">No rows match your search.</td></tr>';
   }
   for (var i = 0; i < filtered.length; i++) {
     var r = filtered[i];
-    var oEv = Number(r.EV_OVER);
-    var uEv = Number(r.EV_UNDER);
-    var bestOver = oEv >= uEv;
-    var bestSide = bestOver ? "over" : "under";
     html +=
       "<tr>" +
       "<td>" + escapeHtml(r.PLAYER_NAME || "") + "</td>" +
@@ -499,19 +492,13 @@ function renderPlayersPanel() {
       "<td>" + escapeHtml(r.MARKET || r.CATEGORY || "") + "</td>" +
       '<td class="num">' + fmt1(r.LINE) + "</td>" +
       '<td class="num">' + fmt1(r.STAT_Q50) + "</td>" +
+      '<td class="num">' + fmtNumOrDash(r.MIN_Q50) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L5) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L10) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L15) + "</td>" +
       '<td class="num">' + fmtNumOrDash(r.AVG_MIN_L10) + "</td>" +
       '<td class="num">' + fmtNumOrDash(r.AVG_STAT_L10) + "</td>" +
       '<td class="num">' + fmtNumOrDash(r.AVG_STAT_VS_MATCHUP) + "</td>" +
-      '<td class="num">' + (r.ODDS_OVER != null ? String(r.ODDS_OVER) : "—") + "</td>" +
-      '<td class="num">' + (r.ODDS_UNDER != null ? String(r.ODDS_UNDER) : "—") + "</td>" +
-      '<td class="num ' + (bestOver ? "ev-best" : "ev-muted") + '">' + fmtSignedEv(oEv) + "%</td>" +
-      '<td class="num ' + (!bestOver ? "ev-best" : "ev-muted") + '">' + fmtSignedEv(uEv) + "%</td>" +
-      "<td>" +
-      '<span class="side-tag ' + bestSide + '">' + escapeHtml(bestSide.toUpperCase()) + "</span>" +
-      "</td>" +
-      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L5, bestOver) + "</td>" +
-      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L10, bestOver) + "</td>" +
-      '<td class="num">' + fmtBestSideHitPct(r.OVER_RATE_L15, bestOver) + "</td>" +
       "</tr>";
   }
   html += "</tbody></table></div>";
