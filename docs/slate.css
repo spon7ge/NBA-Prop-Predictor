@@ -237,6 +237,43 @@ a.header-link[aria-current="page"]:visited {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+.players-table th.players-sort-th {
+  padding: 0;
+  vertical-align: bottom;
+}
+.players-table th.players-sort-th .players-sort-btn {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  text-align: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+.players-table th.num .players-sort-btn {
+  text-align: right;
+}
+.players-table th.players-sort-th .players-sort-btn:hover {
+  color: #e8e8e4;
+  background: rgba(255, 255, 255, 0.06);
+}
+.players-table th.players-sort-th .players-sort-btn:focus {
+  outline: none;
+}
+.players-table th.players-sort-th .players-sort-btn:focus-visible {
+  outline: 2px solid rgba(120, 160, 220, 0.55);
+  outline-offset: -2px;
+}
+.players-table th.players-sort-th--active .players-sort-btn {
+  color: #e8e8e4;
+}
 .ev-best {
   color: #8fd17a;
   font-weight: 500;
