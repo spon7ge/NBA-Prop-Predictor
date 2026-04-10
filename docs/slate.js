@@ -14,6 +14,9 @@ var ALL_LINE_PROBS = [];
 var lineProbsState = "idle";
 /** null = all stats; otherwise MARKET key e.g. PTS, AST, REB */
 var activePlayerStat = null;
+/** null = default (max EV); otherwise column id for All Players table sort */
+var playersSortKey = null;
+var playersSortDir = "desc";
 
 function jsonUrls(filename) {
   var a = "data/props/ev_analysis/" + filename;
@@ -444,17 +447,15 @@ function htmlBookPill(book) {
   );
 }
 
-function renderPlayersPanel() {
-  var el = document.getElementById("playersPanel");
-  if (!el) return;
-  if (!ALL_LINE_PROBS.length) {
-    el.innerHTML =
-      '<p class="load-msg load-err">No rows in <code>all_line_probs.json</code> or file not found. Export JSONL to <code>data/props/ev_analysis/all_line_probs.json</code>.</p>';
-    return;
-  }
-  var searchEl = document.getElementById("playerSearch");
-  var q = searchEl ? searchEl.value : "";
-  var sorted = ALL_LINE_PROBS.slice().sort(function (a, b) {
+function parseSortNumber(val) {
+  if (val == null || val === "") return null;
+  var n = Number(val);
+  if (isNaN(n)) return null;
+  return n;
+}
+
+function defaultSortPlayersRows(rows) {
+  return rows.slice().sort(function (a, b) {
     var ba = Math.max(Number(a.EV_OVER), Number(a.EV_UNDER));
     var bb = Math.max(Number(b.EV_OVER), Number(b.EV_UNDER));
     if (bb !== ba) return bb - ba;
@@ -465,19 +466,119 @@ function renderPlayersPanel() {
     if (Number(a.LINE) !== Number(b.LINE)) return Number(a.LINE) - Number(b.LINE);
     return String(a.LINE_BOOKMAKER || "").localeCompare(String(b.LINE_BOOKMAKER || ""));
   });
+}
+
+function comparePlayersColumn(a, b, key, dir) {
+  function strCmp(get) {
+    var sa = String(get(a) || "");
+    var sb = String(get(b) || "");
+    return dir === "desc"
+      ? sb.localeCompare(sa, undefined, { sensitivity: "base" })
+      : sa.localeCompare(sb, undefined, { sensitivity: "base" });
+  }
+  function numCmp(field) {
+    var va = parseSortNumber(a[field]);
+    var vb = parseSortNumber(b[field]);
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    return dir === "desc" ? vb - va : va - vb;
+  }
+  switch (key) {
+    case "player":
+      return strCmp(function (r) {
+        return r.PLAYER_NAME;
+      });
+    case "book":
+      return strCmp(function (r) {
+        return r.LINE_BOOKMAKER;
+      });
+    case "mkt":
+      return strCmp(function (r) {
+        return r.MARKET || r.CATEGORY;
+      });
+    case "line":
+      return numCmp("LINE");
+    case "statProj":
+      return numCmp("STAT_Q50");
+    case "minProj":
+      return numCmp("MIN_Q50");
+    case "l5":
+      return numCmp("OVER_RATE_L5");
+    case "l10":
+      return numCmp("OVER_RATE_L10");
+    case "l15":
+      return numCmp("OVER_RATE_L15");
+    case "minL10":
+      return numCmp("AVG_MIN_L10");
+    case "statL10":
+      return numCmp("AVG_STAT_L10");
+    case "matchup":
+      return numCmp("AVG_STAT_VS_MATCHUP");
+    default:
+      return 0;
+  }
+}
+
+function sortPlayersRows(rows) {
+  if (!playersSortKey) return defaultSortPlayersRows(rows);
+  return rows.slice().sort(function (a, b) {
+    return comparePlayersColumn(a, b, playersSortKey, playersSortDir);
+  });
+}
+
+function playerSortTh(key, opts) {
+  opts = opts || {};
+  var cls = opts.className || "";
+  var active = playersSortKey === key;
+  var thClass = "players-sort-th" + (cls ? " " + cls : "") + (active ? " players-sort-th--active" : "");
+  var ariaSort = active ? (playersSortDir === "desc" ? "descending" : "ascending") : "none";
+  var title = opts.title ? ' title="' + escapeHtml(opts.title) + '"' : "";
+  var arrow = active ? (playersSortDir === "desc" ? " \u2193" : " \u2191") : "";
+  return (
+    '<th class="' +
+    thClass +
+    '"' +
+    title +
+    ' aria-sort="' +
+    ariaSort +
+    '">' +
+    '<button type="button" class="players-sort-btn" data-players-sort="' +
+    key +
+    '">' +
+    escapeHtml(opts.label) +
+    arrow +
+    "</button></th>"
+  );
+}
+
+function renderPlayersPanel() {
+  var el = document.getElementById("playersPanel");
+  if (!el) return;
+  if (!ALL_LINE_PROBS.length) {
+    el.innerHTML =
+      '<p class="load-msg load-err">No rows in <code>all_line_probs.json</code> or file not found. Export JSONL to <code>data/props/ev_analysis/all_line_probs.json</code>.</p>';
+    return;
+  }
+  var searchEl = document.getElementById("playerSearch");
+  var q = searchEl ? searchEl.value : "";
+  var sorted = sortPlayersRows(ALL_LINE_PROBS);
   var byStat = filterPlayerRowsByStat(sorted, activePlayerStat);
   var filtered = filterPlayerRows(byStat, q);
   var html =
-    '<div class="players-wrap"><table class="players-table"><thead><tr>' +
-    "<th>Player</th><th>Book</th><th>Mkt</th>" +
-    '<th class="num">Line</th><th class="num">Stat Proj.</th>' +
-    '<th class="num" title="Projected minutes (Q50)">Min Proj.</th>' +
-    '<th class="num" title="Over hit rate (last 5 games)">L5</th>' +
-    '<th class="num" title="Over hit rate (last 10 games)">L10</th>' +
-    '<th class="num" title="Over hit rate (last 15 games)">L15</th>' +
-    '<th class="num" title="Average minutes last 10 games">MIN L10</th>' +
-    '<th class="num" title="Average stat last 10 games">STAT L10</th>' +
-    '<th class="num" title="Average stat vs this opponent (matchup history)">Matchup Avg.</th>' +
+    '<div class="players-wrap"><table class="players-table players-table--sortable"><thead><tr>' +
+    playerSortTh("player", { label: "Player" }) +
+    playerSortTh("book", { label: "Book" }) +
+    playerSortTh("mkt", { label: "Mkt" }) +
+    playerSortTh("line", { className: "num", label: "Line" }) +
+    playerSortTh("statProj", { className: "num", label: "Stat Proj." }) +
+    playerSortTh("minProj", { className: "num", title: "Projected minutes (Q50)", label: "Min Proj." }) +
+    playerSortTh("l5", { className: "num", title: "Over hit rate (last 5 games)", label: "L5" }) +
+    playerSortTh("l10", { className: "num", title: "Over hit rate (last 10 games)", label: "L10" }) +
+    playerSortTh("l15", { className: "num", title: "Over hit rate (last 15 games)", label: "L15" }) +
+    playerSortTh("minL10", { className: "num", title: "Average minutes last 10 games", label: "MIN L10" }) +
+    playerSortTh("statL10", { className: "num", title: "Average stat last 10 games", label: "STAT L10" }) +
+    playerSortTh("matchup", { className: "num", title: "Average stat vs this opponent (matchup history)", label: "Matchup Avg." }) +
     "</tr></thead><tbody>";
   if (!filtered.length) {
     html +=
@@ -509,6 +610,24 @@ function initPlayerSearch() {
   var input = document.getElementById("playerSearch");
   if (!input) return;
   input.addEventListener("input", function () {
+    if (lineProbsState === "loaded") renderPlayersPanel();
+  });
+}
+
+function initPlayersColumnSort() {
+  var sec = document.getElementById("sectionPlayers");
+  if (!sec) return;
+  sec.addEventListener("click", function (e) {
+    var btn = e.target && e.target.closest("[data-players-sort]");
+    if (!btn || !sec.contains(btn)) return;
+    var key = btn.getAttribute("data-players-sort");
+    if (!key) return;
+    if (playersSortKey === key) {
+      playersSortDir = playersSortDir === "desc" ? "asc" : "desc";
+    } else {
+      playersSortKey = key;
+      playersSortDir = "desc";
+    }
     if (lineProbsState === "loaded") renderPlayersPanel();
   });
 }
@@ -928,6 +1047,7 @@ function render() {
 initMainNav();
 initPlayerSearch();
 initPlayerStatFilter();
+initPlayersColumnSort();
 try {
   var q = new URLSearchParams(window.location.search);
   var viewParam = q.get("view");
