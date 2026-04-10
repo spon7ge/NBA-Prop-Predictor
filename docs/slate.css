@@ -118,7 +118,9 @@ button.header-link {
   -webkit-appearance: none;
   appearance: none;
 }
-.header-link:hover {
+/* Hover must beat a.header-link:visited for visited anchors. */
+a.header-link:hover,
+button.header-link:hover {
   color: #e8e8e4;
   background: rgba(255, 255, 255, 0.05);
 }
@@ -549,6 +551,18 @@ body.faq-page-body .slate-header {
 .faq-answer strong {
   color: #e8e8e4;
   font-weight: 600;
+}
+.faq-answer p + p,
+.faq-answer p + ul,
+.faq-answer ul + p {
+  margin-top: 10px;
+}
+.faq-answer ul {
+  margin: 6px 0 0 1.25em;
+  padding-left: 0.25em;
+}
+.faq-answer ul li + li {
+  margin-top: 4px;
 }
 
 .players-toolbar {
