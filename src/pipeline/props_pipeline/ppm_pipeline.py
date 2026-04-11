@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.utils.helper_functions import findOpp
-from src.utils.team_info import nameDict, projectedStartingFive
+from src.utils.team_info import nameDict, projectedStartingFive, teamStarPlayer
 
 _BAYES_PPM_CONFIDENCE_K = 20
 
@@ -55,6 +55,8 @@ def ppm_pipeline(df, name, current_date):
     points = pdf['PTS'].tail(10).mean().round(2)
     poss = pdf['POSS'].tail(10).mean().round(2)
     res.append(points / poss if pd.notna(points / poss) else float("nan"))
+    team_pts_per_min_rank_l10 = pdf["TEAM_PTS_PER_MIN_RANK_L10"].iloc[-1]
+    res.append(float(team_pts_per_min_rank_l10) if pd.notna(team_pts_per_min_rank_l10) else float("nan"))
 
     # USG_PCT_roll10 and 3PA_PER_MIN_10_ewm
     usg_pct_roll10 = pdf["USG_PCT"].astype(float).tail(10).mean().round(2)
@@ -99,4 +101,16 @@ def ppm_pipeline(df, name, current_date):
 
     # POSITION_ENC
     res.append(pdf['POSITION_ENC'].iloc[-1])
+
+    # PLAYER_IS_TEAM_STAR
+    if teamStarPlayer[player_team] == name:
+        res.append(1)
+    else:
+        res.append(0)
+    
+    # STAR_SAT_OUT
+    if teamStarPlayer[player_team] in projectedStartingFive[player_team]:
+        res.append(1)
+    else:
+        res.append(0)
     return res
