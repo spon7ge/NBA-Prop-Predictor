@@ -1,44 +1,26 @@
 import numpy as np
 import pandas as pd
+import joblib
+
+ppm_bundle = joblib.load("src/models/saved_models/ppm_quantile_xgb.joblib")
+ppm_quantile_models = ppm_bundle["quantile_models"]
+ppm_feature_names = ppm_bundle["feature_names"]
+scaler = ppm_bundle["scaler"]
+
+CONTINUOUS_COLS = [
+    'PTS_PER_MIN_season_avg', 'PTS_PER_MIN_10_ewm', 'PPM_MOMENTUM', 'PTS_PER_POSS_roll10', 
+    'USG_PCT_roll10', '3PA_PER_MIN_10_ewm', 'FTA_PER_MIN_10_ewm', 
+    'POSS_DIFF_L10', 'TS_PCT_DELTA', 'TRUE_USG_L10', 'TS_PCT_roll10', 'OPP_DEF_RATING_roll10',
+    'PACE_DIFFERENTIAL'
+]
 
 from src.utils.helper_functions import findOpp
-from src.utils.team_info import nameDict, projectedStartingFive, teamStarPlayer
+from src.utils.team_info import nameDict, projectedStartingFive, team3StarsPerTeam
 
-_BAYES_PPM_CONFIDENCE_K = 20
-
-def _bayes_ppm_proj_for_player(df, pid: int, confidence_k: int = 20, min_minutes: float = 1.0) -> float:
-    """Shrink player PTS/MIN toward a (pos, STARTING) role prior; same construction as training."""
-    d = df.copy()
-    d["_ppm"] = np.where(d["MIN"] >= min_minutes, d["PTS"] / d["MIN"], np.nan)
-    priors = d.groupby(["pos", "STARTING"], dropna=False)["_ppm"].mean().to_dict()
-    stats = d.groupby("PLAYER_ID", as_index=False).agg(
-        player_mean_ppm=("_ppm", "mean"),
-        games_played=("_ppm", "count"),
-    )
-    last = d[d["PLAYER_ID"] == pid].sort_values("GAME_DATE").iloc[-1]
-    s = stats.loc[stats["PLAYER_ID"] == pid]
-    if s.empty:
-        return float("nan")
-    player_mean = float(s["player_mean_ppm"].iloc[0])
-    games_played = float(s["games_played"].iloc[0])
-    key = (last["pos"], last["STARTING"])
-    pv = priors.get(key)
-    if pv is None or (isinstance(pv, float) and np.isnan(pv)):
-        prior_ppm = float(d["_ppm"].mean())
-    else:
-        prior_ppm = float(pv)
-    return round(
-        (games_played * player_mean + confidence_k * prior_ppm) / (games_played + confidence_k),
-        4,
-    )
 
 def ppm_pipeline(df, name, current_date):
     pdf = df[df['PLAYER_NAME'] == name].sort_values('GAME_DATE').copy()
-    pid = int(pdf["PLAYER_ID"].iloc[-1])
     res = []
-
-    # Bayes PPM Proj
-    res.append(_bayes_ppm_proj_for_player(pdf, pid, confidence_k=_BAYES_PPM_CONFIDENCE_K))
 
     # STARTING
     team = pdf["TEAM_ABBREVIATION"].iloc[-1]
@@ -46,6 +28,10 @@ def ppm_pipeline(df, name, current_date):
     projected = projectedStartingFive.get(team, [])
     starting_flag = float(1 if (canon_name in projected or name in projected) else 0)
     res.append(starting_flag)
+    
+    # PTS_PER_MIN_season_avg
+    pts_per_min_season_avg = pdf["PTS_PER_MIN"].mean()
+    res.append(float(pts_per_min_season_avg) if pd.notna(pts_per_min_season_avg) else float("nan"))
 
     # PPM Momentum
     ppm_ewm10 = pdf["PTS_PER_MIN"].astype(float).ewm(span=10).mean().iloc[-1]
@@ -63,6 +49,8 @@ def ppm_pipeline(df, name, current_date):
     res.append(float(usg_pct_roll10) if pd.notna(usg_pct_roll10) else float("nan"))
     three_pa_per_min_10_ewm = pdf["3PA_PER_MIN"].astype(float).ewm(span=10).mean().iloc[-1]
     res.append(float(three_pa_per_min_10_ewm) if pd.notna(three_pa_per_min_10_ewm) else float("nan"))
+    fta_per_min_10_ewm = pdf["FTA_PER_MIN"].astype(float).ewm(span=10).mean().iloc[-1]
+    res.append(float(fta_per_min_10_ewm) if pd.notna(fta_per_min_10_ewm) else float("nan"))
 
     # TEAM_USG_RANK_L10
     team_usg_rank_l10 = pdf["USG_PCT_roll10"].rank(ascending=False, method="dense")
@@ -92,25 +80,23 @@ def ppm_pipeline(df, name, current_date):
     player_team_pace_roll10 = float(player_team_df["TEAM_PACE"].tail(10).mean().round(2))
     res.append(player_team_pace_roll10 - opp_pace_roll10)
 
-    # DAYS_REST
-    last_date = pdf["GAME_DATE"].iloc[-1]
-    slate = pd.Timestamp(current_date).normalize()
-    last_norm = pd.Timestamp(last_date).normalize()
-    days_rest = int((slate - last_norm).days)
-    res.append(float(days_rest))
-
     # POSITION_ENC
     res.append(pdf['POSITION_ENC'].iloc[-1])
 
-    # PLAYER_IS_TEAM_STAR
-    if teamStarPlayer[player_team] == name:
-        res.append(1)
-    else:
-        res.append(0)
+    # IS_TOP_STAR
+    res.append(pdf['IS_TOP_STAR'].iloc[-1])
     
-    # STAR_SAT_OUT
-    if teamStarPlayer[player_team] in projectedStartingFive[player_team]:
-        res.append(1)
-    else:
-        res.append(0)
-    return res
+    # ACTIVE_STARS_COUNT
+    count = 0
+    for star in team3StarsPerTeam[player_team]:
+        if star in projectedStartingFive[player_team]:
+            count += 1
+    res.append(count)
+    
+    res_df = pd.DataFrame([res], columns=ppm_feature_names)
+    
+    # 3. Scale continuous columns
+    res_df[CONTINUOUS_COLS] = scaler.transform(res_df[CONTINUOUS_COLS])
+    res_df = res_df.fillna(0.0)
+    
+    return res_df.values
