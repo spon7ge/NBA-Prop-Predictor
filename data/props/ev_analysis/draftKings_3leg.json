@@ -11,7 +11,7 @@
     "SIDE 1": "under",
     "PREDICTION 1": 6.0,
     "MIN PREDICTION 1": 34.1,
-    "MODEL_PROB 1": 0.723,
+    "MODEL_PROB 1": 0.716,
     "OPPONENT 1": "Milwaukee Bucks",
     "SPREAD 1": -15.0,
     "TOTAL 1": 227.0,
@@ -52,7 +52,7 @@
     "SIDE 2": "under",
     "PREDICTION 2": 18.6,
     "MIN PREDICTION 2": 32.2,
-    "MODEL_PROB 2": 0.784,
+    "MODEL_PROB 2": 0.782,
     "OPPONENT 2": "Atlanta Hawks",
     "SPREAD 2": -4.0,
     "TOTAL 2": 243.0,
@@ -93,7 +93,7 @@
     "SIDE 3": "under",
     "PREDICTION 3": 24.3,
     "MIN PREDICTION 3": 35.0,
-    "MODEL_PROB 3": 0.729,
+    "MODEL_PROB 3": 0.72,
     "OPPONENT 3": "Chicago Bulls",
     "SPREAD 3": -6.5,
     "TOTAL 3": 245.5,
@@ -123,9 +123,9 @@
     "STD_USG_L10 3": 0.04,
     "AVG_STAT_VS_MATCHUP 3": 11.0,
     "MATCHUP_GAMES 3": 1,
-    "PARLAY_PROB": 0.413,
-    "EV": 147.93,
-    "KELLY": 14.79
+    "PARLAY_PROB": 0.403,
+    "EV": 141.88,
+    "KELLY": 14.19
   },
   {
     "NAME 1": "Donovan Clingan",
@@ -139,7 +139,7 @@
     "SIDE 1": "under",
     "PREDICTION 1": 9.6,
     "MIN PREDICTION 1": 24.2,
-    "MODEL_PROB 1": 0.649,
+    "MODEL_PROB 1": 0.658,
     "OPPONENT 1": "Sacramento Kings",
     "SPREAD 1": -16.5,
     "TOTAL 1": 228.5,
@@ -180,7 +180,7 @@
     "SIDE 2": "under",
     "PREDICTION 2": 23.7,
     "MIN PREDICTION 2": 34.1,
-    "MODEL_PROB 2": 0.703,
+    "MODEL_PROB 2": 0.704,
     "OPPONENT 2": "Milwaukee Bucks",
     "SPREAD 2": -15.0,
     "TOTAL 2": 227.0,
@@ -221,7 +221,7 @@
     "SIDE 3": "under",
     "PREDICTION 3": 12.9,
     "MIN PREDICTION 3": 26.9,
-    "MODEL_PROB 3": 0.759,
+    "MODEL_PROB 3": 0.761,
     "OPPONENT 3": "Atlanta Hawks",
     "SPREAD 3": -4.0,
     "TOTAL 3": 243.0,
@@ -251,8 +251,8 @@
     "STD_USG_L10 3": 0.04,
     "AVG_STAT_VS_MATCHUP 3": 18.7,
     "MATCHUP_GAMES 3": 6,
-    "PARLAY_PROB": 0.346,
-    "EV": 107.77,
-    "KELLY": 10.78
+    "PARLAY_PROB": 0.353,
+    "EV": 111.51,
+    "KELLY": 11.15
   }
 ]
