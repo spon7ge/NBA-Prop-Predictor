@@ -35,7 +35,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "AST", "REB", "STL", "BLK"]
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "IS_DNP"]
 
     for lag in [1, 2, 3]:
         for col in cols:

@@ -1,10 +1,12 @@
 import pandas as pd
+import numpy as np
 
 def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE'])
 
     df = _rolling_player(df)
+    df = _ewm_player(df)
     df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
@@ -35,10 +37,27 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
+    cols = [
+        'MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PTS_PER_POSS', 'POSS_PER_MIN',
+        'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV',
+    ]
+
+    for span in [3, 5, 10]:
+        for col in cols:
+            df[f'{col}_{span}_ewm'] = (
+                df.groupby('PLAYER_ID')[col]
+                .transform(
+                    lambda x: x.shift(1).ewm(span=span, adjust=False).mean().round(2)
+                )
+            )
+
+    return df
+
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT"]
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "PTS_PER_MIN", '3PA_PER_MIN', 'FTA_PER_MIN', 'POSS_PER_MIN']
 
     for lag in [1, 2]:
         for col in cols:

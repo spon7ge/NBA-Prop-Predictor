@@ -16,7 +16,7 @@ def predict_min_times_rate(
     rate_pipeline,
     rate_quantile_models,
     min_quantile_models,
-    stat_prefix,  # "PTS", "AST", or "REB"
+    stat_prefix,  # "PTS", "AST", "REB", or "PTS+AST" (display market label)
     verbose=True,
 ):
     """
@@ -24,6 +24,12 @@ def predict_min_times_rate(
     """
     q10, q50, q90 = "q_0.10", "q_0.50", "q_0.90"
     records = []
+    # MARKET label (stat_prefix) vs per-minute column in prop_stats_df
+    rate_col_by_market = {
+        "PTS": "PTS_PER_MIN",
+        "AST": "AST_PER_MIN",
+        "REB": "REB_PER_MIN",
+    }
 
     for raw_name in names:
         name = name_dict.get(raw_name, raw_name) if raw_name in name_dict else raw_name
@@ -48,10 +54,10 @@ def predict_min_times_rate(
             r90 = float(rate_quantile_models[q90].predict(rate_arr)[0])
 
             pdf = prop_stats_df[prop_stats_df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
-            rate_col = f"{stat_prefix}_PER_MIN"  # "PTS_PER_MIN", "AST_PER_MIN", "REB_PER_MIN"
+            rate_col = rate_col_by_market.get(stat_prefix, f"{stat_prefix}_PER_MIN")
+            if rate_col not in pdf.columns:
+                raise KeyError(rate_col)
             rate_history = pdf[rate_col].dropna().tail(15).tolist()
-
-
 
             s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
             row = {
@@ -128,134 +134,66 @@ def triangular_clip(
 
     return samples
 
-def run_stat_simulation(
-    row,
-    n_sims: int = 10_000,
-    anchor_weight: float = 0.3,
-    decay: float = 0.85,
-    min_history: int = 5,
-) -> np.ndarray:
-    if not 0.0 <= anchor_weight <= 1.0:
-        raise ValueError(f"anchor_weight must be in [0, 1], got {anchor_weight}")
-    if n_sims < 1:
-        raise ValueError(f"n_sims must be >= 1, got {n_sims}")
-
-    # --- Minutes simulation ---
-    sim_min = triangular_clip(
-        row,
-        "MIN_Q10", "MIN_Q50", "MIN_Q90",
-        lo_scale=0.75, hi_scale=1.25,
-        low=0, high=48,
-        n_sims=n_sims,
+def triangular_clip_with_u(row, q10, q50, q90, U, lo_scale, hi_scale, low, high, mode_skew=1.03):
+    """
+    Inverse transform sampling with degenerate case protection.
+    """
+    q10_val, q50_val, q90_val = float(row[q10]), float(row[q50]), float(row[q90])
+    
+    left = q10_val * lo_scale
+    mode = q50_val * mode_skew
+    right = q90_val * hi_scale
+    
+    left, right = min(left, mode), max(right, mode)
+    
+    # Degenerate guard: if variance is zero, return the mode
+    if np.isclose(left, right):
+        return np.full_like(U, np.clip(mode, low, high))
+    
+    prob_mode = (mode - left) / (right - left)
+    
+    samples = np.where(
+        U < prob_mode,
+        left + np.sqrt(U * (mode - left) * (right - left)),
+        right - np.sqrt((1 - U) * (right - mode) * (right - left))
     )
+    return np.clip(samples, low, high)
 
-    # --- Rate simulation ---
-    rate_history = row.get("RATE_HISTORY") if isinstance(row, (dict, pd.Series)) else None
-
-    if rate_history is not None and len(rate_history) >= min_history:
-        h = np.array(rate_history, dtype=float)
-
-        # Recency weights: most recent game gets highest weight
+def run_pts_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_history=5):
+    n_anchor = int(n_sims * anchor_weight)
+    n_empirical = n_sims - n_anchor
+    
+    U = np.random.uniform(0, 1, n_sims)
+    np.random.shuffle(U)
+    
+    # Anchor: Fully Coupled (Min/Rate tied to same U slice)
+    U_anchor = U[:n_anchor]
+    sim_min_anchor = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U_anchor, 0.75, 1.25, 0, 48)
+    sim_ppm_anchor = triangular_clip_with_u(row, "RATE_Q10", "RATE_Q50", "RATE_Q90", U_anchor, 0.85, 1.15, 0, None)
+    
+    # Empirical: Independent Assumption
+    # Explicitly acknowledging independence assumption here.
+    if row.get("RATE_HISTORY") is not None and len(row["RATE_HISTORY"]) >= min_history:
+        h = np.array(row["RATE_HISTORY"], dtype=float)
         weights = np.array([decay ** i for i in range(len(h) - 1, -1, -1)])
         weights /= weights.sum()
-
-        n_anchor = int(n_sims * anchor_weight)
-        n_empirical = n_sims - n_anchor
-
-        # Empirical draws with mild jitter to smooth inter-game variance
-        empirical_samples = np.random.choice(h, size=n_empirical, p=weights)
-        jitter_std = np.std(h) * 0.05
-        empirical_samples = np.clip(
-            empirical_samples + np.random.normal(0, jitter_std, size=n_empirical),
-            0, None,
-        )
-
-        # Anchor draws: triangular distribution centred on Q50 rather than a point mass
-        anchor_samples = triangular_clip(
-            row,
-            "RATE_Q10", "RATE_Q50", "RATE_Q90",
-            lo_scale=0.85, hi_scale=1.15,
-            low=0, high=None,
-            n_sims=n_anchor,
-        ) if n_anchor > 0 else np.empty(0)
-
-        sim_rate = np.concatenate([empirical_samples, anchor_samples])
-
+        
+        empirical_rates = np.random.choice(h, size=n_empirical, p=weights)
+        # Robust jitter: capped to prevent outlier-driven variance expansion
+        jitter_std = np.clip(np.std(h) * 0.05, 0.01, 0.5)
+        empirical_rates += np.random.normal(0, jitter_std, size=n_empirical)
+        
+        sim_min_empirical = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)
+        
+        # Result arrays
+        sim_min = np.concatenate([sim_min_empirical, sim_min_anchor])
+        sim_ppm = np.concatenate([np.clip(empirical_rates, 0, None), sim_ppm_anchor])
     else:
-        sim_rate = triangular_clip(
-            row,
-            "RATE_Q10", "RATE_Q50", "RATE_Q90",
-            lo_scale=0.70, hi_scale=1.30,
-            low=0, high=None,
-            n_sims=n_sims,
-        )
-    # --- Poisson draw ---
-    # Clip lambda to (0, inf) — np.random.poisson raises on negative lam
-    expected_val = np.clip(sim_min * sim_rate, 0, None)
-    return np.random.poisson(lam=expected_val)
-
-def run_pts_simulation(
-    row,
-    n_sims: int = 10_000,
-    anchor_weight: float = 0.3,
-    decay: float = 0.85,
-    min_history: int = 5,
-) -> np.ndarray:
-    if not 0.0 <= anchor_weight <= 1.0:
-        raise ValueError(f"anchor_weight must be in [0, 1], got {anchor_weight}")
-    if n_sims < 1:
-        raise ValueError(f"n_sims must be >= 1, got {n_sims}")
-
-    # --- Minutes simulation (unchanged) ---
-    sim_min = triangular_clip(
-        row,
-        "MIN_Q10", "MIN_Q50", "MIN_Q90",
-        lo_scale=0.75, hi_scale=1.25,
-        low=0, high=48,
-        n_sims=n_sims,
-    )
-
-    # --- PPM simulation ---
-    rate_history = row.get("RATE_HISTORY") if isinstance(row, (dict, pd.Series)) else None
-
-    if rate_history is not None and len(rate_history) >= min_history:
-        h = np.array(rate_history, dtype=float)
-
-        # Recency weights: most recent game gets highest weight
-        weights = np.array([decay ** i for i in range(len(h) - 1, -1, -1)])
-        weights /= weights.sum()
-
-        n_anchor = int(n_sims * anchor_weight)
-        n_empirical = n_sims - n_anchor
-
-        # Empirical draws with mild jitter to smooth inter-game variance
-        empirical_samples = np.random.choice(h, size=n_empirical, p=weights)
-        jitter_std = np.std(h) * 0.05
-        empirical_samples = np.clip(empirical_samples + np.random.normal(0, jitter_std, size=n_empirical), 0, None)
-
-        # Anchor draws: triangular distribution centred on Q50 rather than a point mass
-        anchor_samples = triangular_clip(
-            row,
-            "RATE_Q10", "RATE_Q50", "RATE_Q90",
-            lo_scale=0.85, hi_scale=1.15,
-            low=0, high=None,
-            n_sims=n_anchor,
-        ) if n_anchor > 0 else np.empty(0)
-
-        sim_ppm = np.concatenate([empirical_samples, anchor_samples])
-
-    else:
-        sim_ppm = triangular_clip(
-            row,
-            "RATE_Q10", "RATE_Q50", "RATE_Q90",
-            lo_scale=0.70, hi_scale=1.30,
-            low=0, high=None,
-            n_sims=n_sims,
-        )
-
-    # Paired multiply — no shuffle needed; both arrays are already independently random
+        # Fallback
+        sim_min = sim_min_anchor
+        sim_ppm = sim_ppm_anchor
+        
     return sim_min * sim_ppm
-
 # ---------------------------------------------------------
 # 2. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------

@@ -1,13 +1,12 @@
 import pandas as pd
 
-def apm_features(df: pd.DataFrame) -> pd.DataFrame:
+def papm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE'])
 
     df = _rolling_player(df)
-    df = _ewm_player(df)
     df = _lag_features(df)
-    # df = _starter_features(df)
+    df = _starter_features(df)
     df = _season_averages(df)
     df = _efficiency_trends(df)
     df = _team_context(df)
@@ -23,7 +22,8 @@ def apm_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'AST_TO','AST', 'AST_PCT','AST_RATIO', 'TOV', 'AST_PER_MIN', 'TOV_PER_MIN', 'POSS_PER_MIN']
+    cols = ['MIN', 'PTS', 'AST','PTS_PER_MIN', 'AST_PER_MIN', 'FGA_PER_MIN', 'FG3A_PER_MIN', 
+    'FTA_PER_MIN', 'USG_PCT', 'TS_PCT', 'AST_PCT', 'AST_TO', 'COMBO_TARGET']
 
     for window in [3,5,10]:
         for col in cols:
@@ -33,27 +33,11 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = [
-        'AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN', 'AST_PCT', 'AST_TO', 'MIN', 'USG_PCT', 
-    ]
-
-    for span in [3, 5, 10]:
-        for col in cols:
-            df[f'{col}_{span}_ewm'] = (
-                df.groupby('PLAYER_ID')[col]
-                .transform(
-                    lambda x: x.shift(1).ewm(span=span, adjust=False).mean().round(2)
-                )
-            )
-
-    return df
-
-
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN']
+    cols = ['PTS_PER_MIN', 'AST_PER_MIN', 'FGA_PER_MIN', 'FG3A_PER_MIN', 
+    'FTA_PER_MIN', 'STARTING', 'USG_PCT', 'TS_PCT', 'COMBO_TARGET']
 
     for lag in [1, 2]:
         for col in cols:
@@ -75,7 +59,8 @@ def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 4. Season averages (expanding) ───────────────────────────────────────────
 
 def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'AST', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'AST_PER_MIN']
+    cols = ['MIN', 'PTS_PER_MIN', 'AST_PER_MIN', 'FGA_PER_MIN', 'FG3A_PER_MIN', 
+    'FTA_PER_MIN', 'USG_PCT', 'TS_PCT', 'COMBO_TARGET']
 
     for col in cols:
         df[f'{col}_season_avg'] = (
@@ -88,14 +73,12 @@ def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
 # ── 5. Efficiency trends ──────────────────────────────────────────────────────
 
 def _efficiency_trends(df: pd.DataFrame) -> pd.DataFrame:
-    df['PTS_PER_MIN_roll5'] = df['PTS_roll5'] / df['MIN_roll5'].replace(0, pd.NA)
-
-    df['NET_RATING_roll5'] = (
+    df['NET_RATING_roll10'] = (
         df.groupby('PLAYER_ID')['NET_RATING']
         .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
     )
 
-    df['TS_PCT_roll5'] = (
+    df['TS_PCT_roll10'] = (
         df.groupby('PLAYER_ID')['TS_PCT']
         .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
     )
@@ -119,10 +102,10 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
         .groupby('TEAM_ID')['TEAM_AST']
         .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
     )
-    team_net_rating = (
+    team_pts = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .groupby('TEAM_ID')['TEAM_NET_RATING']
+        .groupby('TEAM_ID')['TEAM_PTS']
         .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
     )
 
@@ -136,24 +119,17 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
         .sort_values(['TEAM_ID', 'GAME_DATE'])
         .assign(TEAM_AST_roll10=team_ast.values)[['TEAM_ID', 'GAME_ID', 'TEAM_AST_roll10']]
     )
-    team_net_rating_map = (
+    team_pts_map = (
         df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
         .sort_values(['TEAM_ID', 'GAME_DATE'])
-        .assign(TEAM_NET_RATING_roll10=team_net_rating.values)[['TEAM_ID', 'GAME_ID', 'TEAM_NET_RATING_roll10']]
-    )    
+        .assign(TEAM_PTS_roll10=team_pts.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PTS_roll10']]
+    )
 
     df = df.merge(team_pace_map, on=['TEAM_ID', 'GAME_ID'], how='left')
     df = df.merge(team_ast_map, on=['TEAM_ID', 'GAME_ID'], how='left')
-    df = df.merge(team_net_rating_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_pts_map, on=['TEAM_ID', 'GAME_ID'], how='left')
 
-    # ── MIN share and POSS share are player-level so these are fine as-is ─────
-    df["MIN_share_proxy"] = round(df["MIN_roll10"] / (48 * 10), 2)
-    #percentage of team's points scored by the player
-    df["AST_share_proxy_roll10"] = round(df["AST_roll10"] / (df["TEAM_AST_roll10"]), 2)
-
-    df["TEAM_POSS_roll10"] = df.groupby(["TEAM_ID", "SEASON_YEAR"])["POSS"].transform(lambda x: x.shift(1).rolling(10).mean().round(2))
-    df["TEAM_POSS_share_roll10"] = df["POSS_roll10"] / (df["TEAM_POSS_roll10"] + 1e-6)
-
+    df["PTS_share_proxy_roll10"] = round(df["PTS_roll10"] / (df["TEAM_PTS_roll10"]), 2)
     return df
 # ── 7. Schedule / rest ────────────────────────────────────────────────────────
 
@@ -179,19 +155,22 @@ def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 9. Volatility ─────────────────────────────────────────────────────────────
 
 def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
-    df['MIN_std10'] = (
-        df.groupby('PLAYER_ID')['MIN']
+    df['PTS_PER_MIN_std10'] = (
+        df.groupby('PLAYER_ID')['PTS_PER_MIN']
         .transform(lambda x: x.shift(1).rolling(10).std().round(2))
     )
-    df['AST_std10'] = (
-        df.groupby('PLAYER_ID')['MIN']
+    df['AST_PER_MIN_std10'] = (
+        df.groupby('PLAYER_ID')['AST_PER_MIN']
         .transform(lambda x: x.shift(1).rolling(10).std().round(2))
     )
-    df['TOV_std10'] = (
-        df.groupby('PLAYER_ID')['TOV']
+    df['FGA_PER_MIN_std10'] = (
+        df.groupby('PLAYER_ID')['FGA_PER_MIN']
         .transform(lambda x: x.shift(1).rolling(10).std().round(2))
     )
-
+    df['FG3A_PER_MIN_std10'] = (
+        df.groupby('PLAYER_ID')['FG3A_PER_MIN']
+        .transform(lambda x: x.shift(1).rolling(10).std().round(2))
+    )
     return df
 # ---- Opponent stats ---------------------------------------------------------------
 def _opponent_stats(df):
