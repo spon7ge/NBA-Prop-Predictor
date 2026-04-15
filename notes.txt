@@ -1,57 +1,9 @@
-training on s19-s25 and validating on s26 data
-10/21/25 - 11/03/25 live testing metrics MAE: 4.88 R2: 0.527
+https://techbuzzireland.com/2026/02/02/beyond-the-box-score-feature-engineering-for-predictive-sports-models-focusing-on-nba-player-props-and-advanced-metrics/
 
-MATH NEEDED:
-**Core Probability and Statistics**
+https://github.com/swapnil-ahlawat/NBA_Game_Predictor/blob/main/NBAPrediction.pdf
 
-* Probability rules, conditional probability, independence
-* Distributions: Normal, Poisson, Binomial, Exponential
-* Expected value, variance and correlation
-* Law of large numbers, central limit theorem, Bayes Theorem
-* Hypothesis testing and confidence intervals
-* Regression basics (linear, logistic)
-* Bayesian Thinking
-  - Prior, liklihood, posterior
-  - Bayesian updating
-  - Monte Carlo sampling for posterior simulation
-* Decision and Risk Theory
-  - Expected Utility and risk aversion
-  - Kelly Criterion
-  - Value at Risk(VaR) and expected shortfall
-  - Correlated Risk and portfolio variance
-* Stochastic Processes
-  - Markov Chain
-  - Martingales
-  - Random Walks and Brownian motion
+For Historical Odds: https://github.com/aigeon-ai/pinnacle-odds
 
-**Applied Statistics for Sports**
+https://hajim.rochester.edu/ece/sites/zduan/teaching/ece408/projects/2024/KevinFobare_MukhtarSuleman_RyanPappania_RodneyBoone_FinalProject_Report.pdf
 
-* Time series analysis (ARIMA, moving averages, stationarity)
-* Correlation and autocorrelation
-* Survival analysis (player time on court, injury risk modeling)
-* Bayesian inference (updating beliefs as new games are played)
-
-**Machine Learning Foundations**
-
-* Linear regression, logistic regression
-* Decision trees, random forests, gradient boosting (XGBoost, CatBoost, LightGBM)
-* Regularization (L1, L2)
-* Feature engineering for temporal and categorical data
-
-**Optimization and Decision Making**
-
-* Monte Carlo simulation for scenario testing
-* Expected value (EV) and Kelly Criterion for bankroll sizing
-* Linear programming and constrained optimization (useful in DFS lineups)
-
-**Mathematics of the Game**
-
-* Combinatorics (lineup combinations, possession outcomes)
-* Markov chains (possession-based modeling, win probability)
-* Elo/Glicko rating systems (team and player strength)
-
-**Advanced/Optional**
-
-* Calculus (to understand optimization and ML gradients)
-* Linear algebra (to understand matrix operations in ML models)
-* Probability density estimation (kernel density, bootstrapping)
+https://cs229.stanford.edu/proj2016/report/Avalon_balci_guzman_various_ml_approaches_NBA_Scores_report.pdf
