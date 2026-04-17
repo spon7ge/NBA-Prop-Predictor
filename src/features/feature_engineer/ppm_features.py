@@ -79,7 +79,7 @@ def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 4. Season averages (expanding) ───────────────────────────────────────────
 
 def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'DEF_RATING', 'PTS_PER_MIN']
+    cols = ['MIN', 'PTS', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'DEF_RATING', 'PTS_PER_MIN', 'FGA_PER_MIN', 'FTA_PER_MIN', '3PA_PER_MIN', 'TS_PCT']
 
     for col in cols:
         df[f'{col}_season_avg'] = (

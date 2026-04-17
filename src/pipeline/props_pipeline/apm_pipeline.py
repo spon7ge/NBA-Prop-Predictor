@@ -107,10 +107,4 @@ def apm_pipeline(df, name, date):
     starting_flag = float(1 if (canon_name in projected or name in projected) else 0)
     res.append(starting_flag)
 
-    res_df = pd.DataFrame([res], columns=apm_feature_names)
-    
-    # 3. Scale continuous columns
-    res_df[CONTINUOUS_COLS] = scaler.transform(res_df[CONTINUOUS_COLS])
-    res_df = res_df.fillna(0.0)
-    
-    return res_df.values
+    return res
