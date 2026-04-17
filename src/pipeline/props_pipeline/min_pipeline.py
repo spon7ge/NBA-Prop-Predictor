@@ -17,15 +17,6 @@ def min_pipeline(df, name, current_date):
     # ── GP ───────────────────────────────────────────────────────────────────
     res.append(len(pdf))
 
-    # ── DAYS_REST ─────────────────────────────────────────────────────────────
-    if len(pdf) >= 2:
-        last_date = pd.Timestamp(pdf["GAME_DATE"].iloc[-1]).normalize()
-        current = pd.Timestamp(current_date).normalize()
-        days_rest = int((current - last_date).days)
-    elif days_rest > 3:
-        days_rest = 3
-    res.append(float(days_rest))
-
     # ── POSITION_ENC ──────────────────────────────────────────────────────────
     res.append(pdf['POSITION_ENC'].iloc[-1])
 
@@ -34,7 +25,6 @@ def min_pipeline(df, name, current_date):
         starting_override = 1
     else:
         starting_override = 0
-    res.append(float(starting_override))
 
     # ── STARTER_X_MIN_AVG ─────────────────────────────────────────────────────
     min_avg = float(pdf["MIN"].mean())

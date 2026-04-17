@@ -8,10 +8,10 @@ projectedStartingFive = {
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
     "DEN": ["Julian Strawther", "Zeke Nnaji", "Nikola Jokić", "Bruce Brown", "Tyus Jones"],
     "DET": ["Paul Reed", "Tobias Harris", "Ausar Thompson", "Cade Cunningham", "Duncan Robinson"],
-    "GSW": ["Kristaps Porziņģis", "De'Anthony Melton", "Brandin Podziemski", "Al Horford", "Stephen Curry"],
+    "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Jae'Sean Tate", "Josh Okogie", "Tari Eason", "Clint Capela", "Reed Sheppard"],
     "IND": ["Micah Potter", "Ethan Thompson", "Kobe Brown", "Quenton Jackson", "Jalen Slawson"],
-    "LAC": ["Derrick Jones", "Darius Garland", "Brook Lopez", "John Collins", "Kris Dunn"],
+    "LAC": ["Brook Lopez", "Kris Dunn", "Kawhi Leonard", "Derrick Jones", "Darius Garland"],
     "LAL": ["Rui Hachimura", "Luke Kennard", "Deandre Ayton", "LeBron James", "Marcus Smart"],
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
@@ -20,8 +20,8 @@ projectedStartingFive = {
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Jose Alvarado", "Mikal Bridges", "Miles McBride", "Mohamed Diawara", "Ariel Hukporti"],
     "OKC": ["Luguentz Dort", "Nikola Topic", "Aaron Wiggins", "Jared McCain", "Branden Carlson"],
-    "ORL": ["Franz Wagner", "Jalen Suggs", "Desmond Bane", "Wendell Carter", "Paolo Banchero"],
-    "PHI": ["VJ Edgecombe", "Adem Bona", "Kelly Oubre", "Tyrese Maxey", "Paul George"],
+    "ORL": ["Franz Wagner", "Wendell Carter", "Jalen Suggs", "Paolo Banchero", "Desmond Bane"],
+    "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Adem Bona", "Tyrese Maxey"],
     "PHX": ["Amir Coffey", "Ryan Dunn", "Oso Ighodaro", "Jamaree Bouyea", "Rasheer Fleming"],
     "POR": ["Toumani Camara", "Jrue Holiday", "Deni Avdija", "Scoot Henderson", "Donovan Clingan"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
@@ -131,6 +131,7 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DAL": ["Cooper Flagg"],
+    "LAC": ["Isaiah Jackson"],
+    "ORL": ["Jett Howard", "Jonathan Isaac"],
 }
 

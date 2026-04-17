@@ -2,17 +2,6 @@ import numpy as np
 import pandas as pd
 import joblib
 
-rpm_bundle = joblib.load("src/models/saved_models/rpm_quantile_xgb.joblib")
-rpm_quantile_models = rpm_bundle["quantile_models"]
-rpm_feature_names = rpm_bundle["feature_names"]
-scaler = rpm_bundle["scaler"]
-
-CONTINUOUS_COLS = [
-    'REB_PER_MIN_season_avg', 'MEDIAN_REB_PER_MIN_L10', 'REB_PCT_roll10', 
-    'REB_PER_MIN_roll10', 'OREB_PER_MIN_season_avg', 'DREB_PER_MIN_season_avg', 
-    'OPP_DEF_RATING_roll10', 'DREB_PER_MIN_roll10'
-]
-
 from src.utils.helper_functions import findOpp
 from src.utils.team_info import nameDict, projectedStartingFive, team3StarsPerTeam
 
@@ -64,11 +53,5 @@ def rpm_pipeline(df, name, date):
     # DREB_PER_MIN_roll10
     dreb_per_min_roll10 = pdf["DREB_PER_MIN"].astype(float).tail(10).mean().round(2)
     res.append(float(dreb_per_min_roll10) if pd.notna(dreb_per_min_roll10) else float("nan"))
-
-    res_df = pd.DataFrame([res], columns=rpm_feature_names)
     
-    # 3. Scale continuous columns
-    res_df[CONTINUOUS_COLS] = scaler.transform(res_df[CONTINUOUS_COLS])
-    res_df = res_df.fillna(0.0)
-    
-    return res_df.values
+    return res
