@@ -1,0 +1,634 @@
+player,prop,line,proj,side,diff
+Jalen Wilson,Points,9.5,12.6,over,3.1
+De'Aaron Fox,Points,25.5,28.2,over,2.7
+DeMar DeRozan,Points,22.5,25.1,over,2.6
+Tim Hardaway Jr.,Points,9.5,12,over,2.5
+Ochai Agbaji,Points,10.5,13,over,2.5
+Lauri Markkanen,Points,18.5,20.9,over,2.4
+Miles Bridges,Points,13.5,15.8,over,2.3
+LaMelo Ball,Points,23.5,21.2,under,-2.3
+Ausar Thompson,Points,7.5,9.7,over,2.2
+Guerschon Yabusele,Points,9.5,11.5,over,2
+Nicolas Batum,Points,3.5,5.5,over,2
+Dru Smith,Points,6.5,8.4,over,1.9
+Kelly Oubre Jr.,Points,14.5,16.4,over,1.9
+Nick Richards,Points,6.5,8.4,over,1.9
+Jarrett Allen,Points,12.5,14.4,over,1.9
+Cameron Johnson,Points,20.5,17.7,under,-1.8
+Josh Giddey,Points,14.5,16.2,over,1.7
+Ronald Holland II,Points,6.5,8.1,over,1.6
+Donovan Mitchell,Points,22.5,24,over,1.5
+Brice Sensabaugh,Points,5.5,7,over,1.5
+Aaron Gordon,Points,13.5,14.9,over,1.4
+Noah Clowney,Points,7.5,6.2,under,-1.3
+Jonathan Mogbo,Points,9.5,8.3,under,-1.2
+Jordan Miller,Points,6.5,7.7,over,1.2
+Isaiah Stewart,Points,6.5,7.6,over,1.1
+Davion Mitchell,Points,7.5,6.4,under,-1.1
+Jamal Murray,Points,18.5,19.6,over,1.1
+Malik Monk,Points,17.5,18.6,over,1.1
+Bam Adebayo,Points,17.5,18.5,over,1
+Jaime Jaquez Jr.,Points,7.5,8.5,over,1
+Tyrese Maxey,Points,26.5,24.5,under,-1
+Kris Dunn,Points,6.5,7.5,over,1
+Ayo Dosunmu,Points,14.5,15.4,over,0.9
+Haywood Highsmith,Points,6.5,7.3,over,0.8
+Simone Fontecchio,Points,6.5,7.3,over,0.8
+Isaac Okoro,Points,6.5,7.3,over,0.8
+James Harden,Points,22.5,21.7,under,-0.8
+Jordan Clarkson,Points,13.5,14.3,over,0.8
+Caris LeVert,Points,11.5,12.2,over,0.7
+Dorian Finney-Smith,Points,9.5,10.2,over,0.7
+Cade Cunningham,Points,22.5,23.1,over,0.6
+Christian Braun,Points,12.5,11.9,under,-0.6
+Julian Strawther,Points,8.5,9.1,over,0.6
+Jalen Duren,Points,9.5,10,over,0.5
+Kelly Olynyk,Points,7.5,7.9,over,0.4
+RJ Barrett,Points,25.5,25.1,under,-0.4
+Coby White,Points,21.5,21.9,over,0.4
+Darius Garland,Points,18.5,18.9,over,0.4
+Nic Claxton,Points,10.5,10.9,over,0.4
+Evan Mobley,Points,15.5,15.9,over,0.4
+Collin Sexton,Points,14.5,14.9,over,0.4
+Paul George,Points,21.5,21.8,over,0.3
+Sam Merrill,Points,6.5,6.8,over,0.3
+Norman Powell,Points,22.5,21.2,under,-0.3
+Andre Drummond,Points,10.5,10.3,under,-0.2
+Josh Green,Points,8.5,8.7,over,0.2
+John Collins,Points,16.5,16.3,under,-0.2
+Kevin Porter Jr.,Points,12.5,12.7,over,0.2
+Amir Coffey,Points,10.5,10.7,over,0.2
+Duncan Robinson,Points,11.5,11.6,over,0.1
+Tyler Herro,Points,22.5,22.4,under,-0.1
+Brandon Miller,Points,20.5,20.6,over,0.1
+Nikola Vucevic,Points,20.5,20.6,over,0.1
+Jakob Poeltl,Points,16.5,16.6,over,0.1
+Matas Buzelis,Points,7.5,7.4,under,-0.1
+Jordan Miller,Assists,0.5,1.5,over,1
+Cade Cunningham,Assists,9.5,8.6,under,-0.9
+Paul George,Assists,5.5,4.6,under,-0.9
+LaMelo Ball,Assists,5.5,6.4,over,0.9
+Kelly Olynyk,Assists,2.5,3.3,over,0.8
+Simone Fontecchio,Assists,0.5,1.2,over,0.7
+Ronald Holland II,Assists,0.5,1.2,over,0.7
+Guerschon Yabusele,Assists,1.5,2.2,over,0.7
+Jonathan Mogbo,Assists,3.5,2.8,under,-0.7
+John Collins,Assists,2.5,1.8,under,-0.7
+Haywood Highsmith,Assists,0.5,1.1,over,0.6
+Josh Green,Assists,1.5,2.1,over,0.6
+Brandon Miller,Assists,3.5,2.9,under,-0.6
+Coby White,Assists,4.5,5.1,over,0.6
+Josh Giddey,Assists,6.5,7.1,over,0.6
+Gradey Dick,Assists,2.5,1.9,under,-0.6
+Matas Buzelis,Assists,0.5,1.1,over,0.6
+Jarrett Allen,Assists,1.5,2.1,over,0.6
+Jalen Wilson,Assists,1.5,2.1,over,0.6
+Bam Adebayo,Assists,4.5,4,under,-0.5
+Jalen Duren,Assists,1.5,2,over,0.5
+Ausar Thompson,Assists,1.5,2,over,0.5
+Donovan Mitchell,Assists,4.5,5,over,0.5
+Nic Claxton,Assists,2.5,2,under,-0.5
+Malik Monk,Assists,5.5,6,over,0.5
+Tim Hardaway Jr.,Assists,1.5,1.9,over,0.4
+Andre Drummond,Assists,0.5,0.9,over,0.4
+Davion Mitchell,Assists,4.5,4.9,over,0.4
+Evan Mobley,Assists,2.5,2.9,over,0.4
+De'Aaron Fox,Assists,6.5,6.9,over,0.4
+Christian Braun,Assists,1.5,1.9,over,0.4
+Jordan Clarkson,Assists,3.5,3.9,over,0.4
+Norman Powell,Assists,2.5,2.1,under,-0.4
+Lauri Markkanen,Assists,2.5,2.1,under,-0.4
+Jaime Jaquez Jr.,Assists,1.5,1.8,over,0.3
+Nick Richards,Assists,0.5,0.8,over,0.3
+Patrick Williams,Assists,1.5,1.2,under,-0.3
+Caris LeVert,Assists,4,4.3,over,0.3
+Jamal Murray,Assists,5.5,5.8,over,0.3
+Nicolas Batum,Assists,1.5,1.8,over,0.3
+Duncan Robinson,Assists,2.5,2.3,under,-0.2
+Miles Bridges,Assists,2.5,2.7,over,0.2
+Nikola Vucevic,Assists,3.5,3.3,under,-0.2
+Dorian Finney-Smith,Assists,1.5,1.7,over,0.2
+Darius Garland,Assists,6.5,6.7,over,0.2
+Cameron Johnson,Assists,2.5,2.7,over,0.2
+Isaac Okoro,Assists,1.5,1.7,over,0.2
+Sam Merrill,Assists,1.5,1.3,under,-0.2
+Noah Clowney,Assists,0.5,0.7,over,0.2
+Tyler Herro,Assists,4.5,4.6,over,0.1
+Isaiah Stewart,Assists,1.5,1.6,over,0.1
+Dru Smith,Assists,2.5,2.4,under,-0.1
+Kelly Oubre Jr.,Assists,1.5,1.6,over,0.1
+Tyrese Maxey,Assists,5.5,5.6,over,0.1
+Jakob Poeltl,Assists,3.5,3.6,over,0.1
+Ayo Dosunmu,Assists,5.5,4.4,under,-0.1
+Ochai Agbaji,Assists,2.5,2.4,under,-0.1
+Ja'Kobe Walter,Assists,1.5,1.6,over,0.1
+Aaron Gordon,Assists,3,3.1,over,0.1
+Julian Strawther,Assists,1.5,1.4,under,-0.1
+Collin Sexton,Assists,3.5,3.6,over,0.1
+Amir Coffey,Assists,1.5,1.4,under,-0.1
+Matas Buzelis,Rebounds,4.5,3.2,under,-1.3
+Dru Smith,Rebounds,3.5,4.6,over,1.1
+DeMar DeRozan,Rebounds,3.5,4.5,over,1
+Isaiah Stewart,Rebounds,5.5,6.4,over,0.9
+Guerschon Yabusele,Rebounds,5.5,6.4,over,0.9
+Jarrett Allen,Rebounds,10.5,9.6,under,-0.9
+Sam Merrill,Rebounds,2.5,1.6,under,-0.9
+Bam Adebayo,Rebounds,10.5,9.7,under,-0.8
+Tyler Herro,Rebounds,4.5,5.3,over,0.8
+John Collins,Rebounds,7.5,8.3,over,0.8
+Brandon Miller,Rebounds,5.5,4.8,under,-0.7
+Aaron Gordon,Rebounds,5.5,6.2,over,0.7
+Nicolas Batum,Rebounds,2.5,3.2,over,0.7
+Haywood Highsmith,Rebounds,3.5,2.9,under,-0.6
+Kelly Olynyk,Rebounds,3.5,4.1,over,0.6
+Coby White,Rebounds,3.5,4.1,over,0.6
+Patrick Williams,Rebounds,3.5,2.9,under,-0.6
+Jalen Wilson,Rebounds,3.5,4.1,over,0.6
+Russell Westbrook III,Rebounds,4.5,3.9,under,-0.6
+Jordan Clarkson,Rebounds,2.5,3.1,over,0.6
+Norman Powell,Rebounds,2.5,3.1,over,0.6
+Tim Hardaway Jr.,Rebounds,2.5,3,over,0.5
+Jaime Jaquez Jr.,Rebounds,3.5,3,under,-0.5
+RJ Barrett,Rebounds,7.5,7,under,-0.5
+Cameron Johnson,Rebounds,4.5,5,over,0.5
+Julian Strawther,Rebounds,2.5,2,under,-0.5
+Lauri Markkanen,Rebounds,6.5,7,over,0.5
+Cade Cunningham,Rebounds,6.5,6.1,under,-0.4
+Simone Fontecchio,Rebounds,2.5,2.9,over,0.4
+Ronald Holland II,Rebounds,3.5,3.9,over,0.4
+Josh Green,Rebounds,3.5,3.1,under,-0.4
+Davion Mitchell,Rebounds,2.5,2.1,under,-0.4
+De'Aaron Fox,Rebounds,4.5,4.9,over,0.4
+Tyrese Maxey,Rebounds,3.5,3.8,over,0.3
+Jakob Poeltl,Rebounds,11.5,11.8,over,0.3
+Ayo Dosunmu,Rebounds,3.5,3.8,over,0.3
+Jonathan Mogbo,Rebounds,6.5,6.8,over,0.3
+Noah Clowney,Rebounds,3.5,3.2,under,-0.3
+Malik Monk,Rebounds,3.5,3.8,over,0.3
+Christian Braun,Rebounds,4.5,4.8,over,0.3
+Collin Sexton,Rebounds,2.5,2.2,under,-0.3
+Jordan Miller,Rebounds,2.5,2.2,under,-0.3
+Paul George,Rebounds,5.5,5.7,over,0.2
+Andre Drummond,Rebounds,11.5,11.3,under,-0.2
+Nick Richards,Rebounds,6.5,6.7,over,0.2
+Ochai Agbaji,Rebounds,4.5,4.7,over,0.2
+Ja'Kobe Walter,Rebounds,3.5,3.3,under,-0.2
+Nic Claxton,Rebounds,8.5,8.7,over,0.2
+Jamal Murray,Rebounds,3.5,3.7,over,0.2
+Duncan Robinson,Rebounds,2.5,2.4,under,-0.1
+Jalen Duren,Rebounds,9.5,9.4,under,-0.1
+Kelly Oubre Jr.,Rebounds,5.5,5.6,over,0.1
+Miles Bridges,Rebounds,5.5,5.6,over,0.1
+Nikola Vucevic,Rebounds,10.5,10.4,under,-0.1
+Gradey Dick,Rebounds,3.5,3.4,under,-0.1
+Caris LeVert,Rebounds,3.5,3.4,under,-0.1
+Donovan Mitchell,Rebounds,4.5,4.4,under,-0.1
+Darius Garland,Rebounds,2.5,2.6,over,0.1
+Isaac Okoro,Rebounds,2.5,2.6,over,0.1
+Evan Mobley,Rebounds,9.5,8.4,under,-0.1
+James Harden,Rebounds,5.5,5.6,over,0.1
+Kris Dunn,Rebounds,3.5,3.4,under,-0.1
+Kevin Porter Jr.,Rebounds,3.5,3.4,under,-0.1
+Amir Coffey,Rebounds,2.5,2.4,under,-0.1
+Bones Hyland,Rebounds,1.5,1.6,over,0.1
+DeMar DeRozan,Pts+Ast,25.5,30.8,over,5.3
+Gradey Dick,Pts+Ast,22.5,17.6,under,-3.9
+De'Aaron Fox,Pts+Ast,31.5,35.1,over,3.6
+Ochai Agbaji,Pts+Ast,12.5,15.4,over,2.9
+Ronald Holland II,Pts+Ast,6.5,9.3,over,2.8
+Kelly Oubre Jr.,Pts+Ast,15.5,18,over,2.5
+Tyrese Maxey,Pts+Ast,32.5,30,under,-2.5
+Ja'Kobe Walter,Pts+Ast,11.5,9,under,-2.5
+Lauri Markkanen,Pts+Ast,20.5,23,over,2.5
+Ausar Thompson,Pts+Ast,9.5,11.7,over,2.2
+Jalen Wilson,Pts+Ast,12.5,14.7,over,2.2
+Cameron Johnson,Pts+Ast,24.5,20.4,under,-2.1
+Miles Bridges,Pts+Ast,16.5,18.5,over,2
+Jarrett Allen,Pts+Ast,14.5,16.5,over,2
+Nicolas Batum,Pts+Ast,5.5,7.3,over,1.8
+Nick Richards,Pts+Ast,7.5,9.2,over,1.7
+Patrick Williams,Pts+Ast,10.5,8.8,under,-1.7
+Jordan Miller,Pts+Ast,7.5,9.2,over,1.7
+Noah Clowney,Pts+Ast,8.5,6.9,under,-1.6
+Coby White,Pts+Ast,25.5,27,over,1.5
+Donovan Mitchell,Pts+Ast,27.5,29,over,1.5
+Aaron Gordon,Pts+Ast,16.5,18,over,1.5
+Jonathan Mogbo,Pts+Ast,13.5,11.1,under,-1.4
+Dru Smith,Pts+Ast,9.5,10.8,over,1.3
+Evan Mobley,Pts+Ast,17.5,18.8,over,1.3
+Davion Mitchell,Pts+Ast,12.5,11.3,under,-1.2
+Norman Powell,Pts+Ast,24.5,23.3,under,-1.2
+RJ Barrett,Pts+Ast,32.5,30.4,under,-1.1
+Malik Monk,Pts+Ast,23.5,24.6,over,1.1
+Simone Fontecchio,Pts+Ast,7.5,8.5,over,1
+Brandon Miller,Pts+Ast,24.5,23.5,under,-1
+Julian Strawther,Pts+Ast,9.5,10.5,over,1
+Collin Sexton,Pts+Ast,17.5,18.5,over,1
+Haywood Highsmith,Pts+Ast,7.5,8.4,over,0.9
+LaMelo Ball,Pts+Ast,30.5,27.6,under,-0.9
+Darius Garland,Pts+Ast,26.5,25.6,under,-0.9
+Jamal Murray,Pts+Ast,24.5,25.4,over,0.9
+Cade Cunningham,Pts+Ast,33.5,31.7,under,-0.8
+Jaime Jaquez Jr.,Pts+Ast,9.5,10.3,over,0.8
+Josh Giddey,Pts+Ast,22.5,23.3,over,0.8
+Andre Drummond,Pts+Ast,10.5,11.2,over,0.7
+Kelly Olynyk,Pts+Ast,10.5,11.2,over,0.7
+Christian Braun,Pts+Ast,14.5,13.8,under,-0.7
+Jordan Clarkson,Pts+Ast,17.5,18.2,over,0.7
+Kevin Porter Jr.,Pts+Ast,16.5,17.2,over,0.7
+Bones Hyland,Pts+Ast,11.5,12.2,over,0.7
+Tyler Herro,Pts+Ast,27.5,26.9,under,-0.6
+Isaiah Stewart,Pts+Ast,8.5,9.1,over,0.6
+Nic Claxton,Pts+Ast,13.5,12.9,under,-0.6
+John Collins,Pts+Ast,17.5,18.1,over,0.6
+Amir Coffey,Pts+Ast,11.5,12.1,over,0.6
+Jalen Duren,Pts+Ast,11.5,12,over,0.5
+Jakob Poeltl,Pts+Ast,20.5,20,under,-0.5
+Isaac Okoro,Pts+Ast,8.5,9,over,0.5
+Duncan Robinson,Pts+Ast,13.5,13.9,over,0.4
+Dorian Finney-Smith,Pts+Ast,11.5,11.9,over,0.4
+Sam Merrill,Pts+Ast,8.5,8.1,under,-0.4
+James Harden,Pts+Ast,31.5,31.9,over,0.4
+Josh Green,Pts+Ast,10.5,10.8,over,0.3
+Nikola Vucevic,Pts+Ast,23.5,23.8,over,0.3
+Ayo Dosunmu,Pts+Ast,19.5,19.8,over,0.3
+Bam Adebayo,Pts+Ast,22.5,22.6,over,0.1
+Paul George,Pts+Ast,26.5,26.4,under,-0.1
+Matas Buzelis,Pts+Ast,8.5,8.6,over,0.1
+Caris LeVert,Pts+Ast,16.5,16.6,over,0.1
+Russell Westbrook III,Pts+Reb,17.5,14,under,-3.5
+Gradey Dick,Pts+Reb,23.5,19.1,under,-3.4
+Lauri Markkanen,Pts+Reb,24.5,27.9,over,3.4
+Ochai Agbaji,Pts+Reb,14.5,17.7,over,3.2
+Jalen Wilson,Pts+Reb,13.5,16.7,over,3.2
+DeMar DeRozan,Pts+Reb,26.5,29.6,over,3.1
+De'Aaron Fox,Pts+Reb,30.5,33.1,over,2.6
+Tim Hardaway Jr.,Pts+Reb,12.5,15,over,2.5
+Dru Smith,Pts+Reb,10.5,13,over,2.5
+Ronald Holland II,Pts+Reb,9.5,12,over,2.5
+Josh Giddey,Pts+Reb,21.5,24,over,2.5
+Patrick Williams,Pts+Reb,12.5,10.5,under,-2
+Miles Bridges,Pts+Reb,19.5,21.4,over,1.9
+Matas Buzelis,Pts+Reb,12.5,10.6,under,-1.9
+Ja'Kobe Walter,Pts+Reb,12.5,10.7,under,-1.8
+Cameron Johnson,Pts+Reb,24.5,22.7,under,-1.8
+Simone Fontecchio,Pts+Reb,8.5,10.2,over,1.7
+Bones Hyland,Pts+Reb,10.5,12.2,over,1.7
+Aaron Gordon,Pts+Reb,19.5,21.1,over,1.6
+Isaiah Stewart,Pts+Reb,12.5,14,over,1.5
+Kelly Oubre Jr.,Pts+Reb,20.5,22,over,1.5
+Coby White,Pts+Reb,24.5,26,over,1.5
+LaMelo Ball,Pts+Reb,27.5,26.1,under,-1.4
+Jonathan Mogbo,Pts+Reb,16.5,15.1,under,-1.4
+Jordan Miller,Pts+Reb,8.5,9.9,over,1.4
+Josh Green,Pts+Reb,10.5,11.8,over,1.3
+Isaac Okoro,Pts+Reb,8.5,9.8,over,1.3
+Tyrese Maxey,Pts+Reb,30.5,28.3,under,-1.2
+Noah Clowney,Pts+Reb,11.5,9.4,under,-1.1
+Paul George,Pts+Reb,26.5,27.5,over,1
+Davion Mitchell,Pts+Reb,10.5,8.5,under,-1
+Darius Garland,Pts+Reb,22.5,21.5,under,-1
+Jalen Duren,Pts+Reb,18.5,19.4,over,0.9
+Donovan Mitchell,Pts+Reb,27.5,28.4,over,0.9
+Malik Monk,Pts+Reb,21.5,22.4,over,0.9
+Jordan Clarkson,Pts+Reb,16.5,17.4,over,0.9
+Jamal Murray,Pts+Reb,22.5,23.3,over,0.8
+Ayo Dosunmu,Pts+Reb,18.5,19.2,over,0.7
+Julian Strawther,Pts+Reb,10.5,11.1,over,0.6
+Collin Sexton,Pts+Reb,16.5,17.1,over,0.6
+Duncan Robinson,Pts+Reb,13.5,14,over,0.5
+Kelly Olynyk,Pts+Reb,12.5,12,under,-0.5
+Dorian Finney-Smith,Pts+Reb,14.5,15,over,0.5
+Jarrett Allen,Pts+Reb,23.5,24,over,0.5
+Nikola Vucevic,Pts+Reb,30.5,30.9,over,0.4
+RJ Barrett,Pts+Reb,32.5,32.1,under,-0.4
+Kris Dunn,Pts+Reb,10.5,10.9,over,0.4
+Kevin Porter Jr.,Pts+Reb,16.5,16.1,under,-0.4
+Amir Coffey,Pts+Reb,13.5,13.1,under,-0.4
+Bam Adebayo,Pts+Reb,28.5,28.2,under,-0.3
+Haywood Highsmith,Pts+Reb,10.5,10.2,under,-0.3
+Cade Cunningham,Pts+Reb,30.5,29.2,under,-0.3
+Tyler Herro,Pts+Reb,27.5,27.7,over,0.2
+Jakob Poeltl,Pts+Reb,28.5,28.3,under,-0.2
+Evan Mobley,Pts+Reb,24.5,24.3,under,-0.2
+Christian Braun,Pts+Reb,16.5,16.7,over,0.2
+James Harden,Pts+Reb,27.5,27.3,under,-0.2
+Nicolas Batum,Pts+Reb,8.5,8.7,over,0.2
+Norman Powell,Pts+Reb,25.5,24.3,under,-0.2
+Jaime Jaquez Jr.,Pts+Reb,11.5,11.6,over,0.1
+Andre Drummond,Pts+Reb,21.5,21.6,over,0.1
+Brandon Miller,Pts+Reb,27.5,25.4,under,-0.1
+Caris LeVert,Pts+Reb,15.5,15.6,over,0.1
+Nic Claxton,Pts+Reb,19.5,19.6,over,0.1
+Sam Merrill,Pts+Reb,9.5,8.4,under,-0.1
+John Collins,Pts+Reb,24.5,24.6,over,0.1
+Bam Adebayo,Reb+Ast,15.5,13.7,under,-1.8
+Josh Giddey,Reb+Ast,13.5,14.9,over,1.4
+Kevin Porter Jr.,Reb+Ast,6.5,7.9,over,1.4
+James Harden,Reb+Ast,14.5,15.8,over,1.3
+RJ Barrett,Reb+Ast,14.5,12.3,under,-1.2
+Matas Buzelis,Reb+Ast,5.5,4.3,under,-1.2
+Christian Braun,Reb+Ast,5.5,6.7,over,1.2
+Nick Richards,Reb+Ast,6.5,7.5,over,1
+Dorian Finney-Smith,Reb+Ast,5.5,6.5,over,1
+Tim Hardaway Jr.,Reb+Ast,4,4.9,over,0.9
+Jalen Duren,Reb+Ast,10.5,11.4,over,0.9
+Kelly Olynyk,Reb+Ast,6.5,7.4,over,0.9
+Jonathan Mogbo,Reb+Ast,10.5,9.6,under,-0.9
+Donovan Mitchell,Reb+Ast,8.5,9.4,over,0.9
+Cade Cunningham,Reb+Ast,16.5,14.7,under,-0.8
+LaMelo Ball,Reb+Ast,10.5,11.3,over,0.8
+Brandon Miller,Reb+Ast,8.5,7.7,under,-0.8
+Jakob Poeltl,Reb+Ast,14.5,15.3,over,0.8
+Jarrett Allen,Reb+Ast,12.5,11.7,under,-0.8
+Aaron Gordon,Reb+Ast,8.5,9.3,over,0.8
+Jaime Jaquez Jr.,Reb+Ast,5.5,4.8,under,-0.7
+Andre Drummond,Reb+Ast,11.5,12.2,over,0.7
+Coby White,Reb+Ast,8.5,9.2,over,0.7
+Jalen Wilson,Reb+Ast,5.5,6.2,over,0.7
+Simone Fontecchio,Reb+Ast,3.5,4.1,over,0.6
+Ronald Holland II,Reb+Ast,4.5,5.1,over,0.6
+Davion Mitchell,Reb+Ast,6.5,7.1,over,0.6
+Ochai Agbaji,Reb+Ast,6.5,7.1,over,0.6
+Ja'Kobe Walter,Reb+Ast,5.5,4.9,under,-0.6
+Sam Merrill,Reb+Ast,3.5,2.9,under,-0.6
+Noah Clowney,Reb+Ast,4.5,3.9,under,-0.6
+Lauri Markkanen,Reb+Ast,8.5,9.1,over,0.6
+John Collins,Reb+Ast,9.5,10.1,over,0.6
+Haywood Highsmith,Reb+Ast,4.5,4,under,-0.5
+Dru Smith,Reb+Ast,6.5,7,over,0.5
+Nicolas Batum,Reb+Ast,4.5,5,over,0.5
+Jordan Clarkson,Reb+Ast,6.5,7,over,0.5
+Isaiah Stewart,Reb+Ast,7.5,7.9,over,0.4
+Patrick Williams,Reb+Ast,4.5,4.1,under,-0.4
+Tyler Herro,Reb+Ast,9.5,9.8,over,0.3
+Kelly Oubre Jr.,Reb+Ast,7.5,7.2,under,-0.3
+Josh Green,Reb+Ast,5.5,5.2,under,-0.3
+Ayo Dosunmu,Reb+Ast,8.5,8.2,under,-0.3
+Malik Monk,Reb+Ast,9.5,9.8,over,0.3
+De'Aaron Fox,Reb+Ast,11.5,11.8,over,0.3
+Norman Powell,Reb+Ast,5.5,5.2,under,-0.3
+Collin Sexton,Reb+Ast,5.5,5.8,over,0.3
+Amir Coffey,Reb+Ast,3.5,3.8,over,0.3
+Duncan Robinson,Reb+Ast,4.5,4.7,over,0.2
+Paul George,Reb+Ast,11.5,10.3,under,-0.2
+Miles Bridges,Reb+Ast,8.5,8.3,under,-0.2
+Tyrese Maxey,Reb+Ast,10.5,9.3,under,-0.2
+Nikola Vucevic,Reb+Ast,13.5,13.7,over,0.2
+Gradey Dick,Reb+Ast,6.5,5.3,under,-0.2
+Caris LeVert,Reb+Ast,7.5,7.7,over,0.2
+Darius Garland,Reb+Ast,9.5,9.3,under,-0.2
+Nic Claxton,Reb+Ast,10.5,10.7,over,0.2
+Cameron Johnson,Reb+Ast,7.5,7.7,over,0.2
+Isaac Okoro,Reb+Ast,4,4.2,over,0.2
+Evan Mobley,Reb+Ast,11.5,11.3,under,-0.2
+Jordan Miller,Reb+Ast,3.5,3.7,over,0.2
+Jamal Murray,Reb+Ast,9.5,9.6,over,0.1
+Julian Strawther,Reb+Ast,3.5,3.4,under,-0.1
+DeMar DeRozan,Pts+Reb+Ast,30.5,35.3,over,4.8
+Gradey Dick,Pts+Reb+Ast,25.5,21,under,-3.5
+De'Aaron Fox,Pts+Reb+Ast,36.5,40,over,3.5
+Lauri Markkanen,Pts+Reb+Ast,26.5,30,over,3.5
+Jalen Wilson,Pts+Reb+Ast,15.5,18.8,over,3.3
+Patrick Williams,Pts+Reb+Ast,14.5,11.7,under,-2.8
+Ronald Holland II,Pts+Reb+Ast,10.5,13.2,over,2.7
+Ochai Agbaji,Pts+Reb+Ast,17.5,20.1,over,2.6
+Josh Giddey,Pts+Reb+Ast,28.5,31.1,over,2.6
+Nick Richards,Pts+Reb+Ast,13.5,15.9,over,2.4
+Noah Clowney,Pts+Reb+Ast,12.5,10.1,under,-2.4
+Ja'Kobe Walter,Pts+Reb+Ast,14.5,12.3,under,-2.2
+Kelly Oubre Jr.,Pts+Reb+Ast,21.5,23.6,over,2.1
+RJ Barrett,Pts+Reb+Ast,40.5,37.4,under,-2.1
+Cameron Johnson,Pts+Reb+Ast,28.5,25.4,under,-2.1
+Kevin Porter Jr.,Pts+Reb+Ast,18.5,20.6,over,2.1
+Dru Smith,Pts+Reb+Ast,13.5,15.4,over,1.9
+Jordan Miller,Pts+Reb+Ast,9.5,11.4,over,1.9
+Matas Buzelis,Pts+Reb+Ast,13.5,11.7,under,-1.8
+Cade Cunningham,Pts+Reb+Ast,40.5,37.8,under,-1.7
+Tyrese Maxey,Pts+Reb+Ast,36.5,33.8,under,-1.7
+Evan Mobley,Pts+Reb+Ast,25.5,27.2,over,1.7
+Aaron Gordon,Pts+Reb+Ast,22.5,24.2,over,1.7
+Miles Bridges,Pts+Reb+Ast,22.5,24.1,over,1.6
+Coby White,Pts+Reb+Ast,29.5,31.1,over,1.6
+Jonathan Mogbo,Pts+Reb+Ast,20.5,17.9,under,-1.6
+Bam Adebayo,Pts+Reb+Ast,33.5,32.2,under,-1.3
+Brandon Miller,Pts+Reb+Ast,30.5,28.3,under,-1.2
+Collin Sexton,Pts+Reb+Ast,19.5,20.7,over,1.2
+Bones Hyland,Pts+Reb+Ast,12.5,13.7,over,1.2
+Davion Mitchell,Pts+Reb+Ast,15.5,13.4,under,-1.1
+Isaiah Stewart,Pts+Reb+Ast,14.5,15.5,over,1
+Isaac Okoro,Pts+Reb+Ast,10.5,11.5,over,1
+Nicolas Batum,Pts+Reb+Ast,9.5,10.5,over,1
+Amir Coffey,Pts+Reb+Ast,15.5,14.5,under,-1
+Jalen Duren,Pts+Reb+Ast,20.5,21.4,over,0.9
+Simone Fontecchio,Pts+Reb+Ast,10.5,11.4,over,0.9
+Donovan Mitchell,Pts+Reb+Ast,32.5,33.4,over,0.9
+Malik Monk,Pts+Reb+Ast,27.5,28.4,over,0.9
+John Collins,Pts+Reb+Ast,25.5,26.4,over,0.9
+Jaime Jaquez Jr.,Pts+Reb+Ast,12.5,13.3,over,0.8
+Kelly Olynyk,Pts+Reb+Ast,14.5,15.3,over,0.8
+Sam Merrill,Pts+Reb+Ast,10.5,9.7,under,-0.8
+Jordan Clarkson,Pts+Reb+Ast,20.5,21.3,over,0.8
+Jakob Poeltl,Pts+Reb+Ast,32.5,31.8,under,-0.7
+Jarrett Allen,Pts+Reb+Ast,25.5,26.1,over,0.6
+Jamal Murray,Pts+Reb+Ast,28.5,29.1,over,0.6
+Paul George,Pts+Reb+Ast,32.5,32.1,under,-0.4
+Josh Green,Pts+Reb+Ast,13.5,13.9,over,0.4
+Caris LeVert,Pts+Reb+Ast,19.5,19.9,over,0.4
+Tyler Herro,Pts+Reb+Ast,32.5,32.2,under,-0.3
+Nikola Vucevic,Pts+Reb+Ast,34.5,34.2,under,-0.3
+Darius Garland,Pts+Reb+Ast,28.5,28.2,under,-0.3
+Duncan Robinson,Pts+Reb+Ast,16.5,16.3,under,-0.2
+Haywood Highsmith,Pts+Reb+Ast,11.5,11.3,under,-0.2
+Dorian Finney-Smith,Pts+Reb+Ast,16.5,16.7,over,0.2
+Andre Drummond,Pts+Reb+Ast,22.5,22.6,over,0.1
+LaMelo Ball,Pts+Reb+Ast,32.5,32.6,over,0.1
+Ayo Dosunmu,Pts+Reb+Ast,23.5,23.6,over,0.1
+Nic Claxton,Pts+Reb+Ast,21.5,21.6,over,0.1
+Christian Braun,Pts+Reb+Ast,18.5,18.6,over,0.1
+Julian Strawther,Pts+Reb+Ast,12.5,12.6,over,0.1
+James Harden,Pts+Reb+Ast,37.5,37.6,over,0.1
+Norman Powell,Pts+Reb+Ast,27.5,26.4,under,-0.1
+Matas Buzelis,Steals,1.5,0.7,under,-0.8
+Jarrett Allen,Steals,0.5,1.2,over,0.7
+Isaiah Stewart,Steals,1.5,1,under,-0.5
+Ausar Thompson,Steals,0.5,1,over,0.5
+Nick Richards,Steals,0.5,1,over,0.5
+Nikola Vucevic,Steals,0.5,1,over,0.5
+John Collins,Steals,0.5,1,over,0.5
+Tim Hardaway Jr.,Steals,0.5,0.1,under,-0.4
+Bam Adebayo,Steals,0.5,0.9,over,0.4
+Tyler Herro,Steals,0.5,0.1,under,-0.4
+Jalen Duren,Steals,0.5,0.9,over,0.4
+Andre Drummond,Steals,0.5,0.9,over,0.4
+Gradey Dick,Steals,0.5,0.1,under,-0.4
+Sam Merrill,Steals,0.5,0.1,under,-0.4
+Jalen Wilson,Steals,0.5,0.1,under,-0.4
+Jordan Clarkson,Steals,0.5,0.1,under,-0.4
+Collin Sexton,Steals,0.5,0.1,under,-0.4
+Amir Coffey,Steals,0.5,0.1,under,-0.4
+Duncan Robinson,Steals,0.5,0.2,under,-0.3
+Jaime Jaquez Jr.,Steals,0.5,0.2,under,-0.3
+Josh Green,Steals,0.5,0.2,under,-0.3
+Kelly Olynyk,Steals,0.5,0.2,under,-0.3
+Coby White,Steals,0.5,0.2,under,-0.3
+Davion Mitchell,Steals,0.5,0.2,under,-0.3
+Ja'Kobe Walter,Steals,0.5,0.2,under,-0.3
+Darius Garland,Steals,0.5,0.2,under,-0.3
+Evan Mobley,Steals,1.5,1.8,over,0.3
+James Harden,Steals,0.5,0.8,over,0.3
+Haywood Highsmith,Steals,0.5,0.7,over,0.2
+Simone Fontecchio,Steals,0.5,0.3,under,-0.2
+Kelly Oubre Jr.,Steals,0.5,0.7,over,0.2
+LaMelo Ball,Steals,0.5,0.3,under,-0.2
+Brandon Miller,Steals,0.5,0.7,over,0.2
+Ayo Dosunmu,Steals,0.5,0.7,over,0.2
+Noah Clowney,Steals,0.5,0.7,over,0.2
+Russell Westbrook III,Steals,0.5,0.3,under,-0.2
+Julian Strawther,Steals,0.5,0.3,under,-0.2
+Norman Powell,Steals,0.5,0.3,under,-0.2
+Cade Cunningham,Steals,0.5,0.6,over,0.1
+Ronald Holland II,Steals,0.5,0.4,under,-0.1
+Paul George,Steals,0.5,0.6,over,0.1
+Tyrese Maxey,Steals,0.5,0.4,under,-0.1
+Jakob Poeltl,Steals,1.5,1.6,over,0.1
+RJ Barrett,Steals,0.5,0.4,under,-0.1
+Patrick Williams,Steals,0.5,0.6,over,0.1
+Ochai Agbaji,Steals,0.5,0.6,over,0.1
+Josh Giddey,Steals,0.5,0.6,over,0.1
+Jonathan Mogbo,Steals,0.5,0.6,over,0.1
+Caris LeVert,Steals,0.5,0.6,over,0.1
+Nic Claxton,Steals,1.5,1.6,over,0.1
+Cameron Johnson,Steals,0.5,0.4,under,-0.1
+DeMar DeRozan,Steals,0.5,0.6,over,0.1
+Jamal Murray,Steals,0.5,0.4,under,-0.1
+Malik Monk,Steals,0.5,0.6,over,0.1
+De'Aaron Fox,Steals,0.5,0.4,under,-0.1
+Christian Braun,Steals,0.5,0.6,over,0.1
+Nicolas Batum,Steals,0.5,0.6,over,0.1
+Lauri Markkanen,Steals,0.5,0.4,under,-0.1
+Kevin Porter Jr.,Steals,0.5,0.4,under,-0.1
+Haywood Highsmith,Blocks,0.5,1.4,over,0.9
+Andre Drummond,Blocks,0.5,1.3,over,0.8
+Ausar Thompson,Blocks,0.5,1.2,over,0.7
+LaMelo Ball,Blocks,0.5,1.2,over,0.7
+Ayo Dosunmu,Blocks,0.5,1.2,over,0.7
+Bones Hyland,Blocks,0.5,1.2,over,0.7
+Ochai Agbaji,Blocks,0.5,1.1,over,0.6
+Josh Giddey,Blocks,0.5,1.1,over,0.6
+Jakob Poeltl,Blocks,1.5,1,under,-0.5
+Coby White,Blocks,1.5,1,under,-0.5
+Darius Garland,Blocks,0.5,1,over,0.5
+De'Aaron Fox,Blocks,1.5,2,over,0.5
+Christian Braun,Blocks,0.5,1,over,0.5
+Norman Powell,Blocks,0.5,1,over,0.5
+John Collins,Blocks,0.5,1,over,0.5
+Tyler Herro,Blocks,0.5,0.9,over,0.4
+Jaime Jaquez Jr.,Blocks,0.5,0.9,over,0.4
+Brandon Miller,Blocks,0.5,0.9,over,0.4
+Nikola Vucevic,Blocks,0.5,0.9,over,0.4
+Gradey Dick,Blocks,0.5,0.9,over,0.4
+Caris LeVert,Blocks,0.5,0.9,over,0.4
+Cameron Johnson,Blocks,0.5,0.9,over,0.4
+Russell Westbrook III,Blocks,1.5,1.1,under,-0.4
+Jamal Murray,Blocks,1.5,1.1,under,-0.4
+Malik Monk,Blocks,0.5,0.9,over,0.4
+Lauri Markkanen,Blocks,0.5,0.9,over,0.4
+Cade Cunningham,Blocks,0.5,0.8,over,0.3
+Tyrese Maxey,Blocks,1.5,1.2,under,-0.3
+Josh Green,Blocks,0.5,0.8,over,0.3
+Kelly Olynyk,Blocks,0.5,0.8,over,0.3
+RJ Barrett,Blocks,0.5,0.8,over,0.3
+Dorian Finney-Smith,Blocks,0.5,0.8,over,0.3
+Evan Mobley,Blocks,0.5,0.8,over,0.3
+Aaron Gordon,Blocks,0.5,0.8,over,0.3
+Jordan Clarkson,Blocks,0.5,0.8,over,0.3
+Kris Dunn,Blocks,1.5,1.8,over,0.3
+Collin Sexton,Blocks,0.5,0.8,over,0.3
+Kevin Porter Jr.,Blocks,1.5,1.2,under,-0.3
+Amir Coffey,Blocks,0.5,0.8,over,0.3
+Duncan Robinson,Blocks,0.5,0.7,over,0.2
+Isaiah Stewart,Blocks,0.5,0.3,under,-0.2
+Kelly Oubre Jr.,Blocks,1.5,1.3,under,-0.2
+Guerschon Yabusele,Blocks,0.5,0.7,over,0.2
+Nick Richards,Blocks,0.5,0.3,under,-0.2
+Patrick Williams,Blocks,0.5,0.7,over,0.2
+Davion Mitchell,Blocks,0.5,0.7,over,0.2
+Jonathan Mogbo,Blocks,1.5,1.3,under,-0.2
+Jarrett Allen,Blocks,0.5,0.7,over,0.2
+Isaac Okoro,Blocks,0.5,0.7,over,0.2
+Sam Merrill,Blocks,0.5,0.3,under,-0.2
+Noah Clowney,Blocks,0.5,0.3,under,-0.2
+Julian Strawther,Blocks,0.5,0.7,over,0.2
+Nicolas Batum,Blocks,0.5,0.7,over,0.2
+Bam Adebayo,Blocks,1.5,1.6,over,0.1
+Jalen Duren,Blocks,0.5,0.4,under,-0.1
+Simone Fontecchio,Blocks,0.5,0.4,under,-0.1
+Ronald Holland II,Blocks,0.5,0.6,over,0.1
+Paul George,Blocks,1.5,1.6,over,0.1
+Miles Bridges,Blocks,0.5,0.6,over,0.1
+Matas Buzelis,Blocks,0.5,0.6,over,0.1
+Ja'Kobe Walter,Blocks,0.5,0.6,over,0.1
+Donovan Mitchell,Blocks,1.5,1.4,under,-0.1
+Nic Claxton,Blocks,0.5,0.6,over,0.1
+Jalen Wilson,Blocks,0.5,0.6,over,0.1
+DeMar DeRozan,Blocks,1.5,1.4,under,-0.1
+James Harden,Blocks,1.5,1.6,over,0.1
+Christian Braun,3-Pointers Made,0.5,1.4,over,0.9
+Nicolas Batum,3-Pointers Made,0.5,1.4,over,0.9
+Tim Hardaway Jr.,3-Pointers Made,1.5,2.3,over,0.8
+Matas Buzelis,3-Pointers Made,1.5,0.7,under,-0.8
+Davion Mitchell,3-Pointers Made,1.5,0.8,under,-0.7
+Ja'Kobe Walter,3-Pointers Made,1.5,0.8,under,-0.7
+Dorian Finney-Smith,3-Pointers Made,1.5,2.1,over,0.6
+Isaac Okoro,3-Pointers Made,0.5,1.1,over,0.6
+Noah Clowney,3-Pointers Made,1.5,0.9,under,-0.6
+Russell Westbrook III,3-Pointers Made,1.5,0.9,under,-0.6
+Tyrese Maxey,3-Pointers Made,3.5,3,under,-0.5
+Aaron Gordon,3-Pointers Made,1.5,1,under,-0.5
+Paul George,3-Pointers Made,2.5,2.9,over,0.4
+Patrick Williams,3-Pointers Made,1.5,1.1,under,-0.4
+Ochai Agbaji,3-Pointers Made,1.5,1.9,over,0.4
+James Harden,3-Pointers Made,3.5,3.1,under,-0.4
+Kris Dunn,3-Pointers Made,0.5,0.9,over,0.4
+Cade Cunningham,3-Pointers Made,2.5,2.2,under,-0.3
+Kelly Oubre Jr.,3-Pointers Made,1.5,1.8,over,0.3
+Guerschon Yabusele,3-Pointers Made,1.5,1.8,over,0.3
+LaMelo Ball,3-Pointers Made,3.5,3.2,under,-0.3
+Brandon Miller,3-Pointers Made,3.5,3.2,under,-0.3
+Nikola Vucevic,3-Pointers Made,1.5,1.8,over,0.3
+RJ Barrett,3-Pointers Made,1.5,1.8,over,0.3
+Ayo Dosunmu,3-Pointers Made,1.5,1.8,over,0.3
+Donovan Mitchell,3-Pointers Made,3.5,3.2,under,-0.3
+Cameron Johnson,3-Pointers Made,3.5,3.2,under,-0.3
+DeMar DeRozan,3-Pointers Made,0.5,0.8,over,0.3
+Norman Powell,3-Pointers Made,3.5,3.2,under,-0.3
+Lauri Markkanen,3-Pointers Made,2.5,2.8,over,0.3
+Amir Coffey,3-Pointers Made,1.5,1.8,over,0.3
+Duncan Robinson,3-Pointers Made,2.5,2.7,over,0.2
+Ausar Thompson,3-Pointers Made,0.5,0.3,under,-0.2
+Miles Bridges,3-Pointers Made,1.5,1.7,over,0.2
+Coby White,3-Pointers Made,3.5,3.3,under,-0.2
+Josh Giddey,3-Pointers Made,1.5,1.3,under,-0.2
+Gradey Dick,3-Pointers Made,2.5,2.3,under,-0.2
+Sam Merrill,3-Pointers Made,1.5,1.7,over,0.2
+Jalen Wilson,3-Pointers Made,1.5,1.7,over,0.2
+Malik Monk,3-Pointers Made,2.5,2.7,over,0.2
+John Collins,3-Pointers Made,1.5,1.3,under,-0.2
+Collin Sexton,3-Pointers Made,1.5,1.3,under,-0.2
+Bam Adebayo,3-Pointers Made,0.5,0.6,over,0.1
+Haywood Highsmith,3-Pointers Made,1.5,1.4,under,-0.1
+Tyler Herro,3-Pointers Made,3.5,3.6,over,0.1
+Jaime Jaquez Jr.,3-Pointers Made,0.5,0.6,over,0.1
+Simone Fontecchio,3-Pointers Made,1.5,1.4,under,-0.1
+Ronald Holland II,3-Pointers Made,0.5,0.6,over,0.1
+Josh Green,3-Pointers Made,1.5,1.4,under,-0.1
+Kelly Olynyk,3-Pointers Made,0.5,0.6,over,0.1
+Caris LeVert,3-Pointers Made,1.5,1.4,under,-0.1
+Darius Garland,3-Pointers Made,2.5,2.6,over,0.1
+Evan Mobley,3-Pointers Made,0.5,0.6,over,0.1
+Jamal Murray,3-Pointers Made,2.5,2.6,over,0.1
+De'Aaron Fox,3-Pointers Made,2.5,2.6,over,0.1
+Julian Strawther,3-Pointers Made,1.5,1.6,over,0.1
+Jordan Clarkson,3-Pointers Made,1.5,1.6,over,0.1
+Jordan Miller,3-Pointers Made,0.5,0.6,over,0.1
