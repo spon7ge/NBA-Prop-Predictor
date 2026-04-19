@@ -7,8 +7,15 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from src.scrapers.NBAPropFinder import NBAPropFinder
+from src.scrapers.MLBPropFinder import MLBPropFinder
+from src.scrapers.SoccerPropFinder import SoccerPropFinder
+from src.scrapers.AFLPropFinder import AFLPropFinder
 from src.scrapers.TeamLines import fetchTeamLines
 from datetime import datetime
 
-nba_props = NBAPropFinder(region='us')
+nba_props = NBAPropFinder(region='us,eu')
+# nba_props = NBAPropFinder(region='us_dfs')
+# mlb_props = MLBPropFinder(region='us,eu')
+# soccer_props = SoccerPropFinder(region='us')
+# afl_props = AFLPropFinder(region='au')
 # nba_team_lines = fetchTeamLines(api_key, date=datetime.now().strftime("%Y%m%d"))
