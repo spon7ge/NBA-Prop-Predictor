@@ -2,13 +2,17 @@ https://techbuzzireland.com/2026/02/02/beyond-the-box-score-feature-engineering-
 
 https://github.com/swapnil-ahlawat/NBA_Game_Predictor/blob/main/NBAPrediction.pdf
 
-For Historical Odds: https://github.com/aigeon-ai/pinnacle-odds
-
 https://hajim.rochester.edu/ece/sites/zduan/teaching/ece408/projects/2024/KevinFobare_MukhtarSuleman_RyanPappania_RodneyBoone_FinalProject_Report.pdf
 
 https://cs229.stanford.edu/proj2016/report/Avalon_balci_guzman_various_ml_approaches_NBA_Scores_report.pdf
 
+- ON THINGS I USE AI, UNDERSTAND THE "WHY". 
+
 Documentation:
-1. using interactions features so my model understand the difference between a tough defense vs a weak defense 
-Regression to the Mean problem:
-- instead of using one model for both role players and stars i create two. 
+1. using interactions features 
+2. Regression to the Mean problem:
+    - instead of using one model for both role players and stars i create two. 
+3. unrelated to my model, but learn about arbitrage betting, ev betting, and middling betting. 
+    - this is best done when you have access to real time odds, the odds api is behind 1-5 minutes. lines change fast so that can cause you to miss a good betting opportunity
+4. Was using just K-Folds but switch to time series split and walk forward validation to train my model. to avoid any random shuffling from happing when using k-folding causing leakage. 
+5. start backtesting on historicalOdds, that were scraped from bettingPros.  
