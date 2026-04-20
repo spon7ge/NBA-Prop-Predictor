@@ -16,3 +16,4 @@ Documentation:
     - this is best done when you have access to real time odds, the odds api is behind 1-5 minutes. lines change fast so that can cause you to miss a good betting opportunity
 4. Was using just K-Folds but switch to time series split and walk forward validation to train my model. to avoid any random shuffling from happing when using k-folding causing leakage. 
 5. start backtesting on historicalOdds, that were scraped from bettingPros.  
+6. Created 3 new columns that tell my model whether or not a star was missing for a certain game. (Main_star_active, second_star_active, and third_star_active)
