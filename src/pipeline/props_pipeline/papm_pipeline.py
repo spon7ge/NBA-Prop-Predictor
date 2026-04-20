@@ -58,7 +58,8 @@ def papm_pipeline(df, name, current_date):
     starting_flag = float(1 if (canon_name in projected or name in projected) else 0)
     res.append(starting_flag)
     res.append(pdf['POSITION_ENC'].iloc[-1])
-    res.append(pdf['IS_TOP_STAR'].iloc[-1])
+    # Historically IS_TOP_STAR meant any of the top-3; use IS_STAR_TRIO to match trained models.
+    res.append(pdf['IS_STAR_TRIO'].iloc[-1] if 'IS_STAR_TRIO' in pdf.columns else pdf['IS_TOP_STAR'].iloc[-1])
     
     # ACTIVE_STARS_COUNT
     count = 0

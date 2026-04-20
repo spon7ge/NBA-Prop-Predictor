@@ -57,10 +57,11 @@ def ppm_pipeline(df, name, current_date):
     min_10_ewm         = float(pdf["MIN"].astype(float).ewm(span=10, adjust=False).mean().iloc[-1])
 
     opp_def_rating_roll10 = float(opp_team["TEAM_DEF_RATING"].tail(10).mean().round(2))
-    is_top_star = float(last["IS_TOP_STAR"])
+    # Historically IS_TOP_STAR meant any of the top-3; use IS_STAR_TRIO to match trained models.
+    is_star_trio = float(last.get("IS_STAR_TRIO", last.get("IS_TOP_STAR", 0)))
 
     # ── Interactions ──────────────────────────────────────────────────────────
-    res.append(is_top_star * opp_poss_roll10)                    # TOP_STAR_X_OPP_POSS_L10
+    res.append(is_star_trio * opp_poss_roll10)                  # STAR_TRIO_X_OPP_POSS_L10
     res.append(ppm_season_avg * opp_def_rating_roll10)           # PPM_SEASON_AVG_X_OPP_DRTG_L10
     res.append(fga_season_avg * opp_def_rating_roll10)           # FGA_PER_MIN_X_OPP_DRTG_L10
     res.append(fta_season_avg * opp_def_rating_roll10)           # FTA_PER_MIN_X_OPP_DRTG_L10
