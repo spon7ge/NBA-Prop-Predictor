@@ -17,3 +17,5 @@ Documentation:
 4. Was using just K-Folds but switch to time series split and walk forward validation to train my model. to avoid any random shuffling from happing when using k-folding causing leakage. 
 5. start backtesting on historicalOdds, that were scraped from bettingPros.  
 6. Created 3 new columns that tell my model whether or not a star was missing for a certain game. (Main_star_active, second_star_active, and third_star_active)
+7. Fixed leakage that was happening when i was looking for main stars, it was using avgs from all games found instead of pre computed avgs leading up to the game
+8. 

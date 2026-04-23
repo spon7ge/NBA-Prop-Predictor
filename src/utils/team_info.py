@@ -1,12 +1,12 @@
 projectedStartingFive = {
-    "ATL": ["Corey Kispert", "Tony Bradley", "Keaton Wallace", "Asa Newell", "Zaccharie Risacher"],
+    "ATL": ["Jalen Johnson", "Dyson Daniels", "CJ McCollum", "Nickeil Alexander-Walker"],
     "BKN": ["Malachi Smith", "Trevon Scott", "E.J. Liddell", "Drake Powell", "Ben Saraf"],
     "BOS": ["Baylor Scheierman", "Max Shulga", "Jordan Walsh", "Ron Harper", "Luka Garza"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
-    "CLE": ["Larry Nance", "Craig Porter", "Max Strus", "Jaylon Tyson", "Nae'Qwan Tomlin"],
+    "CLE": ["Donovan Mitchell", "Evan Mobley", "James Harden", "Dean Wade", "Jarrett Allen"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
-    "DEN": ["Julian Strawther", "Zeke Nnaji", "Nikola Jokić", "Bruce Brown", "Tyus Jones"],
+    "DEN": ["Cameron Johnson", "Jamal Murray", "Aaron Gordon", "Christian Braun", "Nikola Jokić"],
     "DET": ["Paul Reed", "Tobias Harris", "Ausar Thompson", "Cade Cunningham", "Duncan Robinson"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Jae'Sean Tate", "Josh Okogie", "Tari Eason", "Clint Capela", "Reed Sheppard"],
@@ -16,9 +16,9 @@ projectedStartingFive = {
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
-    "MIN": ["Joe Ingles", "Joan Beringer", "Jaylen Clark", "Terrence Shannon", "Donte DiVincenzo"],
+    "MIN": ["Donte DiVincenzo", "Rudy Gobert", "Julius Randle", "Jaden McDaniels", "Anthony Edwards"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
-    "NYK": ["Jose Alvarado", "Mikal Bridges", "Miles McBride", "Mohamed Diawara", "Ariel Hukporti"],
+    "NYK": ["Karl-Anthony Towns", "Jalen Brunson", "Mikal Bridges", "Josh Hart"],
     "OKC": ["Luguentz Dort", "Nikola Topic", "Aaron Wiggins", "Jared McCain", "Branden Carlson"],
     "ORL": ["Franz Wagner", "Wendell Carter", "Jalen Suggs", "Paolo Banchero", "Desmond Bane"],
     "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Adem Bona", "Tyrese Maxey"],
@@ -26,7 +26,7 @@ projectedStartingFive = {
     "POR": ["Toumani Camara", "Jrue Holiday", "Deni Avdija", "Scoot Henderson", "Donovan Clingan"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
     "SAS": ["Julian Champagnie", "Stephon Castle", "Devin Vassell", "Mason Plumlee", "De'Aaron Fox"],
-    "TOR": ["Brandon Ingram", "RJ Barrett", "Scottie Barnes", "Jakob Poeltl"],
+    "TOR": ["Scottie Barnes", "Jamal Shead", "Jakob Poeltl", "RJ Barrett", "Brandon Ingram"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
 }
@@ -131,7 +131,6 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "LAC": ["Isaiah Jackson"],
-    "ORL": ["Jett Howard", "Jonathan Isaac"],
+    "ATL": ["Onyeka Okongwu"],
 }
 

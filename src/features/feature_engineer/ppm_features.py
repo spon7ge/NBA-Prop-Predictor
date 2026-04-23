@@ -5,68 +5,34 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE'])
 
+    df = _per_min_features(df)
     df = _rolling_player(df)
     df = _ewm_player(df)
     df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
     df = _team_context(df)
+    df = _team_allowed_context(df)
+    df = _team_allowed_rolling(df)
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
     df = _expectedPace(df)
-    df = _detect_star_players(df)
-    df = _compute_ppm_by_active_count(df)
-
     return df
 
-def _resolve_position_column(df: pd.DataFrame):
-    """Resolve position column; prefers ``pos`` (matches ``Pos`` / ``POS`` by name)."""
-    if 'pos' in df.columns:
-        return 'pos'
-    lower_to_orig = {str(c).lower(): c for c in df.columns}
-    if 'pos' in lower_to_orig:
-        return lower_to_orig['pos']
-    for col in ('POSITION', 'START_POSITION'):
-        if col in df.columns:
-            return col
-    return None
-
-
-def _normalize_pos_series(s: pd.Series) -> pd.Series:
-    """String compare helper: strip and casefold for robust equality."""
-    out = s.astype('string')
-    return out.str.strip().str.casefold()
-
-
-def _resolve_star_team_col(df: pd.DataFrame) -> str:
-    """Column for franchise / roster side in star logic (same team within ``GAME_ID``)."""
-    if 'TEAM_ID' in df.columns:
-        return 'TEAM_ID'
-    if 'TEAM_ABBREVIATION' in df.columns:
-        return 'TEAM_ABBREVIATION'
-    raise KeyError(
-        "Star and redistribution features require 'TEAM_ID' or 'TEAM_ABBREVIATION' in the dataframe"
-    )
-
-
-def _position_prior(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Prior-game position per player (shift within PLAYER_ID timeline).
-    Avoids using the current game's listed position when labeling historical rows.
-    """
-    df = df.copy()
-    pos_col = _resolve_position_column(df)
-    if pos_col is None:
-        df['POS_PRIOR'] = pd.NA
-        return df
-    df['POS_PRIOR'] = df.groupby('PLAYER_ID', sort=False)[pos_col].shift(1)
+def _per_min_features(df: pd.DataFrame) -> pd.DataFrame:
+    df['PTS_PER_MIN'] = df['PTS'] / df['MIN'].replace(0, np.nan)
+    df['POSS_PER_MIN'] = df['POSS'] / df['MIN'].replace(0, np.nan)
+    df['FGA_PER_MIN'] = df['FGA'] / df['MIN'].replace(0, np.nan)
+    df['FGM_PER_MIN'] = df['FGM'] / df['MIN'].replace(0, np.nan)
+    df['3PA_PER_MIN'] = df['FG3A'] / df['MIN'].replace(0, np.nan)
+    df['3PM_PER_MIN'] = df['FG3M'] / df['MIN'].replace(0, np.nan)
+    df['FTA_PER_MIN'] = df['FTA'] / df['MIN'].replace(0, np.nan)
+    df['FTM_PER_MIN'] = df['FTM'] / df['MIN'].replace(0, np.nan)
     return df
-
-# ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PTS_PER_POSS',
+    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN',
     'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV'
     ]
 
@@ -81,8 +47,8 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = [
-        'MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'PTS_PER_POSS', 'POSS_PER_MIN',
-        'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV',
+        'MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV', 'REB', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN'
     ]
 
     for span in [3, 5, 10]:
@@ -99,7 +65,7 @@ def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "PTS_PER_MIN", '3PA_PER_MIN', 'FTA_PER_MIN', 'POSS_PER_MIN']
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "PTS_PER_MIN", 'POSS_PER_MIN']
 
     for lag in [1, 2]:
         for col in cols:
@@ -195,6 +161,201 @@ def _team_context(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+# ── Team defense allowed (prior games only) ───────────────────────────────────
+def _team_allowed_context(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Builds team-level "allowed" features using only games before the current one
+    (shift(1) within TEAM_ID + SEASON_YEAR), then merges back to player rows.
+    """
+    required = [
+        "TEAM_ID",
+        "SEASON_YEAR",
+        "GAME_ID",
+        "GAME_DATE",
+        "OPP_FGM",
+        "OPP_FGA",
+        "OPP_FG3M",
+        "OPP_FG3A",
+        "OPP_FTA",
+        "OPP_PTS",
+        "OPP_POSS",
+        "OPP_PFD",
+        "OPP_DEF_RATING",
+        "OPP_EFG_PCT",
+        "OPP_TS_PCT",
+        "OPP_DREB_PCT",
+        "OPP_TM_TOV_PCT",
+    ]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        return df
+
+    team_game = (
+        df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+        .copy()
+    )
+
+    g = team_game.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)
+
+    # Cumulative % allowed to date (prior games only)
+    cum_opp_fgm_prior  = g["OPP_FGM"].transform(lambda x: x.cumsum().shift(1))
+    cum_opp_fga_prior  = g["OPP_FGA"].transform(lambda x: x.cumsum().shift(1))
+    cum_opp_fg3m_prior = g["OPP_FG3M"].transform(lambda x: x.cumsum().shift(1))
+    cum_opp_fg3a_prior = g["OPP_FG3A"].transform(lambda x: x.cumsum().shift(1))
+
+    team_game["TEAM_FG%_ALLOWED"] = (
+        (cum_opp_fgm_prior / cum_opp_fga_prior.replace(0, np.nan)).round(3)
+    )
+    team_game["TEAM_FG3%_ALLOWED"] = (
+        (cum_opp_fg3m_prior / cum_opp_fg3a_prior.replace(0, np.nan)).round(3)
+    )
+
+    # Per-game allowed averages to date (prior games only)
+    def prior_expanding_mean(x):
+        return x.shift(1).expanding().mean().round(3)
+
+    for raw_col, new_col in [
+        ("OPP_FTA",        "TEAM_FTA_ALLOWED"),
+        ("OPP_FG3A",       "TEAM_FG3A_ALLOWED"),
+        ("OPP_FG3M",       "TEAM_FG3M_ALLOWED"),
+        ("OPP_PTS",        "TEAM_PTS_ALLOWED"),
+        ("OPP_POSS",       "TEAM_POSS_ALLOWED"),
+        ("OPP_PFD",        "TEAM_PFD_ALLOWED"),
+        # High-signal additions
+        ("OPP_DEF_RATING", "TEAM_DEF_RATING_ALLOWED"),
+        ("OPP_EFG_PCT",    "TEAM_EFG_PCT_ALLOWED"),
+        ("OPP_TS_PCT",     "TEAM_TS_PCT_ALLOWED"),
+        ("OPP_DREB_PCT",   "TEAM_DREB_PCT_ALLOWED"),
+        ("OPP_TM_TOV_PCT", "TEAM_TM_TOV_PCT_ALLOWED"),
+    ]:
+        team_game[new_col] = g[raw_col].transform(prior_expanding_mean)
+
+    allowed_cols = [
+        "TEAM_ID",
+        "GAME_ID",
+        "TEAM_FG%_ALLOWED",
+        "TEAM_FG3%_ALLOWED",
+        "TEAM_FG3A_ALLOWED",
+        "TEAM_FG3M_ALLOWED",
+        "TEAM_FTA_ALLOWED",
+        "TEAM_PTS_ALLOWED",
+        "TEAM_POSS_ALLOWED",
+        "TEAM_PFD_ALLOWED",
+        # High-signal additions
+        "TEAM_DEF_RATING_ALLOWED",
+        "TEAM_EFG_PCT_ALLOWED",
+        "TEAM_TS_PCT_ALLOWED",
+        "TEAM_DREB_PCT_ALLOWED",
+        "TEAM_TM_TOV_PCT_ALLOWED",
+    ]
+
+    allowed_map = team_game[allowed_cols]
+    out = df.merge(allowed_map, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    if "OPP_TEAM_ID" not in out.columns:
+        return out
+
+    opp_rename = {
+        "TEAM_ID":                  "OPP_TEAM_ID",
+        "TEAM_FG%_ALLOWED":         "OPP_TEAM_FG%_ALLOWED",
+        "TEAM_FG3%_ALLOWED":        "OPP_TEAM_FG3%_ALLOWED",
+        "TEAM_FG3A_ALLOWED":        "OPP_TEAM_FG3A_ALLOWED",
+        "TEAM_FG3M_ALLOWED":        "OPP_TEAM_FG3M_ALLOWED",
+        "TEAM_FTA_ALLOWED":         "OPP_TEAM_FTA_ALLOWED",
+        "TEAM_PTS_ALLOWED":         "OPP_TEAM_PTS_ALLOWED",
+        "TEAM_POSS_ALLOWED":        "OPP_TEAM_POSS_ALLOWED",
+        "TEAM_PFD_ALLOWED":         "OPP_TEAM_PFD_ALLOWED",
+        # High-signal additions
+        "TEAM_DEF_RATING_ALLOWED":  "OPP_TEAM_DEF_RATING_ALLOWED",
+        "TEAM_EFG_PCT_ALLOWED":     "OPP_TEAM_EFG_PCT_ALLOWED",
+        "TEAM_TS_PCT_ALLOWED":      "OPP_TEAM_TS_PCT_ALLOWED",
+        "TEAM_DREB_PCT_ALLOWED":    "OPP_TEAM_DREB_PCT_ALLOWED",
+        "TEAM_TM_TOV_PCT_ALLOWED":  "OPP_TEAM_TM_TOV_PCT_ALLOWED",
+    }
+
+    opp_allowed_map = allowed_map.rename(columns=opp_rename)
+    return out.merge(opp_allowed_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+
+def _team_allowed_rolling(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Rolling means of per-game opponent stats (prior games only) for the player's
+    team and the opponent, aligned with _team_allowed_context input columns.
+    """
+    required = [
+        "TEAM_ID",
+        "SEASON_YEAR",
+        "GAME_ID",
+        "GAME_DATE",
+        "OPP_FGM",
+        "OPP_FGA",
+        "OPP_FG3M",
+        "OPP_FG3A",
+        "OPP_FTA",
+        "OPP_PTS",
+        "OPP_POSS",
+        "OPP_PFD",
+        "OPP_DEF_RATING",
+        "OPP_EFG_PCT",
+        "OPP_TS_PCT",
+        "OPP_DREB_PCT",
+        "OPP_TM_TOV_PCT",
+    ]
+    if any(c not in df.columns for c in required):
+        return df
+    if "OPP_TEAM_ID" not in df.columns:
+        return df
+
+    team_game = (
+        df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+        .copy()
+    )
+    g = team_game.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)
+
+    # Derived per-game ratio columns
+    team_game["OPP_FGPCT_GAME"]  = team_game["OPP_FGM"] / team_game["OPP_FGA"].replace(0, np.nan)
+    team_game["OPP_FG3PCT_GAME"] = team_game["OPP_FG3M"] / team_game["OPP_FG3A"].replace(0, np.nan)
+
+    # (raw_col, output_prefix) — raw_col is what we roll, output_prefix is the TEAM_*_ALLOWED_roll{w} name
+    roll_stat_cols = [
+        ("OPP_FGPCT_GAME",   "TEAM_FG%_ALLOWED"),
+        ("OPP_FG3PCT_GAME",  "TEAM_FG3%_ALLOWED"),
+        ("OPP_FTA",          "TEAM_FTA_ALLOWED"),
+        ("OPP_FG3M",         "TEAM_FG3M_ALLOWED"),
+        ("OPP_FG3A",         "TEAM_FG3A_ALLOWED"),
+        ("OPP_PTS",          "TEAM_PTS_ALLOWED"),
+        ("OPP_POSS",         "TEAM_POSS_ALLOWED"),
+        ("OPP_PFD",          "TEAM_PFD_ALLOWED"),
+        # High-signal additions
+        ("OPP_DEF_RATING",   "TEAM_DEF_RATING_ALLOWED"),
+        ("OPP_EFG_PCT",      "TEAM_EFG_PCT_ALLOWED"),
+        ("OPP_TS_PCT",       "TEAM_TS_PCT_ALLOWED"),
+        ("OPP_DREB_PCT",     "TEAM_DREB_PCT_ALLOWED"),
+        ("OPP_TM_TOV_PCT",   "TEAM_TM_TOV_PCT_ALLOWED"),
+    ]
+
+    roll_windows = [3, 5, 10]
+    for window in roll_windows:
+        for raw_col, prefix in roll_stat_cols:
+            team_game[f"{prefix}_roll{window}"] = g[raw_col].transform(
+                lambda x, w=window: x.shift(1).rolling(w, min_periods=3).mean().round(3)
+            )
+
+    team_roll_cols = [c for c in team_game.columns if c.startswith("TEAM_") and "_ALLOWED_roll" in c]
+    allowed_roll_map = team_game[["TEAM_ID", "GAME_ID"] + team_roll_cols]
+
+    out = df.merge(allowed_roll_map, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    opp_rename = {c: c.replace("TEAM_", "OPP_TEAM_", 1) for c in team_roll_cols}
+    opp_allowed_roll_map = (
+        allowed_roll_map
+        .rename(columns=opp_rename)
+        .rename(columns={"TEAM_ID": "OPP_TEAM_ID"})
+    )
+
+    return out.merge(opp_allowed_roll_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+    
 # ── 8. Schedule / rest ────────────────────────────────────────────────────────
 
 def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -221,6 +382,15 @@ def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
 def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
     df['MIN_std10'] = (
         df.groupby('PLAYER_ID')['MIN']
+        .transform(lambda x: x.shift(1).rolling(10).std().round(2))
+    )
+
+    df['PTS_PER_MIN_std5'] = (
+        df.groupby('PLAYER_ID')['PTS_PER_MIN']
+        .transform(lambda x: x.shift(1).rolling(5).std().round(2))
+    )
+    df['PTS_PER_MIN_std10'] = (
+        df.groupby('PLAYER_ID')['PTS_PER_MIN']
         .transform(lambda x: x.shift(1).rolling(10).std().round(2))
     )
 
@@ -263,270 +433,3 @@ def _expectedPace(df):
     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
     return df
 
-# ---- Finding Star Players -----------------------
-def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
-    df = df.copy()
-    # ppm_features() does not call :func:`_position_prior` earlier (min_features does); ensure prior pos exists.
-    df = _position_prior(df)
-
-    # 1. Normalize Names
-    if name_dict:
-        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME'].map(lambda x: name_dict.get(x, x))
-    else:
-        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME']
-
-    team_col = _resolve_star_team_col(df)
-
-    # 2–5. Causal star ranks: prior-only expanding stats per player, min–max within each
-    #      (GAME_ID, team), then rank teammates for that game (no season-wide leakage).
-    df['_sort_order'] = np.arange(len(df), dtype=np.int64)
-    df = df.sort_values([team_col, 'PLAYER_NAME_NORM', 'GAME_DATE'], kind='mergesort')
-
-    grp_keys = [df[team_col], df['PLAYER_NAME_NORM']]
-    qual = df['MIN'] >= min_minutes
-    df['_prior_qual_games'] = (
-        qual.astype(int).groupby(grp_keys, sort=False).transform(lambda s: s.shift(1).cumsum())
-    )
-
-    cols = ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']
-    prior_cols = []
-    for col in cols:
-        pc = f'_prior_{col}'
-        if col not in df.columns:
-            df[pc] = np.nan
-        else:
-            v = pd.to_numeric(df[col], errors='coerce').where(qual)
-            df[pc] = v.groupby(grp_keys, sort=False).transform(
-                lambda s: s.shift(1).expanding().mean()
-            )
-        prior_cols.append(pc)
-
-    def _norm_team_game(s: pd.Series) -> pd.Series:
-        s = pd.to_numeric(s, errors='coerce').astype(float)
-        mn = s.min(skipna=True)
-        mx = s.max(skipna=True)
-        if pd.isna(mn) or pd.isna(mx) or mx <= mn:
-            return pd.Series(0.0, index=s.index, dtype=float)
-        return ((s - mn) / (mx - mn)).fillna(0.0)
-
-    norm_cols = []
-    for pc in prior_cols:
-        nc = f'{pc}_TG_NORM'
-        df[nc] = df.groupby(['GAME_ID', team_col], sort=False)[pc].transform(_norm_team_game)
-        norm_cols.append(nc)
-
-    # Same weights as legacy season-aggregate score (EFG/NET normalized but not in weighted sum)
-    df['_star_score_ranking'] = (
-        0.30 * df['_prior_USG_PCT_TG_NORM']
-        + 0.25 * df['_prior_TS_PCT_TG_NORM']
-        + 0.30 * df['_prior_PTS_TG_NORM']
-        + 0.15 * df['_prior_PIE_TG_NORM']
-    )
-    eligible = df['_prior_qual_games'] >= min_games
-    df['_star_score_ranking'] = df['_star_score_ranking'].where(eligible)
-
-    df['STAR_RANK'] = (
-        df.groupby(['GAME_ID', team_col], sort=False)['_star_score_ranking']
-        .rank(method='first', ascending=False, na_option='bottom')
-    )
-    df.loc[(df['STAR_RANK'] > 3) | (~eligible), 'STAR_RANK'] = np.nan
-
-    drop_tmp = ['_sort_order', '_prior_qual_games', '_star_score_ranking'] + prior_cols + norm_cols
-    df = df.sort_values('_sort_order', kind='mergesort').drop(columns=drop_tmp, errors='ignore')
-
-    rank_to_col = {
-        1: 'MAIN_STAR_ACTIVE',
-        2: 'SECONDARY_STAR_ACTIVE',
-        3: 'THIRD_STAR_ACTIVE',
-    }
-
-    sr_valid = df['STAR_RANK'].notna()
-    df['IS_STAR_TRIO'] = sr_valid.astype(int)
-    # Rank-specific flags (IS_TOP_STAR = slot 1 / "top" star only)
-    df['IS_TOP_STAR'] = (df['STAR_RANK'] == 1).astype(int)
-    df['IS_SECOND_STAR'] = (df['STAR_RANK'] == 2).astype(int)
-    df['IS_THIRD_STAR'] = (df['STAR_RANK'] == 3).astype(int)
-
-    # 6. For each (GAME_ID, team), figure out which of the team's top-3 stars actually played
-    star_rows = df.loc[sr_valid].copy()
-    star_rows['_PLAYED'] = (star_rows['MIN'] >= min_minutes).astype(int)
-
-    active_per_game = (
-        star_rows
-        .pivot_table(
-            index=['GAME_ID', team_col],
-            columns='STAR_RANK',
-            values='_PLAYED',
-            aggfunc='max',
-            fill_value=0,
-        )
-        .rename(columns=rank_to_col)
-        .reset_index()
-    )
-    active_per_game.columns.name = None
-
-    # Make sure all three flag columns exist even if a tier never appears
-    for col in rank_to_col.values():
-        if col not in active_per_game.columns:
-            active_per_game[col] = 0
-
-    flag_cols = list(rank_to_col.values())
-
-    # Drop pre-existing copies to keep merges clean on re-runs
-    df = df.drop(columns=[c for c in flag_cols if c in df.columns], errors='ignore')
-
-    df = df.merge(
-        active_per_game[['GAME_ID', team_col] + flag_cols],
-        on=['GAME_ID', team_col],
-        how='left',
-    )
-    for col in flag_cols:
-        df[col] = df[col].fillna(0).astype(int)
-
-    # 7. Star slot positions (from each star's prior-game position) + positional match flags
-    star_pos_cols = ['STAR_1_POS', 'STAR_2_POS', 'STAR_3_POS']
-    match_cols = ['STAR_1_POSITION_MATCH', 'STAR_2_POSITION_MATCH', 'STAR_3_POSITION_MATCH']
-    df = df.drop(columns=[c for c in star_pos_cols + match_cols if c in df.columns], errors='ignore')
-
-    sr = star_rows.dropna(subset=['STAR_RANK']).copy()
-    pos_col = _resolve_position_column(df)
-    if not sr.empty:
-        slot_src = sr['POS_PRIOR']
-        if pos_col is not None:
-            slot_src = sr['POS_PRIOR'].combine_first(sr[pos_col])
-        slot_pos = (
-            sr.assign(_SLOT_POS=slot_src)
-            .groupby(['GAME_ID', team_col, 'STAR_RANK'], as_index=False)['_SLOT_POS']
-            .first()
-        )
-        wide = slot_pos.pivot(index=['GAME_ID', team_col], columns='STAR_RANK', values='_SLOT_POS')
-        wide = wide.rename(columns={c: f'STAR_{int(float(c))}_POS' for c in wide.columns})
-        df = df.merge(wide.reset_index(), on=['GAME_ID', team_col], how='left')
-        for c in star_pos_cols:
-            if c not in df.columns:
-                df[c] = pd.NA
-
-        player_pos = df['POS_PRIOR']
-        if pos_col is not None:
-            player_pos = df['POS_PRIOR'].combine_first(df[pos_col])
-        pp = _normalize_pos_series(player_pos)
-        for col_pos, col_match in (
-            ('STAR_1_POS', 'STAR_1_POSITION_MATCH'),
-            ('STAR_2_POS', 'STAR_2_POSITION_MATCH'),
-            ('STAR_3_POS', 'STAR_3_POSITION_MATCH'),
-        ):
-            sp = _normalize_pos_series(df[col_pos])
-            df[col_match] = (
-                pp.notna() & sp.notna() & (pp == sp)
-            ).astype(int)
-    else:
-        for col_pos, col_match in zip(star_pos_cols, match_cols):
-            df[col_pos] = pd.NA
-            df[col_match] = 0
-
-    return df.drop(columns=['PLAYER_NAME_NORM'])
-
-def _compute_ppm_by_active_count(df, min_minutes=10):
-    df = df.copy()
-    team_col = _resolve_star_team_col(df)
-
-    # Per (GAME_ID, team): star slot PPM played (``*_ACTIVE`` comes from :func:`_detect_star_players`).
-    _redist_cols = (
-        'MAIN_STAR_PPM_PLAYED',
-        'SECONDARY_STAR_PPM_PLAYED',
-        'THIRD_STAR_PPM_PLAYED',
-    )
-    df = df.drop(columns=[c for c in _redist_cols if c in df.columns], errors='ignore')
-
-    if 'STAR_RANK' in df.columns:
-        slots = df.loc[df['STAR_RANK'].notna(), ['GAME_ID', team_col, 'STAR_RANK', 'PTS_PER_MIN']].copy()
-        slots['PTS_PER_MIN'] = pd.to_numeric(slots['PTS_PER_MIN'], errors='coerce').fillna(0)
-        slot_ppm = slots.groupby(['GAME_ID', team_col, 'STAR_RANK'], as_index=False)['PTS_PER_MIN'].max()
-        if not slot_ppm.empty:
-            wide = slot_ppm.pivot(index=['GAME_ID', team_col], columns='STAR_RANK', values='PTS_PER_MIN')
-            wide.columns = [int(float(c)) for c in wide.columns]
-            for rk in (1, 2, 3):
-                if rk not in wide.columns:
-                    wide[rk] = 0.0
-            wide = wide.rename(
-                columns={
-                    1: 'MAIN_STAR_PPM_PLAYED',
-                    2: 'SECONDARY_STAR_PPM_PLAYED',
-                    3: 'THIRD_STAR_PPM_PLAYED',
-                }
-            ).reset_index()
-            df = df.merge(wide, on=['GAME_ID', team_col], how='left')
-        else:
-            for c in ('MAIN_STAR_PPM_PLAYED', 'SECONDARY_STAR_PPM_PLAYED', 'THIRD_STAR_PPM_PLAYED'):
-                df[c] = 0.0
-    else:
-        for c in ('MAIN_STAR_PPM_PLAYED', 'SECONDARY_STAR_PPM_PLAYED', 'THIRD_STAR_PPM_PLAYED'):
-            df[c] = 0.0
-
-    for c in ('MAIN_STAR_PPM_PLAYED', 'SECONDARY_STAR_PPM_PLAYED', 'THIRD_STAR_PPM_PLAYED'):
-        if c not in df.columns:
-            df[c] = 0.0
-        df[c] = df[c].fillna(0)
-
-    tier_cols = {
-        'MAIN_STAR_ACTIVE': 'main_star',
-        'SECONDARY_STAR_ACTIVE': 'secondary_star',
-        'THIRD_STAR_ACTIVE': 'third_star',
-    }
-
-    # ── Causal per-row expanding means of PPM over PRIOR games (no leakage) ────
-    new_cols = [
-        'ppm_main_star_active', 'ppm_main_star_out', 'ppm_main_star_jump_when_out',
-        'ppm_secondary_star_active', 'ppm_secondary_star_out', 'ppm_secondary_star_jump_when_out',
-        'ppm_third_star_active', 'ppm_third_star_out', 'ppm_third_star_jump_when_out',
-        'ppm_all_stars_out',
-    ]
-    df = df.drop(columns=[c for c in new_cols if c in df.columns], errors='ignore')
-
-    if 'PTS_PER_MIN' not in df.columns:
-        _min = pd.to_numeric(df['MIN'], errors='coerce').replace(0, np.nan)
-        df['PTS_PER_MIN'] = (pd.to_numeric(df['PTS'], errors='coerce') / _min).round(4)
-
-    original_index = df.index.copy()
-    df = df.sort_values(['PLAYER_NAME', team_col, 'GAME_DATE']).copy()
-
-    _min_played = pd.to_numeric(df['MIN'], errors='coerce')
-    played_mask = _min_played >= min_minutes
-    keys = [df['PLAYER_NAME'], df[team_col]]
-    ppm_vals = pd.to_numeric(df['PTS_PER_MIN'], errors='coerce').fillna(0.0)
-
-    def _prior_mean_ppm(value_mask: pd.Series) -> pd.Series:
-        """Expanding mean of PTS_PER_MIN over prior rows where value_mask is True (per group)."""
-        masked = ppm_vals.where(value_mask, 0)
-        masked_cnt = value_mask.astype(int)
-        cs = masked.groupby(keys, sort=False).cumsum()
-        cc = masked_cnt.groupby(keys, sort=False).cumsum()
-        prior_sum = cs - masked
-        prior_cnt = cc - masked_cnt
-        return (prior_sum / prior_cnt.where(prior_cnt > 0)).round(4)
-
-    for flag_col, tier_label in tier_cols.items():
-        active_col = f'ppm_{tier_label}_active'
-        out_col = f'ppm_{tier_label}_out'
-        if flag_col not in df.columns:
-            df[active_col] = float('nan')
-            df[out_col] = float('nan')
-            df[f'ppm_{tier_label}_jump_when_out'] = float('nan')
-            continue
-        df[active_col] = _prior_mean_ppm(played_mask & (df[flag_col] == 1))
-        df[out_col] = _prior_mean_ppm(played_mask & (df[flag_col] == 0))
-        jump_col = f'ppm_{tier_label}_jump_when_out'
-        df[jump_col] = (
-            pd.to_numeric(df[out_col], errors='coerce')
-            - pd.to_numeric(df[active_col], errors='coerce')
-        ).round(4)
-
-    flag_set = ['MAIN_STAR_ACTIVE', 'SECONDARY_STAR_ACTIVE', 'THIRD_STAR_ACTIVE']
-    if all(c in df.columns for c in flag_set):
-        all_out = (df[flag_set] == 0).all(axis=1)
-        df['ppm_all_stars_out'] = _prior_mean_ppm(played_mask & all_out)
-    else:
-        df['ppm_all_stars_out'] = float('nan')
-
-    df = df.loc[original_index]
-    return df
