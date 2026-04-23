@@ -39,7 +39,7 @@ def calc_bets(total_stake: float, weight_a: float, weight_b: float,
     return round(stake_a, 2), round(stake_b, 2), round(profit, 2)
 
 MIN_MARGIN = 0.0
-TOTAL_STAKE = 10.0
+TOTAL_STAKE = 100.0
 
 
 def scan_player_props(csv_path):
