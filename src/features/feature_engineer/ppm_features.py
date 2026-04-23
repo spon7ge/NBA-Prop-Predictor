@@ -17,7 +17,7 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
-    df = _expectedPace(df)
+
     return df
 
 def _per_min_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -401,21 +401,20 @@ def _opponent_stats(df):
     available_stat_cols = [c for c in stat_cols if c in df.columns]
 
     team_game = (
-        df[['GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION'] + available_stat_cols]
+        df[['GAME_ID', 'GAME_DATE', 'SEASON_YEAR', 'TEAM_ABBREVIATION'] + available_stat_cols]
         .drop_duplicates(subset=['GAME_ID', 'TEAM_ABBREVIATION'])
-        .sort_values(['TEAM_ABBREVIATION', 'GAME_DATE'])
+        .sort_values(['TEAM_ABBREVIATION', 'SEASON_YEAR', 'GAME_DATE'])
     )
 
     opp_cols = []
     for col in available_stat_cols:
         base = col.replace('TEAM_', '')
-        for window in [5, 10]:
-            avg_col = f'{base}_roll{window}'
-            team_game[avg_col] = (
-                team_game.groupby('TEAM_ABBREVIATION')[col]
-                .transform(lambda x, w=window: x.shift(1).rolling(w, min_periods=1).mean().round(2))
-            )
-            opp_cols.append(avg_col)
+        avg_col = f'{base}_AVG'
+        team_game[avg_col] = (
+            team_game.groupby(['TEAM_ABBREVIATION', 'SEASON_YEAR'])[col]
+            .transform(lambda x: x.shift(1).expanding().mean().round(5))
+        )
+        opp_cols.append(avg_col)
 
     opp_rename = {col: f'OPP_{col}' for col in opp_cols}
 
@@ -427,9 +426,9 @@ def _opponent_stats(df):
     return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')
 
 # ---- Expected Pace and Points -----------------------
-def _expectedPace(df):
-    df = df.copy()
-    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
-    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
-    return df
+# def _expectedPace(df):
+#     df = df.copy()
+#     df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
+#     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
+#     return df
 
