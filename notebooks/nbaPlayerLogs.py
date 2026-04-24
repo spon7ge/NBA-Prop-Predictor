@@ -3,13 +3,14 @@ import os
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from nba_api.stats.endpoints import playergamelogs, teamgamelogs
-from nba_api.stats.endpoints import boxscoreadvancedv3
+from nba_api.stats.endpoints import boxscoreplayertrackv3
 
 
 class NBAGameLogs:
     """
     Fetches and merges player base, player advanced, team base, team advanced,
-    opponent team stats, and START_POSITION into a single flat DataFrame.
+    opponent team stats, START_POSITION, and player tracking stats into a
+    single flat DataFrame.
     """
 
     def __init__(self, season: str, season_type: str = 'Regular Season'):
@@ -39,6 +40,7 @@ class NBAGameLogs:
             season_type_nullable=self.season_type,
             measure_type_player_game_logs_nullable='Base'
         ).get_data_frames()[0]
+        time.sleep(0.6)
         print("✓ Player base")
 
         self._player_adv = playergamelogs.PlayerGameLogs(
@@ -46,6 +48,7 @@ class NBAGameLogs:
             season_type_nullable=self.season_type,
             measure_type_player_game_logs_nullable='Advanced'
         ).get_data_frames()[0]
+        time.sleep(0.6)
         print("✓ Player advanced")
 
         self._team_base = teamgamelogs.TeamGameLogs(
@@ -53,6 +56,7 @@ class NBAGameLogs:
             season_type_nullable=self.season_type,
             measure_type_player_game_logs_nullable='Base'
         ).get_data_frames()[0]
+        time.sleep(0.6)
         print("✓ Team base")
 
         self._team_adv = teamgamelogs.TeamGameLogs(
@@ -60,6 +64,7 @@ class NBAGameLogs:
             season_type_nullable=self.season_type,
             measure_type_player_game_logs_nullable='Advanced'
         ).get_data_frames()[0]
+        time.sleep(0.6)
         print("✓ Team advanced")
 
         if skip_start_positions:
@@ -109,18 +114,48 @@ class NBAGameLogs:
             def fetch_one(game_id):
                 normalized = str(game_id).zfill(10)
                 time.sleep(delay)
-                df = boxscoreadvancedv3.BoxScoreAdvancedV3(
+                df = boxscoreplayertrackv3.BoxScorePlayerTrackV3(
                     game_id=normalized,
                     timeout=60
                 ).get_data_frames()[0]
-                return (
-                    df[['gameId', 'personId', 'position']]
-                    .rename(columns={
-                        'gameId':        'GAME_ID',
-                        'personId':      'PLAYER_ID',
-                        'position': 'START_POSITION'
-                    })
-                )
+
+                column_mapping = {
+                    'gameId': 'GAME_ID',
+                    'personId': 'PLAYER_ID',
+                    'position': 'START_POSITION',
+                    'minutes': 'MIN',
+                    'speed': 'SPD',
+                    'distance': 'DIST',
+                    'reboundChancesOffensive': 'ORBC',
+                    'reboundChancesDefensive': 'DRBC',
+                    'reboundChancesTotal': 'RBC',
+                    'touches': 'TCHS',
+                    'secondaryAssists': 'SAST',
+                    'freeThrowAssists': 'FTAST',
+                    'passes': 'PASS',
+                    'contestedFieldGoalsMade': 'CFGM',
+                    'contestedFieldGoalsAttempted': 'CFGA',
+                    'contestedFieldGoalPercentage': 'CFG_PCT',
+                    'uncontestedFieldGoalsMade': 'UFGM',
+                    'uncontestedFieldGoalsAttempted': 'UFGA',
+                    'uncontestedFieldGoalsPercentage': 'UFG_PCT',
+                    'defendedAtRimFieldGoalsMade': 'DFGM',
+                    'defendedAtRimFieldGoalsAttempted': 'DFGA',
+                    'defendedAtRimFieldGoalPercentage': 'DFG_PCT'
+                }
+                df = df.rename(columns=column_mapping)
+
+                # MIN is intentionally excluded — already present on player_base.
+                cols = [
+                    'GAME_ID', 'PLAYER_ID', 'START_POSITION',
+                    'SPD', 'DIST', 'ORBC', 'DRBC', 'RBC',
+                    'TCHS', 'SAST', 'FTAST', 'PASS',
+                    'CFGM', 'CFGA', 'CFG_PCT',
+                    'UFGM', 'UFGA', 'UFG_PCT',
+                    'DFGM', 'DFGA', 'DFG_PCT'
+                ]
+                existing_cols = [c for c in cols if c in df.columns]
+                return df[existing_cols]
 
             with ThreadPoolExecutor(max_workers=5) as executor:
                 futures = {executor.submit(fetch_one, gid): gid for gid in batch}

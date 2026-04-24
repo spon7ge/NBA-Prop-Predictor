@@ -11,12 +11,17 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
+    df = _lineup_usg_shift(df)
     df = _team_context(df)
     df = _team_allowed_context(df)
     df = _team_allowed_rolling(df)
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
+    df = _expectedPace(df)
+    df = _role_tier_features(df)
+    df = _role_tier_interactions(df)
+
 
     return df
 
@@ -96,6 +101,100 @@ def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
         )
 
     return df
+
+# ── 5b. Lineup USG shift ──────────────────────────────────────────────────────
+
+def _lineup_usg_shift(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Per team-game, identify the team's top USG player going into that game using
+    USG_PCT_season_avg (already a shift(1)-expanding mean, so leakage-safe) and
+    emit features capturing whether the top player is active/starting and how
+    much USG must be absorbed by the rest of the lineup when they are out.
+
+    Outputs:
+        TOP_USG_PLAYER_VALUE     - prior season-avg USG of the identified top player
+        TOP_USG_PLAYER_ACTIVE    - 1 if that player has a row in the team's game
+        TOP_USG_PLAYER_STARTING  - 1 if that player started the team's game
+        LINEUP_USG_SHIFT         - TOP_USG_PLAYER_VALUE when top player is out, else 0
+    """
+    required = {"TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE",
+                "PLAYER_ID", "USG_PCT_season_avg", "STARTING"}
+    if not required.issubset(df.columns):
+        return df
+
+    df = df.copy()
+
+    # Build per-(TEAM_ID, SEASON_YEAR) timelines of each player's most recently
+    # known USG_PCT_season_avg, forward-filled across the team's game dates so a
+    # player who sits today still has their prior season-to-date USG available.
+    tops = []
+    for (tid, season), grp in df.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False):
+        dates = np.sort(grp["GAME_DATE"].unique())
+        pivot = (
+            grp.pivot_table(
+                index="GAME_DATE",
+                columns="PLAYER_ID",
+                values="USG_PCT_season_avg",
+                aggfunc="last",
+            )
+            .reindex(dates)
+            .ffill()
+        )
+        if pivot.shape[1] == 0:
+            continue
+
+        all_nan = pivot.isna().all(axis=1)
+        top_pid = pivot.idxmax(axis=1)
+        top_val = pivot.max(axis=1)
+        top_pid[all_nan] = np.nan
+        top_val[all_nan] = np.nan
+
+        tops.append(pd.DataFrame({
+            "TEAM_ID": tid,
+            "SEASON_YEAR": season,
+            "GAME_DATE": dates,
+            "TOP_USG_PLAYER_ID": top_pid.values,
+            "TOP_USG_PLAYER_VALUE": top_val.values,
+        }))
+
+    if not tops:
+        return df
+
+    top_map = pd.concat(tops, ignore_index=True)
+    df = df.merge(top_map, on=["TEAM_ID", "SEASON_YEAR", "GAME_DATE"], how="left")
+
+    # Flag the top player's row (if present), then aggregate per team-game.
+    is_top = (df["PLAYER_ID"] == df["TOP_USG_PLAYER_ID"]).astype(int)
+    is_top_starter = (is_top.astype(bool) & (df["STARTING"] == 1)).astype(int)
+    df["_is_top_row"] = is_top
+    df["_is_top_starter_row"] = is_top_starter
+
+    active = (
+        df.groupby(["TEAM_ID", "GAME_ID"])["_is_top_row"].max()
+        .rename("TOP_USG_PLAYER_ACTIVE").reset_index()
+    )
+    starter = (
+        df.groupby(["TEAM_ID", "GAME_ID"])["_is_top_starter_row"].max()
+        .rename("TOP_USG_PLAYER_STARTING").reset_index()
+    )
+
+    df = df.merge(active, on=["TEAM_ID", "GAME_ID"], how="left")
+    df = df.merge(starter, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    # When we have no history to identify a top player (e.g., season opener),
+    # leave the flags as NaN instead of implying the player is out.
+    unknown = df["TOP_USG_PLAYER_ID"].isna()
+    df.loc[unknown, ["TOP_USG_PLAYER_ACTIVE", "TOP_USG_PLAYER_STARTING"]] = np.nan
+
+    df["LINEUP_USG_SHIFT"] = np.where(
+        df["TOP_USG_PLAYER_ACTIVE"] == 0,
+        df["TOP_USG_PLAYER_VALUE"].fillna(0.0),
+        0.0,
+    ).round(3)
+
+    df = df.drop(columns=["_is_top_row", "_is_top_starter_row", "TOP_USG_PLAYER_ID"])
+    return df
+
 
 # ── 6. Team context ───────────────────────────────────────────────────────────
 
@@ -397,24 +496,25 @@ def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 # ---- Opponent stats ---------------------------------------------------------------
 def _opponent_stats(df):
-    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS']
+    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS','TEAM_NET_RATING']
     available_stat_cols = [c for c in stat_cols if c in df.columns]
 
     team_game = (
-        df[['GAME_ID', 'GAME_DATE', 'SEASON_YEAR', 'TEAM_ABBREVIATION'] + available_stat_cols]
+        df[['GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION'] + available_stat_cols]
         .drop_duplicates(subset=['GAME_ID', 'TEAM_ABBREVIATION'])
-        .sort_values(['TEAM_ABBREVIATION', 'SEASON_YEAR', 'GAME_DATE'])
+        .sort_values(['TEAM_ABBREVIATION', 'GAME_DATE'])
     )
 
     opp_cols = []
     for col in available_stat_cols:
         base = col.replace('TEAM_', '')
-        avg_col = f'{base}_AVG'
-        team_game[avg_col] = (
-            team_game.groupby(['TEAM_ABBREVIATION', 'SEASON_YEAR'])[col]
-            .transform(lambda x: x.shift(1).expanding().mean().round(5))
-        )
-        opp_cols.append(avg_col)
+        for window in [5, 10]:
+            avg_col = f'{base}_roll{window}'
+            team_game[avg_col] = (
+                team_game.groupby('TEAM_ABBREVIATION')[col]
+                .transform(lambda x, w=window: x.shift(1).rolling(w, min_periods=1).mean().round(2))
+            )
+            opp_cols.append(avg_col)
 
     opp_rename = {col: f'OPP_{col}' for col in opp_cols}
 
@@ -426,9 +526,53 @@ def _opponent_stats(df):
     return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')
 
 # ---- Expected Pace and Points -----------------------
-# def _expectedPace(df):
-#     df = df.copy()
-#     df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
-#     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
-#     return df
+def _expectedPace(df):
+    df = df.copy()
+    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
+    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
+    return df
+
+
+def _role_tier_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    starter = df["STARTER_ROLL10_PCT"].fillna(0)
+    usg = df.get("USG_PCT_roll10")
+    if usg is None:
+        usg = df.get("USG_PCT_10_ewm")
+
+    # defaults if missing
+    if usg is None:
+        df["ROLE_TIER"] = 1  # role
+    else:
+        # 0=bench, 1=role, 2=star
+        df["ROLE_TIER"] = 1
+        df.loc[starter <= 0.5, "ROLE_TIER"] = 0
+        df.loc[(starter > 0.5) & (usg >= 26), "ROLE_TIER"] = 2
+
+    df["ROLE_TIER_BENCH"] = (df["ROLE_TIER"] == 0).astype(int)
+    df["ROLE_TIER_ROLE"]  = (df["ROLE_TIER"] == 1).astype(int)
+    df["ROLE_TIER_STAR"]  = (df["ROLE_TIER"] == 2).astype(int)
+    return df
+
+
+def _role_tier_interactions(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    usg = df.get("USG_PCT_roll10")
+    if usg is None:
+        usg = df.get("USG_PCT_10_ewm")
+
+    pace = df.get("EXPECTED_PACE")
+    opp_def = df.get("OPP_TEAM_DEF_RATING_ALLOWED")
+
+    for tier_col in ["ROLE_TIER_BENCH", "ROLE_TIER_ROLE", "ROLE_TIER_STAR"]:
+        if usg is not None:
+            df[f"{tier_col}_x_USG"] = (df[tier_col] * usg).round(3)
+        if pace is not None:
+            df[f"{tier_col}_x_PACE"] = (df[tier_col] * pace).round(3)
+        if opp_def is not None:
+            df[f"{tier_col}_x_OPP_DEF"] = (df[tier_col] * opp_def).round(3)
+
+    return df
 

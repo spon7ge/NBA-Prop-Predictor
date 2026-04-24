@@ -10,11 +10,17 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
+    df = _star_out_flag(df)
+    df = _star_position_match(df)
+    df = _min_by_star_status(df)
     df = _team_context(df)
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
     df = _expectedPace(df)
+    df = _role_tier_features(df)
+    df = _role_tier_interactions(df)
+    
     return df
 
 
@@ -85,6 +91,223 @@ def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
                 .round(2)
             )
         )
+
+    return df
+
+
+# ── 5. Star-out flag ──────────────────────────────────────────────────────────
+
+def _star_out_flag(
+    df: pd.DataFrame,
+    usg_scale: float = 80.0,
+    min_games: int = 5,
+) -> pd.DataFrame:
+    """
+    Identify each team's star for every team-game using leakage-free season
+    averages (PTS_ewm_season_avg + USG_PCT_ewm_season_avg * usg_scale) and
+    flag games where that star did not play (STAR_OUT_FLAG).
+
+    Both season averages are already shift(1) EWM, so the composite score
+    for a player at a given game reflects ONLY data from prior games. To
+    find the star for a team's game on date D we look at every player who
+    has ever played for that team in the same SEASON_YEAR and use their
+    most recent row strictly before D. This avoids leakage from the game
+    being predicted.
+
+    Parameters
+    ----------
+    usg_scale : float
+        Scale applied to USG_PCT (0-1 fraction) so it is comparable to PTS.
+        Default 80 ≈ a 25% usage player contributes 20 "PTS-equivalent" to
+        their star score.
+    min_games : int
+        Minimum prior games required for a player to be considered the
+        team's star. Falls back to any player with history if no one
+        qualifies (useful for very early-season games).
+
+    Output columns
+    --------------
+    STAR_PLAYER_ID : Int64 (nullable)
+        The player flagged as the team's star going into the game.
+    STAR_OUT_FLAG : int {0, 1}
+        1 if that star has no row for (TEAM_ID, GAME_ID), else 0.
+    """
+    df = df.copy()
+
+    pts_col = "PTS_ewm_season_avg"
+    usg_col = "USG_PCT_ewm_season_avg"
+
+    if pts_col not in df.columns or usg_col not in df.columns:
+        df["STAR_PLAYER_ID"] = pd.NA
+        df["STAR_OUT_FLAG"] = 0
+        return df
+
+    df["_STAR_SCORE"] = (
+        df[pts_col].fillna(0).astype(float)
+        + df[usg_col].fillna(0).astype(float) * usg_scale
+    )
+
+    team_games = (
+        df[["TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE"]]
+        .drop_duplicates()
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+    )
+
+    rosters = (
+        df.groupby(["TEAM_ID", "GAME_ID"])["PLAYER_ID"]
+        .apply(set)
+        .to_dict()
+    )
+
+    hist_cols = ["PLAYER_ID", "TEAM_ID", "SEASON_YEAR", "GAME_DATE", "_STAR_SCORE"]
+    player_hist = df[hist_cols].sort_values("GAME_DATE")
+
+    star_rows = []
+    for (team_id, season), tg in team_games.groupby(["TEAM_ID", "SEASON_YEAR"]):
+        team_hist = player_hist[
+            (player_hist["TEAM_ID"] == team_id)
+            & (player_hist["SEASON_YEAR"] == season)
+        ]
+
+        for _, g in tg.iterrows():
+            game_id = g["GAME_ID"]
+            game_date = g["GAME_DATE"]
+
+            prior = team_hist[team_hist["GAME_DATE"] < game_date]
+            if prior.empty:
+                star_rows.append({
+                    "TEAM_ID": team_id,
+                    "GAME_ID": game_id,
+                    "STAR_PLAYER_ID": pd.NA,
+                    "STAR_OUT_FLAG": 0,
+                })
+                continue
+
+            latest = prior.groupby("PLAYER_ID", as_index=False).tail(1)
+            counts = prior.groupby("PLAYER_ID").size()
+            qualified_ids = counts[counts >= min_games].index
+            pool = latest[latest["PLAYER_ID"].isin(qualified_ids)]
+            if pool.empty:
+                pool = latest
+
+            star_id = pool.loc[pool["_STAR_SCORE"].idxmax(), "PLAYER_ID"]
+            roster = rosters.get((team_id, game_id), set())
+            star_out = int(star_id not in roster)
+
+            star_rows.append({
+                "TEAM_ID": team_id,
+                "GAME_ID": game_id,
+                "STAR_PLAYER_ID": star_id,
+                "STAR_OUT_FLAG": star_out,
+            })
+
+    stars = pd.DataFrame(star_rows)
+    df = df.merge(stars, on=["TEAM_ID", "GAME_ID"], how="left")
+    df["STAR_OUT_FLAG"] = df["STAR_OUT_FLAG"].fillna(0).astype(int)
+    df = df.drop(columns=["_STAR_SCORE"])
+    return df
+
+
+# ── 5a. Star ↔ player position match ──────────────────────────────────────────
+
+def _star_position_match(df: pd.DataFrame, pos_col: str = "pos") -> pd.DataFrame:
+    """
+    Attach the star's position and a match flag against the current player's
+    position. Requires STAR_PLAYER_ID (from `_star_out_flag`) and a `pos`
+    column with values like 'PG', 'SG', 'SF', 'PF', 'C'.
+
+    Output columns
+    --------------
+    STAR_POS : object
+        The star player's position.
+    STAR_SAME_POS : Int8 (0/1, NaN if either position unknown)
+        1 if STAR_POS == player's position (exact, e.g. SG == SG).
+    STAR_SAME_POS_GROUP : Int8 (0/1, NaN if either position unknown)
+        1 if both positions fall in the same broad bucket (G / F / C),
+        based on the first character.
+    """
+    df = df.copy()
+
+    if "STAR_PLAYER_ID" not in df.columns or pos_col not in df.columns:
+        df["STAR_POS"] = pd.NA
+        df["STAR_SAME_POS"] = pd.NA
+        df["STAR_SAME_POS_GROUP"] = pd.NA
+        return df
+
+    # Player → most common position seen for that player (positions are
+    # essentially static, but mode handles any one-off mislabels).
+    pos_lookup = (
+        df.dropna(subset=[pos_col])
+          .groupby("PLAYER_ID")[pos_col]
+          .agg(lambda s: s.mode().iat[0] if not s.mode().empty else pd.NA)
+    )
+
+    df["STAR_POS"] = df["STAR_PLAYER_ID"].map(pos_lookup)
+
+    both_known = df[pos_col].notna() & df["STAR_POS"].notna()
+
+    same_exact = (df[pos_col].astype("string") == df["STAR_POS"].astype("string"))
+    df["STAR_SAME_POS"] = same_exact.where(both_known).astype("Int8")
+
+    def _bucket(s: pd.Series) -> pd.Series:
+        return s.astype("string").str[0]  # 'G', 'F', or 'C'
+
+    same_group = (_bucket(df[pos_col]) == _bucket(df["STAR_POS"]))
+    df["STAR_SAME_POS_GROUP"] = same_group.where(both_known).astype("Int8")
+
+    return df
+
+
+# ── 5b. Minutes conditioned on star status ────────────────────────────────────
+
+def _min_by_star_status(df: pd.DataFrame, min_sample: int = 2) -> pd.DataFrame:
+    """
+    Per player, leakage-free historical average minutes split by the team's
+    star status going into each game:
+
+        MIN_WHEN_STAR_IN   = avg MIN in prior same-season games where STAR_OUT_FLAG == 0
+        MIN_WHEN_STAR_OUT  = avg MIN in prior same-season games where STAR_OUT_FLAG == 1
+        MIN_STAR_OUT_DELTA = MIN_WHEN_STAR_OUT - MIN_WHEN_STAR_IN
+
+    Uses a shift(1) expanding mean within (PLAYER_ID, SEASON_YEAR) restricted
+    to games matching each flag value, so the value at row t only reflects
+    games strictly before t. Cells with fewer than `min_sample` prior matching
+    games are left as NaN to avoid noisy small-sample estimates.
+
+    Requires STAR_OUT_FLAG (from `_star_out_flag`) and MIN in df.
+    """
+    df = df.copy()
+
+    if "STAR_OUT_FLAG" not in df.columns or "MIN" not in df.columns:
+        df["MIN_WHEN_STAR_IN"] = np.nan
+        df["MIN_WHEN_STAR_OUT"] = np.nan
+        df["MIN_STAR_OUT_DELTA"] = np.nan
+        return df
+
+    df = df.sort_values(["PLAYER_ID", "SEASON_YEAR", "GAME_DATE"])
+
+    def _conditional_expanding_mean(group: pd.DataFrame, flag_val: int) -> pd.Series:
+        mask = (group["STAR_OUT_FLAG"] == flag_val)
+        masked_min = group["MIN"].where(mask)
+        # shift(1) so the value at row t uses only games strictly before t
+        shifted = masked_min.shift(1)
+        running_sum = shifted.expanding().sum()
+        running_cnt = shifted.expanding().count()
+        avg = running_sum / running_cnt.replace(0, np.nan)
+        avg = avg.where(running_cnt >= min_sample)
+        return avg.round(2)
+
+    df["MIN_WHEN_STAR_IN"] = (
+        df.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)
+          .apply(lambda g: _conditional_expanding_mean(g, 0))
+    )
+    df["MIN_WHEN_STAR_OUT"] = (
+        df.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)
+          .apply(lambda g: _conditional_expanding_mean(g, 1))
+    )
+    df["MIN_STAR_OUT_DELTA"] = (
+        df["MIN_WHEN_STAR_OUT"] - df["MIN_WHEN_STAR_IN"]
+    ).round(2)
 
     return df
 
@@ -217,3 +440,47 @@ def _expectedPace(df):
     df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
     return df
+
+def _role_tier_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    starter = df["STARTER_ROLL10_PCT"].fillna(0)
+    usg = df.get("USG_PCT_roll10")
+    if usg is None:
+        usg = df.get("USG_PCT_10_ewm")
+
+    # defaults if missing
+    if usg is None:
+        df["ROLE_TIER"] = 1  # role
+    else:
+        # 0=bench, 1=role, 2=star
+        df["ROLE_TIER"] = 1
+        df.loc[starter <= 0.5, "ROLE_TIER"] = 0
+        df.loc[(starter > 0.5) & (usg >= 26), "ROLE_TIER"] = 2
+
+    df["ROLE_TIER_BENCH"] = (df["ROLE_TIER"] == 0).astype(int)
+    df["ROLE_TIER_ROLE"]  = (df["ROLE_TIER"] == 1).astype(int)
+    df["ROLE_TIER_STAR"]  = (df["ROLE_TIER"] == 2).astype(int)
+    return df
+
+
+def _role_tier_interactions(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    usg = df.get("USG_PCT_roll10")
+    if usg is None:
+        usg = df.get("USG_PCT_10_ewm")
+
+    pace = df.get("EXPECTED_PACE")
+    opp_def = df.get("OPP_TEAM_DEF_RATING_ALLOWED")
+
+    for tier_col in ["ROLE_TIER_BENCH", "ROLE_TIER_ROLE", "ROLE_TIER_STAR"]:
+        if usg is not None:
+            df[f"{tier_col}_x_USG"] = (df[tier_col] * usg).round(3)
+        if pace is not None:
+            df[f"{tier_col}_x_PACE"] = (df[tier_col] * pace).round(3)
+        if opp_def is not None:
+            df[f"{tier_col}_x_OPP_DEF"] = (df[tier_col] * opp_def).round(3)
+
+    return df
+
