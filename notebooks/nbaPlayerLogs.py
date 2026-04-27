@@ -1,9 +1,51 @@
 import time
 import os
+import random
+import logging
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from nba_api.stats.endpoints import playergamelogs, teamgamelogs
 from nba_api.stats.endpoints import boxscoreplayertrackv3
+
+logger = logging.getLogger(__name__)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+
+def _is_rate_limit_error(exc: Exception) -> bool:
+    """Heuristic: detect rate limit / throttling errors from nba_api."""
+    msg = str(exc).lower()
+    return any(k in msg for k in (
+        'rate limit', 'too many requests', '429',
+        'timeout', 'timed out', 'connection', 'read timed out',
+    ))
+
+
+def _call_with_retry(fn, *args, label: str = '', max_retries: int = 5,
+                     base_delay: float = 1.0, max_delay: float = 60.0, **kwargs):
+    """
+    Call ``fn(*args, **kwargs)`` with exponential backoff on rate-limit /
+    transient errors. Non-retryable errors are re-raised immediately.
+    """
+    attempt = 0
+    while True:
+        try:
+            return fn(*args, **kwargs)
+        except Exception as e:
+            if not _is_rate_limit_error(e) or attempt >= max_retries:
+                raise
+            sleep_for = min(max_delay, base_delay * (2 ** attempt))
+            sleep_for += random.uniform(0, 0.5 * sleep_for)
+            logger.warning(
+                "Rate limit / transient error on %s (attempt %d/%d): %s — "
+                "retrying in %.1fs",
+                label or fn.__name__, attempt + 1, max_retries, e, sleep_for,
+            )
+            time.sleep(sleep_for)
+            attempt += 1
 
 
 class NBAGameLogs:
@@ -28,44 +70,45 @@ class NBAGameLogs:
 
     def fetch(
         self,
-        start_position_delay: float = 0.6,
+        start_position_delay: float = 0.3,
         batch_size: int = 100,
         checkpoint_path: str = 'start_positions_checkpoint.csv',
-        skip_start_positions: bool = False
+        skip_start_positions: bool = False,
+        start_position_workers: int = 8,
+        run_all_batches: bool = True,
     ) -> 'NBAGameLogs':
         print(f"Fetching data for {self.season} {self.season_type}...")
 
-        self._player_base = playergamelogs.PlayerGameLogs(
-            season_nullable=self.season,
-            season_type_nullable=self.season_type,
-            measure_type_player_game_logs_nullable='Base'
-        ).get_data_frames()[0]
-        time.sleep(0.6)
-        print("✓ Player base")
+        def _player_logs(measure):
+            return playergamelogs.PlayerGameLogs(
+                season_nullable=self.season,
+                season_type_nullable=self.season_type,
+                measure_type_player_game_logs_nullable=measure,
+            ).get_data_frames()[0]
 
-        self._player_adv = playergamelogs.PlayerGameLogs(
-            season_nullable=self.season,
-            season_type_nullable=self.season_type,
-            measure_type_player_game_logs_nullable='Advanced'
-        ).get_data_frames()[0]
-        time.sleep(0.6)
-        print("✓ Player advanced")
+        def _team_logs(measure):
+            return teamgamelogs.TeamGameLogs(
+                season_nullable=self.season,
+                season_type_nullable=self.season_type,
+                measure_type_player_game_logs_nullable=measure,
+            ).get_data_frames()[0]
 
-        self._team_base = teamgamelogs.TeamGameLogs(
-            season_nullable=self.season,
-            season_type_nullable=self.season_type,
-            measure_type_player_game_logs_nullable='Base'
-        ).get_data_frames()[0]
-        time.sleep(0.6)
-        print("✓ Team base")
-
-        self._team_adv = teamgamelogs.TeamGameLogs(
-            season_nullable=self.season,
-            season_type_nullable=self.season_type,
-            measure_type_player_game_logs_nullable='Advanced'
-        ).get_data_frames()[0]
-        time.sleep(0.6)
-        print("✓ Team advanced")
+        # The 4 league-wide pulls are independent → fetch them in parallel.
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            futs = {
+                'player_base':     ex.submit(_call_with_retry, _player_logs, 'Base',     label='player_base'),
+                'player_advanced': ex.submit(_call_with_retry, _player_logs, 'Advanced', label='player_advanced'),
+                'team_base':       ex.submit(_call_with_retry, _team_logs,   'Base',     label='team_base'),
+                'team_advanced':   ex.submit(_call_with_retry, _team_logs,   'Advanced', label='team_advanced'),
+            }
+            self._player_base = futs['player_base'].result()
+            print("✓ Player base")
+            self._player_adv = futs['player_advanced'].result()
+            print("✓ Player advanced")
+            self._team_base = futs['team_base'].result()
+            print("✓ Team base")
+            self._team_adv = futs['team_advanced'].result()
+            print("✓ Team advanced")
 
         if skip_start_positions:
             print("⚡ Skipping START_POSITION fetch")
@@ -73,7 +116,9 @@ class NBAGameLogs:
             self._start_positions = self._fetch_start_positions(
                 delay=start_position_delay,
                 batch_size=batch_size,
-                checkpoint_path=checkpoint_path
+                checkpoint_path=checkpoint_path,
+                workers=start_position_workers,
+                run_all_batches=run_all_batches,
             )
 
         return self
@@ -82,7 +127,9 @@ class NBAGameLogs:
         self,
         delay: float,
         batch_size: int,
-        checkpoint_path: str
+        checkpoint_path: str,
+        workers: int = 8,
+        run_all_batches: bool = True,
     ) -> pd.DataFrame:
         all_game_ids = self._player_base['GAME_ID'].unique()
         total = len(all_game_ids)
@@ -114,10 +161,18 @@ class NBAGameLogs:
             def fetch_one(game_id):
                 normalized = str(game_id).zfill(10)
                 time.sleep(delay)
-                df = boxscoreplayertrackv3.BoxScorePlayerTrackV3(
-                    game_id=normalized,
-                    timeout=60
-                ).get_data_frames()[0]
+
+                def _call():
+                    return boxscoreplayertrackv3.BoxScorePlayerTrackV3(
+                        game_id=normalized,
+                        timeout=60,
+                    ).get_data_frames()[0]
+
+                df = _call_with_retry(_call, label=f"game {normalized}")
+
+                if df is None or df.empty:
+                    logger.warning("Skipping game %s: no tracking data returned", normalized)
+                    return None
 
                 column_mapping = {
                     'gameId': 'GAME_ID',
@@ -155,18 +210,32 @@ class NBAGameLogs:
                     'DFGM', 'DFGA', 'DFG_PCT'
                 ]
                 existing_cols = [c for c in cols if c in df.columns]
+                missing_required = {'GAME_ID', 'PLAYER_ID'} - set(existing_cols)
+                if missing_required:
+                    logger.warning(
+                        "Skipping game %s: missing required columns %s",
+                        normalized, sorted(missing_required),
+                    )
+                    return None
                 return df[existing_cols]
 
-            with ThreadPoolExecutor(max_workers=5) as executor:
+            with ThreadPoolExecutor(max_workers=workers) as executor:
                 futures = {executor.submit(fetch_one, gid): gid for gid in batch}
 
                 for i, future in enumerate(as_completed(futures), 1):
                     game_id = futures[future]
                     try:
-                        batch_frames.append(future.result())
+                        result_df = future.result()
+                        if result_df is None:
+                            failed.append(game_id)
+                        else:
+                            batch_frames.append(result_df)
                     except Exception as e:
                         failed.append(game_id)
-                        print(f"  ⚠ Skipped game {str(game_id).zfill(10)}: {e}")
+                        logger.warning(
+                            "Skipped game %s after retries: %s",
+                            str(game_id).zfill(10), e,
+                        )
 
                     if i % 25 == 0:
                         print(f"  … {i}/{len(batch)} games in batch")
@@ -178,8 +247,9 @@ class NBAGameLogs:
                 checkpoint_so_far.to_csv(checkpoint_path, index=False)
                 print(f"  ✓ Batch {batch_num} done — checkpoint saved ({len(checkpoint_so_far)} rows total)")
 
-            print(f"  → Done for now. Re-run fetch() to continue with the next batch.")
-            break  # <-- Remove this line to run all batches in one go
+            if not run_all_batches:
+                print(f"  → Stopping after batch {batch_num} (run_all_batches=False).")
+                break
 
         if failed:
             print(f"\n  ✗ {len(failed)} games failed across all batches: {failed}")
