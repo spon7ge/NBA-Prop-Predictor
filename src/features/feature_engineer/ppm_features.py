@@ -8,19 +8,22 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _per_min_features(df)
     df = _rolling_player(df)
     df = _ewm_player(df)
-    df = _lag_features(df)
+    # df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
     df = _lineup_usg_shift(df)
     df = _team_context(df)
     df = _team_allowed_context(df)
     df = _team_allowed_rolling(df)
+    df = _opp_pos_ppm_allowed(df)
+    df = _own_pos_allowed_features(df)
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
     df = _expectedPace(df)
-    df = _role_tier_features(df)
-    df = _role_tier_interactions(df)
+    df = _star_out_flag(df)
+    # df = _role_tier_features(df)
+    # df = _role_tier_interactions(df)
 
 
     return df
@@ -34,11 +37,19 @@ def _per_min_features(df: pd.DataFrame) -> pd.DataFrame:
     df['3PM_PER_MIN'] = df['FG3M'] / df['MIN'].replace(0, np.nan)
     df['FTA_PER_MIN'] = df['FTA'] / df['MIN'].replace(0, np.nan)
     df['FTM_PER_MIN'] = df['FTM'] / df['MIN'].replace(0, np.nan)
+    df['TCHS_PER_MIN']  = df['TCHS'] / df['MIN'].replace(0, np.nan)
+    df['PASS_PER_MIN']  = df['PASS'] / df['MIN'].replace(0, np.nan)
+    df['UFGA_PER_MIN']  = df['UFGA'] / df['MIN'].replace(0, np.nan)
+    df['CFGA_PER_MIN']  = df['CFGA'] / df['MIN'].replace(0, np.nan)
+    df['SAST_PER_MIN']  = df['SAST'] / df['MIN'].replace(0, np.nan)
+    df['DFGA_PER_MIN']  = df['DFGA'] / df['MIN'].replace(0, np.nan)
     return df
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN',
-    'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV'
+    cols = [
+        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'TS_PCT', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN',
+        'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT'
     ]
 
     for window in [3,5,10]:
@@ -52,8 +63,9 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = [
-        'MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
-        'TS_PCT', 'AST_TO', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'AST', 'TOV', 'REB', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN'
+        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'TS_PCT', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN',
+        'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'DFGA_PER_MIN'
     ]
 
     for span in [3, 5, 10]:
@@ -70,8 +82,11 @@ def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PIE', 'STARTING', 'POSS', "USG_PCT", "PTS_PER_MIN", 'POSS_PER_MIN']
-
+    cols = [
+        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'TS_PCT', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN',
+        'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'DFGA_PER_MIN'
+    ]
     for lag in [1, 2]:
         for col in cols:
             df[f'{col}_lag{lag}'] = df.groupby('PLAYER_ID')[col].shift(lag)
@@ -92,8 +107,11 @@ def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 4. Season averages (expanding) ───────────────────────────────────────────
 
 def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'DEF_RATING', 'PTS_PER_MIN', 'FGA_PER_MIN', 'FTA_PER_MIN', '3PA_PER_MIN', 'TS_PCT']
-
+    cols = [
+        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'TS_PCT', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN',
+        'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'DFGA_PER_MIN'
+    ]
     for col in cols:
         df[f'{col}_season_avg'] = (
             df.groupby(['PLAYER_ID', 'SEASON_YEAR'])[col]
@@ -454,7 +472,127 @@ def _team_allowed_rolling(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     return out.merge(opp_allowed_roll_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
-    
+
+
+# ── Position-level PPM / PTS allowed (season-to-date, leakage-safe) ──────────
+
+def _opp_pos_ppm_allowed(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    For each (defending team, season, position), compute season-to-date defender
+    "allowed" features, with a shift(1) so the current game is excluded
+    (prior games only -> no leakage):
+
+        PPM_ALLOWED_TO_{POS} = cumulative PTS allowed / cumulative MIN allowed
+        PTS_ALLOWED_TO_{POS} = expanding mean of PTS allowed per game
+
+    Pivoted wide so every player row gets one feature per position, merged via
+    the player's OPP_TEAM_ID (the defender they are facing).
+    """
+    required = {"TEAM_ID", "OPP_TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE",
+                "POS", "PTS", "MIN"}
+    if not required.issubset(df.columns):
+        return df
+
+    df = df.copy()
+    pos_norm = df["POS"].fillna("UNK").astype(str).str.upper().str.strip()
+
+    work = pd.DataFrame({
+        "DEF_TEAM_ID": df["OPP_TEAM_ID"],
+        "SEASON_YEAR": df["SEASON_YEAR"],
+        "GAME_ID":     df["GAME_ID"],
+        "GAME_DATE":   df["GAME_DATE"],
+        "POS":         pos_norm,
+        "PTS":         df["PTS"],
+        "MIN":         df["MIN"],
+    })
+
+    pos_game = (
+        work.groupby(
+            ["DEF_TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE", "POS"],
+            as_index=False,
+        )
+        .agg(PTS=("PTS", "sum"), MIN=("MIN", "sum"))
+        .sort_values(["DEF_TEAM_ID", "SEASON_YEAR", "POS", "GAME_DATE"])
+    )
+
+    g = pos_game.groupby(["DEF_TEAM_ID", "SEASON_YEAR", "POS"], sort=False)
+    cum_pts_prior = g["PTS"].transform(lambda x: x.cumsum().shift(1))
+    cum_min_prior = g["MIN"].transform(lambda x: x.cumsum().shift(1))
+    pos_game["PPM_ALLOWED"] = (
+        cum_pts_prior / cum_min_prior.replace(0, np.nan)
+    ).round(4)
+    pos_game["PTS_ALLOWED"] = (
+        g["PTS"].transform(lambda x: x.shift(1).expanding().mean())
+    ).round(2)
+
+    def _pivot(value_col: str, prefix: str) -> pd.DataFrame:
+        wide = (
+            pos_game.pivot_table(
+                index=["DEF_TEAM_ID", "GAME_ID"],
+                columns="POS",
+                values=value_col,
+                aggfunc="last",
+            )
+            .reset_index()
+        )
+        wide.columns.name = None
+        rename = {
+            c: f"{prefix}_{c}"
+            for c in wide.columns
+            if c not in {"DEF_TEAM_ID", "GAME_ID"}
+        }
+        return wide.rename(columns=rename).rename(
+            columns={"DEF_TEAM_ID": "OPP_TEAM_ID"}
+        )
+
+    ppm_wide = _pivot("PPM_ALLOWED", "PPM_ALLOWED_TO")
+    pts_wide = _pivot("PTS_ALLOWED", "PTS_ALLOWED_TO")
+
+    df = df.merge(ppm_wide, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+    df = df.merge(pts_wide, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+    return df
+
+
+# ── Self-position selectors + matchup expectation ────────────────────────────
+
+def _own_pos_allowed_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Collapse the wide PPM_ALLOWED_TO_{POS} / PTS_ALLOWED_TO_{POS} columns into
+    single per-row features that pick the value matching the player's own POS.
+
+    Adds:
+        OPP_PPM_ALLOWED_TO_OWN_POS
+        OPP_PTS_ALLOWED_TO_OWN_POS
+        EXP_PTS_FROM_OPP_POS  (= MIN_roll10 * OPP_PPM_ALLOWED_TO_OWN_POS)
+    """
+    if "POS" not in df.columns:
+        return df
+
+    df = df.copy()
+    pos = df["POS"].fillna("UNK").astype(str).str.upper().str.strip()
+
+    ppm_out = pd.Series(np.nan, index=df.index)
+    pts_out = pd.Series(np.nan, index=df.index)
+    for p in pos.unique():
+        mask = (pos == p)
+        ppm_col = f"PPM_ALLOWED_TO_{p}"
+        pts_col = f"PTS_ALLOWED_TO_{p}"
+        if ppm_col in df.columns:
+            ppm_out.loc[mask] = df.loc[mask, ppm_col]
+        if pts_col in df.columns:
+            pts_out.loc[mask] = df.loc[mask, pts_col]
+
+    df["OPP_PPM_ALLOWED_TO_OWN_POS"] = ppm_out.round(4)
+    df["OPP_PTS_ALLOWED_TO_OWN_POS"] = pts_out.round(2)
+
+    if "MIN_roll10" in df.columns:
+        df["EXP_PTS_FROM_OPP_POS"] = (
+            df["MIN_roll10"] * df["OPP_PPM_ALLOWED_TO_OWN_POS"]
+        ).round(2)
+
+    return df
+
+
 # ── 8. Schedule / rest ────────────────────────────────────────────────────────
 
 def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -575,4 +713,115 @@ def _role_tier_interactions(df: pd.DataFrame) -> pd.DataFrame:
             df[f"{tier_col}_x_OPP_DEF"] = (df[tier_col] * opp_def).round(3)
 
     return df
+
+def _star_out_flag(
+    df: pd.DataFrame,
+    usg_scale: float = 80.0,
+    min_games: int = 5,
+) -> pd.DataFrame:
+    """
+    Identify each team's star for every team-game using leakage-free season
+    averages (PTS_ewm_season_avg + USG_PCT_ewm_season_avg * usg_scale) and
+    flag games where that star did not play (STAR_OUT_FLAG).
+
+    Both season averages are already shift(1) EWM, so the composite score
+    for a player at a given game reflects ONLY data from prior games. To
+    find the star for a team's game on date D we look at every player who
+    has ever played for that team in the same SEASON_YEAR and use their
+    most recent row strictly before D. This avoids leakage from the game
+    being predicted.
+
+    Parameters
+    ----------
+    usg_scale : float
+        Scale applied to USG_PCT (0-1 fraction) so it is comparable to PTS.
+        Default 80 ≈ a 25% usage player contributes 20 "PTS-equivalent" to
+        their star score.
+    min_games : int
+        Minimum prior games required for a player to be considered the
+        team's star. Falls back to any player with history if no one
+        qualifies (useful for very early-season games).
+
+    Output columns
+    --------------
+    STAR_PLAYER_ID : Int64 (nullable)
+        The player flagged as the team's star going into the game.
+    STAR_OUT_FLAG : int {0, 1}
+        1 if that star has no row for (TEAM_ID, GAME_ID), else 0.
+    """
+    df = df.copy()
+
+    pts_col = "PTS_ewm_season_avg"
+    usg_col = "USG_PCT_ewm_season_avg"
+
+    if pts_col not in df.columns or usg_col not in df.columns:
+        df["STAR_PLAYER_ID"] = pd.NA
+        df["STAR_OUT_FLAG"] = 0
+        return df
+
+    df["_STAR_SCORE"] = (
+        df[pts_col].fillna(0).astype(float)
+        + df[usg_col].fillna(0).astype(float) * usg_scale
+    )
+
+    team_games = (
+        df[["TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE"]]
+        .drop_duplicates()
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+    )
+
+    rosters = (
+        df.groupby(["TEAM_ID", "GAME_ID"])["PLAYER_ID"]
+        .apply(set)
+        .to_dict()
+    )
+
+    hist_cols = ["PLAYER_ID", "TEAM_ID", "SEASON_YEAR", "GAME_DATE", "_STAR_SCORE"]
+    player_hist = df[hist_cols].sort_values("GAME_DATE")
+
+    star_rows = []
+    for (team_id, season), tg in team_games.groupby(["TEAM_ID", "SEASON_YEAR"]):
+        team_hist = player_hist[
+            (player_hist["TEAM_ID"] == team_id)
+            & (player_hist["SEASON_YEAR"] == season)
+        ]
+
+        for _, g in tg.iterrows():
+            game_id = g["GAME_ID"]
+            game_date = g["GAME_DATE"]
+
+            prior = team_hist[team_hist["GAME_DATE"] < game_date]
+            if prior.empty:
+                star_rows.append({
+                    "TEAM_ID": team_id,
+                    "GAME_ID": game_id,
+                    "STAR_PLAYER_ID": pd.NA,
+                    "STAR_OUT_FLAG": 0,
+                })
+                continue
+
+            latest = prior.groupby("PLAYER_ID", as_index=False).tail(1)
+            counts = prior.groupby("PLAYER_ID").size()
+            qualified_ids = counts[counts >= min_games].index
+            pool = latest[latest["PLAYER_ID"].isin(qualified_ids)]
+            if pool.empty:
+                pool = latest
+
+            star_id = pool.loc[pool["_STAR_SCORE"].idxmax(), "PLAYER_ID"]
+            roster = rosters.get((team_id, game_id), set())
+            star_out = int(star_id not in roster)
+
+            star_rows.append({
+                "TEAM_ID": team_id,
+                "GAME_ID": game_id,
+                "STAR_PLAYER_ID": star_id,
+                "STAR_OUT_FLAG": star_out,
+            })
+
+    stars = pd.DataFrame(star_rows)
+    df = df.merge(stars, on=["TEAM_ID", "GAME_ID"], how="left")
+    df["STAR_OUT_FLAG"] = df["STAR_OUT_FLAG"].fillna(0).astype(int)
+    df = df.drop(columns=["_STAR_SCORE"])
+    return df
+
 
