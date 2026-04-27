@@ -19,3 +19,17 @@ Documentation:
 6. Created 3 new columns that tell my model whether or not a star was missing for a certain game. (Main_star_active, second_star_active, and third_star_active)
 7. Fixed leakage that was happening when i was looking for main stars, it was using avgs from all games found instead of pre computed avgs leading up to the game
 8. 
+
+
+
+# Before betting real money — log every prediction + adjustment
+paper_log = {
+    'date': date,
+    'player': player,
+    'model_pred': pred_pts,
+    'human_adj': adjustment,
+    'final_pred': adjusted_pts,
+    'book_line': line,
+    'actual': None,  # fill in after game
+    'condition': condition_triggered,
+}
