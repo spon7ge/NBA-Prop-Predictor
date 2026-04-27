@@ -38,7 +38,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING']
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'DIST', 'SPD', 'TCHS']
 
     for span in [3, 5, 10]:
         for col in cols:
@@ -81,16 +81,23 @@ def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
     cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING']
 
     for col in cols:
-        df[f'{col}_ewm_season_avg'] = (
-            df.groupby(['PLAYER_ID', 'SEASON_YEAR'], sort=False)[col]
-            .transform(
-                lambda x: pd.to_numeric(x, errors='coerce')
-                .shift(1)
-                .ewm(alpha=0.3, min_periods=3, adjust=False)
-                .mean()
-                .round(2)
-            )
+        # Convert to numeric once to save processing time
+        series = pd.to_numeric(df[col], errors='coerce')
+        group = df.groupby(['PLAYER_ID', 'SEASON_YEAR'], sort=False)
+
+        # 1. Calculate the EWM (The primary "Recent Form" feature)
+        ewm_series = group[col].transform(
+            lambda x: x.shift(1).ewm(alpha=0.3, min_periods=3, adjust=False).mean()
         )
+
+        # 2. Calculate the Expanding Mean (The "Season Baseline" fallback)
+        # min_periods=1 ensures we get a value as early as Game 2
+        expanding_mean = group[col].transform(
+            lambda x: x.shift(1).expanding(min_periods=1).mean()
+        )
+
+        # 3. Fill NaNs in EWM with the Expanding Mean, then round
+        df[f'{col}_ewm_season_avg'] = ewm_series.fillna(expanding_mean).round(2)
 
     return df
 
