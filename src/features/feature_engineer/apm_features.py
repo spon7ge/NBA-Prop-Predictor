@@ -14,16 +14,18 @@ def apm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _schedule_features(df)
     df = _volatility_features(df)
     df = _opponent_stats(df)
+    df = _opponent_season_stats_and_rank(df)
     df = _expectedPace(df)
     df = _detect_star_players(df)
-
+    df = _team_allowed_context(df)
+    
     return df
 
 
 # ── 1. Rolling player performance ─────────────────────────────────────────────
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'AST_TO','AST', 'AST_PCT','AST_RATIO', 'TOV', 'AST_PER_MIN', 'TOV_PER_MIN', 'POSS_PER_MIN']
+    cols = ['MIN', 'PTS', 'USG_PCT', 'PLUS_MINUS', 'POSS', 'AST_TO','AST', 'AST_PCT','AST_RATIO', 'TOV', 'AST_PER_MIN', 'TOV_PER_MIN', 'POSS_PER_MIN', 'SAST_PER_MIN', 'FTAST_PER_MIN', 'PASS_PER_MIN', 'TCHS_PER_MIN']
 
     for window in [3,5,10]:
         for col in cols:
@@ -35,7 +37,8 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = [
-        'AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN', 'AST_PCT', 'AST_TO', 'MIN', 'USG_PCT', 
+        'AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN', 'AST_PCT', 'AST_TO', 'MIN', 
+        'USG_PCT', 'SAST_PER_MIN', 'FTAST_PER_MIN', 'PASS_PER_MIN', 'TCHS_PER_MIN'
     ]
 
     for span in [3, 5, 10]:
@@ -53,7 +56,7 @@ def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN']
+    cols = ['AST_PER_MIN', 'AST', 'TOV_PER_MIN', 'TOV', 'POSS_PER_MIN', 'SAST_PER_MIN', 'FTAST_PER_MIN', 'PASS_PER_MIN', 'TCHS_PER_MIN']
 
     for lag in [1, 2]:
         for col in cols:
@@ -75,7 +78,7 @@ def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 4. Season averages (expanding) ───────────────────────────────────────────
 
 def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'AST', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'AST_PER_MIN']
+    cols = ['MIN', 'AST', 'USG_PCT', 'POSS', 'PF', 'OFF_RATING', 'AST_PER_MIN', 'SAST_PER_MIN', 'FTAST_PER_MIN', 'PASS_PER_MIN', 'TCHS_PER_MIN']
 
     for col in cols:
         df[f'{col}_season_avg'] = (
@@ -267,35 +270,186 @@ def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
     # 4. Refined Weighted Star Score
     # Prioritizing PIE (30%) as the best catch-all, Usage (25%), PTS (20%)
     stats_df['STAR_SCORE'] = (
-        0.25 * stats_df['USG_PCT_NORM'] +
-        0.15 * stats_df['TS_PCT_NORM'] +
-        0.10 * stats_df['EFG_PCT_NORM'] +
-        0.20 * stats_df['PTS_NORM'] +
-        0.30 * stats_df['PIE_NORM'] 
-    )
+        0.35 * stats_df['USG_PCT_NORM'] +
+        0.20 * stats_df['TS_PCT_NORM'] +
+        0.30 * stats_df['PTS_NORM'] +
+        0.15 * stats_df['PIE_NORM'])
     
-    # 5. Extract Top 3 per team
-    top_3 = (stats_df.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
-             .groupby('TEAM_ID').head(3))
-    
+    # 5. Extract Top 3 per team + single top player per team
+    sorted_stars = stats_df.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
+    top_3 = sorted_stars.groupby('TEAM_ID').head(3)
+    top_1 = sorted_stars.groupby('TEAM_ID').head(1)[['TEAM_ID', 'PLAYER_NAME_NORM']]
+    top_1_set = set(zip(top_1['TEAM_ID'], top_1['PLAYER_NAME_NORM']))
+
     # 6. Flag players in the main dataframe
-    # Create a set of "Star" identifiers (TeamID + PlayerName)
     top_stars = set(zip(top_3['TEAM_ID'], top_3['PLAYER_NAME_NORM']))
-    
+
     df['IS_TOP_STAR'] = df.apply(
         lambda x: 1 if (x['TEAM_ID'], x['PLAYER_NAME_NORM']) in top_stars else 0, axis=1
     )
-    
-    # 7. Calculate total stars active per game
-    # This identifies how many of the top 3 are available for a given game
+    df['IS_TOP_1_STAR'] = df.apply(
+        lambda x: 1 if (x['TEAM_ID'], x['PLAYER_NAME_NORM']) in top_1_set else 0, axis=1
+    )
+
+    # 7. Calculate total top-3 stars active per game
     active_stars_per_game = (
-        df[df['IS_TOP_STAR'] == 1 & (df['MIN'] >= min_minutes)]
+        df[(df['IS_TOP_STAR'] == 1) & (df['MIN'] >= min_minutes)]
         .groupby(['GAME_ID', 'TEAM_ID'])['IS_TOP_STAR']
         .sum()
         .reset_index(name='ACTIVE_STARS_COUNT')
     )
-    
+
     df = df.merge(active_stars_per_game, on=['GAME_ID', 'TEAM_ID'], how='left')
     df['ACTIVE_STARS_COUNT'] = df['ACTIVE_STARS_COUNT'].fillna(0).astype(int)
-    
+
+    # 8. Flag whether the #1 star was active per game (played >= min_minutes)
+    top1_active_per_game = (
+        df[(df['IS_TOP_1_STAR'] == 1) & (df['MIN'] >= min_minutes)]
+        .groupby(['GAME_ID', 'TEAM_ID'])['IS_TOP_1_STAR']
+        .max()
+        .reset_index(name='TOP_STAR_ACTIVE')
+    )
+
+    df = df.merge(top1_active_per_game, on=['GAME_ID', 'TEAM_ID'], how='left')
+    df['TOP_STAR_ACTIVE'] = df['TOP_STAR_ACTIVE'].fillna(0).astype(int)
+
     return df.drop(columns=['PLAYER_NAME_NORM'])
+
+def _team_allowed_context(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Builds team-level "allowed" features using only games before the current one
+    (shift(1) within TEAM_ID + SEASON_YEAR), then merges back to player rows.
+    """
+    required = [
+        "TEAM_ID",
+        "SEASON_YEAR",
+        "GAME_ID",
+        "GAME_DATE",
+        "OPP_POSS",
+        "OPP_AST",
+        "OPP_TOV",
+        "OPP_DEF_RATING",
+        "OPP_PTS",
+    ]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        return df
+
+    team_game = (
+        df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+        .copy()
+    )
+
+    g = team_game.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)
+
+    # Per-game allowed/forced averages to date (prior games only)
+    def prior_expanding_mean(x):
+        return x.shift(1).expanding().mean().round(3)
+
+    for raw_col, new_col in [
+        ("OPP_POSS",       "TEAM_POSS_ALLOWED"),
+        ("OPP_AST",        "TEAM_AST_ALLOWED"),
+        ("OPP_TOV",        "TEAM_TOV_FORCED"),
+        ("OPP_DEF_RATING", "TEAM_DEF_RATING_ALLOWED"),
+        ("OPP_PTS",        "TEAM_PTS_ALLOWED"),
+    ]:
+        team_game[new_col] = g[raw_col].transform(prior_expanding_mean)
+
+    allowed_cols = [
+        "TEAM_ID",
+        "GAME_ID",
+        "TEAM_POSS_ALLOWED",
+        "TEAM_AST_ALLOWED",
+        "TEAM_TOV_FORCED",
+        "TEAM_DEF_RATING_ALLOWED",
+        "TEAM_PTS_ALLOWED",
+    ]
+
+    allowed_map = team_game[allowed_cols]
+    out = df.merge(allowed_map, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    if "OPP_TEAM_ID" not in out.columns:
+        return out
+
+    opp_rename = {
+        "TEAM_ID":                  "OPP_TEAM_ID",
+        "TEAM_POSS_ALLOWED":        "OPP_TEAM_POSS_ALLOWED",
+        "TEAM_AST_ALLOWED":         "OPP_TEAM_AST_ALLOWED",
+        "TEAM_TOV_FORCED":          "OPP_TEAM_TOV_FORCED",
+        "TEAM_DEF_RATING_ALLOWED":  "OPP_TEAM_DEF_RATING_ALLOWED",
+        "TEAM_PTS_ALLOWED":         "OPP_TEAM_PTS_ALLOWED",
+    }
+
+    opp_allowed_map = allowed_map.rename(columns=opp_rename)
+    return out.merge(opp_allowed_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+
+def _opponent_season_stats_and_rank(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Opponent (team) features: YTD means through prior games only, plus weekly league
+    rank among teams (1 = best) using each team's S2D stat at the last game in the
+    ISO week, broadcast to all games in that week.
+    """
+    if 'OPP_OPP_ABBREVIATION_base' not in df.columns or 'SEASON_YEAR' not in df.columns:
+        return df
+
+    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS']
+    available = [c for c in stat_cols if c in df.columns]
+    if not available:
+        return df
+
+    need = ['GAME_ID', 'GAME_DATE', 'SEASON_YEAR', 'TEAM_ABBREVIATION'] + available
+    team_game = (
+        df[need]
+        .drop_duplicates(subset=['GAME_ID', 'TEAM_ABBREVIATION'])
+        .copy()
+    )
+    team_game['GAME_DATE'] = pd.to_datetime(team_game['GAME_DATE'], utc=False)
+    team_game = team_game.sort_values(['SEASON_YEAR', 'TEAM_ABBREVIATION', 'GAME_DATE'])
+
+    g = team_game.groupby(['SEASON_YEAR', 'TEAM_ABBREVIATION'], sort=False)
+
+    season_renames = {}
+    for col in available:
+        base = col.replace('TEAM_', '')
+        sname = f'{base}_season_to_date'
+        team_game[sname] = g[col].transform(
+            lambda x: x.shift(1).expanding().mean().round(2)
+        )
+        season_renames[col] = sname
+
+    team_game['RANK_WEEK'] = team_game['GAME_DATE'].dt.to_period('W-SAT')
+    last_idx = team_game.groupby(
+        ['SEASON_YEAR', 'RANK_WEEK', 'TEAM_ABBREVIATION'], sort=False
+    )['GAME_DATE'].idxmax()
+    weekly = team_game.loc[last_idx].copy()
+
+    # Def rating: lower is better. Pace / poss: higher = rank 1.
+    rank_asc = {
+        'TEAM_DEF_RATING': True,
+        'TEAM_PACE': False,
+        'TEAM_POSS': False,
+    }
+    rank_cols = []
+    for col, sname in season_renames.items():
+        asc = rank_asc.get(col, True)
+        rk = sname.replace('_season_to_date', '_szn_league_rank')
+        rank_cols.append(rk)
+        weekly[rk] = (
+            weekly.groupby(['SEASON_YEAR', 'RANK_WEEK'])[sname]
+            .rank(ascending=asc, method='min')
+        )
+
+    w = weekly[['SEASON_YEAR', 'RANK_WEEK', 'TEAM_ABBREVIATION', *rank_cols]]
+    team_game = team_game.merge(
+        w, on=['SEASON_YEAR', 'RANK_WEEK', 'TEAM_ABBREVIATION'], how='left'
+    )
+
+    out_cols = list(season_renames.values()) + rank_cols
+    opp_rename = {c: f'OPP_{c}' for c in out_cols}
+    team_game_opp = (
+        team_game[['GAME_ID', 'TEAM_ABBREVIATION', *out_cols]]
+        .rename(columns={**{'TEAM_ABBREVIATION': 'OPP_OPP_ABBREVIATION_base'}, **opp_rename})
+    )
+
+    return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')

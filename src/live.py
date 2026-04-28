@@ -12,7 +12,6 @@ def predict_min_times_rate(
     prop_stats_df,
     current_date,
     *,
-    name_dict,
     rate_pipeline,
     rate_quantile_models,
     min_quantile_models,
@@ -32,10 +31,7 @@ def predict_min_times_rate(
     }
 
     for raw_name in names:
-        name = name_dict.get(raw_name, raw_name) if raw_name in name_dict else raw_name
-        if raw_name in name_dict:
-            name = name_dict[raw_name]
-
+        name = raw_name
         try:
             min_feats = min_pipeline(min_stats_df, name, current_date)
             if min_feats is None:
@@ -198,34 +194,20 @@ def run_pts_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_hi
 # 2. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------
 
-def _line_lookup_from_lines_df(ldf: pd.DataFrame, name_dict: dict) -> dict:
-    """
-    Maps sportsbook names to canonical dataset names.
-    Handles 'Jokic' vs 'Jokić' logic.
-    """
+def _line_lookup_from_lines_df(ldf: pd.DataFrame) -> dict:
+    """Build a direct name → line lookup from the lines DataFrame."""
     d = {}
     for _, r in ldf.iterrows():
         book_name = str(r["NAME"]).strip()
-        line = r["LINE"]
-        d[book_name] = line
-        
-        # Add the canonical version if it exists in your nameDict
-        canon = name_dict.get(book_name)
-        if canon:
-            d[canon] = line
-            
-    # Reverse check: ensure variants point to the line if canon was found
-    for variant, canon in name_dict.items():
-        if canon in d and variant not in d:
-            d[variant] = d[canon]
+        d[book_name] = r["LINE"]
     return d
 
 # ---------------------------------------------------------
 # 3. EXECUTION LOOP
 # ---------------------------------------------------------
 
-def line_probs_for_market(preds_df, lines_df, name_dict, sim_fn, n_sims=10_000):
-    line_by_name = _line_lookup_from_lines_df(lines_df, name_dict)
+def line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000):
+    line_by_name = _line_lookup_from_lines_df(lines_df)
     rows = []
     for _, row in preds_df.iterrows():
         name = row["PLAYER_NAME"]

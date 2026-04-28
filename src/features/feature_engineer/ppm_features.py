@@ -719,36 +719,6 @@ def _star_out_flag(
     usg_scale: float = 80.0,
     min_games: int = 5,
 ) -> pd.DataFrame:
-    """
-    Identify each team's star for every team-game using leakage-free season
-    averages (PTS_ewm_season_avg + USG_PCT_ewm_season_avg * usg_scale) and
-    flag games where that star did not play (STAR_OUT_FLAG).
-
-    Both season averages are already shift(1) EWM, so the composite score
-    for a player at a given game reflects ONLY data from prior games. To
-    find the star for a team's game on date D we look at every player who
-    has ever played for that team in the same SEASON_YEAR and use their
-    most recent row strictly before D. This avoids leakage from the game
-    being predicted.
-
-    Parameters
-    ----------
-    usg_scale : float
-        Scale applied to USG_PCT (0-1 fraction) so it is comparable to PTS.
-        Default 80 ≈ a 25% usage player contributes 20 "PTS-equivalent" to
-        their star score.
-    min_games : int
-        Minimum prior games required for a player to be considered the
-        team's star. Falls back to any player with history if no one
-        qualifies (useful for very early-season games).
-
-    Output columns
-    --------------
-    STAR_PLAYER_ID : Int64 (nullable)
-        The player flagged as the team's star going into the game.
-    STAR_OUT_FLAG : int {0, 1}
-        1 if that star has no row for (TEAM_ID, GAME_ID), else 0.
-    """
     df = df.copy()
 
     pts_col = "PTS_ewm_season_avg"
