@@ -6,7 +6,7 @@ projectedStartingFive = {
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
     "CLE": ["Jarrett Allen", "James Harden", "Evan Mobley", "Donovan Mitchell", "Dean Wade"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
-    "DEN": ["Jamal Murray", "Nikola Jokić", "Cameron Johnson", "Spencer Jones", "Christian Braun"],
+    "DEN": ["Cameron Johnson", "Spencer Jones", "Christian Braun", "Nikola Jokić", "Jamal Murray"],
     "DET": ["Paul Reed", "Tobias Harris", "Ausar Thompson", "Cade Cunningham", "Duncan Robinson"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Jae'Sean Tate", "Josh Okogie", "Tari Eason", "Clint Capela", "Reed Sheppard"],
@@ -16,13 +16,13 @@ projectedStartingFive = {
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
-    "MIN": ["Julius Randle", "Donte DiVincenzo", "Rudy Gobert", "Jaden McDaniels"],
+    "MIN": ["Julius Randle", "Rudy Gobert", "Jaden McDaniels", "Ayo Dosunmu", "Mike Conley"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Karl-Anthony Towns", "Jalen Brunson", "OG Anunoby", "Josh Hart", "Mikal Bridges"],
-    "OKC": ["Luguentz Dort", "Nikola Topic", "Aaron Wiggins", "Jared McCain", "Branden Carlson"],
+    "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
     "ORL": ["Franz Wagner", "Wendell Carter", "Jalen Suggs", "Paolo Banchero", "Desmond Bane"],
     "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Adem Bona", "Tyrese Maxey"],
-    "PHX": ["Amir Coffey", "Ryan Dunn", "Oso Ighodaro", "Jamaree Bouyea", "Rasheer Fleming"],
+    "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Toumani Camara", "Jrue Holiday", "Deni Avdija", "Scoot Henderson", "Donovan Clingan"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
     "SAS": ["Julian Champagnie", "Stephon Castle", "Devin Vassell", "Mason Plumlee", "De'Aaron Fox"],
@@ -131,6 +131,6 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "MIN": ["Anthony Edwards"],
+    "MIN": ["Naz Reid"],
 }
 

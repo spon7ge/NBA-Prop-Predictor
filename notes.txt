@@ -33,3 +33,11 @@ paper_log = {
     'actual': None,  # fill in after game
     'condition': condition_triggered,
 }
+
+Raw model prediction
+    ↓
+Human adjustments (star out, blowout risk, back-to-back)
+    ↓
+Monte Carlo simulation (using adjusted prediction as the mean)
+    ↓
+Betting signal (percentile of book line in your distribution)

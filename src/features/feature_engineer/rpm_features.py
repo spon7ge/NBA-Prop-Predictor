@@ -5,6 +5,7 @@ def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE'])
 
     df = _rolling_player(df)
+    df = _ewm_player(df)
     df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
@@ -15,7 +16,7 @@ def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _opponent_stats(df)
     df = _expectedPace(df)
     df = _detect_star_players(df)
-
+    df = _team_allowed_context(df)
     return df
 
 
@@ -33,6 +34,21 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
+    cols = [
+        'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN'
+    ]
+
+    for span in [3, 5, 10]:
+        for col in cols:
+            df[f'{col}_{span}_ewm'] = (
+                df.groupby('PLAYER_ID')[col]
+                .transform(
+                    lambda x: x.shift(1).ewm(span=span, adjust=False).mean().round(2)
+                )
+            )
+
+    return df
 # ── 2. Lag features ───────────────────────────────────────────────────────────
 
 def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -58,7 +74,7 @@ def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
 # ── 4. Season averages (expanding) ───────────────────────────────────────────
 
 def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'REB', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN']
+    cols = ['MIN', 'REB', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN']
 
     for col in cols:
         df[f'{col}_season_avg'] = (
@@ -348,6 +364,66 @@ def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
     df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE', 'PLAYER_NAME_NORM'])
 
     return df
+
+def _team_allowed_context(df: pd.DataFrame) -> pd.DataFrame:
+    required = [
+        "TEAM_ID",
+        "SEASON_YEAR",
+        "GAME_ID",
+        "GAME_DATE",
+        "OPP_POSS",
+        "OPP_REB",
+        "OPP_OREB",
+        "OPP_DREB",
+    ]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        return df
+
+    team_game = (
+        df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+        .copy()
+    )
+
+    g = team_game.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)
+
+    def prior_expanding_mean(x):
+        return x.shift(1).expanding().mean().round(3)
+
+    for raw_col, new_col in [
+        ("OPP_POSS", "TEAM_POSS_ALLOWED"),
+        ("OPP_REB",  "TEAM_REB_ALLOWED"),
+        ("OPP_OREB", "TEAM_OREB_ALLOWED"),
+        ("OPP_DREB", "TEAM_DREB_ALLOWED"),
+    ]:
+        team_game[new_col] = g[raw_col].transform(prior_expanding_mean)
+
+    allowed_cols = [
+        "TEAM_ID",
+        "GAME_ID",
+        "TEAM_POSS_ALLOWED",
+        "TEAM_REB_ALLOWED",
+        "TEAM_OREB_ALLOWED",
+        "TEAM_DREB_ALLOWED",
+    ]
+
+    allowed_map = team_game[allowed_cols]
+    out = df.merge(allowed_map, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    if "OPP_TEAM_ID" not in out.columns:
+        return out
+
+    opp_rename = {
+        "TEAM_ID":            "OPP_TEAM_ID",
+        "TEAM_POSS_ALLOWED":  "OPP_TEAM_POSS_ALLOWED",
+        "TEAM_REB_ALLOWED":   "OPP_TEAM_REB_ALLOWED",
+        "TEAM_OREB_ALLOWED":  "OPP_TEAM_OREB_ALLOWED",
+        "TEAM_DREB_ALLOWED":  "OPP_TEAM_DREB_ALLOWED",
+    }
+
+    opp_allowed_map = allowed_map.rename(columns=opp_rename)
+    return out.merge(opp_allowed_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
 
 
 
