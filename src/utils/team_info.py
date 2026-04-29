@@ -1,5 +1,5 @@
 projectedStartingFive = {
-    "ATL": ["Onyeka Okongwu", "Jalen Johnson", "CJ McCollum", "Nickeil Alexander-Walker", "Dyson Daniels"],
+    "ATL": ["Dyson Daniels", "Nickeil Alexander-Walker", "Onyeka Okongwu", "Jalen Johnson", "CJ McCollum"],
     "BKN": ["Malachi Smith", "Trevon Scott", "E.J. Liddell", "Drake Powell", "Ben Saraf"],
     "BOS": ["Baylor Scheierman", "Max Shulga", "Jordan Walsh", "Ron Harper", "Luka Garza"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
@@ -18,14 +18,14 @@ projectedStartingFive = {
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
     "MIN": ["Julius Randle", "Rudy Gobert", "Jaden McDaniels", "Ayo Dosunmu", "Mike Conley"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
-    "NYK": ["Karl-Anthony Towns", "Jalen Brunson", "OG Anunoby", "Josh Hart", "Mikal Bridges"],
+    "NYK": ["Mikal Bridges", "Jalen Brunson", "Josh Hart", "OG Anunoby", "Karl-Anthony Towns"],
     "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
     "ORL": ["Franz Wagner", "Wendell Carter", "Jalen Suggs", "Paolo Banchero", "Desmond Bane"],
     "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Adem Bona", "Tyrese Maxey"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
-    "POR": ["Toumani Camara", "Jrue Holiday", "Deni Avdija", "Scoot Henderson", "Donovan Clingan"],
+    "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
-    "SAS": ["Julian Champagnie", "Stephon Castle", "Devin Vassell", "Mason Plumlee", "De'Aaron Fox"],
+    "SAS": ["Stephon Castle", "Victor Wembanyama", "Julian Champagnie", "Devin Vassell", "De'Aaron Fox"],
     "TOR": ["Jamal Shead", "RJ Barrett", "Scottie Barnes", "Jakob Poeltl", "Brandon Ingram"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
@@ -131,6 +131,5 @@ nameDict = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "MIN": ["Naz Reid"],
 }
 

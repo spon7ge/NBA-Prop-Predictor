@@ -65,4 +65,8 @@ def rpm_pipeline(df, name, date):
     starting = float(1 if (canon_name in projected or name in projected) else 0)
     res.append(starting)
 
+    # ── IS_PLAYOFF ────────────────────────────────────────────────────────────
+    is_playoff = float(last["IS_PLAYOFF"]) if "IS_PLAYOFF" in last.index else float("nan")
+    res.append(is_playoff)
+    
     return res

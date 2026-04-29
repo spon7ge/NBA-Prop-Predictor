@@ -60,4 +60,8 @@ def ppm_pipeline(df, name, current_date):
     pts_season_avg = float(pdf["PTS"].astype(float).mean()) if "PTS" in pdf.columns else float("nan")
     res.append(pts_season_avg if pd.notna(pts_season_avg) else float("nan"))
 
+    # ── IS_PLAYOFF ────────────────────────────────────────────────────────────
+    is_playoff = float(last["IS_PLAYOFF"]) if "IS_PLAYOFF" in last.index else float("nan")
+    res.append(is_playoff)
+    
     return res
