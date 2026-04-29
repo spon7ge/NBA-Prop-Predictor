@@ -79,4 +79,8 @@ def apm_pipeline(df, name, date):
     )
     res.append(ftast_per_min_10_ewm if pd.notna(ftast_per_min_10_ewm) else float("nan"))
 
+    # ── IS_PLAYOFF ────────────────────────────────────────────────────────────
+    is_playoff = float(last["IS_PLAYOFF"]) if "IS_PLAYOFF" in last.index else float("nan")
+    res.append(is_playoff)
+
     return res
