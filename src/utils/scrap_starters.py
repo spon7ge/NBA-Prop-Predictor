@@ -26,12 +26,6 @@ class NBADailyLineups:
         self.url = url
         self.soup = self._getSoup()
 
-    def _normalize_player_name(self, player_name):
-        """Normalize player name using nameDict from teamInfo.py"""
-        if player_name in nameDict:
-            return nameDict[player_name]
-        return player_name
-
     def __str__(self):
         result = ""
         for index, matchup in enumerate(self.data):
@@ -83,7 +77,6 @@ class NBADailyLineups:
                 continue
             
             player_name = player_elem.get('title') or player_elem.get_text(strip=True)
-            player_name = self._normalize_player_name(player_name)
             
             # Get the injury status from <span class="lineup__inj">
             status_span = item.find('span', class_='lineup__inj')
@@ -118,21 +111,21 @@ class NBADailyLineups:
             away_gtd = set()
             for item in away_list.find_all("li", {"title": "Very Likely To Play"}):
                 if item.a and "has-injury-status" not in (item.get('class') or []):
-                    away_confirmed.add(self._normalize_player_name(item.a['title']))
+                    away_confirmed.add(item.a['title'])
             
             for item in away_list.find_all("li", {"title": ["Toss Up To Play", "Likely To Play"]}):
                 if item.a and "has-injury-status" not in (item.get('class') or []):
-                    away_gtd.add(self._normalize_player_name(item.a['title']))
+                    away_gtd.add(item.a['title'])
             
             home_confirmed = set()
             home_gtd = set()
             for item in home_list.find_all("li", {"title": ["Very Likely To Play", "Likely To Play"]}):
                 if item.a and "has-injury-status" not in (item.get('class') or []):
-                    home_confirmed.add(self._normalize_player_name(item.a['title']))
+                    home_confirmed.add(item.a['title'])
             
             for item in home_list.find_all("li", {"title": "Toss Up To Play"}):
                 if item.a and "has-injury-status" not in (item.get('class') or []):
-                    home_gtd.add(self._normalize_player_name(item.a['title']))
+                    home_gtd.add(item.a['title'])
             
             # Get injured/questionable players from the same list
             away_injured = self._get_injured_players(away_list)

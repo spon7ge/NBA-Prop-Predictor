@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from src.utils.team_info import nameDict, projectedStartingFive
+from src.utils.team_info import projectedStartingFive
 
 
 def min_pipeline(df, name, current_date):
@@ -13,9 +13,8 @@ def min_pipeline(df, name, current_date):
     player_team = last["TEAM_ABBREVIATION"]
 
     # ── STARTING ──────────────────────────────────────────────────────────────
-    canon_name = nameDict.get(name, name)
     projected = projectedStartingFive.get(player_team, [])
-    starting_override = float(1 if (canon_name in projected or name in projected) else 0)
+    starting_override = float(1 if (name in projected) else 0)
     res.append(starting_override)
 
     # ── MIN_10_ewm ────────────────────────────────────────────────────────────
