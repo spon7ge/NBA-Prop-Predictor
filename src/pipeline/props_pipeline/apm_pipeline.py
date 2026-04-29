@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.utils.helper_functions import findOpp
-from src.utils.team_info import nameDict, projectedStartingFive
+from src.utils.team_info import projectedStartingFive
 
 
 def apm_pipeline(df, name, date):

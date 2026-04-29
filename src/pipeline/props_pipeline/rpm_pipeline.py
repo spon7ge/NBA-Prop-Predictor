@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.utils.helper_functions import findOpp
-from src.utils.team_info import nameDict, projectedStartingFive
+from src.utils.team_info import projectedStartingFive
 
 
 def rpm_pipeline(df, name, date):
@@ -60,9 +60,8 @@ def rpm_pipeline(df, name, date):
     res.append(rpm_season_std if pd.notna(rpm_season_std) else float("nan"))
 
     # ── STARTING ──────────────────────────────────────────────────────────────
-    canon_name = nameDict.get(name, name)
     projected = projectedStartingFive.get(player_team, [])
-    starting = float(1 if (canon_name in projected or name in projected) else 0)
+    starting = float(1 if (name in projected) else 0)
     res.append(starting)
 
     # ── IS_PLAYOFF ────────────────────────────────────────────────────────────

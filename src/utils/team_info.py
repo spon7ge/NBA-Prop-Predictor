@@ -4,15 +4,15 @@ projectedStartingFive = {
     "BOS": ["Baylor Scheierman", "Max Shulga", "Jordan Walsh", "Ron Harper", "Luka Garza"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
-    "CLE": ["Jarrett Allen", "James Harden", "Evan Mobley", "Donovan Mitchell", "Dean Wade"],
+    "CLE": ["Evan Mobley", "James Harden", "Dean Wade", "Jarrett Allen", "Donovan Mitchell"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
     "DEN": ["Cameron Johnson", "Spencer Jones", "Christian Braun", "Nikola Jokić", "Jamal Murray"],
-    "DET": ["Paul Reed", "Tobias Harris", "Ausar Thompson", "Cade Cunningham", "Duncan Robinson"],
+    "DET": ["Duncan Robinson", "Cade Cunningham", "Ausar Thompson", "Tobias Harris", "Jalen Duren"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
-    "HOU": ["Jae'Sean Tate", "Josh Okogie", "Tari Eason", "Clint Capela", "Reed Sheppard"],
+    "HOU": ["Jabari Smith", "Tari Eason", "Alperen Sengun", "Reed Sheppard", "Amen Thompson"],
     "IND": ["Micah Potter", "Ethan Thompson", "Kobe Brown", "Quenton Jackson", "Jalen Slawson"],
     "LAC": ["Brook Lopez", "Kris Dunn", "Kawhi Leonard", "Derrick Jones", "Darius Garland"],
-    "LAL": ["Rui Hachimura", "Luke Kennard", "Deandre Ayton", "LeBron James", "Marcus Smart"],
+    "LAL": ["Marcus Smart", "Deandre Ayton", "LeBron James", "Rui Hachimura"],
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
@@ -20,13 +20,13 @@ projectedStartingFive = {
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Mikal Bridges", "Jalen Brunson", "Josh Hart", "OG Anunoby", "Karl-Anthony Towns"],
     "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
-    "ORL": ["Franz Wagner", "Wendell Carter", "Jalen Suggs", "Paolo Banchero", "Desmond Bane"],
+    "ORL": ["Paolo Banchero", "Desmond Bane", "Wendell Carter", "Jalen Suggs"],
     "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Adem Bona", "Tyrese Maxey"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
     "SAS": ["Stephon Castle", "Victor Wembanyama", "Julian Champagnie", "Devin Vassell", "De'Aaron Fox"],
-    "TOR": ["Jamal Shead", "RJ Barrett", "Scottie Barnes", "Jakob Poeltl", "Brandon Ingram"],
+    "TOR": ["Jakob Poeltl", "Brandon Ingram", "Scottie Barnes", "RJ Barrett", "Ja'Kobe Walter"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
 }
@@ -97,39 +97,10 @@ team3StarsPerTeam = {
     "WAS": ["Trae Young", "Anthony Davis", "Alex Sarr"]
 }
 
-# Name mapping dictionary to handle special characters in player names
-nameDict = {
-    'Nikola Jokic': 'Nikola Jokić',
-    'Luka Doncic': 'Luka Dončić',
-    'Nikola Vucevic': 'Nikola Vučević',
-    'Jonas Valanciunas': 'Jonas Valančiūnas',
-    'Dennis Schroder': 'Dennis Schröder',
-    'Kristaps Porzingis': 'Kristaps Porziņģis',
-    'Bogdan Bogdanovic': 'Bogdan Bogdanović',
-    'Dario Saric': 'Dario Šarić',
-    'Nikola Jovic': 'Nikola Jović',
-    'Vlatko Cancar': 'Vlatko Čančar',
-    'Jaren Jackson': 'Jaren Jackson Jr.',
-    'Michael Porter Jr': 'Michael Porter Jr.',
-    'Jimmy Butler': 'Jimmy Butler III',
-    'C.J. McCollum': 'CJ McCollum',
-    'Jabari Smith Jr': 'Jabari Smith Jr.',
-    'Nicolas Claxton': 'Nic Claxton',
-    'Vit Krejci': 'Vít Krejčí',
-    'Gary Trent Jr': 'Gary Trent Jr.',
-    'Jaime Jaquez Jr': 'Jaime Jaquez Jr.',
-    'Isaiah Stewart II': 'Isaiah Stewart',
-    'Carlton Carrington': 'Bub Carrington',
-    'Tim Hardaway Jr': 'Tim Hardaway Jr.',
-    'Jaren Jackson Jr': 'Jaren Jackson Jr.',
-    'Vincent Williams Jr': 'Vincent Williams Jr.',
-    'Jusuf Nurkic': 'Jusuf Nurkić',
-    'Tidjane Salaun': 'Tidjane Salaün', 
-    'Moussa Diabate': 'Moussa Diabaté', 
-    'Robert Williams': 'Robert Williams III',
-}
-
 # Players listed as questionable/may not play
 questionablePlayers = {
+    "DET": ["Kevin Huerter"],
+    "LAL": ["Austin Reaves"],
+    "ORL": ["Franz Wagner"],
 }
 

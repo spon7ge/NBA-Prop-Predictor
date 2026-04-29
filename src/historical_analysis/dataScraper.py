@@ -58,7 +58,6 @@ def generalized_best_bets(
     base_df,
     us_df,
     team_dds,
-    name_dict,
     line_bookmaker='Underdog',
     game_odds_df=None,
 ):
@@ -119,13 +118,8 @@ def generalized_best_bets(
         stat_cols = cat_to_stat_cols[category]
 
         book_cat_mask = (lines_dfs['BOOKMAKER'] == line_bookmaker) & (lines_dfs['CATEGORY'] == category)
-        updated_names = []
         cat_line_names = lines_dfs.loc[book_cat_mask, 'NAME'].unique()
-
-        for name in cat_line_names:
-            updated_names.append(name_dict.get(name, name))
-
-        df = base_df[base_df['PLAYER_NAME'].isin(updated_names)].copy()
+        df = base_df[base_df['PLAYER_NAME'].isin(cat_line_names)].copy()
 
         if df.empty:
             continue
