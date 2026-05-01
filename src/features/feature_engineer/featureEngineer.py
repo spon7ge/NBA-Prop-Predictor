@@ -300,17 +300,24 @@ def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
         0.05 * normalized_stats['NET_RATING_NORM']     # Net rating
     )
     
-    # Select highest scoring player per team as star
-    star_rows = (
+    # Select top 3 highest scoring players per team
+    top_3 = (
         normalized_stats.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
-        .groupby(['TEAM_ID'], as_index=False)
-        .first()
+        .groupby('TEAM_ID', as_index=False)
+        .head(3)
+        .copy()
     )
-    
-    star_by_team = {
-        row.TEAM_ID: row.PLAYER_NAME
-        for _, row in star_rows.iterrows()
-    }
+    top_3['STAR_RANK'] = top_3.groupby('TEAM_ID').cumcount() + 1
+
+    top_star_map    = top_3[top_3['STAR_RANK'] == 1].set_index('TEAM_ID')['PLAYER_NAME']
+    second_star_map = top_3[top_3['STAR_RANK'] == 2].set_index('TEAM_ID')['PLAYER_NAME']
+    third_star_map  = top_3[top_3['STAR_RANK'] == 3].set_index('TEAM_ID')['PLAYER_NAME']
+
+    df['TOP_STAR']    = df['TEAM_ID'].map(top_star_map)
+    df['SECOND_STAR'] = df['TEAM_ID'].map(second_star_map)
+    df['THIRD_STAR']  = df['TEAM_ID'].map(third_star_map)
+
+    star_by_team = top_star_map.to_dict()
 
     # Map normalized star name back to dataframe
     df['STAR_NAME'] = df['TEAM_ID'].map(star_by_team)

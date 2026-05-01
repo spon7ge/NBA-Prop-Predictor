@@ -255,8 +255,18 @@ def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
     
     # 5. Extract Top 3 per team
     top_3 = (stats_df.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
-             .groupby('TEAM_ID').head(3))
-    
+             .groupby('TEAM_ID').head(3)
+             .copy())
+    top_3['STAR_RANK'] = top_3.groupby('TEAM_ID').cumcount() + 1
+
+    top_star_map    = top_3[top_3['STAR_RANK'] == 1].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+    second_star_map = top_3[top_3['STAR_RANK'] == 2].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+    third_star_map  = top_3[top_3['STAR_RANK'] == 3].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+
+    df['TOP_STAR']    = df['TEAM_ID'].map(top_star_map)
+    df['SECOND_STAR'] = df['TEAM_ID'].map(second_star_map)
+    df['THIRD_STAR']  = df['TEAM_ID'].map(third_star_map)
+
     # 6. Flag players in the main dataframe
     # Create a set of "Star" identifiers (TeamID + PlayerName)
     top_stars = set(zip(top_3['TEAM_ID'], top_3['PLAYER_NAME_NORM']))
