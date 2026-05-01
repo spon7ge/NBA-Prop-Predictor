@@ -31,7 +31,7 @@ def rpm_pipeline(df, name, date):
     res.append(rbc_per_min_10_ewm if pd.notna(rbc_per_min_10_ewm) else float("nan"))
 
     # ── POSITION_ENC ──────────────────────────────────────────────────────────
-    res.append(float(pdf["POSITION_ENC"].iloc[-1]))
+    res.append(float(pdf["POSITION_ENCODED"].iloc[-1]))
 
     # ── REB_PER_MIN_roll5 ─────────────────────────────────────────────────────
     reb_per_min_roll5 = float(pdf["REB_PER_MIN"].astype(float).tail(5).mean())

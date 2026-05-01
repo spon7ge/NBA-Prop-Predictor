@@ -23,9 +23,16 @@ def min_pipeline(df, name, current_date):
     res.append(min_10_ewm if pd.notna(min_10_ewm) else float("nan"))
 
     # ── TEAM_MIN_RANK_L10 ─────────────────────────────────────────────────────
-    gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
-    min_rank_l10 = gameday["MIN_roll10"].rank(ascending=False, method="dense")
-    team_min_rank_l10 = float(min_rank_l10[gameday["PLAYER_NAME"] == name].iloc[0])
+    # Rank player by rolling-10 minutes average among all teammates
+    team_df = df[df["TEAM_ID"] == last["TEAM_ID"]]
+    teammate_roll = {}
+    for player, grp in team_df.groupby("PLAYER_NAME"):
+        grp_sorted = grp.sort_values("GAME_DATE")
+        roll_avg = grp_sorted["MIN"].astype(float).tail(10).mean()
+        teammate_roll[player] = roll_avg
+    sorted_teammates = sorted(teammate_roll.items(), key=lambda x: x[1], reverse=True)
+    rank_map = {p: float(i + 1) for i, (p, _) in enumerate(sorted_teammates)}
+    team_min_rank_l10 = rank_map.get(name, float("nan"))
     res.append(team_min_rank_l10 if pd.notna(team_min_rank_l10) else float("nan"))
 
     # ── STARTER_ROLL10_PCT ────────────────────────────────────────────────────

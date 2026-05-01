@@ -38,9 +38,16 @@ def ppm_pipeline(df, name, current_date):
     res.append(ppm_season_mean if pd.notna(ppm_season_mean) else float("nan"))
 
     # ── TEAM_USG_RANK_L10 ─────────────────────────────────────────────────────
-    gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
-    usg_rank_l10 = gameday["USG_PCT_roll10"].rank(ascending=False, method="dense")
-    team_usg_rank_l10 = float(usg_rank_l10[gameday["PLAYER_NAME"] == name].iloc[0])
+    # Rank player by rolling-10 USG_PCT average among all teammates
+    team_df = df[df["TEAM_ID"] == last["TEAM_ID"]]
+    teammate_roll = {}
+    for player, grp in team_df.groupby("PLAYER_NAME"):
+        grp_sorted = grp.sort_values("GAME_DATE")
+        roll_avg = grp_sorted["USG_PCT"].astype(float).tail(10).mean()
+        teammate_roll[player] = roll_avg
+    sorted_teammates = sorted(teammate_roll.items(), key=lambda x: x[1], reverse=True)
+    rank_map = {p: float(i + 1) for i, (p, _) in enumerate(sorted_teammates)}
+    team_usg_rank_l10 = rank_map.get(name, float("nan"))
     res.append(team_usg_rank_l10 if pd.notna(team_usg_rank_l10) else float("nan"))
 
     # ── PTS_PER_MIN_X_OPP_PTS_ALLOWED ────────────────────────────────────────

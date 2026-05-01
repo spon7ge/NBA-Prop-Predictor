@@ -9,7 +9,6 @@ from nba_api.stats.endpoints import scheduleleaguev2
 from nba_api.stats.endpoints import leaguedashteamstats
 from src.features.features_v1 import *
 from src.features.features_v1 import teamContext as features_teamContext
-from src.utils.player_positions import *
 
 # Get project root by navigating up from this file's location
 # This file is in src/utils/, so go up 2 levels to reach project root
