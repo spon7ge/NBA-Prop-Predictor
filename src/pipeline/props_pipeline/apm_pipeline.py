@@ -60,7 +60,16 @@ def apm_pipeline(df, name, date):
     res.append(float(pdf["POSITION_ENCODED"].iloc[-1]) if "POSITION_ENCODED" in pdf.columns else float("nan"))
 
     # ── TEAM_AST_PER_MIN_RANK_L10 ─────────────────────────────────────────────
-    team_ast_rank = float(pdf["TEAM_AST_PER_MIN_RANK_L10"].iloc[-1]) if "TEAM_AST_PER_MIN_RANK_L10" in pdf.columns else float("nan")
+    # Rank player by rolling-10 AST_PER_MIN average among all teammates
+    team_df = df[df["TEAM_ID"] == last["TEAM_ID"]]
+    teammate_roll = {}
+    for player, grp in team_df.groupby("PLAYER_NAME"):
+        grp_sorted = grp.sort_values("GAME_DATE")
+        roll_avg = grp_sorted["AST_PER_MIN"].astype(float).tail(10).mean()
+        teammate_roll[player] = roll_avg
+    sorted_teammates = sorted(teammate_roll.items(), key=lambda x: x[1], reverse=True)
+    rank_map = {p: float(i + 1) for i, (p, _) in enumerate(sorted_teammates)}
+    team_ast_rank = rank_map.get(name, float("nan"))
     res.append(team_ast_rank if pd.notna(team_ast_rank) else float("nan"))
 
     # ── FTAST_PER_MIN_season_avg ──────────────────────────────────────────────
