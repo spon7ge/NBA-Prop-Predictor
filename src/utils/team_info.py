@@ -6,7 +6,7 @@ projectedStartingFive = {
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
     "CLE": ["Evan Mobley", "James Harden", "Dean Wade", "Jarrett Allen", "Donovan Mitchell"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
-    "DEN": ["Cameron Johnson", "Spencer Jones", "Christian Braun", "Nikola Jokić", "Jamal Murray"],
+    "DEN": ["Christian Braun", "Jamal Murray", "Nikola Jokic", "Cameron Johnson", "Spencer Jones"],
     "DET": ["Duncan Robinson", "Cade Cunningham", "Ausar Thompson", "Tobias Harris", "Jalen Duren"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Jabari Smith", "Tari Eason", "Alperen Sengun", "Reed Sheppard", "Amen Thompson"],
@@ -16,7 +16,7 @@ projectedStartingFive = {
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
-    "MIN": ["Julius Randle", "Rudy Gobert", "Jaden McDaniels", "Ayo Dosunmu", "Mike Conley"],
+    "MIN": ["Julius Randle", "Jaden McDaniels", "Rudy Gobert", "Terrence Shannon", "Mike Conley"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Mikal Bridges", "Jalen Brunson", "Josh Hart", "OG Anunoby", "Karl-Anthony Towns"],
     "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
@@ -99,8 +99,5 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DET": ["Kevin Huerter"],
-    "LAL": ["Austin Reaves"],
-    "ORL": ["Franz Wagner"],
 }
 

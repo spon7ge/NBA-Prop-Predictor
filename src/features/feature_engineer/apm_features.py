@@ -270,16 +270,25 @@ def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
     # 4. Refined Weighted Star Score
     # Prioritizing PIE (30%) as the best catch-all, Usage (25%), PTS (20%)
     stats_df['STAR_SCORE'] = (
-        0.35 * stats_df['USG_PCT_NORM'] +
-        0.20 * stats_df['TS_PCT_NORM'] +
-        0.30 * stats_df['PTS_NORM'] +
-        0.15 * stats_df['PIE_NORM'])
+        0.30 * stats_df['USG_PCT_NORM'] +
+        0.25 * stats_df['TS_PCT_NORM'] +
+        0.15 * stats_df['PTS_NORM'] +
+        0.30 * stats_df['PIE_NORM'])
     
     # 5. Extract Top 3 per team + single top player per team
     sorted_stars = stats_df.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
-    top_3 = sorted_stars.groupby('TEAM_ID').head(3)
+    top_3 = sorted_stars.groupby('TEAM_ID').head(3).copy()
+    top_3['STAR_RANK'] = top_3.groupby('TEAM_ID').cumcount() + 1
     top_1 = sorted_stars.groupby('TEAM_ID').head(1)[['TEAM_ID', 'PLAYER_NAME_NORM']]
     top_1_set = set(zip(top_1['TEAM_ID'], top_1['PLAYER_NAME_NORM']))
+
+    top_star_map    = top_3[top_3['STAR_RANK'] == 1].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+    second_star_map = top_3[top_3['STAR_RANK'] == 2].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+    third_star_map  = top_3[top_3['STAR_RANK'] == 3].set_index('TEAM_ID')['PLAYER_NAME_NORM']
+
+    df['TOP_PLAYER']        = df['TEAM_ID'].map(top_star_map)
+    df['SECOND_TOP_PLAYER'] = df['TEAM_ID'].map(second_star_map)
+    df['THIRD_TOP_PLAYER']  = df['TEAM_ID'].map(third_star_map)
 
     # 6. Flag players in the main dataframe
     top_stars = set(zip(top_3['TEAM_ID'], top_3['PLAYER_NAME_NORM']))
