@@ -279,12 +279,10 @@ def adjust_predictions(
     base_df: pd.DataFrame,
     game_contexts: dict,
     *,
-    min_adjust_weight: float = 0.5,
-    rate_adjust_weight: float = 0.5,
-    delta_cap_min: float = 4.0,
-    delta_cap_rate: float = 0.04,
-    pace_high_cutoff: float = 234.5,
-    pace_low_cutoff: float = 225.0,
+    min_adjust_weight: float = 1,
+    rate_adjust_weight: float = 1,
+    delta_cap_min: float = 5.0,
+    delta_cap_rate: float = 0.5,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """
@@ -300,9 +298,9 @@ def adjust_predictions(
         rate_adjust_weight: Blend fraction for rate adjustment     (0 = off, 1 = full delta).
         delta_cap_min:      Hard cap on total minutes delta (minutes).
         delta_cap_rate:     Hard cap on total rate delta (per-minute units).
-        pace_high_cutoff:   Vegas total above this → high-pace bucket.
-        pace_low_cutoff:    Vegas total below this → low-pace bucket.
         verbose:            Print per-player adjustment summary.
+
+        Pace adjustment always uses the middle_pace scenario bucket (no total cutoffs).
 
     Returns:
         Adjusted copy of preds_df, ready for line_probs_for_market().
@@ -324,6 +322,19 @@ def adjust_predictions(
         d = node.get("delta", 0.0)
         return float(d) if d is not None else 0.0
 
+    def _set_adj_missing(row):
+        row["ADJ_CONTEXT_OK"] = False
+        row["ADJ_CONTEXT_ERR"] = None
+        row["ADJ_ACTIVE_STARS"] = None
+        row["ADJ_STARS_MISSING"] = None
+        row["ADJ_SPREAD_ROLE"] = None
+        row["ADJ_CTX_SPREAD"] = None
+        row["ADJ_CTX_TOTAL"] = None
+        row["ADJ_MIN_DELTA"] = None
+        row["ADJ_RATE_DELTA"] = None
+        row["ADJ_MIN_SHIFT"] = None
+        row["ADJ_RATE_SHIFT"] = None
+
     out_rows = []
     for _, row in preds_df.iterrows():
         row = row.copy()
@@ -335,6 +346,10 @@ def adjust_predictions(
         if ctx is None or isinstance(ctx, str):
             if verbose:
                 print(f"[NO CONTEXT] {name} — using raw model prediction")
+            _set_adj_missing(row)
+            row["ADJ_CONTEXT_ERR"] = (
+                str(ctx)[:300] if isinstance(ctx, str) else "missing_context"
+            )
             out_rows.append(row)
             continue
 
@@ -353,11 +368,7 @@ def adjust_predictions(
             else _delta(min_sc, "spread", "underdog") if spread is not None and spread > 0
             else 0.0
         )
-        min_d_pace = (
-            _delta(min_sc, "opp_pace", "high_pace")   if total is not None and total > pace_high_cutoff
-            else _delta(min_sc, "opp_pace", "low_pace") if total is not None and total < pace_low_cutoff
-            else _delta(min_sc, "opp_pace", "middle_pace")
-        )
+        min_d_pace = _delta(min_sc, "opp_pace", "middle_pace")
         min_d_home  = _delta(min_sc, "home_away", "home" if is_home else "away")
         min_delta   = float(np.clip(min_d_stars + min_d_spread + min_d_pace + min_d_home,
                                     -delta_cap_min, delta_cap_min))
@@ -369,11 +380,7 @@ def adjust_predictions(
             else _delta(rate_sc, "spread", "underdog") if spread is not None and spread > 0
             else 0.0
         )
-        rate_d_pace = (
-            _delta(rate_sc, "opp_pace", "high_pace")   if total is not None and total > pace_high_cutoff
-            else _delta(rate_sc, "opp_pace", "low_pace") if total is not None and total < pace_low_cutoff
-            else _delta(rate_sc, "opp_pace", "middle_pace")
-        )
+        rate_d_pace = _delta(rate_sc, "opp_pace", "middle_pace")
         rate_d_home  = _delta(rate_sc, "home_away", "home" if is_home else "away")
         rate_delta   = float(np.clip(rate_d_stars + rate_d_spread + rate_d_pace + rate_d_home,
                                      -delta_cap_rate, delta_cap_rate))
@@ -407,6 +414,26 @@ def adjust_predictions(
         row["STAT_Q10"] = round(float(row["MIN_Q10"]) * float(row["RATE_Q10"]), 2)
         row["STAT_Q50"] = round(new_min_q50 * new_rate_q50, 2)
         row["STAT_Q90"] = round(float(row["MIN_Q90"]) * float(row["RATE_Q90"]), 2)
+
+        row["ADJ_CONTEXT_OK"] = True
+        row["ADJ_CONTEXT_ERR"] = None
+        row["ADJ_ACTIVE_STARS"] = int(n_stars)
+        row["ADJ_STARS_MISSING"] = int(max(0, 3 - min(n_stars, 3)))
+        row["ADJ_SPREAD_ROLE"] = (
+            "favorite"
+            if spread is not None and spread < 0
+            else "underdog"
+            if spread is not None and spread > 0
+            else "pick_em"
+            if spread is not None and spread == 0
+            else None
+        )
+        row["ADJ_CTX_SPREAD"] = float(spread) if spread is not None else None
+        row["ADJ_CTX_TOTAL"] = float(total) if total is not None else None
+        row["ADJ_MIN_DELTA"] = round(min_delta, 4)
+        row["ADJ_RATE_DELTA"] = round(rate_delta, 6)
+        row["ADJ_MIN_SHIFT"] = round(new_min_q50 - orig_min_q50, 2)
+        row["ADJ_RATE_SHIFT"] = round(new_rate_q50 - orig_rate_q50, 4)
 
         if verbose:
             print(
@@ -506,6 +533,35 @@ def _line_lookup_from_lines_df(ldf: pd.DataFrame) -> dict:
         d[book_name] = r["LINE"]
     return d
 
+
+def _adj_columns_from_row(row: pd.Series) -> dict:
+    """Pass through ADJ_* fields from adjust_predictions for ledgers / slates."""
+    out = {}
+    for k in row.index:
+        ks = str(k)
+        if not ks.startswith("ADJ_"):
+            continue
+        v = row[k]
+        try:
+            if v is None or pd.isna(v):
+                out[ks] = None
+                continue
+        except (ValueError, TypeError):
+            pass
+        if isinstance(v, (np.floating, float)):
+            x = float(v)
+            out[ks] = None if np.isnan(x) else x
+        elif isinstance(v, (np.integer,)):
+            out[ks] = int(v)
+        else:
+            out[ks] = v
+    return out
+
+
+def _adj_fields_for_slate_leg(r: pd.Series, n: int) -> dict:
+    return {f"{k} {n}": r[k] for k in r.index if str(k).startswith("ADJ_")}
+
+
 # ---------------------------------------------------------
 # 4. EXECUTION LOOP
 # ---------------------------------------------------------
@@ -522,6 +578,7 @@ def line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000):
                 "PLAYER_NAME": name, "MARKET": market, "LINE": np.nan,
                 "MIN_Q50": np.nan, "STAT_Q50": np.nan,
                 "P_OVER": np.nan, "P_UNDER": np.nan,
+                **_adj_columns_from_row(row),
             })
             continue
         sims = sim_fn(row, n_sims=n_sims)
@@ -536,6 +593,7 @@ def line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000):
             "STAT_Q90": round(row["STAT_Q90"], 2),
             "P_OVER": round(float(np.mean(sims > line_f)), 3),
             "P_UNDER": round(float(np.mean(sims < line_f)), 3),
+            **_adj_columns_from_row(row),
         })
     return pd.DataFrame(rows)
 
@@ -714,6 +772,8 @@ def build_greedy_slate(
             "AVG_STAT_VS_MATCHUP 2": round(float(r2["AVG_STAT_VS_MATCHUP"]), 1),
             "MATCHUP_GAMES 1":       int(r1["MATCHUP_GAMES"]),
             "MATCHUP_GAMES 2":       int(r2["MATCHUP_GAMES"]),
+            **_adj_fields_for_slate_leg(r1, 1),
+            **_adj_fields_for_slate_leg(r2, 2),
         })
 
     pair_sorted = sorted(records, key=lambda r: r["PARLAY_PROB"], reverse=True)
@@ -846,6 +906,7 @@ def build_greedy_slate_3leg(
                 f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
                 f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
                 f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
+                **_adj_fields_for_slate_leg(r, n),
             }
 
         row = {
@@ -925,6 +986,7 @@ def leg_fields(r, side, p, n: int):
         f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
         f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
         f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
+        **_adj_fields_for_slate_leg(r, n),
     }
 
 
