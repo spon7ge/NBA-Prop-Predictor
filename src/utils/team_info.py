@@ -1,7 +1,7 @@
 projectedStartingFive = {
     "ATL": ["Dyson Daniels", "Nickeil Alexander-Walker", "Onyeka Okongwu", "Jalen Johnson", "CJ McCollum"],
     "BKN": ["Malachi Smith", "Trevon Scott", "E.J. Liddell", "Drake Powell", "Ben Saraf"],
-    "BOS": ["Jaylen Brown", "Sam Hauser", "Derrick White", "Neemias Queta"],
+    "BOS": ["Jaylen Brown", "Derrick White", "Neemias Queta", "Sam Hauser"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
     "CLE": ["Evan Mobley", "Donovan Mitchell", "Max Strus", "James Harden", "Jarrett Allen"],
