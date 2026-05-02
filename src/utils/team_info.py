@@ -1,7 +1,7 @@
 projectedStartingFive = {
     "ATL": ["Dyson Daniels", "Nickeil Alexander-Walker", "Onyeka Okongwu", "Jalen Johnson", "CJ McCollum"],
     "BKN": ["Malachi Smith", "Trevon Scott", "E.J. Liddell", "Drake Powell", "Ben Saraf"],
-    "BOS": ["Derrick White", "Neemias Queta", "Sam Hauser", "Jayson Tatum", "Jaylen Brown"],
+    "BOS": ["Jaylen Brown", "Sam Hauser", "Derrick White", "Neemias Queta"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
     "CLE": ["Evan Mobley", "Donovan Mitchell", "Max Strus", "James Harden", "Jarrett Allen"],
@@ -21,7 +21,7 @@ projectedStartingFive = {
     "NYK": ["Mikal Bridges", "Jalen Brunson", "Josh Hart", "OG Anunoby", "Karl-Anthony Towns"],
     "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
     "ORL": ["Jalen Suggs", "Paolo Banchero", "Jamal Cain", "Wendell Carter", "Desmond Bane"],
-    "PHI": ["Paul George", "VJ Edgecombe", "Kelly Oubre", "Tyrese Maxey"],
+    "PHI": ["Tyrese Maxey", "VJ Edgecombe", "Kelly Oubre"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
@@ -66,5 +66,6 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
+    "BOS": ["Jayson Tatum"],
 }
 
