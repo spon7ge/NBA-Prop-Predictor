@@ -53,6 +53,34 @@ def _norm_matchup_opp(name: pd.Series) -> pd.Series:
     return s.replace({'la clippers': 'los angeles clippers'})
 
 
+def _debug_nan_rows(
+    df: pd.DataFrame,
+    stage: str,
+    cols: list,
+    *,
+    max_players: int = 12,
+    extra_cols: tuple[str, ...] = (),
+) -> None:
+    """Print which players have NaN in ``cols`` and a few context columns (debug only)."""
+    if df is None or df.empty:
+        return
+    base_show = ['PLAYER_NAME', 'CATEGORY', 'LINE']
+    show = [c for c in base_show + list(extra_cols) if c in df.columns]
+    for col in cols:
+        if col not in df.columns:
+            continue
+        bad = df[df[col].isna()]
+        if bad.empty:
+            continue
+        print(
+            f"[generalized_best_bets] {stage}: column '{col}' is NaN for "
+            f"{len(bad)} row(s) (showing up to {max_players} unique players)"
+        )
+        if show:
+            u = bad[show].drop_duplicates().head(max_players)
+            print(u.to_string(index=False))
+
+
 def generalized_best_bets(
     lines_dfs,
     base_df,
@@ -60,8 +88,17 @@ def generalized_best_bets(
     team_dds,
     line_bookmaker='Underdog',
     game_odds_df=None,
+    *,
+    debug_nans: bool = False,
 ):
-    """Prop lines from ``lines_dfs`` for ``line_bookmaker``; best US sides from ``us_df``."""
+    """Prop lines from ``lines_dfs`` for ``line_bookmaker``; best US sides from ``us_df``.
+
+    If ``debug_nans`` is True, prints why key columns are NaN per pipeline stage
+    (game odds join, matchup history, rolling stats / Z-score, cover rates, opp stats).
+    """
+    if debug_nans:
+        print("[generalized_best_bets] debug_nans=True — printing NaN diagnostics per category/stage")
+
     if game_odds_df is None:
         game_rows = []
 
@@ -188,6 +225,21 @@ def generalized_best_bets(
             how='left'
         ).drop(columns='TEAM')
 
+        if debug_nans:
+            miss = merged['TEAM_SPREAD'].isna() | merged['GAME_TOTAL'].isna() | merged['OPPONENT'].isna()
+            if miss.any():
+                print(
+                    f"[generalized_best_bets] category={category!r}: "
+                    f"{miss.sum()} row(s) failed game_odds_df join (TEAM_NAME not in schedule / "
+                    f"no consensus spread or total). Check TEAM_NAME vs game_odds_df['TEAM']."
+                )
+            _debug_nan_rows(
+                merged,
+                f"after game_odds merge [{category}]",
+                ['TEAM_SPREAD', 'GAME_TOTAL', 'OPPONENT', 'HOME_AWAY'],
+                extra_cols=('TEAM_NAME',),
+            )
+
         if 'OPP_OPP_NAME_base' in df.columns:
             _hist = df.dropna(subset=['OPP_OPP_NAME_base']).copy()
             _hist['_OPP_NORM'] = _norm_matchup_opp(_hist['OPP_OPP_NAME_base'])
@@ -200,7 +252,28 @@ def generalized_best_bets(
             merged = merged.merge(matchup_agg, on=['PLAYER_NAME', '_OPP_NORM'], how='left')
             merged = merged.drop(columns=['_OPP_NORM'])
             merged['MATCHUP_EDGE'] = (merged['AVG_STAT_VS_MATCHUP'] - merged['LINE']).round(2)
+            if debug_nans:
+                miss_m = merged['AVG_STAT_VS_MATCHUP'].isna()
+                if miss_m.any():
+                    print(
+                        f"[generalized_best_bets] category={category!r}: "
+                        f"{miss_m.sum()} row(s) have no matchup_agg hit — no prior games vs "
+                        f"normalized opponent key (see _OPP_NORM / OPPONENT spelling), or "
+                        f"no history rows for that (PLAYER_NAME, opponent) pair."
+                    )
+                _debug_nan_rows(
+                    merged,
+                    f"after matchup merge [{category}]",
+                    ['AVG_STAT_VS_MATCHUP', 'MATCHUP_GAMES', 'MATCHUP_EDGE'],
+                    extra_cols=('OPPONENT', 'TEAM_NAME'),
+                )
         else:
+            if debug_nans:
+                print(
+                    f"[generalized_best_bets] category={category!r}: base_df slice has no "
+                    f"'OPP_OPP_NAME_base' column — setting AVG_STAT_VS_MATCHUP / "
+                    f"MATCHUP_GAMES / MATCHUP_EDGE to NaN for all rows in this category."
+                )
             merged['AVG_STAT_VS_MATCHUP'] = np.nan
             merged['MATCHUP_GAMES'] = np.nan
             merged['MATCHUP_EDGE'] = np.nan
@@ -214,6 +287,22 @@ def generalized_best_bets(
         merged['Z_SCORE'] = ((merged['LINE'] - merged['AVG_STAT_L10']) / z_denom).round(3)
         merged['PROB_OVER'] = (1 - stats.norm.cdf(merged['Z_SCORE'])).round(3)
         merged['PROB_UNDER'] = stats.norm.cdf(merged['Z_SCORE']).round(3)
+
+        if debug_nans:
+            _debug_nan_rows(
+                merged,
+                f"rolling / z-score [{category}]",
+                ['AVG_STAT_L10', 'STD_STAT_L10', 'MED_STAT_L10', 'Z_SCORE', 'PROB_OVER', 'PROB_UNDER'],
+                extra_cols=('TEAM_NAME',),
+            )
+            zbad = merged['Z_SCORE'].isna()
+            if zbad.any() and 'STD_STAT_L10' in merged.columns:
+                zero_std = (merged['STD_STAT_L10'].fillna(0) == 0) | merged['STD_STAT_L10'].isna()
+                if (zbad & zero_std).any():
+                    print(
+                        f"[generalized_best_bets] category={category!r}: Z_SCORE NaN often means "
+                        f"STD_STAT_L10 is 0 or NaN (not enough variance in last 10 games for that stat)."
+                    )
 
         merged['TOTAL_BOOST'] = ((merged['GAME_TOTAL'] - 220) / 10).round(3)
         merged['IS_UNDERDOG'] = (merged['TEAM_SPREAD'] > 0).astype(int)
@@ -231,8 +320,34 @@ def generalized_best_bets(
 
         merged = merged.merge(cover, on='PLAYER_NAME', how='left')
 
+        if debug_nans:
+            _debug_nan_rows(
+                merged,
+                f"after cover / over-rate merge [{category}]",
+                ['OVER_RATE_L5', 'OVER_RATE_L10', 'OVER_RATE_L15', 'OVER_RATE_SEASON'],
+            )
+            cov_miss = merged['OVER_RATE_L10'].isna()
+            if cov_miss.any():
+                print(
+                    f"[generalized_best_bets] category={category!r}: "
+                    f"{cov_miss.sum()} row(s) missing OVER_RATE_* — cover merge failed "
+                    f"(no inner match on PLAYER_NAME between df and merged prop LINE), "
+                    f"or groupby produced NaN from empty tail."
+                )
+
         merged['EV_OVER'] = merged.apply(lambda r: calc_ev(r['PROB_OVER'], r['ODDS_OVER']), axis=1)
         merged['EV_UNDER'] = merged.apply(lambda r: calc_ev(r['PROB_UNDER'], r['ODDS_UNDER']), axis=1)
+
+        if debug_nans:
+            min_ok = (merged['AVG_MIN_L10'] >= 20) & (merged['STD_MIN_L10'] <= 8)
+            dropped = merged.loc[~min_ok, ['PLAYER_NAME', 'AVG_MIN_L10', 'STD_MIN_L10']].drop_duplicates()
+            if not dropped.empty:
+                print(
+                    f"[generalized_best_bets] category={category!r}: filtering out "
+                    f"{(~min_ok).sum()} row(s) (need AVG_MIN_L10>=20 and STD_MIN_L10<=8). "
+                    f"Sample dropped players:"
+                )
+                print(dropped.head(15).to_string(index=False))
 
         merged = merged[(merged['AVG_MIN_L10'] >= 20) & (merged['STD_MIN_L10'] <= 8)].copy()
 
@@ -288,6 +403,12 @@ def generalized_best_bets(
     tier1_all = output_all[output_all['BET_FLAG']] if not output_all.empty else output_all
 
     if output_all.empty:
+        if debug_nans:
+            print(
+                "[generalized_best_bets] output_all is empty — no category produced rows "
+                "(no book lines for this bookmaker, no base_df name overlap, or all rows "
+                "filtered by AVG_MIN_L10>=20 & STD_MIN_L10<=8 before concat)."
+            )
         final = pd.DataFrame()
         return output_all, tier1_all, final
 
@@ -315,6 +436,24 @@ def generalized_best_bets(
     )
     _opp = opp_stats.rename(columns={'OPPONENT': '_OPP_MATCH_KEY'})
     final = _output.merge(_opp, on='_OPP_MATCH_KEY', how='left').drop(columns='_OPP_MATCH_KEY')
+
+    if debug_nans:
+        miss_opp = final['OPP_DEF_RATING'].isna() | final['OPP_PACE'].isna()
+        if miss_opp.any():
+            print(
+                "[generalized_best_bets] final: OPP_DEF_RATING / OPP_PACE (or ranks) NaN — "
+                "LeagueDashTeamStats TEAM_NAME did not match OPPONENT after Clippers map. "
+                f"Affected rows: {miss_opp.sum()}. Sample PLAYER_NAME / OPPONENT / join key:"
+            )
+            sample = final.loc[miss_opp, ['PLAYER_NAME', 'OPPONENT']].head(12).copy()
+            sample['_OPP_MATCH_KEY'] = sample['OPPONENT'].replace(_opp_lookup_map)
+            print(sample.to_string(index=False))
+        _debug_nan_rows(
+            final,
+            "final (after nba_api opp join)",
+            ['OPP_DEF_RATING', 'OPP_RANK_DEF_RATING', 'OPP_PACE', 'OPP_PACE_RANK'],
+            extra_cols=('OPPONENT',),
+        )
 
     final = final[[
         'PLAYER_NAME', 'LINE', 'CATEGORY', 'LINE_BOOKMAKER', 'OPPONENT',
