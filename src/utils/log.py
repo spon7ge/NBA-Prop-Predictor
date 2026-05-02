@@ -2,9 +2,9 @@
 Prediction ledger and results reconciliation.
 
 Ledger files (append-only, newline-delimited JSON):
-    data/logs/predictions.jsonl  — one row per prop × bookmaker × run
-    data/logs/slates.jsonl       — one row per leg in every greedy slate (long format)
-    data/logs/results.jsonl      — one row per reconciled prop after gamelog update
+    data/logs/predictions.jsonl  — one row per prop × bookmaker × run (includes ADJ_* from adjust_predictions when present)
+    data/logs/slates.jsonl       — one row per leg in every greedy slate (long format; per-leg ADJ_* when present)
+    data/logs/results.jsonl      — one row per reconciled prop after gamelog update (includes RECON_CONTEXT, ACTUAL_GAME_PTS when available)
 
 Dedup key for predictions : (DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
 Dedup key for slates      : (DATE, SLATE_ID, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
@@ -104,6 +104,17 @@ def _dedup_and_write(new_df: pd.DataFrame, path: Path, key_cols: list[str]) -> N
         _append_jsonl(new_df.to_dict("records"), path)
 
 
+def _adj_from_slate_pair(pair: dict, leg: int) -> dict:
+    """Map 'ADJ_X 1' → 'ADJ_X' for the given leg index."""
+    suf = f" {leg}"
+    out = {}
+    for k, v in pair.items():
+        ks = str(k)
+        if ks.startswith("ADJ_") and ks.endswith(suf):
+            out[ks[: -len(suf)]] = v
+    return out
+
+
 # ── Core API ──────────────────────────────────────────────────────────────────
 
 def snapshot(
@@ -155,7 +166,7 @@ def snapshot(
             for idx, pair in enumerate(pairs):
                 slate_id = f"{date}_{bookmaker.replace(' ', '_')}_{slate_type}_{idx:04d}"
                 for leg in range(1, n_legs + 1):
-                    slate_rows.append({
+                    leg_row = {
                         "DATE":          date,
                         "RUN_TIMESTAMP": run_timestamp,
                         "SLATE_ID":      slate_id,
@@ -174,7 +185,9 @@ def snapshot(
                         "OPPONENT":      pair.get(f"OPPONENT {leg}"),
                         "SPREAD":        pair.get(f"SPREAD {leg}"),
                         "TOTAL":         pair.get(f"TOTAL {leg}"),
-                    })
+                        **_adj_from_slate_pair(pair, leg),
+                    }
+                    slate_rows.append(leg_row)
 
     if slate_rows:
         slate_df = pd.DataFrame(slate_rows)
@@ -230,12 +243,15 @@ def reconcile(date: str, base_df: pd.DataFrame) -> pd.DataFrame:
     result_rows = []
     for _, pred in latest.iterrows():
         actual_stat, actual_min, hit, miss_reason = _score_prediction(pred, game_day)
+        actual_game_pts = _game_combined_pts(game_day, pred["PLAYER_NAME"])
         result_rows.append({
             **pred.to_dict(),
             "ACTUAL_STAT":    actual_stat,
             "ACTUAL_MIN":     actual_min,
             "HIT":            hit,
             "MISS_REASON":    miss_reason,
+            "ACTUAL_GAME_PTS": actual_game_pts,
+            "RECON_CONTEXT":  _recon_context_summary(pred, actual_game_pts),
             "RECONCILED_AT":  datetime.now().isoformat(timespec="seconds"),
         })
 
@@ -247,6 +263,56 @@ def reconcile(date: str, base_df: pd.DataFrame) -> pd.DataFrame:
     pct   = hits / total if total else 0
     print(f"[log] reconciled   {total:>4} props for {date}  →  {hits}/{total} hit ({pct:.1%})")
     return result_df
+
+
+def _recon_context_summary(
+    pred: pd.Series,
+    actual_game_pts: float | None = None,
+) -> str:
+    """Compact adjustment context + optional actual game total for results review."""
+    parts: list[str] = []
+    ok = pred.get("ADJ_CONTEXT_OK")
+    if ok is False:
+        parts.append("adj_ctx_fail")
+        err = pred.get("ADJ_CONTEXT_ERR")
+        if isinstance(err, str) and err.strip():
+            parts.append(err.replace("|", ";")[:80])
+    sm = pred.get("ADJ_STARS_MISSING")
+    if sm is not None:
+        try:
+            if not pd.isna(sm):
+                parts.append(f"stars_missing={int(sm)}")
+        except (ValueError, TypeError):
+            pass
+    role = pred.get("ADJ_SPREAD_ROLE")
+    if isinstance(role, str) and role:
+        parts.append(role)
+    tot_pre = pred.get("ADJ_CTX_TOTAL")
+    if tot_pre is not None:
+        try:
+            if not pd.isna(tot_pre):
+                parts.append(f"vegas_total={float(tot_pre):.1f}")
+        except (ValueError, TypeError):
+            pass
+    if actual_game_pts is not None:
+        parts.append(f"actual_pts={actual_game_pts:.0f}")
+    return "|".join(parts)
+
+
+def _game_combined_pts(game_day: pd.DataFrame, player_name: str) -> float | None:
+    sub = game_day[game_day["PLAYER_NAME"] == player_name]
+    if sub.empty:
+        return None
+    r = sub.iloc[0]
+    if "TEAM_PTS" not in r.index or "OPP_PTS" not in r.index:
+        return None
+    tp, opp = r["TEAM_PTS"], r["OPP_PTS"]
+    try:
+        if pd.isna(tp) or pd.isna(opp):
+            return None
+        return float(tp) + float(opp)
+    except (TypeError, ValueError):
+        return None
 
 
 # ── Scoring helpers ───────────────────────────────────────────────────────────
