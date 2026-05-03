@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 
-from src.features.feature_engineer.apm_features import _detect_star_players
+from src.features.feature_engineer.min_features import _detect_star_players
 from src.utils.dataScraper import generalized_best_bets
 
 
