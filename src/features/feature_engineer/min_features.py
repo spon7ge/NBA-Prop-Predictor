@@ -18,8 +18,7 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _volatility_features(df)
     df = _opponent_stats(df)
     df = _expectedPace(df)
-    df = _role_tier_features(df)
-    df = _role_tier_interactions(df)
+    df = _detect_star_players(df)
     
     return df
 
@@ -448,46 +447,167 @@ def _expectedPace(df):
     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
     return df
 
-def _role_tier_features(df: pd.DataFrame) -> pd.DataFrame:
+def _detect_star_players(
+    df,
+    min_minutes: int = 10,
+    min_games: int = 10,
+    name_dict: dict | None = None,
+    current_season: str | None = None,   # e.g. "2024-25" — fixes trade bug
+    recent_n_games: int | None = None,   # alternative: use last N games per player-team
+):
     df = df.copy()
 
-    starter = df["STARTER_ROLL10_PCT"].fillna(0)
-    usg = df.get("USG_PCT_roll10")
-    if usg is None:
-        usg = df.get("USG_PCT_10_ewm")
+    # ── 1. normalize names ───────────────────────────────────────────────────
+    df["PLAYER_NAME_NORM"] = (
+        df["PLAYER_NAME"].map(lambda x: name_dict.get(x, x))
+        if name_dict else df["PLAYER_NAME"]
+    )
 
-    # defaults if missing
-    if usg is None:
-        df["ROLE_TIER"] = 1  # role
-    else:
-        # 0=bench, 1=role, 2=star
-        df["ROLE_TIER"] = 1
-        df.loc[starter <= 0.5, "ROLE_TIER"] = 0
-        df.loc[(starter > 0.5) & (usg >= 26), "ROLE_TIER"] = 2
+    # ── 2. resolve current team per player (trade fix) ───────────────────────
+    # Use only the player's most recent TEAM_ID so traded players
+    # are evaluated under their current team, not their old one.
+    current_team = (
+        df.sort_values("GAME_DATE")
+        .groupby("PLAYER_NAME_NORM")["TEAM_ID"]
+        .last()
+    )
+    df["CURRENT_TEAM_ID"] = df["PLAYER_NAME_NORM"].map(current_team)
 
-    df["ROLE_TIER_BENCH"] = (df["ROLE_TIER"] == 0).astype(int)
-    df["ROLE_TIER_ROLE"]  = (df["ROLE_TIER"] == 1).astype(int)
-    df["ROLE_TIER_STAR"]  = (df["ROLE_TIER"] == 2).astype(int)
-    return df
+    # ── 3. build the scoring window ──────────────────────────────────────────
+    # Prefer season filter, fall back to recent_n_games, fall back to all data.
+    scoring_df = df.copy()
 
+    if current_season is not None and "SEASON" in df.columns:
+        scoring_df = scoring_df[scoring_df["SEASON"] == current_season]
+    elif recent_n_games is not None:
+        scoring_df = (
+            scoring_df.sort_values("GAME_DATE")
+            .groupby(["PLAYER_NAME_NORM", "CURRENT_TEAM_ID"])
+            .tail(recent_n_games)
+        )
 
-def _role_tier_interactions(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
+    # Only score within current-team games — eliminates old-team contamination
+    scoring_df = scoring_df[scoring_df["TEAM_ID"] == scoring_df["CURRENT_TEAM_ID"]]
 
-    usg = df.get("USG_PCT_roll10")
-    if usg is None:
-        usg = df.get("USG_PCT_10_ewm")
+    # ── 4. filter for qualified minutes ─────────────────────────────────────
+    active = scoring_df[scoring_df["MIN"] >= min_minutes]
 
-    pace = df.get("EXPECTED_PACE")
-    opp_def = df.get("OPP_TEAM_DEF_RATING_ALLOWED")
+    stats_df = active.groupby(["CURRENT_TEAM_ID", "PLAYER_NAME_NORM"]).agg(
+        USG_PCT    = ("USG_PCT",    "mean"),
+        TS_PCT     = ("TS_PCT",     "mean"),
+        EFG_PCT    = ("EFG_PCT",    "mean"),
+        PTS        = ("PTS",        "mean"),
+        PIE        = ("PIE",        "mean"),
+        NET_RATING = ("NET_RATING", "mean"),
+        GAMES      = ("MIN",        "count"),
+    ).reset_index()
 
-    for tier_col in ["ROLE_TIER_BENCH", "ROLE_TIER_ROLE", "ROLE_TIER_STAR"]:
-        if usg is not None:
-            df[f"{tier_col}_x_USG"] = (df[tier_col] * usg).round(3)
-        if pace is not None:
-            df[f"{tier_col}_x_PACE"] = (df[tier_col] * pace).round(3)
-        if opp_def is not None:
-            df[f"{tier_col}_x_OPP_DEF"] = (df[tier_col] * opp_def).round(3)
+    stats_df = stats_df[stats_df["GAMES"] >= min_games]
 
-    return df
+    if stats_df.empty:
+        df["IS_TOP_STAR"] = 0
+        df["IS_TOP_1_STAR"] = 0
+        df["ACTIVE_STARS_COUNT"] = 0
+        df["TOP_STAR_ACTIVE"] = 0
+        df["TOP_PLAYER"] = None
+        df["SECOND_TOP_PLAYER"] = None
+        df["THIRD_TOP_PLAYER"] = None
+        return df.drop(columns=["PLAYER_NAME_NORM", "CURRENT_TEAM_ID"])
 
+    # ── 5. rank-based normalization (robust to outliers) ─────────────────────
+    # Percentile rank within team rather than min-max — a single outlier
+    # can't compress the rest of the team's scores with this approach.
+    score_cols = ["USG_PCT", "TS_PCT", "EFG_PCT", "PTS", "PIE", "NET_RATING"]
+    for col in score_cols:
+        stats_df[f"{col}_RANK"] = stats_df.groupby("CURRENT_TEAM_ID")[col].rank(
+            pct=True, method="average", na_option="bottom"
+        )
+
+    # ── 6. star score — weights match comment, all 6 metrics used ────────────
+    stats_df["STAR_SCORE"] = (
+        0.25 * stats_df["USG_PCT_RANK"]    +   # usage: how much offense runs through them
+        0.20 * stats_df["PIE_RANK"]        +   # overall impact catch-all
+        0.20 * stats_df["PTS_RANK"]        +   # raw scoring load
+        0.15 * stats_df["TS_PCT_RANK"]     +   # scoring efficiency
+        0.10 * stats_df["EFG_PCT_RANK"]    +   # field goal quality
+        0.10 * stats_df["NET_RATING_RANK"]     # on/off impact
+    )
+
+    # ── 7. top 3 per team ────────────────────────────────────────────────────
+    sorted_stars = stats_df.sort_values(
+        ["CURRENT_TEAM_ID", "STAR_SCORE"], ascending=[True, False]
+    )
+    top_3 = sorted_stars.groupby("CURRENT_TEAM_ID").head(3).copy()
+    top_3["STAR_RANK"] = top_3.groupby("CURRENT_TEAM_ID").cumcount() + 1
+
+    top_star_map    = top_3[top_3["STAR_RANK"] == 1].set_index("CURRENT_TEAM_ID")["PLAYER_NAME_NORM"]
+    second_star_map = top_3[top_3["STAR_RANK"] == 2].set_index("CURRENT_TEAM_ID")["PLAYER_NAME_NORM"]
+    third_star_map  = top_3[top_3["STAR_RANK"] == 3].set_index("CURRENT_TEAM_ID")["PLAYER_NAME_NORM"]
+
+    df["TOP_PLAYER"]        = df["CURRENT_TEAM_ID"].map(top_star_map)
+    df["SECOND_TOP_PLAYER"] = df["CURRENT_TEAM_ID"].map(second_star_map)
+    df["THIRD_TOP_PLAYER"]  = df["CURRENT_TEAM_ID"].map(third_star_map)
+
+    top_stars_set = set(zip(top_3["CURRENT_TEAM_ID"], top_3["PLAYER_NAME_NORM"]))
+    top1_set      = set(zip(
+        top_3[top_3["STAR_RANK"] == 1]["CURRENT_TEAM_ID"],
+        top_3[top_3["STAR_RANK"] == 1]["PLAYER_NAME_NORM"],
+    ))
+
+    # ── 8. flag players in main df ───────────────────────────────────────────
+    # Use CURRENT_TEAM_ID for lookup so traded players resolve to new team
+    df["IS_TOP_STAR"]   = df.apply(
+        lambda r: 1 if (r["CURRENT_TEAM_ID"], r["PLAYER_NAME_NORM"]) in top_stars_set else 0,
+        axis=1,
+    )
+    df["IS_TOP_1_STAR"] = df.apply(
+        lambda r: 1 if (r["CURRENT_TEAM_ID"], r["PLAYER_NAME_NORM"]) in top1_set else 0,
+        axis=1,
+    )
+
+    # ── 9. active stars per game ─────────────────────────────────────────────
+    active_stars_per_game = (
+        df[(df["IS_TOP_STAR"] == 1) & (df["MIN"] >= min_minutes)]
+        .groupby(["GAME_ID", "CURRENT_TEAM_ID"])["PLAYER_NAME_NORM"]
+        .nunique()                          # distinct players, not sum of flag
+        .reset_index(name="ACTIVE_STARS_COUNT")
+        .assign(ACTIVE_STARS_COUNT=lambda x: x["ACTIVE_STARS_COUNT"].clip(upper=3))
+    )
+    df = df.merge(active_stars_per_game, on=["GAME_ID", "CURRENT_TEAM_ID"], how="left")
+    df["ACTIVE_STARS_COUNT"] = df["ACTIVE_STARS_COUNT"].fillna(0).astype(int)
+
+    # ── 10. top-1 star active flag ───────────────────────────────────────────
+    top1_active_per_game = (
+        df[(df["IS_TOP_1_STAR"] == 1) & (df["MIN"] >= min_minutes)]
+        .groupby(["GAME_ID", "CURRENT_TEAM_ID"])["IS_TOP_1_STAR"]
+        .max()
+        .reset_index(name="TOP_STAR_ACTIVE")
+    )
+    df = df.merge(top1_active_per_game, on=["GAME_ID", "CURRENT_TEAM_ID"], how="left")
+    df["TOP_STAR_ACTIVE"] = df["TOP_STAR_ACTIVE"].fillna(0).astype(int)
+
+    # ── 11. individual star active flags per game ────────────────────────────
+    for rank, col_name in [(1, "TOP_PLAYER_ACTIVE"), (2, "SECOND_PLAYER_ACTIVE"), (3, "THIRD_PLAYER_ACTIVE")]:
+        star_name_map = top_3[top_3["STAR_RANK"] == rank].set_index("CURRENT_TEAM_ID")["PLAYER_NAME_NORM"]
+
+        # resolve each row's star name for that rank
+        df[f"_STAR_{rank}_NAME"] = df["CURRENT_TEAM_ID"].map(star_name_map)
+
+        # find games where that specific player hit min_minutes
+        star_active = (
+            df[
+                (df["PLAYER_NAME_NORM"] == df[f"_STAR_{rank}_NAME"]) &
+                (df["MIN"] >= min_minutes)
+            ]
+            .groupby(["GAME_ID", "CURRENT_TEAM_ID"])
+            .size()
+            .gt(0)
+            .astype(int)
+            .reset_index(name=col_name)
+        )
+
+        df = df.merge(star_active, on=["GAME_ID", "CURRENT_TEAM_ID"], how="left")
+        df[col_name] = df[col_name].fillna(0).astype(int)
+        df.drop(columns=[f"_STAR_{rank}_NAME"], inplace=True)
+
+    return df.drop(columns=["PLAYER_NAME_NORM", "CURRENT_TEAM_ID"])
