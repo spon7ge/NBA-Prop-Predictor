@@ -210,6 +210,7 @@ def player_scenarios(
     stat_name: str,
     min_minutes: int = 15,
     last_n: int = 20,
+    min_playoff_games: int = 5,
 ) -> dict:
     """
     Historical splits for a player covering the context signals
@@ -220,9 +221,11 @@ def player_scenarios(
         4. Home / Away         (venue context)
         5. Last-N recency      (role / form drift)
         6. Interaction splits  (home×pace, away×spread)
+        7. Playoff vs regular season, close/blowout playoff splits, uplift
 
     Preprocessing:
         - Drops games below `min_minutes` (garbage time / early DNP returns)
+        - `SPREAD_ABS` is derived from `TEAM_SPREAD` when absent (for playoff close/blowout splits).
 
     Bayesian shrinkage toward the player's overall median:
         shrunk = (n * split_median + k * overall_median) / (n + k)
@@ -238,8 +241,21 @@ def player_scenarios(
     if "MIN" in pdf.columns:
         pdf = pdf[pdf["MIN"] >= min_minutes]
 
+    if "SPREAD_ABS" not in pdf.columns and "TEAM_SPREAD" in pdf.columns:
+        pdf["SPREAD_ABS"] = pdf["TEAM_SPREAD"].abs()
+    elif "SPREAD_ABS" not in pdf.columns:
+        pdf["SPREAD_ABS"] = np.nan
+
     total_n = len(pdf)
     overall_median = pdf[stat_name].median() if total_n > 0 else None
+
+    _empty_split = {
+        "median": None,
+        "shrunk_median": None,
+        "delta": 0.0,
+        "hit_rate_vs_overall": None,
+        "n": 0,
+    }
 
     if total_n == 0 or pd.isna(overall_median):
         return {
@@ -255,6 +271,14 @@ def player_scenarios(
             "home_away": {},
             "recency": {},
             "interactions": {},
+            "playoff": {
+                "regular_season": dict(_empty_split),
+                "playoffs": dict(_empty_split),
+                "n_playoff_games": 0,
+                "has_playoff_history": False,
+                "last_playoff_run": dict(_empty_split),
+                "playoff_uplift": None,
+            },
         }
 
     # ── 1. adaptive k ───────────────────────────────────────────────────────
@@ -333,7 +357,50 @@ def player_scenarios(
         "home_favorite":    split_stats(pdf[is_home  & favorite]),
     }
 
-    # ── 9. overall IQR ──────────────────────────────────────────────────────
+    # ── 9. playoff splits ───────────────────────────────────────────────────
+    if "IS_PLAYOFF" in pdf.columns:
+        is_po = pdf["IS_PLAYOFF"].fillna(0).astype(int).eq(1)
+        playoff_pdf = pdf.loc[is_po]
+        reg_pdf = pdf.loc[~is_po]
+    else:
+        playoff_pdf = pdf.iloc[0:0]
+        reg_pdf = pdf
+
+    n_playoff = len(playoff_pdf)
+    n_reg = len(reg_pdf)
+
+    playoff: dict = {
+        "regular_season": split_stats(reg_pdf),
+        "playoffs": split_stats(playoff_pdf),
+        "n_playoff_games": n_playoff,
+        "has_playoff_history": n_playoff >= min_playoff_games,
+    }
+
+    last_playoff_run = (
+        playoff_pdf.sort_values("GAME_DATE").tail(last_n)
+        if n_playoff else playoff_pdf
+    )
+    playoff["last_playoff_run"] = split_stats(last_playoff_run)
+
+    if n_playoff >= min_playoff_games:
+        sab = playoff_pdf["SPREAD_ABS"]
+        close_mask = sab.notna() & (sab <= 4)
+        blow_mask = sab.notna() & (sab > 4)
+        playoff["playoff_close"] = split_stats(playoff_pdf.loc[close_mask])
+        playoff["playoff_blowout"] = split_stats(playoff_pdf.loc[blow_mask])
+
+    if n_playoff >= min_playoff_games and pd.notna(overall_median):
+        playoff_median = playoff_pdf[stat_name].median()
+        reg_median = reg_pdf[stat_name].median()
+        playoff["playoff_uplift"] = (
+            round(float(playoff_median - reg_median), 4)
+            if pd.notna(playoff_median) and pd.notna(reg_median)
+            else None
+        )
+    else:
+        playoff["playoff_uplift"] = None
+
+    # ── 10. overall IQR ─────────────────────────────────────────────────────
     overall_iqr = pdf[stat_name].quantile(0.75) - pdf[stat_name].quantile(0.25)
 
     return {
@@ -350,6 +417,7 @@ def player_scenarios(
         "home_away":         home_away,
         "recency":           recency,
         "interactions":      interactions,
+        "playoff":           playoff,
     }
 
 
@@ -366,6 +434,7 @@ def adjust_predictions(
     use_recency: bool = True,
     recency_weight: float = 0.5,
     min_interaction_n: int = 15,
+    min_playoff_games: int = 5,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """
@@ -376,7 +445,7 @@ def adjust_predictions(
         preds_df:            Output of predict_min_times_rate.
         base_df:             Game-log DataFrame used to compute player_scenarios.
         game_contexts:       {player_name: dict} output of get_game_context
-                             (keys: active_stars, spread, total, is_home).
+                             (keys: active_stars, spread, total, is_home, is_playoff).
         min_adjust_weight:   Blend fraction for minutes adjustment  (0=off, 1=full delta).
         rate_adjust_weight:  Blend fraction for rate adjustment     (0=off, 1=full delta).
         delta_cap_min:       Hard cap on total minutes delta (minutes).
@@ -387,6 +456,8 @@ def adjust_predictions(
         recency_weight:      Weight on the recency delta (0=ignore, 1=full recency signal).
                              Blended as: final_delta = (1-recency_weight)*base + recency_weight*recent
         min_interaction_n:   Minimum n in an interaction split to trust it over additive.
+        min_playoff_games:   Minimum playoff games to treat playoff splits as trustworthy
+                             (see player_scenarios "playoff" block).
         verbose:             Print per-player adjustment summary.
     """
     rate_col_by_market = {
@@ -405,7 +476,9 @@ def adjust_predictions(
     scenario_cache: dict[tuple, dict] = {}
     for name in unique_names:
         for col in ["MIN", *unique_rate_cols]:
-            scenario_cache[(name, col)] = player_scenarios(base_df, name, col)
+            scenario_cache[(name, col)] = player_scenarios(
+                base_df, name, col, min_playoff_games=min_playoff_games
+            )
 
     # ── helpers ─────────────────────────────────────────────────────────────
     def _delta(sc: dict, *key_path) -> tuple[float, int]:
@@ -458,8 +531,58 @@ def adjust_predictions(
             return "away_low_pace"
         return None
 
-    def _build_delta(sc: dict, n_stars: int, spread_key: str | None,
-                     pace_key: str, is_home: bool) -> tuple[float, dict]:
+    def _playoff_delta(sc: dict, spread_val: float | None) -> tuple[float, int, str | None]:
+        """
+        Three tiers: no playoff games → 0; small sample → heavy shrink toward overall;
+        enough games → _delta from playoff splits, preferring close/blowout when spread known.
+        """
+        po = sc.get("playoff")
+        if not isinstance(po, dict):
+            return 0.0, 0, None
+
+        n_po = int(po.get("n_playoff_games", 0))
+        om = sc.get("overall_median")
+
+        if n_po == 0:
+            return 0.0, n_po, "none"
+
+        spread_abs = abs(float(spread_val)) if spread_val is not None else None
+
+        if n_po < min_playoff_games:
+            pl_stats = po.get("playoffs") or {}
+            pm = pl_stats.get("median")
+            if pm is None or om is None or pd.isna(om):
+                return 0.0, n_po, "small_no_median"
+            k_playoff = 30.0
+            d = (n_po * float(pm) + k_playoff * float(om)) / (n_po + k_playoff) - float(om)
+            return float(d), n_po, "shrunk"
+
+        if spread_abs is not None and spread_abs <= 4:
+            d, n_sub = _delta(sc, "playoff", "playoff_close")
+            tier = "playoff_close"
+        elif spread_abs is not None and spread_abs > 4:
+            d, n_sub = _delta(sc, "playoff", "playoff_blowout")
+            tier = "playoff_blowout"
+        else:
+            d, n_sub = _delta(sc, "playoff", "playoffs")
+            tier = "playoffs"
+
+        if n_sub == 0 and spread_abs is not None:
+            d, n_sub = _delta(sc, "playoff", "playoffs")
+            tier = "playoffs_fallback"
+
+        return d, n_po, tier
+
+    def _build_delta(
+        sc: dict,
+        n_stars: int,
+        spread_key: str | None,
+        pace_key: str,
+        is_home: bool,
+        *,
+        is_playoff_ctx: bool,
+        ctx_spread: float | None,
+    ) -> tuple[float, dict]:
         """
         Returns (total_delta, component_log).
         Replaces spread+venue additive pair with interaction split when
@@ -490,6 +613,11 @@ def adjust_predictions(
 
         base_delta = d_stars + d_pace + (d_ix if use_ix else d_spread + d_home)
 
+        d_playoff, n_playoff_g, po_tier = (
+            _playoff_delta(sc, ctx_spread) if is_playoff_ctx else (0.0, 0, None)
+        )
+        base_delta = base_delta + d_playoff
+
         recency_delta = 0.0
         if use_recency:
             last_key = next(
@@ -512,6 +640,9 @@ def adjust_predictions(
             "spread":      (round(d_spread, 4), n_spread)      if not use_ix else None,
             "home_away":   (round(d_home,  4),  n_home)        if not use_ix else None,
             "recency":     (round(recency_delta, 4), None)      if use_recency else None,
+            "playoff":     (round(d_playoff, 4), n_playoff_g, po_tier)
+            if is_playoff_ctx
+            else None,
             "used_interaction": use_ix,
             "interaction_key":  interaction_key if use_ix else None,
         }
@@ -550,6 +681,7 @@ def adjust_predictions(
         spread    = ctx.get("spread")
         total     = ctx.get("total")
         is_home   = bool(ctx.get("is_home", True))
+        is_playoff_ctx = bool(ctx.get("is_playoff", False))
 
         min_sc   = scenario_cache[(name, "MIN")]
         rate_sc  = scenario_cache[(name, rate_col)]
@@ -558,8 +690,21 @@ def adjust_predictions(
         min_pace   = _pace_key(min_sc,  total)
         rate_pace  = _pace_key(rate_sc, total)
 
-        raw_min_delta,  min_log  = _build_delta(min_sc,  n_stars, spread_key, min_pace,  is_home)
-        raw_rate_delta, rate_log = _build_delta(rate_sc, n_stars, spread_key, rate_pace, is_home)
+        raw_min_delta,  min_log  = _build_delta(
+            min_sc,  n_stars, spread_key, min_pace,  is_home,
+            is_playoff_ctx=is_playoff_ctx,
+            ctx_spread=float(spread) if spread is not None else None,
+        )
+        raw_rate_delta, rate_log = _build_delta(
+            rate_sc, n_stars, spread_key, rate_pace, is_home,
+            is_playoff_ctx=is_playoff_ctx,
+            ctx_spread=float(spread) if spread is not None else None,
+        )
+
+        if verbose and is_playoff_ctx and min_log.get("playoff"):
+            _dp, n_pg, tier = min_log["playoff"]
+            if n_pg == 0 and tier == "none":
+                print(f"[PLAYOFF] {name} — no playoff history, using raw prediction")
 
         min_delta  = float(np.clip(raw_min_delta,  -delta_cap_min,  delta_cap_min))
         rate_delta = float(np.clip(raw_rate_delta, -delta_cap_rate, delta_cap_rate))
@@ -642,6 +787,7 @@ def get_game_context(
     out_players: dict | None = None,
     stars_by_team: dict | None = None,
     team_abbrev_map: dict | None = None,
+    is_playoff: bool = False,
 ) -> dict:
     """
     Builds the game-context dict consumed by adjust_predictions().
@@ -660,6 +806,7 @@ def get_game_context(
                            Falls back to global team3StarsPerTeam if None.
         team_abbrev_map:   {full_team_name: abbrev} lookup.
                            Falls back to global TEAM_NAME_TO_ABBREV if None.
+        is_playoff:        When True, adjust_predictions applies tiered playoff deltas.
     """
     # ── resolve injected vs global dependencies ──────────────────────────────
     _out_players   = out_players   if out_players   is not None else outPlayers
@@ -675,6 +822,7 @@ def get_game_context(
             "spread": None, "spread_price": None,
             "total": None, "total_over_price": None, "total_under_price": None,
             "bookmaker": None, "commence_time": None,
+            "is_playoff": None,
         }
 
     # ── 1. resolve player → team ─────────────────────────────────────────────
@@ -775,6 +923,7 @@ def get_game_context(
         "total":             total,
         "total_over_price":  over_price,
         "total_under_price": under_price,
+        "is_playoff":        is_playoff,
     }
 # ---------------------------------------------------------
 # 3. LINE LOOKUP & MAPPING
