@@ -30,23 +30,6 @@ PROP_LABEL_MAP = {
     'player_rebounds_assists':      'REB+AST',
 }
 
-# Category slug → game-log columns (same semantics as dataScraper.cat_to_stat_cols)
-_OVER_RATE_CAT_TO_STAT = {
-    'player_points': ['PTS'],
-    'player_rebounds': ['REB'],
-    'player_assists': ['AST'],
-    'player_turnovers': ['TOV'],
-    'player_frees_attempts': ['FTA'],
-    'player_threes': ['FG3M'],
-    'player_blocks': ['BLK'],
-    'player_steals': ['STL'],
-    'player_blocks_steals': ['BLK', 'STL'],
-    'player_points_rebounds_assists': ['PTS', 'REB', 'AST'],
-    'player_points_rebounds': ['PTS', 'REB'],
-    'player_points_assists': ['PTS', 'AST'],
-    'player_rebounds_assists': ['REB', 'AST'],
-}
-
 # Bookmaker name → output JSON file path
 BOOKMAKER_SLATE_PATHS = {
     'PrizePicks':       'data/props/ev_analysis/prizepicks.json',
@@ -63,15 +46,31 @@ BOOKMAKER_3LEG_PATHS = {
 }
 
 
+def normalize_game_date_series(s: pd.Series) -> pd.Series:
+    """
+    Parse GAME_DATE strings that mix ``YYYY-MM-DD`` (season CSVs) with ISO timestamps
+    (playoff CSVs). Plain ``pd.to_datetime`` on the combined column can infer the wrong
+    format and yield NaT for playoff rows (pandas 2.x+).
+    """
+    try:
+        return pd.to_datetime(s, errors="coerce", format="mixed")
+    except (TypeError, ValueError):
+        return pd.to_datetime(s, errors="coerce")
+
+
 def load_base_df() -> pd.DataFrame:
     """Load and combine season + playoff game logs for S25 and S26."""
     s25 = pd.read_csv('data/raw/season_stats/S25.csv').sort_values('GAME_DATE')
     p25 = pd.read_csv('data/raw/playoff_stats/P25.csv').sort_values('GAME_DATE')
-    s25 = _detect_star_players(pd.concat([s25, p25], ignore_index=True))
+    merged25 = pd.concat([s25, p25], ignore_index=True)
+    merged25["GAME_DATE"] = normalize_game_date_series(merged25["GAME_DATE"])
+    s25 = _detect_star_players(merged25)
 
     s26 = pd.read_csv('data/raw/season_stats/S26.csv').sort_values('GAME_DATE')
     p26 = pd.read_csv('data/raw/playoff_stats/P26.csv').sort_values('GAME_DATE')
-    s26 = _detect_star_players(pd.concat([s26, p26], ignore_index=True))
+    merged26 = pd.concat([s26, p26], ignore_index=True)
+    merged26["GAME_DATE"] = normalize_game_date_series(merged26["GAME_DATE"])
+    s26 = _detect_star_players(merged26)
 
     base_df = pd.concat([s25, s26], ignore_index=True)
     print(f"base_df: {len(base_df)} rows, {base_df['PLAYER_NAME'].nunique()} players")
@@ -156,6 +155,9 @@ def merge_with_bookmaker(
     Returns an enriched DataFrame ready for build_greedy_slate(), or an empty
     DataFrame if no lines were found for the bookmaker today.
 
+    Rows are filtered with ``dropna`` on non-``ADJ_`` columns only, so missing game-context
+    adjustment fields do not drop otherwise valid enriched legs.
+
     Pass ``debug_nans=True`` to print why NaNs appear inside ``generalized_best_bets``.
     """
     _, _, final = generalized_best_bets(
@@ -177,166 +179,13 @@ def merge_with_bookmaker(
         left_on=['PLAYER_NAME', 'MARKET'],
         right_on=['PLAYER_NAME', 'CATEGORY'],
         how='left',
-    ).dropna()
+    )
+    # Do not require ADJ_* columns to be non-null: adjust_predictions fills those with
+    # NaN when game context is missing, but the prop row is still valid for enrichment.
+    _core = [c for c in merged.columns if not str(c).startswith("ADJ_")]
+    merged = merged.dropna(subset=_core)
 
     print(f"[{bookmaker}] {len(merged)} enriched legs")
-    return merged
-
-# Category slug → game-log columns (same semantics as dataScraper.cat_to_stat_cols)
-_OVER_RATE_CAT_TO_STAT = {
-    'player_points': ['PTS'],
-    'player_rebounds': ['REB'],
-    'player_assists': ['AST'],
-    'player_turnovers': ['TOV'],
-    'player_frees_attempts': ['FTA'],
-    'player_threes': ['FG3M'],
-    'player_blocks': ['BLK'],
-    'player_steals': ['STL'],
-    'player_blocks_steals': ['BLK', 'STL'],
-    'player_points_rebounds_assists': ['PTS', 'REB', 'AST'],
-    'player_points_rebounds': ['PTS', 'REB'],
-    'player_points_assists': ['PTS', 'AST'],
-    'player_rebounds_assists': ['REB', 'AST'],
-}
-
-
-def compute_prop_over_rates(
-    base_df: pd.DataFrame,
-    prop_lines: pd.DataFrame,
-    *,
-    name_col: str = 'PLAYER_NAME',
-    category_col: str = 'CATEGORY',
-    line_col: str = 'LINE',
-    bookmaker_col: str | None = 'BOOKMAKER',
-    line_bookmaker: str | None = None,
-    date_col: str = 'GAME_DATE',
-) -> pd.DataFrame:
-    pl = prop_lines.copy()
-    if bookmaker_col and line_bookmaker and bookmaker_col in pl.columns:
-        pl = pl[pl[bookmaker_col] == line_bookmaker]
-    if pl.empty:
-        return pd.DataFrame(
-            columns=list(pl.columns)
-            + ['OVER_RATE_L5', 'OVER_RATE_L10', 'OVER_RATE_L15', 'OVER_RATE_SEASON']
-        )
-
-    pl[line_col] = pd.to_numeric(pl[line_col], errors='coerce')
-    pl = pl.dropna(subset=[name_col, category_col, line_col])
-
-    base = base_df.sort_values(date_col)
-    rows_out = []
-
-    for _, r in pl.iterrows():
-        name = r[name_col]
-        cat = r[category_col]
-        line = float(r[line_col])
-        stat_cols = _OVER_RATE_CAT_TO_STAT.get(cat)
-        if not stat_cols:
-            rows_out.append({**r.to_dict(), **{
-                'OVER_RATE_L5': np.nan,
-                'OVER_RATE_L10': np.nan,
-                'OVER_RATE_L15': np.nan,
-                'OVER_RATE_SEASON': np.nan,
-            }})
-            continue
-
-        pdf = base[base['PLAYER_NAME'] == name]
-        if pdf.empty:
-            rows_out.append({**r.to_dict(), **{
-                'OVER_RATE_L5': np.nan,
-                'OVER_RATE_L10': np.nan,
-                'OVER_RATE_L15': np.nan,
-                'OVER_RATE_SEASON': np.nan,
-            }})
-            continue
-
-        missing = [c for c in stat_cols if c not in pdf.columns]
-        if missing:
-            rows_out.append({**r.to_dict(), **{
-                'OVER_RATE_L5': np.nan,
-                'OVER_RATE_L10': np.nan,
-                'OVER_RATE_L15': np.nan,
-                'OVER_RATE_SEASON': np.nan,
-            }})
-            continue
-
-        if len(stat_cols) == 1:
-            s = pdf[stat_cols[0]].astype(float)
-        else:
-            s = pdf[stat_cols].astype(float).sum(axis=1)
-
-        def _rate(tail_n: int | None) -> float:
-            seg = s if tail_n is None else s.tail(tail_n)
-            if seg.empty:
-                return float('nan')
-            return round((seg > line).mean(), 2)
-
-        rows_out.append({
-            **r.to_dict(),
-            'OVER_RATE_L5': _rate(5),
-            'OVER_RATE_L10': _rate(10),
-            'OVER_RATE_L15': _rate(15),
-            'OVER_RATE_SEASON': _rate(None),
-        })
-
-    return pd.DataFrame(rows_out)
-
-from nba_api.stats.endpoints import leaguedashteamstats
-
-# Same as dataScraper: book/log "OPPONENT" vs NBA API team name
-_OPP_NAME_TO_API_KEY = {'Los Angeles Clippers': 'LA Clippers'}
-
-
-def league_team_adv_stats_lookup() -> pd.DataFrame:
-    """
-    Current league advanced team stats (PerGame, Advanced), one row per team.
-
-    Columns: OPPONENT (team name for merge), OPP_DEF_RATING,
-    OPP_RANK_DEF_RATING, OPP_PACE, OPP_PACE_RANK — same naming as
-    ``generalized_best_bets`` / ``dataScraper`` after rename.
-    """
-    league_df = leaguedashteamstats.LeagueDashTeamStats(
-        league_id_nullable='00',
-        per_mode_detailed='PerGame',
-        measure_type_detailed_defense='Advanced',
-    ).get_data_frames()[0]
-
-    out = (
-        league_df[['TEAM_NAME', 'DEF_RATING', 'DEF_RATING_RANK', 'PACE', 'PACE_RANK']]
-        .copy()
-        .rename(columns={
-            'TEAM_NAME': 'OPPONENT',
-            'DEF_RATING': 'OPP_DEF_RATING',
-            'DEF_RATING_RANK': 'OPP_RANK_DEF_RATING',
-            'PACE': 'OPP_PACE',
-            'PACE_RANK': 'OPP_PACE_RANK',
-        })
-    )
-    # API uses "LA Clippers"; some pipelines use "Los Angeles Clippers"
-    out['_OPP_MATCH_KEY'] = out['OPPONENT'].replace(_OPP_NAME_TO_API_KEY)
-    return out
-
-
-def attach_opponent_adv_stats(
-    df: pd.DataFrame,
-    opponent_col: str = 'OPPONENT',
-    *,
-    how: str = 'left',
-) -> pd.DataFrame:
-    """
-    Left-join ``OPP_DEF_RATING``, ``OPP_RANK_DEF_RATING``, ``OPP_PACE``,
-    ``OPP_PACE_RANK`` onto ``df`` using ``df[opponent_col]`` (full team name).
-
-    Mirrors the merge in ``dataScraper.py`` (``_output.merge(_opp, ...)``).
-    """
-    opp = league_team_adv_stats_lookup()
-    left = df.copy()
-    left['_OPP_MATCH_KEY'] = left[opponent_col].replace(_OPP_NAME_TO_API_KEY)
-    merged = left.merge(
-        opp[['_OPP_MATCH_KEY', 'OPP_DEF_RATING', 'OPP_RANK_DEF_RATING', 'OPP_PACE', 'OPP_PACE_RANK']],
-        on='_OPP_MATCH_KEY',
-        how=how,
-    ).drop(columns='_OPP_MATCH_KEY')
     return merged
 
 
