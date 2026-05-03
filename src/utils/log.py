@@ -2,9 +2,9 @@
 Prediction ledger and results reconciliation.
 
 Ledger files (append-only, newline-delimited JSON):
-    data/logs/predictions.jsonl  — one row per prop × bookmaker × run (includes ADJ_* from adjust_predictions when present)
-    data/logs/slates.jsonl       — one row per leg in every greedy slate (long format; per-leg ADJ_* when present)
-    data/logs/results.jsonl      — one row per reconciled prop after gamelog update (includes RECON_CONTEXT, ACTUAL_GAME_PTS when available)
+    data/logs/predictions.jsonl  — one row per prop × bookmaker × run
+    data/logs/slates.jsonl       — one row per leg in every greedy slate (long format)
+    data/logs/results.jsonl      — compact reconciled rows (keys + model medians, side, outcomes)
 
 Dedup key for predictions : (DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
 Dedup key for slates      : (DATE, SLATE_ID, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
@@ -16,8 +16,10 @@ Re-runs after a *line move* keep both entries (line history is preserved).
 import json
 import numpy as np
 import pandas as pd
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
+
+from src.utils.helpers import normalize_game_date_series
 
 LOGS_DIR          = Path("data/logs")
 PREDICTIONS_FILE  = LOGS_DIR / "predictions.jsonl"
@@ -41,8 +43,51 @@ _STAT_COL = {
     "STL": "STL",
 }
 
+# Omitted from ledger output (verbose adjustment diagnostics from adjust_predictions / slates).
+_LEDGER_ADJ_DROP = frozenset({
+    "ADJ_CONTEXT_OK",
+    "ADJ_CONTEXT_ERR",
+    "ADJ_ACTIVE_STARS",
+    "ADJ_STARS_MISSING",
+    "ADJ_SPREAD_ROLE",
+    "ADJ_CTX_SPREAD",
+    "ADJ_CTX_TOTAL",
+    "ADJ_MIN_DELTA",
+    "ADJ_RATE_DELTA",
+    "ADJ_MIN_SHIFT",
+    "ADJ_RATE_SHIFT",
+})
+
 
 # ── I/O helpers ───────────────────────────────────────────────────────────────
+
+def _rows_for_calendar_date(
+    base_df: pd.DataFrame,
+    date_str: str,
+    *,
+    date_col: str = "GAME_DATE",
+) -> pd.DataFrame:
+    """
+    Rows whose calendar day matches ``date_str`` (``YYYY-MM-DD``).
+
+    Uses ``normalize_game_date_series`` so season rows (``YYYY-MM-DD``) and playoff
+    rows (ISO timestamps) parse correctly after ``pd.concat`` — plain
+    ``pd.to_datetime`` can yield NaT for playoff-only formats (pandas 2.x).
+    """
+    if date_col not in base_df.columns:
+        return pd.DataFrame()
+    cal = normalize_game_date_series(base_df[date_col]).dt.strftime("%Y-%m-%d")
+    return base_df.loc[cal == date_str].copy()
+
+
+def _player_game_rows(game_day: pd.DataFrame, player_name: str) -> pd.DataFrame:
+    """Match PLAYER_NAME with stripped whitespace (prediction vs gamelog spellings)."""
+    if game_day.empty or "PLAYER_NAME" not in game_day.columns:
+        return pd.DataFrame()
+    want = str(player_name).strip()
+    mask = game_day["PLAYER_NAME"].astype(str).str.strip() == want
+    return game_day.loc[mask]
+
 
 def _read_jsonl(path: Path) -> pd.DataFrame:
     if not path.exists():
@@ -71,6 +116,15 @@ def _json_safe(obj):
         return {k: _json_safe(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple)):
         return [_json_safe(v) for v in obj]
+    if isinstance(obj, pd.Timestamp):
+        return None if pd.isna(obj) else obj.isoformat()
+    if isinstance(obj, np.datetime64):
+        t = pd.Timestamp(obj)
+        return None if pd.isna(t) else t.isoformat()
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, np.bool_):
+        return bool(obj)
     if isinstance(obj, np.integer):
         return int(obj)
     if isinstance(obj, (np.floating, float)):
@@ -105,13 +159,16 @@ def _dedup_and_write(new_df: pd.DataFrame, path: Path, key_cols: list[str]) -> N
 
 
 def _adj_from_slate_pair(pair: dict, leg: int) -> dict:
-    """Map 'ADJ_X 1' → 'ADJ_X' for the given leg index."""
+    """Map 'ADJ_X 1' → 'ADJ_X' for the given leg index (drops _LEDGER_ADJ_DROP)."""
     suf = f" {leg}"
     out = {}
     for k, v in pair.items():
         ks = str(k)
         if ks.startswith("ADJ_") and ks.endswith(suf):
-            out[ks[: -len(suf)]] = v
+            base = ks[: -len(suf)]
+            if base in _LEDGER_ADJ_DROP:
+                continue
+            out[base] = v
     return out
 
 
@@ -144,6 +201,9 @@ def snapshot(
     preds["DATE"]          = date
     preds["RUN_TIMESTAMP"] = run_timestamp
     preds["SIDE"]          = preds.apply(_derive_side, axis=1)
+    drop_adj = [c for c in _LEDGER_ADJ_DROP if c in preds.columns]
+    if drop_adj:
+        preds = preds.drop(columns=drop_adj)
 
     _dedup_and_write(preds, PREDICTIONS_FILE, _PRED_KEY)
     print(f"[log] predictions  {len(preds):>4} rows  ({date}  ts={run_timestamp})")
@@ -201,11 +261,15 @@ def reconcile(date: str, base_df: pd.DataFrame) -> pd.DataFrame:
     """
     Match logged predictions for `date` against actual stats in base_df.
 
+    ``base_df`` must contain rows for that **calendar** game day under ``GAME_DATE``
+    (season + playoff CSVs if needed). Date matching is normalized so string/datetime
+    columns both work.
+
     Scores only the most-recent prediction per (DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER)
     so line moves don't inflate the row count.
 
-    Appends new results to results.jsonl, skipping any already reconciled.
-    Returns the reconciled DataFrame for the given date.
+    Appends compact rows to ``results.jsonl`` (see ``_compact_reconcile_record``),
+    skipping any already reconciled. Returns that compact DataFrame for the given date.
     """
     preds = _read_jsonl(PREDICTIONS_FILE)
     if preds.empty:
@@ -238,22 +302,34 @@ def reconcile(date: str, base_df: pd.DataFrame) -> pd.DataFrame:
         print(f"[log] {date} already fully reconciled")
         return existing[existing["DATE"] == date] if not existing.empty else pd.DataFrame()
 
-    # Look up actual stats
-    game_day = base_df[base_df["GAME_DATE"] == date].copy()
+    # Look up actual stats (calendar-safe GAME_DATE match; see _rows_for_calendar_date)
+    game_day = _rows_for_calendar_date(base_df, date)
+    if game_day.empty:
+        ts = normalize_game_date_series(base_df["GAME_DATE"])
+        lo = ts.min()
+        hi = ts.max()
+        print(
+            f"[log] reconcile: no rows in base_df for calendar day {date!r}. "
+            f"GAME_DATE range present: {lo} … {hi}. "
+            f"Include playoff gamelogs if that slate is playoffs (e.g. concat P26 with S26), "
+            f"or run fetch_data so CSVs cover this date."
+        )
+
     result_rows = []
     for _, pred in latest.iterrows():
         actual_stat, actual_min, hit, miss_reason = _score_prediction(pred, game_day)
         actual_game_pts = _game_combined_pts(game_day, pred["PLAYER_NAME"])
-        result_rows.append({
+        full = {
             **pred.to_dict(),
             "ACTUAL_STAT":    actual_stat,
             "ACTUAL_MIN":     actual_min,
-            "HIT":            hit,
+            "HIT":            bool(hit),
             "MISS_REASON":    miss_reason,
             "ACTUAL_GAME_PTS": actual_game_pts,
             "RECON_CONTEXT":  _recon_context_summary(pred, actual_game_pts),
             "RECONCILED_AT":  datetime.now().isoformat(timespec="seconds"),
-        })
+        }
+        result_rows.append(_compact_reconcile_record(full))
 
     result_df = pd.DataFrame(result_rows)
     _append_jsonl(result_rows, RESULTS_FILE)
@@ -266,41 +342,18 @@ def reconcile(date: str, base_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _recon_context_summary(
-    pred: pd.Series,
+    _pred: pd.Series,
     actual_game_pts: float | None = None,
 ) -> str:
-    """Compact adjustment context + optional actual game total for results review."""
+    """Optional actual game total for results review (ADJ_* omitted from ledger)."""
     parts: list[str] = []
-    ok = pred.get("ADJ_CONTEXT_OK")
-    if ok is False:
-        parts.append("adj_ctx_fail")
-        err = pred.get("ADJ_CONTEXT_ERR")
-        if isinstance(err, str) and err.strip():
-            parts.append(err.replace("|", ";")[:80])
-    sm = pred.get("ADJ_STARS_MISSING")
-    if sm is not None:
-        try:
-            if not pd.isna(sm):
-                parts.append(f"stars_missing={int(sm)}")
-        except (ValueError, TypeError):
-            pass
-    role = pred.get("ADJ_SPREAD_ROLE")
-    if isinstance(role, str) and role:
-        parts.append(role)
-    tot_pre = pred.get("ADJ_CTX_TOTAL")
-    if tot_pre is not None:
-        try:
-            if not pd.isna(tot_pre):
-                parts.append(f"vegas_total={float(tot_pre):.1f}")
-        except (ValueError, TypeError):
-            pass
     if actual_game_pts is not None:
         parts.append(f"actual_pts={actual_game_pts:.0f}")
     return "|".join(parts)
 
 
 def _game_combined_pts(game_day: pd.DataFrame, player_name: str) -> float | None:
-    sub = game_day[game_day["PLAYER_NAME"] == player_name]
+    sub = _player_game_rows(game_day, player_name)
     if sub.empty:
         return None
     r = sub.iloc[0]
@@ -329,6 +382,34 @@ def _derive_side(row) -> str:
     return "over" if po >= pu else "under"
 
 
+def _compact_reconcile_record(full: dict) -> dict:
+    """
+    Minimal row shape appended to ``results.jsonl`` (keeps dedupe / slate-join keys).
+
+    ``SIDE`` is model-derived from ``STAT_Q50`` vs ``LINE`` (via ``_derive_side``).
+    ``P_OVER`` / ``P_UNDER`` are kept so ``calibration()`` still works.
+    """
+    return {
+        "DATE":             full.get("DATE"),
+        "PLAYER_NAME":      full.get("PLAYER_NAME"),
+        "MARKET":           full.get("MARKET"),
+        "LINE_BOOKMAKER":   full.get("LINE_BOOKMAKER"),
+        "LINE":             full.get("LINE"),
+        "MIN_Q50":          full.get("MIN_Q50"),
+        "STAT_Q50":         full.get("STAT_Q50"),
+        "P_OVER":           full.get("P_OVER"),
+        "P_UNDER":          full.get("P_UNDER"),
+        "SIDE":             _derive_side(full),
+        "ACTUAL_STAT":      full.get("ACTUAL_STAT"),
+        "ACTUAL_MIN":       full.get("ACTUAL_MIN"),
+        "HIT":              full.get("HIT"),
+        "MISS_REASON":      full.get("MISS_REASON"),
+        "ACTUAL_GAME_PTS":  full.get("ACTUAL_GAME_PTS"),
+        "RECON_CONTEXT":    full.get("RECON_CONTEXT"),
+        "RECONCILED_AT":    full.get("RECONCILED_AT"),
+    }
+
+
 def _score_prediction(pred: pd.Series, game_day: pd.DataFrame) -> tuple:
     """
     Returns (actual_stat, actual_min, hit, miss_reason).
@@ -346,7 +427,7 @@ def _score_prediction(pred: pd.Series, game_day: pd.DataFrame) -> tuple:
     line   = float(pred.get("LINE", 0))
     side   = str(pred.get("SIDE", "over"))
 
-    player_game = game_day[game_day["PLAYER_NAME"] == name]
+    player_game = _player_game_rows(game_day, name)
 
     if player_game.empty:
         return None, None, False, "dnp"
@@ -395,6 +476,63 @@ def load_slates() -> pd.DataFrame:
 def load_results() -> pd.DataFrame:
     """Load the full results ledger."""
     return _read_jsonl(RESULTS_FILE)
+
+
+def results_compact_view(
+    df: pd.DataFrame | None = None,
+    *,
+    date: str | None = None,
+) -> pd.DataFrame:
+    """
+    Notebook-friendly slice of reconcile output (~9 columns).
+
+    ``side`` is derived from ``STAT_Q50`` vs ``LINE`` (and P_OVER/P_UNDER at equality),
+    same rule as the logging pipeline — not re-read from the stored ``SIDE`` column.
+
+    Examples::
+
+        log.results_compact_view(date="2026-05-01")
+        log.results_compact_view(log.reconcile("2026-05-01", base_df))
+    """
+    if df is None:
+        df = load_results()
+    if df.empty:
+        return pd.DataFrame()
+    if date is not None and "DATE" in df.columns:
+        df = df[df["DATE"] == date].copy()
+    if df.empty:
+        return pd.DataFrame()
+
+    out = df.copy()
+    out["side"] = out.apply(_derive_side, axis=1)
+
+    want = [
+        "PLAYER_NAME",
+        "MARKET",
+        "LINE",
+        "MIN_Q50",
+        "STAT_Q50",
+        "side",
+        "ACTUAL_STAT",
+        "HIT",
+        "MISS_REASON",
+    ]
+    have = [c for c in want if c in out.columns]
+    slim = out[have].rename(
+        columns={
+            "PLAYER_NAME": "name",
+            "MARKET": "market",
+            "LINE": "line",
+            "MIN_Q50": "min_q50",
+            "STAT_Q50": "stat_q50",
+            "ACTUAL_STAT": "actual_stat",
+            "HIT": "hit",
+            "MISS_REASON": "miss_reason",
+        }
+    )
+    if "name" in slim.columns:
+        slim = slim.sort_values(["name", "market", "line"], na_position="last")
+    return slim.reset_index(drop=True)
 
 
 def hit_rate_by(group_col: str) -> pd.DataFrame:

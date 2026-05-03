@@ -204,26 +204,74 @@ def run_pts_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_hi
 # 2. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------
 
-def player_scenarios(df: pd.DataFrame, player_name: str, stat_name: str) -> dict:
+def player_scenarios(
+    df: pd.DataFrame,
+    player_name: str,
+    stat_name: str,
+    min_minutes: int = 15,
+    last_n: int = 20,
+) -> dict:
     """
     Historical splits for a player covering the context signals
     that the base model does not capture:
-        1. Active stars count  (roster context)
-        2. Opponent pace       (game-speed context, proxied by Vegas total)
-        3. Spread              (game-script / blowout risk)
+        1. Active stars count  (roster context)        — dynamic, no silent gaps
+        2. Opponent pace       (game-speed context)    — player-relative percentile buckets
+        3. Spread              (game-script risk)      — includes pick'em
         4. Home / Away         (venue context)
+        5. Last-N recency      (role / form drift)
+        6. Interaction splits  (home×pace, away×spread)
 
-    Each split uses Bayesian shrinkage toward the player's overall median:
+    Preprocessing:
+        - Drops games below `min_minutes` (garbage time / early DNP returns)
+
+    Bayesian shrinkage toward the player's overall median:
         shrunk = (n * split_median + k * overall_median) / (n + k)
+        k is adaptive: max(5, total_n // 10) — trusts splits more for large samples.
     """
-    pdf = df[df["PLAYER_NAME"] == player_name].sort_values("GAME_DATE")
-    overall_median = pdf[stat_name].median()
-    total_n = len(pdf)
 
-    def split_stats(subset, k=10):
+    # ── 0. filter + sort ────────────────────────────────────────────────────
+    pdf = (
+        df[df["PLAYER_NAME"] == player_name]
+        .copy()
+        .sort_values("GAME_DATE")
+    )
+    if "MIN" in pdf.columns:
+        pdf = pdf[pdf["MIN"] >= min_minutes]
+
+    total_n = len(pdf)
+    overall_median = pdf[stat_name].median() if total_n > 0 else None
+
+    if total_n == 0 or pd.isna(overall_median):
+        return {
+            "player": player_name,
+            "stat": stat_name,
+            "overall_median": None,
+            "overall_iqr": None,
+            "total_games": 0,
+            "min_minutes_filter": min_minutes,
+            "active_stars": {},
+            "opp_pace": {},
+            "spread": {},
+            "home_away": {},
+            "recency": {},
+            "interactions": {},
+        }
+
+    # ── 1. adaptive k ───────────────────────────────────────────────────────
+    K_BASE = max(5, total_n // 10)
+    K_HOME_AWAY = max(3, total_n // 20)   # venue is a weaker prior — shrink less
+
+    # ── 2. split_stats helper ───────────────────────────────────────────────
+    def split_stats(subset, k=K_BASE) -> dict:
         n = len(subset)
         if n == 0:
-            return {"median": None, "shrunk_median": None, "delta": 0.0, "hit_rate_vs_overall": None, "n": 0}
+            return {
+                "median": None,
+                "shrunk_median": None,
+                "delta": 0.0,
+                "hit_rate_vs_overall": None,
+                "n": 0,
+            }
         split_median = subset[stat_name].median()
         shrunk = (n * split_median + k * overall_median) / (n + k)
         hit_rate = (subset[stat_name] >= overall_median).mean()
@@ -235,42 +283,73 @@ def player_scenarios(df: pd.DataFrame, player_name: str, stat_name: str) -> dict
             "n":                   n,
         }
 
-    K_ACTIVE_STARS = 10
-    K_PACE         = 10
-    K_SPREAD       = 10
-    K_HOME_AWAY    = 5
+    # ── 3. active stars — dynamic, no silent gaps ────────────────────────────
+    star_counts = sorted(pdf["ACTIVE_STARS_COUNT"].dropna().unique().astype(int))
+    active_stars = {i: split_stats(pdf[pdf["ACTIVE_STARS_COUNT"] == i]) for i in star_counts}
 
-    active_stars = {
-        i: split_stats(pdf[pdf["ACTIVE_STARS_COUNT"] == i], k=K_ACTIVE_STARS)
-        for i in [0, 1, 2, 3]
-    }
+    # ── 4. opponent pace — player-relative percentile buckets ───────────────
+    p33 = pdf["GAME_TOTAL"].quantile(0.33)
+    p67 = pdf["GAME_TOTAL"].quantile(0.67)
     opp_pace = {
-        "high_pace":   split_stats(pdf[pdf["GAME_TOTAL"] > 234.5],                                              k=K_PACE),
-        "middle_pace": split_stats(pdf[(pdf["GAME_TOTAL"] >= 225.0) & (pdf["GAME_TOTAL"] <= 234.5)], k=K_PACE),
-        "low_pace":    split_stats(pdf[pdf["GAME_TOTAL"] < 225.0],                                              k=K_PACE),
+        "high_pace":   split_stats(pdf[pdf["GAME_TOTAL"] >  p67]),
+        "middle_pace": split_stats(pdf[(pdf["GAME_TOTAL"] >= p33) & (pdf["GAME_TOTAL"] <= p67)]),
+        "low_pace":    split_stats(pdf[pdf["GAME_TOTAL"] <  p33]),
+        "_pace_thresholds": {"p33": round(p33, 2), "p67": round(p67, 2)},  # auditable
     }
+
+    # ── 5. spread — pick'em included ────────────────────────────────────────
     spread = {
-        "favorite": split_stats(pdf[pdf["TEAM_SPREAD"] < 0], k=K_SPREAD),
-        "underdog": split_stats(pdf[pdf["TEAM_SPREAD"] > 0], k=K_SPREAD),
+        "favorite": split_stats(pdf[pdf["TEAM_SPREAD"] <  0]),
+        "pick_em":  split_stats(pdf[pdf["TEAM_SPREAD"] == 0]),
+        "underdog": split_stats(pdf[pdf["TEAM_SPREAD"] >  0]),
     }
+
+    # ── 6. home / away ──────────────────────────────────────────────────────
     home_away = {
         "home": split_stats(pdf[pdf["IS_HOME"] == 1], k=K_HOME_AWAY),
         "away": split_stats(pdf[pdf["IS_HOME"] == 0], k=K_HOME_AWAY),
     }
-    overall_iqr = (
-        pdf[stat_name].quantile(0.75) - pdf[stat_name].quantile(0.25)
-        if total_n > 0 else None
-    )
+
+    # ── 7. recency ──────────────────────────────────────────────────────────
+    recency = {
+        f"last_{last_n}": split_stats(pdf.tail(last_n)),
+        f"prior":         split_stats(pdf.iloc[:-last_n] if total_n > last_n else pdf.iloc[0:0]),
+    }
+
+    # ── 8. interaction splits ────────────────────────────────────────────────
+    is_home  = pdf["IS_HOME"] == 1
+    is_away  = pdf["IS_HOME"] == 0
+    hi_pace  = pdf["GAME_TOTAL"] > p67
+    lo_pace  = pdf["GAME_TOTAL"] < p33
+    favorite = pdf["TEAM_SPREAD"] < 0
+    underdog = pdf["TEAM_SPREAD"] > 0
+
+    interactions = {
+        "home_high_pace":   split_stats(pdf[is_home  & hi_pace]),
+        "home_low_pace":    split_stats(pdf[is_home  & lo_pace]),
+        "away_high_pace":   split_stats(pdf[is_away  & hi_pace]),
+        "away_low_pace":    split_stats(pdf[is_away  & lo_pace]),
+        "away_underdog":    split_stats(pdf[is_away  & underdog]),
+        "home_favorite":    split_stats(pdf[is_home  & favorite]),
+    }
+
+    # ── 9. overall IQR ──────────────────────────────────────────────────────
+    overall_iqr = pdf[stat_name].quantile(0.75) - pdf[stat_name].quantile(0.25)
+
     return {
-        "player":         player_name,
-        "stat":           stat_name,
-        "overall_median": round(overall_median, 4) if pd.notna(overall_median) else None,
-        "overall_iqr":    round(overall_iqr, 4) if overall_iqr is not None and pd.notna(overall_iqr) else None,
-        "total_games":    total_n,
-        "active_stars":   active_stars,
-        "opp_pace":       opp_pace,
-        "spread":         spread,
-        "home_away":      home_away,
+        "player":            player_name,
+        "stat":              stat_name,
+        "overall_median":    round(overall_median, 4),
+        "overall_iqr":       round(overall_iqr, 4) if pd.notna(overall_iqr) else None,
+        "total_games":       total_n,
+        "min_minutes_filter": min_minutes,
+        "adaptive_k":        {"base": K_BASE, "home_away": K_HOME_AWAY},
+        "active_stars":      active_stars,
+        "opp_pace":          opp_pace,
+        "spread":            spread,
+        "home_away":         home_away,
+        "recency":           recency,
+        "interactions":      interactions,
     }
 
 
@@ -279,10 +358,14 @@ def adjust_predictions(
     base_df: pd.DataFrame,
     game_contexts: dict,
     *,
-    min_adjust_weight: float = 1,
-    rate_adjust_weight: float = 1,
+    min_adjust_weight: float = 1.0,
+    rate_adjust_weight: float = 1.0,
     delta_cap_min: float = 5.0,
     delta_cap_rate: float = 0.5,
+    use_interactions: bool = True,
+    use_recency: bool = True,
+    recency_weight: float = 0.5,
+    min_interaction_n: int = 15,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """
@@ -290,20 +373,21 @@ def adjust_predictions(
     player_scenarios + game_context, then recalculates all STAT quantiles.
 
     Args:
-        preds_df:           Output of predict_min_times_rate.
-        base_df:            Game-log DataFrame used to compute player_scenarios.
-        game_contexts:      {player_name: dict} where each dict is the output of
-                            get_game_context (keys: active_stars, spread, total, is_home).
-        min_adjust_weight:  Blend fraction for minutes adjustment  (0 = off, 1 = full delta).
-        rate_adjust_weight: Blend fraction for rate adjustment     (0 = off, 1 = full delta).
-        delta_cap_min:      Hard cap on total minutes delta (minutes).
-        delta_cap_rate:     Hard cap on total rate delta (per-minute units).
-        verbose:            Print per-player adjustment summary.
-
-        Pace adjustment always uses the middle_pace scenario bucket (no total cutoffs).
-
-    Returns:
-        Adjusted copy of preds_df, ready for line_probs_for_market().
+        preds_df:            Output of predict_min_times_rate.
+        base_df:             Game-log DataFrame used to compute player_scenarios.
+        game_contexts:       {player_name: dict} output of get_game_context
+                             (keys: active_stars, spread, total, is_home).
+        min_adjust_weight:   Blend fraction for minutes adjustment  (0=off, 1=full delta).
+        rate_adjust_weight:  Blend fraction for rate adjustment     (0=off, 1=full delta).
+        delta_cap_min:       Hard cap on total minutes delta (minutes).
+        delta_cap_rate:      Hard cap on total rate delta (per-minute units).
+        use_interactions:    Pull away_underdog / home_favorite / pace×venue splits
+                             when n >= min_interaction_n, replacing two additive deltas.
+        use_recency:         Blend last_N delta into minutes and rate adjustments.
+        recency_weight:      Weight on the recency delta (0=ignore, 1=full recency signal).
+                             Blended as: final_delta = (1-recency_weight)*base + recency_weight*recent
+        min_interaction_n:   Minimum n in an interaction split to trust it over additive.
+        verbose:             Print per-player adjustment summary.
     """
     rate_col_by_market = {
         "PTS": "PTS_PER_MIN",
@@ -311,133 +395,222 @@ def adjust_predictions(
         "REB": "REB_PER_MIN",
     }
 
-    def _delta(sc: dict, *key_path) -> float:
+    # ── 1. pre-compute all scenario caches ──────────────────────────────────
+    unique_names = preds_df["PLAYER_NAME"].unique()
+    unique_rate_cols = {
+        rate_col_by_market.get(m, f"{m}_PER_MIN")
+        for m in preds_df["MARKET"].unique()
+    }
+
+    scenario_cache: dict[tuple, dict] = {}
+    for name in unique_names:
+        for col in ["MIN", *unique_rate_cols]:
+            scenario_cache[(name, col)] = player_scenarios(base_df, name, col)
+
+    # ── helpers ─────────────────────────────────────────────────────────────
+    def _delta(sc: dict, *key_path) -> tuple[float, int]:
+        """Return (delta, n) — n=0 means the split was missing or empty."""
         node = sc
         for k in key_path:
             if not isinstance(node, dict):
-                return 0.0
+                return 0.0, 0
             node = node.get(k)
         if not isinstance(node, dict):
-            return 0.0
+            return 0.0, 0
         d = node.get("delta", 0.0)
-        return float(d) if d is not None else 0.0
+        n = node.get("n", 0)
+        return (float(d) if d is not None else 0.0), int(n)
 
-    def _set_adj_missing(row):
-        row["ADJ_CONTEXT_OK"] = False
-        row["ADJ_CONTEXT_ERR"] = None
-        row["ADJ_ACTIVE_STARS"] = None
-        row["ADJ_STARS_MISSING"] = None
-        row["ADJ_SPREAD_ROLE"] = None
-        row["ADJ_CTX_SPREAD"] = None
-        row["ADJ_CTX_TOTAL"] = None
-        row["ADJ_MIN_DELTA"] = None
-        row["ADJ_RATE_DELTA"] = None
-        row["ADJ_MIN_SHIFT"] = None
-        row["ADJ_RATE_SHIFT"] = None
+    def _pace_key(sc: dict, total: float | None) -> str:
+        thresholds = sc.get("opp_pace", {}).get("_pace_thresholds", {})
+        p33 = thresholds.get("p33")
+        p67 = thresholds.get("p67")
+        if total is None or p33 is None or p67 is None:
+            return "middle_pace"
+        if total > p67:
+            return "high_pace"
+        if total < p33:
+            return "low_pace"
+        return "middle_pace"
 
+    def _spread_key(spread: float | None) -> str | None:
+        if spread is None:
+            return None
+        if spread < 0:
+            return "favorite"
+        if spread > 0:
+            return "underdog"
+        return "pick_em"
+
+    def _interaction_key(is_home: bool, spread_key: str | None, pace_key: str) -> str | None:
+        venue = "home" if is_home else "away"
+        if spread_key == "underdog" and not is_home:
+            return "away_underdog"
+        if spread_key == "favorite" and is_home:
+            return "home_favorite"
+        if pace_key == "high_pace" and is_home:
+            return "home_high_pace"
+        if pace_key == "low_pace" and is_home:
+            return "home_low_pace"
+        if pace_key == "high_pace" and not is_home:
+            return "away_high_pace"
+        if pace_key == "low_pace" and not is_home:
+            return "away_low_pace"
+        return None
+
+    def _build_delta(sc: dict, n_stars: int, spread_key: str | None,
+                     pace_key: str, is_home: bool) -> tuple[float, dict]:
+        """
+        Returns (total_delta, component_log).
+        Replaces spread+venue additive pair with interaction split when
+        use_interactions=True and n >= min_interaction_n.
+        """
+        star_key  = min(n_stars, max(sc.get("active_stars", {}).keys(), default=3))
+        d_stars, n_stars_n = _delta(sc, "active_stars", star_key)
+        d_pace,  n_pace    = _delta(sc, "opp_pace", pace_key)
+
+        interaction_key = _interaction_key(is_home, spread_key, pace_key) if use_interactions else None
+        d_interaction, n_interaction = (
+            _delta(sc, "interactions", interaction_key)
+            if interaction_key else (0.0, 0)
+        )
+
+        use_ix = use_interactions and interaction_key and n_interaction >= min_interaction_n
+        if use_ix:
+            d_spread = 0.0;  n_spread = 0
+            d_home   = 0.0;  n_home   = 0
+            d_ix     = d_interaction
+        else:
+            d_spread, n_spread = (
+                _delta(sc, "spread", spread_key) if spread_key and spread_key != "pick_em"
+                else (0.0, 0)
+            )
+            d_home, n_home = _delta(sc, "home_away", "home" if is_home else "away")
+            d_ix = 0.0
+
+        base_delta = d_stars + d_pace + (d_ix if use_ix else d_spread + d_home)
+
+        recency_delta = 0.0
+        if use_recency:
+            last_key = next(
+                (k for k in sc.get("recency", {}) if k.startswith("last_")), None
+            )
+            if last_key:
+                d_rec, n_rec = _delta(sc, "recency", last_key)
+                recency_delta = d_rec if n_rec >= min_interaction_n else 0.0
+
+        total = (
+            (1 - recency_weight) * base_delta + recency_weight * recency_delta
+            if use_recency and recency_delta != 0.0
+            else base_delta
+        )
+
+        log = {
+            "stars":       (round(d_stars, 4),  n_stars_n),
+            "pace":        (round(d_pace,  4),  n_pace),
+            "interaction": (round(d_ix,    4),  n_interaction) if use_ix else None,
+            "spread":      (round(d_spread, 4), n_spread)      if not use_ix else None,
+            "home_away":   (round(d_home,  4),  n_home)        if not use_ix else None,
+            "recency":     (round(recency_delta, 4), None)      if use_recency else None,
+            "used_interaction": use_ix,
+            "interaction_key":  interaction_key if use_ix else None,
+        }
+        return total, log
+
+    def _set_adj_missing(row, err=None):
+        for col in [
+            "ADJ_CONTEXT_OK", "ADJ_CONTEXT_ERR", "ADJ_ACTIVE_STARS",
+            "ADJ_STARS_MISSING", "ADJ_SPREAD_ROLE", "ADJ_CTX_SPREAD",
+            "ADJ_CTX_TOTAL", "ADJ_MIN_DELTA", "ADJ_RATE_DELTA",
+            "ADJ_MIN_SHIFT", "ADJ_RATE_SHIFT", "ADJ_USED_INTERACTION",
+            "ADJ_MIN_LOG", "ADJ_RATE_LOG",
+        ]:
+            row[col] = None
+        row["ADJ_CONTEXT_OK"]  = False
+        row["ADJ_CONTEXT_ERR"] = err
+
+    # ── 2. main loop ─────────────────────────────────────────────────────────
     out_rows = []
     for _, row in preds_df.iterrows():
-        row = row.copy()
-        name    = row["PLAYER_NAME"]
-        market  = row["MARKET"]
+        row      = row.copy()
+        name     = row["PLAYER_NAME"]
+        market   = row["MARKET"]
         rate_col = rate_col_by_market.get(market, f"{market}_PER_MIN")
 
         ctx = game_contexts.get(name)
-        if ctx is None or isinstance(ctx, str):
+        if ctx is None or not ctx.get("ok"):
+            err = ctx.get("error") if isinstance(ctx, dict) else "missing_context"
             if verbose:
-                print(f"[NO CONTEXT] {name} — using raw model prediction")
-            _set_adj_missing(row)
-            row["ADJ_CONTEXT_ERR"] = (
-                str(ctx)[:300] if isinstance(ctx, str) else "missing_context"
-            )
+                print(f"[NO CONTEXT] {name} — raw prediction used")
+            _set_adj_missing(row, err=err)
             out_rows.append(row)
             continue
 
-        n_stars  = int(ctx.get("active_stars", 1))
-        spread   = ctx.get("spread")
-        total    = ctx.get("total")
-        is_home  = ctx.get("is_home", True)
+        n_stars   = int(ctx.get("active_stars", 1))
+        spread    = ctx.get("spread")
+        total     = ctx.get("total")
+        is_home   = bool(ctx.get("is_home", True))
 
-        min_sc  = player_scenarios(base_df, name, "MIN")
-        rate_sc = player_scenarios(base_df, name, rate_col)
+        min_sc   = scenario_cache[(name, "MIN")]
+        rate_sc  = scenario_cache[(name, rate_col)]
 
-        # ── minutes deltas ──────────────────────────────────────────────
-        min_d_stars  = _delta(min_sc, "active_stars", min(n_stars, 3))
-        min_d_spread = (
-            _delta(min_sc, "spread", "favorite") if spread is not None and spread < 0
-            else _delta(min_sc, "spread", "underdog") if spread is not None and spread > 0
-            else 0.0
-        )
-        min_d_pace = _delta(min_sc, "opp_pace", "middle_pace")
-        min_d_home  = _delta(min_sc, "home_away", "home" if is_home else "away")
-        min_delta   = float(np.clip(min_d_stars + min_d_spread + min_d_pace + min_d_home,
-                                    -delta_cap_min, delta_cap_min))
+        spread_key = _spread_key(spread)
+        min_pace   = _pace_key(min_sc,  total)
+        rate_pace  = _pace_key(rate_sc, total)
 
-        # ── rate deltas ─────────────────────────────────────────────────
-        rate_d_stars  = _delta(rate_sc, "active_stars", min(n_stars, 3))
-        rate_d_spread = (
-            _delta(rate_sc, "spread", "favorite") if spread is not None and spread < 0
-            else _delta(rate_sc, "spread", "underdog") if spread is not None and spread > 0
-            else 0.0
-        )
-        rate_d_pace = _delta(rate_sc, "opp_pace", "middle_pace")
-        rate_d_home  = _delta(rate_sc, "home_away", "home" if is_home else "away")
-        rate_delta   = float(np.clip(rate_d_stars + rate_d_spread + rate_d_pace + rate_d_home,
-                                     -delta_cap_rate, delta_cap_rate))
+        raw_min_delta,  min_log  = _build_delta(min_sc,  n_stars, spread_key, min_pace,  is_home)
+        raw_rate_delta, rate_log = _build_delta(rate_sc, n_stars, spread_key, rate_pace, is_home)
 
-        # ── apply adjustments ───────────────────────────────────────────
+        min_delta  = float(np.clip(raw_min_delta,  -delta_cap_min,  delta_cap_min))
+        rate_delta = float(np.clip(raw_rate_delta, -delta_cap_rate, delta_cap_rate))
+
+        # ── apply ──────────────────────────────────────────────────────
         orig_min_q50  = float(row["MIN_Q50"])
         orig_rate_q50 = float(row["RATE_Q50"])
 
         new_min_q50  = max(orig_min_q50  + min_adjust_weight  * min_delta,  0.0)
         new_rate_q50 = max(orig_rate_q50 + rate_adjust_weight * rate_delta, 0.0)
 
-        # Scale Q10/Q90 proportionally to preserve distribution shape
-        if orig_min_q50 > 0:
-            min_scale = new_min_q50 / orig_min_q50
-            row["MIN_Q10"] = round(float(row["MIN_Q10"]) * min_scale, 2)
-            row["MIN_Q90"] = round(float(row["MIN_Q90"]) * min_scale, 2)
-        if orig_rate_q50 > 0:
-            rate_scale = new_rate_q50 / orig_rate_q50
-            row["RATE_Q10"] = round(float(row["RATE_Q10"]) * rate_scale, 4)
-            row["RATE_Q90"] = round(float(row["RATE_Q90"]) * rate_scale, 4)
-
+        # shift Q10/Q90 absolutely — preserves IQR width
+        row["MIN_Q10"]  = round(max(float(row["MIN_Q10"])  + min_delta,  0.0), 2)
+        row["MIN_Q90"]  = round(max(float(row["MIN_Q90"])  + min_delta,  0.0), 2)
+        row["RATE_Q10"] = round(max(float(row["RATE_Q10"]) + rate_delta, 0.0), 4)
+        row["RATE_Q90"] = round(max(float(row["RATE_Q90"]) + rate_delta, 0.0), 4)
         row["MIN_Q50"]  = round(new_min_q50,  2)
         row["RATE_Q50"] = round(new_rate_q50, 4)
 
-        # Scale RATE_HISTORY so the empirical branch in run_pts_simulation
-        # reflects the same context shift as the quantiles.
+        # RATE_HISTORY: adjust only if not already scaling quantiles, pick one
         if orig_rate_q50 > 0 and row.get("RATE_HISTORY") is not None:
-            rate_scale = new_rate_q50 / orig_rate_q50
-            row["RATE_HISTORY"] = [round(r * rate_scale, 6) for r in row["RATE_HISTORY"]]
+            row["RATE_HISTORY"] = [
+                round(r + rate_adjust_weight * rate_delta, 6)
+                for r in row["RATE_HISTORY"]
+            ]
 
         row["STAT_Q10"] = round(float(row["MIN_Q10"]) * float(row["RATE_Q10"]), 2)
         row["STAT_Q50"] = round(new_min_q50 * new_rate_q50, 2)
         row["STAT_Q90"] = round(float(row["MIN_Q90"]) * float(row["RATE_Q90"]), 2)
 
-        row["ADJ_CONTEXT_OK"] = True
-        row["ADJ_CONTEXT_ERR"] = None
-        row["ADJ_ACTIVE_STARS"] = int(n_stars)
-        row["ADJ_STARS_MISSING"] = int(max(0, 3 - min(n_stars, 3)))
-        row["ADJ_SPREAD_ROLE"] = (
-            "favorite"
-            if spread is not None and spread < 0
-            else "underdog"
-            if spread is not None and spread > 0
-            else "pick_em"
-            if spread is not None and spread == 0
-            else None
-        )
-        row["ADJ_CTX_SPREAD"] = float(spread) if spread is not None else None
-        row["ADJ_CTX_TOTAL"] = float(total) if total is not None else None
-        row["ADJ_MIN_DELTA"] = round(min_delta, 4)
-        row["ADJ_RATE_DELTA"] = round(rate_delta, 6)
-        row["ADJ_MIN_SHIFT"] = round(new_min_q50 - orig_min_q50, 2)
-        row["ADJ_RATE_SHIFT"] = round(new_rate_q50 - orig_rate_q50, 4)
+        # ── metadata ───────────────────────────────────────────────────
+        row["ADJ_CONTEXT_OK"]      = True
+        row["ADJ_CONTEXT_ERR"]     = None
+        row["ADJ_ACTIVE_STARS"]    = n_stars
+        row["ADJ_STARS_MISSING"]   = max(0, 3 - min(n_stars, 3))
+        row["ADJ_SPREAD_ROLE"]     = spread_key
+        row["ADJ_CTX_SPREAD"]      = float(spread) if spread is not None else None
+        row["ADJ_CTX_TOTAL"]       = float(total)  if total  is not None else None
+        row["ADJ_MIN_DELTA"]       = round(min_delta,  4)
+        row["ADJ_RATE_DELTA"]      = round(rate_delta, 6)
+        row["ADJ_MIN_SHIFT"]       = round(new_min_q50  - orig_min_q50,  2)
+        row["ADJ_RATE_SHIFT"]      = round(new_rate_q50 - orig_rate_q50, 4)
+        row["ADJ_USED_INTERACTION"]= min_log.get("used_interaction", False)
+        row["ADJ_MIN_LOG"]         = min_log
+        row["ADJ_RATE_LOG"]        = rate_log
 
         if verbose:
+            ix_tag = f" [ix: {min_log.get('interaction_key')}]" if min_log.get("used_interaction") else ""
             print(
-                f"{name} [{market}]  "
+                f"{name} [{market}]{ix_tag}  "
+                f"pace_bucket={min_pace}  "
                 f"MIN: {orig_min_q50:.1f}→{new_min_q50:.1f} (Δ{min_delta:+.2f})  "
                 f"RATE: {orig_rate_q50:.4f}→{new_rate_q50:.4f} (Δ{rate_delta:+.4f})"
             )
@@ -460,67 +633,149 @@ TEAM_NAME_TO_ABBREV = {
     'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
 }
 
-def get_game_context(base_df, player_name, team_odds, bookmaker_name='DraftKings', out_players=None):
-    pdf = base_df[base_df['PLAYER_NAME'] == player_name].sort_values('GAME_DATE')
+def get_game_context(
+    base_df: pd.DataFrame,
+    player_name: str,
+    team_odds: pd.DataFrame | list[dict],
+    *,
+    bookmaker_priority: list[str] = ("DraftKings", "FanDuel", "BetMGM"),
+    out_players: dict | None = None,
+    stars_by_team: dict | None = None,
+    team_abbrev_map: dict | None = None,
+) -> dict:
+    """
+    Builds the game-context dict consumed by adjust_predictions().
+
+    Returns a dict always. On failure, "ok" is False and "error" describes why.
+    On success, "ok" is True and all expected keys are present.
+
+    Args:
+        base_df:           Game-log DataFrame (used to resolve player → team).
+        player_name:       Exact PLAYER_NAME string as it appears in base_df.
+        team_odds:         Odds feed — either a DataFrame or list of game dicts.
+        bookmaker_priority: Bookmakers tried in order; first hit wins.
+        out_players:       {team_abbrev: [player, ...]} of inactive players.
+                           Falls back to global outPlayers if None.
+        stars_by_team:     {team_abbrev: [player, ...]} of star designations.
+                           Falls back to global team3StarsPerTeam if None.
+        team_abbrev_map:   {full_team_name: abbrev} lookup.
+                           Falls back to global TEAM_NAME_TO_ABBREV if None.
+    """
+    # ── resolve injected vs global dependencies ──────────────────────────────
+    _out_players   = out_players   if out_players   is not None else outPlayers
+    _stars_by_team = stars_by_team if stars_by_team is not None else team3StarsPerTeam
+    _abbrev_map    = team_abbrev_map if team_abbrev_map is not None else TEAM_NAME_TO_ABBREV
+
+    def _fail(reason: str) -> dict:
+        return {
+            "ok": False, "error": reason,
+            "player": player_name,
+            "team": None, "opponent": None, "is_home": None,
+            "active_stars": None, "active_star_names": None,
+            "spread": None, "spread_price": None,
+            "total": None, "total_over_price": None, "total_under_price": None,
+            "bookmaker": None, "commence_time": None,
+        }
+
+    # ── 1. resolve player → team ─────────────────────────────────────────────
+    pdf = base_df[base_df["PLAYER_NAME"] == player_name].sort_values("GAME_DATE")
     if pdf.empty:
-        return f"Player '{player_name}' not found in base_df"
+        return _fail(f"player '{player_name}' not found in base_df")
 
-    team_name = pdf['TEAM_NAME'].iloc[-1]
+    team_name   = pdf["TEAM_NAME"].iloc[-1]
+    team_abbrev = _abbrev_map.get(team_name)
 
-    games = team_odds.to_dict('records') if isinstance(team_odds, pd.DataFrame) else team_odds
+    # ── 2. find the game — normalized match ──────────────────────────────────
+    games = team_odds.to_dict("records") if isinstance(team_odds, pd.DataFrame) else team_odds
+
+    def _team_matches(feed_name: str) -> bool:
+        """Tolerates case, punctuation, and common abbreviation mismatches."""
+        norm = lambda s: s.lower().replace(".", "").replace("-", " ").strip()
+        if norm(feed_name) == norm(team_name):
+            return True
+        if team_abbrev and norm(feed_name) == norm(team_abbrev):
+            return True
+        return False
 
     game_data = next(
-        (g for g in games if g.get('home_team') == team_name or g.get('away_team') == team_name),
-        None
+        (g for g in games
+         if _team_matches(g.get("home_team", ""))
+         or _team_matches(g.get("away_team", ""))),
+        None,
     )
     if game_data is None:
-        return f"No game found for team '{team_name}'"
+        return _fail(f"no game found for team '{team_name}' (abbrev: {team_abbrev})")
 
-    bk = next(
-        (b for b in game_data.get('bookmakers', []) if b.get('bookmaker') == bookmaker_name),
-        None
-    )
+    is_home  = _team_matches(game_data.get("home_team", ""))
+    opponent = game_data["away_team"] if is_home else game_data["home_team"]
+
+    # ── 3. bookmaker — first available from priority list ────────────────────
+    available_books = {b.get("bookmaker"): b for b in game_data.get("bookmakers", [])}
+    bk = None
+    used_bookmaker = None
+    for book in bookmaker_priority:
+        if book in available_books:
+            bk = available_books[book]
+            used_bookmaker = book
+            break
+
     if bk is None:
-        return f"Bookmaker '{bookmaker_name}' not found for this game"
+        return _fail(
+            f"none of {list(bookmaker_priority)} found; "
+            f"available: {list(available_books.keys())}"
+        )
 
-    # --- active_stars ---
-    team_abbrev = TEAM_NAME_TO_ABBREV.get(team_name)
-    stars = team3StarsPerTeam.get(team_abbrev, [])
-    _out = out_players if out_players is not None else outPlayers
-    out = _out.get(team_abbrev, [])
-    active_stars = [s for s in stars if s not in out]
+    # ── 4. active stars ──────────────────────────────────────────────────────
+    stars  = _stars_by_team.get(team_abbrev, [])
+    out    = _out_players.get(team_abbrev, [])
+    active = [s for s in stars if s not in out]
 
-    result = {
-        'player': player_name,
-        'team': team_name,
-        'opponent': game_data['away_team'] if game_data['home_team'] == team_name else game_data['home_team'],
-        'is_home': game_data['home_team'] == team_name,
-        'commence_time': game_data['commence_time'],
-        'bookmaker': bookmaker_name,
-        'active_stars': len(active_stars),   # count: 0, 1, 2, or 3
-        'active_star_names': active_stars,   # optional: the names for debugging
-        'spread': None,
-        'spread_price': None,
-        'total': None,
-        'total_over_price': None,
-        'total_under_price': None,
+    # ── 5. parse markets ─────────────────────────────────────────────────────
+    spread = spread_price = total = over_price = under_price = None
+
+    for market in bk.get("markets", []):
+        key = market.get("market_key")
+        if key == "spreads":
+            for outcome in market.get("outcomes", []):
+                if _team_matches(outcome.get("name", "")):
+                    spread       = outcome.get("point")
+                    spread_price = outcome.get("price")
+        elif key == "totals":
+            for outcome in market.get("outcomes", []):
+                if outcome.get("name") == "Over":
+                    total      = outcome.get("point")
+                    over_price = outcome.get("price")
+                elif outcome.get("name") == "Under":
+                    under_price = outcome.get("price")
+
+    # ── 6. warn on missing lines ─────────────────────────────────────────────
+    missing = [k for k, v in [("spread", spread), ("total", total)] if v is None]
+    if missing:
+        import warnings
+        warnings.warn(
+            f"{player_name} ({team_name}): missing lines {missing} "
+            f"from {used_bookmaker} — context signals will be partial",
+            stacklevel=2,
+        )
+
+    return {
+        "ok":                True,
+        "error":             None,
+        "player":            player_name,
+        "team":              team_name,
+        "team_abbrev":       team_abbrev,
+        "opponent":          opponent,
+        "is_home":           is_home,
+        "commence_time":     game_data.get("commence_time"),
+        "bookmaker":         used_bookmaker,
+        "active_stars":      len(active),
+        "active_star_names": active,
+        "spread":            spread,
+        "spread_price":      spread_price,
+        "total":             total,
+        "total_over_price":  over_price,
+        "total_under_price": under_price,
     }
-
-    for market in bk.get('markets', []):
-        if market['market_key'] == 'spreads':
-            for outcome in market['outcomes']:
-                if outcome['name'] == team_name:
-                    result['spread'] = outcome['point']
-                    result['spread_price'] = outcome['price']
-        elif market['market_key'] == 'totals':
-            for outcome in market['outcomes']:
-                if outcome['name'] == 'Over':
-                    result['total'] = outcome['point']
-                    result['total_over_price'] = outcome['price']
-                elif outcome['name'] == 'Under':
-                    result['total_under_price'] = outcome['price']
-
-    return result
 # ---------------------------------------------------------
 # 3. LINE LOOKUP & MAPPING
 # ---------------------------------------------------------
@@ -532,34 +787,6 @@ def _line_lookup_from_lines_df(ldf: pd.DataFrame) -> dict:
         book_name = str(r["NAME"]).strip()
         d[book_name] = r["LINE"]
     return d
-
-
-def _adj_columns_from_row(row: pd.Series) -> dict:
-    """Pass through ADJ_* fields from adjust_predictions for ledgers / slates."""
-    out = {}
-    for k in row.index:
-        ks = str(k)
-        if not ks.startswith("ADJ_"):
-            continue
-        v = row[k]
-        try:
-            if v is None or pd.isna(v):
-                out[ks] = None
-                continue
-        except (ValueError, TypeError):
-            pass
-        if isinstance(v, (np.floating, float)):
-            x = float(v)
-            out[ks] = None if np.isnan(x) else x
-        elif isinstance(v, (np.integer,)):
-            out[ks] = int(v)
-        else:
-            out[ks] = v
-    return out
-
-
-def _adj_fields_for_slate_leg(r: pd.Series, n: int) -> dict:
-    return {f"{k} {n}": r[k] for k in r.index if str(k).startswith("ADJ_")}
 
 
 # ---------------------------------------------------------
@@ -578,7 +805,6 @@ def line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000):
                 "PLAYER_NAME": name, "MARKET": market, "LINE": np.nan,
                 "MIN_Q50": np.nan, "STAT_Q50": np.nan,
                 "P_OVER": np.nan, "P_UNDER": np.nan,
-                **_adj_columns_from_row(row),
             })
             continue
         sims = sim_fn(row, n_sims=n_sims)
@@ -593,7 +819,6 @@ def line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000):
             "STAT_Q90": round(row["STAT_Q90"], 2),
             "P_OVER": round(float(np.mean(sims > line_f)), 3),
             "P_UNDER": round(float(np.mean(sims < line_f)), 3),
-            **_adj_columns_from_row(row),
         })
     return pd.DataFrame(rows)
 
@@ -604,6 +829,8 @@ def _json_ready(obj):
         return {k: _json_ready(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple)):
         return [_json_ready(v) for v in obj]
+    if isinstance(obj, np.bool_):
+        return bool(obj)
     if isinstance(obj, (np.integer,)):
         return int(obj)
     if isinstance(obj, (np.floating, float)):
@@ -772,8 +999,6 @@ def build_greedy_slate(
             "AVG_STAT_VS_MATCHUP 2": round(float(r2["AVG_STAT_VS_MATCHUP"]), 1),
             "MATCHUP_GAMES 1":       int(r1["MATCHUP_GAMES"]),
             "MATCHUP_GAMES 2":       int(r2["MATCHUP_GAMES"]),
-            **_adj_fields_for_slate_leg(r1, 1),
-            **_adj_fields_for_slate_leg(r2, 2),
         })
 
     pair_sorted = sorted(records, key=lambda r: r["PARLAY_PROB"], reverse=True)
@@ -865,7 +1090,6 @@ def build_greedy_slate_3leg(
             continue
 
         def leg_fields(r, side, p, n: int):
-            sn = str(n)
             return {
                 f"NAME {n}": r["PLAYER_NAME"],
                 f"TEAM {n}": r["TEAM"],
@@ -883,7 +1107,6 @@ def build_greedy_slate_3leg(
                 f"OPP_DEF_RANK {n}": r["OPP_RANK_DEF_RATING"],
                 f"OPP_PACE {n}": r["OPP_PACE"],
                 f"OPP_PACE_RANK {n}": r["OPP_PACE_RANK"],
-                f"ODDS_OVER {n}": r["ODDS_OVER"],
                 f"ODDS_OVER {n}": r["ODDS_OVER"],
                 f"ODDS_UNDER {n}": r["ODDS_UNDER"],
                 f"IMP_PROB_OVER {n}": round(float(r["IMP_PROB_OVER"]), 3),
@@ -906,7 +1129,6 @@ def build_greedy_slate_3leg(
                 f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
                 f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
                 f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
-                **_adj_fields_for_slate_leg(r, n),
             }
 
         row = {
@@ -944,50 +1166,6 @@ def build_greedy_slate_3leg(
         f"Legs: {len(legs)}  |  Triples: {len(records)}  |  Slate: {len(slate_list)}  |  JSON: {out_path}"
     )
     return str(out_path)
-
-# Helper function for leg_fields
-def leg_fields(r, side, p, n: int):
-    return {
-        f"NAME {n}": r["PLAYER_NAME"],
-        f"TEAM {n}": r["TEAM"],
-        f"MARKET {n}": r["MARKET"],
-        f"PROP_KEY_{n}": r["PROP_KEY"],
-        f"LINE {n}": r["LINE"],
-        f"SIDE {n}": side,
-        f"PREDICTION {n}": round(float(r["STAT_Q50"]), 1),
-        f"MIN PREDICTION {n}": round(float(r["MIN_Q50"]), 1),
-        f"MODEL_PROB {n}": round(p, 3),
-        f"OPPONENT {n}": r["OPPONENT"],
-        f"SPREAD {n}": r["TEAM_SPREAD"],
-        f"TOTAL {n}": r["GAME_TOTAL"],
-        f"OPP_DEF_RATING {n}": r["OPP_DEF_RATING"],
-        f"OPP_DEF_RANK {n}": r["OPP_RANK_DEF_RATING"],
-        f"OPP_PACE {n}": r["OPP_PACE"],
-        f"OPP_PACE_RANK {n}": r["OPP_PACE_RANK"],
-        f"ODDS_OVER {n}": r["ODDS_OVER"],
-        f"ODDS_UNDER {n}": r["ODDS_UNDER"],
-        f"IMP_PROB_OVER {n}": round(float(r["IMP_PROB_OVER"]), 3),
-        f"IMP_PROB_UNDER {n}": round(float(r["IMP_PROB_UNDER"]), 3),
-        f"EDGE {n}": round(float(r["EDGE"]), 3),
-        f"MED_EDGE {n}": round(float(r["MED_EDGE"]), 3),
-        f"Z_SCORE {n}": round(float(r["Z_SCORE"]), 3),
-        f"EV_OVER {n}": round(float(r["EV_OVER"]), 3),
-        f"EV_UNDER {n}": round(float(r["EV_UNDER"]), 3),
-        f"AVG_STAT_L10 {n}": round(float(r["AVG_STAT_L10"]), 1),
-        f"MED_STAT_L10 {n}": round(float(r["MED_STAT_L10"]), 1),
-        f"STD_STAT_L10 {n}": round(float(r["STD_STAT_L10"]), 1),
-        f"OVER_RATE_L5 {n}": round(float(r["OVER_RATE_L5"]), 3),
-        f"OVER_RATE_L10 {n}": round(float(r["OVER_RATE_L10"]), 3),
-        f"OVER_RATE_L15 {n}": round(float(r["OVER_RATE_L15"]), 3),
-        f"OVER_RATE_SEASON {n}": round(float(r["OVER_RATE_SEASON"]), 3),
-        f"AVG_MIN_L10 {n}": round(float(r["AVG_MIN_L10"]), 1),
-        f"STD_MIN_L10 {n}": round(float(r["STD_MIN_L10"]), 1),
-        f"AVG_USG_L10 {n}": round(float(r["AVG_USG_L10"]), 3),
-        f"STD_USG_L10 {n}": round(float(r["STD_USG_L10"]), 3),
-        f"AVG_STAT_VS_MATCHUP {n}": round(float(r["AVG_STAT_VS_MATCHUP"]), 1),
-        f"MATCHUP_GAMES {n}": int(r["MATCHUP_GAMES"]),
-        **_adj_fields_for_slate_leg(r, n),
-    }
 
 
 # ---------------------------------------------------------
@@ -1042,6 +1220,10 @@ def main(
     base_df   = load_base_df()
     team_odds = load_team_odds()
     lines_dfs, lines_us = load_player_lines(today_str)
+
+    print(f"Lines for date: {current_date}")
+    lines_dfs = lines_dfs[lines_dfs['COMMENCE_TIME'] == current_date]
+    lines_us = lines_us[lines_us['COMMENCE_TIME'] == current_date]
 
     lines_dfs_pts = lines_dfs[lines_dfs['CATEGORY'] == 'player_points']
     lines_dfs_ast = lines_dfs[lines_dfs['CATEGORY'] == 'player_assists']
