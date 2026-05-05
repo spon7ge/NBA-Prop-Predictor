@@ -1647,7 +1647,7 @@ def main(
     print("\n── Adjusting predictions ──")
     all_names = set(pts_preds["PLAYER_NAME"]) | set(ast_preds["PLAYER_NAME"]) | set(reb_preds["PLAYER_NAME"])
     game_contexts = {
-        name: get_game_context(base_df, name, team_odds)
+        name: get_game_context(base_df, name, team_odds, is_playoff=True)
         for name in all_names
     }
     pts_preds = adjust_predictions(pts_preds, base_df, game_contexts, verbose=verbose)
