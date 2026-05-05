@@ -1594,8 +1594,8 @@ def main(
     lines_dfs, lines_us = load_player_lines(today_str)
 
     print(f"Lines for date: {current_date}")
-    lines_dfs = lines_dfs[lines_dfs['COMMENCE_TIME'] == current_date]
-    lines_us = lines_us[lines_us['COMMENCE_TIME'] == current_date]
+    # lines_dfs = lines_dfs[lines_dfs['COMMENCE_TIME'] == current_date]
+    # lines_us = lines_us[lines_us['COMMENCE_TIME'] == current_date]
 
     lines_dfs_pts = lines_dfs[lines_dfs['CATEGORY'] == 'player_points']
     lines_dfs_ast = lines_dfs[lines_dfs['CATEGORY'] == 'player_assists']
