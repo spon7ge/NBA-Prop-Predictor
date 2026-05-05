@@ -16,16 +16,16 @@ projectedStartingFive = {
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
-    "MIN": ["Julius Randle", "Jaden McDaniels", "Rudy Gobert", "Terrence Shannon", "Mike Conley"],
+    "MIN": ["Mike Conley", "Julius Randle", "Anthony Edwards", "Jaden McDaniels", "Rudy Gobert"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
-    "NYK": ["Mikal Bridges", "Jalen Brunson", "Josh Hart", "OG Anunoby", "Karl-Anthony Towns"],
+    "NYK": ["Jalen Brunson", "Josh Hart", "Karl-Anthony Towns", "Mikal Bridges", "OG Anunoby"],
     "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
     "ORL": ["Jalen Suggs", "Desmond Bane", "Jamal Cain", "Wendell Carter", "Paolo Banchero"],
-    "PHI": ["Joel Embiid", "Kelly Oubre", "Tyrese Maxey", "Paul George", "VJ Edgecombe"],
+    "PHI": ["Tyrese Maxey", "Paul George", "Kelly Oubre", "Joel Embiid", "VJ Edgecombe"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
-    "SAS": ["Stephon Castle", "Victor Wembanyama", "Julian Champagnie", "Devin Vassell", "De'Aaron Fox"],
+    "SAS": ["Devin Vassell", "Julian Champagnie", "De'Aaron Fox", "Victor Wembanyama", "Stephon Castle"],
     "TOR": ["Ja'Kobe Walter", "RJ Barrett", "Jakob Poeltl", "Scottie Barnes", "Jamal Shead"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
@@ -66,6 +66,5 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DET": ["Kevin Huerter"],
 }
 
