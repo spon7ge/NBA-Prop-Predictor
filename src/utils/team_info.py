@@ -4,22 +4,22 @@ projectedStartingFive = {
     "BOS": ["Derrick White", "Baylor Scheierman", "Luka Garza", "Jaylen Brown", "Ron Harper"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
-    "CLE": ["Max Strus", "James Harden", "Donovan Mitchell", "Jarrett Allen", "Evan Mobley"],
+    "CLE": ["Donovan Mitchell", "James Harden", "Jarrett Allen", "Evan Mobley", "Dean Wade"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
     "DEN": ["Christian Braun", "Jamal Murray", "Nikola Jokic", "Cameron Johnson", "Spencer Jones"],
-    "DET": ["Cade Cunningham", "Tobias Harris", "Jalen Duren", "Duncan Robinson", "Ausar Thompson"],
+    "DET": ["Cade Cunningham", "Ausar Thompson", "Duncan Robinson", "Tobias Harris", "Jalen Duren"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Amen Thompson", "Reed Sheppard", "Tari Eason", "Jabari Smith", "Alperen Sengun"],
     "IND": ["Micah Potter", "Ethan Thompson", "Kobe Brown", "Quenton Jackson", "Jalen Slawson"],
     "LAC": ["Brook Lopez", "Kris Dunn", "Kawhi Leonard", "Derrick Jones", "Darius Garland"],
-    "LAL": ["Deandre Ayton", "Rui Hachimura", "Austin Reaves", "LeBron James", "Marcus Smart"],
+    "LAL": ["Rui Hachimura", "Marcus Smart", "Deandre Ayton", "Austin Reaves", "LeBron James"],
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
     "MIN": ["Mike Conley", "Jaden McDaniels", "Rudy Gobert", "Julius Randle", "Terrence Shannon"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["OG Anunoby", "Jalen Brunson", "Josh Hart", "Mikal Bridges", "Karl-Anthony Towns"],
-    "OKC": ["Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Ajay Mitchell", "Chet Holmgren", "Luguentz Dort"],
+    "OKC": ["Shai Gilgeous-Alexander", "Luguentz Dort", "Isaiah Hartenstein", "Chet Holmgren", "Ajay Mitchell"],
     "ORL": ["Jalen Suggs", "Desmond Bane", "Jamal Cain", "Wendell Carter", "Paolo Banchero"],
     "PHI": ["VJ Edgecombe", "Joel Embiid", "Paul George", "Tyrese Maxey", "Kelly Oubre"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
@@ -66,6 +66,6 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "MIN": ["Ayo Dosunmu"],
+    "DET": ["Kevin Huerter"],
 }
 
