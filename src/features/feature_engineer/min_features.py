@@ -19,6 +19,7 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _opponent_stats(df)
     df = _expectedPace(df)
     df = _detect_star_players(df)
+    df = _HomeAwayAverages(df)
     
     return df
 
@@ -27,7 +28,7 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING']
-    for window in [3,5,10]:
+    for window in [5,10,20]:
         for col in cols:
             df[f'{col}_roll{window}'] = (
                 df.groupby('PLAYER_ID')[col]
@@ -39,7 +40,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'DIST', 'SPD', 'TCHS']
 
-    for span in [3, 5, 10]:
+    for span in [5, 10, 20]:
         for col in cols:
             df[f'{col}_{span}_ewm'] = (
                 df.groupby('PLAYER_ID')[col]
@@ -611,3 +612,41 @@ def _detect_star_players(
         df.drop(columns=[f"_STAR_{rank}_NAME"], inplace=True)
 
     return df.drop(columns=["PLAYER_NAME_NORM", "CURRENT_TEAM_ID"])
+
+# ------- HOME/AWAY AVERAGES -------------------------------
+
+def _HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    df = player_data.copy()
+    df.reset_index(drop=True, inplace=True)
+    df.sort_values([player_id_col, date_col], inplace=True)
+
+    if 'IS_HOME' not in df.columns:
+        return df
+
+    metrics = ['PTS_PER_MIN', 'TCHS_PER_MIN', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'USG_PCT', 'POSS', 'MIN',]
+    metrics = [m for m in metrics if m in df.columns]
+    if not metrics:
+        return df
+
+    global_means = df[metrics].mean()
+
+    for metric in metrics:
+        overall_avg = df.groupby(player_id_col)[metric].transform(lambda x: x.shift(1).expanding().mean())
+        loc_avg    = df.groupby([player_id_col, 'IS_HOME'])[metric].transform(lambda x: x.shift(1).expanding().mean())
+
+        home_col = f'HOME_AVG_{metric}_TO_DATE'
+        away_col = f'AWAY_AVG_{metric}_TO_DATE'
+
+        df[home_col] = np.where(df['IS_HOME'] == 1, loc_avg, np.nan)
+        df[away_col] = np.where(df['IS_HOME'] == 0, loc_avg, np.nan)
+
+        df[home_col] = df.groupby(player_id_col)[home_col].transform('ffill')
+        df[away_col] = df.groupby(player_id_col)[away_col].transform('ffill')
+
+        df[home_col] = df[home_col].fillna(overall_avg).fillna(global_means[metric]).astype('float32').round(2)
+        df[away_col] = df[away_col].fillna(overall_avg).fillna(global_means[metric]).astype('float32').round(2)
+
+        df[f'PLAYER_HOME_{metric}_DELTA'] = (df[home_col] - overall_avg).fillna(0).round(2)
+        df[f'PLAYER_AWAY_{metric}_DELTA'] = (df[away_col] - overall_avg).fillna(0).round(2)
+
+    return df

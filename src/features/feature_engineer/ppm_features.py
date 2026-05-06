@@ -9,7 +9,7 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _per_min_features(df)
     df = _rolling_player(df)
     df = _ewm_player(df)
-    # df = _lag_features(df)
+    df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
     # df = _lineup_usg_shift(df)
