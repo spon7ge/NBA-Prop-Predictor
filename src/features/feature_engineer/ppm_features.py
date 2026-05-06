@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from src.features.feature_engineer.min_features import _detect_star_players
 
 def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
@@ -11,7 +12,7 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     # df = _lag_features(df)
     df = _starter_features(df)
     df = _season_averages(df)
-    df = _lineup_usg_shift(df)
+    # df = _lineup_usg_shift(df)
     df = _team_context(df)
     df = _team_allowed_context(df)
     df = _team_allowed_rolling(df)
@@ -21,7 +22,8 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _volatility_features(df)
     df = _opponent_stats(df)
     df = _expectedPace(df)
-    df = _star_out_flag(df)
+    df = _detect_star_players(df)
+    df = _HomeAwayAverages(df)
     # df = _role_tier_features(df)
     # df = _role_tier_interactions(df)
 
@@ -52,7 +54,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
         'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT'
     ]
 
-    for window in [3,5,10]:
+    for window in [5,10,20]:
         for col in cols:
             df[f'{col}_roll{window}'] = (
                 df.groupby('PLAYER_ID')[col]
@@ -68,7 +70,7 @@ def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
         'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'DFGA_PER_MIN'
     ]
 
-    for span in [3, 5, 10]:
+    for span in [5, 10, 15, 20]:
         for col in cols:
             df[f'{col}_{span}_ewm'] = (
                 df.groupby('PLAYER_ID')[col]
@@ -670,128 +672,40 @@ def _expectedPace(df):
     df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
     return df
 
+# ------- HOME/AWAY AVERAGES -------------------------------
 
-def _role_tier_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
+def _HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE'):
+    df = player_data.copy()
+    df.reset_index(drop=True, inplace=True)
+    df.sort_values([player_id_col, date_col], inplace=True)
 
-    starter = df["STARTER_ROLL10_PCT"].fillna(0)
-    usg = df.get("USG_PCT_roll10")
-    if usg is None:
-        usg = df.get("USG_PCT_10_ewm")
-
-    # defaults if missing
-    if usg is None:
-        df["ROLE_TIER"] = 1  # role
-    else:
-        # 0=bench, 1=role, 2=star
-        df["ROLE_TIER"] = 1
-        df.loc[starter <= 0.5, "ROLE_TIER"] = 0
-        df.loc[(starter > 0.5) & (usg >= 26), "ROLE_TIER"] = 2
-
-    df["ROLE_TIER_BENCH"] = (df["ROLE_TIER"] == 0).astype(int)
-    df["ROLE_TIER_ROLE"]  = (df["ROLE_TIER"] == 1).astype(int)
-    df["ROLE_TIER_STAR"]  = (df["ROLE_TIER"] == 2).astype(int)
-    return df
-
-
-def _role_tier_interactions(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-
-    usg = df.get("USG_PCT_roll10")
-    if usg is None:
-        usg = df.get("USG_PCT_10_ewm")
-
-    pace = df.get("EXPECTED_PACE")
-    opp_def = df.get("OPP_TEAM_DEF_RATING_ALLOWED")
-
-    for tier_col in ["ROLE_TIER_BENCH", "ROLE_TIER_ROLE", "ROLE_TIER_STAR"]:
-        if usg is not None:
-            df[f"{tier_col}_x_USG"] = (df[tier_col] * usg).round(3)
-        if pace is not None:
-            df[f"{tier_col}_x_PACE"] = (df[tier_col] * pace).round(3)
-        if opp_def is not None:
-            df[f"{tier_col}_x_OPP_DEF"] = (df[tier_col] * opp_def).round(3)
-
-    return df
-
-def _star_out_flag(
-    df: pd.DataFrame,
-    usg_scale: float = 80.0,
-    min_games: int = 5,
-) -> pd.DataFrame:
-    df = df.copy()
-
-    pts_col = "PTS_ewm_season_avg"
-    usg_col = "USG_PCT_ewm_season_avg"
-
-    if pts_col not in df.columns or usg_col not in df.columns:
-        df["STAR_PLAYER_ID"] = pd.NA
-        df["STAR_OUT_FLAG"] = 0
+    if 'IS_HOME' not in df.columns:
         return df
 
-    df["_STAR_SCORE"] = (
-        df[pts_col].fillna(0).astype(float)
-        + df[usg_col].fillna(0).astype(float) * usg_scale
-    )
+    metrics = ['PTS_PER_MIN', 'TCHS_PER_MIN', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'USG_PCT', 'POSS', 'MIN',]
+    metrics = [m for m in metrics if m in df.columns]
+    if not metrics:
+        return df
 
-    team_games = (
-        df[["TEAM_ID", "SEASON_YEAR", "GAME_ID", "GAME_DATE"]]
-        .drop_duplicates()
-        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
-    )
+    global_means = df[metrics].mean()
 
-    rosters = (
-        df.groupby(["TEAM_ID", "GAME_ID"])["PLAYER_ID"]
-        .apply(set)
-        .to_dict()
-    )
+    for metric in metrics:
+        overall_avg = df.groupby(player_id_col)[metric].transform(lambda x: x.shift(1).expanding().mean())
+        loc_avg    = df.groupby([player_id_col, 'IS_HOME'])[metric].transform(lambda x: x.shift(1).expanding().mean())
 
-    hist_cols = ["PLAYER_ID", "TEAM_ID", "SEASON_YEAR", "GAME_DATE", "_STAR_SCORE"]
-    player_hist = df[hist_cols].sort_values("GAME_DATE")
+        home_col = f'HOME_AVG_{metric}_TO_DATE'
+        away_col = f'AWAY_AVG_{metric}_TO_DATE'
 
-    star_rows = []
-    for (team_id, season), tg in team_games.groupby(["TEAM_ID", "SEASON_YEAR"]):
-        team_hist = player_hist[
-            (player_hist["TEAM_ID"] == team_id)
-            & (player_hist["SEASON_YEAR"] == season)
-        ]
+        df[home_col] = np.where(df['IS_HOME'] == 1, loc_avg, np.nan)
+        df[away_col] = np.where(df['IS_HOME'] == 0, loc_avg, np.nan)
 
-        for _, g in tg.iterrows():
-            game_id = g["GAME_ID"]
-            game_date = g["GAME_DATE"]
+        df[home_col] = df.groupby(player_id_col)[home_col].transform('ffill')
+        df[away_col] = df.groupby(player_id_col)[away_col].transform('ffill')
 
-            prior = team_hist[team_hist["GAME_DATE"] < game_date]
-            if prior.empty:
-                star_rows.append({
-                    "TEAM_ID": team_id,
-                    "GAME_ID": game_id,
-                    "STAR_PLAYER_ID": pd.NA,
-                    "STAR_OUT_FLAG": 0,
-                })
-                continue
+        df[home_col] = df[home_col].fillna(overall_avg).fillna(global_means[metric]).astype('float32').round(2)
+        df[away_col] = df[away_col].fillna(overall_avg).fillna(global_means[metric]).astype('float32').round(2)
 
-            latest = prior.groupby("PLAYER_ID", as_index=False).tail(1)
-            counts = prior.groupby("PLAYER_ID").size()
-            qualified_ids = counts[counts >= min_games].index
-            pool = latest[latest["PLAYER_ID"].isin(qualified_ids)]
-            if pool.empty:
-                pool = latest
+        df[f'PLAYER_HOME_{metric}_DELTA'] = (df[home_col] - overall_avg).fillna(0).round(2)
+        df[f'PLAYER_AWAY_{metric}_DELTA'] = (df[away_col] - overall_avg).fillna(0).round(2)
 
-            star_id = pool.loc[pool["_STAR_SCORE"].idxmax(), "PLAYER_ID"]
-            roster = rosters.get((team_id, game_id), set())
-            star_out = int(star_id not in roster)
-
-            star_rows.append({
-                "TEAM_ID": team_id,
-                "GAME_ID": game_id,
-                "STAR_PLAYER_ID": star_id,
-                "STAR_OUT_FLAG": star_out,
-            })
-
-    stars = pd.DataFrame(star_rows)
-    df = df.merge(stars, on=["TEAM_ID", "GAME_ID"], how="left")
-    df["STAR_OUT_FLAG"] = df["STAR_OUT_FLAG"].fillna(0).astype(int)
-    df = df.drop(columns=["_STAR_SCORE"])
     return df
-
-
