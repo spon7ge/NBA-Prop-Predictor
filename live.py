@@ -186,7 +186,7 @@ def run_pts_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_hi
         
         empirical_rates = np.random.choice(h, size=n_empirical, p=weights)
         # Robust jitter: capped to prevent outlier-driven variance expansion
-        jitter_std = np.clip(np.std(h) * 0.05, 0.01, 0.5)
+        jitter_std = np.clip(np.std(h) * 0.3, 0.05, 1.0)
         empirical_rates += np.random.normal(0, jitter_std, size=n_empirical)
         
         sim_min_empirical = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)

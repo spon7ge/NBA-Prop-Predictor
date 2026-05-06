@@ -269,21 +269,6 @@ def HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DATE
         # Fill delta NaN values with 0 (no difference from average)
         df[home_delta_col] = df[home_delta_col].fillna(0)
         df[away_delta_col] = df[away_delta_col].fillna(0)
-    
-    # Add interaction features for PTS only (can extend to other metrics if needed)
-    if 'PTS' in metrics:
-        # Calculate baseline using shifted expanding mean to prevent leakage
-        pts_overall_avg = shifted_expanding_mean(df['PTS'], df[player_id_col])
-        df['PTS_BASELINE'] = pts_overall_avg.fillna(global_means['PTS']).astype('float32')
-        
-        # Calculate home/away multipliers (ratio of home to away performance)
-        # Add epsilon to avoid division by zero
-        eplison = 1e-8
-        df['HOME_PTS_MULTIPLIER'] = (df['PLAYER_HOME_AVG_PTS_TO_DATE'] / (df['PLAYER_AWAY_AVG_PTS_TO_DATE'] + eplison)).fillna(1.0).astype('float32')
-        
-        # Create interaction term: baseline * home_game * multiplier
-        df['PTS_BASELINE_x_HOME'] = (df['PTS_BASELINE'] * df['HOME_GAME'] * df['HOME_PTS_MULTIPLIER']).astype('float32')
-
     return df
 
 

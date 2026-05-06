@@ -20,7 +20,7 @@ def fetchTeamLines(api_key, date=None, save_dir=None):
     
     params = {
         "apiKey": api_key,
-        "regions": "us",
+        "regions": "us", # us or eu
         "markets": "spreads,totals",
         "oddsFormat": "american"
     }
