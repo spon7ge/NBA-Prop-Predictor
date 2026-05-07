@@ -140,9 +140,16 @@ def _truncate_iso(iso_ts: str) -> str:
 
 
 def _clean_player_name(description: str) -> str:
-    player = description.split("(")[0].strip()
-    if "Total Points by" in player:
-        player = player.split("Total Points by")[1].strip()
+    """Return player name only; strip parenthetical notes and trailing 'Total …' wording."""
+    player = (description or "").split("(")[0].strip()
+    if not player:
+        return player
+    legacy = re.search(r"(?is)total\s+points\s+by\s+(.+)$", player)
+    if legacy:
+        return legacy.group(1).strip()
+    first_total = re.search(r"(?is)\s+total\s+", player)
+    if first_total:
+        return player[: first_total.start()].strip()
     return player
 
 
