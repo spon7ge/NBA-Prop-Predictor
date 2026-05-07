@@ -1,33 +1,40 @@
 import json
 import requests
-import time
-import sys
 import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-# Add parent directory to path to import Supplier
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.Supplier import Supplier
+# Project root (parent of src/) so `scripts` package resolves
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+_DEFAULT_PROJECTIONS_DIR = os.path.join(_ROOT, 'data', 'props', 'prizepicks')
+_OUTPUT_TZ = ZoneInfo("America/Los_Angeles")
+
+
+def _prizepicks_output_filename() -> str:
+    """prizepicks_2026-05-06_213045.json in Pacific time."""
+    d = datetime.now(_OUTPUT_TZ)
+    return d.strftime("prizepicks_%Y-%m-%d_%H%M%S.json")
+
+
+def _resolve_prizepicks_output_path() -> str:
+    """
+    Always data/props/prizepicks under project root + timestamped .json.
+    Optional PRIZEPICKS_OUTPUT=/abs/path/file.json overrides to a fixed file path.
+    """
+    out = os.environ.get("PRIZEPICKS_OUTPUT", "").strip()
+    if out and out.lower().endswith(".json"):
+        expanded = os.path.expanduser(out)
+        if not expanded.endswith(("/", "\\")) and not os.path.isdir(expanded):
+            return expanded
+    return os.path.join(_DEFAULT_PROJECTIONS_DIR, _prizepicks_output_filename())
+
 
 class PrizePicks_Scraper():
     def __init__(self):
-        supplier = Supplier()
         self.lines = []
-        directory = supplier.getDirectory()
-        
-        if not directory:
-            raise ValueError("PROJECTIONS_DIRECTORY environment variable is not set. Please set it in your .env file.")
-        
-        # If directory is a path without filename, append a filename
-        # Check if it ends with a slash (directory) or has no extension (assume directory)
-        if directory.endswith(('/', '\\')) or (os.path.exists(directory) and os.path.isdir(directory)):
-            self.directory = os.path.join(directory, 'prizepicks_projections.json')
-        elif not os.path.splitext(directory)[1]:  # No extension, assume it's a directory
-            self.directory = os.path.join(directory, 'prizepicks_projections.json')
-        else:
-            self.directory = directory
-        
+        self.directory = _resolve_prizepicks_output_path()
+
         print(f"Using file path: {self.directory}")
         self.getJSON()
         self.loadJSON()
