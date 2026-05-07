@@ -23,6 +23,13 @@
     }
   },
   {
+    "url": "https://pick6.draftkings.com/resources/user-settings",
+    "data": {
+      "gameplaySettingMetadata": [],
+      "userGameplaySettings": []
+    }
+  },
+  {
     "url": "https://api.draftkings.com/sites/US-PSX/en/geolocations/v3/licenses?platform=Web",
     "data": {
       "activeGeoMethods": [
@@ -44,7 +51,7 @@
   {
     "url": "https://api.draftkings.com/api/promotions/v1/promotions/query?format=json",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:50.5013353Z",
+      "lastUpdatedTime": "2026-05-07T05:25:40.9256879Z",
       "zones": [
         {
           "zoneName": "PickSixInlineHome",
@@ -62,18 +69,11 @@
     }
   },
   {
-    "url": "https://pick6.draftkings.com/resources/user-settings",
-    "data": {
-      "gameplaySettingMetadata": [],
-      "userGameplaySettings": []
-    }
-  },
-  {
     "url": "https://app.launchdarkly.com/sdk/goals/6582bc9bcbe58f1057272b7e",
     "data": []
   },
   {
-    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDg3Nzk5OCIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
+    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDgzNjE3OSIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
     "data": {
       "EXP-REX-EnableRewardCenterRedesign": {
         "flagVersion": 19,
@@ -224,9 +224,51 @@
     }
   },
   {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=83e1df26-ccb4-476a-8b5c-9d176382a01c&batch_time=1778131540776&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "83e1df26-ccb4-476a-8b5c-9d176382a01c"
+    }
+  },
+  {
     "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
       "success": true
+    }
+  },
+  {
+    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820836179&current_device_time=1778131541&event_id=7ee98893-27de-4e5a-8631-d3efe9a06e5a&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=71794290-b97f-4404-9e75-31932a8065e0&sdid=ceb8e03e-4930-4a49-8205-24cea00fef5d&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131541&u=ceb8e03e-4930-4a49-8205-24cea00fef5d&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=35ccee69-29fe-404c-8b59-8a7319c20437&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=ceb8e03e-4930-4a49-8205-24cea00fef5d&os=Windows&lag=0&h=0ff94510f3b32fc80467812de0c7c1a044e42518",
+    "data": {
+      "status": "ok"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=bc917f2b-16a5-406c-9bcb-07ed19793b20&batch_time=1778131540853&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "bc917f2b-16a5-406c-9bcb-07ed19793b20"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e21fda97-1b34-4bde-8e1d-fcedee47e17d&batch_time=1778131540848&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "e21fda97-1b34-4bde-8e1d-fcedee47e17d"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7c5ab08e-584e-4736-a19b-0dc15dda8982&batch_time=1778131540850&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "7c5ab08e-584e-4736-a19b-0dc15dda8982"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=29ac54a0-cddd-4710-ba05-4afa03cec278&batch_time=1778131541213&_dd.api=fetch",
+    "data": {
+      "request_id": "29ac54a0-cddd-4710-ba05-4afa03cec278"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=81b4ec05-f284-4668-8cc9-ee418426c928&batch_time=1778131540886&_dd.api=fetch",
+    "data": {
+      "request_id": "81b4ec05-f284-4668-8cc9-ee418426c928"
     }
   },
   {
@@ -539,75 +581,9 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5a7c14b5-607e-47b8-a1bb-2ac10985c8c9&batch_time=1778131610793&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "5a7c14b5-607e-47b8-a1bb-2ac10985c8c9"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=53a910e6-1c21-453b-9276-e54fd5625948&batch_time=1778131610796&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "53a910e6-1c21-453b-9276-e54fd5625948"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=de8c0ed2-a6a4-4ebd-b531-d1046470a690&batch_time=1778131610841&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "de8c0ed2-a6a4-4ebd-b531-d1046470a690"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=01fe8591-df13-4506-9be4-9fc3cbfc46c8&batch_time=1778131610843&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "01fe8591-df13-4506-9be4-9fc3cbfc46c8"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a1b54e05-6cb4-450f-9314-bee83ae77bc5&batch_time=1778131610853&_dd.api=fetch",
-    "data": {
-      "request_id": "a1b54e05-6cb4-450f-9314-bee83ae77bc5"
-    }
-  },
-  {
-    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820877998&current_device_time=1778131611&event_id=f721af0b-2f16-4826-91fa-68cac7c01620&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=1d78b5fc-e414-4867-b948-70eed4e348a3&sdid=8c0c8554-6b76-4abb-9009-0f69139ebdc5&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131611&u=8c0c8554-6b76-4abb-9009-0f69139ebdc5&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=525985a9-f12a-4eb5-a9fc-86b316aa4d2d&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=8c0c8554-6b76-4abb-9009-0f69139ebdc5&os=Windows&lag=0&h=e9a864ec1f26aff3de7127f10fd54cecfced8a7d",
-    "data": {
-      "status": "ok"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cfa2175c-fb94-47af-a84c-790dfb511d2f&batch_time=1778131611284&_dd.api=fetch",
-    "data": {
-      "request_id": "cfa2175c-fb94-47af-a84c-790dfb511d2f"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f38d3032-7957-4a61-b71a-f89243dbcb9f&batch_time=1778131611275&_dd.api=fetch",
-    "data": {
-      "request_id": "f38d3032-7957-4a61-b71a-f89243dbcb9f"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0df362f6-3fd6-4720-89a3-37e93f53989d&batch_time=1778131611276&_dd.api=fetch",
-    "data": {
-      "request_id": "0df362f6-3fd6-4720-89a3-37e93f53989d"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=dbfcc60f-9d8c-48d7-b4ed-62fce2c2e967&batch_time=1778131611294&_dd.api=fetch",
-    "data": {
-      "request_id": "dbfcc60f-9d8c-48d7-b4ed-62fce2c2e967"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=396a6f98-4af8-4366-800a-1296d744ded0&batch_time=1778131611292&_dd.api=fetch",
-    "data": {
-      "request_id": "396a6f98-4af8-4366-800a-1296d744ded0"
-    }
-  },
-  {
     "url": "https://api.draftkings.com/en/api/promotions/v2/promotions/query",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:51.6664002Z",
+      "lastUpdatedTime": "2026-05-07T05:25:41.7327789Z",
       "zones": [
         {
           "zoneName": "WebCarousel",
@@ -987,147 +963,171 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d9281930-5dac-43f7-a852-1e713dc2f6d6&batch_time=1778131611380&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=20c3043b-bfb4-4145-908e-dead7370e016&batch_time=1778131541427&_dd.api=fetch",
     "data": {
-      "request_id": "d9281930-5dac-43f7-a852-1e713dc2f6d6"
+      "request_id": "20c3043b-bfb4-4145-908e-dead7370e016"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=039c71b5-6182-4b83-a570-2dd387be8657&batch_time=1778131611381&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3fb3ec38-57f3-4290-aa5c-49b7d3a33a62&batch_time=1778131541426&_dd.api=fetch",
     "data": {
-      "request_id": "039c71b5-6182-4b83-a570-2dd387be8657"
+      "request_id": "3fb3ec38-57f3-4290-aa5c-49b7d3a33a62"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9be066ec-1f55-48d9-bfea-d832b9decc6f&batch_time=1778131611399&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cdd89abf-783e-448d-9664-dcdeefa121b9&batch_time=1778131541439&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "9be066ec-1f55-48d9-bfea-d832b9decc6f"
+      "request_id": "cdd89abf-783e-448d-9664-dcdeefa121b9"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fd2a7c65-8bf0-491b-a3fe-c6c89e173e00&batch_time=1778131611375&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=01fe5657-1fbd-4142-8662-2d72067c7146&batch_time=1778131541425&_dd.api=fetch",
     "data": {
-      "request_id": "fd2a7c65-8bf0-491b-a3fe-c6c89e173e00"
+      "request_id": "01fe5657-1fbd-4142-8662-2d72067c7146"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b6bbf9c0-7376-4b08-851d-a1c310473a23&batch_time=1778131611471&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=49108056-bfd6-43aa-b39c-5f3b7ccca851&batch_time=1778131541454&_dd.api=fetch",
     "data": {
-      "request_id": "b6bbf9c0-7376-4b08-851d-a1c310473a23"
+      "request_id": "49108056-bfd6-43aa-b39c-5f3b7ccca851"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3f76bc26-d1ac-4c77-b708-53aecef4a7e7&batch_time=1778131611468&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=40ee0e88-5a00-40d5-b013-2a61e4dddb01&batch_time=1778131541576&_dd.api=fetch",
     "data": {
-      "request_id": "3f76bc26-d1ac-4c77-b708-53aecef4a7e7"
+      "request_id": "40ee0e88-5a00-40d5-b013-2a61e4dddb01"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6fa578de-7a4c-434d-93a2-7f5569c65ca4&batch_time=1778131611493&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6ffe9752-4a8f-4b1c-9255-2beef823556c&batch_time=1778131541559&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "6fa578de-7a4c-434d-93a2-7f5569c65ca4"
+      "request_id": "6ffe9752-4a8f-4b1c-9255-2beef823556c"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=89aa36a7-1d16-43f4-bca9-42691020c82a&batch_time=1778131611545&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a58a3a20-40b3-4ec4-baf5-976c73b1bc7f&batch_time=1778131541583&_dd.api=fetch",
     "data": {
-      "request_id": "89aa36a7-1d16-43f4-bca9-42691020c82a"
+      "request_id": "a58a3a20-40b3-4ec4-baf5-976c73b1bc7f"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1671ee25-a019-4db7-b593-4f5e1c234fb1&batch_time=1778131611534&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1e351455-d2b1-4222-81da-973896e31c34&batch_time=1778131541558&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "1671ee25-a019-4db7-b593-4f5e1c234fb1"
+      "request_id": "1e351455-d2b1-4222-81da-973896e31c34"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=79edf440-bb25-45b3-8ef1-9c18f9f13deb&batch_time=1778131611569&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=75ed4aaf-8d06-455d-9adc-5ed7c4d212e3&batch_time=1778131541560&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "79edf440-bb25-45b3-8ef1-9c18f9f13deb"
+      "request_id": "75ed4aaf-8d06-455d-9adc-5ed7c4d212e3"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fa27c71e-12e6-457f-9eb2-1ddbe2c4dc4e&batch_time=1778131611574&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=381e9805-b1af-4e96-9878-cf5a9e909b05&batch_time=1778131541677&_dd.api=fetch",
     "data": {
-      "request_id": "fa27c71e-12e6-457f-9eb2-1ddbe2c4dc4e"
+      "request_id": "381e9805-b1af-4e96-9878-cf5a9e909b05"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cf30cc82-0b9f-4554-8142-52d387cf27db&batch_time=1778131611624&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=858af841-df97-49fe-8650-0768422665d5&batch_time=1778131541679&_dd.api=fetch",
     "data": {
-      "request_id": "cf30cc82-0b9f-4554-8142-52d387cf27db"
+      "request_id": "858af841-df97-49fe-8650-0768422665d5"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d7f00afd-2bbc-458d-924b-172ee167dcdf&batch_time=1778131611630&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7dc70fb3-d73a-457a-82ff-5764c248492e&batch_time=1778131541669&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "d7f00afd-2bbc-458d-924b-172ee167dcdf"
+      "request_id": "7dc70fb3-d73a-457a-82ff-5764c248492e"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1e5da830-b835-4703-81c4-1a249811ce12&batch_time=1778131611662&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b0bb6228-dbef-46d4-83b3-608565a1d83d&batch_time=1778131541684&_dd.api=fetch",
     "data": {
-      "request_id": "1e5da830-b835-4703-81c4-1a249811ce12"
+      "request_id": "b0bb6228-dbef-46d4-83b3-608565a1d83d"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5f4c6fea-3872-470b-8adf-52e0b9172053&batch_time=1778131611690&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=183a6c2d-bdde-4092-955d-e545230b6847&batch_time=1778131541680&_dd.api=fetch",
     "data": {
-      "request_id": "5f4c6fea-3872-470b-8adf-52e0b9172053"
+      "request_id": "183a6c2d-bdde-4092-955d-e545230b6847"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5465692c-97c7-4867-8b07-a1f43203cdc3&batch_time=1778131611698&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fe3c01ee-e453-49fd-8564-bb5fcf109c10&batch_time=1778131541794&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "5465692c-97c7-4867-8b07-a1f43203cdc3"
+      "request_id": "fe3c01ee-e453-49fd-8564-bb5fcf109c10"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5ee0eb79-0dfc-4678-aa66-4e6355ac91e2&batch_time=1778131611743&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=30572101-2006-4671-91b3-884d23cb2d38&batch_time=1778131541770&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "5ee0eb79-0dfc-4678-aa66-4e6355ac91e2"
+      "request_id": "30572101-2006-4671-91b3-884d23cb2d38"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=78498a37-5945-44c4-b002-30fda6c9c97a&batch_time=1778131611763&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f13ea068-9127-4d53-9076-98fc216e2353&batch_time=1778131541768&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "78498a37-5945-44c4-b002-30fda6c9c97a"
+      "request_id": "f13ea068-9127-4d53-9076-98fc216e2353"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=974991ec-d3d9-46cb-9a71-4aaa858ed021&batch_time=1778131611774&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f08f553e-23d6-4c4b-8e1a-36f30bef5caa&batch_time=1778131541811&_dd.api=fetch",
     "data": {
-      "request_id": "974991ec-d3d9-46cb-9a71-4aaa858ed021"
+      "request_id": "f08f553e-23d6-4c4b-8e1a-36f30bef5caa"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ffa25f93-7cdf-49c8-8cfa-f58af4136fb9&batch_time=1778131611757&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c1e40b7a-b8b4-4ece-b8be-3f87f8ee8377&batch_time=1778131541811&_dd.api=fetch",
     "data": {
-      "request_id": "ffa25f93-7cdf-49c8-8cfa-f58af4136fb9"
+      "request_id": "c1e40b7a-b8b4-4ece-b8be-3f87f8ee8377"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=559864bd-1580-46c3-9e26-06ef31497c76&batch_time=1778131612039&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4bf135e8-4461-4e69-8cde-46c4d43195db&batch_time=1778131541880&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "559864bd-1580-46c3-9e26-06ef31497c76"
+      "request_id": "4bf135e8-4461-4e69-8cde-46c4d43195db"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=62a20987-79f8-4218-ae32-008c389284b8&batch_time=1778131612457&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f7d1f2df-c57f-4330-b164-6747ecbf6c79&batch_time=1778131541898&_dd.api=fetch",
     "data": {
-      "request_id": "62a20987-79f8-4218-ae32-008c389284b8"
+      "request_id": "f7d1f2df-c57f-4330-b164-6747ecbf6c79"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=33a277d8-b5d6-4dad-8773-fa6255b790bb&batch_time=1778131614583&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0e86e2ed-132c-448d-a06a-69055faf18cb&batch_time=1778131541893&_dd.api=fetch",
     "data": {
-      "request_id": "33a277d8-b5d6-4dad-8773-fa6255b790bb"
+      "request_id": "0e86e2ed-132c-448d-a06a-69055faf18cb"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9c6be044-6569-43de-8cac-675e46b9c3b1&batch_time=1778131616741&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d6697578-7caf-4655-bd63-177720d98c2d&batch_time=1778131541943&_dd.api=fetch",
     "data": {
-      "request_id": "9c6be044-6569-43de-8cac-675e46b9c3b1"
+      "request_id": "d6697578-7caf-4655-bd63-177720d98c2d"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5cabecda-9592-40e3-9d02-1f13b1b889e7&batch_time=1778131541929&_dd.api=fetch",
+    "data": {
+      "request_id": "5cabecda-9592-40e3-9d02-1f13b1b889e7"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0c0d50f2-f871-4427-92cf-e2e2a312f9d8&batch_time=1778131542212&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "0c0d50f2-f871-4427-92cf-e2e2a312f9d8"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8a1d4bd9-8ac5-438b-94a5-cc97511ebb71&batch_time=1778131542950&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "8a1d4bd9-8ac5-438b-94a5-cc97511ebb71"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=62eab5b2-2bc8-4565-8778-f6c1f9245bac&batch_time=1778131544337&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "62eab5b2-2bc8-4565-8778-f6c1f9245bac"
     }
   },
   {
@@ -1137,20 +1137,20 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8d306357-3dcd-4d0f-8252-81a082104683&batch_time=1778131618632&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3cfdc44a-c72d-439b-b9cd-3c1d27f36b35&batch_time=1778131546556&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "8d306357-3dcd-4d0f-8252-81a082104683"
+      "request_id": "3cfdc44a-c72d-439b-b9cd-3c1d27f36b35"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2f17a2bb-3d45-4c83-9720-ab6e2679b9f8&batch_time=1778131549354&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "2f17a2bb-3d45-4c83-9720-ab6e2679b9f8"
     }
   },
   {
     "url": "https://sdk.iad-01.braze.com/api/v3/data/",
     "data": {}
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=04057337-2553-4c56-9bae-eddda1a0fff1&batch_time=1778131621385&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "04057337-2553-4c56-9bae-eddda1a0fff1"
-    }
   },
   {
     "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
@@ -1618,9 +1618,9 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6084d8bd-dc78-40b7-afe5-94edf71fcf83&batch_time=1778131622098&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e685438f-7edb-4fb8-abbf-0b83a596e0fb&batch_time=1778131551856&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "6084d8bd-dc78-40b7-afe5-94edf71fcf83"
+      "request_id": "e685438f-7edb-4fb8-abbf-0b83a596e0fb"
     }
   },
   {
@@ -7698,27 +7698,21 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=eee08e0b-f205-4973-92a3-dad7c7950b78&batch_time=1778131622300&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=159ccff9-707a-4156-879b-1bbd55d0c871&batch_time=1778131551995&_dd.api=fetch",
     "data": {
-      "request_id": "eee08e0b-f205-4973-92a3-dad7c7950b78"
+      "request_id": "159ccff9-707a-4156-879b-1bbd55d0c871"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=38de9c92-4619-4b6e-a87c-9085776fda0e&batch_time=1778131622490&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9569e61b-0195-46f2-ba84-fabe9ee3eea8&batch_time=1778131552347&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "38de9c92-4619-4b6e-a87c-9085776fda0e"
+      "request_id": "9569e61b-0195-46f2-ba84-fabe9ee3eea8"
     }
   },
   {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d22aaadf-c547-4724-86d2-937ecee88539&batch_time=1778131553159&_dd.api=fetch-keepalive",
     "data": {
-      "success": true
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=751d1cfe-0ea4-4da0-9adf-c083d680cdfa&batch_time=1778131624840&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "751d1cfe-0ea4-4da0-9adf-c083d680cdfa"
+      "request_id": "d22aaadf-c547-4724-86d2-937ecee88539"
     }
   },
   {
@@ -7728,10 +7722,9 @@
     }
   },
   {
-    "url": "https://pick6.draftkings.com/resources/user-settings",
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
-      "gameplaySettingMetadata": [],
-      "userGameplaySettings": []
+      "success": true
     }
   },
   {
@@ -7752,6 +7745,13 @@
     }
   },
   {
+    "url": "https://pick6.draftkings.com/resources/user-settings",
+    "data": {
+      "gameplaySettingMetadata": [],
+      "userGameplaySettings": []
+    }
+  },
+  {
     "url": "https://api.draftkings.com/sites/US-PSX/en/geolocations/v3/licenses?platform=Web",
     "data": {
       "activeGeoMethods": [
@@ -7769,7 +7769,7 @@
         {
           "name": "RadarNDBS",
           "key": "prj_live_pk_0a8abd34ed55b1e6def099ba69c65efe46523bcb",
-          "expires": "2026-05-14T05:26:50.4844868Z",
+          "expires": "2026-05-14T05:25:40.9614626Z",
           "priority": 1,
           "cookieName": "gch",
           "externalRequestTimeoutSeconds": 300,
@@ -7785,7 +7785,7 @@
   {
     "url": "https://api.draftkings.com/api/promotions/v1/promotions/query?format=json",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:50.5895450Z",
+      "lastUpdatedTime": "2026-05-07T05:25:41.2743099Z",
       "zones": [
         {
           "zoneName": "PickSixInlineHome",
@@ -7803,95 +7803,11 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c867e7d4-a194-4081-9a31-e23b66bc3e9e&batch_time=1778131610527&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "c867e7d4-a194-4081-9a31-e23b66bc3e9e"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ce2c229-5025-45a3-b743-ee79908a9eab&batch_time=1778131610523&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "3ce2c229-5025-45a3-b743-ee79908a9eab"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c6de0937-5b00-4377-aa53-0df34b8f3f00&batch_time=1778131610525&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "c6de0937-5b00-4377-aa53-0df34b8f3f00"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=392531ca-b443-4481-a320-bb6b1d288727&batch_time=1778131610537&_dd.api=fetch",
-    "data": {
-      "request_id": "392531ca-b443-4481-a320-bb6b1d288727"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0f0332ed-36cc-49c8-bbef-b7e9f7a6ea3f&batch_time=1778131610529&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "0f0332ed-36cc-49c8-bbef-b7e9f7a6ea3f"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=db47146c-ff7e-4f5c-851f-8b1f4abef53f&batch_time=1778131610990&_dd.api=fetch",
-    "data": {
-      "request_id": "db47146c-ff7e-4f5c-851f-8b1f4abef53f"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b158c4fe-897a-4e89-aa65-9211c109e01b&batch_time=1778131610989&_dd.api=fetch",
-    "data": {
-      "request_id": "b158c4fe-897a-4e89-aa65-9211c109e01b"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cb46f40c-2fd2-49c9-8ff8-1d4dfbbaf46b&batch_time=1778131610990&_dd.api=fetch",
-    "data": {
-      "request_id": "cb46f40c-2fd2-49c9-8ff8-1d4dfbbaf46b"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=66e4a54f-ce17-4dea-a6d4-29f2c8c57f26&batch_time=1778131611045&_dd.api=fetch",
-    "data": {
-      "request_id": "66e4a54f-ce17-4dea-a6d4-29f2c8c57f26"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2809478f-6c98-449d-8c99-2579de028df7&batch_time=1778131611045&_dd.api=fetch",
-    "data": {
-      "request_id": "2809478f-6c98-449d-8c99-2579de028df7"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c413b6d1-4805-4311-809b-fd3db1a0cef4&batch_time=1778131611128&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "c413b6d1-4805-4311-809b-fd3db1a0cef4"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d89b97ac-43aa-45dc-8389-4c61e3bfec24&batch_time=1778131611139&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "d89b97ac-43aa-45dc-8389-4c61e3bfec24"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c19e7acc-6da2-49f2-bfaa-d8445331c797&batch_time=1778131611129&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "c19e7acc-6da2-49f2-bfaa-d8445331c797"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=caf51ee7-a77e-4eb5-9863-404812849d54&batch_time=1778131611149&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "caf51ee7-a77e-4eb5-9863-404812849d54"
-    }
-  },
-  {
     "url": "https://app.launchdarkly.com/sdk/goals/6582bc9bcbe58f1057272b7e",
     "data": []
   },
   {
-    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDg5MjYzMiIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
+    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDg4NzMzOSIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
     "data": {
       "EXP-REX-EnableRewardCenterRedesign": {
         "flagVersion": 19,
@@ -8042,13 +7958,43 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=06fd81e9-d1b2-461f-8a42-bcc705d8796b&batch_time=1778131611202&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ca2f24c6-3bc4-47ea-ac57-4aa613ff2a78&batch_time=1778131541420&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "06fd81e9-d1b2-461f-8a42-bcc705d8796b"
+      "request_id": "ca2f24c6-3bc4-47ea-ac57-4aa613ff2a78"
     }
   },
   {
-    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820892632&current_device_time=1778131611&event_id=325251ee-8122-4f56-848b-635d2d1da87c&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=f0582547-890e-420d-ae49-ad74ae4c2293&sdid=767a66b9-d067-4ee0-b778-266fc649da98&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131611&u=767a66b9-d067-4ee0-b778-266fc649da98&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=165fd22d-16f5-431d-a270-23cc8838b43c&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=767a66b9-d067-4ee0-b778-266fc649da98&os=Windows&lag=0&h=6f75412f68ec1457faeb33daa80ac862fa272d18",
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "data": {
+      "success": true
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=eb30632b-8fe8-4fe4-a28e-7e56d4aaab5c&batch_time=1778131541504&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "eb30632b-8fe8-4fe4-a28e-7e56d4aaab5c"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5fcdea0e-08e5-4953-bb7c-412b92f053ef&batch_time=1778131541506&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "5fcdea0e-08e5-4953-bb7c-412b92f053ef"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=010f953a-8ad4-4b97-b765-c71277b9fdf8&batch_time=1778131541542&_dd.api=fetch",
+    "data": {
+      "request_id": "010f953a-8ad4-4b97-b765-c71277b9fdf8"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6be1af8b-410b-4b51-add7-59ce456c1c6e&batch_time=1778131541508&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "6be1af8b-410b-4b51-add7-59ce456c1c6e"
+    }
+  },
+  {
+    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820887339&current_device_time=1778131542&event_id=b3fadd6a-791a-4803-883a-cca424d87d6a&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=595817d0-bebf-4da7-aacf-95215fdb6957&sdid=a6b8f357-2ca3-4b51-bfd9-78621926f782&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131542&u=a6b8f357-2ca3-4b51-bfd9-78621926f782&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=ba779e08-b9d5-4ed8-99bd-7b47bcf97e54&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=a6b8f357-2ca3-4b51-bfd9-78621926f782&os=Windows&lag=0&h=33ed3b1445828afecf8232875322757d8bac16f3",
     "data": {
       "status": "ok"
     }
@@ -8363,87 +8309,69 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8f528b4c-49f4-46f6-8724-53e27bd09ffd&batch_time=1778131611267&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2315d7f3-265a-475f-81ca-fc8248aa18e9&batch_time=1778131541896&_dd.api=fetch",
     "data": {
-      "request_id": "8f528b4c-49f4-46f6-8724-53e27bd09ffd"
+      "request_id": "2315d7f3-265a-475f-81ca-fc8248aa18e9"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1d3d3769-bf98-4224-9323-495cf22858b5&batch_time=1778131611269&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=50f4fc73-572b-4d2e-a1b6-c362034f2439&batch_time=1778131541956&_dd.api=fetch",
     "data": {
-      "request_id": "1d3d3769-bf98-4224-9323-495cf22858b5"
+      "request_id": "50f4fc73-572b-4d2e-a1b6-c362034f2439"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e4b1f251-b57c-4cc1-9637-555f0054bdb8&batch_time=1778131611265&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ce0787a-1d13-4f41-a1ee-27301711e80d&batch_time=1778131541958&_dd.api=fetch",
     "data": {
-      "request_id": "e4b1f251-b57c-4cc1-9637-555f0054bdb8"
+      "request_id": "3ce0787a-1d13-4f41-a1ee-27301711e80d"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=453cab03-955a-416c-8c79-66a34b31d82b&batch_time=1778131611297&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0bff78ae-b94a-4e3b-838e-7462c0218438&batch_time=1778131542041&_dd.api=fetch",
     "data": {
-      "request_id": "453cab03-955a-416c-8c79-66a34b31d82b"
+      "request_id": "0bff78ae-b94a-4e3b-838e-7462c0218438"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1b81d801-71e4-404b-adc0-d67f033c013a&batch_time=1778131611280&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4e5286c0-507b-41d7-9501-f8fadc52815b&batch_time=1778131542040&_dd.api=fetch",
     "data": {
-      "request_id": "1b81d801-71e4-404b-adc0-d67f033c013a"
+      "request_id": "4e5286c0-507b-41d7-9501-f8fadc52815b"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6fbe9ac3-9cc0-48bd-9f98-c3a0109a81d3&batch_time=1778131611370&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d82a286d-7695-4d3f-bd81-f0b6b3534b27&batch_time=1778131542057&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "6fbe9ac3-9cc0-48bd-9f98-c3a0109a81d3"
+      "request_id": "d82a286d-7695-4d3f-bd81-f0b6b3534b27"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b3015147-73d8-49a9-882e-45827fdf069d&batch_time=1778131611366&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c2c09a43-408e-4265-9490-3c701aa57cbc&batch_time=1778131542079&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "b3015147-73d8-49a9-882e-45827fdf069d"
+      "request_id": "c2c09a43-408e-4265-9490-3c701aa57cbc"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=79686948-5040-49ad-9526-7da0559831cf&batch_time=1778131611418&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0337a5c1-3adb-4df1-bdd2-f083f44e4f53&batch_time=1778131542072&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "79686948-5040-49ad-9526-7da0559831cf"
+      "request_id": "0337a5c1-3adb-4df1-bdd2-f083f44e4f53"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fe15853e-5f62-4401-96e2-5f2a8d8e4996&batch_time=1778131611457&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=57bc79f2-43a4-4148-b784-51f3ac30e45e&batch_time=1778131542199&_dd.api=fetch",
     "data": {
-      "request_id": "fe15853e-5f62-4401-96e2-5f2a8d8e4996"
+      "request_id": "57bc79f2-43a4-4148-b784-51f3ac30e45e"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d17ed6c9-d00a-4912-bb36-828afc711ae9&batch_time=1778131611418&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=533f2e50-d07f-49d6-991b-f9437fd7bff4&batch_time=1778131542187&_dd.api=fetch",
     "data": {
-      "request_id": "d17ed6c9-d00a-4912-bb36-828afc711ae9"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=732aaf1e-14be-46ba-8575-74ddd9519347&batch_time=1778131611484&_dd.api=fetch",
-    "data": {
-      "request_id": "732aaf1e-14be-46ba-8575-74ddd9519347"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=769e4380-87c9-4083-a9c0-c769cbec6d39&batch_time=1778131611479&_dd.api=fetch",
-    "data": {
-      "request_id": "769e4380-87c9-4083-a9c0-c769cbec6d39"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d02e9ebb-9c1a-470b-af0b-ebd9298a5bb4&batch_time=1778131611510&_dd.api=fetch",
-    "data": {
-      "request_id": "d02e9ebb-9c1a-470b-af0b-ebd9298a5bb4"
+      "request_id": "533f2e50-d07f-49d6-991b-f9437fd7bff4"
     }
   },
   {
     "url": "https://api.draftkings.com/en/api/promotions/v2/promotions/query",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:51.9806319Z",
+      "lastUpdatedTime": "2026-05-07T05:25:42.5107600Z",
       "zones": [
         {
           "zoneName": "WebCarousel",
@@ -8823,33 +8751,117 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c9d8af20-d8a6-450a-8242-991c148c938e&batch_time=1778131611737&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=eb915e4c-534c-408c-81ce-dec610713b11&batch_time=1778131542185&_dd.api=fetch",
     "data": {
-      "request_id": "c9d8af20-d8a6-450a-8242-991c148c938e"
+      "request_id": "eb915e4c-534c-408c-81ce-dec610713b11"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=881c243f-8cd0-455c-82a4-50ad5bb1e33e&batch_time=1778131611989&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=145c9170-741f-4445-892a-2f9c0066cf38&batch_time=1778131542183&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "881c243f-8cd0-455c-82a4-50ad5bb1e33e"
+      "request_id": "145c9170-741f-4445-892a-2f9c0066cf38"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=252b9ec9-110a-4486-ad43-dd4f2bd4b17a&batch_time=1778131612257&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f5adc6fa-0e0c-4111-a381-7f1c45c579f9&batch_time=1778131542185&_dd.api=fetch",
     "data": {
-      "request_id": "252b9ec9-110a-4486-ad43-dd4f2bd4b17a"
+      "request_id": "f5adc6fa-0e0c-4111-a381-7f1c45c579f9"
     }
   },
   {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0265a38e-9093-4847-a94e-a8b61e1f60ba&batch_time=1778131542289&_dd.api=fetch-keepalive",
     "data": {
-      "success": true
+      "request_id": "0265a38e-9093-4847-a94e-a8b61e1f60ba"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=aaed1117-d387-4d02-8cc1-7a54a0621920&batch_time=1778131614531&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=68eec919-b586-4539-845a-367fe2ac5565&batch_time=1778131542286&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "aaed1117-d387-4d02-8cc1-7a54a0621920"
+      "request_id": "68eec919-b586-4539-845a-367fe2ac5565"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ae72c0ae-2aac-4e38-a12d-25870d291437&batch_time=1778131542301&_dd.api=fetch",
+    "data": {
+      "request_id": "ae72c0ae-2aac-4e38-a12d-25870d291437"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b292786c-4738-4de7-92bb-0aff65f049ae&batch_time=1778131542287&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "b292786c-4738-4de7-92bb-0aff65f049ae"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=786289bf-fae3-4b5b-8fef-0205c6cb92f8&batch_time=1778131542309&_dd.api=fetch",
+    "data": {
+      "request_id": "786289bf-fae3-4b5b-8fef-0205c6cb92f8"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6ac7aa62-2d4c-4e54-92cb-033a9df853c7&batch_time=1778131542392&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "6ac7aa62-2d4c-4e54-92cb-033a9df853c7"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=94d62697-57e0-4452-898d-2f83b5ee7ad9&batch_time=1778131542401&_dd.api=fetch",
+    "data": {
+      "request_id": "94d62697-57e0-4452-898d-2f83b5ee7ad9"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=41f3aab0-2b98-4bbe-b627-1f7294a8a086&batch_time=1778131542400&_dd.api=fetch",
+    "data": {
+      "request_id": "41f3aab0-2b98-4bbe-b627-1f7294a8a086"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=daa88ea1-0488-45e4-8e31-0eda18a2d7c9&batch_time=1778131542402&_dd.api=fetch",
+    "data": {
+      "request_id": "daa88ea1-0488-45e4-8e31-0eda18a2d7c9"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cb202663-6b03-46be-8fb8-769d933b78e1&batch_time=1778131542433&_dd.api=fetch",
+    "data": {
+      "request_id": "cb202663-6b03-46be-8fb8-769d933b78e1"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5917eb08-fb13-4a84-97e5-7af5bb9463fc&batch_time=1778131542485&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "5917eb08-fb13-4a84-97e5-7af5bb9463fc"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=897044f6-9b40-4740-a717-c5ea8564837e&batch_time=1778131542480&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "897044f6-9b40-4740-a717-c5ea8564837e"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3b2f490e-8a6e-4f49-867e-60c607ed5708&batch_time=1778131542487&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "3b2f490e-8a6e-4f49-867e-60c607ed5708"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=db5dc53d-5266-4ebd-8fad-ead7d8f77c1a&batch_time=1778131542907&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "db5dc53d-5266-4ebd-8fad-ead7d8f77c1a"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=15ba35ca-715d-4671-ba79-21c0b76a28d5&batch_time=1778131544838&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "15ba35ca-715d-4671-ba79-21c0b76a28d5"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a3c12bd0-4021-4073-95c6-1b6f06019468&batch_time=1778131546721&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "a3c12bd0-4021-4073-95c6-1b6f06019468"
     }
   },
   {
@@ -9318,9 +9330,9 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a28ce2d8-d8b6-40bc-b40f-5d042edd72c8&batch_time=1778131616761&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1c7e9463-6e55-4159-bef2-be590853ad4e&batch_time=1778131547129&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "a28ce2d8-d8b6-40bc-b40f-5d042edd72c8"
+      "request_id": "1c7e9463-6e55-4159-bef2-be590853ad4e"
     }
   },
   {
@@ -13407,15 +13419,21 @@
     ]
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a8b8934f-5a7e-4c13-9e78-87d53e98e6f9&batch_time=1778131616863&_dd.api=fetch-keepalive",
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
-      "request_id": "a8b8934f-5a7e-4c13-9e78-87d53e98e6f9"
+      "success": true
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=842df9c9-0c59-4d79-b69d-cde58a4cfd55&batch_time=1778131616905&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8621e655-361d-4438-8049-2c8874f722b7&batch_time=1778131547415&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "842df9c9-0c59-4d79-b69d-cde58a4cfd55"
+      "request_id": "8621e655-361d-4438-8049-2c8874f722b7"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=24a681c8-5b15-484f-a363-653f1b98392e&batch_time=1778131547579&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "24a681c8-5b15-484f-a363-653f1b98392e"
     }
   },
   {
@@ -13425,32 +13443,14 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f13375ac-ecff-4bb6-ae0d-582c2a2152fc&batch_time=1778131617134&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1b73c455-a9dc-4360-83bd-cf21bc94bc58&batch_time=1778131549887&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "f13375ac-ecff-4bb6-ae0d-582c2a2152fc"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e099f5d4-f6c2-4c96-8475-a1df12ed9a27&batch_time=1778131618013&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "e099f5d4-f6c2-4c96-8475-a1df12ed9a27"
-    }
-  },
-  {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
-    "data": {
-      "success": true
+      "request_id": "1b73c455-a9dc-4360-83bd-cf21bc94bc58"
     }
   },
   {
     "url": "https://sdk.iad-01.braze.com/api/v3/data/",
     "data": {}
-  },
-  {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
-    "data": {
-      "success": true
-    }
   },
   {
     "url": "https://pick6.draftkings.com/__manifest?paths=%2Fcategory%2F17&version=c03e28dc",
@@ -13912,9 +13912,21 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ad6d4e85-4532-4d38-bede-14cb409ead81&batch_time=1778131622016&_dd.api=fetch-keepalive",
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
-      "request_id": "ad6d4e85-4532-4d38-bede-14cb409ead81"
+      "success": true
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ba357971-2f2f-44a4-90de-f615eec1dd10&batch_time=1778131552394&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "ba357971-2f2f-44a4-90de-f615eec1dd10"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4c8c27c6-5a27-4025-9ebb-15e8b0ef248b&batch_time=1778131552566&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "4c8c27c6-5a27-4025-9ebb-15e8b0ef248b"
     }
   },
   {
@@ -23165,27 +23177,21 @@
     ]
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f71c7556-6c60-46c4-9e20-7bcf22dd7e18&batch_time=1778131622114&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "f71c7556-6c60-46c4-9e20-7bcf22dd7e18"
-    }
-  },
-  {
     "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
       "success": true
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=12c48c1c-70c3-411e-8e1a-e50ddaf5c1b5&batch_time=1778131622483&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a4810339-70c6-4eb7-8c02-02e4b34f7c1e&batch_time=1778131552950&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "12c48c1c-70c3-411e-8e1a-e50ddaf5c1b5"
+      "request_id": "a4810339-70c6-4eb7-8c02-02e4b34f7c1e"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d49d075f-51d3-4f57-b34f-3f56378218b4&batch_time=1778131623325&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9df8aa85-3794-439e-9841-f3f7048d5dd1&batch_time=1778131553792&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "d49d075f-51d3-4f57-b34f-3f56378218b4"
+      "request_id": "9df8aa85-3794-439e-9841-f3f7048d5dd1"
     }
   },
   {
@@ -23198,13 +23204,6 @@
     "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
       "success": true
-    }
-  },
-  {
-    "url": "https://pick6.draftkings.com/resources/user-settings",
-    "data": {
-      "gameplaySettingMetadata": [],
-      "userGameplaySettings": []
     }
   },
   {
@@ -23222,6 +23221,13 @@
           "displayMetadata": {}
         }
       ]
+    }
+  },
+  {
+    "url": "https://pick6.draftkings.com/resources/user-settings",
+    "data": {
+      "gameplaySettingMetadata": [],
+      "userGameplaySettings": []
     }
   },
   {
@@ -23246,7 +23252,7 @@
   {
     "url": "https://api.draftkings.com/api/promotions/v1/promotions/query?format=json",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:51.4083265Z",
+      "lastUpdatedTime": "2026-05-07T05:25:40.6564890Z",
       "zones": [
         {
           "zoneName": "PickSixInlineHome",
@@ -23268,7 +23274,7 @@
     "data": []
   },
   {
-    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDg3Nzk5OSIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
+    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDkwMTY4OSIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
     "data": {
       "EXP-REX-EnableRewardCenterRedesign": {
         "flagVersion": 19,
@@ -23425,39 +23431,27 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e0e759a9-a79e-4fd0-b542-f42a6cfdc608&batch_time=1778131611639&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f8774185-29a5-413f-b8f0-a97fb36d4331&batch_time=1778131540963&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "e0e759a9-a79e-4fd0-b542-f42a6cfdc608"
+      "request_id": "f8774185-29a5-413f-b8f0-a97fb36d4331"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=685014c9-a991-44cb-873a-3aeb98a100e9&batch_time=1778131611727&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=71f959d5-a2f9-4705-9a6d-6a0db9661f29&batch_time=1778131540969&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "685014c9-a991-44cb-873a-3aeb98a100e9"
+      "request_id": "71f959d5-a2f9-4705-9a6d-6a0db9661f29"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ef2d0dc-6c39-4e2a-aa7a-2d5cd48d54ab&batch_time=1778131611766&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=882c3de2-02d0-4ac7-b6b0-aef0671a61f8&batch_time=1778131540968&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "3ef2d0dc-6c39-4e2a-aa7a-2d5cd48d54ab"
+      "request_id": "882c3de2-02d0-4ac7-b6b0-aef0671a61f8"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c3762a6f-2086-4f57-ae80-afd911f1840b&batch_time=1778131611786&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=65900455-38fb-445b-b7f5-3967f287f5cb&batch_time=1778131540966&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "c3762a6f-2086-4f57-ae80-afd911f1840b"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8997dc41-5028-41d8-9211-8d87f69e7ffa&batch_time=1778131611764&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "8997dc41-5028-41d8-9211-8d87f69e7ffa"
-    }
-  },
-  {
-    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820877999&current_device_time=1778131612&event_id=80e8f1bc-06ea-4ce0-9e99-1abd1cdd38b0&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=5ce2b0a4-86e2-40c2-8084-3d3f774a2b6a&sdid=76a7e462-c01a-475a-9274-ede06efb9955&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131612&u=76a7e462-c01a-475a-9274-ede06efb9955&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=4ed6bb29-ec7f-4d97-b559-efe03cad23b8&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=76a7e462-c01a-475a-9274-ede06efb9955&os=Windows&lag=0&h=5bc5207f67674315bfeeb3d60b52d8aab3c7480a",
-    "data": {
-      "status": "ok"
+      "request_id": "65900455-38fb-445b-b7f5-3967f287f5cb"
     }
   },
   {
@@ -23770,129 +23764,111 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c116cb43-d120-4b05-adb5-bda1ad7dff8b&batch_time=1778131612122&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e0c4ee40-6524-4f26-bc2c-dfeb63904f5f&batch_time=1778131541022&_dd.api=fetch",
     "data": {
-      "request_id": "c116cb43-d120-4b05-adb5-bda1ad7dff8b"
+      "request_id": "e0c4ee40-6524-4f26-bc2c-dfeb63904f5f"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fe2b9212-1906-4970-a055-24115315f703&batch_time=1778131612184&_dd.api=fetch",
+    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820901689&current_device_time=1778131542&event_id=2eb3984b-7aff-49f6-bcc5-ec90be250a22&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=e149e3a4-95bc-4abe-8bfa-29e25ad0081b&sdid=9e812a04-9a34-4c30-8175-30aec7f69f44&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131542&u=9e812a04-9a34-4c30-8175-30aec7f69f44&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=8fbb140f-1427-40d6-be24-949a41925391&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=9e812a04-9a34-4c30-8175-30aec7f69f44&os=Windows&lag=0&h=4b020c4203c8d0c1b16b828e1cb624f4366edfa7",
     "data": {
-      "request_id": "fe2b9212-1906-4970-a055-24115315f703"
+      "status": "ok"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=02f47461-58a9-4436-b7a0-ce6515e408ff&batch_time=1778131612184&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5ba54c78-c197-4678-b834-115963278565&batch_time=1778131541559&_dd.api=fetch",
     "data": {
-      "request_id": "02f47461-58a9-4436-b7a0-ce6515e408ff"
+      "request_id": "5ba54c78-c197-4678-b834-115963278565"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=12450eec-d246-4daf-9242-99d118d6b8f1&batch_time=1778131612214&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=bf6555bf-befd-415a-a2ba-5c1bca13bfb4&batch_time=1778131541558&_dd.api=fetch",
     "data": {
-      "request_id": "12450eec-d246-4daf-9242-99d118d6b8f1"
+      "request_id": "bf6555bf-befd-415a-a2ba-5c1bca13bfb4"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=06fcba50-c109-42d0-a8c1-d2d4d6ebc49b&batch_time=1778131612183&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=90682d41-f11b-4158-bef7-84799f925e01&batch_time=1778131541559&_dd.api=fetch",
     "data": {
-      "request_id": "06fcba50-c109-42d0-a8c1-d2d4d6ebc49b"
+      "request_id": "90682d41-f11b-4158-bef7-84799f925e01"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0bcd43ec-767e-4ebc-b95c-fea1aea51fb1&batch_time=1778131612184&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6c91e8f5-e6dc-4265-a36d-969e660de670&batch_time=1778131541557&_dd.api=fetch",
     "data": {
-      "request_id": "0bcd43ec-767e-4ebc-b95c-fea1aea51fb1"
+      "request_id": "6c91e8f5-e6dc-4265-a36d-969e660de670"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=15a7eb2d-2861-49c9-bc6f-7ae0de3180b7&batch_time=1778131612278&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=99908dae-29ae-4015-a72a-9bea7e1c5327&batch_time=1778131541566&_dd.api=fetch",
     "data": {
-      "request_id": "15a7eb2d-2861-49c9-bc6f-7ae0de3180b7"
+      "request_id": "99908dae-29ae-4015-a72a-9bea7e1c5327"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9fbb6ef0-4c77-41dc-8f3d-16abe782d65f&batch_time=1778131612282&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0a97c7ed-4d14-4571-8518-34a07f61cc29&batch_time=1778131541688&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "9fbb6ef0-4c77-41dc-8f3d-16abe782d65f"
+      "request_id": "0a97c7ed-4d14-4571-8518-34a07f61cc29"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9799f841-d4ca-4ae3-98d3-83f7f2dc7c14&batch_time=1778131612324&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=41334b84-2c19-4f9c-82c8-be1dac68bc35&batch_time=1778131541688&_dd.api=fetch",
     "data": {
-      "request_id": "9799f841-d4ca-4ae3-98d3-83f7f2dc7c14"
+      "request_id": "41334b84-2c19-4f9c-82c8-be1dac68bc35"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=54c10d41-2012-4e11-b13f-082839081dc8&batch_time=1778131612361&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9125a9ee-7314-4b1c-8ce5-0af886895eb4&batch_time=1778131541693&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "54c10d41-2012-4e11-b13f-082839081dc8"
+      "request_id": "9125a9ee-7314-4b1c-8ce5-0af886895eb4"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=668fec62-b38d-4c0a-b4f1-7dec06acc064&batch_time=1778131612363&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5d6af660-6d57-48e2-80bd-eece10971c21&batch_time=1778131541687&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "668fec62-b38d-4c0a-b4f1-7dec06acc064"
+      "request_id": "5d6af660-6d57-48e2-80bd-eece10971c21"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=87cb8049-d334-4f9b-9a4a-e2697c98cb73&batch_time=1778131612360&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ced64ead-2993-41d6-ae7c-43d98363d33c&batch_time=1778131541697&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "87cb8049-d334-4f9b-9a4a-e2697c98cb73"
+      "request_id": "ced64ead-2993-41d6-ae7c-43d98363d33c"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c67bfb4f-a8ca-48a4-9aa6-90a945cda896&batch_time=1778131612388&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f637d1cb-ac4e-4c47-bb01-e7aa81e4a8f2&batch_time=1778131541777&_dd.api=fetch",
     "data": {
-      "request_id": "c67bfb4f-a8ca-48a4-9aa6-90a945cda896"
+      "request_id": "f637d1cb-ac4e-4c47-bb01-e7aa81e4a8f2"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2947f14d-82b7-4227-b078-fa29df7c3c32&batch_time=1778131612451&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0836e90b-e6f7-4417-aa7b-31a8dc50926b&batch_time=1778131541785&_dd.api=fetch",
     "data": {
-      "request_id": "2947f14d-82b7-4227-b078-fa29df7c3c32"
+      "request_id": "0836e90b-e6f7-4417-aa7b-31a8dc50926b"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a532421a-8142-467a-aa2a-4f1dfe6e347c&batch_time=1778131612419&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=36fd5af2-2d69-4e95-91bc-83ae10201a2f&batch_time=1778131541810&_dd.api=fetch",
     "data": {
-      "request_id": "a532421a-8142-467a-aa2a-4f1dfe6e347c"
+      "request_id": "36fd5af2-2d69-4e95-91bc-83ae10201a2f"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e31cdf3e-0cab-4413-a84a-daedb3b40441&batch_time=1778131612468&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7b88f646-982e-47f7-892d-a8cbc64fe7b3&batch_time=1778131541802&_dd.api=fetch",
     "data": {
-      "request_id": "e31cdf3e-0cab-4413-a84a-daedb3b40441"
+      "request_id": "7b88f646-982e-47f7-892d-a8cbc64fe7b3"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=bdd1260c-2fe3-4f3c-9b37-fbd661b08e37&batch_time=1778131612479&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7c420bc0-aed5-4d4f-a164-784a9c3df0e3&batch_time=1778131541822&_dd.api=fetch",
     "data": {
-      "request_id": "bdd1260c-2fe3-4f3c-9b37-fbd661b08e37"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1b0ea06b-c30a-4a69-8caa-7d54a17e35c2&batch_time=1778131612510&_dd.api=fetch",
-    "data": {
-      "request_id": "1b0ea06b-c30a-4a69-8caa-7d54a17e35c2"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6f1f69b4-2e84-4dc2-bdb0-fcbf6826d49e&batch_time=1778131612548&_dd.api=fetch",
-    "data": {
-      "request_id": "6f1f69b4-2e84-4dc2-bdb0-fcbf6826d49e"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8a030d15-2f8d-47cb-800d-18ad88aee7ba&batch_time=1778131612541&_dd.api=fetch",
-    "data": {
-      "request_id": "8a030d15-2f8d-47cb-800d-18ad88aee7ba"
+      "request_id": "7c420bc0-aed5-4d4f-a164-784a9c3df0e3"
     }
   },
   {
     "url": "https://api.draftkings.com/en/api/promotions/v2/promotions/query",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:52.6449289Z",
+      "lastUpdatedTime": "2026-05-07T05:25:42.1050079Z",
       "zones": [
         {
           "zoneName": "WebCarousel",
@@ -24272,51 +24248,87 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=78081532-173c-4ea9-9b06-6fabc71849f9&batch_time=1778131612563&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=287f78f5-833d-4501-8502-64abeeec85da&batch_time=1778131541903&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "78081532-173c-4ea9-9b06-6fabc71849f9"
+      "request_id": "287f78f5-833d-4501-8502-64abeeec85da"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8ac39db4-97a2-413c-b4e6-33040b827871&batch_time=1778131612608&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=427a169b-24fb-49a7-93da-f909450729f9&batch_time=1778131541892&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "8ac39db4-97a2-413c-b4e6-33040b827871"
+      "request_id": "427a169b-24fb-49a7-93da-f909450729f9"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a50b0555-05a4-4ed4-bf81-25382bf2184e&batch_time=1778131612622&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6993245a-4229-4fd9-9cfe-1007cca92a65&batch_time=1778131541931&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "a50b0555-05a4-4ed4-bf81-25382bf2184e"
+      "request_id": "6993245a-4229-4fd9-9cfe-1007cca92a65"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=bdae0a4f-7163-410b-b82f-4d6322c065f2&batch_time=1778131612640&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=05eef5ee-e84c-489d-b81e-4c8531e59c77&batch_time=1778131541904&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "bdae0a4f-7163-410b-b82f-4d6322c065f2"
+      "request_id": "05eef5ee-e84c-489d-b81e-4c8531e59c77"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=08dbe2ec-531b-49a3-95a9-c2af984f0bce&batch_time=1778131612773&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8490c7d4-eccb-4392-bfac-98c4c5503e69&batch_time=1778131541950&_dd.api=fetch",
     "data": {
-      "request_id": "08dbe2ec-531b-49a3-95a9-c2af984f0bce"
+      "request_id": "8490c7d4-eccb-4392-bfac-98c4c5503e69"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d71a616a-8c76-41dd-b592-e9f665b44538&batch_time=1778131612991&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=39369e70-7c5f-473a-a5a2-d8ebf2c46c63&batch_time=1778131541996&_dd.api=fetch",
     "data": {
-      "request_id": "d71a616a-8c76-41dd-b592-e9f665b44538"
+      "request_id": "39369e70-7c5f-473a-a5a2-d8ebf2c46c63"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=30e82da9-f09d-4d49-b653-8b8acff9ba9c&batch_time=1778131613356&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0f61fbb1-ac9c-4791-aefb-10a1927c0a6b&batch_time=1778131542006&_dd.api=fetch",
     "data": {
-      "request_id": "30e82da9-f09d-4d49-b653-8b8acff9ba9c"
+      "request_id": "0f61fbb1-ac9c-4791-aefb-10a1927c0a6b"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fccae71d-0583-4711-b410-ab5f34b5bb1e&batch_time=1778131615432&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5ba56439-546f-4787-ae2e-40c267d5c14f&batch_time=1778131542023&_dd.api=fetch",
     "data": {
-      "request_id": "fccae71d-0583-4711-b410-ab5f34b5bb1e"
+      "request_id": "5ba56439-546f-4787-ae2e-40c267d5c14f"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=cf3d0506-d2e1-4c40-9d29-af0d90c37542&batch_time=1778131542072&_dd.api=fetch",
+    "data": {
+      "request_id": "cf3d0506-d2e1-4c40-9d29-af0d90c37542"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a243244c-0191-417a-9e76-754692ab5961&batch_time=1778131542109&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "a243244c-0191-417a-9e76-754692ab5961"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a81e0b2b-da99-4c53-83ca-7097bc8528d2&batch_time=1778131542324&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "a81e0b2b-da99-4c53-83ca-7097bc8528d2"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c6b3bed9-0406-4929-ad4d-bd682adfb432&batch_time=1778131542757&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "c6b3bed9-0406-4929-ad4d-bd682adfb432"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=715825b5-585c-4be3-a14c-34d08f15c9f7&batch_time=1778131544488&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "715825b5-585c-4be3-a14c-34d08f15c9f7"
+    }
+  },
+  {
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "data": {
+      "success": true
     }
   },
   {
@@ -24779,9 +24791,15 @@
     }
   },
   {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3f4c988e-72c9-4fdb-9c6d-681a03ef4390&batch_time=1778131546805&_dd.api=fetch-keepalive",
     "data": {
-      "success": true
+      "request_id": "3f4c988e-72c9-4fdb-9c6d-681a03ef4390"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5c93203c-6860-4242-af6d-2240832fd9fc&batch_time=1778131546866&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "5c93203c-6860-4242-af6d-2240832fd9fc"
     }
   },
   {
@@ -30227,9 +30245,21 @@
     ]
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7ac2578c-6b6a-4271-978e-8a3a261dd580&batch_time=1778131617728&_dd.api=fetch-keepalive",
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
-      "request_id": "7ac2578c-6b6a-4271-978e-8a3a261dd580"
+      "success": true
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2dad9e34-2742-4fb6-9329-91ac1040f08e&batch_time=1778131547081&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "2dad9e34-2742-4fb6-9329-91ac1040f08e"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f7104b8b-37fa-477b-a825-74fb9a9353d6&batch_time=1778131547274&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "f7104b8b-37fa-477b-a825-74fb9a9353d6"
     }
   },
   {
@@ -30239,32 +30269,20 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=777d4f4a-7aa9-4366-861f-375f01c3ad7e&batch_time=1778131617905&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8b7a32c8-cfd1-4ce8-b8e5-fbf448fcda6f&batch_time=1778131549520&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "777d4f4a-7aa9-4366-861f-375f01c3ad7e"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=73555f67-9bbe-4d29-aa34-3bdead1a6f2b&batch_time=1778131618089&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "73555f67-9bbe-4d29-aa34-3bdead1a6f2b"
-    }
-  },
-  {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
-    "data": {
-      "success": true
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=32a5b5dd-d999-4e03-861f-f45e9bf10b41&batch_time=1778131619202&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "32a5b5dd-d999-4e03-861f-f45e9bf10b41"
+      "request_id": "8b7a32c8-cfd1-4ce8-b8e5-fbf448fcda6f"
     }
   },
   {
     "url": "https://sdk.iad-01.braze.com/api/v3/data/",
     "data": {}
+  },
+  {
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "data": {
+      "success": true
+    }
   },
   {
     "url": "https://pick6.draftkings.com/__manifest?paths=%2Fcategory%2F18&version=c03e28dc",
@@ -30726,15 +30744,9 @@
     }
   },
   {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4ffd886e-fe0c-4112-b920-172327b8a257&batch_time=1778131552078&_dd.api=fetch-keepalive",
     "data": {
-      "success": true
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9d604465-36da-4828-9b0b-80b8cb98577d&batch_time=1778131622912&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "9d604465-36da-4828-9b0b-80b8cb98577d"
+      "request_id": "4ffd886e-fe0c-4112-b920-172327b8a257"
     }
   },
   {
@@ -37092,9 +37104,9 @@
     ]
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b4ff1257-8df3-48b7-adb4-1602d7ad1441&batch_time=1778131623014&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6ebd86b9-71c9-45f1-bc4d-9494f8be8409&batch_time=1778131552241&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "b4ff1257-8df3-48b7-adb4-1602d7ad1441"
+      "request_id": "6ebd86b9-71c9-45f1-bc4d-9494f8be8409"
     }
   },
   {
@@ -37104,15 +37116,15 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e3550b7a-11b1-4158-af58-e4ef95e4abbd&batch_time=1778131623323&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=addb7a87-6e2c-4290-abfd-fb0f231a0c9d&batch_time=1778131552541&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "e3550b7a-11b1-4158-af58-e4ef95e4abbd"
+      "request_id": "addb7a87-6e2c-4290-abfd-fb0f231a0c9d"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=29cdb6d2-e894-4f89-9fe0-4dc47eb225b7&batch_time=1778131624200&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5ba5425a-a57f-420f-a8f2-5bde9d3a6db3&batch_time=1778131553393&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "29cdb6d2-e894-4f89-9fe0-4dc47eb225b7"
+      "request_id": "5ba5425a-a57f-420f-a8f2-5bde9d3a6db3"
     }
   },
   {
@@ -37173,7 +37185,7 @@
   {
     "url": "https://api.draftkings.com/api/promotions/v1/promotions/query?format=json",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:50.9353293Z",
+      "lastUpdatedTime": "2026-05-07T05:25:40.6019292Z",
       "zones": [
         {
           "zoneName": "PickSixInlineHome",
@@ -37191,11 +37203,17 @@
     }
   },
   {
+    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "data": {
+      "success": true
+    }
+  },
+  {
     "url": "https://app.launchdarkly.com/sdk/goals/6582bc9bcbe58f1057272b7e",
     "data": []
   },
   {
-    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDg3Nzk5NSIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
+    "url": "https://app.launchdarkly.com/sdk/evalx/6582bc9bcbe58f1057272b7e/contexts/eyJraW5kIjoidXNlciIsImtleSI6IjExMTgyMDgzNjE4OCIsImFub255bW91cyI6ZmFsc2UsInNpdGVfZXhwZXJpZW5jZSI6IlVTLVBTWCJ9",
     "data": {
       "EXP-REX-EnableRewardCenterRedesign": {
         "flagVersion": 19,
@@ -37346,39 +37364,69 @@
     }
   },
   {
-    "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b556e7df-9cda-4e22-98b7-28ede7a8ac54&batch_time=1778131540946&_dd.api=fetch-keepalive",
     "data": {
-      "success": true
+      "request_id": "b556e7df-9cda-4e22-98b7-28ede7a8ac54"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fa781322-9c3a-4c79-b381-b5e8ada1e9f6&batch_time=1778131611233&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=63d876c5-d202-44f5-a3ee-44e74d6b81b9&batch_time=1778131541018&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "fa781322-9c3a-4c79-b381-b5e8ada1e9f6"
+      "request_id": "63d876c5-d202-44f5-a3ee-44e74d6b81b9"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e241d5ee-5fbe-42e0-ade5-efe0117949de&batch_time=1778131611230&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ed6d7ce-f100-4662-9893-bf4b81a66b7d&batch_time=1778131541023&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "e241d5ee-5fbe-42e0-ade5-efe0117949de"
+      "request_id": "3ed6d7ce-f100-4662-9893-bf4b81a66b7d"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1bb68e43-8068-4693-9502-aadba5e0c478&batch_time=1778131611285&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=24f2bcb3-8353-4f57-a8e1-210dad561fe1&batch_time=1778131541020&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "1bb68e43-8068-4693-9502-aadba5e0c478"
+      "request_id": "24f2bcb3-8353-4f57-a8e1-210dad561fe1"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4bfc0900-3458-4135-ab13-4d1e28dd73ce&batch_time=1778131611293&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=2f8a6068-2091-4eb7-be0b-46fea25eb4f9&batch_time=1778131541080&_dd.api=fetch",
     "data": {
-      "request_id": "4bfc0900-3458-4135-ab13-4d1e28dd73ce"
+      "request_id": "2f8a6068-2091-4eb7-be0b-46fea25eb4f9"
     }
   },
   {
-    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820877995&current_device_time=1778131612&event_id=215c220d-405d-46a4-b25f-5ecbee226900&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=9a7671fd-6d33-44e9-acdc-85926e4b16ab&sdid=ac404f5e-270b-49e5-bd10-2091b103c4cb&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131612&u=ac404f5e-270b-49e5-bd10-2091b103c4cb&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=31c91156-f208-490b-a336-a5d02e5ad1a3&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=ac404f5e-270b-49e5-bd10-2091b103c4cb&os=Windows&lag=0&h=5d18a42e023659da03ac7825dbe613d514b8ceab",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=44683e07-1cde-4b4a-b8ef-0e5929df7ef9&batch_time=1778131541501&_dd.api=fetch",
+    "data": {
+      "request_id": "44683e07-1cde-4b4a-b8ef-0e5929df7ef9"
+    }
+  },
+  {
+    "url": "https://sdk-api-v1.singular.net/api/v1/event?custom_user_id=111820836188&current_device_time=1778131541&event_id=56264a61-863e-42b4-93a6-97f6ed1ac72f&conversion_event=true&k=SDID&a=draftkings_5711bda2&p=Web&i=com.draftkings.picksix&screen_height=900&screen_width=1280&sdk=WebSDK-v1.4.10&singular_instance_id=f6800745-176a-4ed5-801a-8be9c707ae20&sdid=87125f85-6148-4980-90b0-f2910057eff3&storage_type=local&timezone=GMT-0700&touchpoint_timestamp=1778131541&u=87125f85-6148-4980-90b0-f2910057eff3&n=__PAGE_VISIT__&is_revenue_event=false&first=true&is_after_conversion_event=false&s=7b90a2e7-31b1-4abc-b280-d7099fa55bdd&web_page_url=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&web_page_referrer=https%3A%2F%2Fpick6.draftkings.com%2Fcategory%2F16%3Fsport%3DNBA%26pickGroup%3D147290&is_first_visit=true&is_page_refreshed=true&sdid_persist_mode=auto&is_first_page_visit_in_session=true&ecid=87125f85-6148-4980-90b0-f2910057eff3&os=Windows&lag=1&h=45bc49ecb6a4e77a122aa946edf4f66c88004ab1",
     "data": {
       "status": "ok"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=14030769-53f4-40f0-8d4b-8b4762dbf7c2&batch_time=1778131541668&_dd.api=fetch",
+    "data": {
+      "request_id": "14030769-53f4-40f0-8d4b-8b4762dbf7c2"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=de37566b-e4c9-4d18-8838-2d039e4c28d9&batch_time=1778131541669&_dd.api=fetch",
+    "data": {
+      "request_id": "de37566b-e4c9-4d18-8838-2d039e4c28d9"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5ed58a10-4d49-41db-a6e9-2f937d8879e9&batch_time=1778131541671&_dd.api=fetch",
+    "data": {
+      "request_id": "5ed58a10-4d49-41db-a6e9-2f937d8879e9"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e8d67e0c-aa9d-4a3c-b353-7843ccdc3dd0&batch_time=1778131541665&_dd.api=fetch",
+    "data": {
+      "request_id": "e8d67e0c-aa9d-4a3c-b353-7843ccdc3dd0"
     }
   },
   {
@@ -37691,81 +37739,21 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=807d7dc4-9ac1-4e2e-9c80-269cec476459&batch_time=1778131611303&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=bcdbbb0f-dc8f-43e4-9e6e-a6e754328c98&batch_time=1778131541762&_dd.api=fetch",
     "data": {
-      "request_id": "807d7dc4-9ac1-4e2e-9c80-269cec476459"
+      "request_id": "bcdbbb0f-dc8f-43e4-9e6e-a6e754328c98"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=87ae85da-4b98-4658-a097-db44ec4d6973&batch_time=1778131611674&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c2b92f35-7321-48d3-bdfc-f85cd0adbb52&batch_time=1778131541788&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "87ae85da-4b98-4658-a097-db44ec4d6973"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d255d69b-ed29-4784-b301-4db67beadeca&batch_time=1778131611677&_dd.api=fetch",
-    "data": {
-      "request_id": "d255d69b-ed29-4784-b301-4db67beadeca"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b156a487-132e-4153-a218-3c5ffd40376b&batch_time=1778131611732&_dd.api=fetch",
-    "data": {
-      "request_id": "b156a487-132e-4153-a218-3c5ffd40376b"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7bc39c76-1b78-41bc-b3ec-ba7e813d000f&batch_time=1778131611732&_dd.api=fetch",
-    "data": {
-      "request_id": "7bc39c76-1b78-41bc-b3ec-ba7e813d000f"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f59ca240-d435-459f-9b56-7bef332ca396&batch_time=1778131611745&_dd.api=fetch",
-    "data": {
-      "request_id": "f59ca240-d435-459f-9b56-7bef332ca396"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0e7c9053-6c3c-4113-b83a-463d8aa34638&batch_time=1778131611781&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "0e7c9053-6c3c-4113-b83a-463d8aa34638"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1944593e-d6b3-4c3d-aac2-8ff38baabbf7&batch_time=1778131611863&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "1944593e-d6b3-4c3d-aac2-8ff38baabbf7"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=653234a7-8c46-4ae8-8196-313509d9a9e2&batch_time=1778131611860&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "653234a7-8c46-4ae8-8196-313509d9a9e2"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=88e6e3e0-85cb-4571-b593-00c44844a31b&batch_time=1778131611823&_dd.api=fetch-keepalive",
-    "data": {
-      "request_id": "88e6e3e0-85cb-4571-b593-00c44844a31b"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=dac0897d-224e-4f56-ad91-376fdbe60fdc&batch_time=1778131611873&_dd.api=fetch",
-    "data": {
-      "request_id": "dac0897d-224e-4f56-ad91-376fdbe60fdc"
-    }
-  },
-  {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c0bf805c-36f6-44eb-b690-a2b879264b41&batch_time=1778131611865&_dd.api=fetch",
-    "data": {
-      "request_id": "c0bf805c-36f6-44eb-b690-a2b879264b41"
+      "request_id": "c2b92f35-7321-48d3-bdfc-f85cd0adbb52"
     }
   },
   {
     "url": "https://api.draftkings.com/en/api/promotions/v2/promotions/query",
     "data": {
-      "lastUpdatedTime": "2026-05-07T05:26:52.2229988Z",
+      "lastUpdatedTime": "2026-05-07T05:25:42.1178813Z",
       "zones": [
         {
           "zoneName": "WebCarousel",
@@ -38145,111 +38133,141 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c3532980-b310-4b12-8812-2773554be1e4&batch_time=1778131611947&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e60b2af7-90ae-467d-b6ce-30bb70a0a9f4&batch_time=1778131541798&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "c3532980-b310-4b12-8812-2773554be1e4"
+      "request_id": "e60b2af7-90ae-467d-b6ce-30bb70a0a9f4"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=fcf573f7-9aca-4bd2-9161-309351c3c4e9&batch_time=1778131611944&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=f138b4eb-f518-478f-b52f-a912631b341e&batch_time=1778131541798&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "fcf573f7-9aca-4bd2-9161-309351c3c4e9"
+      "request_id": "f138b4eb-f518-478f-b52f-a912631b341e"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=a60b6c6f-304c-413b-afbe-7c34b754f87f&batch_time=1778131611946&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=092618f0-5364-4046-8064-3c9f56b45f4a&batch_time=1778131541802&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "a60b6c6f-304c-413b-afbe-7c34b754f87f"
+      "request_id": "092618f0-5364-4046-8064-3c9f56b45f4a"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=527ba28e-a73a-41d1-b7a1-cfc7e0b0e12d&batch_time=1778131611987&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9115a8f9-82f9-400a-8960-0d80a3d1158a&batch_time=1778131541860&_dd.api=fetch",
     "data": {
-      "request_id": "527ba28e-a73a-41d1-b7a1-cfc7e0b0e12d"
+      "request_id": "9115a8f9-82f9-400a-8960-0d80a3d1158a"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5fb3311e-4945-4983-ad35-fd44ad45b221&batch_time=1778131611984&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=e237865c-b4d6-40ce-99e7-2a546b008da0&batch_time=1778131541889&_dd.api=fetch",
     "data": {
-      "request_id": "5fb3311e-4945-4983-ad35-fd44ad45b221"
+      "request_id": "e237865c-b4d6-40ce-99e7-2a546b008da0"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ddf248c-874b-43a5-bad2-5e4b4e88adbe&batch_time=1778131612046&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b1c0764b-3795-452b-88d7-a19b4e1d37be&batch_time=1778131541901&_dd.api=fetch",
     "data": {
-      "request_id": "3ddf248c-874b-43a5-bad2-5e4b4e88adbe"
+      "request_id": "b1c0764b-3795-452b-88d7-a19b4e1d37be"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b5b255d7-353e-4391-8b3c-d0677df41cbe&batch_time=1778131612040&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=5c8f09da-839b-4fef-ab4d-0b0b1898eb41&batch_time=1778131541919&_dd.api=fetch",
     "data": {
-      "request_id": "b5b255d7-353e-4391-8b3c-d0677df41cbe"
+      "request_id": "5c8f09da-839b-4fef-ab4d-0b0b1898eb41"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d61233ce-2c7c-49e6-b234-033a70d3e675&batch_time=1778131612089&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=226dff06-e0e8-4c53-9e65-ad6c8f2d9991&batch_time=1778131541919&_dd.api=fetch",
     "data": {
-      "request_id": "d61233ce-2c7c-49e6-b234-033a70d3e675"
+      "request_id": "226dff06-e0e8-4c53-9e65-ad6c8f2d9991"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=182e254c-37ef-451b-87c0-daa8c728dc58&batch_time=1778131612111&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8714389b-7d67-4722-a956-223ea5337407&batch_time=1778131542016&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "182e254c-37ef-451b-87c0-daa8c728dc58"
+      "request_id": "8714389b-7d67-4722-a956-223ea5337407"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ae8ea428-0035-4fff-b0ca-5ec96bab2e57&batch_time=1778131612111&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=91605a55-0831-4498-a76b-25b9ecc7d0bd&batch_time=1778131541999&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "ae8ea428-0035-4fff-b0ca-5ec96bab2e57"
+      "request_id": "91605a55-0831-4498-a76b-25b9ecc7d0bd"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=da56269d-d423-4b53-accd-9ff335d9ab52&batch_time=1778131612157&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=4920ccef-12e5-4062-a529-c0e21138a40b&batch_time=1778131541998&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "da56269d-d423-4b53-accd-9ff335d9ab52"
+      "request_id": "4920ccef-12e5-4062-a529-c0e21138a40b"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7edb6c0d-0fce-422d-8935-ed09d9a60964&batch_time=1778131612166&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0b438b26-2ba4-4dec-81b1-55e43db7656d&batch_time=1778131542045&_dd.api=fetch",
     "data": {
-      "request_id": "7edb6c0d-0fce-422d-8935-ed09d9a60964"
+      "request_id": "0b438b26-2ba4-4dec-81b1-55e43db7656d"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=9333f9f7-125f-4133-9a71-5b5038753b74&batch_time=1778131612179&_dd.api=fetch",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=d4f05aa7-dc20-4fb6-b318-bc206f5204a7&batch_time=1778131542027&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "9333f9f7-125f-4133-9a71-5b5038753b74"
+      "request_id": "d4f05aa7-dc20-4fb6-b318-bc206f5204a7"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=557888fa-b363-46e7-aaa7-86b1a8876058&batch_time=1778131612225&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=b7a99e38-39d3-4a74-9a80-649854e13572&batch_time=1778131542112&_dd.api=fetch",
     "data": {
-      "request_id": "557888fa-b363-46e7-aaa7-86b1a8876058"
+      "request_id": "b7a99e38-39d3-4a74-9a80-649854e13572"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=ff961e79-540a-495b-a350-1b60b419e993&batch_time=1778131612490&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=c77a6478-d2ce-492e-9680-b6dc0da78bf6&batch_time=1778131542114&_dd.api=fetch",
     "data": {
-      "request_id": "ff961e79-540a-495b-a350-1b60b419e993"
+      "request_id": "c77a6478-d2ce-492e-9680-b6dc0da78bf6"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=87bbe7db-696f-4600-805a-b3a4dd09c324&batch_time=1778131613420&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=21b302eb-d0f3-4290-8cd1-f6e027cd3ff7&batch_time=1778131542146&_dd.api=fetch",
     "data": {
-      "request_id": "87bbe7db-696f-4600-805a-b3a4dd09c324"
+      "request_id": "21b302eb-d0f3-4290-8cd1-f6e027cd3ff7"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=dade02a8-6a57-4ce4-98ee-89f9bce23992&batch_time=1778131615170&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=808372eb-8e49-49d5-abde-bffeda9af902&batch_time=1778131542132&_dd.api=fetch",
     "data": {
-      "request_id": "dade02a8-6a57-4ce4-98ee-89f9bce23992"
+      "request_id": "808372eb-8e49-49d5-abde-bffeda9af902"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=571071fc-96e7-403d-9e4e-0e16f6b9a6a8&batch_time=1778131542118&_dd.api=fetch",
+    "data": {
+      "request_id": "571071fc-96e7-403d-9e4e-0e16f6b9a6a8"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=afadad36-9ba4-4954-a3cb-04bb048ad7b3&batch_time=1778131542197&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "afadad36-9ba4-4954-a3cb-04bb048ad7b3"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3f2620b7-d564-4695-88a6-e57569b3be12&batch_time=1778131542791&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "3f2620b7-d564-4695-88a6-e57569b3be12"
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=6609f0e9-d4bf-415c-b0d5-4cbfe3021f7f&batch_time=1778131544488&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "6609f0e9-d4bf-415c-b0d5-4cbfe3021f7f"
     }
   },
   {
     "url": "https://pick6.draftkings.com/TynoNStt6p2I3LLae9Yb/9DuODXGztbzVfhOD/FDseAg/AmQE/NGk8VVsB",
     "data": {
       "success": true
+    }
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=7da900b2-586b-48ff-984a-5db73410f04a&batch_time=1778131546774&_dd.api=fetch-keepalive",
+    "data": {
+      "request_id": "7da900b2-586b-48ff-984a-5db73410f04a"
     }
   },
   {
@@ -38712,9 +38730,9 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=1842aac2-56f3-45dc-bceb-713ab6f7ab66&batch_time=1778131617399&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=3ec8a5b8-d71a-4ea1-853e-d4ce0877b745&batch_time=1778131546919&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "1842aac2-56f3-45dc-bceb-713ab6f7ab66"
+      "request_id": "3ec8a5b8-d71a-4ea1-853e-d4ce0877b745"
     }
   },
   {
@@ -41091,15 +41109,15 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0ab876a9-e60b-4cc0-8d0c-c401932e2c15&batch_time=1778131617626&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=8cb86c0b-b6a7-4ab4-b058-105aca40c8d6&batch_time=1778131547321&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "0ab876a9-e60b-4cc0-8d0c-c401932e2c15"
+      "request_id": "8cb86c0b-b6a7-4ab4-b058-105aca40c8d6"
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=39c623b0-714e-4678-9e7f-6a79d22b91fa&batch_time=1778131617805&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=afe19d97-25fd-4249-afd6-d89b4b17f742&batch_time=1778131548175&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "39c623b0-714e-4678-9e7f-6a79d22b91fa"
+      "request_id": "afe19d97-25fd-4249-afd6-d89b4b17f742"
     }
   },
   {
@@ -41109,13 +41127,9 @@
     }
   },
   {
-    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=0bce4f5f-6e93-4da3-8196-78d570581483&batch_time=1778131620153&_dd.api=fetch-keepalive",
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub08cb88a3ffb126503702a6ce9bba246b&dd-evp-origin-version=6.22.0&dd-evp-origin=browser&dd-request-id=caf372df-64d6-4f71-b7a7-5791505e7982&batch_time=1778131550327&_dd.api=fetch-keepalive",
     "data": {
-      "request_id": "0bce4f5f-6e93-4da3-8196-78d570581483"
+      "request_id": "caf372df-64d6-4f71-b7a7-5791505e7982"
     }
-  },
-  {
-    "url": "https://sdk.iad-01.braze.com/api/v3/data/",
-    "data": {}
   }
 ]
