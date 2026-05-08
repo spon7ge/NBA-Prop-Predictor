@@ -41,3 +41,11 @@ Human adjustments (star out, blowout risk, back-to-back)
 Monte Carlo simulation (using adjusted prediction as the mean)
     ↓
 Betting signal (percentile of book line in your distribution)
+
+assembling context:
+1. system prompt 
+2a. agent.md files 
+2b. skills -> skills.md files
+3. tools
+4. codebase
+5. user convo
