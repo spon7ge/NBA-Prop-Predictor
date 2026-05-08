@@ -1,10 +1,12 @@
 """
-Fetch NBA events and odds from Odds-API.io (v3) for selected bookmakers.
+Fetch NBA events and odds from Odds-API.io (v3) for selected bookmakers (BetMGM, Bet365).
+
+Default save dir: ``data/props/365+mgm_props/`` (files like ``365+mgm_YYYYMMDD_HHMMSS.json``).
 
 Docs: https://api.odds-api.io/v3 — use GET /bookmakers for exact name spelling.
 
-Env (optional): ODDS_API_IO_TIMEOUT (seconds, default 60), ODDS_API_IO_RETRIES (default 4)
-for transient connection timeouts.
+Env (optional): ``API_KEY_IO_2`` for this scraper (separate from FD/DK pulls on ``API_KEY_IO_1``).
+Fallback ``ODDS_API_IO_KEY`` if set. Also: ``ODDS_API_IO_TIMEOUT`` (default 60), ``ODDS_API_IO_RETRIES`` (default 4).
 """
 
 from __future__ import annotations
@@ -21,7 +23,7 @@ import requests
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_SPORT = "basketball"
-DEFAULT_BOOKMAKERS = ("FanDuel", "DraftKings")
+DEFAULT_BOOKMAKERS = ("BetMGM", "Bet365")
 MULTI_BATCH = 10
 
 
@@ -297,7 +299,7 @@ def flatten_player_props_records(
 class OddsIoScraper:
     """
     Pull every NBA event the API returns for the configured status, then attach
-    FanDuel + DraftKings odds via /odds/multi.
+    BetMGM + Bet365 odds via /odds/multi.
     """
 
     def __init__(
@@ -311,12 +313,12 @@ class OddsIoScraper:
     ):
         self.api_key = (
             api_key
-            or os.environ.get("API_KEY_IO_1", "")
+            or os.environ.get("API_KEY_IO_2", "")
             or os.environ.get("ODDS_API_IO_KEY", "")
         )
         if not self.api_key:
             raise ValueError(
-                "Set API_KEY_IO_1 (or ODDS_API_IO_KEY) or pass api_key= to OddsIoScraper."
+                "Set API_KEY_IO_2 (or ODDS_API_IO_KEY) or pass api_key= to OddsIoScraper."
             )
         self.bookmakers = bookmakers
         self.sport = sport
@@ -347,8 +349,8 @@ class OddsIoScraper:
 
 
 def default_player_lines_dir() -> Path:
-    """data/raw/player_lines under project root (this file: src/scrapers/prop_odds.py)."""
-    return Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "player_lines"
+    """``data/props/365+mgm_props`` under project root."""
+    return Path(__file__).resolve().parent.parent.parent / "data" / "props" / "365+mgm_props"
 
 
 def save_odds_io_pull_json(
@@ -361,7 +363,9 @@ def save_odds_io_pull_json(
     player_props_only: bool = True,
     odds_format: str = "american",
 ) -> Path:
-    """Write odds payloads to timestamped JSON under player_lines.
+    """Write odds payloads to timestamped JSON (default: ``data/props/365+mgm_props``).
+
+    Filenames: ``365+mgm_YYYYMMDD_HHMMSS.json`` (player props) or ``365+mgm_full_YYYYMMDD_HHMMSS.json`` (full odds).
 
     By default saves only markets named \"Player Props\" (NBA); omits the full events list.
     Set player_props_only=False to persist unfiltered /odds payloads and include events.
@@ -371,11 +375,12 @@ def save_odds_io_pull_json(
     pulled = pulled_at or datetime.now(timezone.utc)
     out_dir = out_dir or default_player_lines_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
-    stamp = pulled.strftime("%Y%m%d_%H%M%S")
+    date_s = pulled.strftime("%Y%m%d")
+    time_s = pulled.strftime("%H%M%S")
     name = (
-        f"NBA_player_props_io_{stamp}.json"
+        f"365+mgm_{date_s}_{time_s}.json"
         if player_props_only
-        else f"NBA_odds_io_{stamp}.json"
+        else f"365+mgm_full_{date_s}_{time_s}.json"
     )
     path = out_dir / name
     odds_out = (
