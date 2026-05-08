@@ -1,23 +1,27 @@
 """
 Run DFS / book scrapers in one shot; artifacts go under ``data/props/``:
 
-  underdogs/     — Underdog pick'em JSON
-  prizepicks/    — PrizePicks projections JSON
-  pinnacle/      — Pinnacle matchups JSON (Selenium)
-  player_lines/  — Odds-API.io player props JSON (FD/DK multi)
-  team_lines/    — Odds-API.io spread + totals JSON
+  underdogs/        — Underdog pick'em JSON
+  prizepicks/       — PrizePicks projections JSON
+  pinnacle/         — Pinnacle matchups JSON (Selenium)
+  dk+fd_props/       — Odds-API.io FanDuel + DraftKings player props (``draftkings_fanduel.py``)
+  dk+fd_team_lines/  — Odds-API.io FanDuel + DraftKings spreads + totals (``draftkings_fanduel_team.py``)
+  365+mgm_props/     — Odds-API.io BetMGM + Bet365 player props (``betmgm_bet365.py``)
+  365+mgm_team_lines/ — Odds-API.io BetMGM + Bet365 spreads + totals (``betmgm_bet365_team.py``)
 
 From repo root::
 
-  python scripts/run_prop_scrapers.py
-  python scripts/run_prop_scrapers.py --skip-pinnacle
-  python scripts/run_prop_scrapers.py --only underdog,prizepicks,prop_odds,team_odds
+  python scripts/run_scrapers.py
+  python scripts/run_scrapers.py --skip-pinnacle
+  python scripts/run_scrapers.py --only underdog,prizepicks,dk_fd_props,dk_fd_team,mgm_bet365_props,mgm_bet365_team
 
-Env: ``API_KEY_IO_1`` (or ``ODDS_API_IO_KEY``) for prop_odds / team_odds; ``.env`` loaded from repo root.
+Env:
+  ``API_KEY_IO_1`` (or ``ODDS_API_IO_KEY``) for ``draftkings_fanduel`` and ``draftkings_fanduel_team``;
+  ``API_KEY_IO_2`` (or ``ODDS_API_IO_KEY``) for ``betmgm_bet365`` and ``betmgm_bet365_team``.
+  ``.env`` is loaded from repo root.
 
-Note: ``src/utils/helpers.py`` still loads team odds from ``data/raw/team_lines`` and DFS/US CSVs from
-``data/raw/player_lines``. This runner writes Odds-API.io *JSON* under ``data/props/``. Point loaders
-or copy files if your pipeline expects the old paths.
+Note: ``src/utils/helpers.py`` may still point at ``data/raw/`` paths. Copy artifacts or update
+loaders if the pipeline expects the old locations.
 """
 
 from __future__ import annotations
@@ -37,8 +41,10 @@ def _ensure_props_subdirs() -> None:
         "underdogs",
         "prizepicks",
         "pinnacle",
-        "player_lines",
-        "team_lines",
+        "dk+fd_props",
+        "dk+fd_team_lines",
+        "365+mgm_props",
+        "365+mgm_team_lines",
     ):
         (DATA_PROPS / sub).mkdir(parents=True, exist_ok=True)
 
@@ -77,51 +83,70 @@ def run_pinnacle() -> None:
     PinnacleNBAScraper().run()
 
 
-def run_prop_odds() -> None:
-    from src.scrapers.prop_odds import OddsIoScraper, save_odds_io_pull_json
+def run_dk_fd_props() -> None:
+    from src.scrapers.draftkings_fanduel import OddsIoScraper, save_odds_io_pull_json
 
-    print("\n=== prop_odds (Odds-API.io player props) ===")
+    print("\n=== draftkings_fanduel (Odds-API.io FD/DK player props) ===")
     scraper = OddsIoScraper()
     payload = scraper.run()
     out_path = save_odds_io_pull_json(
         events=scraper.events,
         odds=payload,
         bookmakers=scraper.bookmakers,
-        out_dir=DATA_PROPS / "player_lines",
+        out_dir=DATA_PROPS / "dk+fd_props",
     )
     print(f"saved {out_path}")
 
 
-def run_team_odds() -> None:
-    from src.scrapers.team_odds import (
-        TeamOddsIoScraper,
-        filter_odds_payloads_team_lines_only,
-        save_team_lines_json,
-    )
+def run_dk_fd_team() -> None:
+    from src.scrapers.draftkings_fanduel_team import fetchTeamLines
 
-    print("\n=== team_odds (Odds-API.io Spread / Totals) ===")
-    scraper = TeamOddsIoScraper()
+    print("\n=== draftkings_fanduel_team (Odds-API.io FD/DK spreads/totals) ===")
+    _, path = fetchTeamLines(save_dir=DATA_PROPS / "dk+fd_team_lines")
+    if not path:
+        raise ValueError(
+            "draftkings_fanduel_team failed (set API_KEY_IO_1 or ODDS_API_IO_KEY, check logs)."
+        )
+    print(f"saved {path}")
+
+
+def run_mgm_bet365_props() -> None:
+    from src.scrapers.betmgm_bet365 import OddsIoScraper, save_odds_io_pull_json
+
+    print("\n=== betmgm_bet365 (Odds-API.io BetMGM/Bet365 player props) ===")
+    scraper = OddsIoScraper()
     payload = scraper.run()
-    team_only = filter_odds_payloads_team_lines_only(payload)
-    out_path = save_team_lines_json(
+    out_path = save_odds_io_pull_json(
         events=scraper.events,
         odds=payload,
         bookmakers=scraper.bookmakers,
-        out_dir=DATA_PROPS / "team_lines",
-    )
-    print(
-        f"events_fetched={len(scraper.events)} "
-        f"team_line_payloads={len(team_only)}"
+        out_dir=DATA_PROPS / "365+mgm_props",
     )
     print(f"saved {out_path}")
+
+
+def run_mgm_bet365_team() -> None:
+    from src.scrapers.betmgm_bet365_team import fetchTeamLines
+
+    print("\n=== betmgm_bet365_team (Odds-API.io BetMGM/Bet365 spreads/totals) ===")
+    key = os.environ.get("API_KEY_IO_2") or os.environ.get("ODDS_API_IO_KEY")
+    if not key:
+        raise ValueError(
+            "Set API_KEY_IO_2 (or ODDS_API_IO_KEY) for betmgm_bet365_team."
+        )
+    _, path = fetchTeamLines(key, save_dir=DATA_PROPS / "365+mgm_team_lines")
+    if path:
+        print(f"saved {path}")
 
 
 _RUNNERS: dict[str, object] = {
     "underdog": run_underdog,
     "prizepicks": run_prizepicks,
     "pinnacle": run_pinnacle,
-    "prop_odds": run_prop_odds,
-    "team_odds": run_team_odds,
+    "dk_fd_props": run_dk_fd_props,
+    "dk_fd_team": run_dk_fd_team,
+    "mgm_bet365_props": run_mgm_bet365_props,
+    "mgm_bet365_team": run_mgm_bet365_team,
 }
 
 
@@ -147,8 +172,10 @@ def main() -> int:
     parser.add_argument("--skip-underdog", action="store_true")
     parser.add_argument("--skip-prizepicks", action="store_true")
     parser.add_argument("--skip-pinnacle", action="store_true")
-    parser.add_argument("--skip-prop-odds", action="store_true")
-    parser.add_argument("--skip-team-odds", action="store_true")
+    parser.add_argument("--skip-dk-fd-props", action="store_true")
+    parser.add_argument("--skip-dk-fd-team", action="store_true")
+    parser.add_argument("--skip-mgm-bet365-props", action="store_true")
+    parser.add_argument("--skip-mgm-bet365-team", action="store_true")
     parser.add_argument(
         "--continue-on-error",
         action="store_true",
@@ -171,19 +198,31 @@ def main() -> int:
     _ensure_props_subdirs()
 
     only = _parse_only(args.only)
-    skip = set()
+    skip: set[str] = set()
     if args.skip_underdog:
         skip.add("underdog")
     if args.skip_prizepicks:
         skip.add("prizepicks")
     if args.skip_pinnacle:
         skip.add("pinnacle")
-    if args.skip_prop_odds:
-        skip.add("prop_odds")
-    if args.skip_team_odds:
-        skip.add("team_odds")
+    if args.skip_dk_fd_props:
+        skip.add("dk_fd_props")
+    if args.skip_dk_fd_team:
+        skip.add("dk_fd_team")
+    if args.skip_mgm_bet365_props:
+        skip.add("mgm_bet365_props")
+    if args.skip_mgm_bet365_team:
+        skip.add("mgm_bet365_team")
 
-    order = ["underdog", "prizepicks", "pinnacle", "prop_odds", "team_odds"]
+    order = [
+        "underdog",
+        "prizepicks",
+        "pinnacle",
+        "dk_fd_props",
+        "dk_fd_team",
+        "mgm_bet365_props",
+        "mgm_bet365_team",
+    ]
     failed = []
     for key in order:
         if only is not None and key not in only:
