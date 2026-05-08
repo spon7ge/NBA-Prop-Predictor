@@ -9,7 +9,8 @@ Flow:
 
 Requirements: Google Chrome + Selenium-managed chromedriver.
 Optional PINNACLE_CHROME_VISIBLE=1 (disable headless if pages load oddly).
-PINNACLE_MAX_GAMES caps games per run (default 50). PINNACLE_PAGE_WAIT adjusts post-load pause.
+PINNACLE_MAX_GAMES caps games per run (default 50).
+PINNACLE_PAGE_WAIT — fallback sleep between retries if Arcadia poll fails (default 8).
 PINNACLE_ODDS_FORMAT=both|decimal|american — Arcadia always sends American `price`; decimal
 is derived. The site odds-format switch does not change the API (no need to automate it).
 
@@ -17,8 +18,21 @@ Output: data/props/pinnacle/pinnacle_{YYYY-MM-DD}_{HHMMSS}.json (America/Los_Ang
 PINNACLE_OUTPUT (full path to a .json file stays fixed; directory → timestamped name inside) or
 PINNACLE_OUTPUT_DIR (directory; timestamped filename appended).
 
-PINNACLE_WORKERS — concurrent Chrome instances for game pages (default 2). Discovery still
-uses one short-lived driver; each worker gets its own browser + temp user-data-dir.
+PINNACLE_WORKERS — concurrent Chrome instances for game pages (default scales with CPU, max 6).
+Discovery still uses one short-lived driver; each worker gets its own browser + temp user-data-dir.
+
+Speed-oriented (optional):
+PINNACLE_EAGER_PAGE_LOAD is ignored: discovery always uses full page load; game pages use
+eager by default (set PINNACLE_MATCHUP_NORMAL_LOAD=1 to force full load on games too).
+PINNACLE_BLOCK_IMAGES=1 — block images on game pages only (not on discovery).
+PINNACLE_ARCADIA_TIMEOUT — seconds to poll for Arcadia /matchups responses (default 90).
+PINNACLE_ARCADIA_POLL — poll interval seconds (default 0.22).
+PINNACLE_POST_ARCADIA_BUFFER — brief sleep after both payloads decode (default 0.08).
+PINNACLE_DISCOVER_SCROLL_ROUNDS / PINNACLE_DISCOVER_SCROLL_PAUSE — list-page lazy load (8 / 0.32).
+PINNACLE_DISCOVER_SETTLE — seconds to wait after #root before scrolling (default 0.65).
+PINNACLE_DISCOVER_RETRIES / PINNACLE_DISCOVER_RETRY_PAUSE — empty list reloads (3 / 2.5s).
+PINNACLE_GAMES_PER_WORKER — target games per browser when parallel (default 2); fewer
+Chrome cold-starts on small slates (e.g. 4 games → 2 workers × 2 pages each).
 """
 
 from __future__ import annotations
@@ -189,7 +203,7 @@ def _worker_scrape_game_batch(
         return []
 
     scraper = PinnacleNBAScraper()
-    driver = scraper._build_driver(worker_id=worker_id)
+    driver = scraper._build_driver(worker_id=worker_id, discovery=False)
     out: list[tuple[int, dict[str, Any]]] = []
     n = len(batch)
     try:
@@ -261,12 +275,50 @@ class PinnacleNBAScraper:
         fmt = os.environ.get("PINNACLE_ODDS_FORMAT", "both").strip().lower()
         self.odds_format = fmt if fmt in ("both", "decimal", "american") else "both"
 
-        self.page_wait = float(os.environ.get("PINNACLE_PAGE_WAIT", "14"))
+        self.page_wait = float(os.environ.get("PINNACLE_PAGE_WAIT", "8"))
         self.max_games = int(os.environ.get("PINNACLE_MAX_GAMES", "50"))
+
+        cpu = os.cpu_count() or 8
+        _default_workers = min(6, max(2, cpu // 2))
         try:
-            self.parallel_workers = max(1, int(os.environ.get("PINNACLE_WORKERS", "2")))
+            self.parallel_workers = max(
+                1,
+                int(os.environ.get("PINNACLE_WORKERS", str(_default_workers))),
+            )
         except ValueError:
             self.parallel_workers = 1
+
+        self.arcadia_timeout = float(os.environ.get("PINNACLE_ARCADIA_TIMEOUT", "90"))
+        self.arcadia_poll = float(os.environ.get("PINNACLE_ARCADIA_POLL", "0.22"))
+        self.post_arcadia_buffer = float(
+            os.environ.get("PINNACLE_POST_ARCADIA_BUFFER", "0.08"),
+        )
+        try:
+            self.discover_scroll_rounds = int(
+                os.environ.get("PINNACLE_DISCOVER_SCROLL_ROUNDS", "8"),
+            )
+        except ValueError:
+            self.discover_scroll_rounds = 8
+        self.discover_scroll_pause = float(
+            os.environ.get("PINNACLE_DISCOVER_SCROLL_PAUSE", "0.32"),
+        )
+        try:
+            self.discover_retries = max(
+                1, int(os.environ.get("PINNACLE_DISCOVER_RETRIES", "3"))
+            )
+        except ValueError:
+            self.discover_retries = 3
+        self.discover_retry_pause = float(
+            os.environ.get("PINNACLE_DISCOVER_RETRY_PAUSE", "2.5"),
+        )
+        self.discover_settle = float(os.environ.get("PINNACLE_DISCOVER_SETTLE", "0.65"))
+        try:
+            self.games_per_worker = max(
+                1, int(os.environ.get("PINNACLE_GAMES_PER_WORKER", "2")),
+            )
+        except ValueError:
+            self.games_per_worker = 2
+        self._last_effective_parallel: int | None = None
 
     def _chrome_visible(self) -> bool:
         return os.environ.get("PINNACLE_CHROME_VISIBLE", "").lower() in (
@@ -275,7 +327,12 @@ class PinnacleNBAScraper:
             "yes",
         )
 
-    def _build_driver(self, worker_id: int | None = None):
+    def _build_driver(
+        self,
+        worker_id: int | None = None,
+        *,
+        discovery: bool = False,
+    ):
         if WebDriverWait is None:
             raise RuntimeError("Install selenium (pip install selenium) to run this scraper.")
 
@@ -283,12 +340,29 @@ class PinnacleNBAScraper:
         from selenium.webdriver.chrome.options import Options  # type: ignore[import-untyped]
 
         opts = Options()
+        # Discovery must hydrate matchup links; game pages can use eager + optional image block.
+        if not discovery:
+            if os.environ.get("PINNACLE_MATCHUP_NORMAL_LOAD", "").lower() not in (
+                "1",
+                "true",
+                "yes",
+            ):
+                opts.page_load_strategy = "eager"
         opts.add_argument("--window-size=1400,1000")
         opts.add_argument("--disable-extensions")
         if not self._chrome_visible():
             opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--lang=en-US")
+        if not discovery and os.environ.get("PINNACLE_BLOCK_IMAGES", "").lower() in (
+            "1",
+            "true",
+            "yes",
+        ):
+            opts.add_experimental_option(
+                "prefs",
+                {"profile.managed_default_content_settings.images": 2},
+            )
 
         if worker_id is not None:
             ud = tempfile.mkdtemp(prefix=f"pinnacle_chrome_w{worker_id}_")
@@ -300,51 +374,73 @@ class PinnacleNBAScraper:
         )
 
         driver = webdriver.Chrome(options=opts)
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(0)
         driver.execute_cdp_cmd("Network.enable", {})
         driver.set_page_load_timeout(120)
         return driver
 
-    def _scroll_lazy(self, driver, rounds: int = 12) -> None:
+    def _effective_parallel_workers(self, n: int) -> int:
+        """Fewer Chromes when each can scrape multiple games (saves cold-start time)."""
+        if n <= 0:
+            return 1
+        per = self.games_per_worker
+        ideal = (n + per - 1) // per
+        return min(self.parallel_workers, n, max(1, ideal))
+
+    def _scroll_lazy(self, driver, rounds: int | None = None) -> None:
         if By is None:
             return
 
-        for _ in range(rounds):
+        r = self.discover_scroll_rounds if rounds is None else rounds
+        for _ in range(max(1, r)):
             driver.execute_script(
                 "window.scrollBy({top: window.innerHeight * 0.85, behavior: 'instant'})",
             )
-            time.sleep(0.45)
+            time.sleep(self.discover_scroll_pause)
 
     def discover_game_urls(self, driver) -> list[str]:
         if WebDriverWait is None:
             raise RuntimeError("Install selenium: pip install selenium")
 
-        driver.get(NBA_MATCHUPS_URL)
-
-        WebDriverWait(driver, 60).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "#root")),
-        )
-        self._scroll_lazy(driver)
-
         cand: set[str] = set()
+        for attempt in range(self.discover_retries):
+            if attempt > 0:
+                print(
+                    f"  No game URLs (discover attempt {attempt + 1}/{self.discover_retries}); "
+                    f"waiting {self.discover_retry_pause}s and retrying…",
+                )
+                time.sleep(self.discover_retry_pause)
 
-        anchors = driver.find_elements(By.TAG_NAME, "a")
-        for a in anchors:
-            raw = (a.get_attribute("href") or "").strip()
-            if not raw or "basketball/nba/" not in raw.lower():
-                continue
-            canon = _normalize_game_url(raw)
-            if canon:
-                cand.add(canon)
+            driver.get(NBA_MATCHUPS_URL)
 
-        if not cand:
-            for m in _GAME_PATH_RE.finditer(driver.page_source or ""):
-                frag = m.group(0)
-                canon = _normalize_game_url(urljoin(PINNACLE_ORIGIN, frag))
+            WebDriverWait(driver, 60).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "#root")),
+            )
+            if self.discover_settle > 0:
+                time.sleep(self.discover_settle)
+            self._scroll_lazy(driver)
+
+            cand = set()
+            anchors = driver.find_elements(By.TAG_NAME, "a")
+            for a in anchors:
+                raw = (a.get_attribute("href") or "").strip()
+                if not raw or "basketball/nba/" not in raw.lower():
+                    continue
+                canon = _normalize_game_url(raw)
                 if canon:
                     cand.add(canon)
 
-        return sorted(cand)[: self.max_games]
+            if not cand:
+                for m in _GAME_PATH_RE.finditer(driver.page_source or ""):
+                    frag = m.group(0)
+                    canon = _normalize_game_url(urljoin(PINNACLE_ORIGIN, frag))
+                    if canon:
+                        cand.add(canon)
+
+            if cand:
+                return sorted(cand)[: self.max_games]
+
+        return []
 
     def _finished_arcadia_requests(self, driver) -> dict[str, str]:
         """
@@ -449,6 +545,31 @@ class PinnacleNBAScraper:
 
         return best_straight, best_related
 
+    def _poll_matchup_arcadia_ready(
+        self,
+        driver,
+        matchup_id: str,
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """
+        Poll performance log until straight + related Arcadia arrays decode, instead of
+        long fixed sleeps per attempt.
+        """
+        deadline = time.time() + max(5.0, self.arcadia_timeout)
+        iterations = 0
+        while time.time() < deadline:
+            straight, related = self._extract_matchup_arcadia_arrays(driver, matchup_id)
+            if straight and related:
+                if self.post_arcadia_buffer > 0:
+                    time.sleep(self.post_arcadia_buffer)
+                return straight, related
+            time.sleep(max(0.1, self.arcadia_poll))
+            iterations += 1
+            if iterations % 5 == 0:
+                driver.execute_script(
+                    "window.dispatchEvent(new Event('resize'));",
+                )
+        return [], []
+
     def props_from_arcadia_arrays(
         self,
         straight: list[dict[str, Any]],
@@ -509,13 +630,15 @@ class PinnacleNBAScraper:
         WebDriverWait(driver, 90).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "#root")),
         )
-        straight, raw_markets = [], []
-        for attempt in range(6):
-            time.sleep(max(4.0, self.page_wait) if attempt == 0 else 3.5)
-            straight, raw_markets = self._extract_matchup_arcadia_arrays(driver, mid)
-            if straight and raw_markets:
-                break
-            driver.execute_script("window.dispatchEvent(new Event('resize'));")
+        straight, raw_markets = self._poll_matchup_arcadia_ready(driver, mid)
+        if not straight or not raw_markets:
+            # Fallback: brief fixed waits for slow CDP / cache (mirrors old behavior)
+            for attempt in range(4):
+                time.sleep(max(2.0, self.page_wait * 0.5))
+                straight, raw_markets = self._extract_matchup_arcadia_arrays(driver, mid)
+                if straight and raw_markets:
+                    break
+                driver.execute_script("window.dispatchEvent(new Event('resize'));")
 
         props = self.props_from_arcadia_arrays(straight, raw_markets)
 
@@ -537,7 +660,7 @@ class PinnacleNBAScraper:
         return game
 
     def _scrape_games_sequential(self, urls: list[str]) -> list[dict[str, Any]]:
-        driver = self._build_driver()
+        driver = self._build_driver(discovery=False)
         games_out: list[dict[str, Any]] = []
         try:
             for i, url in enumerate(urls, start=1):
@@ -562,7 +685,8 @@ class PinnacleNBAScraper:
         return games_out
 
     def _scrape_games_parallel(self, urls: list[str]) -> list[dict[str, Any]]:
-        k = min(self.parallel_workers, max(1, len(urls)))
+        k = self._effective_parallel_workers(len(urls))
+        self._last_effective_parallel = k
         batches: list[list[tuple[int, str]]] = [[] for _ in range(k)]
         for i, url in enumerate(urls):
             batches[i % k].append((i, url))
@@ -607,11 +731,13 @@ class PinnacleNBAScraper:
         return list(merged)
 
     def run(self) -> dict[str, Any]:
-        print(f"Using output path: {self.output_path}")
-        if self.parallel_workers > 1:
-            print(f"Parallel workers: {self.parallel_workers}")
+        print(
+            f"Using output path: {self.output_path} | max_workers={self.parallel_workers} "
+            f"target {self.games_per_worker} games/browser",
+        )
 
-        discover_driver = self._build_driver()
+        discover_driver = self._build_driver(discovery=True)
+        self._last_effective_parallel = None
         try:
             urls = self.discover_game_urls(discover_driver)
         finally:
@@ -627,8 +753,11 @@ class PinnacleNBAScraper:
             print(f"Collected {len(urls)} game URL(s); scraping…")
             games_out = self._scrape_games_sequential(urls)
         else:
-            k = min(self.parallel_workers, len(urls))
-            print(f"Collected {len(urls)} game URL(s); scraping with {k} workers…")
+            k = self._effective_parallel_workers(len(urls))
+            print(
+                f"Collected {len(urls)} game URL(s); scraping with {k} worker(s) "
+                f"(≤{self.games_per_worker} games/browser, max {self.parallel_workers} configured)…",
+            )
             games_out = self._scrape_games_parallel(urls)
 
         payload: dict[str, Any] = {
@@ -636,7 +765,12 @@ class PinnacleNBAScraper:
             "source": "pinnacle_selenium",
             "sport": "nba",
             "list_page": NBA_MATCHUPS_URL,
-            "parallel_workers": self.parallel_workers,
+            "parallel_workers_configured": self.parallel_workers,
+            "parallel_workers_effective": self._last_effective_parallel
+            or (1 if urls and self.parallel_workers <= 1 else None),
+            "games_per_worker_target": self.games_per_worker,
+            "arcadia_timeout_s": self.arcadia_timeout,
+            "arcadia_poll_s": self.arcadia_poll,
             "games": games_out,
         }
 
