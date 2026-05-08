@@ -2,11 +2,21 @@
 DraftKings Pick 6 NBA Prop Lines Scraper (Playwright)
 ------------------------------------------------------
 Uses a real browser to bypass Akamai bot detection.
-Intercepts the network response containing player lines.
+Intercepts the network response containing player lines and reads Pick6 DOM cards.
 
 Setup:
     pip install playwright
     playwright install chromium
+
+Output: ``data/props/draftkings/draftkings6_{YYYY-MM-DD}_{HHMMSS}.json`` (America/Los_Angeles).
+Override with ``DRAFTKINGS6_OUTPUT`` (full ``.json`` path, or a directory → timestamped name inside) or
+``DRAFTKINGS6_OUTPUT_DIR``. CLI ``-o`` wins over env when provided.
+
+Raw XHR/debug dump: default ``data/props/draftkings/debug/draftkings6_raw_{timestamp}.json``.
+Set ``DRAFTKINGS6_RAW_OUTPUT`` to a full path, or ``DRAFTKINGS6_NO_RAW=1`` to skip.
+
+Env knobs (optional):
+    DRAFTKINGS6_WORKERS — parallel carousel shards for NBA (default 4; same idea as PINNACLE_WORKERS).
 
 Usage:
     python draftkings6.py                   # NBA slate; 4 parallel carousel workers by default
@@ -23,6 +33,7 @@ import asyncio
 import json
 import os
 import re
+import sys
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
@@ -31,6 +42,19 @@ from playwright.async_api import Browser, async_playwright, Page, Response
 _OUTPUT_TZ = ZoneInfo("America/Los_Angeles")
 
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
+sys.path.insert(0, _REPO_ROOT)
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None  # type: ignore[assignment,misc]
+
+if load_dotenv:
+    load_dotenv(os.path.join(_REPO_ROOT, ".env"))
+
+_DEFAULT_DK_PROPS_DIR = os.path.join(_REPO_ROOT, "data", "props", "draftkings")
+_DEFAULT_DK_DEBUG_DIR = os.path.join(_DEFAULT_DK_PROPS_DIR, "debug")
 
 PICK6_URL = "https://pick6.draftkings.com"
 
@@ -62,7 +86,80 @@ NBA_STAT_MARKET_PILLS = [
     "Assists",
 ]
 
-_DEFAULT_PAR_WORKERS = 4
+try:
+    _DEFAULT_PAR_WORKERS = max(1, int(os.environ.get("DRAFTKINGS6_WORKERS", "4")))
+except ValueError:
+    _DEFAULT_PAR_WORKERS = 4
+
+
+def _draftkings6_props_filename(now: datetime | None = None) -> str:
+    if now is None:
+        d = datetime.now(_OUTPUT_TZ)
+    elif now.tzinfo is None:
+        d = now.replace(tzinfo=timezone.utc).astimezone(_OUTPUT_TZ)
+    else:
+        d = now.astimezone(_OUTPUT_TZ)
+    return d.strftime("draftkings6_%Y-%m-%d_%H%M%S.json")
+
+
+def _draftkings6_raw_filename(now: datetime | None = None) -> str:
+    if now is None:
+        d = datetime.now(_OUTPUT_TZ)
+    elif now.tzinfo is None:
+        d = now.replace(tzinfo=timezone.utc).astimezone(_OUTPUT_TZ)
+    else:
+        d = now.astimezone(_OUTPUT_TZ)
+    return d.strftime("draftkings6_raw_%Y-%m-%d_%H%M%S.json")
+
+
+def resolve_props_output_path(cli_output: str | None) -> str:
+    """CLI ``-o`` > ``DRAFTKINGS6_OUTPUT`` > ``DRAFTKINGS6_OUTPUT_DIR`` > ``data/props/draftkings``."""
+    if cli_output and str(cli_output).strip():
+        return os.path.expanduser(str(cli_output).strip())
+
+    out_file = os.environ.get("DRAFTKINGS6_OUTPUT", "").strip()
+    out_dir = os.environ.get("DRAFTKINGS6_OUTPUT_DIR", "").strip()
+
+    if out_file:
+        expanded = os.path.expanduser(out_file)
+        if out_file.endswith(("/", "\\")) or os.path.isdir(expanded):
+            return os.path.join(
+                expanded.rstrip("/\\"),
+                _draftkings6_props_filename(),
+            )
+        if expanded.lower().endswith(".json"):
+            return expanded
+        return os.path.join(expanded, _draftkings6_props_filename())
+
+    if out_dir:
+        directory = os.path.expanduser(out_dir)
+        name = _draftkings6_props_filename()
+        if directory.endswith(("/", "\\")) or (
+            os.path.exists(directory) and os.path.isdir(directory)
+        ):
+            return os.path.join(directory.rstrip("/\\"), name)
+        if not os.path.splitext(directory)[1]:
+            return os.path.join(directory, name)
+        return directory
+
+    os.makedirs(_DEFAULT_DK_PROPS_DIR, exist_ok=True)
+    return os.path.join(_DEFAULT_DK_PROPS_DIR, _draftkings6_props_filename())
+
+
+def resolve_raw_responses_path() -> str | None:
+    if os.environ.get("DRAFTKINGS6_NO_RAW", "").lower() in ("1", "true", "yes"):
+        return None
+    custom = os.environ.get("DRAFTKINGS6_RAW_OUTPUT", "").strip()
+    if custom:
+        exp = os.path.expanduser(custom)
+        if exp.lower().endswith(".json"):
+            return exp
+        if exp.endswith(("/", "\\")) or (os.path.exists(exp) and os.path.isdir(exp)):
+            return os.path.join(exp.rstrip("/\\"), _draftkings6_raw_filename())
+        return os.path.join(exp, _draftkings6_raw_filename())
+    os.makedirs(_DEFAULT_DK_DEBUG_DIR, exist_ok=True)
+    return os.path.join(_DEFAULT_DK_DEBUG_DIR, _draftkings6_raw_filename())
+
 
 PLAYWRIGHT_CONTEXT_KWARGS = {
     "user_agent": (
@@ -517,10 +614,14 @@ async def scrape(
 
         await browser.close()
 
-    # Save everything intercepted for debugging
-    with open("raw6_all_responses.json", "w") as f:
-        json.dump(raw_dump, f, indent=2)
-    print(f"Saved {len(raw_dump)} intercepted responses -> raw6_all_responses.json")
+    raw_path = resolve_raw_responses_path()
+    if raw_path:
+        parent = os.path.dirname(os.path.abspath(raw_path))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        with open(raw_path, "w", encoding="utf-8") as f:
+            json.dump(raw_dump, f, indent=2)
+        print(f"Saved {len(raw_dump)} intercepted responses -> {raw_path}")
 
     return all_raw
 
@@ -528,7 +629,9 @@ async def scrape(
 # ── Output ────────────────────────────────────────────────────────────────────
 
 def save(props: list[dict], path: str) -> None:
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    parent = os.path.dirname(os.path.abspath(path))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     out = {
         "source":     "DraftKings Pick 6",
         "league":     "NBA",
@@ -541,60 +644,99 @@ def save(props: list[dict], path: str) -> None:
     print(f"Saved {len(props)} props -> {path}")
 
 
-def default_path() -> str:
-    ts  = datetime.now(_OUTPUT_TZ).strftime("draftkings6_%Y-%m-%d_%H%M%S.json")
-    out = os.path.join(_REPO_ROOT, "data", "props", "draftking6")
-    os.makedirs(out, exist_ok=True)
-    return os.path.join(out, ts)
+class DraftKingsPick6Scraper:
+    """Same role as ``PinnacleNBAScraper``: env-resolved output dir, single ``run()`` entry."""
+
+    def __init__(
+        self,
+        *,
+        sport: str = "NBA",
+        headful: bool = False,
+        start_url: str | None = None,
+        category_id: str = DEFAULT_NBA_CATEGORY_ID,
+        pick_group: str = DEFAULT_NBA_PICK_GROUP,
+        parallel_workers: int | None = None,
+        output_path: str | None = None,
+        list_types: bool = False,
+    ) -> None:
+        self.sport = sport
+        self.headful = headful
+        self.start_url = start_url
+        self.category_id = category_id
+        self.pick_group = pick_group
+        self.parallel_workers = (
+            parallel_workers if parallel_workers is not None else _DEFAULT_PAR_WORKERS
+        )
+        self.output_path = output_path
+        self.list_types = list_types
+
+    async def run_async(self) -> str | None:
+        raw_lines = await scrape(
+            sport=self.sport,
+            headful=self.headful,
+            start_url=self.start_url,
+            category_id=self.category_id,
+            pick_group=self.pick_group,
+            parallel_workers=self.parallel_workers,
+        )
+        if not raw_lines:
+            print(
+                "\nNo props found (network + DOM).\n"
+                "  1. Run with headful=True — confirm the board loads (login / geo / bot wall).\n"
+                "  2. Check the raw debug JSON under data/props/draftkings/debug/.\n"
+                "  3. Update start_url / pick_group if the slate changed."
+            )
+            return None
+        props = parse(raw_lines, sport_filter=self.sport)
+        seen: set[str] = set()
+        unique: list[dict] = []
+        for p in props:
+            uid = p["prop_id"] or f"{p['player']}_{p['prop_type']}"
+            if uid not in seen:
+                seen.add(uid)
+                unique.append(p)
+        print(f"Parsed {len(unique)} unique props")
+        if self.list_types:
+            types = sorted({p["prop_type"] for p in unique if p["prop_type"]})
+            print(f"\nStat types ({len(types)}):")
+            for t in types:
+                print(f"  * {t}")
+            return None
+        out_path = resolve_props_output_path(self.output_path)
+        save(unique, out_path)
+        return out_path
+
+    def run(self) -> str | None:
+        return asyncio.run(self.run_async())
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
 async def main_async(args):
-    raw_lines = await scrape(
+    scraper = DraftKingsPick6Scraper(
         sport=args.sport,
         headful=args.headful,
         start_url=args.url,
         category_id=args.category,
         pick_group=args.pick_group,
         parallel_workers=args.workers,
+        output_path=args.output,
+        list_types=args.list_types,
     )
-
-    if not raw_lines:
-        print(
-            "\nNo props found (network + DOM).\n"
-            "  1. Run with --headful — confirm the board loads (login / geo / bot wall).\n"
-            "  2. Check raw6_all_responses.json (XHR is often promos only; lines are in the page DOM).\n"
-            "  3. Update --url / --pick-group if the slate changed."
-        )
-        return
-
-    props = parse(raw_lines, sport_filter=args.sport)
-
-    # Deduplicate by prop_id
-    seen, unique = set(), []
-    for p in props:
-        uid = p["prop_id"] or f"{p['player']}_{p['prop_type']}"
-        if uid not in seen:
-            seen.add(uid)
-            unique.append(p)
-
-    print(f"Parsed {len(unique)} unique props")
-
-    if args.list_types:
-        types = sorted({p["prop_type"] for p in unique if p["prop_type"]})
-        print(f"\nStat types ({len(types)}):")
-        for t in types:
-            print(f"  * {t}")
-        return
-
-    out_path = os.path.expanduser(args.output) if args.output else default_path()
-    save(unique, out_path)
+    await scraper.run_async()
 
 
 def main():
     parser = argparse.ArgumentParser(description="DraftKings Pick 6 props -> JSON (Playwright)")
-    parser.add_argument("--output",     "-o", default=None,        help="Output JSON path")
+    parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help=(
+            "Output JSON path (overrides DRAFTKINGS6_OUTPUT / DRAFTKINGS6_OUTPUT_DIR; "
+            "default: data/props/draftkings/draftkings6_<ts>.json)"
+        ),
+    )
     parser.add_argument("--sport",      "-s", default="NBA",       help="Sport (default: NBA)")
     parser.add_argument(
         "--url",
@@ -620,9 +762,8 @@ def main():
         type=int,
         default=_DEFAULT_PAR_WORKERS,
         help=(
-            "NBA only: parallel carousel shards (one browser, multiple contexts; "
-            "like Pinnacle multi-worker batching). Default "
-            f"{_DEFAULT_PAR_WORKERS}; use 1 for fully sequential. Ignored with --headful."
+            "NBA only: parallel carousel shards (DRAFTKINGS6_WORKERS env default). "
+            "Use 1 for fully sequential. Ignored with --headful."
         ),
     )
     parser.add_argument("--headful",          action="store_true", help="Show browser window")
@@ -632,4 +773,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    print("Starting DraftKings Pick6 scraper (Playwright)...")
+    try:
+        main()
+    except Exception as e:
+        print(f"✗ Error: {e}")
+        import traceback
+
+        traceback.print_exc()
+        raise SystemExit(1) from e
