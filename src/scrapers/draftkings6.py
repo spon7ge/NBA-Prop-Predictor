@@ -8,11 +8,11 @@ Setup:
     pip install playwright
     playwright install chromium
 
-Output: ``data/props/draftkings/draftkings6_{YYYY-MM-DD}_{HHMMSS}.json`` (America/Los_Angeles).
+Output: ``data/props/draftking6/draftkings6_{YYYY-MM-DD}_{HHMMSS}.json`` (America/Los_Angeles).
 Override with ``DRAFTKINGS6_OUTPUT`` (full ``.json`` path, or a directory → timestamped name inside) or
 ``DRAFTKINGS6_OUTPUT_DIR``. CLI ``-o`` wins over env when provided.
 
-Raw XHR/debug dump: default ``data/props/draftkings/debug/draftkings6_raw_{timestamp}.json``.
+Raw XHR/debug dump: default ``data/props/draftking6/debug/draftkings6_raw_{timestamp}.json``.
 Set ``DRAFTKINGS6_RAW_OUTPUT`` to a full path, or ``DRAFTKINGS6_NO_RAW=1`` to skip.
 
 Env knobs (optional):
@@ -53,7 +53,7 @@ except ImportError:
 if load_dotenv:
     load_dotenv(os.path.join(_REPO_ROOT, ".env"))
 
-_DEFAULT_DK_PROPS_DIR = os.path.join(_REPO_ROOT, "data", "props", "draftkings")
+_DEFAULT_DK_PROPS_DIR = os.path.join(_REPO_ROOT, "data", "props", "draftking6")
 _DEFAULT_DK_DEBUG_DIR = os.path.join(_DEFAULT_DK_PROPS_DIR, "debug")
 
 PICK6_URL = "https://pick6.draftkings.com"
@@ -113,7 +113,7 @@ def _draftkings6_raw_filename(now: datetime | None = None) -> str:
 
 
 def resolve_props_output_path(cli_output: str | None) -> str:
-    """CLI ``-o`` > ``DRAFTKINGS6_OUTPUT`` > ``DRAFTKINGS6_OUTPUT_DIR`` > ``data/props/draftkings``."""
+    """CLI ``-o`` > ``DRAFTKINGS6_OUTPUT`` > ``DRAFTKINGS6_OUTPUT_DIR`` > ``data/props/draftking6``."""
     if cli_output and str(cli_output).strip():
         return os.path.expanduser(str(cli_output).strip())
 
@@ -683,7 +683,7 @@ class DraftKingsPick6Scraper:
             print(
                 "\nNo props found (network + DOM).\n"
                 "  1. Run with headful=True — confirm the board loads (login / geo / bot wall).\n"
-                "  2. Check the raw debug JSON under data/props/draftkings/debug/.\n"
+                "  2. Check the raw debug JSON under data/props/draftking6/debug/.\n"
                 "  3. Update start_url / pick_group if the slate changed."
             )
             return None
@@ -734,7 +734,7 @@ def main():
         default=None,
         help=(
             "Output JSON path (overrides DRAFTKINGS6_OUTPUT / DRAFTKINGS6_OUTPUT_DIR; "
-            "default: data/props/draftkings/draftkings6_<ts>.json)"
+            "default: data/props/draftking6/draftkings6_<ts>.json)"
         ),
     )
     parser.add_argument("--sport",      "-s", default="NBA",       help="Sport (default: NBA)")
