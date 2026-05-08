@@ -41,7 +41,7 @@ def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
         'USG_PCT', 'SAST_PER_MIN', 'FTAST_PER_MIN', 'PASS_PER_MIN', 'TCHS_PER_MIN'
     ]
 
-    for span in [3, 5, 10]:
+    for span in [5, 10, 20]:
         for col in cols:
             df[f'{col}_{span}_ewm'] = (
                 df.groupby('PLAYER_ID')[col]
