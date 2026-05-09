@@ -1,8 +1,15 @@
 """
 PrizePicks NBA projections — fetch and save a flat JSON export.
 
-One HTTP parse, connection reuse via Session. Writes a single file:
-  data/props/prizepicks/prizepicks_YYYY-MM-DD_HHMMSS.json
+One HTTP parse. Writes: data/props/prizepicks/prizepicks_YYYY-MM-DD_HHMMSS.json
+
+PrizePicks sits behind PerimeterX; plain ``requests`` often gets 403. This module
+tries ``curl_cffi`` first (TLS fingerprint + browser impersonation). Install::
+
+    pip install curl_cffi
+
+Optional: PRIZEPICKS_COOKIE / PRIZEPICKS_COOKIE_FILE to add a browser session.
+Optional: PRIZEPICKS_IMPERSONATE=comma-separated curl_cffi profiles (default tries safari17_2_ios first).
 
 File schema: source, league, fetched_at, count, projections[]
 Each projection: player, stat_type, line_score, odds_type, updated_at
@@ -26,20 +33,50 @@ _DEFAULT_PROJECTIONS_DIR = os.path.join(_ROOT, "data", "props", "prizepicks")
 _OUTPUT_TZ = ZoneInfo("America/Los_Angeles")
 
 API_URL = "https://api.prizepicks.com/projections?league_id=7"
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    ),
+
+# Full headers for stdlib ``requests`` fallback only (no TLS impersonation).
+HEADERS_REQUESTS: dict[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://app.prizepicks.com/",
+    "Connection": "keep-alive",
     "Origin": "https://app.prizepicks.com",
+    "Referer": "https://app.prizepicks.com/",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/131.0.0.0 Safari/537.36"
+    ),
+    "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"macOS"',
 }
 
-# Reused across requests in a process (typical single GET; still cheap to share)
+# For curl_cffi: do not set User-Agent / sec-ch-ua — impersonate profile supplies them.
+_HEADERS_CURL_BASE: dict[str, str] = {
+    "Accept": "application/json",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Origin": "https://app.prizepicks.com",
+    "Referer": "https://app.prizepicks.com/",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+}
+
+# Impersonation targets tried in order. PerimeterX often allows safari17_2_ios while
+# blocking chrome* from non-browser networks — set PRIZEPICKS_IMPERSONATE to override.
+_CURL_IMPERSONATE_DEFAULT = (
+    "safari17_2_ios",
+    "safari17_0",
+    "chrome136",
+    "chrome131",
+    "chrome124",
+    "chrome120",
+)
+
 _SESSION = requests.Session()
-_SESSION.headers.update(HEADERS)
 
 ProjectionRow = tuple[str, str, Any, str, str]
 """player, stat_type, line_score, odds_type, updated_at"""
@@ -112,10 +149,128 @@ def extract_projection_rows(data: dict[str, Any]) -> list[ProjectionRow]:
     return rows
 
 
+def _cookie_for_request() -> str:
+    """Optional browser Cookie string (e.g. after logging in on app.prizepicks.com)."""
+    c = os.environ.get("PRIZEPICKS_COOKIE", "").strip()
+    if c:
+        return c
+    path = os.environ.get("PRIZEPICKS_COOKIE_FILE", "").strip()
+    if path:
+        p = os.path.expanduser(path)
+        if os.path.isfile(p):
+            with open(p, encoding="utf-8") as f:
+                return f.read().strip()
+    return ""
+
+
+def _request_headers(overrides: dict[str, str] | None = None) -> dict[str, str]:
+    h = dict(HEADERS_REQUESTS)
+    cookie = _cookie_for_request()
+    if cookie:
+        h["Cookie"] = cookie
+    if overrides:
+        h.update(overrides)
+    return h
+
+
+def _curl_headers(overrides: dict[str, str] | None = None) -> dict[str, str]:
+    h = dict(_HEADERS_CURL_BASE)
+    cookie = _cookie_for_request()
+    if cookie:
+        h["Cookie"] = cookie
+    if overrides:
+        h.update(overrides)
+    return h
+
+
+def _perimeterx_challenge(body: str) -> bool:
+    b = body or ""
+    return "px-cloud" in b or '"appId":"PX' in b or "PerimeterX" in b
+
+
 def fetch_projections_payload() -> dict[str, Any]:
-    r = _SESSION.get(API_URL, timeout=30)
-    r.raise_for_status()
-    return r.json()
+    """
+    GET projections. Uses curl_cffi browser impersonation first (PerimeterX).
+    Falls back to ``requests``. Optional PRIZEPICKS_COOKIE* adds session cookies.
+    """
+    origin_variants: list[dict[str, str] | None] = [
+        None,
+        {
+            "Origin": "https://www.prizepicks.com",
+            "Referer": "https://www.prizepicks.com/",
+        },
+    ]
+
+    curl_mod = None
+    try:
+        import curl_cffi.requests as curl_requests  # type: ignore[import-untyped]
+        curl_mod = curl_requests
+    except ImportError:
+        pass
+
+    last_resp: Any = None
+    had_cookie = bool(_cookie_for_request())
+    impersonate_list = os.environ.get("PRIZEPICKS_IMPERSONATE", "").strip()
+    impersonators: tuple[str, ...] = (
+        tuple(p.strip() for p in impersonate_list.split(",") if p.strip())
+        if impersonate_list
+        else _CURL_IMPERSONATE_DEFAULT
+    )
+
+    if curl_mod is not None:
+        for impersonate in impersonators:
+            for extra in origin_variants:
+                try:
+                    r = curl_mod.get(
+                        API_URL,
+                        headers=_curl_headers(extra),
+                        timeout=45,
+                        impersonate=impersonate,
+                    )
+                except Exception:
+                    continue
+                last_resp = r
+                if r.status_code != 200:
+                    continue
+                try:
+                    data = r.json()
+                except json.JSONDecodeError:
+                    continue
+                if isinstance(data, dict) and "data" in data:
+                    return data
+
+    for extra in origin_variants:
+        r = _SESSION.get(API_URL, headers=_request_headers(extra), timeout=30)
+        last_resp = r
+        if r.status_code == 403:
+            continue
+        r.raise_for_status()
+        return r.json()
+
+    if last_resp is not None:
+        text = last_resp.text or ""
+        tail = text[:400].replace("\n", " ")
+        px = _perimeterx_challenge(text)
+        curl_hint = ""
+        if px:
+            curl_hint = (
+                " PrizePicks returned a PerimeterX challenge. Run: pip install curl_cffi "
+                "(already in requirements.txt) and retry."
+            )
+            if curl_mod is None:
+                curl_hint += " curl_cffi is not installed in this environment."
+        elif not had_cookie:
+            curl_hint = (
+                " You can also set PRIZEPICKS_COOKIE or PRIZEPICKS_COOKIE_FILE from DevTools."
+            )
+        else:
+            curl_hint = " Try a fresh PRIZEPICKS_COOKIE."
+
+        raise requests.HTTPError(
+            f"403 Forbidden from PrizePicks API.{curl_hint} Response: {tail!r}",
+            response=last_resp,
+        )
+    raise RuntimeError("fetch_projections_payload: no response")
 
 
 def build_export_payload(

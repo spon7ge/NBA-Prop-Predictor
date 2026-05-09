@@ -1,66 +1,85 @@
-import numpy as np
 import pandas as pd
 
 from src.utils.helper_functions import findOpp
-from src.utils.team_info import projectedStartingFive
+
+
+def _shifted_ewm_tail(col: pd.Series, span: int, *, decimals: int = 2) -> float:
+    v = (
+        col.astype(float)
+        .shift(1)
+        .ewm(span=span, adjust=False)
+        .mean()
+        .iloc[-1]
+    )
+    if pd.isna(v):
+        return float("nan")
+    return round(float(v), decimals) if decimals is not None else float(v)
+
+
+def _opp_team_ast_allowed(
+    df: pd.DataFrame, opp_abbr: str, *, as_of_date: str | None
+) -> float:
+    """Match training `OPP_TEAM_AST_ALLOWED`: prior expanding mean of OPP_AST on opponent team rows."""
+    if "OPP_AST" not in df.columns:
+        return float("nan")
+    opp = df[df["TEAM_ABBREVIATION"] == opp_abbr].drop_duplicates(
+        subset=["TEAM_ID", "GAME_ID"]
+    )
+    if opp.empty:
+        return float("nan")
+    if as_of_date is not None:
+        cutoff = pd.to_datetime(as_of_date)
+        dated = opp[pd.to_datetime(opp["GAME_DATE"], errors="coerce") < cutoff]
+        opp = dated if len(dated) > 0 else opp
+    opp = opp.sort_values(["GAME_DATE"]).copy()
+    if "SEASON_YEAR" not in opp.columns:
+        return float(
+            opp["OPP_AST"]
+            .astype(float)
+            .shift(1)
+            .expanding()
+            .mean()
+            .round(3)
+            .iloc[-1]
+        )
+    last = opp.iloc[-1]
+    mask = opp["SEASON_YEAR"] == last["SEASON_YEAR"]
+    season = opp.loc[mask]
+    allowed = (
+        season.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)["OPP_AST"]
+        .transform(lambda x: x.shift(1).expanding().mean().round(3))
+    )
+    return float(season.assign(_a=allowed)["_a"].iloc[-1])
 
 
 def apm_pipeline(df, name, date):
-    pdf = df[df['PLAYER_NAME'] == name].sort_values('GAME_DATE').copy()
+    pdf = df[df["PLAYER_NAME"] == name].sort_values("GAME_DATE").copy()
     if len(pdf) < 10:
         return None
 
     res = []
     last = pdf.iloc[-1]
-    player_team = last["TEAM_ABBREVIATION"]
 
-    def _ewm_last(col: str, span: int) -> float:
-        return float(pdf[col].astype(float).ewm(span=span, adjust=False).mean().iloc[-1])
-
-    # ── Opponent setup ────────────────────────────────────────────────────────
+    # ── Opponent setup ──────────────────────────────────────────────────────────
     opp_abbr, _ = findOpp(name, pdf, date, max_days_ahead=3)
-    opp_team = df[df["TEAM_ABBREVIATION"] == opp_abbr].sort_values("GAME_DATE")
-    opp_team = opp_team.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
 
-    # ── Team setup ────────────────────────────────────────────────────────────
-    gameday = df[(df["TEAM_ID"] == last["TEAM_ID"]) & (df["GAME_DATE"] == last["GAME_DATE"])]
+    # ── 1. AST_PER_MIN_season_avg (shift(1).expanding mean within season) ──────
+    if "SEASON_YEAR" in pdf.columns:
+        sx = pdf.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)[
+            "AST_PER_MIN"
+        ].transform(lambda x: x.shift(1).expanding().mean().round(2))
+        ast_per_min_season_avg = float(sx.iloc[-1]) if pd.notna(sx.iloc[-1]) else float("nan")
+    else:
+        ast_per_min_season_avg = float(
+            pdf["AST_PER_MIN"].astype(float).shift(1).expanding().mean().round(2).iloc[-1]
+        )
+        if pd.isna(ast_per_min_season_avg):
+            ast_per_min_season_avg = float("nan")
+    res.append(ast_per_min_season_avg)
 
-    # ── AST_PER_MIN_season_avg ────────────────────────────────────────────────
-    ast_per_min_season_avg = float(pdf["AST_PER_MIN"].mean())
-    res.append(ast_per_min_season_avg if pd.notna(ast_per_min_season_avg) else float("nan"))
-
-    # ── AST_10_ewm ────────────────────────────────────────────────────────────
-    ast_10_ewm = _ewm_last("AST", 10)
-    res.append(ast_10_ewm if pd.notna(ast_10_ewm) else float("nan"))
-
-    # ── TCHS_PER_MIN_10_ewm ───────────────────────────────────────────────────
-    tchs_per_min_10_ewm = (
-        _ewm_last("TCHS_PER_MIN", 10) if "TCHS_PER_MIN" in pdf.columns else float("nan")
-    )
-    res.append(tchs_per_min_10_ewm if pd.notna(tchs_per_min_10_ewm) else float("nan"))
-
-    # ── AST_PCT_10_ewm ────────────────────────────────────────────────────────
-    ast_pct_10_ewm = _ewm_last("AST_PCT", 10)
-    res.append(ast_pct_10_ewm if pd.notna(ast_pct_10_ewm) else float("nan"))
-
-    # ── PASS_PER_MIN_5_ewm ────────────────────────────────────────────────────
-    pass_per_min_5_ewm = (
-        _ewm_last("PASS_PER_MIN", 5) if "PASS_PER_MIN" in pdf.columns else float("nan")
-    )
-    res.append(pass_per_min_5_ewm if pd.notna(pass_per_min_5_ewm) else float("nan"))
-
-    # ── OPP_TEAM_AST_ALLOWED ──────────────────────────────────────────────────
-    opp_team_ast_allowed = (
-        float(opp_team["OPP_AST"].astype(float).mean())
-        if "OPP_AST" in opp_team.columns else float("nan")
-    )
-    res.append(opp_team_ast_allowed if pd.notna(opp_team_ast_allowed) else float("nan"))
-
-    # ── POSITION_ENCODED ──────────────────────────────────────────────────────
-    res.append(float(pdf["POSITION_ENCODED"].iloc[-1]) if "POSITION_ENCODED" in pdf.columns else float("nan"))
-
-    # ── TEAM_AST_PER_MIN_RANK_L10 ─────────────────────────────────────────────
-    # Rank player by rolling-10 AST_PER_MIN average among all teammates
+    # ── 2. TEAM_AST_PER_MIN_RANK_L10 ───────────────────────────────────────────
+    # Same spirit as notebook: AST_PER_MIN_roll10 = shift(1).rolling(10).mean —
+    # for predicting the next slate that equals mean(AST_PER_MIN) over last 10 games.
     team_df = df[df["TEAM_ID"] == last["TEAM_ID"]]
     teammate_roll = {}
     for player, grp in team_df.groupby("PLAYER_NAME"):
@@ -72,24 +91,44 @@ def apm_pipeline(df, name, date):
     team_ast_rank = rank_map.get(name, float("nan"))
     res.append(team_ast_rank if pd.notna(team_ast_rank) else float("nan"))
 
-    # ── FTAST_PER_MIN_season_avg ──────────────────────────────────────────────
-    ftast_per_min_season_avg = (
-        float(pdf["FTAST_PER_MIN"].mean()) if "FTAST_PER_MIN" in pdf.columns else float("nan")
+    # ── 3. OPP_TEAM_AST_ALLOWED ────────────────────────────────────────────────
+    if "OPP_TEAM_AST_ALLOWED" in last.index and pd.notna(last.get("OPP_TEAM_AST_ALLOWED")):
+        opp_team_ast_allowed = float(last["OPP_TEAM_AST_ALLOWED"])
+    else:
+        opp_team_ast_allowed = _opp_team_ast_allowed(df, opp_abbr, as_of_date=date)
+    res.append(
+        opp_team_ast_allowed if pd.notna(opp_team_ast_allowed) else float("nan")
     )
-    res.append(ftast_per_min_season_avg if pd.notna(ftast_per_min_season_avg) else float("nan"))
 
-    # ── AST_PER_MIN_lag1 ──────────────────────────────────────────────────────
-    ast_per_min_lag1 = float(pdf["AST_PER_MIN"].iloc[-1])
-    res.append(ast_per_min_lag1 if pd.notna(ast_per_min_lag1) else float("nan"))
-
-    # ── FTAST_PER_MIN_10_ewm ──────────────────────────────────────────────────
-    ftast_per_min_10_ewm = (
-        _ewm_last("FTAST_PER_MIN", 10) if "FTAST_PER_MIN" in pdf.columns else float("nan")
+    # ── 4. PASS_PER_MIN_5_ewm ───────────────────────────────────────────────────
+    pass_per_min_5_ewm = (
+        _shifted_ewm_tail(pdf["PASS_PER_MIN"], 5)
+        if "PASS_PER_MIN" in pdf.columns
+        else float("nan")
     )
-    res.append(ftast_per_min_10_ewm if pd.notna(ftast_per_min_10_ewm) else float("nan"))
+    res.append(pass_per_min_5_ewm)
 
-    # ── IS_PLAYOFF ────────────────────────────────────────────────────────────
-    is_playoff = float(last["IS_PLAYOFF"]) if "IS_PLAYOFF" in last.index else float("nan")
-    res.append(is_playoff)
+    # ── 5. POSITION_ENCODED ─────────────────────────────────────────────────────
+    res.append(
+        float(pdf["POSITION_ENCODED"].iloc[-1])
+        if "POSITION_ENCODED" in pdf.columns
+        else float("nan")
+    )
+
+    # ── 6. AST_PER_MIN_STD_SEASON ───────────────────────────────────────────────
+    ast_std_series = pdf.groupby("PLAYER_ID", group_keys=False)["AST_PER_MIN"].transform(
+        lambda x: x.shift(1).expanding(min_periods=2).std()
+    )
+    ast_per_min_std_season = float(ast_std_series.iloc[-1]) if pd.notna(ast_std_series.iloc[-1]) else float("nan")
+    res.append(ast_per_min_std_season)
+
+    # ── 7. APM_TREND ────────────────────────────────────────────────────────────
+    ast_per_min_5_ewm = _shifted_ewm_tail(pdf["AST_PER_MIN"], 5)
+    apm_trend = (
+        round(ast_per_min_5_ewm, 2) - ast_per_min_season_avg
+        if pd.notna(ast_per_min_5_ewm) and pd.notna(ast_per_min_season_avg)
+        else float("nan")
+    )
+    res.append(apm_trend)
 
     return res
