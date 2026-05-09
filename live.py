@@ -16,6 +16,59 @@ from src.utils.scrap_starters import NBADailyLineups
 # Populated at startup by main(); empty default prevents import-time side-effects
 outPlayers: dict = {}
 
+
+def coerce_nonneg_monotone_quantiles(q10: float, q50: float, q90: float) -> tuple[float, float, float]:
+    """
+    Betting-facing cleanup for stacked quantile regressors.
+
+    Separate XGBoost quantile heads minimize pinball loss on unbounded reals, so tails
+    can cross (q50 < q10) or go slightly negative — invalid for minutes, per-minute rates,
+    and triangular sampling in ``run_pts_simulation``. We impose:
+
+    - support in [0, ∞) for minutes and rates (points/assists/rebounds can't be negative);
+    - ordering q10 ≤ q50 ≤ q90 so triangular parameterization stays well-defined.
+
+    A final monotone pass on implied STAT quantiles avoids nonsensical under/over tails
+    in edge cases where min×rate crosses between deciles due to independence of the two
+    model stacks.
+
+    Minor inconsistency can remain between STAT_Q50 and MIN_Q50×RATE_Q50 after the STAT
+    pass; MC paths still draw from sanitized MIN_/RATE_ quantiles.
+    """
+    a = max(float(q10), 0.0)
+    b = max(float(q50), 0.0)
+    c = max(float(q90), 0.0)
+    b = max(b, a)
+    c = max(c, b)
+    return a, b, c
+
+
+def _sanitize_prediction_row_quantiles(row) -> None:
+    """Mutate a prediction row Series/dict in place (MIN_/RATE_/STAT_ columns)."""
+    m10 = float(row["MIN_Q10"])
+    m50 = float(row["MIN_Q50"])
+    m90 = float(row["MIN_Q90"])
+    r10 = float(row["RATE_Q10"])
+    r50 = float(row["RATE_Q50"])
+    r90 = float(row["RATE_Q90"])
+
+    m10, m50, m90 = coerce_nonneg_monotone_quantiles(m10, m50, m90)
+    r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
+
+    row["MIN_Q10"] = round(m10, 2)
+    row["MIN_Q50"] = round(m50, 2)
+    row["MIN_Q90"] = round(m90, 2)
+    row["RATE_Q10"] = round(r10, 4)
+    row["RATE_Q50"] = round(r50, 4)
+    row["RATE_Q90"] = round(r90, 4)
+
+    s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
+    s10, s50, s90 = coerce_nonneg_monotone_quantiles(s10, s50, s90)
+    row["STAT_Q10"] = round(s10, 2)
+    row["STAT_Q50"] = round(s50, 2)
+    row["STAT_Q90"] = round(s90, 2)
+
+
 def predict_min_times_rate(
     names,
     min_stats_df,
@@ -30,6 +83,9 @@ def predict_min_times_rate(
 ):
     """
     For each name: min quantiles × rate quantiles → implied stat (same quantile index).
+
+    Raw XGB predictions are coerced to nonnegative, ordered q10≤q50≤q90 anchors for
+    ``run_pts_simulation`` and sensible betting tails (see ``coerce_nonneg_monotone_quantiles``).
     """
     q10, q50, q90 = "q_0.10", "q_0.50", "q_0.90"
     records = []
@@ -65,7 +121,9 @@ def predict_min_times_rate(
                 raise KeyError(rate_col)
             rate_history = pdf[rate_col].dropna().tail(15).tolist()
 
-            s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
+            m10, m50, m90 = coerce_nonneg_monotone_quantiles(m10, m50, m90)
+            r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
+
             row = {
                 "PLAYER_NAME": name,
                 "MARKET": stat_prefix,
@@ -75,11 +133,13 @@ def predict_min_times_rate(
                 "RATE_Q10": round(r10, 4),
                 "RATE_Q50": round(r50, 4),
                 "RATE_Q90": round(r90, 4),
-                f"STAT_Q10": round(s10, 2),
-                f"STAT_Q50": round(s50, 2),
-                f"STAT_Q90": round(s90, 2),
-                f"RATE_HISTORY": rate_history,
+                "RATE_HISTORY": rate_history,
             }
+            s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
+            s10, s50, s90 = coerce_nonneg_monotone_quantiles(s10, s50, s90)
+            row["STAT_Q10"] = round(s10, 2)
+            row["STAT_Q50"] = round(s50, 2)
+            row["STAT_Q90"] = round(s90, 2)
         except Exception as e:
             if verbose:
                 print(f"[SKIP] {name}: {e}")
@@ -209,7 +269,7 @@ def player_scenarios(
     player_name: str,
     stat_name: str,
     min_minutes: int = 15,
-    last_n: int = 20,
+    last_n: int = 5,
     min_playoff_games: int = 5,
 ) -> dict:
     """
@@ -221,15 +281,20 @@ def player_scenarios(
         4. Home / Away         (venue context)
         5. Last-N recency      (role / form drift)
         6. Interaction splits  (home×pace, away×spread)
-        7. Playoff vs regular season, close/blowout playoff splits, uplift
+        7. Starting vs bench   (``STARTING`` / ``START_POSITION`` prior-game flags)
+        8. Playoff vs regular season, close/blowout playoff splits, uplift
 
     Preprocessing:
         - Drops games below `min_minutes` (garbage time / early DNP returns)
         - `SPREAD_ABS` is derived from `TEAM_SPREAD` when absent (for playoff close/blowout splits).
+        - If ``STARTING`` is missing but ``START_POSITION`` exists, derives ``STARTING`` for splits.
 
     Bayesian shrinkage toward the player's overall median:
         shrunk = (n * split_median + k * overall_median) / (n + k)
         k is adaptive: max(5, total_n // 10) — trusts splits more for large samples.
+
+    If neither ``STARTING`` nor ``START_POSITION`` exists, ``starting`` in the returned
+    dict is empty and downstream adjustments omit the role term.
     """
 
     # ── 0. filter + sort ────────────────────────────────────────────────────
@@ -238,6 +303,8 @@ def player_scenarios(
         .copy()
         .sort_values("GAME_DATE")
     )
+    if "STARTING" not in pdf.columns and "START_POSITION" in pdf.columns:
+        pdf["STARTING"] = pdf["START_POSITION"].notna().astype(int)
     if "MIN" in pdf.columns:
         pdf = pdf[pdf["MIN"] >= min_minutes]
 
@@ -271,6 +338,7 @@ def player_scenarios(
             "home_away": {},
             "recency": {},
             "interactions": {},
+            "starting": {},
             "playoff": {
                 "regular_season": dict(_empty_split),
                 "playoffs": dict(_empty_split),
@@ -357,6 +425,16 @@ def player_scenarios(
         "home_favorite":    split_stats(pdf[is_home  & favorite]),
     }
 
+    # ── 8.5 starting vs bench (same stat_name as other splits) ───────────────
+    if "STARTING" in pdf.columns:
+        st = pdf["STARTING"].fillna(0).astype(float).astype(int).clip(0, 1)
+        starting = {
+            "started": split_stats(pdf[st.eq(1)]),
+            "bench":   split_stats(pdf[st.eq(0)]),
+        }
+    else:
+        starting = {}
+
     # ── 9. playoff splits ───────────────────────────────────────────────────
     if "IS_PLAYOFF" in pdf.columns:
         is_po = pdf["IS_PLAYOFF"].fillna(0).astype(int).eq(1)
@@ -417,6 +495,7 @@ def player_scenarios(
         "home_away":         home_away,
         "recency":           recency,
         "interactions":      interactions,
+        "starting":          starting,
         "playoff":           playoff,
     }
 
@@ -445,7 +524,8 @@ def adjust_predictions(
         preds_df:            Output of predict_min_times_rate.
         base_df:             Game-log DataFrame used to compute player_scenarios.
         game_contexts:       {player_name: dict} output of get_game_context
-                             (keys: active_stars, spread, total, is_home, is_playoff).
+                             (keys: active_stars, spread, total, is_home, is_playoff,
+                             expected_starting = last logged 1/0 starter flag when available).
         min_adjust_weight:   Blend fraction for minutes adjustment  (0=off, 1=full delta).
         rate_adjust_weight:  Blend fraction for rate adjustment     (0=off, 1=full delta).
         delta_cap_min:       Hard cap on total minutes delta (minutes).
@@ -531,6 +611,19 @@ def adjust_predictions(
             return "away_low_pace"
         return None
 
+    def _starting_role_key(expected_starting) -> str | None:
+        """
+        Maps ctx['expected_starting'] (typically last game's 0/1) to scenarios keys.
+        """
+        if expected_starting is None or (
+            isinstance(expected_starting, float) and np.isnan(expected_starting)
+        ):
+            return None
+        try:
+            return "started" if int(expected_starting) == 1 else "bench"
+        except (TypeError, ValueError):
+            return None
+
     def _playoff_delta(sc: dict, spread_val: float | None) -> tuple[float, int, str | None]:
         """
         Three tiers: no playoff games → 0; small sample → heavy shrink toward overall;
@@ -582,6 +675,7 @@ def adjust_predictions(
         *,
         is_playoff_ctx: bool,
         ctx_spread: float | None,
+        starting_role_key: str | None,
     ) -> tuple[float, dict]:
         """
         Returns (total_delta, component_log).
@@ -613,6 +707,13 @@ def adjust_predictions(
 
         base_delta = d_stars + d_pace + (d_ix if use_ix else d_spread + d_home)
 
+        d_start, n_start = (0.0, 0)
+        if starting_role_key is not None:
+            ds, ns = _delta(sc, "starting", starting_role_key)
+            if ns >= min_interaction_n:
+                d_start, n_start = ds, ns
+        base_delta = base_delta + d_start
+
         d_playoff, n_playoff_g, po_tier = (
             _playoff_delta(sc, ctx_spread) if is_playoff_ctx else (0.0, 0, None)
         )
@@ -639,12 +740,14 @@ def adjust_predictions(
             "interaction": (round(d_ix,    4),  n_interaction) if use_ix else None,
             "spread":      (round(d_spread, 4), n_spread)      if not use_ix else None,
             "home_away":   (round(d_home,  4),  n_home)        if not use_ix else None,
+            "starting":    (round(d_start, 4), n_start),
             "recency":     (round(recency_delta, 4), None)      if use_recency else None,
             "playoff":     (round(d_playoff, 4), n_playoff_g, po_tier)
             if is_playoff_ctx
             else None,
             "used_interaction": use_ix,
             "interaction_key":  interaction_key if use_ix else None,
+            "starting_role_key": starting_role_key,
         }
         return total, log
 
@@ -674,6 +777,7 @@ def adjust_predictions(
             if verbose:
                 print(f"[NO CONTEXT] {name} — raw prediction used")
             _set_adj_missing(row, err=err)
+            _sanitize_prediction_row_quantiles(row)
             out_rows.append(row)
             continue
 
@@ -689,16 +793,19 @@ def adjust_predictions(
         spread_key = _spread_key(spread)
         min_pace   = _pace_key(min_sc,  total)
         rate_pace  = _pace_key(rate_sc, total)
+        role_k     = _starting_role_key(ctx.get("expected_starting"))
 
         raw_min_delta,  min_log  = _build_delta(
             min_sc,  n_stars, spread_key, min_pace,  is_home,
             is_playoff_ctx=is_playoff_ctx,
             ctx_spread=float(spread) if spread is not None else None,
+            starting_role_key=role_k,
         )
         raw_rate_delta, rate_log = _build_delta(
             rate_sc, n_stars, spread_key, rate_pace, is_home,
             is_playoff_ctx=is_playoff_ctx,
             ctx_spread=float(spread) if spread is not None else None,
+            starting_role_key=role_k,
         )
 
         if verbose and is_playoff_ctx and min_log.get("playoff"):
@@ -734,6 +841,8 @@ def adjust_predictions(
         row["STAT_Q10"] = round(float(row["MIN_Q10"]) * float(row["RATE_Q10"]), 2)
         row["STAT_Q50"] = round(new_min_q50 * new_rate_q50, 2)
         row["STAT_Q90"] = round(float(row["MIN_Q90"]) * float(row["RATE_Q90"]), 2)
+
+        _sanitize_prediction_row_quantiles(row)
 
         # ── metadata ───────────────────────────────────────────────────
         row["ADJ_CONTEXT_OK"]      = True
@@ -793,7 +902,9 @@ def get_game_context(
     Builds the game-context dict consumed by adjust_predictions().
 
     Returns a dict always. On failure, "ok" is False and "error" describes why.
-    On success, "ok" is True and all expected keys are present.
+    On success, "ok" is True and all expected keys are present,
+    including ``expected_starting`` when derivable from the latest game row
+    (``STARTING`` or ``START_POSITION`` on ``base_df``).
 
     Args:
         base_df:           Game-log DataFrame (used to resolve player → team).
@@ -823,6 +934,7 @@ def get_game_context(
             "total": None, "total_over_price": None, "total_under_price": None,
             "bookmaker": None, "commence_time": None,
             "is_playoff": None,
+            "expected_starting": None,
         }
 
     # ── 1. resolve player → team ─────────────────────────────────────────────
@@ -896,7 +1008,20 @@ def get_game_context(
                 elif outcome.get("name") == "Under":
                     under_price = outcome.get("price")
 
-    # ── 6. warn on missing lines ─────────────────────────────────────────────
+    # ── 6. infer likely role tonight from most recent logged game ─────────────
+    last_row = pdf.iloc[-1]
+    expected_starting = None
+    if "STARTING" in pdf.columns:
+        v = last_row["STARTING"]
+        if pd.notna(v):
+            try:
+                expected_starting = int(np.clip(round(float(v)), 0, 1))
+            except (TypeError, ValueError):
+                expected_starting = None
+    elif "START_POSITION" in pdf.columns:
+        expected_starting = int(bool(pd.notna(last_row["START_POSITION"])))
+
+    # ── 7. warn on missing lines ─────────────────────────────────────────────
     missing = [k for k, v in [("spread", spread), ("total", total)] if v is None]
     if missing:
         import warnings
@@ -924,6 +1049,7 @@ def get_game_context(
         "total_over_price":  over_price,
         "total_under_price": under_price,
         "is_playoff":        is_playoff,
+        "expected_starting": expected_starting,
     }
 # ---------------------------------------------------------
 # 3. LINE LOOKUP & MAPPING

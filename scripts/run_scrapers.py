@@ -18,6 +18,8 @@ From repo root::
 Env:
   ``API_KEY_IO_1`` (or ``ODDS_API_IO_KEY``) for ``draftkings_fanduel`` and ``draftkings_fanduel_team``;
   ``API_KEY_IO_2`` (or ``ODDS_API_IO_KEY``) for ``betmgm_bet365`` and ``betmgm_bet365_team``.
+  ``PRIZEPICKS_COOKIE`` / ``PRIZEPICKS_COOKIE_FILE`` (optional) if PrizePicks blocks your IP.
+  ``PRIZEPICKS_IMPERSONATE`` (optional) — comma-separated ``curl_cffi`` browser ids; default tries ``safari17_2_ios`` first (works better with PerimeterX than Chrome fingerprints in some environments).
   ``.env`` is loaded from repo root.
 
 Note: ``src/utils/helpers.py`` may still point at ``data/raw/`` paths. Copy artifacts or update
