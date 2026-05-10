@@ -119,7 +119,7 @@ def predict_min_times_rate(
             rate_col = rate_col_by_market.get(stat_prefix, f"{stat_prefix}_PER_MIN")
             if rate_col not in pdf.columns:
                 raise KeyError(rate_col)
-            rate_history = pdf[rate_col].dropna().tail(15).tolist()
+            rate_history = pdf[rate_col].dropna().tail(10).tolist()
 
             m10, m50, m90 = coerce_nonneg_monotone_quantiles(m10, m50, m90)
             r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
