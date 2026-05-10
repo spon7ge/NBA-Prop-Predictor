@@ -3,6 +3,12 @@ Fetch NBA events and odds from Odds-API.io (v3) for selected bookmakers (BetMGM,
 
 Default save dir: ``data/props/365+mgm_props/`` (files like ``365+mgm_YYYYMMDD_HHMMSS.json``).
 
+**Schema parity:** The JSON envelope and each ``records[]`` row shape (NAME, MARKET,
+LINE, OVER, UNDER, BOOKMAKER, EVENT_ID, HOME, AWAY, START) are the same pipeline as
+``draftkings_fanduel.py`` — filtering and ``flatten_player_props_records`` are kept in
+sync. If DK/FD files list more markets than BetMGM/Bet365 at the same pull time, that is
+typically Odds‑API coverage per book, not different scraper formatting.
+
 Docs: https://api.odds-api.io/v3 — use GET /bookmakers for exact name spelling.
 
 Env (optional): ``API_KEY_IO_2`` for this scraper (separate from FD/DK pulls on ``API_KEY_IO_1``).
@@ -167,10 +173,77 @@ def fetch_odds_multi(
     return out
 
 
+_TEAM_SIDE_TAIL = frozenset({"home", "away", "draw", "none", "tie", "pk"})
+_UMBRELLA_MARKET_NAMES = frozenset({"player props", "player prop"})
+
+
+def _market_title_suggests_player_stat_props(name: str) -> bool:
+    """True when Odds names a bucket clearly about individual stat lines (often Bet365/BetMGM)."""
+    lc = (name or "").strip().lower()
+    if not lc:
+        return False
+    if any(x in lc for x in ("team total", "match total", "game total")):
+        return False
+    if any(x in lc for x in ("winner", "handicap ", " handicap", "spread", "money line")):
+        return False
+
+    stat_bits = (
+        "point",
+        "assist",
+        "rebound",
+        "three",
+        "steal",
+        "block",
+        "turnover",
+        "triple",
+        "double",
+        "fantasy",
+        "performance",
+        "minute",
+        "first basket",
+    )
+    if "player" in lc:
+        return any(s in lc for s in stat_bits)
+    # Title-only alternate lines
+    return bool(re.search(r"\b(alternate|alternative)\s+.*\b(points|assists|rebounds)", lc))
+
+
 def _is_player_prop_market(market: dict) -> bool:
-    """Odds-API.io groups NBA player markets under name \"Player Props\"."""
-    name = (market.get("name") or "").strip().lower()
-    return name == "player props" or name == "player prop"
+    """Treat a market bucket as NBA player props for filtering.
+
+    Odds-API.io usually nests props under markets named ``Player Props``, but some
+    books (often Bet365) use other titles or omit the umbrella. In those cases we
+    still keep the block when most outcome ``label`` strings look like
+    ``Player Name (Market)``.
+
+    Labels like spreads ``Away (+7.5)`` are ignored (pure numeric parentheses).
+    """
+    if not isinstance(market, dict):
+        return False
+    raw_name = (market.get("name") or "").strip()
+    name = raw_name.lower()
+    if name in ("player props", "player prop"):
+        return True
+    if "player props" in name or name.endswith("player prop"):
+        return True
+    if _market_title_suggests_player_stat_props(raw_name):
+        return True
+
+    odds = market.get("odds")
+    if not isinstance(odds, list) or not odds:
+        return False
+    lines = [o for o in odds if isinstance(o, dict)]
+    if not lines:
+        return False
+    n = len(lines)
+    with_stat = sum(
+        1
+        for ln in lines
+        if isinstance(ln.get("label"), str)
+        and bool(_split_prop_label(ln["label"])[1])
+    )
+    # Books that omit "Player Props" wrapper but still expose standard prop rows
+    return with_stat > 0 and with_stat >= max(1, (4 * n + 9) // 10)
 
 
 def filter_bookmakers_player_props_only(bookmakers: dict[str, Any]) -> dict[str, Any]:
@@ -232,12 +305,83 @@ def decimal_to_american(value: Any) -> Any:
 
 
 def _split_prop_label(label: str) -> tuple[str, str]:
-    """Parse API labels like \"Max Strus (Points)\" -> name, market."""
+    """Parse API labels like \"Max Strus (Points)\" -> name, market.
+
+    Strings like spread labels \"Team Name (+7.5)\" are not split (returns empty market)
+    so we do not classify them as player-prop labels.
+    """
     label = (label or "").strip()
     m = re.match(r"^(.+) \((.+)\)\s*$", label)
-    if m:
-        return m.group(1).strip(), m.group(2).strip()
-    return label, ""
+    if not m:
+        return label, ""
+    mkt_raw = (m.group(2) or "").strip()
+    mkt_nop_fracs = (
+        mkt_raw.replace("\u00bd", "")
+        .replace("\u00bc", "")
+        .replace("\u00be", "")
+        .replace("½", "")
+        .replace("¼", "")
+        .replace("¾", "")
+        .strip()
+    )
+    if re.fullmatch(r"[+\- 0-9.]+", mkt_nop_fracs):
+        return label, ""
+    if mkt_raw.strip().lower() in _TEAM_SIDE_TAIL:
+        return label, ""
+    return m.group(1).strip(), mkt_raw
+
+
+def _infer_market_from_freeform_label(label: str) -> str:
+    """Best-effort stat tag when label is not ``Name (Stat)`` (common for Bet365)."""
+    low = (label or "").lower()
+    if not low:
+        return ""
+    checks = (
+        (r"\bdouble[\s\-]?double\b", "Double+Double"),
+        (r"\btriple[\s\-]?double\b", "Triple+Double"),
+        (r"\b3[- ]?point|three[- ]?pointer|\bfg\b.*3", "3 Point FG"),
+        (r"\bpoints?\b|\bpts\b", "Points"),
+        (r"\brebounds?\b|\brebs?\b", "Rebounds"),
+        (r"\bassists?\b|\basts?\b", "Assists"),
+        (r"\bblocks?\b", "Blocks"),
+        (r"\bsteals?\b", "Steals"),
+        (r"\bfirst basket\b", "First Basket"),
+    )
+    for pat, disp in checks:
+        if re.search(pat, low):
+            return disp
+    return ""
+
+
+def _resolve_flat_market(
+    market: dict,
+    line: dict,
+    mkt_from_label: str,
+) -> str:
+    """Fill MARKET when Odds-API uses plain labels under a generic umbrella (often Bet365)."""
+    if mkt_from_label:
+        return mkt_from_label
+    for k in (
+        "betTypeName",
+        "categoryName",
+        "groupName",
+        "marketName",
+        "selectionName",
+        "subMarketName",
+    ):
+        v = line.get(k)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    bucket = (market.get("name") or "").strip()
+    bl = bucket.lower()
+    if bucket and bl not in _UMBRELLA_MARKET_NAMES:
+        return bucket
+    raw = line.get("label")
+    if isinstance(raw, str):
+        inferred = _infer_market_from_freeform_label(raw)
+        if inferred:
+            return inferred
+    return "Player Props"
 
 
 def flatten_player_props_records(
@@ -248,6 +392,10 @@ def flatten_player_props_records(
     """
     One row per bookmaker / prop line with NAME, MARKET, LINE, OVER, UNDER
     plus BOOKMAKER, EVENT_ID, HOME, AWAY, START for context.
+
+    ``MARKET`` is usually parsed from ``label`` as ``Name (Stat)``. If missing,
+    we use the market bucket title, optional line metadata fields, or fall back
+    to the string ``Player Props`` for generic umbrellas (typical Bet365 pattern).
 
     odds_format: \"american\" (default) or \"decimal\" for OVER/UNDER columns.
     """
@@ -274,6 +422,7 @@ def flatten_player_props_records(
                     name, mkt = _split_prop_label(
                         raw_label if isinstance(raw_label, str) else ""
                     )
+                    mkt = _resolve_flat_market(market, line, mkt)
                     over = line.get("over")
                     under = line.get("under")
                     if use_american:
