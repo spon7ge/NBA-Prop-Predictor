@@ -12,14 +12,14 @@ projectedStartingFive = {
     "HOU": ["Amen Thompson", "Reed Sheppard", "Tari Eason", "Jabari Smith", "Alperen Sengun"],
     "IND": ["Micah Potter", "Ethan Thompson", "Kobe Brown", "Quenton Jackson", "Jalen Slawson"],
     "LAC": ["Brook Lopez", "Kris Dunn", "Kawhi Leonard", "Derrick Jones", "Darius Garland"],
-    "LAL": ["LeBron James", "Austin Reaves", "Rui Hachimura", "Deandre Ayton", "Marcus Smart"],
+    "LAL": ["Deandre Ayton", "Marcus Smart", "LeBron James", "Rui Hachimura", "Austin Reaves"],
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
     "MIN": ["Mike Conley", "Jaden McDaniels", "Rudy Gobert", "Julius Randle", "Terrence Shannon"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["OG Anunoby", "Jalen Brunson", "Josh Hart", "Mikal Bridges", "Karl-Anthony Towns"],
-    "OKC": ["Chet Holmgren", "Shai Gilgeous-Alexander", "Isaiah Hartenstein", "Luguentz Dort", "Ajay Mitchell"],
+    "OKC": ["Isaiah Hartenstein", "Ajay Mitchell", "Shai Gilgeous-Alexander", "Chet Holmgren", "Luguentz Dort"],
     "ORL": ["Jalen Suggs", "Desmond Bane", "Jamal Cain", "Wendell Carter", "Paolo Banchero"],
     "PHI": ["VJ Edgecombe", "Joel Embiid", "Paul George", "Tyrese Maxey", "Kelly Oubre"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
@@ -66,6 +66,5 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "LAL": ["Jarred Vanderbilt"],
 }
 
