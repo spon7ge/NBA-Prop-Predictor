@@ -10,11 +10,15 @@ var activeBook = "prizepicks";
 /** Parlay size: 2, 3, or 4 legs. */
 var activeLegs = 2;
 var activeView = "pairs";
-var ALL_LINE_PROBS = [];
-var lineProbsState = "idle";
+var ALL_ENRICHED = [];
+var enrichedState = "idle";
 /** null = all stats; otherwise MARKET key e.g. PTS, AST, REB */
 var activePlayerStat = null;
-/** null = default (max EV); otherwise column id for All Players table sort */
+/** null = all platforms */
+var activePlatform = null;
+/** null = all tiers */
+var activeTier = null;
+/** null = default (tier+conviction); otherwise column id for All Players table sort */
 var playersSortKey = null;
 var playersSortDir = "desc";
 
@@ -92,6 +96,47 @@ function fetchSlateWithFallback(urls) {
         .catch(function () {
           tryNext();
         });
+    }
+    tryNext();
+  });
+}
+
+function enrichedUrls() {
+  var urls = [];
+  var path = typeof window !== "undefined" && window.location && window.location.pathname
+    ? window.location.pathname : "";
+  var inDocs = path.indexOf("/docs/") !== -1;
+  var now = new Date();
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    var y = d.getFullYear();
+    var mo = String(d.getMonth() + 1).padStart(2, "0");
+    var dy = String(d.getDate()).padStart(2, "0");
+    var fname = "dfs_enriched_" + y + mo + dy + ".json";
+    var a = "data/props/enriched/" + fname;
+    var b = "../data/props/enriched/" + fname;
+    urls.push(inDocs ? b : a);
+    urls.push(inDocs ? a : b);
+  }
+  return urls;
+}
+
+function fetchEnrichedWithFallback(urls) {
+  return new Promise(function (resolve) {
+    var i = 0;
+    function tryNext() {
+      if (i >= urls.length) { resolve([]); return; }
+      var url = urls[i++];
+      fetch(url, { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          var picks = data && Array.isArray(data.picks) ? data.picks : [];
+          if (picks.length) { resolve(picks); } else { tryNext(); }
+        })
+        .catch(function () { tryNext(); });
     }
     tryNext();
   });
@@ -379,16 +424,14 @@ function initMainNav() {
 
 function loadLineProbs() {
   var panel = document.getElementById("playersPanel");
-  if (lineProbsState === "loading") return;
-  if (lineProbsState === "loaded") {
-    renderPlayersPanel();
-    return;
-  }
-  lineProbsState = "loading";
-  if (panel) panel.innerHTML = '<p class="load-msg">Loading player lines…</p>';
-  fetchLineProbsWithFallback(jsonUrls("all_line_probs.json")).then(function (rows) {
-    ALL_LINE_PROBS = rows;
-    lineProbsState = "loaded";
+  if (enrichedState === "loading") return;
+  if (enrichedState === "loaded") { renderPlayersPanel(); return; }
+  enrichedState = "loading";
+  if (panel) panel.innerHTML = '<p class="load-msg">Loading player data…</p>';
+  fetchEnrichedWithFallback(enrichedUrls()).then(function (picks) {
+    var supported = { PTS: true, REB: true, AST: true };
+    ALL_ENRICHED = picks.filter(function (p) { return supported[p.market]; });
+    enrichedState = "loaded";
     renderPlayersPanel();
   });
 }
@@ -399,7 +442,7 @@ function fmtSignedEv(x) {
   return sign + fmtEv(Math.abs(n));
 }
 
-/** Over hit rate (0–1) as a percentage. */
+/** 0–1 probability as a percentage string. */
 function fmtOverRatePct(overRate) {
   if (overRate == null || overRate === "") return "—";
   var n = Number(overRate);
@@ -407,14 +450,35 @@ function fmtOverRatePct(overRate) {
   return Math.round(n * 100) + "%";
 }
 
+function tierPriority(tier) {
+  if (tier === "sharp_verified") return 0;
+  if (tier === "conflict") return 1;
+  return 2;
+}
+
+function htmlTierPill(tier) {
+  var cls, label;
+  switch (String(tier || "")) {
+    case "sharp_verified": cls = "tier-sharp"; label = "Verified"; break;
+    case "conflict": cls = "tier-conflict"; label = "Conflict"; break;
+    default: cls = "tier-nomodel"; label = "No Model"; break;
+  }
+  return '<span class="tier-pill ' + cls + '">' + label + "</span>";
+}
+
+function htmlLeanPill(lean) {
+  if (!lean) return "—";
+  var s = String(lean).toUpperCase();
+  var cls = s === "OVER" ? "side-over" : "side-under";
+  return '<span class="side-pill ' + cls + '">' + escapeHtml(s) + "</span>";
+}
+
 function filterPlayerRows(rows, query) {
-  var q = String(query || "")
-    .trim()
-    .toLowerCase();
+  var q = String(query || "").trim().toLowerCase();
   if (!q) return rows.slice();
   var parts = q.split(/\s+/).filter(Boolean);
   return rows.filter(function (r) {
-    var name = String(r.PLAYER_NAME || "").toLowerCase();
+    var name = String(r.player || r.display_name || "").toLowerCase();
     for (var i = 0; i < parts.length; i++) {
       if (name.indexOf(parts[i]) === -1) return false;
     }
@@ -426,9 +490,18 @@ function filterPlayerRowsByStat(rows, stat) {
   if (!stat) return rows.slice();
   var want = String(stat).toUpperCase();
   return rows.filter(function (r) {
-    var m = String(r.MARKET || r.CATEGORY || "").toUpperCase();
-    return m === want;
+    return String(r.market || "").toUpperCase() === want;
   });
+}
+
+function filterByPlatform(rows, platform) {
+  if (!platform) return rows.slice();
+  return rows.filter(function (r) { return String(r.platform || "") === platform; });
+}
+
+function filterByTier(rows, tier) {
+  if (!tier) return rows.slice();
+  return rows.filter(function (r) { return String(r.tier || "") === tier; });
 }
 
 function bookPillClass(book) {
@@ -456,15 +529,12 @@ function parseSortNumber(val) {
 
 function defaultSortPlayersRows(rows) {
   return rows.slice().sort(function (a, b) {
-    var ba = Math.max(Number(a.EV_OVER), Number(a.EV_UNDER));
-    var bb = Math.max(Number(b.EV_OVER), Number(b.EV_UNDER));
-    if (bb !== ba) return bb - ba;
-    var cmp = String(a.PLAYER_NAME || "").localeCompare(String(b.PLAYER_NAME || ""));
-    if (cmp) return cmp;
-    cmp = String(a.MARKET || a.CATEGORY || "").localeCompare(String(b.MARKET || b.CATEGORY || ""));
-    if (cmp) return cmp;
-    if (Number(a.LINE) !== Number(b.LINE)) return Number(a.LINE) - Number(b.LINE);
-    return String(a.LINE_BOOKMAKER || "").localeCompare(String(b.LINE_BOOKMAKER || ""));
+    var ta = tierPriority(a.tier), tb = tierPriority(b.tier);
+    if (ta !== tb) return ta - tb;
+    var ma = a.model ? Math.abs(Number(a.model.p_over || 0.5) - 0.5) : 0;
+    var mb = b.model ? Math.abs(Number(b.model.p_over || 0.5) - 0.5) : 0;
+    if (mb !== ma) return mb - ma;
+    return String(a.player || "").localeCompare(String(b.player || ""));
   });
 }
 
@@ -476,47 +546,33 @@ function comparePlayersColumn(a, b, key, dir) {
       ? sb.localeCompare(sa, undefined, { sensitivity: "base" })
       : sa.localeCompare(sb, undefined, { sensitivity: "base" });
   }
-  function numCmp(field) {
-    var va = parseSortNumber(a[field]);
-    var vb = parseSortNumber(b[field]);
+  function numCmp(get) {
+    var va = parseSortNumber(get(a));
+    var vb = parseSortNumber(get(b));
     if (va == null && vb == null) return 0;
     if (va == null) return 1;
     if (vb == null) return -1;
     return dir === "desc" ? vb - va : va - vb;
   }
   switch (key) {
-    case "player":
-      return strCmp(function (r) {
-        return r.PLAYER_NAME;
-      });
-    case "book":
-      return strCmp(function (r) {
-        return r.LINE_BOOKMAKER;
-      });
-    case "mkt":
-      return strCmp(function (r) {
-        return r.MARKET || r.CATEGORY;
-      });
-    case "line":
-      return numCmp("LINE");
-    case "statProj":
-      return numCmp("STAT_Q50");
-    case "minProj":
-      return numCmp("MIN_Q50");
-    case "l5":
-      return numCmp("OVER_RATE_L5");
-    case "l10":
-      return numCmp("OVER_RATE_L10");
-    case "l15":
-      return numCmp("OVER_RATE_L15");
-    case "minL10":
-      return numCmp("AVG_MIN_L10");
-    case "statL10":
-      return numCmp("AVG_STAT_L10");
-    case "matchup":
-      return numCmp("AVG_STAT_VS_MATCHUP");
-    default:
-      return 0;
+    case "player":   return strCmp(function (r) { return r.player || r.display_name; });
+    case "platform": return strCmp(function (r) { return r.platform; });
+    case "mkt":      return strCmp(function (r) { return r.market; });
+    case "line":     return numCmp(function (r) { return r.dfs_line; });
+    case "tier":
+      var ta = tierPriority(a.tier), tb2 = tierPriority(b.tier);
+      return dir === "desc" ? ta - tb2 : tb2 - ta;
+    case "modelProb":     return numCmp(function (r) { return r.model && r.model.p_over; });
+    case "sharpProb":     return numCmp(function (r) { return r.sharp && r.sharp.no_vig_over; });
+    case "consensusProb": return numCmp(function (r) { return r.consensus && r.consensus.mean_no_vig_over_same_line; });
+    case "statProj":      return numCmp(function (r) { return r.model && r.model.stat_q50; });
+    case "minProj":       return numCmp(function (r) { return r.model && r.model.min_q50; });
+    case "l5":            return numCmp(function (r) { return r.form && r.form.over_l5; });
+    case "l10":           return numCmp(function (r) { return r.form && r.form.over_l10; });
+    case "l15":           return numCmp(function (r) { return r.form && r.form.over_l15; });
+    case "vsOppAvg":      return numCmp(function (r) { return r.vs_opp && r.vs_opp.avg_stat; });
+    case "oppDefRank":    return numCmp(function (r) { return r.game_context && r.game_context.opp_def_rating_rank; });
+    default: return 0;
   }
 }
 
@@ -555,53 +611,82 @@ function playerSortTh(key, opts) {
 function renderPlayersPanel() {
   var el = document.getElementById("playersPanel");
   if (!el) return;
-  if (!ALL_LINE_PROBS.length) {
-    el.innerHTML =
-      '<p class="load-msg load-err">No rows in <code>all_line_probs.json</code> or file not found. Export JSONL to <code>data/props/ev_analysis/all_line_probs.json</code>.</p>';
+  if (!ALL_ENRICHED.length) {
+    el.innerHTML = '<p class="load-msg load-err">No player data found. Ensure <code>dfs_enriched_YYYYMMDD.json</code> exists under <code>data/props/enriched/</code>.</p>';
     return;
   }
   var searchEl = document.getElementById("playerSearch");
   var q = searchEl ? searchEl.value : "";
-  var sorted = sortPlayersRows(ALL_LINE_PROBS);
-  var byStat = filterPlayerRowsByStat(sorted, activePlayerStat);
-  var filtered = filterPlayerRows(byStat, q);
+  var rows = sortPlayersRows(ALL_ENRICHED);
+  rows = filterByPlatform(rows, activePlatform);
+  rows = filterByTier(rows, activeTier);
+  rows = filterPlayerRowsByStat(rows, activePlayerStat);
+  rows = filterPlayerRows(rows, q);
+
   var html =
     '<div class="players-wrap"><table class="players-table players-table--sortable"><thead><tr>' +
     playerSortTh("player", { label: "Player" }) +
-    playerSortTh("book", { label: "Book" }) +
+    playerSortTh("platform", { label: "Platform" }) +
     playerSortTh("mkt", { label: "Mkt" }) +
     playerSortTh("line", { className: "num", label: "Line" }) +
-    playerSortTh("statProj", { className: "num", label: "Stat Proj." }) +
-    playerSortTh("minProj", { className: "num", title: "Projected minutes (Q50)", label: "Min Proj." }) +
-    playerSortTh("l5", { className: "num", title: "Over hit rate (last 5 games)", label: "L5" }) +
-    playerSortTh("l10", { className: "num", title: "Over hit rate (last 10 games)", label: "L10" }) +
-    playerSortTh("l15", { className: "num", title: "Over hit rate (last 15 games)", label: "L15" }) +
-    playerSortTh("minL10", { className: "num", title: "Average minutes last 10 games", label: "MIN L10" }) +
-    playerSortTh("statL10", { className: "num", title: "Average stat last 10 games", label: "STAT L10" }) +
-    playerSortTh("matchup", { className: "num", title: "Average stat vs this opponent (matchup history)", label: "Matchup Avg." }) +
+    playerSortTh("modelProb", { className: "num", label: "Model", title: "Model lean and probability of OVER" }) +
+    playerSortTh("sharpProb", { className: "num", label: "Sharp", title: "Sharp book lean and no-vig implied probability of OVER" }) +
+    playerSortTh("consensusProb", { className: "num", label: "Consensus", title: "Market consensus no-vig implied probability of OVER (same line)" }) +
+    playerSortTh("statProj", { className: "num", label: "Proj", title: "Model stat projection (median)" }) +
+    playerSortTh("minProj", { className: "num", label: "Min", title: "Model minutes projection (median)" }) +
+    playerSortTh("l5", { className: "num", label: "L5", title: "Over hit rate last 5 games" }) +
+    playerSortTh("l10", { className: "num", label: "L10", title: "Over hit rate last 10 games" }) +
+    playerSortTh("l15", { className: "num", label: "L15", title: "Over hit rate last 15 games" }) +
+    playerSortTh("vsOppAvg", { className: "num", label: "vs Opp", title: "Average stat vs this opponent (n games)" }) +
+    playerSortTh("oppDefRank", { className: "num", label: "Def Rnk", title: "Opponent defensive rating rank (1=best defense)" }) +
     "</tr></thead><tbody>";
-  if (!filtered.length) {
-    html +=
-      '<tr><td colspan="12" class="players-empty">No rows match your search.</td></tr>';
+
+  if (!rows.length) {
+    html += '<tr><td colspan="14" class="players-empty">No rows match your filters.</td></tr>';
   }
-  for (var i = 0; i < filtered.length; i++) {
-    var r = filtered[i];
-    html +=
-      "<tr>" +
-      "<td>" + escapeHtml(r.PLAYER_NAME || "") + "</td>" +
-      "<td>" + htmlBookPill(r.LINE_BOOKMAKER) + "</td>" +
-      "<td>" + escapeHtml(r.MARKET || r.CATEGORY || "") + "</td>" +
-      '<td class="num">' + fmt1(r.LINE) + "</td>" +
-      '<td class="num">' + fmt1(r.STAT_Q50) + "</td>" +
-      '<td class="num">' + fmtNumOrDash(r.MIN_Q50) + "</td>" +
-      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L5) + "</td>" +
-      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L10) + "</td>" +
-      '<td class="num">' + fmtOverRatePct(r.OVER_RATE_L15) + "</td>" +
-      '<td class="num">' + fmtNumOrDash(r.AVG_MIN_L10) + "</td>" +
-      '<td class="num">' + fmtNumOrDash(r.AVG_STAT_L10) + "</td>" +
-      '<td class="num">' + fmtNumOrDash(r.AVG_STAT_VS_MATCHUP) + "</td>" +
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var model = r.model || {};
+    var sharp = r.sharp || {};
+    var consensus = r.consensus || {};
+    var gc = r.game_context || {};
+    var form = r.form || {};
+    var vsOpp = r.vs_opp || {};
+
+    var modelCell = model.lean
+      ? htmlLeanPill(model.lean) + " " + fmtOverRatePct(model.p_over)
+      : "—";
+    var sharpCell = sharp.lean
+      ? htmlLeanPill(sharp.lean) + " " + fmtOverRatePct(sharp.no_vig_over)
+      : "—";
+    var consensusCell = consensus.mean_no_vig_over_same_line != null
+      ? fmtOverRatePct(consensus.mean_no_vig_over_same_line) +
+        ' <span class="enriched-dim">(' + (consensus.n_books_same_line || 0) + " bk)</span>"
+      : "—";
+    var vsOppCell = vsOpp.avg_stat != null
+      ? fmt1(vsOpp.avg_stat) + ' <span class="enriched-dim">(' + (vsOpp.n_games || 0) + "g)</span>"
+      : "—";
+
+    html += "<tr>" +
+      "<td><span class=\"enriched-name\">" + escapeHtml(r.display_name || r.player || "") + "</span>" +
+      (r.team_abbr ? ' <span class="enriched-dim">' + escapeHtml(r.team_abbr) + "</span>" : "") + "</td>" +
+      "<td>" + htmlBookPill(r.platform) + "</td>" +
+      "<td>" + escapeHtml(r.market || "") + "</td>" +
+      '<td class="num">' + fmt1(r.dfs_line) + "</td>" +
+      "<td class=\"enriched-lean\">" + modelCell + "</td>" +
+      "<td class=\"enriched-lean\">" + sharpCell + "</td>" +
+      "<td>" + consensusCell + "</td>" +
+      '<td class="num">' + fmtNumOrDash(model.stat_q50) + "</td>" +
+      '<td class="num">' + fmtNumOrDash(model.min_q50) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(form.over_l5) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(form.over_l10) + "</td>" +
+      '<td class="num">' + fmtOverRatePct(form.over_l15) + "</td>" +
+      "<td class=\"num enriched-vsopp\">" + vsOppCell + "</td>" +
+      '<td class="num">' + fmtOrdinalRank(gc.opp_def_rating_rank) + "</td>" +
       "</tr>";
   }
+
   html += "</tbody></table></div>";
   el.innerHTML = html;
 }
@@ -610,7 +695,7 @@ function initPlayerSearch() {
   var input = document.getElementById("playerSearch");
   if (!input) return;
   input.addEventListener("input", function () {
-    if (lineProbsState === "loaded") renderPlayersPanel();
+    if (enrichedState === "loaded") renderPlayersPanel();
   });
 }
 
@@ -628,12 +713,12 @@ function initPlayersColumnSort() {
       playersSortKey = key;
       playersSortDir = "desc";
     }
-    if (lineProbsState === "loaded") renderPlayersPanel();
+    if (enrichedState === "loaded") renderPlayersPanel();
   });
 }
 
 function syncStatPillUi() {
-  var pills = document.querySelectorAll(".stat-pill");
+  var pills = document.querySelectorAll("[data-stat]");
   for (var i = 0; i < pills.length; i++) {
     var s = pills[i].getAttribute("data-stat");
     var on = s === "ALL" ? !activePlayerStat : s === activePlayerStat;
@@ -646,7 +731,7 @@ function initPlayerStatFilter() {
   var bar = document.querySelector(".stat-filter");
   if (!bar) return;
   bar.addEventListener("click", function (e) {
-    var t = e.target && e.target.closest(".stat-pill");
+    var t = e.target && e.target.closest("[data-stat]");
     if (!t) return;
     var s = t.getAttribute("data-stat");
     if (s === "ALL") {
@@ -655,7 +740,61 @@ function initPlayerStatFilter() {
       activePlayerStat = activePlayerStat === s ? null : s;
     }
     syncStatPillUi();
-    if (lineProbsState === "loaded") renderPlayersPanel();
+    if (enrichedState === "loaded") renderPlayersPanel();
+  });
+}
+
+function syncPlatformPillUi() {
+  var pills = document.querySelectorAll("[data-platform]");
+  for (var i = 0; i < pills.length; i++) {
+    var p = pills[i].getAttribute("data-platform");
+    var on = p === "ALL" ? !activePlatform : p === activePlatform;
+    pills[i].classList.toggle("active", on);
+    pills[i].setAttribute("aria-pressed", on ? "true" : "false");
+  }
+}
+
+function initPlatformFilter() {
+  var bar = document.getElementById("platformFilter");
+  if (!bar) return;
+  bar.addEventListener("click", function (e) {
+    var t = e.target && e.target.closest("[data-platform]");
+    if (!t) return;
+    var p = t.getAttribute("data-platform");
+    if (p === "ALL") {
+      activePlatform = null;
+    } else {
+      activePlatform = activePlatform === p ? null : p;
+    }
+    syncPlatformPillUi();
+    if (enrichedState === "loaded") renderPlayersPanel();
+  });
+}
+
+function syncTierPillUi() {
+  var pills = document.querySelectorAll("[data-tier]");
+  for (var i = 0; i < pills.length; i++) {
+    var t = pills[i].getAttribute("data-tier");
+    var on = t === "ALL" ? !activeTier : t === activeTier;
+    pills[i].classList.toggle("active", on);
+    pills[i].setAttribute("aria-pressed", on ? "true" : "false");
+  }
+}
+
+function initTierFilter() {
+  var bar = document.getElementById("tierFilter");
+  if (!bar) return;
+  bar.addEventListener("click", function (e) {
+    var t = e.target && e.target.closest("[data-tier]");
+    if (!t) return;
+    var v = t.getAttribute("data-tier");
+    if (v === "ALL") {
+      activeTier = null;
+    } else {
+      activeTier = activeTier === v ? null : v;
+    }
+    syncTierPillUi();
+    if (enrichedState === "loaded") renderPlayersPanel();
   });
 }
 
@@ -1047,6 +1186,8 @@ function render() {
 initMainNav();
 initPlayerSearch();
 initPlayerStatFilter();
+initPlatformFilter();
+initTierFilter();
 initPlayersColumnSort();
 try {
   var q = new URLSearchParams(window.location.search);

@@ -12,6 +12,14 @@ from src.pipeline.props_pipeline.apm_pipeline import apm_pipeline
 from src.pipeline.props_pipeline.rpm_pipeline import rpm_pipeline
 from src.utils.team_info import *
 from src.utils.scrap_starters import NBADailyLineups
+from src.utils.underdog_slates import (
+    _valid_two_leg, _valid_three_leg,
+    _strategy_tier_profile_2leg, _strategy_tier_profile_3leg,
+    _order_three_leg_row, _high_total_threshold, _greedy_slates,
+    load_sharp_aligned,
+    _json_ready as _ud_json_ready,
+    _game_ctx as _ud_game_ctx,
+)
 
 # Populated at startup by main(); empty default prevents import-time side-effects
 outPlayers: dict = {}
@@ -1666,6 +1674,202 @@ def build_greedy_slate_3leg(
     return str(out_path)
 
 
+# Net profit multiplier (profit / stake) for winning the full parlay per platform.
+# 2-leg PrizePicks pays 3x total → net = 2.0; 3-leg pays ~5.5x → net = 4.5, etc.
+_DFS_PLATFORM_PAYOUTS: dict[str, tuple[float, float]] = {
+    "PrizePicks":       (2.0, 4.5),
+    "Underdog":         (2.0, 4.5),
+    "Betr DFS":         (2.0, 4.5),
+    "DraftKings Pick6": (2.0, 4.0),
+}
+
+
+def _prep_legs_dfs(picks: list[dict], platform: str) -> list[dict]:
+    """Convert enriched dfs_sharp_aligned picks for one platform into leg dicts
+    compatible with the underdog_slates strategy-tiering helpers."""
+    legs = []
+    for raw in picks:
+        if raw.get("platform") != platform:
+            continue
+        model = raw.get("model") or {}
+        lean  = model.get("lean") or "OVER"
+        po    = float(model.get("p_over") or 0.0)
+        pu    = float(model.get("p_under") or 0.0)
+        side, p_win = ("UNDER", pu if pu > 0 else 1.0 - po) if lean == "UNDER" else ("OVER", po if po > 0 else 1.0 - pu)
+        if p_win <= 0 or p_win >= 1:
+            continue
+        player = raw.get("player")
+        market = raw.get("market")
+        line   = raw.get("dfs_line")
+        team   = raw.get("team_abbr")
+        if player is None or market is None or line is None or team is None:
+            continue
+        opp   = raw.get("opponent_abbr")
+        t_s   = str(team).strip().upper()
+        opp_s = str(opp).strip().upper() if opp is not None else ""
+        game_key = tuple(sorted([t_s, opp_s])) if t_s and opp_s else None
+        legs.append({
+            "pick":          raw,
+            "player":        str(player),
+            "market":        str(market),
+            "line":          float(line),
+            "team":          t_s,
+            "opponent_abbr": opp,
+            "game_total":    _ud_game_ctx(raw, "game_total"),
+            "game_key":      game_key,
+            "side":          side,
+            "p_win":         p_win,
+            "prop_key":      (str(player), str(market)),
+        })
+    return legs
+
+
+def _build_row_nleg_dfs(
+    legs_chunk: list[dict],
+    *,
+    net_mult: float,
+    stake: float,
+    kelly_fraction: float,
+    row_extras: dict | None = None,
+) -> dict:
+    """Build a slate row using a fixed platform net-profit multiplier."""
+    ps       = [x["p_win"] for x in legs_chunk]
+    parlay_p = float(np.prod(ps))
+    b        = net_mult
+    ev_dol   = parlay_p * stake * b - (1.0 - parlay_p) * stake
+    ev_pct   = (ev_dol / stake) * 100.0 if stake else 0.0
+    k_full   = (parlay_p * b - (1.0 - parlay_p)) / b if b > 1e-12 else 0.0
+    kelly    = max(0.0, k_full * kelly_fraction) * 100.0
+
+    row: dict = {
+        "PARLAY_PROB":    round(parlay_p, 5),
+        "EV":             round(ev_pct, 3),
+        "EV_DOLLARS":     round(ev_dol, 4),
+        "KELLY":          round(kelly, 4),
+        "STAKE_DOLLARS":  stake,
+        "NET_PAYOUT_MULT": net_mult,
+        "N_LEGS":         len(legs_chunk),
+    }
+    for i, leg in enumerate(legs_chunk, start=1):
+        pk     = leg["pick"]
+        gc     = pk.get("game_context") or {}
+        form   = pk.get("form") or {}
+        vs_opp = pk.get("vs_opp") or {}
+        model  = pk.get("model") or {}
+        row[f"NAME {i}"]                = leg["player"]
+        row[f"TEAM {i}"]                = leg["team"]
+        row[f"MARKET {i}"]              = leg["market"]
+        row[f"PROP_KEY_{i}"]            = leg["prop_key"]
+        row[f"LINE {i}"]                = leg["line"]
+        row[f"SIDE {i}"]                = leg["side"]
+        row[f"PREDICTION {i}"]          = model.get("stat_q50")
+        row[f"MODEL_PROB {i}"]          = round(leg["p_win"], 4)
+        row[f"OPPONENT {i}"]            = leg.get("opponent_abbr")
+        row[f"SPREAD {i}"]              = gc.get("spread")
+        row[f"GAME_TOTAL {i}"]          = gc.get("game_total")
+        row[f"TOTAL {i}"]               = gc.get("game_total")
+        row[f"OPP_DEF_RATING_RANK {i}"] = gc.get("opp_def_rating_rank")
+        row[f"OPP_PACE_RANK {i}"]       = gc.get("opp_pace_rank")
+        row[f"OVER_RATE_L5 {i}"]        = form.get("over_l5")
+        row[f"OVER_RATE_L10 {i}"]       = form.get("over_l10")
+        row[f"OVER_RATE_L15 {i}"]       = form.get("over_l15")
+        row[f"AVG_STAT_VS_MATCHUP {i}"] = vs_opp.get("avg_stat")
+        row[f"MATCHUP_GAMES {i}"]       = vs_opp.get("n_games")
+    if row_extras:
+        row.update(row_extras)
+    return row
+
+
+def _generate_candidates_dfs_2leg(legs, stake, kelly_fraction, hi_total, net_mult):
+    records = []
+    for idxs in combinations(range(len(legs)), 2):
+        chunk = [legs[i] for i in idxs]
+        if not _valid_two_leg(chunk):
+            continue
+        a, b  = chunk
+        tier, profile = _strategy_tier_profile_2leg(a, b, hi_total)
+        extras = {"STRATEGY_TIER": tier, "COMBO_PROFILE": profile, "ANCHOR_WIN_PROB": 0.0}
+        records.append(_build_row_nleg_dfs(chunk, net_mult=net_mult, stake=stake, kelly_fraction=kelly_fraction, row_extras=extras))
+    records.sort(key=lambda r: (r.get("STRATEGY_TIER", 0), r["EV_DOLLARS"]), reverse=True)
+    return records
+
+
+def _generate_candidates_dfs_3leg(legs, stake, kelly_fraction, hi_total, net_mult):
+    records = []
+    for idxs in combinations(range(len(legs)), 3):
+        chunk = [legs[i] for i in idxs]
+        if not _valid_three_leg(chunk):
+            continue
+        tier, profile, anchor_p, anchor_name = _strategy_tier_profile_3leg(chunk, hi_total)
+        if tier <= 0:
+            continue
+        ordered = _order_three_leg_row(chunk)
+        extras: dict = {"STRATEGY_TIER": tier, "COMBO_PROFILE": profile, "ANCHOR_WIN_PROB": round(anchor_p, 4)}
+        if anchor_name is not None:
+            extras["ANCHOR_NAME"] = anchor_name
+        records.append(_build_row_nleg_dfs(ordered, net_mult=net_mult, stake=stake, kelly_fraction=kelly_fraction, row_extras=extras))
+    records.sort(key=lambda r: (r.get("STRATEGY_TIER", 0), r.get("ANCHOR_WIN_PROB", 0.0), r["EV_DOLLARS"]), reverse=True)
+    return records
+
+
+def build_dfs_slates_from_aligned(
+    aligned_path: str | Path,
+    platform: str,
+    *,
+    out_2leg: str | Path | None = None,
+    out_3leg: str | Path | None = None,
+    stake_dollars: float = 10.0,
+    top_n: int = 10,
+    kelly_fraction: float = 0.5,
+    verbose: bool = True,
+) -> tuple[str | None, str | None]:
+    """
+    Build 2- and 3-leg slates for one DFS platform from the dfs_sharp_aligned JSON
+    written by enrich_dfs_picks(). Uses the same strategy-tiering logic as
+    underdog_slates.py: same-game preference, high-total preference, 2+1 structure.
+    """
+    path = Path(aligned_path).expanduser().resolve()
+    if not path.is_file():
+        if verbose:
+            print(f"  [{platform}] aligned JSON not found: {path}")
+        return None, None
+
+    _, all_picks = load_sharp_aligned(path)
+    legs = _prep_legs_dfs(all_picks, platform)
+    if len(legs) < 2:
+        if verbose:
+            print(f"  [{platform}] ≥2 legs needed after filtering (have {len(legs)}) — skipping")
+        return None, None
+
+    net_mult_2, net_mult_3 = _DFS_PLATFORM_PAYOUTS.get(platform, (2.0, 4.5))
+    hi_total = _high_total_threshold(legs)
+    path_2: str | None = None
+    path_3: str | None = None
+
+    cand2  = _generate_candidates_dfs_2leg(legs, stake_dollars, kelly_fraction, hi_total, net_mult_2)
+    slate2 = _greedy_slates(cand2, top_n)
+    if slate2 and out_2leg:
+        out2 = Path(out_2leg)
+        out2.parent.mkdir(parents=True, exist_ok=True)
+        out2.write_text(json.dumps(_ud_json_ready(slate2), indent=2), encoding="utf-8")
+        path_2 = str(out2)
+        if verbose:
+            print(f"  {platform} 2-leg: {len(slate2)} slates → {out2}")
+
+    if len(legs) >= 3 and out_3leg:
+        cand3  = _generate_candidates_dfs_3leg(legs, stake_dollars, kelly_fraction, hi_total, net_mult_3)
+        slate3 = _greedy_slates(cand3, top_n)
+        if slate3:
+            out3 = Path(out_3leg)
+            out3.parent.mkdir(parents=True, exist_ok=True)
+            out3.write_text(json.dumps(_ud_json_ready(slate3), indent=2), encoding="utf-8")
+            path_3 = str(out3)
+            if verbose:
+                print(f"  {platform} 3-leg: {len(slate3)} slates → {out3}")
+
+    return path_2, path_3
+
+
 # ---------------------------------------------------------
 # DAILY PIPELINE
 # ---------------------------------------------------------
@@ -1687,9 +1891,9 @@ def main(
       3. Predict MIN × RATE quantiles for PTS / AST / REB
       4. Adjust predictions with player_scenarios + game_context
       5. Simulate line probabilities
-      6. Enrich with bookmaker contextual stats
-      7. Save combined all_line_probs.json
-      8. Build 2-leg and 3-leg greedy slates per bookmaker
+      6/7. Enrich DFS picks via ``enrich_dfs_picks`` (sharp context + model probs) → all_line_probs
+      8. Build greedy 2-/3-leg slates per bookmaker from dfs_sharp_aligned picks
+      9. Append predictions & slates to the ledger (`log.snapshot`)
     """
     from src.utils.helpers import (
         load_base_df, load_team_odds, load_player_lines,
@@ -1720,8 +1924,6 @@ def main(
     lines_dfs, lines_us = load_player_lines(today_str)
 
     print(f"Lines for date: {current_date}")
-    # lines_dfs = lines_dfs[lines_dfs['COMMENCE_TIME'] == current_date]
-    # lines_us = lines_us[lines_us['COMMENCE_TIME'] == current_date]
 
     lines_dfs_pts = lines_dfs[lines_dfs['CATEGORY'] == 'player_points']
     lines_dfs_ast = lines_dfs[lines_dfs['CATEGORY'] == 'player_assists']
@@ -1789,56 +1991,67 @@ def main(
     ], ignore_index=True)
     print(f"  {len(raw_probs)} raw prop lines")
 
-    # ── 7. Enrich per bookmaker ───────────────────────────────────────────────
-    print("\n── Enriching with bookmaker context ──")
-    pra_lines_dfs = pd.concat([lines_dfs_pts, lines_dfs_ast, lines_dfs_reb], ignore_index=True)
-    pra_lines_us  = pd.concat([lines_us_pts,  lines_us_ast,  lines_us_reb],  ignore_index=True)
+    # ── 6/7. Enrich DFS picks with sharp context & model probs ──────────────
+    print("\n── Enriching DFS picks ──")
+    from src.utils.generalized_best_bets_v2 import enrich_dfs_picks as _enrich_dfs_picks
 
-    bookmaker_dfs: dict[str, pd.DataFrame] = {}
-    for bk in bookmakers:
-        enriched = merge_with_bookmaker(
-            raw_probs, pra_lines_dfs, pra_lines_us, base_df, team_odds, bk
-        )
-        bookmaker_dfs[bk] = enriched
+    _circa_files = list(Path("data/props/circa+betonline_team_lines").glob("circa+betonline_*.json"))
+    _team_odds_src = str(max(_circa_files, key=lambda f: f.stat().st_mtime)) if _circa_files else None
 
-    # ── 8. Save combined JSON ─────────────────────────────────────────────────
-    non_empty = [df for df in bookmaker_dfs.values() if not df.empty]
-    if non_empty:
-        all_line_probs = pd.concat(non_empty, ignore_index=True)
-        out_path = Path('data/props/ev_analysis/all_line_probs.json')
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        all_line_probs.to_json(out_path, orient='records', lines=True)
-        print(f"\nSaved {len(all_line_probs)} rows → {out_path}")
-    else:
-        print("\nNo enriched lines — all_line_probs.json not written")
+    enriched_path, aligned_path, all_line_probs = _enrich_dfs_picks(
+        dfs_df=lines_dfs,
+        us_df=lines_us,
+        base_df=base_df,
+        all_line_probs=raw_probs,
+        team_odds_source=_team_odds_src,
+        dfs_platforms=None,
+        current_date=current_date,
+        verbose=verbose,
+    )
+
+    if all_line_probs.empty:
+        print("\nNo enriched lines — skipping snapshot")
         return
 
-    # ── 9. Build slates ───────────────────────────────────────────────────────
+    # ── 8. Build slates from dfs_sharp_aligned picks ─────────────────────────
     print("\n── Building slates ──")
-    min_df = base_df  # game-log used for team lookup in slates
-    for bk, enriched in bookmaker_dfs.items():
-        if enriched.empty:
-            continue
-        slate_2leg = BOOKMAKER_SLATE_PATHS.get(bk)
-        slate_3leg = BOOKMAKER_3LEG_PATHS.get(bk)
-        if slate_2leg:
-            build_greedy_slate(
-                prob_df=enriched, min_df=min_df,
-                min_ev=min_ev, min_kelly=min_kelly,
-                kelly_fraction=kelly_fraction, top_n=top_n,
-                json_path=slate_2leg,
-            )
-        if slate_3leg:
-            build_greedy_slate_3leg(
-                prob_df=enriched, min_df=min_df,
-                min_ev=min_ev, min_kelly=min_kelly,
-                kelly_fraction=kelly_fraction, top_n=top_n,
-                json_path=slate_3leg,
-            )
+    for bk in bookmakers:
+        build_dfs_slates_from_aligned(
+            aligned_path,
+            platform=bk,
+            out_2leg=BOOKMAKER_SLATE_PATHS.get(bk),
+            out_3leg=BOOKMAKER_3LEG_PATHS.get(bk),
+            stake_dollars=10.0,
+            top_n=top_n,
+            kelly_fraction=kelly_fraction,
+            verbose=verbose,
+        )
 
-    # ── 10. Log to ledger ─────────────────────────────────────────────────────
+    # ── 9. Log to ledger ─────────────────────────────────────────────────────
     print("\n── Logging predictions & slates ──")
     from src.utils import log as _log
+
+    # Rename key columns so log.snapshot can find its dedup/side fields,
+    # then expand the `model` nested dict to flat columns alongside all
+    # other enriched context (sharp, consensus, game_context, etc. stay as-is).
+    _log_df = all_line_probs.rename(columns={
+        "player":   "PLAYER_NAME",
+        "market":   "MARKET",
+        "dfs_line": "LINE",
+        "platform": "LINE_BOOKMAKER",
+    }).copy()
+    if "model" in _log_df.columns:
+        _model_flat = _log_df.pop("model").apply(pd.Series).rename(columns={
+            "p_over":   "P_OVER",
+            "p_under":  "P_UNDER",
+            "min_q10":  "MIN_Q10",
+            "min_q50":  "MIN_Q50",
+            "min_q90":  "MIN_Q90",
+            "stat_q10": "STAT_Q10",
+            "stat_q50": "STAT_Q50",
+            "stat_q90": "STAT_Q90",
+        })
+        _log_df = pd.concat([_log_df.reset_index(drop=True), _model_flat.reset_index(drop=True)], axis=1)
 
     slate_paths = {
         bk: {
@@ -1847,7 +2060,7 @@ def main(
         }
         for bk in bookmakers
     }
-    _log.snapshot(all_line_probs, slate_paths, date=current_date)
+    _log.snapshot(_log_df, slate_paths, date=current_date)
 
     print("\n── Done ──")
 

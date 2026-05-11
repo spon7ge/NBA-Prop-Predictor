@@ -6,18 +6,18 @@ Run DFS / book scrapers in one shot; artifacts go under ``data/props/``:
   pinnacle/         — Pinnacle matchups JSON (Selenium)
   dk+fd_props/       — Odds-API.io FanDuel + DraftKings player props (``draftkings_fanduel.py``)
   dk+fd_team_lines/  — Odds-API.io FanDuel + DraftKings spreads + totals (``draftkings_fanduel_team.py``)
-  365+mgm_props/     — Odds-API.io BetMGM + Bet365 player props (``betmgm_bet365.py``)
-  365+mgm_team_lines/ — Odds-API.io BetMGM + Bet365 spreads + totals (``betmgm_bet365_team.py``)
+  circa+betonline_props/ — Odds-API.io Circa + BetOnline.ag player props (``circa_betonline.py``)
+  circa+betonline_team_lines/ — Odds-API.io Circa + BetOnline.ag spreads + totals (``circa_betonline_team.py``)
 
 From repo root::
 
   python scripts/run_scrapers.py
   python scripts/run_scrapers.py --skip-pinnacle
-  python scripts/run_scrapers.py --only underdog,prizepicks,dk_fd_props,dk_fd_team,mgm_bet365_props,mgm_bet365_team
+  python scripts/run_scrapers.py --only underdog,prizepicks,dk_fd_props,dk_fd_team,circa_betonline_props,circa_betonline_team
 
 Env:
   ``API_KEY_IO_1`` (or ``ODDS_API_IO_KEY``) for ``draftkings_fanduel`` and ``draftkings_fanduel_team``;
-  ``API_KEY_IO_2`` (or ``ODDS_API_IO_KEY``) for ``betmgm_bet365`` and ``betmgm_bet365_team``.
+  ``API_KEY_IO_2`` (or ``ODDS_API_IO_KEY``) for ``circa_betonline`` and ``circa_betonline_team``.
   ``PRIZEPICKS_COOKIE`` / ``PRIZEPICKS_COOKIE_FILE`` (optional) if PrizePicks blocks your IP.
   ``PRIZEPICKS_IMPERSONATE`` (optional) — comma-separated ``curl_cffi`` browser ids; default tries ``safari17_2_ios`` first (works better with PerimeterX than Chrome fingerprints in some environments).
   ``.env`` is loaded from repo root.
@@ -45,8 +45,8 @@ def _ensure_props_subdirs() -> None:
         "pinnacle",
         "dk+fd_props",
         "dk+fd_team_lines",
-        "365+mgm_props",
-        "365+mgm_team_lines",
+        "circa+betonline_props",
+        "circa+betonline_team_lines",
     ):
         (DATA_PROPS / sub).mkdir(parents=True, exist_ok=True)
 
@@ -112,31 +112,31 @@ def run_dk_fd_team() -> None:
     print(f"saved {path}")
 
 
-def run_mgm_bet365_props() -> None:
-    from src.scrapers.betmgm_bet365 import OddsIoScraper, save_odds_io_pull_json
+def run_circa_betonline_props() -> None:
+    from src.scrapers.circa_betonline import OddsIoScraper, save_odds_io_pull_json
 
-    print("\n=== betmgm_bet365 (Odds-API.io BetMGM/Bet365 player props) ===")
+    print("\n=== circa_betonline (Odds-API.io Circa/BetOnline.ag player props) ===")
     scraper = OddsIoScraper()
     payload = scraper.run()
     out_path = save_odds_io_pull_json(
         events=scraper.events,
         odds=payload,
         bookmakers=scraper.bookmakers,
-        out_dir=DATA_PROPS / "365+mgm_props",
+        out_dir=DATA_PROPS / "circa+betonline_props",
     )
     print(f"saved {out_path}")
 
 
-def run_mgm_bet365_team() -> None:
-    from src.scrapers.betmgm_bet365_team import fetchTeamLines
+def run_circa_betonline_team() -> None:
+    from src.scrapers.circa_betonline_team import fetchTeamLines
 
-    print("\n=== betmgm_bet365_team (Odds-API.io BetMGM/Bet365 spreads/totals) ===")
+    print("\n=== circa_betonline_team (Odds-API.io Circa/BetOnline.ag spreads/totals) ===")
     key = os.environ.get("API_KEY_IO_2") or os.environ.get("ODDS_API_IO_KEY")
     if not key:
         raise ValueError(
-            "Set API_KEY_IO_2 (or ODDS_API_IO_KEY) for betmgm_bet365_team."
+            "Set API_KEY_IO_2 (or ODDS_API_IO_KEY) for circa_betonline_team."
         )
-    _, path = fetchTeamLines(key, save_dir=DATA_PROPS / "365+mgm_team_lines")
+    _, path = fetchTeamLines(key, save_dir=DATA_PROPS / "circa+betonline_team_lines")
     if path:
         print(f"saved {path}")
 
@@ -147,8 +147,17 @@ _RUNNERS: dict[str, object] = {
     "pinnacle": run_pinnacle,
     "dk_fd_props": run_dk_fd_props,
     "dk_fd_team": run_dk_fd_team,
-    "mgm_bet365_props": run_mgm_bet365_props,
-    "mgm_bet365_team": run_mgm_bet365_team,
+    "circa_betonline_props": run_circa_betonline_props,
+    "circa_betonline_team": run_circa_betonline_team,
+    # backward compatibility (--only still accepts old names)
+    "mgm_bet365_props": run_circa_betonline_props,
+    "mgm_bet365_team": run_circa_betonline_team,
+}
+
+
+_ONLY_CANONICAL: dict[str, str] = {
+    "mgm_bet365_props": "circa_betonline_props",
+    "mgm_bet365_team": "circa_betonline_team",
 }
 
 
@@ -159,7 +168,7 @@ def _parse_only(raw: str | None) -> set[str] | None:
     bad = names - set(_RUNNERS)
     if bad:
         raise SystemExit(f"Unknown --only name(s): {bad}. Valid: {sorted(_RUNNERS)}")
-    return names
+    return {_ONLY_CANONICAL.get(n, n) for n in names}
 
 
 def main() -> int:
@@ -176,8 +185,26 @@ def main() -> int:
     parser.add_argument("--skip-pinnacle", action="store_true")
     parser.add_argument("--skip-dk-fd-props", action="store_true")
     parser.add_argument("--skip-dk-fd-team", action="store_true")
-    parser.add_argument("--skip-mgm-bet365-props", action="store_true")
-    parser.add_argument("--skip-mgm-bet365-team", action="store_true")
+    parser.add_argument(
+        "--skip-circa-betonline-props",
+        action="store_true",
+        help="Skip Odds-API.io Circa/BetOnline.ag player props",
+    )
+    parser.add_argument(
+        "--skip-circa-betonline-team",
+        action="store_true",
+        help="Skip Odds-API.io Circa/BetOnline.ag spreads/totals",
+    )
+    parser.add_argument(
+        "--skip-mgm-bet365-props",
+        action="store_true",
+        help="Deprecated alias for --skip-circa-betonline-props",
+    )
+    parser.add_argument(
+        "--skip-mgm-bet365-team",
+        action="store_true",
+        help="Deprecated alias for --skip-circa-betonline-team",
+    )
     parser.add_argument(
         "--continue-on-error",
         action="store_true",
@@ -211,10 +238,16 @@ def main() -> int:
         skip.add("dk_fd_props")
     if args.skip_dk_fd_team:
         skip.add("dk_fd_team")
-    if args.skip_mgm_bet365_props:
-        skip.add("mgm_bet365_props")
-    if args.skip_mgm_bet365_team:
-        skip.add("mgm_bet365_team")
+    if (
+        args.skip_circa_betonline_props
+        or args.skip_mgm_bet365_props
+    ):
+        skip.add("circa_betonline_props")
+    if (
+        args.skip_circa_betonline_team
+        or args.skip_mgm_bet365_team
+    ):
+        skip.add("circa_betonline_team")
 
     order = [
         "underdog",
@@ -222,8 +255,8 @@ def main() -> int:
         "pinnacle",
         "dk_fd_props",
         "dk_fd_team",
-        "mgm_bet365_props",
-        "mgm_bet365_team",
+        "circa_betonline_props",
+        "circa_betonline_team",
     ]
     failed = []
     for key in order:

@@ -40,20 +40,28 @@ jobs:
             sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" "$f"
           done
       
-      - name: Copy EV data (JSON slates + all line probs) to docs folder
+      - name: Copy EV data (JSON slates + Underdog enriched line probs) to docs folder
         run: |
           mkdir -p docs/data/props/ev_analysis
           cp data/props/ev_analysis/prizepicks.json docs/data/props/ev_analysis/prizepicks.json
           cp data/props/ev_analysis/underdog.json docs/data/props/ev_analysis/underdog.json
           cp data/props/ev_analysis/draftKings.json docs/data/props/ev_analysis/draftKings.json
           cp data/props/ev_analysis/betr.json docs/data/props/ev_analysis/betr.json
-          cp data/props/ev_analysis/all_line_probs.json docs/data/props/ev_analysis/all_line_probs.json
+          if [ -f "data/props/ev_analysis/underdog_enriched.json" ]; then
+            cp data/props/ev_analysis/underdog_enriched.json docs/data/props/ev_analysis/underdog_enriched.json
+          fi
           # 3-leg slates (optional files are skipped if not present yet, e.g. betr_3leg.json)
           for f in prizepicks_3leg.json underdog_3leg.json draftKings_3leg.json betr_3leg.json; do
             if [ -f "data/props/ev_analysis/$f" ]; then
               cp "data/props/ev_analysis/$f" "docs/data/props/ev_analysis/$f"
             fi
           done
+          # Copy latest dfs_enriched_* file for the All Players view
+          mkdir -p docs/data/props/enriched
+          latest=$(ls -t data/props/enriched/dfs_enriched_*.json 2>/dev/null | head -1)
+          if [ -n "$latest" ]; then
+            cp "$latest" "docs/data/props/enriched/$(basename $latest)"
+          fi
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
