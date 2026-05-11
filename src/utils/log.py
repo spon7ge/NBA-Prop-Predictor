@@ -1,17 +1,41 @@
 """
 Prediction ledger and results reconciliation.
 
-Ledger files (append-only, newline-delimited JSON):
-    data/logs/predictions.jsonl  — one row per prop × bookmaker × run
-    data/logs/slates.jsonl       — one row per leg in every greedy slate (long format)
+Primary store (append semantics with key-based replacement):
+    data/logs/predictions.jsonl — one JSON object per line; full history with deduping
+
+Human-readable mirror (same rows as the JSONL ledger, indented envelope):
+    data/logs/predictions_ledger.json — ``{ generated_at, n_picks, picks, … }``
+    shaped like ``underdog_enriched_*.json``. Rewritten whenever ``snapshot`` updates
+    ``predictions.jsonl``.
+
+Further ledgers:
+
+    data/logs/slates.jsonl       — one row per leg in each exported slate (long format)
+
     data/logs/results.jsonl      — compact reconciled rows (keys + model medians, side, outcomes)
 
-Dedup key for predictions : (DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
-Dedup key for slates      : (DATE, SLATE_ID, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)
+``snapshot`` accepts any ``slate_paths`` shape ``{bookmaker: {"2leg": path, "3leg": path}}``.
+Slate JSON may include optional parlay-level fields (e.g. strategy tier); those are
+copied onto each leg row when present.
 
-Re-runs at the *same line* replace the prior entry for that key.
-Re-runs after a *line move* keep both entries (line history is preserved).
+Dedup/replace semantics for predictions (JSONL + bundle mirror):
+
+    Dedup key: ``(DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)``
+
+    ``_dedup_and_write``: load existing JSONL, drop every old row whose key appears in the
+    *incoming batch*, concatenate ``[remaining_old, incoming_new]``, rewrite the entire file.
+
+    Effects:
+      • Re-running ``snapshot`` the same slate day / player / stat / book / numeric line —
+        replaces the prior row with the new props (fresh ``RUN_TIMESTAMP``, EV, quantiles…).
+      • If the sportsbook moves the numeric ``LINE``, the tuple changes → **both rows stay**
+        as separate history rows (line history retained).
+
+Dedup key for slates:
+    ``(DATE, SLATE_ID, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)``
 """
+
 
 import json
 import numpy as np
@@ -21,9 +45,10 @@ from pathlib import Path
 
 from src.utils.helpers import normalize_game_date_series
 
-LOGS_DIR          = Path("data/logs")
-PREDICTIONS_FILE  = LOGS_DIR / "predictions.jsonl"
-SLATES_FILE       = LOGS_DIR / "slates.jsonl"
+LOGS_DIR               = Path("data/logs")
+PREDICTIONS_FILE       = LOGS_DIR / "predictions.jsonl"
+PREDICTIONS_LEDGER_JSON = LOGS_DIR / "predictions_ledger.json"
+SLATES_FILE            = LOGS_DIR / "slates.jsonl"
 RESULTS_FILE      = LOGS_DIR / "results.jsonl"
 
 # Columns used to identify a unique prediction entry
@@ -42,22 +67,6 @@ _STAT_COL = {
     "BLK": "BLK",
     "STL": "STL",
 }
-
-# Omitted from ledger output (verbose adjustment diagnostics from adjust_predictions / slates).
-_LEDGER_ADJ_DROP = frozenset({
-    "ADJ_CONTEXT_OK",
-    "ADJ_CONTEXT_ERR",
-    "ADJ_ACTIVE_STARS",
-    "ADJ_STARS_MISSING",
-    "ADJ_SPREAD_ROLE",
-    "ADJ_CTX_SPREAD",
-    "ADJ_CTX_TOTAL",
-    "ADJ_MIN_DELTA",
-    "ADJ_RATE_DELTA",
-    "ADJ_MIN_SHIFT",
-    "ADJ_RATE_SHIFT",
-})
-
 
 # ── I/O helpers ───────────────────────────────────────────────────────────────
 
@@ -142,8 +151,17 @@ def _json_safe(obj):
 
 def _dedup_and_write(new_df: pd.DataFrame, path: Path, key_cols: list[str]) -> None:
     """
-    Drop any existing rows whose key_cols match a row in new_df, then append new_df.
-    Re-reads the file so the full history is preserved except for exact key matches.
+    Replace-on-key, then rewrite the ledger file.
+
+    1. Read existing rows from ``path`` (if any).
+    2. Build the set of key tuples coming from ``new_df`` (often one snapshot batch).
+    3. Drop any *existing* row whose key lies in that set.
+    4. Concatenate ``[kept_existing, new_df]`` and rewrite ``path``.
+
+    Rows whose key only appears in the incoming batch behave as inserts; overlapping keys
+    behave as replacements (fresh run replaces the stale row).
+
+    Same logic is used for slates with ``_SLATE_KEY`` (see module docstring).
     """
     existing = _read_jsonl(path)
     if not existing.empty and all(c in existing.columns for c in key_cols):
@@ -157,22 +175,82 @@ def _dedup_and_write(new_df: pd.DataFrame, path: Path, key_cols: list[str]) -> N
     else:
         _append_jsonl(new_df.to_dict("records"), path)
 
+    if path.resolve() == PREDICTIONS_FILE.resolve():
+        _sync_predictions_ledger_json()
 
-def _adj_from_slate_pair(pair: dict, leg: int) -> dict:
-    """Map 'ADJ_X 1' → 'ADJ_X' for the given leg index (drops _LEDGER_ADJ_DROP)."""
-    suf = f" {leg}"
-    out = {}
-    for k, v in pair.items():
-        ks = str(k)
-        if ks.startswith("ADJ_") and ks.endswith(suf):
-            base = ks[: -len(suf)]
-            if base in _LEDGER_ADJ_DROP:
-                continue
-            out[base] = v
-    return out
+
+def _sync_predictions_ledger_json() -> None:
+    """Rewrite ``predictions_ledger.json`` — envelope + picks, analogous to Underdog enriched JSON."""
+    df = _read_jsonl(PREDICTIONS_FILE)
+    picks: list = [_json_safe(r) for r in df.to_dict("records")] if not df.empty else []
+    payload: dict = {
+        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "n_picks": len(picks),
+        "ledger_source": str(PREDICTIONS_FILE.name),
+        "dedupe_key_columns": list(_PRED_KEY),
+        "picks": picks,
+    }
+    if not df.empty and "DATE" in df.columns:
+        payload["date_span"] = {
+            "min": str(df["DATE"].min()),
+            "max": str(df["DATE"].max()),
+        }
+    if not df.empty and "RUN_TIMESTAMP" in df.columns:
+        ts = pd.to_datetime(df["RUN_TIMESTAMP"], errors="coerce").max()
+        if pd.notna(ts):
+            payload["latest_run_timestamp"] = ts.isoformat()
+
+    PREDICTIONS_LEDGER_JSON.parent.mkdir(parents=True, exist_ok=True)
+    with open(PREDICTIONS_LEDGER_JSON, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
 
 
 # ── Core API ──────────────────────────────────────────────────────────────────
+def preds_from_underdog_enriched(
+    raw_probs: pd.DataFrame,
+    enriched_path: str | Path,
+) -> pd.DataFrame:
+    """
+    Join simulation rows ``raw_probs`` to ``underdog_enriched_*.json`` picks on
+    ``(PLAYER_NAME, MARKET, LINE)`` for ledger-compatible flat predictions.
+
+    Picks without a matching ``raw_probs`` row are omitted.
+    """
+    path = Path(enriched_path).expanduser()
+    if raw_probs.empty or not path.exists():
+        return pd.DataFrame()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    picks: list = data.get("picks") or []
+    if not picks:
+        return pd.DataFrame()
+    rp = raw_probs.copy()
+    if "PLAYER_NAME" not in rp.columns or "MARKET" not in rp.columns or "LINE" not in rp.columns:
+        return pd.DataFrame()
+    rp["LINE"] = pd.to_numeric(rp["LINE"], errors="coerce")
+    rows: list[dict] = []
+    for p in picks:
+        name = p.get("player")
+        mkt = p.get("market")
+        line_raw = p.get("ud_line")
+        if name is None or mkt is None or line_raw is None:
+            continue
+        try:
+            line_f = float(line_raw)
+        except (TypeError, ValueError):
+            continue
+        hit = rp[
+            (rp["PLAYER_NAME"] == name)
+            & (rp["MARKET"] == mkt)
+            & np.isclose(rp["LINE"], line_f)
+        ]
+        if hit.empty:
+            continue
+        d = hit.iloc[0].to_dict()
+        d["LINE_BOOKMAKER"] = "Underdog"
+        d["LINE"] = line_f
+        rows.append(d)
+    return pd.DataFrame(rows)
+
 
 def snapshot(
     all_line_probs: pd.DataFrame,
@@ -184,10 +262,9 @@ def snapshot(
     Log today's predictions and slates to the ledger files.
 
     Args:
-        all_line_probs:  Enriched DataFrame from main() (all bookmakers combined).
-                         Must contain LINE_BOOKMAKER column.
-        slate_paths:     {bookmaker: {'2leg': path_str, '3leg': path_str}}
-                         Paths to the already-written slate JSON files.
+        all_line_probs:  Enriched prop-level DataFrame. Must contain ``LINE_BOOKMAKER``.
+        slate_paths:     ``{bookmaker: {"2leg": path, "3leg": path}}``. Empty or
+                         whitespace paths are skipped; any bookmaker keys may appear.
         date:            Override date string 'YYYY-MM-DD' (defaults to today).
         run_timestamp:   Override ISO timestamp (defaults to now).
     """
@@ -200,10 +277,10 @@ def snapshot(
     preds = all_line_probs.copy()
     preds["DATE"]          = date
     preds["RUN_TIMESTAMP"] = run_timestamp
-    preds["SIDE"]          = preds.apply(_derive_side, axis=1)
-    drop_adj = [c for c in _LEDGER_ADJ_DROP if c in preds.columns]
-    if drop_adj:
-        preds = preds.drop(columns=drop_adj)
+    preds["SIDE"] = preds.apply(_derive_side, axis=1)
+    adj_cols = [c for c in preds.columns if str(c).startswith("ADJ_")]
+    if adj_cols:
+        preds = preds.drop(columns=adj_cols)
 
     _dedup_and_write(preds, PREDICTIONS_FILE, _PRED_KEY)
     print(f"[log] predictions  {len(preds):>4} rows  ({date}  ts={run_timestamp})")
@@ -212,6 +289,8 @@ def snapshot(
     slate_rows = []
     for bookmaker, type_paths in slate_paths.items():
         for slate_type, path_str in type_paths.items():
+            if not path_str or not str(path_str).strip():
+                continue
             path = Path(path_str)
             if not path.exists():
                 continue
@@ -222,10 +301,34 @@ def snapshot(
             if not pairs:
                 continue
 
-            n_legs = 3 if "3" in slate_type else 2
             for idx, pair in enumerate(pairs):
+                if not isinstance(pair, dict):
+                    continue
+                n_raw = pair.get("N_LEGS")
+                if n_raw is not None:
+                    try:
+                        n_legs = int(n_raw)
+                    except (TypeError, ValueError):
+                        n_legs = 0
+                else:
+                    n_legs = 3 if pair.get("NAME 3") is not None else 2
+                if n_legs not in (2, 3):
+                    n_legs = 3 if "3" in str(slate_type) else 2
+
                 slate_id = f"{date}_{bookmaker.replace(' ', '_')}_{slate_type}_{idx:04d}"
+                parlay_meta = {
+                    "PARLAY_N_LEGS": n_legs,
+                    "STRATEGY_TIER": pair.get("STRATEGY_TIER"),
+                    "COMBO_PROFILE": pair.get("COMBO_PROFILE"),
+                    "ANCHOR_NAME": pair.get("ANCHOR_NAME"),
+                    "ANCHOR_WIN_PROB": pair.get("ANCHOR_WIN_PROB"),
+                    "STAKE_DOLLARS": pair.get("STAKE_DOLLARS"),
+                    "COMBINED_PAYOUT_MULT": pair.get("COMBINED_PAYOUT_MULT"),
+                    "SLATE_SOURCE": pair.get("SOURCE"),
+                }
                 for leg in range(1, n_legs + 1):
+                    gt_leg = pair.get(f"GAME_TOTAL {leg}")
+                    tot_leg = pair.get(f"TOTAL {leg}")
                     leg_row = {
                         "DATE":          date,
                         "RUN_TIMESTAMP": run_timestamp,
@@ -243,9 +346,13 @@ def snapshot(
                         "MODEL_PROB":    pair.get(f"MODEL_PROB {leg}"),
                         "TEAM":          pair.get(f"TEAM {leg}"),
                         "OPPONENT":      pair.get(f"OPPONENT {leg}"),
-                        "SPREAD":        pair.get(f"SPREAD {leg}"),
-                        "TOTAL":         pair.get(f"TOTAL {leg}"),
-                        **_adj_from_slate_pair(pair, leg),
+                        "SPREAD":               pair.get(f"SPREAD {leg}"),
+                        "TOTAL":                tot_leg,
+                        "GAME_TOTAL":           gt_leg if gt_leg is not None else tot_leg,
+                        "PAYOUT_MULT":          pair.get(f"PAYOUT_MULT {leg}"),
+                        "OPP_DEF_RATING_RANK": pair.get(f"OPP_DEF_RATING_RANK {leg}"),
+                        "OPP_PACE_RANK":        pair.get(f"OPP_PACE_RANK {leg}"),
+                        **parlay_meta,
                     }
                     slate_rows.append(leg_row)
 
@@ -345,7 +452,7 @@ def _recon_context_summary(
     _pred: pd.Series,
     actual_game_pts: float | None = None,
 ) -> str:
-    """Optional actual game total for results review (ADJ_* omitted from ledger)."""
+    """Optional actual game total for results review."""
     parts: list[str] = []
     if actual_game_pts is not None:
         parts.append(f"actual_pts={actual_game_pts:.0f}")

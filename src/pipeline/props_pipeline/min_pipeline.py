@@ -1,10 +1,12 @@
+import json
+from collections import defaultdict
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 from src.utils.helper_functions import findOpp
 from src.utils.team_info import projectedStartingFive
-from src.utils.helpers import load_team_odds
 
 from src.pipeline.props_pipeline.ppm_pipeline import (
     _active_stars_from_projected_lineup,
@@ -29,37 +31,91 @@ MIN_FEATURES = [
     "MIN_TREND",
 ]
 
-# Reload team odds when a newer JSON lands (same process predicts many players).
-_odds_mtime: float | None = None
-_odds_df: pd.DataFrame | None = None
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_TEAM_LINES_DIR = _REPO_ROOT / "data" / "props" / "circa+betonline_team_lines"
+
+# Book priority for spread LINE (home handicap from Odds-API.io ``hdp``).
+_SPREAD_BOOK_ORDER = ("Circa", "BetOnline.ag")
+
+# Reload when a newer circa+betonline JSON lands (same process predicts many players).
+_spread_mtime: float | None = None
+_spread_games: list[dict[str, str | float]] | None = None
 
 
-def _cached_team_odds() -> pd.DataFrame | None:
-    global _odds_mtime, _odds_df
-    files = list(Path("data/raw/team_lines").glob("NBA_*.json"))
+def _load_spread_games(path: Path) -> list[dict[str, str | float]]:
+    """
+    Build one spread snapshot per game from flattened scraper rows.
+
+    ``LINE`` is the home-team handicap (``flatten_team_lines_records``); away is the negation.
+    """
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    rows = [r for r in (data.get("records") or []) if (r.get("MARKET") or "").strip() == "Spread"]
+    by_event: dict[tuple, list[dict]] = defaultdict(list)
+    for r in rows:
+        key = (r.get("EVENT_ID"), r.get("HOME"), r.get("AWAY"), r.get("START"))
+        by_event[key].append(r)
+
+    out: list[dict[str, str | float]] = []
+    for grp in by_event.values():
+        by_book = {str(x.get("BOOKMAKER") or ""): x for x in grp}
+        chosen = None
+        for bm in _SPREAD_BOOK_ORDER:
+            if bm in by_book:
+                chosen = by_book[bm]
+                break
+        if chosen is None:
+            chosen = grp[0]
+        line = chosen.get("LINE")
+        if line is None:
+            continue
+        try:
+            home_hdp = float(line)
+        except (TypeError, ValueError):
+            continue
+        home = str(chosen.get("HOME") or "")
+        away = str(chosen.get("AWAY") or "")
+        if not home or not away:
+            continue
+        out.append(
+            {
+                "home_team": home,
+                "away_team": away,
+                "home_spread": home_hdp,
+                "away_spread": -home_hdp,
+            }
+        )
+    return out
+
+
+def _cached_spread_games() -> list[dict[str, str | float]] | None:
+    global _spread_mtime, _spread_games
+    if not _TEAM_LINES_DIR.is_dir():
+        return None
+    files = list(_TEAM_LINES_DIR.glob("circa+betonline_*.json"))
     if not files:
         return None
     newest = max(files, key=lambda f: f.stat().st_mtime)
     mt = newest.stat().st_mtime
-    if _odds_df is None or _odds_mtime != mt:
-        _odds_mtime = mt
-        _odds_df = load_team_odds()
-    return _odds_df
+    if _spread_games is None or _spread_mtime != mt:
+        _spread_mtime = mt
+        _spread_games = _load_spread_games(newest)
+    return _spread_games
 
 
 def _player_team_spread(
-    team_odds: pd.DataFrame | None,
+    spread_games: list[dict[str, str | float]] | None,
     team_name: str,
     team_abbrev: str,
 ) -> float | None:
     """
-    Spread *point* for the player's team from their game in team odds.
-    Book priority: DraftKings, then BetMGM.
-    """
-    if team_odds is None or team_odds.empty:
-        return None
+    Spread *point* for the player's team (same sign convention as DK-style ``point``).
 
-    games = team_odds.to_dict("records")
+    Source: latest ``data/props/circa+betonline_team_lines/circa+betonline_*.json``;
+    book priority: Circa, then BetOnline.ag.
+    """
+    if not spread_games:
+        return None
 
     def _norm(s: str) -> str:
         return str(s).lower().replace(".", "").replace("-", " ").strip()
@@ -72,36 +128,14 @@ def _player_team_spread(
             return True
         return False
 
-    game_data = next(
-        (
-            g
-            for g in games
-            if _team_matches(g.get("home_team", ""))
-            or _team_matches(g.get("away_team", ""))
-        ),
-        None,
-    )
-    if game_data is None:
-        return None
-
-    books = {b.get("bookmaker"): b for b in game_data.get("bookmakers", [])}
-    bk = None
-    for book in ("DraftKings", "BetMGM"):
-        if book in books:
-            bk = books[book]
-            break
-    if bk is None:
-        return None
-
-    for market in bk.get("markets", []):
-        if market.get("market_key") != "spreads":
+    for g in spread_games:
+        ht = str(g.get("home_team", ""))
+        at = str(g.get("away_team", ""))
+        if not (_team_matches(ht) or _team_matches(at)):
             continue
-        for outcome in market.get("outcomes", []):
-            if _team_matches(outcome.get("name", "")):
-                pt = outcome.get("point")
-                if pt is None:
-                    return None
-                return float(pt)
+        if _team_matches(ht):
+            return float(g["home_spread"])
+        return float(g["away_spread"])
     return None
 
 
@@ -144,8 +178,8 @@ def min_pipeline(df, name, current_date):
     # STARTING_X_SPREAD_ABS — matches training: STARTING * |TEAM_SPREAD|
     projected = projectedStartingFive.get(player_team, [])
     starting_override = float(1 if (name in projected) else 0)
-    odds_df = _cached_team_odds()
-    spread_pt = _player_team_spread(odds_df, str(team_name), str(player_team))
+    spread_games = _cached_spread_games()
+    spread_pt = _player_team_spread(spread_games, str(team_name), str(player_team))
     if spread_pt is not None and pd.notna(spread_pt):
         res.append(float(starting_override * abs(spread_pt)))
     else:

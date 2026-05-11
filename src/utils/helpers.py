@@ -147,6 +147,7 @@ def merge_with_bookmaker(
     bookmaker: str,
     *,
     debug_nans: bool = False,
+    verbose: bool = True,
 ) -> pd.DataFrame:
     """
     Run generalized_best_bets for one bookmaker and left-join the enriched
@@ -159,6 +160,7 @@ def merge_with_bookmaker(
     adjustment fields do not drop otherwise valid enriched legs.
 
     Pass ``debug_nans=True`` to print why NaNs appear inside ``generalized_best_bets``.
+    Use ``verbose=False`` to silence merge status prints.
     """
     _, _, final = generalized_best_bets(
         lines_dfs, base_df, lines_us, team_odds,
@@ -167,7 +169,8 @@ def merge_with_bookmaker(
     )
 
     if final.empty or 'CATEGORY' not in final.columns:
-        print(f"[{bookmaker}] No lines found — skipping")
+        if verbose:
+            print(f"[{bookmaker}] No lines found — skipping")
         return pd.DataFrame()
 
     df = final.copy()
@@ -185,7 +188,8 @@ def merge_with_bookmaker(
     _core = [c for c in merged.columns if not str(c).startswith("ADJ_")]
     merged = merged.dropna(subset=_core)
 
-    print(f"[{bookmaker}] {len(merged)} enriched legs")
+    if verbose:
+        print(f"[{bookmaker}] {len(merged)} enriched legs")
     return merged
 
 
@@ -301,3 +305,4 @@ def attach_matchup_columns(
         })
 
     return pd.DataFrame(rows)
+

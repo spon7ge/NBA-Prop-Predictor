@@ -3,6 +3,10 @@ Underdog Fantasy pick'em lines — fast fetch, slim JSON export.
 
 Hot path: one GET, one json parse, no pandas. Saves pretty-printed JSON with
 only: full_name, stat_name, stat_value, updated_at, choice, american_price, payout_multiplier.
+
+By default only picks tied to appearances whose matchup has ``sport_id == "NBA"`` are kept
+(so WNBA, esports, etc. drop out). Toggle via ``sport_allowlist`` in ``config.json`` (``null``
+to keep everything).
 """
 
 from __future__ import annotations
@@ -22,6 +26,7 @@ _OUTPUT_TZ = ZoneInfo("America/Los_Angeles")
 _UNDERDOG_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
 
 _DEFAULT_UNDERDOG_CONFIG: dict[str, Any] = {
+    "sport_allowlist": ["NBA"],
     "ud_pickem_url": "https://api.underdogfantasy.com/beta/v5/over_under_lines",
     "headers": {
         "User-Agent": (
@@ -70,6 +75,47 @@ def _load_config() -> dict[str, Any]:
     return cfg
 
 
+def _sport_allowlist_from_config(cfg: dict[str, Any]) -> frozenset[str] | None:
+    """
+    Frozen set of ``sport_id`` strings to retain, or ``None`` to disable filtering.
+
+    Config key ``sport_allowlist``: list of IDs (default ``[\"NBA\"]`` via defaults), or
+    JSON ``null`` to keep lines from every sport Underdog returns.
+    """
+    raw = cfg.get("sport_allowlist", ["NBA"])
+    if raw is None:
+        return None
+    return frozenset(str(x) for x in raw)
+
+
+def _appearance_id_to_sport_id(payload: dict[str, Any]) -> dict[str, str]:
+    """
+    Map appearance id (uuid str) → ``sport_id`` from the parent ``games`` or ``solo_games``.
+    Appearances not resolved to either are omitted from the mapping.
+    """
+    games_by_id = {g["id"]: g for g in (payload.get("games") or []) if isinstance(g, dict)}
+    solo_by_id = {g["id"]: g for g in (payload.get("solo_games") or []) if isinstance(g, dict)}
+
+    out: dict[str, str] = {}
+    for a in payload.get("appearances") or []:
+        if not isinstance(a, dict):
+            continue
+        aid = a.get("id")
+        mid = a.get("match_id")
+        if aid is None or mid is None:
+            continue
+        gid = aid if isinstance(aid, str) else str(aid)
+
+        evt = games_by_id.get(mid) or solo_by_id.get(mid)
+        if not isinstance(evt, dict):
+            continue
+        sid = evt.get("sport_id")
+        if not sid:
+            continue
+        out[gid] = str(sid)
+    return out
+
+
 def _appearance_full_names(
     players: list[dict[str, Any]],
     appearances: list[dict[str, Any]],
@@ -101,14 +147,23 @@ def _appearance_full_names(
     return out
 
 
-def extract_pick_rows(payload: dict[str, Any], corrections: dict[str, str]) -> list[dict[str, Any]]:
+def extract_pick_rows(
+    payload: dict[str, Any],
+    corrections: dict[str, str],
+    *,
+    sport_allowlist: frozenset[str] | None,
+) -> list[dict[str, Any]]:
     """
     Flatten over_under_lines × options into pick dicts (seven public fields).
     Skips suspended lines/options (same intent as prior filter_data).
+
+    If ``sport_allowlist`` is not ``None``, drops options whose resolved ``sport_id`` is absent
+    or not in the set (appearances unmatched to a ``games`` / ``solo_games`` row are dropped).
     """
     players = payload.get("players") or []
     appearances = payload.get("appearances") or []
     names = _appearance_full_names(players, appearances, corrections)
+    app_sports = _appearance_id_to_sport_id(payload)
 
     rows: list[dict[str, Any]] = []
     for line in payload.get("over_under_lines") or []:
@@ -135,6 +190,10 @@ def extract_pick_rows(payload: dict[str, Any], corrections: dict[str, str]) -> l
             aid = opt.get("appearance_id") or appearance_id_stat
             if not aid:
                 continue
+            if sport_allowlist is not None:
+                sid = app_sports.get(str(aid))
+                if sid not in sport_allowlist:
+                    continue
 
             choice_raw = opt.get("choice")
             choice = _CHOICE_MAP.get(str(choice_raw).lower(), choice_raw)
@@ -193,7 +252,8 @@ class UnderdogScraper:
 
     def scrape(self) -> None:
         payload = self.fetch_data()
-        picks = extract_pick_rows(payload, self.NAME_CORRECTIONS)
+        allow = _sport_allowlist_from_config(self.config)
+        picks = extract_pick_rows(payload, self.NAME_CORRECTIONS, sport_allowlist=allow)
         self.underdog_props = picks
         save_export(picks, self.directory)
         print(f"Saved {len(picks)} picks -> {self.directory}")
