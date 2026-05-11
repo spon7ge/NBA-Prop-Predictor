@@ -1,7 +1,7 @@
 """
-NBA full-game spread + totals from Odds-API.io (v3) for BetMGM and Bet365.
+NBA full-game spread + totals from Odds-API.io (v3) for Circa and BetOnline.ag.
 
-Default save dir: ``data/props/365+mgm_team_lines/`` (``365+mgm_YYYYMMDD_HHMMSS.json``).
+Default save dir: ``data/props/circa+betonline_team_lines/`` (``circa+betonline_YYYYMMDD_HHMMSS.json``).
 
 Env: ``API_KEY_IO_2`` (or ``ODDS_API_IO_KEY``). Optional ``ODDS_API_IO_TIMEOUT``,
 ``ODDS_API_IO_RETRIES``.
@@ -21,7 +21,7 @@ from src.scrapers.team_odds import (
     flatten_team_lines_records,
 )
 
-DEFAULT_BOOKMAKERS = ("BetMGM", "Bet365")
+DEFAULT_BOOKMAKERS = ("Circa", "BetOnline.ag")
 
 
 def default_team_lines_dir() -> Path:
@@ -29,7 +29,7 @@ def default_team_lines_dir() -> Path:
         Path(__file__).resolve().parent.parent.parent
         / "data"
         / "props"
-        / "365+mgm_team_lines"
+        / "circa+betonline_team_lines"
     )
 
 
@@ -52,8 +52,8 @@ def fetchTeamLines(
     save_dir: str | os.PathLike[str] | None = None,
 ) -> tuple[list[dict[str, Any]] | None, Path | None]:
     """
-    Fetch Spread + Totals for NBA (BetMGM, Bet365); write JSON under ``save_dir``
-    (default ``data/props/365+mgm_team_lines``).
+    Fetch Spread + Totals for NBA (Circa, BetOnline.ag); write JSON under ``save_dir``
+    (default ``data/props/circa+betonline_team_lines``).
 
     Returns ``(records, path)`` where ``records`` are flattened rows (same as the
     ``records`` array in the saved file), or ``(None, None)`` on error.
@@ -95,7 +95,7 @@ def fetchTeamLines(
         "records": records,
     }
 
-    file_path = root_dir / f"365+mgm_{date_s}_{time_s}.json"
+    file_path = root_dir / f"circa+betonline_{date_s}_{time_s}.json"
     file_path.write_text(json.dumps(body, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"Saved NBA team lines to {file_path}")

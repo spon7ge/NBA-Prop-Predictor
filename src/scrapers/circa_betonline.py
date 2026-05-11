@@ -1,12 +1,12 @@
 """
-Fetch NBA events and odds from Odds-API.io (v3) for selected bookmakers (BetMGM, Bet365).
+Fetch NBA events and odds from Odds-API.io (v3) for selected bookmakers (Circa, BetOnline.ag).
 
-Default save dir: ``data/props/365+mgm_props/`` (files like ``365+mgm_YYYYMMDD_HHMMSS.json``).
+Default save dir: ``data/props/circa+betonline_props/`` (files like ``circa+betonline_YYYYMMDD_HHMMSS.json``).
 
 **Schema parity:** The JSON envelope and each ``records[]`` row shape (NAME, MARKET,
 LINE, OVER, UNDER, BOOKMAKER, EVENT_ID, HOME, AWAY, START) are the same pipeline as
 ``draftkings_fanduel.py`` — filtering and ``flatten_player_props_records`` are kept in
-sync. If DK/FD files list more markets than BetMGM/Bet365 at the same pull time, that is
+sync. If DK/FD files list more markets than Circa/BetOnline.ag at the same pull time, that is
 typically Odds‑API coverage per book, not different scraper formatting.
 
 Docs: https://api.odds-api.io/v3 — use GET /bookmakers for exact name spelling.
@@ -29,7 +29,7 @@ import requests
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_SPORT = "basketball"
-DEFAULT_BOOKMAKERS = ("BetMGM", "Bet365")
+DEFAULT_BOOKMAKERS = ("Circa", "BetOnline.ag")
 MULTI_BATCH = 10
 
 
@@ -178,7 +178,7 @@ _UMBRELLA_MARKET_NAMES = frozenset({"player props", "player prop"})
 
 
 def _market_title_suggests_player_stat_props(name: str) -> bool:
-    """True when Odds names a bucket clearly about individual stat lines (often Bet365/BetMGM)."""
+    """True when Odds names a bucket clearly about individual stat lines."""
     lc = (name or "").strip().lower()
     if not lc:
         return False
@@ -212,7 +212,7 @@ def _is_player_prop_market(market: dict) -> bool:
     """Treat a market bucket as NBA player props for filtering.
 
     Odds-API.io usually nests props under markets named ``Player Props``, but some
-    books (often Bet365) use other titles or omit the umbrella. In those cases we
+    books use other titles or omit the umbrella. In those cases we
     still keep the block when most outcome ``label`` strings look like
     ``Player Name (Market)``.
 
@@ -332,7 +332,7 @@ def _split_prop_label(label: str) -> tuple[str, str]:
 
 
 def _infer_market_from_freeform_label(label: str) -> str:
-    """Best-effort stat tag when label is not ``Name (Stat)`` (common for Bet365)."""
+    """Best-effort stat tag when label is not ``Name (Stat)``."""
     low = (label or "").lower()
     if not low:
         return ""
@@ -358,7 +358,7 @@ def _resolve_flat_market(
     line: dict,
     mkt_from_label: str,
 ) -> str:
-    """Fill MARKET when Odds-API uses plain labels under a generic umbrella (often Bet365)."""
+    """Fill MARKET when Odds-API uses plain labels under a generic umbrella."""
     if mkt_from_label:
         return mkt_from_label
     for k in (
@@ -395,7 +395,7 @@ def flatten_player_props_records(
 
     ``MARKET`` is usually parsed from ``label`` as ``Name (Stat)``. If missing,
     we use the market bucket title, optional line metadata fields, or fall back
-    to the string ``Player Props`` for generic umbrellas (typical Bet365 pattern).
+    to the string ``Player Props`` for generic umbrellas.
 
     odds_format: \"american\" (default) or \"decimal\" for OVER/UNDER columns.
     """
@@ -448,7 +448,7 @@ def flatten_player_props_records(
 class OddsIoScraper:
     """
     Pull every NBA event the API returns for the configured status, then attach
-    BetMGM + Bet365 odds via /odds/multi.
+    Circa + BetOnline.ag odds via /odds/multi.
     """
 
     def __init__(
@@ -498,8 +498,8 @@ class OddsIoScraper:
 
 
 def default_player_lines_dir() -> Path:
-    """``data/props/365+mgm_props`` under project root."""
-    return Path(__file__).resolve().parent.parent.parent / "data" / "props" / "365+mgm_props"
+    """``data/props/circa+betonline_props`` under project root."""
+    return Path(__file__).resolve().parent.parent.parent / "data" / "props" / "circa+betonline_props"
 
 
 def save_odds_io_pull_json(
@@ -512,9 +512,9 @@ def save_odds_io_pull_json(
     player_props_only: bool = True,
     odds_format: str = "american",
 ) -> Path:
-    """Write odds payloads to timestamped JSON (default: ``data/props/365+mgm_props``).
+    """Write odds payloads to timestamped JSON (default: ``data/props/circa+betonline_props``).
 
-    Filenames: ``365+mgm_YYYYMMDD_HHMMSS.json`` (player props) or ``365+mgm_full_YYYYMMDD_HHMMSS.json`` (full odds).
+    Filenames: ``circa+betonline_YYYYMMDD_HHMMSS.json`` (player props) or ``circa+betonline_full_YYYYMMDD_HHMMSS.json`` (full odds).
 
     By default saves only markets named \"Player Props\" (NBA); omits the full events list.
     Set player_props_only=False to persist unfiltered /odds payloads and include events.
@@ -527,9 +527,9 @@ def save_odds_io_pull_json(
     date_s = pulled.strftime("%Y%m%d")
     time_s = pulled.strftime("%H%M%S")
     name = (
-        f"365+mgm_{date_s}_{time_s}.json"
+        f"circa+betonline_{date_s}_{time_s}.json"
         if player_props_only
-        else f"365+mgm_full_{date_s}_{time_s}.json"
+        else f"circa+betonline_full_{date_s}_{time_s}.json"
     )
     path = out_dir / name
     odds_out = (

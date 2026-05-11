@@ -3,7 +3,7 @@ Fetch NBA events and odds from Odds-API.io (v3) for FanDuel + DraftKings player 
 
 Default save dir: ``data/props/dk+fd_props/`` (files like ``dk+fd_YYYYMMDD_HHMMSS.json``).
 
-**Schema parity:** The JSON envelope and ``records[]`` rows match ``betmgm_bet365.py``.
+**Schema parity:** The JSON envelope and ``records[]`` rows match ``betmgm_bet365.py`` (Circa/BetOnline.ag).
 Prop filtering and flattening helpers should be updated together in both files (or deduped
 into shared code later).
 
