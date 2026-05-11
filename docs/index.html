@@ -119,7 +119,22 @@
           <button type="button" class="stat-pill" data-stat="ALL" aria-pressed="true">All</button>
           <button type="button" class="stat-pill" data-stat="PTS" aria-pressed="false">Pts</button>
           <button type="button" class="stat-pill" data-stat="AST" aria-pressed="false">Ast</button>
-          <button type="button" class="stat-pill" data-stat="REB" aria-pressed="false">Rebs</button>
+          <button type="button" class="stat-pill" data-stat="REB" aria-pressed="false">Reb</button>
+        </div>
+        <div class="stat-filter-divider" aria-hidden="true"></div>
+        <div class="stat-filter" role="group" aria-label="Filter by platform" id="platformFilter">
+          <button type="button" class="stat-pill" data-platform="ALL" aria-pressed="true">All Platforms</button>
+          <button type="button" class="stat-pill" data-platform="PrizePicks" aria-pressed="false">PrizePicks</button>
+          <button type="button" class="stat-pill" data-platform="Underdog" aria-pressed="false">Underdog</button>
+          <button type="button" class="stat-pill" data-platform="DraftKings Pick6" aria-pressed="false">DraftKings</button>
+          <button type="button" class="stat-pill" data-platform="Betr DFS" aria-pressed="false">Betr</button>
+        </div>
+        <div class="stat-filter-divider" aria-hidden="true"></div>
+        <div class="stat-filter" role="group" aria-label="Filter by tier" id="tierFilter">
+          <button type="button" class="stat-pill" data-tier="ALL" aria-pressed="true">All Tiers</button>
+          <button type="button" class="stat-pill stat-pill--tier-sharp" data-tier="sharp_verified" aria-pressed="false">Verified</button>
+          <button type="button" class="stat-pill stat-pill--tier-conflict" data-tier="conflict" aria-pressed="false">Conflict</button>
+          <button type="button" class="stat-pill stat-pill--tier-nomodel" data-tier="no_model" aria-pressed="false">No Model</button>
         </div>
       </div>
       <div id="playersPanel"></div>
