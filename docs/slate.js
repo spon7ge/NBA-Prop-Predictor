@@ -151,6 +151,61 @@ function sortByEvDesc(arr) {
   });
 }
 
+/**
+ * EV slate JSON from the pipeline is nested (LEGS[]). The Top Legs UI still uses
+ * mapRow() which expects flat CSV-style keys (NAME 1, LINE 1, …). Normalize here
+ * so filenames and render logic stay the same.
+ */
+function normalizeParlayRowForUi(row) {
+  if (!row || typeof row !== "object") return null;
+  if (row["NAME 1"] != null && row.LEGS == null) return row;
+  var legs = row.LEGS;
+  if (!Array.isArray(legs) || legs.length < 2) return null;
+  if (row.N_LEGS != null && legs.length !== row.N_LEGS) return null;
+  var out = {
+    PARLAY_PROB: row.PARLAY_PROB,
+    EV: row.EV,
+    KELLY: row.KELLY != null ? row.KELLY : row.KELLY_QUARTER
+  };
+  for (var i = 0; i < legs.length; i++) {
+    var L = legs[i];
+    var n = i + 1;
+    var gc = L.game_context || {};
+    var vs = L.vs_opp || {};
+    var fo = L.form || {};
+    var md = L.model || {};
+    out["NAME " + n] = L.player != null ? L.player : L.display_name;
+    out["TEAM " + n] = L.team_abbr != null ? L.team_abbr : L.team;
+    out["MARKET " + n] = L.market;
+    out["LINE " + n] = L.dfs_line;
+    out["SIDE " + n] = L.side != null ? L.side : md.lean;
+    out["PREDICTION " + n] = md.stat_q50;
+    out["OPPONENT " + n] =
+      L.opponent_abbr != null && String(L.opponent_abbr).trim() !== ""
+        ? L.opponent_abbr
+        : L.opponent;
+    out["SPREAD " + n] = gc.spread;
+    out["TOTAL " + n] = gc.game_total;
+    out["OPP_DEF_RANK " + n] = gc.opp_def_rating_rank;
+    out["OPP_PACE_RANK " + n] = gc.opp_pace_rank;
+    out["AVG_STAT_L10 " + n] = L.avg_stat_l10;
+    out["AVG_STAT_VS_MATCHUP " + n] = vs.avg_stat;
+    out["MATCHUP_GAMES " + n] = vs.n_games;
+    out["OVER_RATE_L10 " + n] = fo.over_l10;
+  }
+  return out;
+}
+
+function normalizeSlateArray(arr) {
+  if (!Array.isArray(arr)) return [];
+  var out = [];
+  for (var i = 0; i < arr.length; i++) {
+    var r = normalizeParlayRowForUi(arr[i]);
+    if (r) out.push(r);
+  }
+  return out;
+}
+
 function loadSlates() {
   var cards = document.getElementById("cards");
   cards.innerHTML = '<p class="load-msg">Loading slates…</p>';
@@ -166,14 +221,14 @@ function loadSlates() {
     fetchSlateWithFallback(jsonUrls("betr_3leg.json"))
   ])
     .then(function (results) {
-      SLATE_PRIZEPICKS = sortByEvDesc(results[0]);
-      SLATE_UNDERDOG = sortByEvDesc(results[1]);
-      SLATE_DRAFTKINGS = sortByEvDesc(results[2]);
-      SLATE_BETR = sortByEvDesc(results[3]);
-      SLATE_PRIZEPICKS_3 = sortByEvDesc(results[4]);
-      SLATE_UNDERDOG_3 = sortByEvDesc(results[5]);
-      SLATE_DRAFTKINGS_3 = sortByEvDesc(results[6]);
-      SLATE_BETR_3 = sortByEvDesc(results[7]);
+      SLATE_PRIZEPICKS = sortByEvDesc(normalizeSlateArray(results[0]));
+      SLATE_UNDERDOG = sortByEvDesc(normalizeSlateArray(results[1]));
+      SLATE_DRAFTKINGS = sortByEvDesc(normalizeSlateArray(results[2]));
+      SLATE_BETR = sortByEvDesc(normalizeSlateArray(results[3]));
+      SLATE_PRIZEPICKS_3 = sortByEvDesc(normalizeSlateArray(results[4]));
+      SLATE_UNDERDOG_3 = sortByEvDesc(normalizeSlateArray(results[5]));
+      SLATE_DRAFTKINGS_3 = sortByEvDesc(normalizeSlateArray(results[6]));
+      SLATE_BETR_3 = sortByEvDesc(normalizeSlateArray(results[7]));
       var has2 =
         SLATE_PRIZEPICKS.length ||
         SLATE_UNDERDOG.length ||
@@ -1078,7 +1133,8 @@ function currentSlate() {
 }
 
 function ordSuffix(n) {
-  const i = Math.floor(Math.abs(n));
+  if (n == null || n === "" || isNaN(Number(n))) return "—";
+  const i = Math.floor(Math.abs(Number(n)));
   const j = i % 100;
   if (j >= 11 && j <= 13) return i + "th";
   switch (i % 10) {
@@ -1097,6 +1153,7 @@ function fmtOrdinalRank(n) {
 }
 
 function spreadFmt(n) {
+  if (n == null || n === "" || isNaN(Number(n))) return "—";
   const v = Number(n);
   const sign = v > 0 ? "+" : "";
   return sign + v.toFixed(1);
@@ -1190,8 +1247,15 @@ function renderLeg(leg) {
       '<p class="model-line">Model predicts ' + fmt1(prediction) +
       ' <span class="' + diffClass + '">(' + diffDisplay(side, prediction, line) + ")</span></p>" +
       '<div class="mini-grid">' +
-        "<span>" + l10StatAvgLabel(market) + "</span><span>" + fmt1(avgL10) + "</span>" +
-        "<span>vs matchup</span><span>" + fmt1(avgVs) + " (" + matchupGames + " games)</span>" +
+        "<span>" + l10StatAvgLabel(market) + "</span><span>" + fmtNumOrDash(avgL10) + "</span>" +
+        "<span>vs matchup</span><span>" +
+        fmtNumOrDash(avgVs) +
+        (matchupGames != null &&
+        String(matchupGames).trim() !== "" &&
+        !isNaN(Number(matchupGames))
+          ? " (" + matchupGames + " games)"
+          : "") +
+        "</span>" +
         "<span>Opp Pace Rank</span><span>" + fmtOrdinalRank(oppPaceRank) + "</span>" +
         "<span>Opp Def Rank</span><span>" + ordSuffix(defRank) + "</span>" +
       "</div>" +
@@ -1349,8 +1413,8 @@ function render() {
           "</div>" +
           '<div class="legs">' + leg1 + leg2 + "</div>" +
           '<div class="card-footer">' +
-            "<div>Game total " + fmt1(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
-            "<div>Game total " + fmt1(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
+            "<div>Game total " + fmtNumOrDash(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
+            "<div>Game total " + fmtNumOrDash(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
           "</div>" +
         "</article>";
     }
@@ -1427,9 +1491,9 @@ function render() {
           "</div>" +
           '<div class="legs">' + leg1 + leg2 + leg3 + "</div>" +
           '<div class="card-footer card-footer--triple">' +
-            "<div>Game total " + fmt1(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
-            "<div>Game total " + fmt1(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
-            "<div>Game total " + fmt1(r.total3) + "<br />Spread " + spreadFmt(r.spread3) + "</div>" +
+            "<div>Game total " + fmtNumOrDash(r.total1) + "<br />Spread " + spreadFmt(r.spread1) + "</div>" +
+            "<div>Game total " + fmtNumOrDash(r.total2) + "<br />Spread " + spreadFmt(r.spread2) + "</div>" +
+            "<div>Game total " + fmtNumOrDash(r.total3) + "<br />Spread " + spreadFmt(r.spread3) + "</div>" +
           "</div>" +
         "</article>";
     }
