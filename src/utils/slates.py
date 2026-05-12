@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.utils.underdog_slates import (
+from src.utils.slates_helper import (
     _valid_two_leg,
     _valid_three_leg,
     _strategy_tier_profile_2leg,
@@ -195,31 +195,13 @@ def _build_row_nleg_dfs(
         "NET_PAYOUT_MULT": net_mult,
         "N_LEGS":          len(legs_chunk),
     }
-    for i, leg in enumerate(legs_chunk, start=1):
-        pk     = leg["pick"]
-        gc     = pk.get("game_context") or {}
-        form   = pk.get("form") or {}
-        vs_opp = pk.get("vs_opp") or {}
-        model  = pk.get("model") or {}
-        row[f"NAME {i}"]                = leg["player"]
-        row[f"TEAM {i}"]                = leg["team"]
-        row[f"MARKET {i}"]              = leg["market"]
-        row[f"PROP_KEY_{i}"]            = leg["prop_key"]
-        row[f"LINE {i}"]                = leg["line"]
-        row[f"SIDE {i}"]                = leg["side"]
-        row[f"PREDICTION {i}"]          = model.get("stat_q50")
-        row[f"MODEL_PROB {i}"]          = round(leg["p_win"], 4)
-        row[f"OPPONENT {i}"]            = leg.get("opponent_abbr")
-        row[f"SPREAD {i}"]              = gc.get("spread")
-        row[f"GAME_TOTAL {i}"]          = gc.get("game_total")
-        row[f"TOTAL {i}"]               = gc.get("game_total")
-        row[f"OPP_DEF_RATING_RANK {i}"] = gc.get("opp_def_rating_rank")
-        row[f"OPP_PACE_RANK {i}"]       = gc.get("opp_pace_rank")
-        row[f"OVER_RATE_L5 {i}"]        = form.get("over_l5")
-        row[f"OVER_RATE_L10 {i}"]       = form.get("over_l10")
-        row[f"OVER_RATE_L15 {i}"]       = form.get("over_l15")
-        row[f"AVG_STAT_VS_MATCHUP {i}"] = vs_opp.get("avg_stat")
-        row[f"MATCHUP_GAMES {i}"]       = vs_opp.get("n_games")
+    legs_out = []
+    for leg in legs_chunk:
+        pk = dict(leg["pick"])
+        pk["side"]  = leg["side"]
+        pk["p_win"] = round(leg["p_win"], 4)
+        legs_out.append(pk)
+    row["LEGS"] = legs_out
     if row_extras:
         row.update(row_extras)
     return row
