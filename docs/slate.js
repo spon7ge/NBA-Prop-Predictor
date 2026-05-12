@@ -611,45 +611,190 @@ function playerSortTh(key, opts) {
   );
 }
 
-function renderPlayersPanel() {
-  var el = document.getElementById("playersPanel");
-  if (!el) return;
-  if (!ALL_ENRICHED.length) {
-    el.innerHTML = '<p class="load-msg load-err">No player data found. Ensure <code>dfs_enriched_YYYYMMDD.json</code> exists under <code>data/props/enriched/</code>.</p>';
-    return;
+function pickEdge(pick) {
+  var m = pick && pick.model;
+  if (!m) return null;
+  var pOver = Number(m.p_over);
+  if (isNaN(pOver)) return null;
+  var pUnder = 1 - pOver;
+  var bestSide, bestP;
+  if (pOver >= pUnder) { bestSide = "OVER"; bestP = pOver; }
+  else { bestSide = "UNDER"; bestP = pUnder; }
+  return { side: bestSide, prob: bestP, edge: bestP - DFS_BREAK_EVEN };
+}
+
+function edgeBucketClass(edge) {
+  if (edge == null) return "edge-neg";
+  if (edge >= 0.15) return "edge-strong";
+  if (edge >= 0.05) return "edge-pos";
+  if (edge >= 0) return "edge-marginal";
+  return "edge-neg";
+}
+
+function htmlEdgeCell(pick) {
+  var e = pickEdge(pick);
+  if (!e) return '<span class="edge-cell edge-neg">—</span>';
+  var sign = e.edge >= 0 ? "+" : "";
+  return '<span class="edge-cell ' + edgeBucketClass(e.edge) + '">' +
+         sign + (e.edge * 100).toFixed(1) + '%</span>';
+}
+
+function htmlBestSidePill(pick) {
+  var e = pickEdge(pick);
+  if (!e) return "";
+  var cls = e.side === "OVER" ? "side-over" : "side-under";
+  return '<span class="side-pill ' + cls + '">' + e.side + '</span>';
+}
+
+function aggregateEnrichedByPlayer(rows) {
+  var map = {};
+  var order = [];
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var key = r.player || r.display_name || "";
+    if (!map[key]) {
+      map[key] = {
+        player: key,
+        displayName: r.display_name || r.player || "",
+        team: r.team_abbr || "",
+        opp: r.opponent_abbr || null,
+        is_home: r.is_home,
+        picks: [],
+        tiers: { sharp_verified: 0, conflict: 0, no_model: 0 },
+        markets: {},
+        platforms: {},
+        bestEdge: null,
+        bestEdgeSide: null,
+      };
+      order.push(key);
+    }
+    var agg = map[key];
+    agg.picks.push(r);
+    agg.markets[r.market] = true;
+    agg.platforms[r.platform] = true;
+    var tierKey = r.tier || "no_model";
+    if (agg.tiers[tierKey] != null) agg.tiers[tierKey]++;
+    var e = pickEdge(r);
+    if (e && (agg.bestEdge == null || e.edge > agg.bestEdge)) {
+      agg.bestEdge = e.edge;
+      agg.bestEdgeSide = e.side;
+    }
   }
-  var searchEl = document.getElementById("playerSearch");
-  var q = searchEl ? searchEl.value : "";
-  var rows = sortPlayersRows(ALL_ENRICHED);
-  rows = filterByPlatform(rows, activePlatform);
-  rows = filterByTier(rows, activeTier);
-  rows = filterPlayerRowsByStat(rows, activePlayerStat);
-  rows = filterPlayerRows(rows, q);
+  return order.map(function (k) { return map[k]; });
+}
+
+function sortPlayerGroups(players) {
+  function n(v) { return v == null ? -Infinity : v; }
+  switch (playersGroupSort) {
+    case "props_desc":
+      return players.slice().sort(function (a, b) {
+        return b.picks.length - a.picks.length;
+      });
+    case "verified_desc":
+      return players.slice().sort(function (a, b) {
+        return (b.tiers.sharp_verified - a.tiers.sharp_verified) ||
+               (b.picks.length - a.picks.length);
+      });
+    case "name_asc":
+      return players.slice().sort(function (a, b) {
+        return String(a.player).localeCompare(String(b.player));
+      });
+    case "edge_desc":
+    default:
+      return players.slice().sort(function (a, b) {
+        return n(b.bestEdge) - n(a.bestEdge);
+      });
+  }
+}
+
+function sortGroupBtnHtml(key, label) {
+  var pressed = playersGroupSort === key ? "true" : "false";
+  return '<button type="button" data-grp-sort="' + key + '" aria-pressed="' + pressed + '">' +
+         label + '</button>';
+}
+
+function htmlPlayerSummaryRow(p) {
+  var totalProps = p.picks.length;
+  var nMarkets = Object.keys(p.markets).length;
+  var nPlatforms = Object.keys(p.platforms).length;
+  var t = p.tiers;
+  var matchupLabel = p.opp
+    ? ((p.is_home ? "vs " : "@ ") + p.opp)
+    : "no opp";
+
+  var tierMix = '<span class="tier-mix" title="' +
+    t.sharp_verified + ' verified \xb7 ' +
+    t.conflict + ' conflict \xb7 ' +
+    t.no_model + ' no model">';
+  if (t.sharp_verified) tierMix += '<span class="tier-mix-seg tier-mix-sharp" style="flex:' + t.sharp_verified + '"></span>';
+  if (t.conflict)       tierMix += '<span class="tier-mix-seg tier-mix-conflict" style="flex:' + t.conflict + '"></span>';
+  if (t.no_model)       tierMix += '<span class="tier-mix-seg tier-mix-nomodel" style="flex:' + t.no_model + '"></span>';
+  tierMix += '</span>';
+
+  var edgeHtml;
+  if (p.bestEdge == null) {
+    edgeHtml = '<span class="edge-cell edge-neg">—</span>';
+  } else {
+    var sign = p.bestEdge >= 0 ? "+" : "";
+    edgeHtml = '<span class="edge-cell ' + edgeBucketClass(p.bestEdge) + '">' +
+               sign + (p.bestEdge * 100).toFixed(1) + '%</span>';
+  }
+  var sideHtml = p.bestEdgeSide
+    ? '<span class="side-pill side-' + p.bestEdgeSide.toLowerCase() + '">' + p.bestEdgeSide + '</span>'
+    : "";
+
+  return (
+    '<button type="button" class="player-row" data-player="' + escapeHtml(p.player) + '" aria-expanded="false">' +
+      '<div class="player-row-main">' +
+        '<span class="player-row-name">' + escapeHtml(p.displayName) + '</span>' +
+        '<span class="player-row-team">' + escapeHtml(p.team) + ' \xb7 ' + escapeHtml(matchupLabel) + '</span>' +
+      '</div>' +
+      '<div class="player-row-stats">' +
+        '<span class="player-row-stat"><b>' + totalProps + '</b> ' +
+          (totalProps === 1 ? "prop" : "props") +
+          ' \xb7 <span class="dim">' + nMarkets + ' mkt \xb7 ' + nPlatforms + ' bk</span></span>' +
+        tierMix +
+        '<span class="player-row-best">' + edgeHtml + ' ' + sideHtml + '</span>' +
+      '</div>' +
+      '<span class="player-row-chevron" aria-hidden="true"></span>' +
+    '</button>'
+  );
+}
+
+function htmlPlayerExpandedBody(picks) {
+  var sorted = picks.slice();
+  if (playersSortKey) {
+    sorted.sort(function (a, b) { return comparePlayersColumn(a, b, playersSortKey, playersSortDir); });
+  } else {
+    sorted.sort(function (a, b) {
+      var ea = pickEdge(a), eb = pickEdge(b);
+      var va = ea ? ea.edge : -Infinity;
+      var vb = eb ? eb.edge : -Infinity;
+      return vb - va;
+    });
+  }
 
   var html =
     '<div class="players-wrap"><table class="players-table players-table--sortable"><thead><tr>' +
-    playerSortTh("player", { label: "Player" }) +
-    playerSortTh("platform", { label: "Platform" }) +
+    playerSortTh("platform", { label: "Book" }) +
     playerSortTh("mkt", { label: "Mkt" }) +
     playerSortTh("line", { className: "num", label: "Line" }) +
-    playerSortTh("modelProb", { className: "num", label: "Model", title: "Model lean and probability of OVER" }) +
-    playerSortTh("sharpProb", { className: "num", label: "Sharp", title: "Sharp book lean and no-vig implied probability of OVER" }) +
-    playerSortTh("consensusProb", { className: "num", label: "Consensus", title: "Market consensus no-vig implied probability of OVER (same line)" }) +
-    playerSortTh("statProj", { className: "num", label: "Proj", title: "Model stat projection (median)" }) +
-    playerSortTh("minProj", { className: "num", label: "Min", title: "Model minutes projection (median)" }) +
-    playerSortTh("l5", { className: "num", label: "L5", title: "Over hit rate last 5 games" }) +
-    playerSortTh("l10", { className: "num", label: "L10", title: "Over hit rate last 10 games" }) +
-    playerSortTh("l15", { className: "num", label: "L15", title: "Over hit rate last 15 games" }) +
-    playerSortTh("vsOppAvg", { className: "num", label: "vs Opp", title: "Average stat vs this opponent (n games)" }) +
-    playerSortTh("oppDefRank", { className: "num", label: "Def Rnk", title: "Opponent defensive rating rank (1=best defense)" }) +
+    '<th class="num">Edge</th>' +
+    playerSortTh("modelProb", { className: "num", label: "Model" }) +
+    playerSortTh("sharpProb", { className: "num", label: "Sharp" }) +
+    playerSortTh("consensusProb", { className: "num col-secondary", label: "Cons" }) +
+    playerSortTh("statProj", { className: "num col-secondary", label: "Proj" }) +
+    playerSortTh("minProj", { className: "num col-secondary", label: "Min" }) +
+    playerSortTh("l5", { className: "num", label: "L5" }) +
+    playerSortTh("l10", { className: "num", label: "L10" }) +
+    playerSortTh("l15", { className: "num col-secondary", label: "L15" }) +
+    playerSortTh("vsOppAvg", { className: "num col-secondary", label: "vs Opp" }) +
+    playerSortTh("oppDefRank", { className: "num col-secondary", label: "Def Rnk" }) +
+    '<th>Tier</th>' +
     "</tr></thead><tbody>";
 
-  if (!rows.length) {
-    html += '<tr><td colspan="14" class="players-empty">No rows match your filters.</td></tr>';
-  }
-
-  for (var i = 0; i < rows.length; i++) {
-    var r = rows[i];
+  for (var i = 0; i < sorted.length; i++) {
+    var r = sorted[i];
     var model = r.model || {};
     var sharp = r.sharp || {};
     var consensus = r.consensus || {};
@@ -672,26 +817,132 @@ function renderPlayersPanel() {
       : "—";
 
     html += "<tr>" +
-      "<td><span class=\"enriched-name\">" + escapeHtml(r.display_name || r.player || "") + "</span>" +
-      (r.team_abbr ? ' <span class="enriched-dim">' + escapeHtml(r.team_abbr) + "</span>" : "") + "</td>" +
       "<td>" + htmlBookPill(r.platform) + "</td>" +
       "<td>" + escapeHtml(r.market || "") + "</td>" +
       '<td class="num">' + fmt1(r.dfs_line) + "</td>" +
-      "<td class=\"enriched-lean\">" + modelCell + "</td>" +
-      "<td class=\"enriched-lean\">" + sharpCell + "</td>" +
-      "<td>" + consensusCell + "</td>" +
-      '<td class="num">' + fmtNumOrDash(model.stat_q50) + "</td>" +
-      '<td class="num">' + fmtNumOrDash(model.min_q50) + "</td>" +
+      '<td class="num">' + htmlEdgeCell(r) + "</td>" +
+      '<td class="enriched-lean">' + modelCell + "</td>" +
+      '<td class="enriched-lean">' + sharpCell + "</td>" +
+      '<td class="col-secondary">' + consensusCell + "</td>" +
+      '<td class="num col-secondary">' + fmtNumOrDash(model.stat_q50) + "</td>" +
+      '<td class="num col-secondary">' + fmtNumOrDash(model.min_q50) + "</td>" +
       '<td class="num">' + fmtOverRatePct(form.over_l5) + "</td>" +
       '<td class="num">' + fmtOverRatePct(form.over_l10) + "</td>" +
-      '<td class="num">' + fmtOverRatePct(form.over_l15) + "</td>" +
-      "<td class=\"num enriched-vsopp\">" + vsOppCell + "</td>" +
-      '<td class="num">' + fmtOrdinalRank(gc.opp_def_rating_rank) + "</td>" +
+      '<td class="num col-secondary">' + fmtOverRatePct(form.over_l15) + "</td>" +
+      '<td class="num enriched-vsopp col-secondary">' + vsOppCell + "</td>" +
+      '<td class="num col-secondary">' + fmtOrdinalRank(gc.opp_def_rating_rank) + "</td>" +
+      "<td>" + htmlTierPill(r.tier) + "</td>" +
       "</tr>";
   }
-
   html += "</tbody></table></div>";
+
+  var cards = '<div class="props-cards" aria-hidden="true">';
+  for (var j = 0; j < sorted.length; j++) {
+    var p = sorted[j];
+    var m = p.model || {};
+    var f = p.form || {};
+    cards += '<div class="props-cards-prop">' +
+      '<div class="props-cards-prop-header">' +
+        '<span class="props-cards-prop-mkt">' + escapeHtml(p.market) + '</span>' +
+        '<span class="props-cards-prop-line">' + fmt1(p.dfs_line) + '</span>' +
+        htmlBestSidePill(p) +
+        htmlBookPill(p.platform) +
+        htmlTierPill(p.tier) +
+      '</div>' +
+      '<div class="props-cards-prop-meta">' +
+        '<span>Edge ' + htmlEdgeCell(p) + '</span>' +
+        '<span>Model ' + (m.lean || "—") + ' ' + fmtOverRatePct(m.p_over) + '</span>' +
+        '<span>L5/10: ' + fmtOverRatePct(f.over_l5) + ' \xb7 ' + fmtOverRatePct(f.over_l10) + '</span>' +
+      '</div>' +
+    '</div>';
+  }
+  cards += '</div>';
+
+  return html + cards;
+}
+
+function renderPlayersPanelGrouped() {
+  var el = document.getElementById("playersPanel");
+  if (!el) return;
+  if (!ALL_ENRICHED.length) {
+    el.innerHTML = '<p class="load-msg load-err">No player data found. ' +
+      'Ensure <code>dfs_enriched_YYYYMMDD.json</code> exists under ' +
+      '<code>data/props/enriched/</code>.</p>';
+    return;
+  }
+  var searchEl = document.getElementById("playerSearch");
+  var q = searchEl ? searchEl.value : "";
+
+  var picks = ALL_ENRICHED.slice();
+  picks = filterByPlatform(picks, activePlatform);
+  picks = filterByTier(picks, activeTier);
+  picks = filterPlayerRowsByStat(picks, activePlayerStat);
+  picks = filterPlayerRows(picks, q);
+
+  var players = sortPlayerGroups(aggregateEnrichedByPlayer(picks));
+
+  if (!players.length) {
+    el.innerHTML = '<div class="players-empty-state">No players match your filters.</div>';
+    return;
+  }
+
+  var html =
+    '<div class="players-grouped">' +
+      '<div class="players-grouped-header">' +
+        '<div class="players-grouped-count"><b>' + players.length + '</b> ' +
+          (players.length === 1 ? "player" : "players") +
+          ' \xb7 <span class="dim">' + picks.length + ' props</span></div>' +
+        '<div class="players-sort-bar" role="group" aria-label="Sort players">' +
+          '<span>Sort</span>' +
+          sortGroupBtnHtml("edge_desc", "Best edge") +
+          sortGroupBtnHtml("props_desc", "Most props") +
+          sortGroupBtnHtml("verified_desc", "Most verified") +
+          sortGroupBtnHtml("name_asc", "Name") +
+        '</div>' +
+      '</div>';
+
+  for (var i = 0; i < players.length; i++) {
+    var p = players[i];
+    var isOpen = expandedPlayer === p.player;
+    html += '<div class="player-block' + (isOpen ? " player-block--expanded" : "") +
+            '" data-player="' + escapeHtml(p.player) + '">';
+    html += htmlPlayerSummaryRow(p);
+    if (isOpen) html += '<div class="player-block-body">' + htmlPlayerExpandedBody(p.picks) + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
   el.innerHTML = html;
+}
+
+renderPlayersPanel = renderPlayersPanelGrouped;
+
+function initPlayerGroupExpand() {
+  var sec = document.getElementById("sectionPlayers");
+  if (!sec) return;
+  sec.addEventListener("click", function (e) {
+    var row = e.target && e.target.closest(".player-row");
+    if (!row || !sec.contains(row)) return;
+    if (e.target.closest("[data-players-sort]") || e.target.closest("[data-grp-sort]")) return;
+    var name = row.getAttribute("data-player");
+    if (!name) return;
+    expandedPlayer = (expandedPlayer === name) ? null : name;
+    if (enrichedState === "loaded") renderPlayersPanel();
+  });
+}
+
+function initPlayerGroupSort() {
+  var sec = document.getElementById("sectionPlayers");
+  if (!sec) return;
+  sec.addEventListener("click", function (e) {
+    var btn = e.target && e.target.closest("[data-grp-sort]");
+    if (!btn || !sec.contains(btn)) return;
+    e.stopPropagation();
+    var k = btn.getAttribute("data-grp-sort");
+    if (k && k !== playersGroupSort) {
+      playersGroupSort = k;
+      if (enrichedState === "loaded") renderPlayersPanel();
+    }
+  });
 }
 
 function initPlayerSearch() {
@@ -1192,6 +1443,8 @@ initPlayerStatFilter();
 initPlatformFilter();
 initTierFilter();
 initPlayersColumnSort();
+initPlayerGroupExpand();
+initPlayerGroupSort();
 try {
   var q = new URLSearchParams(window.location.search);
   var viewParam = q.get("view");
