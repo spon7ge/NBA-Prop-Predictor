@@ -16,7 +16,7 @@ projectedStartingFive = {
     "MEM": ["Dariq Whitehead", "Rayan Rupert", "Jahmai Mashack", "Taj Gibson", "Toby Okani"],
     "MIA": ["Andrew Wiggins", "Tyler Herro", "Kel'el Ware", "Bam Adebayo", "Davion Mitchell"],
     "MIL": ["Jericho Sims", "Cormac Ryan", "AJ Green", "Taurean Prince", "Ousmane Dieng"],
-    "MIN": ["Jaden McDaniels", "Ayo Dosunmu", "Anthony Edwards", "Julius Randle", "Rudy Gobert"],
+    "MIN": ["Jaden McDaniels", "Rudy Gobert", "Ayo Dosunmu", "Julius Randle", "Anthony Edwards"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Jalen Brunson", "Josh Hart", "Mikal Bridges", "Miles McBride", "Karl-Anthony Towns"],
     "OKC": ["Isaiah Hartenstein", "Chet Holmgren", "Shai Gilgeous-Alexander", "Luguentz Dort", "Ajay Mitchell"],
@@ -25,7 +25,7 @@ projectedStartingFive = {
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
-    "SAS": ["Stephon Castle", "Julian Champagnie", "Victor Wembanyama", "Devin Vassell"],
+    "SAS": ["Victor Wembanyama", "De'Aaron Fox", "Julian Champagnie", "Stephon Castle", "Devin Vassell"],
     "TOR": ["Ja'Kobe Walter", "RJ Barrett", "Jakob Poeltl", "Scottie Barnes", "Jamal Shead"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
@@ -66,6 +66,5 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "SAS": ["De'Aaron Fox"],
 }
 
