@@ -11,6 +11,12 @@ from datetime import datetime
 
 from src.features.feature_engineer.min_features import _detect_star_players
 from src.utils.dataScraper import generalized_best_bets
+from src.pipeline.props_pipeline.min_pipeline import min_pipeline
+from src.utils.context import (
+    coerce_nonneg_monotone_quantiles,
+    adjust_predictions,
+    get_game_context,
+)
 
 
 # Mapping from odds-API category slug → model MARKET label
@@ -306,3 +312,81 @@ def attach_matchup_columns(
 
     return pd.DataFrame(rows)
 
+def predict_min_times_rate(
+    names,
+    min_stats_df,
+    prop_stats_df,
+    current_date,
+    *,
+    rate_pipeline,
+    rate_quantile_models,
+    min_quantile_models,
+    stat_prefix,  # "PTS", "AST", "REB", or "PTS+AST" (display market label)
+    verbose=True,
+):
+    """
+    For each name: min quantiles × rate quantiles → implied stat (same quantile index).
+
+    Raw XGB predictions are coerced to nonnegative, ordered q10≤q50≤q90 anchors for
+    ``run_pts_simulation`` and sensible betting tails (see ``coerce_nonneg_monotone_quantiles``).
+    """
+    q10, q50, q90 = "q_0.10", "q_0.50", "q_0.90"
+    records = []
+    # MARKET label (stat_prefix) vs per-minute column in prop_stats_df
+    rate_col_by_market = {
+        "PTS": "PTS_PER_MIN",
+        "AST": "AST_PER_MIN",
+        "REB": "REB_PER_MIN",
+    }
+
+    for raw_name in names:
+        name = raw_name
+        try:
+            min_feats = min_pipeline(min_stats_df, name, current_date)
+            if min_feats is None:
+                raise ValueError("min_pipeline returned None (need >= 10 games)")
+
+            rate_feats = rate_pipeline(prop_stats_df, name, current_date)
+            min_arr = np.asarray(min_feats, dtype=float).reshape(1, -1)
+            rate_arr = np.asarray(rate_feats, dtype=float).reshape(1, -1)
+
+            m10 = float(min_quantile_models[q10].predict(min_arr)[0])
+            m50 = float(min_quantile_models[q50].predict(min_arr)[0])
+            m90 = float(min_quantile_models[q90].predict(min_arr)[0])
+
+            r10 = float(rate_quantile_models[q10].predict(rate_arr)[0])
+            r50 = float(rate_quantile_models[q50].predict(rate_arr)[0])
+            r90 = float(rate_quantile_models[q90].predict(rate_arr)[0])
+
+            pdf = prop_stats_df[prop_stats_df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
+            rate_col = rate_col_by_market.get(stat_prefix, f"{stat_prefix}_PER_MIN")
+            if rate_col not in pdf.columns:
+                raise KeyError(rate_col)
+            rate_history = pdf[rate_col].dropna().tail(10).tolist()
+
+            m10, m50, m90 = coerce_nonneg_monotone_quantiles(m10, m50, m90)
+            r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
+
+            row = {
+                "PLAYER_NAME": name,
+                "MARKET": stat_prefix,
+                "MIN_Q10": round(m10, 2),
+                "MIN_Q50": round(m50, 2),
+                "MIN_Q90": round(m90, 2),
+                "RATE_Q10": round(r10, 4),
+                "RATE_Q50": round(r50, 4),
+                "RATE_Q90": round(r90, 4),
+                "RATE_HISTORY": rate_history,
+            }
+            s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
+            s10, s50, s90 = coerce_nonneg_monotone_quantiles(s10, s50, s90)
+            row["STAT_Q10"] = round(s10, 2)
+            row["STAT_Q50"] = round(s50, 2)
+            row["STAT_Q90"] = round(s90, 2)
+        except Exception as e:
+            if verbose:
+                print(f"[SKIP] {name}: {e}")
+            continue
+        records.append(row)
+
+    return pd.DataFrame(records)
