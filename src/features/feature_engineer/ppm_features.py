@@ -65,7 +65,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = [
-        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN',
+        'MIN', 'PTS', 'USG_PCT', 'POSS', 'PTS_PER_MIN', 'POSS_PER_MIN', 'EFG_PCT',
         'TS_PCT', 'FGA_PER_MIN', '3PA_PER_MIN', 'FTA_PER_MIN', 'FGM_PER_MIN', '3PM_PER_MIN', 'FTM_PER_MIN',
         'TCHS_PER_MIN', 'PASS_PER_MIN', 'UFGA_PER_MIN', 'CFGA_PER_MIN', 'SAST_PER_MIN', 'UFG_PCT', 'CFG_PCT', 'FG_PCT', 'FG3_PCT', 'FT_PCT', 'DFGA_PER_MIN'
     ]

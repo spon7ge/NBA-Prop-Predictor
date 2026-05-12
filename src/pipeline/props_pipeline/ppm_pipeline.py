@@ -1,141 +1,237 @@
 import numpy as np
 import pandas as pd
 
+from src.utils.helper_functions import findOpp
+
 # Order must match training / saved quantile bundle `feature_names`.
 PPM_FEATURES = [
     "PTS_PER_MIN_season_avg",
-    "PTS_PER_MIN_5_ewm",
-    "FGA_PER_MIN_5_ewm",
-    "FTA_PER_MIN_5_ewm",
-    "TS_PCT_5_ewm",
-    "TS_PCT_season_avg",
-    "PPM_STD_L10",
-    "TS_PCT_STD_L10",
+    "PTS_PER_MIN_X_OPP_PTS_ALLOWED",
+    "CFGA_PER_MIN_X_OPP_FG_PCT_ALLOWED",
+    "FGA_PER_MIN_X_OPP_DEF_RATING",
+    "FG3A_PER_MIN_X_OPP_FG3A_ALLOWED",
+    "FTA_PER_MIN_X_OPP_FTA_ALLOWED",
+    "PPM_SEASON_STD",
     "TEAM_PTS_PER_MIN_RANK_L10",
-    "MIN_season_avg",
-    "PPM_WHEN_USG_HIGH",
-    "PPM_WHEN_USG_LOW",
-    "PPM_WHEN_MIN_HIGH",
-    "PPM_WHEN_MIN_LOW",
+    "TEAM_USG_RANK_L10",
+    "TEAM_MIN_RANK_L10",
+    # percentiles
+    "PPM_P10_L10",
+    "PPM_P90_L10",
 ]
 
+# ── Expected df columns for opponent lookups ───────────────────────────────────
+# OPP_PTS        : pts allowed per game (on opponent team rows)
+# OPP_FG_PCT     : FG% allowed
+# OPP_DEF_RATING : defensive rating
+# OPP_FG3A       : 3PA allowed per game
+# OPP_FTA        : FTA allowed per game
+# ──────────────────────────────────────────────────────────────────────────────
 
-def _expanding_mean(series: pd.Series, ndigits: int = 2) -> float:
-    if series.empty:
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _nanfloat(x) -> float:
+    return float(x) if pd.notna(x) else float("nan")
+
+
+def _season_expanding_tail(pdf: pd.DataFrame, col: str) -> float:
+    """Expanding season mean of col, respects SEASON_YEAR grouping when available."""
+    if col not in pdf.columns:
         return float("nan")
-    v = series.astype(float).expanding().mean().round(ndigits).iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
+    if "SEASON_YEAR" in pdf.columns and "PLAYER_ID" in pdf.columns:
+        v = pdf.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)[col].transform(
+            lambda x: x.astype(float).expanding().mean().round(2)
+        )
+    else:
+        v = pdf[col].astype(float).expanding().mean().round(2)
+    return _nanfloat(v.iloc[-1])
 
 
-def _ewm_last(series: pd.Series, span: int) -> float:
-    if series.empty:
+def _expanding_std(pdf: pd.DataFrame, col: str) -> float:
+    """Expanding std of col, respects PLAYER_ID grouping when available."""
+    if col not in pdf.columns:
         return float("nan")
-    v = series.astype(float).ewm(span=span, adjust=False).mean().iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
+    if "PLAYER_ID" in pdf.columns:
+        v = pdf.groupby("PLAYER_ID", group_keys=False)[col].transform(
+            lambda x: x.astype(float).expanding().std()
+        )
+    else:
+        v = pdf[col].astype(float).expanding().std()
+    return _nanfloat(v.iloc[-1])
+
+
+def _opp_team_prior_metric(
+    df: pd.DataFrame,
+    opp_abbr: str | None,
+    raw_col: str,
+    *,
+    as_of_date: str | None,
+    decimals: int = 3,
+) -> float:
+    """
+    Expanding mean of raw_col on opponent team rows, filtered to games
+    strictly before as_of_date. Respects SEASON_YEAR when present.
+    """
+    if opp_abbr is None or raw_col not in df.columns:
+        return float("nan")
+    opp = df[df["TEAM_ABBREVIATION"] == opp_abbr].drop_duplicates(
+        subset=["TEAM_ID", "GAME_ID"]
+    )
+    if opp.empty:
+        return float("nan")
+    if as_of_date is not None:
+        cutoff = pd.to_datetime(as_of_date)
+        dated = opp[pd.to_datetime(opp["GAME_DATE"], errors="coerce") < cutoff]
+        opp = dated if len(dated) > 0 else opp
+    opp = opp.sort_values("GAME_DATE").copy()
+    if "SEASON_YEAR" not in opp.columns:
+        vals = opp[raw_col].astype(float).expanding().mean().round(decimals)
+        return _nanfloat(vals.iloc[-1])
+    last_season = opp.iloc[-1]["SEASON_YEAR"]
+    season = opp[opp["SEASON_YEAR"] == last_season]
+    vals = season.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)[raw_col].transform(
+        lambda x: x.astype(float).expanding().mean().round(decimals)
+    )
+    return _nanfloat(season.assign(_m=vals)["_m"].iloc[-1])
+
+
+def _ewm10(pdf: pd.DataFrame, col: str) -> float:
+    """EWM span=10 of col, unshifted (includes latest game)."""
+    if col not in pdf.columns:
+        return float("nan")
+    v = pdf[col].astype(float).ewm(span=10, adjust=False).mean().iloc[-1]
+    return _nanfloat(v)
 
 
 def _roll_last(series: pd.Series, window: int, min_periods: int = 3) -> float:
     if series.empty:
         return float("nan")
     v = series.astype(float).rolling(window, min_periods=min_periods).mean().iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
+    return _nanfloat(v)
 
 
-def _roll_std(series: pd.Series, window: int, min_periods: int = 3) -> float:
-    if series.empty:
+def _interaction(player_val: float, opp_val: float) -> float:
+    """Multiply two scalars; return nan if either is nan."""
+    if pd.isna(player_val) or pd.isna(opp_val):
         return float("nan")
-    v = series.astype(float).rolling(window, min_periods=min_periods).std().iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
+    return float(player_val * opp_val)
 
 
-def _conditional_ppm_last(
-    series_stat: pd.Series,
-    series_cond: pd.Series,
-    threshold: float,
-    comparison: str,
+def _team_stat_rank_l10(
+    df: pd.DataFrame,
+    player_name: str,
+    team_id,
+    stat_col: str,
 ) -> float:
-    if series_stat.empty or series_cond.empty:
+    """
+    Rank the player among teammates by L10 rolling avg of stat_col.
+    Rank 1 = highest value on team.
+    """
+    team_df = df[df["TEAM_ID"] == team_id]
+    if team_df.empty or stat_col not in team_df.columns:
         return float("nan")
-    stat = series_stat.astype(float)
-    cond = series_cond.astype(float)
-    mask = (cond > threshold) if comparison == "gt" else (cond < threshold)
-    v = stat.where(mask).expanding(min_periods=3).mean().iloc[-1]
-    return float(v) if pd.notna(v) else float("nan")
+    l10_avg = (
+        team_df.sort_values("GAME_DATE")
+        .groupby("PLAYER_NAME")[stat_col]
+        .apply(lambda s: s.astype(float).tail(10).mean())
+    )
+    if player_name not in l10_avg.index:
+        return float("nan")
+    return _nanfloat(l10_avg.rank(ascending=False, method="min")[player_name])
 
 
-def ppm_pipeline(df, name, current_date=None):
+# ── Main pipeline ─────────────────────────────────────────────────────────────
+
+def ppm_pipeline(df: pd.DataFrame, name: str, date: str):
+    """
+    Parameters
+    ----------
+    df   : full player + team game-log dataframe
+    name : PLAYER_NAME to look up
+    date : prediction date string 'YYYY-MM-DD' (passed to findOpp & date filters)
+    """
     pdf = df[df["PLAYER_NAME"] == name].sort_values("GAME_DATE").copy()
     if len(pdf) < 10:
         return None
 
-    res = []
     last = pdf.iloc[-1]
 
+    opp_abbr, _ = findOpp(name, pdf, date, max_days_ahead=3)
+
+    # ── Derived per-minute columns ────────────────────────────────────────────
+    min_s = pdf["MIN"].replace(0, np.nan).astype(float)
+
     if "PTS_PER_MIN" not in pdf.columns:
-        pdf["PTS_PER_MIN"] = pdf["PTS"].astype(float) / pdf["MIN"].replace(0, np.nan)
-
+        pdf["PTS_PER_MIN"] = pdf["PTS"].astype(float) / min_s
     if "FGA_PER_MIN" not in pdf.columns:
-        pdf["FGA_PER_MIN"] = pdf["FGA"].astype(float) / pdf["MIN"].replace(0, np.nan)
-
+        pdf["FGA_PER_MIN"] = pdf["FGA"].astype(float) / min_s
     if "FTA_PER_MIN" not in pdf.columns:
-        pdf["FTA_PER_MIN"] = pdf["FTA"].astype(float) / pdf["MIN"].replace(0, np.nan)
+        pdf["FTA_PER_MIN"] = pdf["FTA"].astype(float) / min_s
+    if "FG3A_PER_MIN" not in pdf.columns:
+        pdf["FG3A_PER_MIN"] = pdf["FG3A"].astype(float) / min_s
 
-    # ── PTS_PER_MIN_season_avg ────────────────────────────────────────────────
-    res.append(_expanding_mean(pdf["PTS_PER_MIN"], 2))
+    # ── Player season average (expanding) ─────────────────────────────────────
+    ppm_season_avg = _season_expanding_tail(pdf, "PTS_PER_MIN")
 
-    # ── PTS_PER_MIN_5_ewm ─────────────────────────────────────────────────────
-    res.append(_ewm_last(pdf["PTS_PER_MIN"], 5))
+    # ── Player EWM(span=10) — used as player side of interaction terms ─────────
+    ppm_ewm10  = _ewm10(pdf, "PTS_PER_MIN")
+    fga_ewm10  = _ewm10(pdf, "FGA_PER_MIN")
+    fta_ewm10  = _ewm10(pdf, "FTA_PER_MIN")
+    fg3a_ewm10 = _ewm10(pdf, "FG3A_PER_MIN")
 
-    # ── FGA_PER_MIN_5_ewm ─────────────────────────────────────────────────────
-    res.append(_ewm_last(pdf["FGA_PER_MIN"], 5))
+    # ── Opponent defensive stats (prior expanding mean from df) ───────────────
+    opp_pts_allowed  = _opp_team_prior_metric(df, opp_abbr, "OPP_PTS",        as_of_date=date)
+    opp_fg_pct       = _opp_team_prior_metric(df, opp_abbr, "OPP_FG_PCT",     as_of_date=date)
+    opp_def_rating   = _opp_team_prior_metric(df, opp_abbr, "OPP_DEF_RATING", as_of_date=date)
+    opp_fg3a_allowed = _opp_team_prior_metric(df, opp_abbr, "OPP_FG3A",       as_of_date=date)
+    opp_fta_allowed  = _opp_team_prior_metric(df, opp_abbr, "OPP_FTA",        as_of_date=date)
 
-    # ── FTA_PER_MIN_5_ewm ─────────────────────────────────────────────────────
-    res.append(_ewm_last(pdf["FTA_PER_MIN"], 5))
+    # ── PPM season std ────────────────────────────────────────────────────────
+    ppm_season_std = _expanding_std(pdf, "PTS_PER_MIN")
 
-    # ── TS_PCT_5_ewm ──────────────────────────────────────────────────────────
-    res.append(_ewm_last(pdf["TS_PCT"], 5))
-
-    # ── TS_PCT_season_avg ─────────────────────────────────────────────────────
-    res.append(_expanding_mean(pdf["TS_PCT"], 2))
-
-    # ── PPM_STD_L10 ───────────────────────────────────────────────────────────
-    res.append(_roll_std(pdf["PTS_PER_MIN"], 10))
-
-    # ── TS_PCT_STD_L10 ────────────────────────────────────────────────────────
-    res.append(_roll_std(pdf["TS_PCT"], 10))
-
-    # ── TEAM_PTS_PER_MIN_RANK_L10 (dense rank, high roll10 = rank 1) ──────────
+    # ── Team ranking: PTS_PER_MIN L10 ────────────────────────────────────────
     team_df = df[df["TEAM_ID"] == last["TEAM_ID"]]
     teammate_roll10 = {}
     for player, grp in team_df.groupby("PLAYER_NAME"):
-        grp_sorted = grp.sort_values("GAME_DATE")
+        grp_sorted = grp.sort_values("GAME_DATE").copy()
         if "PTS_PER_MIN" not in grp_sorted.columns:
-            grp_sorted = grp_sorted.copy()
             grp_sorted["PTS_PER_MIN"] = (
-                grp_sorted["PTS"].astype(float) / grp_sorted["MIN"].replace(0, np.nan)
+                grp_sorted["PTS"].astype(float)
+                / grp_sorted["MIN"].replace(0, np.nan)
             )
-        teammate_roll10[player] = _roll_last(grp_sorted["PTS_PER_MIN"].astype(float), 10)
+        teammate_roll10[player] = _roll_last(grp_sorted["PTS_PER_MIN"], 10)
     sorted_teammates = sorted(
         teammate_roll10.items(),
         key=lambda x: (x[1] if pd.notna(x[1]) else -np.inf),
         reverse=True,
     )
-    rank_map = {p: float(i + 1) for i, (p, _) in enumerate(sorted_teammates)}
-    res.append(rank_map.get(name, float("nan")))
+    ppm_rank = {p: float(i + 1) for i, (p, _) in enumerate(sorted_teammates)}.get(
+        name, float("nan")
+    )
 
-    # ── MIN_season_avg ────────────────────────────────────────────────────────
-    res.append(_expanding_mean(pdf["MIN"], 2))
+    # ── Team ranking: USG & MIN L10 ───────────────────────────────────────────
+    usg_col       = "USG_PCT" if "USG_PCT" in df.columns else "USG"
+    team_usg_rank = _team_stat_rank_l10(df, name, last["TEAM_ID"], usg_col)
+    team_min_rank = _team_stat_rank_l10(df, name, last["TEAM_ID"], "MIN")
 
-    # ── PPM_WHEN_USG_HIGH (USG_PCT > 0.18) ───────────────────────────────────
-    res.append(_conditional_ppm_last(pdf["PTS_PER_MIN"], pdf["USG_PCT"], 0.18, "gt"))
+    # ── PPM percentiles over last 10 games ────────────────────────────────────
+    ppm_l10 = pdf["PTS_PER_MIN"].tail(10).astype(float)
+    ppm_p10 = float(ppm_l10.quantile(0.10))
+    ppm_p90 = float(ppm_l10.quantile(0.90))
 
-    # ── PPM_WHEN_USG_LOW  (USG_PCT < 0.17) ───────────────────────────────────
-    res.append(_conditional_ppm_last(pdf["PTS_PER_MIN"], pdf["USG_PCT"], 0.17, "lt"))
-
-    # ── PPM_WHEN_MIN_HIGH (MIN > 25) ──────────────────────────────────────────
-    res.append(_conditional_ppm_last(pdf["PTS_PER_MIN"], pdf["MIN"], 25, "gt"))
-
-    # ── PPM_WHEN_MIN_LOW  (MIN < 25) ──────────────────────────────────────────
-    res.append(_conditional_ppm_last(pdf["PTS_PER_MIN"], pdf["MIN"], 25, "lt"))
-
-    return res
+    # ── Assemble result in feature order ──────────────────────────────────────
+    return [
+        ppm_season_avg,                                  # PTS_PER_MIN_season_avg
+        _interaction(ppm_ewm10,  opp_pts_allowed),       # PTS_PER_MIN_X_OPP_PTS_ALLOWED
+        _interaction(fga_ewm10,  opp_fg_pct),            # CFGA_PER_MIN_X_OPP_FG_PCT_ALLOWED
+        _interaction(fga_ewm10,  opp_def_rating),        # FGA_PER_MIN_X_OPP_DEF_RATING
+        _interaction(fg3a_ewm10, opp_fg3a_allowed),      # FG3A_PER_MIN_X_OPP_FG3A_ALLOWED
+        _interaction(fta_ewm10,  opp_fta_allowed),       # FTA_PER_MIN_X_OPP_FTA_ALLOWED
+        ppm_season_std,                                  # PPM_SEASON_STD
+        ppm_rank,                                        # TEAM_PTS_PER_MIN_RANK_L10
+        team_usg_rank,                                   # TEAM_USG_RANK_L10
+        team_min_rank,                                   # TEAM_MIN_RANK_L10
+        ppm_p10,                                         # PPM_P10_L10
+        ppm_p90,                                         # PPM_P90_L10
+    ]

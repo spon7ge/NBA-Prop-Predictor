@@ -38,7 +38,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
-    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'DIST', 'SPD', 'TCHS']
+    cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF_PER_MIN', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'DIST', 'SPD', 'TCHS']
 
     for span in [3, 5, 10, 20]:
         for col in cols:
