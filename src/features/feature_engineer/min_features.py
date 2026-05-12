@@ -32,7 +32,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
         for col in cols:
             df[f'{col}_roll{window}'] = (
                 df.groupby('PLAYER_ID')[col]
-                .transform(lambda x: x.shift(1).rolling(window, min_periods=3).mean().round(2))
+                .transform(lambda x: x.shift(1).rolling(window, min_periods=1).mean().round(2))
             )
 
     return df
@@ -40,7 +40,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = ['MIN', 'PTS', 'PLUS_MINUS', 'PF', 'POSS', 'PIE', 'USG_PCT', 'TS_PCT', 'NET_RATING', 'DIST', 'SPD', 'TCHS']
 
-    for span in [5, 10, 20]:
+    for span in [3, 5, 10, 20]:
         for col in cols:
             df[f'{col}_{span}_ewm'] = (
                 df.groupby('PLAYER_ID')[col]
