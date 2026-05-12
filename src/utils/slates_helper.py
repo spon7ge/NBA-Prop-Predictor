@@ -1,11 +1,18 @@
 """
 Utility helpers for building 2- and 3-leg DFS slates.
 
-Strategy tiers (higher = better):
-  Tier 3 — same-game pair + high total
-  Tier 2 — same-game pair OR high total
-  Tier 1 — everything else valid
-  Tier 0 — skip (three-leg only: no same-game pair, no high total)
+2-Leg strategy tiers (higher = better):
+  Tier 3 — same high-total game, opposite teams (game-environment correlation)
+  Tier 2 — same game opposite teams (any total) OR different games both high-total
+  Tier 1 — standard independent (different games, any total)
+  Same-team 2-leg combos are rejected outright.
+
+3-Leg strategy tiers (higher = better):
+  Tier 3 — 2 teammates in a high-total game + 1 independent from a different game
+  Tier 2 — 2 teammates in any game + 1 independent from a different game
+  Tier 1 — same-game opposite-team pair + 1 independent
+  Tier 0 — skip (no useful structure)
+  The independent leg is placed first (highest conviction anchor).
 """
 from __future__ import annotations
 
@@ -90,11 +97,13 @@ def _high_total_threshold(legs: list[dict]) -> float:
 # ---------------------------------------------------------------------------
 
 def _valid_two_leg(chunk: list[dict]) -> bool:
-    """Two legs must be different players with positive win probability."""
+    """Two legs must be different players, different teams, with positive win probability."""
     if len(chunk) != 2:
         return False
     a, b = chunk
     if a["prop_key"][0] == b["prop_key"][0]:  # same player
+        return False
+    if a["team"] == b["team"]:  # same team — avoid in 2-leg
         return False
     return a["p_win"] > 0 and b["p_win"] > 0
 
@@ -119,19 +128,26 @@ def _valid_three_leg(chunk: list[dict]) -> bool:
 def _strategy_tier_profile_2leg(
     a: dict, b: dict, hi_total: float
 ) -> tuple[int, str]:
-    """Return (tier, profile_string) for a 2-leg combo."""
-    same_game   = (a["game_key"] is not None and a["game_key"] == b["game_key"])
-    a_hi        = _is_high_total(a, hi_total)
-    b_hi        = _is_high_total(b, hi_total)
-    both_hi     = a_hi and b_hi
+    """Return (tier, profile_string) for a 2-leg combo.
+
+    Same-team combos must already be rejected by _valid_two_leg before calling this.
+    """
+    same_game = (a["game_key"] is not None and a["game_key"] == b["game_key"])
+    a_hi      = _is_high_total(a, hi_total)
+    b_hi      = _is_high_total(b, hi_total)
+    both_hi   = a_hi and b_hi
 
     if same_game and both_hi:
-        tier, profile = 3, "same-game/high-total"
+        # Best: game-environment correlation + high-scoring game
+        tier, profile = 3, "opp-team/same-game/high-total"
     elif same_game:
-        tier, profile = 2, "same-game"
+        # Game-environment correlation, any total
+        tier, profile = 2, "opp-team/same-game"
     elif both_hi:
-        tier, profile = 2, "high-total"
+        # Independent but both in high-pace/high-total matchups
+        tier, profile = 2, "diff-game/both-high-total"
     else:
+        # Pure independent — valid if EV is strong
         tier, profile = 1, "standard"
 
     return tier, profile
@@ -144,36 +160,57 @@ def _strategy_tier_profile_2leg(
 def _strategy_tier_profile_3leg(
     chunk: list[dict], hi_total: float
 ) -> tuple[int, str, float, str | None]:
-    """Return (tier, profile, anchor_p, anchor_name) for a 3-leg combo."""
-    # Anchor = highest-confidence leg
-    anchor = max(chunk, key=lambda x: x["p_win"])
-    anchor_p    = anchor["p_win"]
-    anchor_name = anchor["player"]
+    """Return (tier, profile, anchor_p, anchor_name) for a 3-leg combo.
 
-    # Count same-game pairs
-    same_game_pairs = sum(
-        1
-        for a, b in combinations(chunk, 2)
-        if a["game_key"] is not None and a["game_key"] == b["game_key"]
-    )
-    has_same_game_pair = same_game_pairs >= 1
+    Primary structure: 2 teammates + 1 independent from a different game.
+    The independent leg is the highest-conviction anchor.
+    """
+    # Find a teammate pair (same team, different players already guaranteed)
+    teammate_pair: tuple[dict, dict] | None = None
+    independent: dict | None = None
+    for a, b in combinations(chunk, 2):
+        if a["team"] == b["team"]:
+            teammate_pair = (a, b)
+            independent = next(l for l in chunk if l is not a and l is not b)
+            break
 
-    hi_count = sum(1 for leg in chunk if _is_high_total(leg, hi_total))
-    all_hi   = hi_count == 3
+    if teammate_pair is not None:
+        ta, tb = teammate_pair
+        diff_game = (
+            independent["game_key"] is None
+            or ta["game_key"] is None
+            or independent["game_key"] != ta["game_key"]
+        )
+        tm_hi = _is_high_total(ta, hi_total)  # both share same game total
 
-    if has_same_game_pair and all_hi:
-        tier, profile = 3, "2+1/same-game/high-total"
-    elif has_same_game_pair:
-        tier, profile = 2, "2+1/same-game"
-    elif all_hi:
-        tier, profile = 2, "high-total"
-    elif hi_count >= 2:
-        tier, profile = 1, "partial-high-total"
+        if diff_game and tm_hi:
+            # Primary weapon: teammates in great matchup + independent anchor
+            tier, profile = 3, "2+1/teammates/high-total"
+        elif diff_game:
+            # Teammates + independent from different game, any total
+            tier, profile = 2, "2+1/teammates"
+        else:
+            # Independent in same game as teammates — weaker structure
+            tier, profile = 1, "2+1/same-game"
     else:
-        # No same-game pair and no high-total advantage — skip
-        return 0, "standard", anchor_p, anchor_name
+        # No teammate pair — fall back to same-game opposite-team pair
+        same_game_pairs = sum(
+            1
+            for a, b in combinations(chunk, 2)
+            if a["game_key"] is not None and a["game_key"] == b["game_key"]
+        )
+        hi_count = sum(1 for leg in chunk if _is_high_total(leg, hi_total))
 
-    return tier, profile, anchor_p, anchor_name
+        if same_game_pairs >= 1 and hi_count >= 2:
+            tier, profile = 1, "opp-team/same-game/high-total"
+        elif same_game_pairs >= 1:
+            tier, profile = 1, "opp-team/same-game"
+        else:
+            # All independent, no structure — skip
+            return 0, "standard", 0.0, None
+
+    anchor = max(chunk, key=lambda x: x["p_win"])
+    return tier, profile, anchor["p_win"], anchor["player"]
 
 
 # ---------------------------------------------------------------------------
@@ -181,7 +218,16 @@ def _strategy_tier_profile_3leg(
 # ---------------------------------------------------------------------------
 
 def _order_three_leg_row(chunk: list[dict]) -> list[dict]:
-    """Return chunk reordered: anchor (highest p_win) first, then by team."""
+    """Return chunk reordered: independent anchor first, then the 2 teammates.
+
+    If no teammate pair exists, falls back to highest p_win first.
+    """
+    for a, b in combinations(chunk, 2):
+        if a["team"] == b["team"]:
+            indep = next(l for l in chunk if l is not a and l is not b)
+            teammates = sorted([a, b], key=lambda x: x["player"])
+            return [indep] + teammates
+    # No teammate pair: highest p_win first, rest by team/player
     anchor = max(chunk, key=lambda x: x["p_win"])
     rest   = sorted(
         [leg for leg in chunk if leg is not anchor],
@@ -206,9 +252,8 @@ def _greedy_slates(candidates: list[dict], top_n: int) -> list[dict]:
         if len(selected) >= top_n:
             break
         players_in_row = {
-            row[f"NAME {i}"]
-            for i in range(1, row["N_LEGS"] + 1)
-            if f"NAME {i}" in row
+            leg["player"]
+            for leg in row.get("LEGS", [])
         }
         if players_in_row & used_players:
             continue

@@ -21,6 +21,9 @@ var activeTier = null;
 /** null = default (tier+conviction); otherwise column id for All Players table sort */
 var playersSortKey = null;
 var playersSortDir = "desc";
+var expandedPlayer = null;
+var playersGroupSort = "edge_desc";
+var DFS_BREAK_EVEN = 137 / (137 + 100);
 
 function jsonUrls(filename) {
   var a = "data/props/ev_analysis/" + filename;

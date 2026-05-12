@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T02:59:38.266565Z",
+  "generated_at": "2026-05-12T06:41:56.153218Z",
   "current_date": "2026-05-11",
   "n_dfs_picks": 642,
   "n_enriched": 642,
@@ -22,15 +22,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.448,
-        "p_under": 0.552,
+        "p_over": 0.179,
+        "p_under": 0.821,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 1.68,
-        "stat_q50": 5.75,
-        "stat_q90": 10.88
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 0.99,
+        "stat_q50": 3.26,
+        "stat_q90": 5.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -160,15 +160,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.296,
-        "p_under": 0.643,
+        "p_over": 0.198,
+        "p_under": 0.75,
         "lean": "UNDER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 2.4,
-        "stat_q50": 6.95,
-        "stat_q90": 13.94
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 3.2,
+        "stat_q50": 5.86,
+        "stat_q90": 10.01
       },
       "sharp": {
         "source": "Pinnacle",
@@ -306,15 +306,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.215,
-        "p_under": 0.686,
+        "p_over": 0.133,
+        "p_under": 0.787,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 0.2,
-        "stat_q50": 2.87,
-        "stat_q90": 7.82
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 0.62,
+        "stat_q50": 2.23,
+        "stat_q90": 4.8
       },
       "sharp": {
         "source": "Pinnacle",
@@ -436,15 +436,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.529,
-        "p_under": 0.47,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 3.26,
-        "stat_q50": 7.45,
-        "stat_q90": 13.56
+        "p_over": 0.222,
+        "p_under": 0.778,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 2.15,
+        "stat_q50": 4.3,
+        "stat_q90": 7.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -552,9 +552,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -574,15 +574,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.546,
-        "p_under": 0.454,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 3.19,
-        "stat_q50": 7.67,
-        "stat_q90": 13.89
+        "p_over": 0.241,
+        "p_under": 0.759,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 2.45,
+        "stat_q50": 4.69,
+        "stat_q90": 8.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -690,9 +690,9 @@
         "avg_stat": 6.0,
         "over_rate_at_line": 0.25
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -712,15 +712,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.065,
+        "p_under": 0.935,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 1.79,
-        "stat_q50": 7.64,
-        "stat_q90": 14.29
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 1.13,
+        "stat_q50": 2.69,
+        "stat_q90": 4.53
       },
       "sharp": {
         "source": "Pinnacle",
@@ -3636,15 +3636,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.471,
-        "p_under": 0.529,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 3.8,
-        "stat_q50": 13.86,
-        "stat_q90": 28.2
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 8.45,
+        "stat_q50": 8.48,
+        "stat_q90": 8.48
       },
       "sharp": {
         "source": "Pinnacle",
@@ -3814,15 +3814,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.634,
-        "p_under": 0.366,
-        "lean": "OVER",
-        "min_q10": 12.75,
-        "min_q50": 18.89,
-        "min_q90": 26.39,
-        "stat_q10": 1.5,
-        "stat_q50": 7.2,
-        "stat_q90": 17.25
+        "p_over": 0.006,
+        "p_under": 0.994,
+        "lean": "UNDER",
+        "min_q10": 8.42,
+        "min_q50": 8.46,
+        "min_q90": 8.46,
+        "stat_q10": 3.58,
+        "stat_q50": 3.6,
+        "stat_q90": 3.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -3946,9 +3946,9 @@
         "avg_stat": 8.125,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -3968,15 +3968,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.227,
-        "p_under": 0.773,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 20.09,
-        "min_q50": 35.34,
-        "min_q90": 41.79,
-        "stat_q10": 5.72,
-        "stat_q50": 18.85,
-        "stat_q90": 34.54
+        "min_q10": 14.54,
+        "min_q50": 14.54,
+        "min_q90": 14.54,
+        "stat_q10": 10.61,
+        "stat_q50": 10.61,
+        "stat_q90": 10.61
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4154,15 +4154,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.405,
-        "p_under": 0.595,
+        "p_over": 0.009,
+        "p_under": 0.991,
         "lean": "UNDER",
-        "min_q10": 18.73,
-        "min_q50": 28.15,
-        "min_q90": 35.24,
-        "stat_q10": 2.01,
-        "stat_q50": 9.26,
-        "stat_q90": 20.65
+        "min_q10": 14.46,
+        "min_q50": 14.69,
+        "min_q90": 14.69,
+        "stat_q10": 7.04,
+        "stat_q50": 7.15,
+        "stat_q90": 7.15
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4316,15 +4316,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.38,
-        "p_under": 0.62,
+        "p_over": 0.045,
+        "p_under": 0.955,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 7.6,
-        "stat_q50": 17.85,
-        "stat_q90": 31.53
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 16.25,
+        "stat_q50": 16.25,
+        "stat_q90": 16.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4494,15 +4494,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.473,
-        "p_under": 0.527,
+        "p_over": 0.106,
+        "p_under": 0.893,
         "lean": "UNDER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.98,
-        "stat_q50": 12.06,
-        "stat_q90": 25.63
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.3,
+        "stat_q50": 8.3,
+        "stat_q90": 8.3
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4656,15 +4656,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.627,
-        "p_under": 0.373,
-        "lean": "OVER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 15.77,
-        "stat_q50": 30.95,
-        "stat_q90": 45.32
+        "p_over": 0.172,
+        "p_under": 0.828,
+        "lean": "UNDER",
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 24.18,
+        "stat_q50": 24.18,
+        "stat_q90": 24.18
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4820,9 +4820,9 @@
         "avg_stat": 24.2,
         "over_rate_at_line": 0.4
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -4842,15 +4842,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
-        "lean": "OVER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 1.84,
-        "stat_q50": 8.25,
-        "stat_q90": 20.42
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 2.8,
+        "stat_q50": 2.92,
+        "stat_q90": 2.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4974,9 +4974,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.6
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -4996,15 +4996,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.735,
-        "p_under": 0.266,
-        "lean": "OVER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 7.06,
-        "stat_q50": 17.36,
-        "stat_q90": 31.68
+        "p_over": 0.045,
+        "p_under": 0.955,
+        "lean": "UNDER",
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 11.16,
+        "stat_q50": 11.25,
+        "stat_q90": 11.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5144,9 +5144,9 @@
         "avg_stat": 14.88888888888889,
         "over_rate_at_line": 0.3333333333333333
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -5166,15 +5166,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.338,
-        "p_under": 0.662,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 13.48,
-        "min_q50": 21.95,
-        "min_q90": 30.82,
-        "stat_q10": 0.44,
-        "stat_q50": 7.23,
-        "stat_q90": 19.93
+        "min_q10": 7.74,
+        "min_q50": 7.76,
+        "min_q90": 7.76,
+        "stat_q10": 3.53,
+        "stat_q50": 3.66,
+        "stat_q90": 3.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5328,15 +5328,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.409,
-        "p_under": 0.591,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 20.33,
-        "min_q50": 36.43,
-        "min_q90": 41.38,
-        "stat_q10": 4.72,
-        "stat_q50": 16.89,
-        "stat_q90": 31.96
+        "min_q10": 14.92,
+        "min_q50": 14.98,
+        "min_q90": 14.98,
+        "stat_q10": 9.79,
+        "stat_q50": 9.83,
+        "stat_q90": 9.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5490,15 +5490,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.653,
-        "p_under": 0.347,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 3.04,
-        "stat_q50": 13.12,
-        "stat_q90": 27.17
+        "p_over": 0.012,
+        "p_under": 0.988,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 5.0,
+        "stat_q50": 5.0,
+        "stat_q90": 5.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5622,9 +5622,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -5644,15 +5644,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.463,
-        "p_under": 0.537,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 8.31,
-        "min_q50": 15.17,
-        "min_q90": 24.77,
-        "stat_q10": 1.11,
-        "stat_q50": 5.76,
-        "stat_q90": 16.54
+        "min_q10": 3.52,
+        "min_q50": 3.76,
+        "min_q90": 3.76,
+        "stat_q10": 1.74,
+        "stat_q50": 1.86,
+        "stat_q90": 1.86
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5798,15 +5798,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.399,
-        "p_under": 0.602,
+        "p_over": 0.054,
+        "p_under": 0.946,
         "lean": "UNDER",
-        "min_q10": 25.01,
-        "min_q50": 32.39,
-        "min_q90": 37.76,
-        "stat_q10": 2.96,
-        "stat_q50": 11.39,
-        "stat_q90": 23.64
+        "min_q10": 20.25,
+        "min_q50": 20.37,
+        "min_q90": 20.37,
+        "stat_q10": 10.25,
+        "stat_q50": 10.31,
+        "stat_q90": 10.31
       },
       "sharp": {
         "source": "Pinnacle",
@@ -5960,15 +5960,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.309,
-        "p_under": 0.691,
+        "p_over": 0.013,
+        "p_under": 0.987,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 8.48,
-        "stat_q50": 22.26,
-        "stat_q90": 36.61
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 18.34,
+        "stat_q50": 18.83,
+        "stat_q90": 18.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6154,15 +6154,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.6,
-        "p_under": 0.4,
-        "lean": "OVER",
-        "min_q10": 23.76,
-        "min_q50": 33.79,
-        "min_q90": 40.66,
-        "stat_q10": 2.38,
-        "stat_q50": 11.85,
-        "stat_q90": 24.73
+        "p_over": 0.076,
+        "p_under": 0.924,
+        "lean": "UNDER",
+        "min_q10": 18.17,
+        "min_q50": 18.23,
+        "min_q90": 18.23,
+        "stat_q10": 8.72,
+        "stat_q50": 8.75,
+        "stat_q90": 8.75
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6294,9 +6294,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -6316,15 +6316,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.634,
-        "p_under": 0.366,
-        "lean": "OVER",
-        "min_q10": 23.05,
-        "min_q50": 32.15,
-        "min_q90": 39.2,
-        "stat_q10": 2.63,
-        "stat_q50": 11.9,
-        "stat_q90": 25.95
+        "p_over": 0.232,
+        "p_under": 0.768,
+        "lean": "UNDER",
+        "min_q10": 16.72,
+        "min_q50": 16.72,
+        "min_q90": 16.72,
+        "stat_q10": 9.04,
+        "stat_q50": 9.04,
+        "stat_q90": 9.04
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6448,9 +6448,9 @@
         "avg_stat": 12.428571428571429,
         "over_rate_at_line": 0.42857142857142855
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -6470,15 +6470,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.526,
-        "p_under": 0.474,
-        "lean": "OVER",
-        "min_q10": 26.99,
-        "min_q50": 34.46,
-        "min_q90": 40.4,
-        "stat_q10": 6.65,
-        "stat_q50": 16.0,
-        "stat_q90": 29.23
+        "p_over": 0.092,
+        "p_under": 0.908,
+        "lean": "UNDER",
+        "min_q10": 21.71,
+        "min_q50": 21.77,
+        "min_q90": 21.77,
+        "stat_q10": 12.59,
+        "stat_q50": 12.62,
+        "stat_q90": 12.62
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6618,9 +6618,9 @@
         "avg_stat": 15.727272727272727,
         "over_rate_at_line": 0.5454545454545454
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -6640,15 +6640,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.839,
-        "p_under": 0.161,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.26,
-        "stat_q50": 10.7,
-        "stat_q90": 21.53
+        "p_over": 0.06,
+        "p_under": 0.94,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 6.32,
+        "stat_q50": 6.45,
+        "stat_q90": 6.45
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6772,9 +6772,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -6794,15 +6794,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.908,
-        "p_under": 0.092,
-        "lean": "OVER",
-        "min_q10": 6.02,
-        "min_q50": 14.19,
-        "min_q90": 22.81,
-        "stat_q10": 1.8,
-        "stat_q50": 8.22,
-        "stat_q90": 20.95
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
+        "stat_q10": 0.0,
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -6918,9 +6918,9 @@
         "avg_stat": 11.5,
         "over_rate_at_line": 0.7
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -6940,15 +6940,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
-        "lean": "OVER",
-        "min_q10": 29.27,
-        "min_q50": 38.31,
-        "min_q90": 42.5,
-        "stat_q10": 4.99,
-        "stat_q50": 15.0,
-        "stat_q90": 27.34
+        "p_over": 0.101,
+        "p_under": 0.899,
+        "lean": "UNDER",
+        "min_q10": 23.61,
+        "min_q50": 23.67,
+        "min_q90": 23.67,
+        "stat_q10": 12.63,
+        "stat_q50": 12.66,
+        "stat_q90": 12.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7080,9 +7080,9 @@
         "avg_stat": 14.0,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -7102,15 +7102,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.044,
-        "p_under": 0.956,
+        "p_over": 0.005,
+        "p_under": 0.995,
         "lean": "UNDER",
-        "min_q10": 26.01,
-        "min_q50": 34.2,
-        "min_q90": 40.94,
-        "stat_q10": 0.0,
-        "stat_q50": 5.25,
-        "stat_q90": 16.49
+        "min_q10": 20.07,
+        "min_q50": 20.07,
+        "min_q90": 20.07,
+        "stat_q10": 9.97,
+        "stat_q50": 9.97,
+        "stat_q90": 9.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7264,15 +7264,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.536,
-        "p_under": 0.464,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 8.13,
-        "stat_q50": 19.72,
-        "stat_q90": 35.52
+        "p_over": 0.137,
+        "p_under": 0.863,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 16.54,
+        "stat_q50": 16.55,
+        "stat_q90": 16.55
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7420,9 +7420,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -7442,15 +7442,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.021,
+        "p_under": 0.979,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.29,
-        "stat_q50": 11.64,
-        "stat_q90": 24.22
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 9.02,
+        "stat_q50": 9.02,
+        "stat_q90": 9.02
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7612,15 +7612,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.505,
-        "p_under": 0.495,
-        "lean": "OVER",
-        "min_q10": 6.14,
-        "min_q50": 13.4,
-        "min_q90": 22.1,
-        "stat_q10": 0.0,
-        "stat_q50": 2.86,
-        "stat_q90": 11.1
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.19,
+        "min_q50": 0.26,
+        "min_q90": 0.26,
+        "stat_q10": 0.07,
+        "stat_q50": 0.09,
+        "stat_q90": 0.09
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7736,9 +7736,9 @@
         "avg_stat": 5.285714285714286,
         "over_rate_at_line": 0.5714285714285714
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -7758,15 +7758,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.241,
-        "p_under": 0.759,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 3.66,
-        "min_q50": 10.54,
-        "min_q90": 20.7,
-        "stat_q10": 0.0,
-        "stat_q50": 2.86,
-        "stat_q90": 12.74
+        "min_q10": 1.19,
+        "min_q50": 1.51,
+        "min_q90": 1.51,
+        "stat_q10": 0.48,
+        "stat_q50": 0.61,
+        "stat_q90": 0.61
       },
       "sharp": {
         "source": "Pinnacle",
@@ -7904,15 +7904,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.625,
-        "p_under": 0.375,
-        "lean": "OVER",
-        "min_q10": 22.14,
-        "min_q50": 30.35,
-        "min_q90": 37.99,
-        "stat_q10": 2.18,
-        "stat_q50": 9.97,
-        "stat_q90": 21.94
+        "p_over": 0.236,
+        "p_under": 0.764,
+        "lean": "UNDER",
+        "min_q10": 16.1,
+        "min_q50": 16.1,
+        "min_q90": 16.1,
+        "stat_q10": 7.47,
+        "stat_q50": 7.47,
+        "stat_q90": 7.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8028,9 +8028,9 @@
         "avg_stat": 8.272727272727273,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -8050,15 +8050,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
-        "lean": "OVER",
-        "min_q10": 28.9,
-        "min_q50": 38.9,
-        "min_q90": 42.88,
-        "stat_q10": 8.4,
-        "stat_q50": 20.95,
-        "stat_q90": 35.19
+        "p_over": 0.134,
+        "p_under": 0.866,
+        "lean": "UNDER",
+        "min_q10": 23.03,
+        "min_q50": 23.03,
+        "min_q90": 23.03,
+        "stat_q10": 14.38,
+        "stat_q50": 14.38,
+        "stat_q90": 14.38
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8198,9 +8198,9 @@
         "avg_stat": 15.727272727272727,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -8220,15 +8220,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.563,
-        "p_under": 0.437,
-        "lean": "OVER",
-        "min_q10": 14.12,
-        "min_q50": 26.77,
-        "min_q90": 34.8,
-        "stat_q10": 1.5,
-        "stat_q50": 9.86,
-        "stat_q90": 23.76
+        "p_over": 0.009,
+        "p_under": 0.991,
+        "lean": "UNDER",
+        "min_q10": 9.74,
+        "min_q50": 9.94,
+        "min_q90": 9.94,
+        "stat_q10": 5.1,
+        "stat_q50": 5.21,
+        "stat_q90": 5.21
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8344,9 +8344,9 @@
         "avg_stat": 14.3,
         "over_rate_at_line": 0.9
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -8366,15 +8366,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.509,
-        "p_under": 0.491,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 9.96,
-        "stat_q50": 22.83,
-        "stat_q90": 37.52
+        "p_over": 0.052,
+        "p_under": 0.948,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 17.96,
+        "stat_q50": 17.97,
+        "stat_q90": 17.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8530,9 +8530,9 @@
         "avg_stat": 20.375,
         "over_rate_at_line": 0.375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -8552,15 +8552,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.466,
-        "p_under": 0.534,
+        "p_over": 0.003,
+        "p_under": 0.997,
         "lean": "UNDER",
-        "min_q10": 16.08,
-        "min_q50": 24.89,
-        "min_q90": 32.77,
-        "stat_q10": 1.51,
-        "stat_q50": 8.27,
-        "stat_q90": 19.7
+        "min_q10": 10.7,
+        "min_q50": 10.74,
+        "min_q90": 10.74,
+        "stat_q10": 4.62,
+        "stat_q50": 4.64,
+        "stat_q90": 4.64
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8706,15 +8706,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.647,
-        "p_under": 0.353,
-        "lean": "OVER",
-        "min_q10": 24.19,
-        "min_q50": 34.32,
-        "min_q90": 40.88,
-        "stat_q10": 2.81,
-        "stat_q50": 12.2,
-        "stat_q90": 24.42
+        "p_over": 0.096,
+        "p_under": 0.904,
+        "lean": "UNDER",
+        "min_q10": 18.65,
+        "min_q50": 18.65,
+        "min_q90": 18.65,
+        "stat_q10": 8.47,
+        "stat_q50": 8.47,
+        "stat_q90": 8.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -8846,9 +8846,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -8868,15 +8868,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.292,
-        "p_under": 0.708,
+        "p_over": 0.082,
+        "p_under": 0.918,
         "lean": "UNDER",
-        "min_q10": 19.46,
-        "min_q50": 26.39,
-        "min_q90": 32.74,
-        "stat_q10": 0.0,
-        "stat_q50": 4.77,
-        "stat_q90": 15.3
+        "min_q10": 13.0,
+        "min_q50": 13.0,
+        "min_q90": 13.0,
+        "stat_q10": 5.57,
+        "stat_q50": 5.57,
+        "stat_q90": 5.57
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9022,15 +9022,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.787,
-        "p_under": 0.213,
-        "lean": "OVER",
-        "min_q10": 24.26,
-        "min_q50": 34.51,
-        "min_q90": 40.15,
-        "stat_q10": 3.81,
-        "stat_q50": 14.51,
-        "stat_q90": 27.5
+        "p_over": 0.138,
+        "p_under": 0.862,
+        "lean": "UNDER",
+        "min_q10": 19.03,
+        "min_q50": 19.04,
+        "min_q90": 19.04,
+        "stat_q10": 9.85,
+        "stat_q50": 9.85,
+        "stat_q90": 9.85
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9154,9 +9154,9 @@
         "avg_stat": 12.090909090909092,
         "over_rate_at_line": 0.5454545454545454
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -9176,15 +9176,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.36,
-        "p_under": 0.64,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.4,
-        "min_q50": 30.96,
-        "min_q90": 37.52,
-        "stat_q10": 0.37,
-        "stat_q50": 6.71,
-        "stat_q90": 15.8
+        "min_q10": 10.92,
+        "min_q50": 11.09,
+        "min_q90": 11.09,
+        "stat_q10": 4.8,
+        "stat_q50": 4.88,
+        "stat_q90": 4.88
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9322,15 +9322,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.814,
-        "p_under": 0.186,
-        "lean": "OVER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 7.1,
-        "stat_q50": 16.84,
-        "stat_q90": 28.45
+        "p_over": 0.176,
+        "p_under": 0.824,
+        "lean": "UNDER",
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 12.48,
+        "stat_q50": 12.49,
+        "stat_q90": 12.49
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9470,9 +9470,9 @@
         "avg_stat": 13.11111111111111,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -9492,15 +9492,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.334,
-        "p_under": 0.666,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 7.79,
-        "stat_q50": 25.32,
-        "stat_q90": 39.58
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 11.32,
+        "stat_q50": 11.6,
+        "stat_q90": 11.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9686,15 +9686,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.353,
-        "p_under": 0.647,
+        "p_over": 0.095,
+        "p_under": 0.905,
         "lean": "UNDER",
-        "min_q10": 25.42,
-        "min_q50": 32.43,
-        "min_q90": 39.12,
-        "stat_q10": 3.68,
-        "stat_q50": 13.2,
-        "stat_q90": 27.09
+        "min_q10": 20.99,
+        "min_q50": 20.99,
+        "min_q90": 20.99,
+        "stat_q10": 12.21,
+        "stat_q50": 12.21,
+        "stat_q90": 12.21
       },
       "sharp": {
         "source": "Pinnacle",
@@ -9848,15 +9848,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.792,
-        "p_under": 0.208,
-        "lean": "OVER",
-        "min_q10": 14.82,
-        "min_q50": 24.78,
-        "min_q90": 33.61,
-        "stat_q10": 2.39,
-        "stat_q50": 10.23,
-        "stat_q90": 25.71
+        "p_over": 0.258,
+        "p_under": 0.742,
+        "lean": "UNDER",
+        "min_q10": 11.68,
+        "min_q50": 11.8,
+        "min_q90": 11.8,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "Betr DFS",
@@ -9921,15 +9921,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.734,
-        "p_under": 0.267,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 6.66,
-        "stat_q50": 17.94,
-        "stat_q90": 32.83
+        "p_over": 0.165,
+        "p_under": 0.836,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 15.17,
+        "stat_q50": 15.17,
+        "stat_q90": 15.17
       },
       "sharp": {
         "source": "Pinnacle",
@@ -10077,9 +10077,9 @@
         "avg_stat": 13.555555555555555,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -10099,15 +10099,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.24,
-        "p_under": 0.76,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 16.62,
-        "min_q50": 30.53,
-        "min_q90": 37.16,
-        "stat_q10": 4.78,
-        "stat_q50": 16.45,
-        "stat_q90": 30.89
+        "min_q10": 10.58,
+        "min_q50": 10.68,
+        "min_q90": 10.68,
+        "stat_q10": 7.52,
+        "stat_q50": 7.59,
+        "stat_q90": 7.59
       },
       "sharp": {
         "source": "Pinnacle",
@@ -17933,15 +17933,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.406,
-        "p_under": 0.507,
+        "p_over": 0.214,
+        "p_under": 0.726,
         "lean": "UNDER",
-        "min_q10": 20.09,
-        "min_q50": 35.34,
-        "min_q90": 41.79,
-        "stat_q10": 1.45,
-        "stat_q50": 5.05,
-        "stat_q90": 10.8
+        "min_q10": 14.54,
+        "min_q50": 14.54,
+        "min_q90": 14.54,
+        "stat_q10": 7.42,
+        "stat_q50": 7.42,
+        "stat_q90": 7.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18063,15 +18063,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.499,
-        "p_under": 0.41,
-        "lean": "OVER",
-        "min_q10": 18.73,
-        "min_q50": 28.15,
-        "min_q90": 35.24,
-        "stat_q10": 2.21,
-        "stat_q50": 6.09,
-        "stat_q90": 11.86
+        "p_over": 0.212,
+        "p_under": 0.714,
+        "lean": "UNDER",
+        "min_q10": 14.46,
+        "min_q50": 14.69,
+        "min_q90": 14.69,
+        "stat_q10": 7.81,
+        "stat_q50": 7.94,
+        "stat_q90": 7.94
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18187,9 +18187,9 @@
         "avg_stat": 7.1,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -18209,15 +18209,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.513,
-        "p_under": 0.487,
-        "lean": "OVER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.1,
-        "stat_q50": 4.23,
-        "stat_q90": 10.7
+        "p_over": 0.353,
+        "p_under": 0.647,
+        "lean": "UNDER",
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.04,
+        "stat_q50": 8.04,
+        "stat_q90": 8.04
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18317,9 +18317,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -18339,15 +18339,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.495,
-        "p_under": 0.505,
+        "p_over": 0.437,
+        "p_under": 0.563,
         "lean": "UNDER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 2.63,
-        "stat_q50": 6.87,
-        "stat_q90": 12.71
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 15.57,
+        "stat_q50": 15.57,
+        "stat_q90": 15.57
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18477,15 +18477,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.395,
-        "p_under": 0.605,
+        "p_over": 0.242,
+        "p_under": 0.758,
         "lean": "UNDER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 2.6,
-        "stat_q50": 6.93,
-        "stat_q90": 13.35
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 10.34,
+        "stat_q50": 10.42,
+        "stat_q90": 10.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18623,15 +18623,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.328,
-        "p_under": 0.672,
+        "p_over": 0.276,
+        "p_under": 0.724,
         "lean": "UNDER",
-        "min_q10": 20.33,
-        "min_q50": 36.43,
-        "min_q90": 41.38,
-        "stat_q10": 0.41,
-        "stat_q50": 3.25,
-        "stat_q90": 8.76
+        "min_q10": 14.92,
+        "min_q50": 14.98,
+        "min_q90": 14.98,
+        "stat_q10": 6.84,
+        "stat_q50": 6.87,
+        "stat_q90": 6.87
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18753,15 +18753,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.597,
-        "p_under": 0.403,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 2.85,
-        "stat_q50": 8.92,
-        "stat_q90": 16.78
+        "p_over": 0.121,
+        "p_under": 0.879,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18877,9 +18877,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -18899,15 +18899,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.471,
-        "p_under": 0.43,
-        "lean": "OVER",
-        "min_q10": 25.01,
-        "min_q50": 32.39,
-        "min_q90": 37.76,
-        "stat_q10": 1.54,
-        "stat_q50": 4.34,
-        "stat_q90": 9.81
+        "p_over": 0.414,
+        "p_under": 0.507,
+        "lean": "UNDER",
+        "min_q10": 20.25,
+        "min_q50": 20.37,
+        "min_q90": 20.37,
+        "stat_q10": 10.52,
+        "stat_q50": 10.58,
+        "stat_q90": 10.58
       },
       "sharp": {
         "source": "Pinnacle",
@@ -18999,9 +18999,9 @@
         "avg_stat": 3.625,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -19021,15 +19021,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.705,
-        "p_under": 0.295,
+        "p_over": 0.542,
+        "p_under": 0.458,
         "lean": "OVER",
-        "min_q10": 23.05,
-        "min_q50": 32.15,
-        "min_q90": 39.2,
-        "stat_q10": 1.45,
-        "stat_q50": 4.59,
-        "stat_q90": 10.98
+        "min_q10": 16.72,
+        "min_q50": 16.72,
+        "min_q90": 16.72,
+        "stat_q10": 8.32,
+        "stat_q50": 8.32,
+        "stat_q90": 8.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19151,15 +19151,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.403,
-        "p_under": 0.521,
+        "p_over": 0.321,
+        "p_under": 0.622,
         "lean": "UNDER",
-        "min_q10": 26.99,
-        "min_q50": 34.46,
-        "min_q90": 40.4,
-        "stat_q10": 3.03,
-        "stat_q50": 7.59,
-        "stat_q90": 14.62
+        "min_q10": 21.71,
+        "min_q50": 21.77,
+        "min_q90": 21.77,
+        "stat_q10": 12.31,
+        "stat_q50": 12.35,
+        "stat_q90": 12.35
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19297,15 +19297,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.503,
-        "p_under": 0.496,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.53,
-        "stat_q50": 8.59,
-        "stat_q90": 16.6
+        "p_over": 0.179,
+        "p_under": 0.821,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 8.27,
+        "stat_q50": 8.78,
+        "stat_q90": 8.78
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19421,9 +19421,9 @@
         "avg_stat": 9.4,
         "over_rate_at_line": 0.2
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -19443,15 +19443,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.624,
-        "p_under": 0.263,
-        "lean": "OVER",
-        "min_q10": 29.27,
-        "min_q50": 38.31,
-        "min_q90": 42.5,
-        "stat_q10": 2.36,
-        "stat_q50": 6.45,
-        "stat_q90": 12.21
+        "p_over": 0.428,
+        "p_under": 0.491,
+        "lean": "UNDER",
+        "min_q10": 23.61,
+        "min_q50": 23.67,
+        "min_q90": 23.67,
+        "stat_q10": 12.1,
+        "stat_q50": 12.13,
+        "stat_q90": 12.13
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19543,9 +19543,9 @@
         "avg_stat": 5.7272727272727275,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -19565,15 +19565,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.355,
-        "p_under": 0.645,
+        "p_over": 0.255,
+        "p_under": 0.745,
         "lean": "UNDER",
-        "min_q10": 26.01,
-        "min_q50": 34.2,
-        "min_q90": 40.94,
-        "stat_q10": 3.33,
-        "stat_q50": 8.69,
-        "stat_q90": 16.92
+        "min_q10": 20.07,
+        "min_q50": 20.07,
+        "min_q90": 20.07,
+        "stat_q10": 12.15,
+        "stat_q50": 12.5,
+        "stat_q90": 12.5
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19711,15 +19711,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.479,
-        "p_under": 0.426,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 1.73,
-        "stat_q50": 5.57,
-        "stat_q90": 10.58
+        "p_over": 0.409,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 13.07,
+        "stat_q50": 13.07,
+        "stat_q90": 13.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19827,9 +19827,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -19849,15 +19849,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.443,
-        "p_under": 0.557,
+        "p_over": 0.299,
+        "p_under": 0.701,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.56,
-        "stat_q50": 8.86,
-        "stat_q90": 16.56
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 10.16,
+        "stat_q50": 10.46,
+        "stat_q90": 10.46
       },
       "sharp": {
         "source": "Pinnacle",
@@ -19987,15 +19987,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.535,
-        "p_under": 0.364,
-        "lean": "OVER",
-        "min_q10": 22.14,
-        "min_q50": 30.35,
-        "min_q90": 37.99,
-        "stat_q10": 2.08,
-        "stat_q50": 5.67,
-        "stat_q90": 11.97
+        "p_over": 0.357,
+        "p_under": 0.564,
+        "lean": "UNDER",
+        "min_q10": 16.1,
+        "min_q50": 16.1,
+        "min_q90": 16.1,
+        "stat_q10": 8.79,
+        "stat_q50": 8.79,
+        "stat_q90": 8.79
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20087,9 +20087,9 @@
         "avg_stat": 5.818181818181818,
         "over_rate_at_line": 0.45454545454545453
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -20109,15 +20109,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.512,
-        "p_under": 0.403,
-        "lean": "OVER",
-        "min_q10": 28.9,
-        "min_q50": 38.9,
-        "min_q90": 42.88,
-        "stat_q10": 2.44,
-        "stat_q50": 7.14,
-        "stat_q90": 13.43
+        "p_over": 0.426,
+        "p_under": 0.491,
+        "lean": "UNDER",
+        "min_q10": 23.03,
+        "min_q50": 23.03,
+        "min_q90": 23.03,
+        "stat_q10": 12.42,
+        "stat_q50": 12.42,
+        "stat_q90": 12.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20217,9 +20217,9 @@
         "avg_stat": 6.636363636363637,
         "over_rate_at_line": 0.45454545454545453
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -20239,15 +20239,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.585,
-        "p_under": 0.415,
-        "lean": "OVER",
-        "min_q10": 14.12,
-        "min_q50": 26.77,
-        "min_q90": 34.8,
-        "stat_q10": 1.27,
-        "stat_q50": 5.23,
-        "stat_q90": 11.76
+        "p_over": 0.36,
+        "p_under": 0.64,
+        "lean": "UNDER",
+        "min_q10": 9.74,
+        "min_q50": 9.94,
+        "min_q90": 9.94,
+        "stat_q10": 5.2,
+        "stat_q50": 5.3,
+        "stat_q90": 5.3
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20339,9 +20339,9 @@
         "avg_stat": 4.6,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -20361,15 +20361,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.427,
-        "p_under": 0.573,
+        "p_over": 0.369,
+        "p_under": 0.631,
         "lean": "UNDER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 2.74,
-        "stat_q50": 6.69,
-        "stat_q90": 12.27
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 14.07,
+        "stat_q50": 14.07,
+        "stat_q90": 14.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20499,15 +20499,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.521,
-        "p_under": 0.343,
-        "lean": "OVER",
-        "min_q10": 19.46,
-        "min_q50": 26.39,
-        "min_q90": 32.74,
-        "stat_q10": 1.39,
-        "stat_q50": 4.54,
-        "stat_q90": 9.58
+        "p_over": 0.324,
+        "p_under": 0.565,
+        "lean": "UNDER",
+        "min_q10": 13.0,
+        "min_q50": 13.0,
+        "min_q90": 13.0,
+        "stat_q10": 6.78,
+        "stat_q50": 6.78,
+        "stat_q90": 6.78
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20607,9 +20607,9 @@
         "avg_stat": 5.4,
         "over_rate_at_line": 0.8
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Betr DFS",
@@ -20629,15 +20629,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.297,
-        "p_under": 0.703,
+        "p_over": 0.069,
+        "p_under": 0.931,
         "lean": "UNDER",
-        "min_q10": 14.4,
-        "min_q50": 30.96,
-        "min_q90": 37.52,
-        "stat_q10": 1.93,
-        "stat_q50": 7.86,
-        "stat_q90": 15.26
+        "min_q10": 10.92,
+        "min_q50": 11.09,
+        "min_q90": 11.09,
+        "stat_q10": 6.68,
+        "stat_q50": 6.91,
+        "stat_q90": 6.91
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20767,15 +20767,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.449,
-        "p_under": 0.551,
+        "p_over": 0.362,
+        "p_under": 0.638,
         "lean": "UNDER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 1.38,
-        "stat_q50": 5.04,
-        "stat_q90": 10.96
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 11.41,
+        "stat_q50": 11.43,
+        "stat_q90": 11.43
       },
       "sharp": {
         "source": "Pinnacle",
@@ -20905,15 +20905,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.246,
-        "p_under": 0.754,
+        "p_over": 0.205,
+        "p_under": 0.795,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 0.54,
-        "stat_q50": 3.59,
-        "stat_q90": 8.8
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 6.4,
+        "stat_q50": 6.56,
+        "stat_q90": 6.56
       },
       "sharp": {
         "source": "Pinnacle",
@@ -21035,15 +21035,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.447,
-        "p_under": 0.445,
-        "lean": "OVER",
-        "min_q10": 25.42,
-        "min_q50": 32.43,
-        "min_q90": 39.12,
-        "stat_q10": 1.97,
-        "stat_q50": 5.15,
-        "stat_q90": 11.25
+        "p_over": 0.358,
+        "p_under": 0.578,
+        "lean": "UNDER",
+        "min_q10": 20.99,
+        "min_q50": 20.99,
+        "min_q90": 20.99,
+        "stat_q10": 11.32,
+        "stat_q50": 11.32,
+        "stat_q90": 11.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -21135,9 +21135,9 @@
         "avg_stat": 4.3,
         "over_rate_at_line": 0.4
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -21157,15 +21157,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.64,
-        "p_under": 0.36,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 2.75,
-        "stat_q50": 7.41,
-        "stat_q90": 14.19
+        "p_over": 0.483,
+        "p_under": 0.517,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 13.88,
+        "stat_q50": 13.88,
+        "stat_q90": 13.88
       },
       "sharp": {
         "source": "Pinnacle",
@@ -21273,9 +21273,9 @@
         "avg_stat": 4.666666666666667,
         "over_rate_at_line": 0.2222222222222222
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Betr DFS",
@@ -21295,15 +21295,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.363,
-        "p_under": 0.578,
+        "p_over": 0.04,
+        "p_under": 0.944,
         "lean": "UNDER",
-        "min_q10": 16.62,
-        "min_q50": 30.53,
-        "min_q90": 37.16,
-        "stat_q10": 4.01,
-        "stat_q50": 10.86,
-        "stat_q90": 18.99
+        "min_q10": 10.58,
+        "min_q50": 10.68,
+        "min_q90": 10.68,
+        "stat_q10": 7.36,
+        "stat_q50": 7.5,
+        "stat_q90": 7.5
       },
       "sharp": {
         "source": "Pinnacle",
@@ -24339,15 +24339,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.623,
-        "p_under": 0.378,
-        "lean": "OVER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 1.65,
-        "stat_q50": 5.01,
-        "stat_q90": 10.57
+        "p_over": 0.244,
+        "p_under": 0.756,
+        "lean": "UNDER",
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 0.8,
+        "stat_q50": 2.26,
+        "stat_q90": 4.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -24447,9 +24447,9 @@
         "avg_stat": 3.857142857142857,
         "over_rate_at_line": 0.2857142857142857
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -24469,15 +24469,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.448,
-        "p_under": 0.552,
+        "p_over": 0.179,
+        "p_under": 0.821,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 1.68,
-        "stat_q50": 5.75,
-        "stat_q90": 10.88
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 0.99,
+        "stat_q50": 3.26,
+        "stat_q90": 5.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -24607,15 +24607,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.529,
-        "p_under": 0.47,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 3.26,
-        "stat_q50": 7.45,
-        "stat_q90": 13.56
+        "p_over": 0.222,
+        "p_under": 0.778,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 2.15,
+        "stat_q50": 4.3,
+        "stat_q90": 7.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -24723,9 +24723,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "DraftKings Pick6",
@@ -24745,15 +24745,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.577,
-        "p_under": 0.423,
-        "lean": "OVER",
-        "min_q10": 6.14,
-        "min_q50": 13.4,
-        "min_q90": 22.1,
-        "stat_q10": 0.37,
-        "stat_q50": 1.76,
-        "stat_q90": 5.27
+        "p_over": 0.001,
+        "p_under": 0.999,
+        "lean": "UNDER",
+        "min_q10": 0.19,
+        "min_q50": 0.26,
+        "min_q90": 0.26,
+        "stat_q10": 0.01,
+        "stat_q50": 0.03,
+        "stat_q90": 0.06
       },
       "sharp": {
         "source": "FanDuel",
@@ -24829,9 +24829,9 @@
         "avg_stat": 2.4285714285714284,
         "over_rate_at_line": 0.8571428571428571
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -24851,15 +24851,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.546,
-        "p_under": 0.454,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 3.19,
-        "stat_q50": 7.67,
-        "stat_q90": 13.89
+        "p_over": 0.241,
+        "p_under": 0.759,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 2.45,
+        "stat_q50": 4.69,
+        "stat_q90": 8.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -24967,9 +24967,9 @@
         "avg_stat": 6.0,
         "over_rate_at_line": 0.25
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -24989,15 +24989,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.065,
+        "p_under": 0.935,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 1.79,
-        "stat_q50": 7.64,
-        "stat_q90": 14.29
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 1.13,
+        "stat_q50": 2.69,
+        "stat_q90": 4.53
       },
       "sharp": {
         "source": "Pinnacle",
@@ -25495,15 +25495,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.471,
-        "p_under": 0.529,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 3.8,
-        "stat_q50": 13.86,
-        "stat_q90": 28.2
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 8.45,
+        "stat_q50": 8.48,
+        "stat_q90": 8.48
       },
       "sharp": {
         "source": "Pinnacle",
@@ -25673,15 +25673,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.38,
-        "p_under": 0.62,
+        "p_over": 0.045,
+        "p_under": 0.955,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 7.6,
-        "stat_q50": 17.85,
-        "stat_q90": 31.53
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 16.25,
+        "stat_q50": 16.25,
+        "stat_q90": 16.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -25851,15 +25851,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.627,
-        "p_under": 0.373,
-        "lean": "OVER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 15.77,
-        "stat_q50": 30.95,
-        "stat_q90": 45.32
+        "p_over": 0.172,
+        "p_under": 0.828,
+        "lean": "UNDER",
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 24.18,
+        "stat_q50": 24.18,
+        "stat_q90": 24.18
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26015,9 +26015,9 @@
         "avg_stat": 24.2,
         "over_rate_at_line": 0.2
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -26037,15 +26037,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
-        "lean": "OVER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 1.84,
-        "stat_q50": 8.25,
-        "stat_q90": 20.42
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 2.8,
+        "stat_q50": 2.92,
+        "stat_q90": 2.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26169,9 +26169,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.6
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -26191,15 +26191,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.735,
-        "p_under": 0.266,
-        "lean": "OVER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 7.06,
-        "stat_q50": 17.36,
-        "stat_q90": 31.68
+        "p_over": 0.045,
+        "p_under": 0.955,
+        "lean": "UNDER",
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 11.16,
+        "stat_q50": 11.25,
+        "stat_q90": 11.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26339,9 +26339,9 @@
         "avg_stat": 14.88888888888889,
         "over_rate_at_line": 0.3333333333333333
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -26361,15 +26361,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.338,
-        "p_under": 0.662,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 13.48,
-        "min_q50": 21.95,
-        "min_q90": 30.82,
-        "stat_q10": 0.44,
-        "stat_q50": 7.23,
-        "stat_q90": 19.93
+        "min_q10": 7.74,
+        "min_q50": 7.76,
+        "min_q90": 7.76,
+        "stat_q10": 3.53,
+        "stat_q50": 3.66,
+        "stat_q90": 3.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26523,15 +26523,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.653,
-        "p_under": 0.347,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 3.04,
-        "stat_q50": 13.12,
-        "stat_q90": 27.17
+        "p_over": 0.012,
+        "p_under": 0.988,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 5.0,
+        "stat_q50": 5.0,
+        "stat_q90": 5.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26655,9 +26655,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -26677,15 +26677,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.463,
-        "p_under": 0.537,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 8.31,
-        "min_q50": 15.17,
-        "min_q90": 24.77,
-        "stat_q10": 1.11,
-        "stat_q50": 5.76,
-        "stat_q90": 16.54
+        "min_q10": 3.52,
+        "min_q50": 3.76,
+        "min_q90": 3.76,
+        "stat_q10": 1.74,
+        "stat_q50": 1.86,
+        "stat_q90": 1.86
       },
       "sharp": {
         "source": "Pinnacle",
@@ -26831,15 +26831,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.309,
-        "p_under": 0.691,
+        "p_over": 0.013,
+        "p_under": 0.987,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 8.48,
-        "stat_q50": 22.26,
-        "stat_q90": 36.61
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 18.34,
+        "stat_q50": 18.83,
+        "stat_q90": 18.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27025,15 +27025,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.6,
-        "p_under": 0.4,
-        "lean": "OVER",
-        "min_q10": 23.76,
-        "min_q50": 33.79,
-        "min_q90": 40.66,
-        "stat_q10": 2.38,
-        "stat_q50": 11.85,
-        "stat_q90": 24.73
+        "p_over": 0.076,
+        "p_under": 0.924,
+        "lean": "UNDER",
+        "min_q10": 18.17,
+        "min_q50": 18.23,
+        "min_q90": 18.23,
+        "stat_q10": 8.72,
+        "stat_q50": 8.75,
+        "stat_q90": 8.75
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27165,9 +27165,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "DraftKings Pick6",
@@ -27187,15 +27187,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.526,
-        "p_under": 0.474,
-        "lean": "OVER",
-        "min_q10": 26.99,
-        "min_q50": 34.46,
-        "min_q90": 40.4,
-        "stat_q10": 6.65,
-        "stat_q50": 16.0,
-        "stat_q90": 29.23
+        "p_over": 0.092,
+        "p_under": 0.908,
+        "lean": "UNDER",
+        "min_q10": 21.71,
+        "min_q50": 21.77,
+        "min_q90": 21.77,
+        "stat_q10": 12.59,
+        "stat_q50": 12.62,
+        "stat_q90": 12.62
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27335,9 +27335,9 @@
         "avg_stat": 15.727272727272727,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -27357,15 +27357,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.839,
-        "p_under": 0.161,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.26,
-        "stat_q50": 10.7,
-        "stat_q90": 21.53
+        "p_over": 0.06,
+        "p_under": 0.94,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 6.32,
+        "stat_q50": 6.45,
+        "stat_q90": 6.45
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27489,9 +27489,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -27511,15 +27511,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.327,
-        "p_under": 0.673,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 0.98,
-        "min_q50": 8.31,
-        "min_q90": 18.97,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 1.74,
-        "stat_q90": 8.97
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "BetOnline.ag",
@@ -27593,15 +27593,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.044,
-        "p_under": 0.956,
+        "p_over": 0.005,
+        "p_under": 0.995,
         "lean": "UNDER",
-        "min_q10": 26.01,
-        "min_q50": 34.2,
-        "min_q90": 40.94,
-        "stat_q10": 0.0,
-        "stat_q50": 5.25,
-        "stat_q90": 16.49
+        "min_q10": 20.07,
+        "min_q50": 20.07,
+        "min_q90": 20.07,
+        "stat_q10": 9.97,
+        "stat_q50": 9.97,
+        "stat_q90": 9.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27755,15 +27755,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.536,
-        "p_under": 0.464,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 8.13,
-        "stat_q50": 19.72,
-        "stat_q90": 35.52
+        "p_over": 0.137,
+        "p_under": 0.863,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 16.54,
+        "stat_q50": 16.55,
+        "stat_q90": 16.55
       },
       "sharp": {
         "source": "Pinnacle",
@@ -27911,9 +27911,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -27933,15 +27933,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.021,
+        "p_under": 0.979,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.29,
-        "stat_q50": 11.64,
-        "stat_q90": 24.22
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 9.02,
+        "stat_q50": 9.02,
+        "stat_q90": 9.02
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28103,15 +28103,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.509,
-        "p_under": 0.491,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 9.96,
-        "stat_q50": 22.83,
-        "stat_q90": 37.52
+        "p_over": 0.052,
+        "p_under": 0.948,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 17.96,
+        "stat_q50": 17.97,
+        "stat_q90": 17.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28267,9 +28267,9 @@
         "avg_stat": 20.375,
         "over_rate_at_line": 0.25
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -28289,15 +28289,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.574,
-        "p_under": 0.426,
-        "lean": "OVER",
-        "min_q10": 11.52,
-        "min_q50": 25.45,
-        "min_q90": 34.7,
-        "stat_q10": 0.84,
-        "stat_q50": 7.0,
-        "stat_q90": 17.74
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 5.84,
+        "min_q50": 6.14,
+        "min_q90": 6.14,
+        "stat_q10": 2.51,
+        "stat_q50": 2.64,
+        "stat_q90": 2.64
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28421,9 +28421,9 @@
         "avg_stat": 9.777777777777779,
         "over_rate_at_line": 0.7777777777777778
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -28443,15 +28443,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.466,
-        "p_under": 0.534,
+        "p_over": 0.003,
+        "p_under": 0.997,
         "lean": "UNDER",
-        "min_q10": 16.08,
-        "min_q50": 24.89,
-        "min_q90": 32.77,
-        "stat_q10": 1.51,
-        "stat_q50": 8.27,
-        "stat_q90": 19.7
+        "min_q10": 10.7,
+        "min_q50": 10.74,
+        "min_q90": 10.74,
+        "stat_q10": 4.62,
+        "stat_q50": 4.64,
+        "stat_q90": 4.64
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28597,15 +28597,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.647,
-        "p_under": 0.353,
-        "lean": "OVER",
-        "min_q10": 24.19,
-        "min_q50": 34.32,
-        "min_q90": 40.88,
-        "stat_q10": 2.81,
-        "stat_q50": 12.2,
-        "stat_q90": 24.42
+        "p_over": 0.096,
+        "p_under": 0.904,
+        "lean": "UNDER",
+        "min_q10": 18.65,
+        "min_q50": 18.65,
+        "min_q90": 18.65,
+        "stat_q10": 8.47,
+        "stat_q50": 8.47,
+        "stat_q90": 8.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28737,9 +28737,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "DraftKings Pick6",
@@ -28759,15 +28759,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.814,
-        "p_under": 0.186,
-        "lean": "OVER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 7.1,
-        "stat_q50": 16.84,
-        "stat_q90": 28.45
+        "p_over": 0.176,
+        "p_under": 0.824,
+        "lean": "UNDER",
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 12.48,
+        "stat_q50": 12.49,
+        "stat_q90": 12.49
       },
       "sharp": {
         "source": "Pinnacle",
@@ -28907,9 +28907,9 @@
         "avg_stat": 13.11111111111111,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -28929,15 +28929,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.21,
-        "p_under": 0.789,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 2.02,
-        "min_q50": 10.27,
-        "min_q90": 21.23,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 1.84,
-        "stat_q90": 10.15
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "FanDuel",
@@ -29075,15 +29075,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.334,
-        "p_under": 0.666,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 7.79,
-        "stat_q50": 25.32,
-        "stat_q90": 39.58
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 11.32,
+        "stat_q50": 11.6,
+        "stat_q90": 11.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -29269,15 +29269,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.734,
-        "p_under": 0.267,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 6.66,
-        "stat_q50": 17.94,
-        "stat_q90": 32.83
+        "p_over": 0.165,
+        "p_under": 0.836,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 15.17,
+        "stat_q50": 15.17,
+        "stat_q90": 15.17
       },
       "sharp": {
         "source": "Pinnacle",
@@ -29425,9 +29425,9 @@
         "avg_stat": 13.555555555555555,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -37005,15 +37005,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.511,
-        "p_under": 0.489,
-        "lean": "OVER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 0.8,
-        "stat_q50": 3.34,
-        "stat_q90": 9.15
+        "p_over": 0.372,
+        "p_under": 0.627,
+        "lean": "UNDER",
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 7.81,
+        "stat_q50": 7.84,
+        "stat_q90": 7.84
       },
       "sharp": {
         "source": "Pinnacle",
@@ -37121,9 +37121,9 @@
         "avg_stat": 2.5714285714285716,
         "over_rate_at_line": 0.14285714285714285
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -37143,15 +37143,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.539,
-        "p_under": 0.461,
-        "lean": "OVER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 2.31,
-        "stat_q50": 5.23,
-        "stat_q90": 10.6
+        "p_over": 0.388,
+        "p_under": 0.612,
+        "lean": "UNDER",
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 13.29,
+        "stat_q50": 13.29,
+        "stat_q90": 13.29
       },
       "sharp": {
         "source": "Pinnacle",
@@ -37259,9 +37259,9 @@
         "avg_stat": 3.6666666666666665,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -37281,15 +37281,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.441,
-        "p_under": 0.559,
+        "p_over": 0.229,
+        "p_under": 0.771,
         "lean": "UNDER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 0.37,
-        "stat_q50": 2.17,
-        "stat_q90": 7.21
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 3.02,
+        "stat_q50": 3.15,
+        "stat_q90": 3.15
       },
       "sharp": {
         "source": "FanDuel",
@@ -37403,15 +37403,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.395,
-        "p_under": 0.605,
+        "p_over": 0.242,
+        "p_under": 0.758,
         "lean": "UNDER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 2.6,
-        "stat_q50": 6.93,
-        "stat_q90": 13.35
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 10.34,
+        "stat_q50": 10.42,
+        "stat_q90": 10.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -37549,15 +37549,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.597,
-        "p_under": 0.403,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 2.85,
-        "stat_q50": 8.92,
-        "stat_q90": 16.78
+        "p_over": 0.121,
+        "p_under": 0.879,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "Pinnacle",
@@ -37673,9 +37673,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -37695,15 +37695,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.503,
-        "p_under": 0.496,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.53,
-        "stat_q50": 8.59,
-        "stat_q90": 16.6
+        "p_over": 0.179,
+        "p_under": 0.821,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 8.27,
+        "stat_q50": 8.78,
+        "stat_q90": 8.78
       },
       "sharp": {
         "source": "Pinnacle",
@@ -37819,9 +37819,9 @@
         "avg_stat": 9.4,
         "over_rate_at_line": 0.2
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -37841,15 +37841,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.373,
-        "p_under": 0.627,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 6.02,
-        "min_q50": 14.19,
-        "min_q90": 22.81,
-        "stat_q10": 0.12,
-        "stat_q50": 1.4,
-        "stat_q90": 5.39
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
+        "stat_q10": 0.0,
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "DraftKings",
@@ -37947,15 +37947,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.355,
-        "p_under": 0.645,
+        "p_over": 0.255,
+        "p_under": 0.745,
         "lean": "UNDER",
-        "min_q10": 26.01,
-        "min_q50": 34.2,
-        "min_q90": 40.94,
-        "stat_q10": 3.33,
-        "stat_q50": 8.69,
-        "stat_q90": 16.92
+        "min_q10": 20.07,
+        "min_q50": 20.07,
+        "min_q90": 20.07,
+        "stat_q10": 12.15,
+        "stat_q50": 12.5,
+        "stat_q90": 12.5
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38093,15 +38093,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.416,
-        "p_under": 0.584,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 6.14,
-        "min_q50": 13.4,
-        "min_q90": 22.1,
-        "stat_q10": 0.45,
-        "stat_q50": 2.62,
-        "stat_q90": 7.91
+        "min_q10": 0.19,
+        "min_q50": 0.26,
+        "min_q90": 0.26,
+        "stat_q10": 0.1,
+        "stat_q50": 0.15,
+        "stat_q90": 0.15
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38231,15 +38231,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.427,
-        "p_under": 0.573,
+        "p_over": 0.369,
+        "p_under": 0.631,
         "lean": "UNDER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 2.74,
-        "stat_q50": 6.69,
-        "stat_q90": 12.27
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 14.07,
+        "stat_q50": 14.07,
+        "stat_q90": 14.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38369,15 +38369,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.449,
-        "p_under": 0.551,
+        "p_over": 0.362,
+        "p_under": 0.638,
         "lean": "UNDER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 1.38,
-        "stat_q50": 5.04,
-        "stat_q90": 10.96
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 11.41,
+        "stat_q50": 11.43,
+        "stat_q90": 11.43
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38507,15 +38507,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.246,
-        "p_under": 0.754,
+        "p_over": 0.205,
+        "p_under": 0.795,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 0.54,
-        "stat_q50": 3.59,
-        "stat_q90": 8.8
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 6.4,
+        "stat_q50": 6.56,
+        "stat_q90": 6.56
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38637,15 +38637,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.64,
-        "p_under": 0.36,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 2.75,
-        "stat_q50": 7.41,
-        "stat_q90": 14.19
+        "p_over": 0.483,
+        "p_under": 0.517,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 13.88,
+        "stat_q50": 13.88,
+        "stat_q90": 13.88
       },
       "sharp": {
         "source": "Pinnacle",
@@ -38753,9 +38753,9 @@
         "avg_stat": 4.666666666666667,
         "over_rate_at_line": 0.2222222222222222
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "DraftKings Pick6",
@@ -40201,15 +40201,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.623,
-        "p_under": 0.378,
-        "lean": "OVER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 1.65,
-        "stat_q50": 5.01,
-        "stat_q90": 10.57
+        "p_over": 0.244,
+        "p_under": 0.756,
+        "lean": "UNDER",
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 0.8,
+        "stat_q50": 2.26,
+        "stat_q90": 4.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -40309,9 +40309,9 @@
         "avg_stat": 3.857142857142857,
         "over_rate_at_line": 0.2857142857142857
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -40331,15 +40331,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.448,
-        "p_under": 0.552,
+        "p_over": 0.179,
+        "p_under": 0.821,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 1.68,
-        "stat_q50": 5.75,
-        "stat_q90": 10.88
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 0.99,
+        "stat_q50": 3.26,
+        "stat_q90": 5.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -40469,15 +40469,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.296,
-        "p_under": 0.643,
+        "p_over": 0.198,
+        "p_under": 0.75,
         "lean": "UNDER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 2.4,
-        "stat_q50": 6.95,
-        "stat_q90": 13.94
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 3.2,
+        "stat_q50": 5.86,
+        "stat_q90": 10.01
       },
       "sharp": {
         "source": "Pinnacle",
@@ -40615,15 +40615,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.481,
-        "p_under": 0.519,
+        "p_over": 0.271,
+        "p_under": 0.729,
         "lean": "UNDER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 0.03,
-        "stat_q50": 1.67,
-        "stat_q90": 5.7
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 0.0,
+        "stat_q50": 0.89,
+        "stat_q90": 2.51
       },
       "sharp": {
         "source": "Pinnacle",
@@ -40737,15 +40737,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.261,
-        "p_under": 0.602,
+        "p_over": 0.058,
+        "p_under": 0.859,
         "lean": "UNDER",
-        "min_q10": 13.48,
-        "min_q50": 21.95,
-        "min_q90": 30.82,
-        "stat_q10": 0.0,
-        "stat_q50": 1.9,
-        "stat_q90": 6.66
+        "min_q10": 7.74,
+        "min_q50": 7.76,
+        "min_q90": 7.76,
+        "stat_q10": 0.36,
+        "stat_q50": 1.05,
+        "stat_q90": 2.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -40867,15 +40867,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.656,
-        "p_under": 0.344,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 0.3,
-        "stat_q50": 1.73,
-        "stat_q90": 5.2
+        "p_over": 0.291,
+        "p_under": 0.709,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 0.0,
+        "stat_q50": 0.4,
+        "stat_q90": 1.24
       },
       "sharp": {
         "source": "DraftKings",
@@ -40951,9 +40951,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -40973,15 +40973,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.215,
-        "p_under": 0.686,
+        "p_over": 0.133,
+        "p_under": 0.787,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 0.2,
-        "stat_q50": 2.87,
-        "stat_q90": 7.82
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 0.62,
+        "stat_q50": 2.23,
+        "stat_q90": 4.8
       },
       "sharp": {
         "source": "Pinnacle",
@@ -41103,15 +41103,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.489,
-        "p_under": 0.511,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 6.02,
-        "min_q50": 14.19,
-        "min_q90": 22.81,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 0.86,
-        "stat_q90": 3.79
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "PrizePicks",
@@ -41176,15 +41176,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.529,
-        "p_under": 0.47,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 3.26,
-        "stat_q50": 7.45,
-        "stat_q90": 13.56
+        "p_over": 0.222,
+        "p_under": 0.778,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 2.15,
+        "stat_q50": 4.3,
+        "stat_q90": 7.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -41292,9 +41292,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -41314,15 +41314,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.408,
-        "p_under": 0.592,
+        "p_over": 0.057,
+        "p_under": 0.943,
         "lean": "UNDER",
-        "min_q10": 2.87,
-        "min_q50": 9.89,
-        "min_q90": 19.96,
+        "min_q10": 0.79,
+        "min_q50": 0.79,
+        "min_q90": 0.79,
         "stat_q10": 0.0,
-        "stat_q50": 0.64,
-        "stat_q90": 3.33
+        "stat_q50": 0.06,
+        "stat_q90": 0.14
       },
       "sharp": {
         "source": "PrizePicks",
@@ -41387,15 +41387,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.439,
-        "p_under": 0.561,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 3.35,
-        "min_q50": 11.2,
-        "min_q90": 22.03,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 0.57,
-        "stat_q90": 3.08
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "PrizePicks",
@@ -41460,15 +41460,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.546,
-        "p_under": 0.454,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 3.19,
-        "stat_q50": 7.67,
-        "stat_q90": 13.89
+        "p_over": 0.241,
+        "p_under": 0.759,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 2.45,
+        "stat_q50": 4.69,
+        "stat_q90": 8.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -41576,9 +41576,9 @@
         "avg_stat": 6.0,
         "over_rate_at_line": 0.25
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -41598,15 +41598,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.209,
-        "p_under": 0.641,
+        "p_over": 0.07,
+        "p_under": 0.816,
         "lean": "UNDER",
-        "min_q10": 16.08,
-        "min_q50": 24.89,
-        "min_q90": 32.77,
-        "stat_q10": 0.0,
-        "stat_q50": 1.24,
-        "stat_q90": 4.97
+        "min_q10": 10.7,
+        "min_q50": 10.74,
+        "min_q90": 10.74,
+        "stat_q10": 0.04,
+        "stat_q50": 0.75,
+        "stat_q90": 1.78
       },
       "sharp": {
         "source": "FanDuel",
@@ -41712,15 +41712,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.357,
-        "p_under": 0.553,
+        "p_over": 0.165,
+        "p_under": 0.749,
         "lean": "UNDER",
-        "min_q10": 24.19,
-        "min_q50": 34.32,
-        "min_q90": 40.88,
-        "stat_q10": 0.16,
-        "stat_q50": 2.69,
-        "stat_q90": 7.44
+        "min_q10": 18.65,
+        "min_q50": 18.65,
+        "min_q90": 18.65,
+        "stat_q10": 0.49,
+        "stat_q50": 1.73,
+        "stat_q90": 3.51
       },
       "sharp": {
         "source": "Pinnacle",
@@ -41842,15 +41842,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.065,
+        "p_under": 0.935,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 1.79,
-        "stat_q50": 7.64,
-        "stat_q90": 14.29
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 1.13,
+        "stat_q50": 2.69,
+        "stat_q90": 4.53
       },
       "sharp": {
         "source": "Pinnacle",
@@ -46581,15 +46581,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.471,
-        "p_under": 0.529,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 21.25,
-        "min_q50": 30.38,
-        "min_q90": 36.73,
-        "stat_q10": 3.8,
-        "stat_q50": 13.86,
-        "stat_q90": 28.2
+        "min_q10": 15.82,
+        "min_q50": 15.89,
+        "min_q90": 15.89,
+        "stat_q10": 8.45,
+        "stat_q50": 8.48,
+        "stat_q90": 8.48
       },
       "sharp": {
         "source": "Pinnacle",
@@ -46759,15 +46759,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.634,
-        "p_under": 0.366,
-        "lean": "OVER",
-        "min_q10": 12.75,
-        "min_q50": 18.89,
-        "min_q90": 26.39,
-        "stat_q10": 1.5,
-        "stat_q50": 7.2,
-        "stat_q90": 17.25
+        "p_over": 0.006,
+        "p_under": 0.994,
+        "lean": "UNDER",
+        "min_q10": 8.42,
+        "min_q50": 8.46,
+        "min_q90": 8.46,
+        "stat_q10": 3.58,
+        "stat_q50": 3.6,
+        "stat_q90": 3.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -46891,9 +46891,9 @@
         "avg_stat": 8.125,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -46913,15 +46913,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.227,
-        "p_under": 0.773,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 20.09,
-        "min_q50": 35.34,
-        "min_q90": 41.79,
-        "stat_q10": 5.72,
-        "stat_q50": 18.85,
-        "stat_q90": 34.54
+        "min_q10": 14.54,
+        "min_q50": 14.54,
+        "min_q90": 14.54,
+        "stat_q10": 10.61,
+        "stat_q50": 10.61,
+        "stat_q90": 10.61
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47099,15 +47099,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.405,
-        "p_under": 0.595,
+        "p_over": 0.009,
+        "p_under": 0.991,
         "lean": "UNDER",
-        "min_q10": 18.73,
-        "min_q50": 28.15,
-        "min_q90": 35.24,
-        "stat_q10": 2.01,
-        "stat_q50": 9.26,
-        "stat_q90": 20.65
+        "min_q10": 14.46,
+        "min_q50": 14.69,
+        "min_q90": 14.69,
+        "stat_q10": 7.04,
+        "stat_q50": 7.15,
+        "stat_q90": 7.15
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47261,15 +47261,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.38,
-        "p_under": 0.62,
+        "p_over": 0.045,
+        "p_under": 0.955,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 7.6,
-        "stat_q50": 17.85,
-        "stat_q90": 31.53
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 16.25,
+        "stat_q50": 16.25,
+        "stat_q90": 16.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47439,15 +47439,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.473,
-        "p_under": 0.527,
+        "p_over": 0.106,
+        "p_under": 0.893,
         "lean": "UNDER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.98,
-        "stat_q50": 12.06,
-        "stat_q90": 25.63
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.3,
+        "stat_q50": 8.3,
+        "stat_q90": 8.3
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47601,15 +47601,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.627,
-        "p_under": 0.373,
-        "lean": "OVER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 15.77,
-        "stat_q50": 30.95,
-        "stat_q90": 45.32
+        "p_over": 0.172,
+        "p_under": 0.828,
+        "lean": "UNDER",
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 24.18,
+        "stat_q50": 24.18,
+        "stat_q90": 24.18
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47765,9 +47765,9 @@
         "avg_stat": 24.2,
         "over_rate_at_line": 0.2
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -47787,15 +47787,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
-        "lean": "OVER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 1.84,
-        "stat_q50": 8.25,
-        "stat_q90": 20.42
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 2.8,
+        "stat_q50": 2.92,
+        "stat_q90": 2.92
       },
       "sharp": {
         "source": "Pinnacle",
@@ -47919,9 +47919,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.6
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -47941,15 +47941,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.735,
-        "p_under": 0.266,
-        "lean": "OVER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 7.06,
-        "stat_q50": 17.36,
-        "stat_q90": 31.68
+        "p_over": 0.045,
+        "p_under": 0.955,
+        "lean": "UNDER",
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 11.16,
+        "stat_q50": 11.25,
+        "stat_q90": 11.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48089,9 +48089,9 @@
         "avg_stat": 14.88888888888889,
         "over_rate_at_line": 0.2222222222222222
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -48111,15 +48111,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.338,
-        "p_under": 0.662,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 13.48,
-        "min_q50": 21.95,
-        "min_q90": 30.82,
-        "stat_q10": 0.44,
-        "stat_q50": 7.23,
-        "stat_q90": 19.93
+        "min_q10": 7.74,
+        "min_q50": 7.76,
+        "min_q90": 7.76,
+        "stat_q10": 3.53,
+        "stat_q50": 3.66,
+        "stat_q90": 3.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48273,15 +48273,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.409,
-        "p_under": 0.591,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 20.33,
-        "min_q50": 36.43,
-        "min_q90": 41.38,
-        "stat_q10": 4.72,
-        "stat_q50": 16.89,
-        "stat_q90": 31.96
+        "min_q10": 14.92,
+        "min_q50": 14.98,
+        "min_q90": 14.98,
+        "stat_q10": 9.79,
+        "stat_q50": 9.83,
+        "stat_q90": 9.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48435,15 +48435,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.877,
-        "p_under": 0.123,
-        "lean": "OVER",
-        "min_q10": 14.15,
-        "min_q50": 23.15,
-        "min_q90": 31.69,
-        "stat_q10": 0.51,
-        "stat_q50": 5.67,
-        "stat_q90": 15.43
+        "p_over": 0.215,
+        "p_under": 0.785,
+        "lean": "UNDER",
+        "min_q10": 8.99,
+        "min_q50": 9.03,
+        "min_q90": 9.03,
+        "stat_q10": 3.25,
+        "stat_q50": 3.26,
+        "stat_q90": 3.26
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48559,9 +48559,9 @@
         "avg_stat": 8.333333333333334,
         "over_rate_at_line": 0.8333333333333334
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -48581,15 +48581,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.653,
-        "p_under": 0.347,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 3.04,
-        "stat_q50": 13.12,
-        "stat_q90": 27.17
+        "p_over": 0.012,
+        "p_under": 0.988,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 5.0,
+        "stat_q50": 5.0,
+        "stat_q90": 5.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48713,9 +48713,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -48735,15 +48735,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.463,
-        "p_under": 0.537,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 8.31,
-        "min_q50": 15.17,
-        "min_q90": 24.77,
-        "stat_q10": 1.11,
-        "stat_q50": 5.76,
-        "stat_q90": 16.54
+        "min_q10": 3.52,
+        "min_q50": 3.76,
+        "min_q90": 3.76,
+        "stat_q10": 1.74,
+        "stat_q50": 1.86,
+        "stat_q90": 1.86
       },
       "sharp": {
         "source": "Pinnacle",
@@ -48889,15 +48889,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.399,
-        "p_under": 0.602,
+        "p_over": 0.054,
+        "p_under": 0.946,
         "lean": "UNDER",
-        "min_q10": 25.01,
-        "min_q50": 32.39,
-        "min_q90": 37.76,
-        "stat_q10": 2.96,
-        "stat_q50": 11.39,
-        "stat_q90": 23.64
+        "min_q10": 20.25,
+        "min_q50": 20.37,
+        "min_q90": 20.37,
+        "stat_q10": 10.25,
+        "stat_q50": 10.31,
+        "stat_q90": 10.31
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49051,15 +49051,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.309,
-        "p_under": 0.691,
+        "p_over": 0.013,
+        "p_under": 0.987,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 8.48,
-        "stat_q50": 22.26,
-        "stat_q90": 36.61
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 18.34,
+        "stat_q50": 18.83,
+        "stat_q90": 18.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49245,15 +49245,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.6,
-        "p_under": 0.4,
-        "lean": "OVER",
-        "min_q10": 23.76,
-        "min_q50": 33.79,
-        "min_q90": 40.66,
-        "stat_q10": 2.38,
-        "stat_q50": 11.85,
-        "stat_q90": 24.73
+        "p_over": 0.076,
+        "p_under": 0.924,
+        "lean": "UNDER",
+        "min_q10": 18.17,
+        "min_q50": 18.23,
+        "min_q90": 18.23,
+        "stat_q10": 8.72,
+        "stat_q50": 8.75,
+        "stat_q90": 8.75
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49385,9 +49385,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -49407,15 +49407,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.634,
-        "p_under": 0.366,
-        "lean": "OVER",
-        "min_q10": 23.05,
-        "min_q50": 32.15,
-        "min_q90": 39.2,
-        "stat_q10": 2.63,
-        "stat_q50": 11.9,
-        "stat_q90": 25.95
+        "p_over": 0.232,
+        "p_under": 0.768,
+        "lean": "UNDER",
+        "min_q10": 16.72,
+        "min_q50": 16.72,
+        "min_q90": 16.72,
+        "stat_q10": 9.04,
+        "stat_q50": 9.04,
+        "stat_q90": 9.04
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49539,9 +49539,9 @@
         "avg_stat": 12.428571428571429,
         "over_rate_at_line": 0.42857142857142855
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -49561,15 +49561,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.526,
-        "p_under": 0.474,
-        "lean": "OVER",
-        "min_q10": 26.99,
-        "min_q50": 34.46,
-        "min_q90": 40.4,
-        "stat_q10": 6.65,
-        "stat_q50": 16.0,
-        "stat_q90": 29.23
+        "p_over": 0.092,
+        "p_under": 0.908,
+        "lean": "UNDER",
+        "min_q10": 21.71,
+        "min_q50": 21.77,
+        "min_q90": 21.77,
+        "stat_q10": 12.59,
+        "stat_q50": 12.62,
+        "stat_q90": 12.62
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49709,9 +49709,9 @@
         "avg_stat": 15.727272727272727,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -49731,15 +49731,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.839,
-        "p_under": 0.161,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.26,
-        "stat_q50": 10.7,
-        "stat_q90": 21.53
+        "p_over": 0.06,
+        "p_under": 0.94,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 6.32,
+        "stat_q50": 6.45,
+        "stat_q90": 6.45
       },
       "sharp": {
         "source": "Pinnacle",
@@ -49863,9 +49863,9 @@
         "avg_stat": 8.5,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -49885,15 +49885,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.908,
-        "p_under": 0.092,
-        "lean": "OVER",
-        "min_q10": 6.02,
-        "min_q50": 14.19,
-        "min_q90": 22.81,
-        "stat_q10": 1.8,
-        "stat_q50": 8.22,
-        "stat_q90": 20.95
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
+        "stat_q10": 0.0,
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50009,9 +50009,9 @@
         "avg_stat": 11.5,
         "over_rate_at_line": 0.7
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -50031,15 +50031,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
-        "lean": "OVER",
-        "min_q10": 29.27,
-        "min_q50": 38.31,
-        "min_q90": 42.5,
-        "stat_q10": 4.99,
-        "stat_q50": 15.0,
-        "stat_q90": 27.34
+        "p_over": 0.101,
+        "p_under": 0.899,
+        "lean": "UNDER",
+        "min_q10": 23.61,
+        "min_q50": 23.67,
+        "min_q90": 23.67,
+        "stat_q10": 12.63,
+        "stat_q50": 12.66,
+        "stat_q90": 12.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50171,9 +50171,9 @@
         "avg_stat": 14.0,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -50193,15 +50193,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.044,
-        "p_under": 0.956,
+        "p_over": 0.005,
+        "p_under": 0.995,
         "lean": "UNDER",
-        "min_q10": 26.01,
-        "min_q50": 34.2,
-        "min_q90": 40.94,
-        "stat_q10": 0.0,
-        "stat_q50": 5.25,
-        "stat_q90": 16.49
+        "min_q10": 20.07,
+        "min_q50": 20.07,
+        "min_q90": 20.07,
+        "stat_q10": 9.97,
+        "stat_q50": 9.97,
+        "stat_q90": 9.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50355,15 +50355,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.536,
-        "p_under": 0.464,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 8.13,
-        "stat_q50": 19.72,
-        "stat_q90": 35.52
+        "p_over": 0.137,
+        "p_under": 0.863,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 16.54,
+        "stat_q50": 16.55,
+        "stat_q90": 16.55
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50511,9 +50511,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -50533,15 +50533,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.021,
+        "p_under": 0.979,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.29,
-        "stat_q50": 11.64,
-        "stat_q90": 24.22
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 9.02,
+        "stat_q50": 9.02,
+        "stat_q90": 9.02
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50703,15 +50703,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.285,
-        "p_under": 0.715,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 3.35,
-        "min_q50": 11.2,
-        "min_q90": 22.03,
-        "stat_q10": 0.01,
-        "stat_q50": 2.17,
-        "stat_q90": 10.11
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
+        "stat_q10": 0.0,
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50849,15 +50849,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.505,
-        "p_under": 0.495,
-        "lean": "OVER",
-        "min_q10": 6.14,
-        "min_q50": 13.4,
-        "min_q90": 22.1,
-        "stat_q10": 0.0,
-        "stat_q50": 2.86,
-        "stat_q90": 11.1
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.19,
+        "min_q50": 0.26,
+        "min_q90": 0.26,
+        "stat_q10": 0.07,
+        "stat_q50": 0.09,
+        "stat_q90": 0.09
       },
       "sharp": {
         "source": "Pinnacle",
@@ -50973,9 +50973,9 @@
         "avg_stat": 5.285714285714286,
         "over_rate_at_line": 0.5714285714285714
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -50995,15 +50995,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.241,
-        "p_under": 0.759,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 3.66,
-        "min_q50": 10.54,
-        "min_q90": 20.7,
-        "stat_q10": 0.0,
-        "stat_q50": 2.86,
-        "stat_q90": 12.74
+        "min_q10": 1.19,
+        "min_q50": 1.51,
+        "min_q90": 1.51,
+        "stat_q10": 0.48,
+        "stat_q50": 0.61,
+        "stat_q90": 0.61
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51141,15 +51141,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.625,
-        "p_under": 0.375,
-        "lean": "OVER",
-        "min_q10": 22.14,
-        "min_q50": 30.35,
-        "min_q90": 37.99,
-        "stat_q10": 2.18,
-        "stat_q50": 9.97,
-        "stat_q90": 21.94
+        "p_over": 0.236,
+        "p_under": 0.764,
+        "lean": "UNDER",
+        "min_q10": 16.1,
+        "min_q50": 16.1,
+        "min_q90": 16.1,
+        "stat_q10": 7.47,
+        "stat_q50": 7.47,
+        "stat_q90": 7.47
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51265,9 +51265,9 @@
         "avg_stat": 8.272727272727273,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -51287,15 +51287,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
-        "lean": "OVER",
-        "min_q10": 28.9,
-        "min_q50": 38.9,
-        "min_q90": 42.88,
-        "stat_q10": 8.4,
-        "stat_q50": 20.95,
-        "stat_q90": 35.19
+        "p_over": 0.134,
+        "p_under": 0.866,
+        "lean": "UNDER",
+        "min_q10": 23.03,
+        "min_q50": 23.03,
+        "min_q90": 23.03,
+        "stat_q10": 14.38,
+        "stat_q50": 14.38,
+        "stat_q90": 14.38
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51435,9 +51435,9 @@
         "avg_stat": 15.727272727272727,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -51457,15 +51457,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.509,
-        "p_under": 0.491,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 9.96,
-        "stat_q50": 22.83,
-        "stat_q90": 37.52
+        "p_over": 0.052,
+        "p_under": 0.948,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 17.96,
+        "stat_q50": 17.97,
+        "stat_q90": 17.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51621,9 +51621,9 @@
         "avg_stat": 20.375,
         "over_rate_at_line": 0.25
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -51643,15 +51643,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.574,
-        "p_under": 0.426,
-        "lean": "OVER",
-        "min_q10": 11.52,
-        "min_q50": 25.45,
-        "min_q90": 34.7,
-        "stat_q10": 0.84,
-        "stat_q50": 7.0,
-        "stat_q90": 17.74
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 5.84,
+        "min_q50": 6.14,
+        "min_q90": 6.14,
+        "stat_q10": 2.51,
+        "stat_q50": 2.64,
+        "stat_q90": 2.64
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51775,9 +51775,9 @@
         "avg_stat": 9.777777777777779,
         "over_rate_at_line": 0.7777777777777778
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -51797,15 +51797,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.466,
-        "p_under": 0.534,
+        "p_over": 0.003,
+        "p_under": 0.997,
         "lean": "UNDER",
-        "min_q10": 16.08,
-        "min_q50": 24.89,
-        "min_q90": 32.77,
-        "stat_q10": 1.51,
-        "stat_q50": 8.27,
-        "stat_q90": 19.7
+        "min_q10": 10.7,
+        "min_q50": 10.74,
+        "min_q90": 10.74,
+        "stat_q10": 4.62,
+        "stat_q50": 4.64,
+        "stat_q90": 4.64
       },
       "sharp": {
         "source": "Pinnacle",
@@ -51951,15 +51951,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.292,
-        "p_under": 0.708,
+        "p_over": 0.082,
+        "p_under": 0.918,
         "lean": "UNDER",
-        "min_q10": 19.46,
-        "min_q50": 26.39,
-        "min_q90": 32.74,
-        "stat_q10": 0.0,
-        "stat_q50": 4.77,
-        "stat_q90": 15.3
+        "min_q10": 13.0,
+        "min_q50": 13.0,
+        "min_q90": 13.0,
+        "stat_q10": 5.57,
+        "stat_q50": 5.57,
+        "stat_q90": 5.57
       },
       "sharp": {
         "source": "Pinnacle",
@@ -52105,15 +52105,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.708,
-        "p_under": 0.292,
-        "lean": "OVER",
-        "min_q10": 7.3,
-        "min_q50": 13.79,
-        "min_q90": 27.78,
-        "stat_q10": 0.49,
-        "stat_q50": 3.8,
-        "stat_q90": 15.32
+        "p_over": 0.009,
+        "p_under": 0.991,
+        "lean": "UNDER",
+        "min_q10": 2.58,
+        "min_q50": 2.67,
+        "min_q90": 2.67,
+        "stat_q10": 1.09,
+        "stat_q50": 1.13,
+        "stat_q90": 1.13
       },
       "sharp": {
         "source": "PrizePicks",
@@ -52178,15 +52178,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.787,
-        "p_under": 0.213,
-        "lean": "OVER",
-        "min_q10": 24.26,
-        "min_q50": 34.51,
-        "min_q90": 40.15,
-        "stat_q10": 3.81,
-        "stat_q50": 14.51,
-        "stat_q90": 27.5
+        "p_over": 0.138,
+        "p_under": 0.862,
+        "lean": "UNDER",
+        "min_q10": 19.03,
+        "min_q50": 19.04,
+        "min_q90": 19.04,
+        "stat_q10": 9.85,
+        "stat_q50": 9.85,
+        "stat_q90": 9.85
       },
       "sharp": {
         "source": "Pinnacle",
@@ -52310,9 +52310,9 @@
         "avg_stat": 12.090909090909092,
         "over_rate_at_line": 0.5454545454545454
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -52332,15 +52332,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.36,
-        "p_under": 0.64,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.4,
-        "min_q50": 30.96,
-        "min_q90": 37.52,
-        "stat_q10": 0.37,
-        "stat_q50": 6.71,
-        "stat_q90": 15.8
+        "min_q10": 10.92,
+        "min_q50": 11.09,
+        "min_q90": 11.09,
+        "stat_q10": 4.8,
+        "stat_q50": 4.88,
+        "stat_q90": 4.88
       },
       "sharp": {
         "source": "Pinnacle",
@@ -52478,15 +52478,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.814,
-        "p_under": 0.186,
-        "lean": "OVER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 7.1,
-        "stat_q50": 16.84,
-        "stat_q90": 28.45
+        "p_over": 0.176,
+        "p_under": 0.824,
+        "lean": "UNDER",
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 12.48,
+        "stat_q50": 12.49,
+        "stat_q90": 12.49
       },
       "sharp": {
         "source": "Pinnacle",
@@ -52626,9 +52626,9 @@
         "avg_stat": 13.11111111111111,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -52648,15 +52648,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.21,
-        "p_under": 0.789,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 2.02,
-        "min_q50": 10.27,
-        "min_q90": 21.23,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 1.84,
-        "stat_q90": 10.15
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "FanDuel",
@@ -52794,15 +52794,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.334,
-        "p_under": 0.666,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 7.79,
-        "stat_q50": 25.32,
-        "stat_q90": 39.58
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 11.32,
+        "stat_q50": 11.6,
+        "stat_q90": 11.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -52988,15 +52988,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.353,
-        "p_under": 0.647,
+        "p_over": 0.095,
+        "p_under": 0.905,
         "lean": "UNDER",
-        "min_q10": 25.42,
-        "min_q50": 32.43,
-        "min_q90": 39.12,
-        "stat_q10": 3.68,
-        "stat_q50": 13.2,
-        "stat_q90": 27.09
+        "min_q10": 20.99,
+        "min_q50": 20.99,
+        "min_q90": 20.99,
+        "stat_q10": 12.21,
+        "stat_q50": 12.21,
+        "stat_q90": 12.21
       },
       "sharp": {
         "source": "Pinnacle",
@@ -53150,15 +53150,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.792,
-        "p_under": 0.208,
-        "lean": "OVER",
-        "min_q10": 14.82,
-        "min_q50": 24.78,
-        "min_q90": 33.61,
-        "stat_q10": 2.39,
-        "stat_q50": 10.23,
-        "stat_q90": 25.71
+        "p_over": 0.258,
+        "p_under": 0.742,
+        "lean": "UNDER",
+        "min_q10": 11.68,
+        "min_q50": 11.8,
+        "min_q90": 11.8,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "PrizePicks",
@@ -53223,15 +53223,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.734,
-        "p_under": 0.267,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 6.66,
-        "stat_q50": 17.94,
-        "stat_q90": 32.83
+        "p_over": 0.165,
+        "p_under": 0.836,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 15.17,
+        "stat_q50": 15.17,
+        "stat_q90": 15.17
       },
       "sharp": {
         "source": "Pinnacle",
@@ -53379,9 +53379,9 @@
         "avg_stat": 13.555555555555555,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -53401,15 +53401,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.24,
-        "p_under": 0.76,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 16.62,
-        "min_q50": 30.53,
-        "min_q90": 37.16,
-        "stat_q10": 4.78,
-        "stat_q50": 16.45,
-        "stat_q90": 30.89
+        "min_q10": 10.58,
+        "min_q50": 10.68,
+        "min_q90": 10.68,
+        "stat_q10": 7.52,
+        "stat_q50": 7.59,
+        "stat_q90": 7.59
       },
       "sharp": {
         "source": "Pinnacle",
@@ -64443,15 +64443,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.406,
-        "p_under": 0.507,
+        "p_over": 0.214,
+        "p_under": 0.726,
         "lean": "UNDER",
-        "min_q10": 20.09,
-        "min_q50": 35.34,
-        "min_q90": 41.79,
-        "stat_q10": 1.45,
-        "stat_q50": 5.05,
-        "stat_q90": 10.8
+        "min_q10": 14.54,
+        "min_q50": 14.54,
+        "min_q90": 14.54,
+        "stat_q10": 7.42,
+        "stat_q50": 7.42,
+        "stat_q90": 7.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -64573,15 +64573,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.499,
-        "p_under": 0.41,
-        "lean": "OVER",
-        "min_q10": 18.73,
-        "min_q50": 28.15,
-        "min_q90": 35.24,
-        "stat_q10": 2.21,
-        "stat_q50": 6.09,
-        "stat_q90": 11.86
+        "p_over": 0.212,
+        "p_under": 0.714,
+        "lean": "UNDER",
+        "min_q10": 14.46,
+        "min_q50": 14.69,
+        "min_q90": 14.69,
+        "stat_q10": 7.81,
+        "stat_q50": 7.94,
+        "stat_q90": 7.94
       },
       "sharp": {
         "source": "Pinnacle",
@@ -64697,9 +64697,9 @@
         "avg_stat": 7.1,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -64719,15 +64719,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.539,
-        "p_under": 0.461,
-        "lean": "OVER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 2.31,
-        "stat_q50": 5.23,
-        "stat_q90": 10.6
+        "p_over": 0.388,
+        "p_under": 0.612,
+        "lean": "UNDER",
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 13.29,
+        "stat_q50": 13.29,
+        "stat_q90": 13.29
       },
       "sharp": {
         "source": "Pinnacle",
@@ -64835,9 +64835,9 @@
         "avg_stat": 3.6666666666666665,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -64857,15 +64857,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.513,
-        "p_under": 0.487,
-        "lean": "OVER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.1,
-        "stat_q50": 4.23,
-        "stat_q90": 10.7
+        "p_over": 0.353,
+        "p_under": 0.647,
+        "lean": "UNDER",
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.04,
+        "stat_q50": 8.04,
+        "stat_q90": 8.04
       },
       "sharp": {
         "source": "Pinnacle",
@@ -64965,9 +64965,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -64987,15 +64987,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.495,
-        "p_under": 0.505,
+        "p_over": 0.437,
+        "p_under": 0.563,
         "lean": "UNDER",
-        "min_q10": 35.68,
-        "min_q50": 43.82,
-        "min_q90": 46.2,
-        "stat_q10": 2.63,
-        "stat_q50": 6.87,
-        "stat_q90": 12.71
+        "min_q10": 29.86,
+        "min_q50": 29.86,
+        "min_q90": 29.86,
+        "stat_q10": 15.57,
+        "stat_q50": 15.57,
+        "stat_q90": 15.57
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65125,15 +65125,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.441,
-        "p_under": 0.559,
+        "p_over": 0.229,
+        "p_under": 0.771,
         "lean": "UNDER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 0.37,
-        "stat_q50": 2.17,
-        "stat_q90": 7.21
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 3.02,
+        "stat_q50": 3.15,
+        "stat_q90": 3.15
       },
       "sharp": {
         "source": "FanDuel",
@@ -65247,15 +65247,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.395,
-        "p_under": 0.605,
+        "p_over": 0.242,
+        "p_under": 0.758,
         "lean": "UNDER",
-        "min_q10": 21.9,
-        "min_q50": 31.05,
-        "min_q90": 38.04,
-        "stat_q10": 2.6,
-        "stat_q50": 6.93,
-        "stat_q90": 13.35
+        "min_q10": 18.2,
+        "min_q50": 18.34,
+        "min_q90": 18.34,
+        "stat_q10": 10.34,
+        "stat_q50": 10.42,
+        "stat_q90": 10.42
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65393,15 +65393,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.522,
-        "p_under": 0.334,
-        "lean": "OVER",
-        "min_q10": 14.15,
-        "min_q50": 23.15,
-        "min_q90": 31.69,
-        "stat_q10": 0.92,
-        "stat_q50": 3.95,
-        "stat_q90": 9.69
+        "p_over": 0.251,
+        "p_under": 0.63,
+        "lean": "UNDER",
+        "min_q10": 8.99,
+        "min_q50": 9.03,
+        "min_q90": 9.03,
+        "stat_q10": 4.61,
+        "stat_q50": 4.63,
+        "stat_q90": 4.63
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65501,9 +65501,9 @@
         "avg_stat": 3.6666666666666665,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -65523,15 +65523,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.597,
-        "p_under": 0.403,
-        "lean": "OVER",
-        "min_q10": 16.78,
-        "min_q50": 31.29,
-        "min_q90": 38.96,
-        "stat_q10": 2.85,
-        "stat_q50": 8.92,
-        "stat_q90": 16.78
+        "p_over": 0.121,
+        "p_under": 0.879,
+        "lean": "UNDER",
+        "min_q10": 9.92,
+        "min_q50": 9.92,
+        "min_q90": 9.92,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65647,9 +65647,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -65669,15 +65669,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.471,
-        "p_under": 0.43,
-        "lean": "OVER",
-        "min_q10": 25.01,
-        "min_q50": 32.39,
-        "min_q90": 37.76,
-        "stat_q10": 1.54,
-        "stat_q50": 4.34,
-        "stat_q90": 9.81
+        "p_over": 0.414,
+        "p_under": 0.507,
+        "lean": "UNDER",
+        "min_q10": 20.25,
+        "min_q50": 20.37,
+        "min_q90": 20.37,
+        "stat_q10": 10.52,
+        "stat_q50": 10.58,
+        "stat_q90": 10.58
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65769,9 +65769,9 @@
         "avg_stat": 3.625,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -65791,15 +65791,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.423,
-        "p_under": 0.577,
+        "p_over": 0.388,
+        "p_under": 0.612,
         "lean": "UNDER",
-        "min_q10": 23.76,
-        "min_q50": 33.79,
-        "min_q90": 40.66,
-        "stat_q10": 0.4,
-        "stat_q50": 3.21,
-        "stat_q90": 8.38
+        "min_q10": 18.17,
+        "min_q50": 18.23,
+        "min_q90": 18.23,
+        "stat_q10": 8.43,
+        "stat_q50": 8.46,
+        "stat_q90": 8.46
       },
       "sharp": {
         "source": "Pinnacle",
@@ -65921,15 +65921,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.705,
-        "p_under": 0.295,
+        "p_over": 0.542,
+        "p_under": 0.458,
         "lean": "OVER",
-        "min_q10": 23.05,
-        "min_q50": 32.15,
-        "min_q90": 39.2,
-        "stat_q10": 1.45,
-        "stat_q50": 4.59,
-        "stat_q90": 10.98
+        "min_q10": 16.72,
+        "min_q50": 16.72,
+        "min_q90": 16.72,
+        "stat_q10": 8.32,
+        "stat_q50": 8.32,
+        "stat_q90": 8.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66051,15 +66051,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.403,
-        "p_under": 0.521,
+        "p_over": 0.321,
+        "p_under": 0.622,
         "lean": "UNDER",
-        "min_q10": 26.99,
-        "min_q50": 34.46,
-        "min_q90": 40.4,
-        "stat_q10": 3.03,
-        "stat_q50": 7.59,
-        "stat_q90": 14.62
+        "min_q10": 21.71,
+        "min_q50": 21.77,
+        "min_q90": 21.77,
+        "stat_q10": 12.31,
+        "stat_q50": 12.35,
+        "stat_q90": 12.35
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66197,15 +66197,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.503,
-        "p_under": 0.496,
-        "lean": "OVER",
-        "min_q10": 20.68,
-        "min_q50": 28.27,
-        "min_q90": 34.77,
-        "stat_q10": 3.53,
-        "stat_q50": 8.59,
-        "stat_q90": 16.6
+        "p_over": 0.179,
+        "p_under": 0.821,
+        "lean": "UNDER",
+        "min_q10": 13.51,
+        "min_q50": 13.78,
+        "min_q90": 13.78,
+        "stat_q10": 8.27,
+        "stat_q50": 8.78,
+        "stat_q90": 8.78
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66321,9 +66321,9 @@
         "avg_stat": 9.4,
         "over_rate_at_line": 0.2
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -66343,15 +66343,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.624,
-        "p_under": 0.263,
-        "lean": "OVER",
-        "min_q10": 29.27,
-        "min_q50": 38.31,
-        "min_q90": 42.5,
-        "stat_q10": 2.36,
-        "stat_q50": 6.45,
-        "stat_q90": 12.21
+        "p_over": 0.428,
+        "p_under": 0.491,
+        "lean": "UNDER",
+        "min_q10": 23.61,
+        "min_q50": 23.67,
+        "min_q90": 23.67,
+        "stat_q10": 12.1,
+        "stat_q50": 12.13,
+        "stat_q90": 12.13
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66443,9 +66443,9 @@
         "avg_stat": 5.7272727272727275,
         "over_rate_at_line": 0.36363636363636365
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -66465,15 +66465,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.479,
-        "p_under": 0.426,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 1.73,
-        "stat_q50": 5.57,
-        "stat_q90": 10.58
+        "p_over": 0.409,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 13.07,
+        "stat_q50": 13.07,
+        "stat_q90": 13.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66581,9 +66581,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -66603,15 +66603,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.443,
-        "p_under": 0.557,
+        "p_over": 0.299,
+        "p_under": 0.701,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.56,
-        "stat_q50": 8.86,
-        "stat_q90": 16.56
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 10.16,
+        "stat_q50": 10.46,
+        "stat_q90": 10.46
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66741,15 +66741,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.535,
-        "p_under": 0.364,
-        "lean": "OVER",
-        "min_q10": 22.14,
-        "min_q50": 30.35,
-        "min_q90": 37.99,
-        "stat_q10": 2.08,
-        "stat_q50": 5.67,
-        "stat_q90": 11.97
+        "p_over": 0.357,
+        "p_under": 0.564,
+        "lean": "UNDER",
+        "min_q10": 16.1,
+        "min_q50": 16.1,
+        "min_q90": 16.1,
+        "stat_q10": 8.79,
+        "stat_q50": 8.79,
+        "stat_q90": 8.79
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66841,9 +66841,9 @@
         "avg_stat": 5.818181818181818,
         "over_rate_at_line": 0.45454545454545453
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -66863,15 +66863,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.585,
-        "p_under": 0.415,
-        "lean": "OVER",
-        "min_q10": 14.12,
-        "min_q50": 26.77,
-        "min_q90": 34.8,
-        "stat_q10": 1.27,
-        "stat_q50": 5.23,
-        "stat_q90": 11.76
+        "p_over": 0.36,
+        "p_under": 0.64,
+        "lean": "UNDER",
+        "min_q10": 9.74,
+        "min_q50": 9.94,
+        "min_q90": 9.94,
+        "stat_q10": 5.2,
+        "stat_q50": 5.3,
+        "stat_q90": 5.3
       },
       "sharp": {
         "source": "Pinnacle",
@@ -66963,9 +66963,9 @@
         "avg_stat": 4.6,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -66985,15 +66985,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.427,
-        "p_under": 0.573,
+        "p_over": 0.369,
+        "p_under": 0.631,
         "lean": "UNDER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 2.74,
-        "stat_q50": 6.69,
-        "stat_q90": 12.27
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 14.07,
+        "stat_q50": 14.07,
+        "stat_q90": 14.07
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67123,15 +67123,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.521,
-        "p_under": 0.343,
-        "lean": "OVER",
-        "min_q10": 19.46,
-        "min_q50": 26.39,
-        "min_q90": 32.74,
-        "stat_q10": 1.39,
-        "stat_q50": 4.54,
-        "stat_q90": 9.58
+        "p_over": 0.324,
+        "p_under": 0.565,
+        "lean": "UNDER",
+        "min_q10": 13.0,
+        "min_q50": 13.0,
+        "min_q90": 13.0,
+        "stat_q10": 6.78,
+        "stat_q50": 6.78,
+        "stat_q90": 6.78
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67231,9 +67231,9 @@
         "avg_stat": 5.4,
         "over_rate_at_line": 0.8
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "PrizePicks",
@@ -67253,15 +67253,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.297,
-        "p_under": 0.703,
+        "p_over": 0.069,
+        "p_under": 0.931,
         "lean": "UNDER",
-        "min_q10": 14.4,
-        "min_q50": 30.96,
-        "min_q90": 37.52,
-        "stat_q10": 1.93,
-        "stat_q50": 7.86,
-        "stat_q90": 15.26
+        "min_q10": 10.92,
+        "min_q50": 11.09,
+        "min_q90": 11.09,
+        "stat_q10": 6.68,
+        "stat_q50": 6.91,
+        "stat_q90": 6.91
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67391,15 +67391,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.449,
-        "p_under": 0.551,
+        "p_over": 0.362,
+        "p_under": 0.638,
         "lean": "UNDER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 1.38,
-        "stat_q50": 5.04,
-        "stat_q90": 10.96
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 11.41,
+        "stat_q50": 11.43,
+        "stat_q90": 11.43
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67529,15 +67529,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.246,
-        "p_under": 0.754,
+        "p_over": 0.205,
+        "p_under": 0.795,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 0.54,
-        "stat_q50": 3.59,
-        "stat_q90": 8.8
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 6.4,
+        "stat_q50": 6.56,
+        "stat_q90": 6.56
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67659,15 +67659,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.447,
-        "p_under": 0.445,
-        "lean": "OVER",
-        "min_q10": 25.42,
-        "min_q50": 32.43,
-        "min_q90": 39.12,
-        "stat_q10": 1.97,
-        "stat_q50": 5.15,
-        "stat_q90": 11.25
+        "p_over": 0.358,
+        "p_under": 0.578,
+        "lean": "UNDER",
+        "min_q10": 20.99,
+        "min_q50": 20.99,
+        "min_q90": 20.99,
+        "stat_q10": 11.32,
+        "stat_q50": 11.32,
+        "stat_q90": 11.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67759,9 +67759,9 @@
         "avg_stat": 4.3,
         "over_rate_at_line": 0.4
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -67781,15 +67781,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.64,
-        "p_under": 0.36,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 2.75,
-        "stat_q50": 7.41,
-        "stat_q90": 14.19
+        "p_over": 0.483,
+        "p_under": 0.517,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 13.88,
+        "stat_q50": 13.88,
+        "stat_q90": 13.88
       },
       "sharp": {
         "source": "Pinnacle",
@@ -67897,9 +67897,9 @@
         "avg_stat": 4.666666666666667,
         "over_rate_at_line": 0.2222222222222222
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "PrizePicks",
@@ -67919,15 +67919,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.363,
-        "p_under": 0.578,
+        "p_over": 0.04,
+        "p_under": 0.944,
         "lean": "UNDER",
-        "min_q10": 16.62,
-        "min_q50": 30.53,
-        "min_q90": 37.16,
-        "stat_q10": 4.01,
-        "stat_q50": 10.86,
-        "stat_q90": 18.99
+        "min_q10": 10.58,
+        "min_q50": 10.68,
+        "min_q90": 10.68,
+        "stat_q10": 7.36,
+        "stat_q50": 7.5,
+        "stat_q90": 7.5
       },
       "sharp": {
         "source": "Pinnacle",
@@ -71704,15 +71704,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.634,
-        "p_under": 0.366,
-        "lean": "OVER",
-        "min_q10": 12.75,
-        "min_q50": 18.89,
-        "min_q90": 26.39,
-        "stat_q10": 1.5,
-        "stat_q50": 7.2,
-        "stat_q90": 17.25
+        "p_over": 0.006,
+        "p_under": 0.994,
+        "lean": "UNDER",
+        "min_q10": 8.42,
+        "min_q50": 8.46,
+        "min_q90": 8.46,
+        "stat_q10": 3.58,
+        "stat_q50": 3.6,
+        "stat_q90": 3.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -71836,9 +71836,9 @@
         "avg_stat": 8.125,
         "over_rate_at_line": 0.5
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -71858,15 +71858,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.38,
-        "p_under": 0.62,
+        "p_over": 0.045,
+        "p_under": 0.955,
         "lean": "UNDER",
-        "min_q10": 30.21,
-        "min_q50": 38.28,
-        "min_q90": 41.7,
-        "stat_q10": 7.6,
-        "stat_q50": 17.85,
-        "stat_q90": 31.53
+        "min_q10": 25.5,
+        "min_q50": 25.5,
+        "min_q90": 25.5,
+        "stat_q10": 16.25,
+        "stat_q50": 16.25,
+        "stat_q90": 16.25
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72036,15 +72036,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.473,
-        "p_under": 0.527,
+        "p_over": 0.106,
+        "p_under": 0.893,
         "lean": "UNDER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.98,
-        "stat_q50": 12.06,
-        "stat_q90": 25.63
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.3,
+        "stat_q50": 8.3,
+        "stat_q90": 8.3
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72198,15 +72198,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.309,
-        "p_under": 0.691,
+        "p_over": 0.013,
+        "p_under": 0.987,
         "lean": "UNDER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 8.48,
-        "stat_q50": 22.26,
-        "stat_q90": 36.61
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 18.34,
+        "stat_q50": 18.83,
+        "stat_q90": 18.83
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72392,15 +72392,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.908,
-        "p_under": 0.092,
-        "lean": "OVER",
-        "min_q10": 6.02,
-        "min_q50": 14.19,
-        "min_q90": 22.81,
-        "stat_q10": 1.8,
-        "stat_q50": 8.22,
-        "stat_q90": 20.95
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
+        "stat_q10": 0.0,
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72516,9 +72516,9 @@
         "avg_stat": 11.5,
         "over_rate_at_line": 0.7
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Underdog",
@@ -72538,15 +72538,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.536,
-        "p_under": 0.464,
-        "lean": "OVER",
-        "min_q10": 31.45,
-        "min_q50": 40.47,
-        "min_q90": 44.71,
-        "stat_q10": 8.13,
-        "stat_q50": 19.72,
-        "stat_q90": 35.52
+        "p_over": 0.137,
+        "p_under": 0.863,
+        "lean": "UNDER",
+        "min_q10": 25.96,
+        "min_q50": 25.97,
+        "min_q90": 25.97,
+        "stat_q10": 16.54,
+        "stat_q50": 16.55,
+        "stat_q90": 16.55
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72694,9 +72694,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -72716,15 +72716,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.703,
-        "p_under": 0.297,
-        "lean": "OVER",
-        "min_q10": 2.87,
-        "min_q50": 9.89,
-        "min_q90": 19.96,
-        "stat_q10": 0.99,
-        "stat_q50": 6.63,
-        "stat_q90": 20.45
+        "p_over": 0.0,
+        "p_under": 1.0,
+        "lean": "UNDER",
+        "min_q10": 0.79,
+        "min_q50": 0.79,
+        "min_q90": 0.79,
+        "stat_q10": 0.37,
+        "stat_q50": 0.4,
+        "stat_q90": 0.41
       },
       "sharp": {
         "source": "Underdog",
@@ -72789,15 +72789,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.021,
+        "p_under": 0.979,
         "lean": "UNDER",
-        "min_q10": 22.74,
-        "min_q50": 31.38,
-        "min_q90": 37.79,
-        "stat_q10": 3.29,
-        "stat_q50": 11.64,
-        "stat_q90": 24.22
+        "min_q10": 17.02,
+        "min_q50": 17.02,
+        "min_q90": 17.02,
+        "stat_q10": 9.02,
+        "stat_q50": 9.02,
+        "stat_q90": 9.02
       },
       "sharp": {
         "source": "Pinnacle",
@@ -72959,15 +72959,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.241,
-        "p_under": 0.759,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 3.66,
-        "min_q50": 10.54,
-        "min_q90": 20.7,
-        "stat_q10": 0.0,
-        "stat_q50": 2.86,
-        "stat_q90": 12.74
+        "min_q10": 1.19,
+        "min_q50": 1.51,
+        "min_q90": 1.51,
+        "stat_q10": 0.48,
+        "stat_q50": 0.61,
+        "stat_q90": 0.61
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73105,15 +73105,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.563,
-        "p_under": 0.437,
-        "lean": "OVER",
-        "min_q10": 14.12,
-        "min_q50": 26.77,
-        "min_q90": 34.8,
-        "stat_q10": 1.5,
-        "stat_q50": 9.86,
-        "stat_q90": 23.76
+        "p_over": 0.009,
+        "p_under": 0.991,
+        "lean": "UNDER",
+        "min_q10": 9.74,
+        "min_q50": 9.94,
+        "min_q90": 9.94,
+        "stat_q10": 5.1,
+        "stat_q50": 5.21,
+        "stat_q90": 5.21
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73229,9 +73229,9 @@
         "avg_stat": 14.3,
         "over_rate_at_line": 0.9
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -73251,15 +73251,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.509,
-        "p_under": 0.491,
-        "lean": "OVER",
-        "min_q10": 31.47,
-        "min_q50": 40.81,
-        "min_q90": 43.65,
-        "stat_q10": 9.96,
-        "stat_q50": 22.83,
-        "stat_q90": 37.52
+        "p_over": 0.052,
+        "p_under": 0.948,
+        "lean": "UNDER",
+        "min_q10": 26.55,
+        "min_q50": 26.56,
+        "min_q90": 26.56,
+        "stat_q10": 17.96,
+        "stat_q50": 17.97,
+        "stat_q90": 17.97
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73415,9 +73415,9 @@
         "avg_stat": 20.375,
         "over_rate_at_line": 0.375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -73437,15 +73437,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.292,
-        "p_under": 0.708,
+        "p_over": 0.082,
+        "p_under": 0.918,
         "lean": "UNDER",
-        "min_q10": 19.46,
-        "min_q50": 26.39,
-        "min_q90": 32.74,
-        "stat_q10": 0.0,
-        "stat_q50": 4.77,
-        "stat_q90": 15.3
+        "min_q10": 13.0,
+        "min_q50": 13.0,
+        "min_q90": 13.0,
+        "stat_q10": 5.57,
+        "stat_q50": 5.57,
+        "stat_q90": 5.57
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73591,15 +73591,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.787,
-        "p_under": 0.213,
-        "lean": "OVER",
-        "min_q10": 24.26,
-        "min_q50": 34.51,
-        "min_q90": 40.15,
-        "stat_q10": 3.81,
-        "stat_q50": 14.51,
-        "stat_q90": 27.5
+        "p_over": 0.138,
+        "p_under": 0.862,
+        "lean": "UNDER",
+        "min_q10": 19.03,
+        "min_q50": 19.04,
+        "min_q90": 19.04,
+        "stat_q10": 9.85,
+        "stat_q50": 9.85,
+        "stat_q90": 9.85
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73723,9 +73723,9 @@
         "avg_stat": 12.090909090909092,
         "over_rate_at_line": 0.5454545454545454
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -73745,15 +73745,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.814,
-        "p_under": 0.186,
-        "lean": "OVER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 7.1,
-        "stat_q50": 16.84,
-        "stat_q90": 28.45
+        "p_over": 0.176,
+        "p_under": 0.824,
+        "lean": "UNDER",
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 12.48,
+        "stat_q50": 12.49,
+        "stat_q90": 12.49
       },
       "sharp": {
         "source": "Pinnacle",
@@ -73893,9 +73893,9 @@
         "avg_stat": 13.11111111111111,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -73915,15 +73915,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.21,
-        "p_under": 0.789,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 2.02,
-        "min_q50": 10.27,
-        "min_q90": 21.23,
+        "min_q10": 0.0,
+        "min_q50": 0.0,
+        "min_q90": 0.0,
         "stat_q10": 0.0,
-        "stat_q50": 1.84,
-        "stat_q90": 10.15
+        "stat_q50": 0.0,
+        "stat_q90": 0.0
       },
       "sharp": {
         "source": "FanDuel",
@@ -74061,15 +74061,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.334,
-        "p_under": 0.666,
+        "p_over": 0.0,
+        "p_under": 1.0,
         "lean": "UNDER",
-        "min_q10": 14.65,
-        "min_q50": 32.99,
-        "min_q90": 39.46,
-        "stat_q10": 7.79,
-        "stat_q50": 25.32,
-        "stat_q90": 39.58
+        "min_q10": 13.06,
+        "min_q50": 13.39,
+        "min_q90": 13.39,
+        "stat_q10": 11.32,
+        "stat_q50": 11.6,
+        "stat_q90": 11.6
       },
       "sharp": {
         "source": "Pinnacle",
@@ -74255,15 +74255,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.792,
-        "p_under": 0.208,
-        "lean": "OVER",
-        "min_q10": 14.82,
-        "min_q50": 24.78,
-        "min_q90": 33.61,
-        "stat_q10": 2.39,
-        "stat_q50": 10.23,
-        "stat_q90": 25.71
+        "p_over": 0.258,
+        "p_under": 0.742,
+        "lean": "UNDER",
+        "min_q10": 11.68,
+        "min_q50": 11.8,
+        "min_q90": 11.8,
+        "stat_q10": 6.07,
+        "stat_q50": 6.13,
+        "stat_q90": 6.13
       },
       "sharp": {
         "source": "Underdog",
@@ -74328,15 +74328,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.734,
-        "p_under": 0.267,
-        "lean": "OVER",
-        "min_q10": 33.27,
-        "min_q50": 42.78,
-        "min_q90": 46.69,
-        "stat_q10": 6.66,
-        "stat_q50": 17.94,
-        "stat_q90": 32.83
+        "p_over": 0.165,
+        "p_under": 0.836,
+        "lean": "UNDER",
+        "min_q10": 26.26,
+        "min_q50": 26.26,
+        "min_q90": 26.26,
+        "stat_q10": 15.17,
+        "stat_q50": 15.17,
+        "stat_q90": 15.17
       },
       "sharp": {
         "source": "Pinnacle",
@@ -74484,9 +74484,9 @@
         "avg_stat": 13.555555555555555,
         "over_rate_at_line": 0.4444444444444444
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict"
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
     },
     {
       "platform": "Underdog",
@@ -77592,15 +77592,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.513,
-        "p_under": 0.487,
-        "lean": "OVER",
-        "min_q10": 22.79,
-        "min_q50": 35.46,
-        "min_q90": 41.98,
-        "stat_q10": 1.1,
-        "stat_q50": 4.23,
-        "stat_q90": 10.7
+        "p_over": 0.353,
+        "p_under": 0.647,
+        "lean": "UNDER",
+        "min_q10": 16.57,
+        "min_q50": 16.57,
+        "min_q90": 16.57,
+        "stat_q10": 8.04,
+        "stat_q50": 8.04,
+        "stat_q90": 8.04
       },
       "sharp": {
         "source": "Pinnacle",
@@ -77700,9 +77700,9 @@
         "avg_stat": null,
         "over_rate_at_line": null
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict"
     },
     {
       "platform": "Underdog",
@@ -77722,15 +77722,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.441,
-        "p_under": 0.559,
+        "p_over": 0.229,
+        "p_under": 0.771,
         "lean": "UNDER",
-        "min_q10": 13.6,
-        "min_q50": 23.32,
-        "min_q90": 32.75,
-        "stat_q10": 0.37,
-        "stat_q50": 2.17,
-        "stat_q90": 7.21
+        "min_q10": 6.26,
+        "min_q50": 6.54,
+        "min_q90": 6.54,
+        "stat_q10": 3.02,
+        "stat_q50": 3.15,
+        "stat_q90": 3.15
       },
       "sharp": {
         "source": "FanDuel",
@@ -77844,15 +77844,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.645,
-        "p_under": 0.355,
+        "p_over": 0.501,
+        "p_under": 0.499,
         "lean": "OVER",
-        "min_q10": 30.08,
-        "min_q50": 38.28,
-        "min_q90": 42.46,
-        "stat_q10": 1.9,
-        "stat_q50": 5.31,
-        "stat_q90": 10.69
+        "min_q10": 24.82,
+        "min_q50": 24.88,
+        "min_q90": 24.88,
+        "stat_q10": 12.48,
+        "stat_q50": 12.51,
+        "stat_q90": 12.51
       },
       "sharp": {
         "source": "Pinnacle",
@@ -77982,15 +77982,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.705,
-        "p_under": 0.295,
+        "p_over": 0.542,
+        "p_under": 0.458,
         "lean": "OVER",
-        "min_q10": 23.05,
-        "min_q50": 32.15,
-        "min_q90": 39.2,
-        "stat_q10": 1.45,
-        "stat_q50": 4.59,
-        "stat_q90": 10.98
+        "min_q10": 16.72,
+        "min_q50": 16.72,
+        "min_q90": 16.72,
+        "stat_q10": 8.32,
+        "stat_q50": 8.32,
+        "stat_q90": 8.32
       },
       "sharp": {
         "source": "Pinnacle",
@@ -78112,15 +78112,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.297,
-        "p_under": 0.703,
+        "p_over": 0.069,
+        "p_under": 0.931,
         "lean": "UNDER",
-        "min_q10": 14.4,
-        "min_q50": 30.96,
-        "min_q90": 37.52,
-        "stat_q10": 1.93,
-        "stat_q50": 7.86,
-        "stat_q90": 15.26
+        "min_q10": 10.92,
+        "min_q50": 11.09,
+        "min_q90": 11.09,
+        "stat_q10": 6.68,
+        "stat_q50": 6.91,
+        "stat_q90": 6.91
       },
       "sharp": {
         "source": "Pinnacle",
@@ -78250,15 +78250,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.449,
-        "p_under": 0.551,
+        "p_over": 0.362,
+        "p_under": 0.638,
         "lean": "UNDER",
-        "min_q10": 29.76,
-        "min_q50": 37.81,
-        "min_q90": 42.5,
-        "stat_q10": 1.38,
-        "stat_q50": 5.04,
-        "stat_q90": 10.96
+        "min_q10": 23.5,
+        "min_q50": 23.53,
+        "min_q90": 23.53,
+        "stat_q10": 11.41,
+        "stat_q50": 11.43,
+        "stat_q90": 11.43
       },
       "sharp": {
         "source": "Pinnacle",
