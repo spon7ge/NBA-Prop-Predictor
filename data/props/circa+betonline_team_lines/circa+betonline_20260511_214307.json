@@ -1,0 +1,173 @@
+{
+  "pulled_at_utc": "2026-05-11T21:43:07.267496+00:00",
+  "bookmakers": [
+    "Circa",
+    "BetOnline.ag"
+  ],
+  "events_fetched": 30,
+  "odds_format": "american",
+  "markets_included": [
+    "Spread",
+    "Totals"
+  ],
+  "odds_payload_count": 3,
+  "record_count": 12,
+  "records": [
+    {
+      "MARKET": "Spread",
+      "LINE": -3.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504998,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-12T00:00:00Z",
+      "HOME_ODDS": -115,
+      "AWAY_ODDS": -105,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 212.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504998,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-12T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -3.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504998,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-12T00:00:00Z",
+      "HOME_ODDS": -105,
+      "AWAY_ODDS": -115,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 212.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504998,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-12T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -10.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504944,
+      "HOME": "San Antonio Spurs",
+      "AWAY": "Minnesota Timberwolves",
+      "START": "2026-05-13T00:00:00Z",
+      "HOME_ODDS": -105,
+      "AWAY_ODDS": -115,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 218.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504944,
+      "HOME": "San Antonio Spurs",
+      "AWAY": "Minnesota Timberwolves",
+      "START": "2026-05-13T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -10.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504944,
+      "HOME": "San Antonio Spurs",
+      "AWAY": "Minnesota Timberwolves",
+      "START": "2026-05-13T00:00:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 218,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504944,
+      "HOME": "San Antonio Spurs",
+      "AWAY": "Minnesota Timberwolves",
+      "START": "2026-05-13T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": 12.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504964,
+      "HOME": "Los Angeles Lakers",
+      "AWAY": "Oklahoma City Thunder",
+      "START": "2026-05-12T02:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 215,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504964,
+      "HOME": "Los Angeles Lakers",
+      "AWAY": "Oklahoma City Thunder",
+      "START": "2026-05-12T02:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -108,
+      "UNDER": -112
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": 12,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504964,
+      "HOME": "Los Angeles Lakers",
+      "AWAY": "Oklahoma City Thunder",
+      "START": "2026-05-12T02:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 215,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504964,
+      "HOME": "Los Angeles Lakers",
+      "AWAY": "Oklahoma City Thunder",
+      "START": "2026-05-12T02:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    }
+  ]
+}
