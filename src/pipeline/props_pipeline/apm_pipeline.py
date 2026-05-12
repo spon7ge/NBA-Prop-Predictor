@@ -3,10 +3,9 @@ import pandas as pd
 from src.utils.helper_functions import findOpp
 
 
-def _shifted_ewm_tail(col: pd.Series, span: int, *, decimals: int = 2) -> float:
+def _ewm_tail(col: pd.Series, span: int, *, decimals: int = 2) -> float:
     v = (
         col.astype(float)
-        .shift(1)
         .ewm(span=span, adjust=False)
         .mean()
         .iloc[-1]
@@ -36,7 +35,6 @@ def _opp_team_ast_allowed(
         return float(
             opp["OPP_AST"]
             .astype(float)
-            .shift(1)
             .expanding()
             .mean()
             .round(3)
@@ -47,7 +45,7 @@ def _opp_team_ast_allowed(
     season = opp.loc[mask]
     allowed = (
         season.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)["OPP_AST"]
-        .transform(lambda x: x.shift(1).expanding().mean().round(3))
+        .transform(lambda x: x.expanding().mean().round(3))
     )
     return float(season.assign(_a=allowed)["_a"].iloc[-1])
 
@@ -63,15 +61,15 @@ def apm_pipeline(df, name, date):
     # ── Opponent setup ──────────────────────────────────────────────────────────
     opp_abbr, _ = findOpp(name, pdf, date, max_days_ahead=3)
 
-    # ── 1. AST_PER_MIN_season_avg (shift(1).expanding mean within season) ──────
+    # ── 1. AST_PER_MIN_season_avg ────────────────────────────────────────────────
     if "SEASON_YEAR" in pdf.columns:
         sx = pdf.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)[
             "AST_PER_MIN"
-        ].transform(lambda x: x.shift(1).expanding().mean().round(2))
+        ].transform(lambda x: x.expanding().mean().round(2))
         ast_per_min_season_avg = float(sx.iloc[-1]) if pd.notna(sx.iloc[-1]) else float("nan")
     else:
         ast_per_min_season_avg = float(
-            pdf["AST_PER_MIN"].astype(float).shift(1).expanding().mean().round(2).iloc[-1]
+            pdf["AST_PER_MIN"].astype(float).expanding().mean().round(2).iloc[-1]
         )
         if pd.isna(ast_per_min_season_avg):
             ast_per_min_season_avg = float("nan")
@@ -102,7 +100,7 @@ def apm_pipeline(df, name, date):
 
     # ── 4. PASS_PER_MIN_5_ewm ───────────────────────────────────────────────────
     pass_per_min_5_ewm = (
-        _shifted_ewm_tail(pdf["PASS_PER_MIN"], 5)
+        _ewm_tail(pdf["PASS_PER_MIN"], 5)
         if "PASS_PER_MIN" in pdf.columns
         else float("nan")
     )
@@ -117,13 +115,13 @@ def apm_pipeline(df, name, date):
 
     # ── 6. AST_PER_MIN_STD_SEASON ───────────────────────────────────────────────
     ast_std_series = pdf.groupby("PLAYER_ID", group_keys=False)["AST_PER_MIN"].transform(
-        lambda x: x.shift(1).expanding(min_periods=2).std()
+        lambda x: x.expanding(min_periods=2).std()
     )
     ast_per_min_std_season = float(ast_std_series.iloc[-1]) if pd.notna(ast_std_series.iloc[-1]) else float("nan")
     res.append(ast_per_min_std_season)
 
     # ── 7. APM_TREND ────────────────────────────────────────────────────────────
-    ast_per_min_5_ewm = _shifted_ewm_tail(pdf["AST_PER_MIN"], 5)
+    ast_per_min_5_ewm = _ewm_tail(pdf["AST_PER_MIN"], 5)
     apm_trend = (
         round(ast_per_min_5_ewm, 2) - ast_per_min_season_avg
         if pd.notna(ast_per_min_5_ewm) and pd.notna(ast_per_min_season_avg)

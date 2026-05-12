@@ -11,7 +11,6 @@ def _nanfloat(x):
 def _season_expanding_tail(
     pdf: pd.DataFrame, col: str, seasons: bool
 ) -> float:
-    """rpm_features._season_averages: shift(1).expanding().mean().round(2) within season."""
     s = pdf[col].astype(float)
     ok_season = (
         seasons
@@ -20,10 +19,10 @@ def _season_expanding_tail(
     )
     if ok_season:
         v = pdf.groupby(["PLAYER_ID", "SEASON_YEAR"], group_keys=False)[col].transform(
-            lambda x: x.astype(float).shift(1).expanding().mean().round(2)
+            lambda x: x.astype(float).expanding().mean().round(2)
         )
     else:
-        v = s.shift(1).expanding().mean().round(2)
+        v = s.expanding().mean().round(2)
     return _nanfloat(v.iloc[-1])
 
 
@@ -52,9 +51,9 @@ def _opp_team_prior_metric(
     if "SEASON_YEAR" not in opp.columns:
         ser = opp[raw_col].astype(float)
         vals = (
-            ser.shift(1).expanding().mean().round(decimals)
+            ser.expanding().mean().round(decimals)
             if round_fn
-            else ser.shift(1).expanding().mean()
+            else ser.expanding().mean()
         )
         return _nanfloat(vals.iloc[-1])
 
@@ -63,21 +62,15 @@ def _opp_team_prior_metric(
     season = opp.loc[mask]
     vals = (
         season.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)[raw_col]
-        .transform(lambda x: x.astype(float).shift(1).expanding().mean().round(decimals))
+        .transform(lambda x: x.astype(float).expanding().mean().round(decimals))
     )
     return _nanfloat(season.assign(_m=vals)["_m"].iloc[-1])
 
 
 def _reb_roll10_slope_last(pdf: pd.DataFrame) -> float:
-    """
-    Matches notebook:
-    REB_PER_MIN_roll10 = shift(1).rolling(10).mean round2;
-    slope = shift(1).rolling(5).polyfit slope on roll10 column.
-    """
     r10 = (
         pdf["REB_PER_MIN"]
         .astype(float)
-        .shift(1)
         .rolling(10)
         .mean()
         .round(2)
@@ -90,8 +83,7 @@ def _reb_roll10_slope_last(pdf: pd.DataFrame) -> float:
         return float(np.polyfit(np.arange(len(y)), y, 1)[0])
 
     out = (
-        r10.shift(1)
-        .rolling(5)
+        r10.rolling(5)
         .apply(lambda a: _slope(a), raw=True)
         .iloc[-1]
     )
@@ -124,7 +116,6 @@ def _team_pace_shift_roll_tail(
     roll = (
         t["TEAM_PACE"]
         .astype(float)
-        .shift(1)
         .rolling(window, min_periods=mp)
         .mean()
         .round(2)
@@ -133,9 +124,8 @@ def _team_pace_shift_roll_tail(
 
 
 def _reb_per_min_roll5_last(pdf: pd.DataFrame) -> float:
-    """rpm_features: REB_PER_MIN_roll5 = REB_roll5 / MIN_roll5 (both shift+roll5 rounded)."""
-    reb5 = pdf["REB"].astype(float).shift(1).rolling(5).mean().round(2)
-    mn5 = pdf["MIN"].astype(float).shift(1).rolling(5).mean().round(2)
+    reb5 = pdf["REB"].astype(float).rolling(5).mean().round(2)
+    mn5 = pdf["MIN"].astype(float).rolling(5).mean().round(2)
     v = (reb5.iloc[-1] / mn5.iloc[-1]) if mn5.iloc[-1] != 0 and pd.notna(mn5.iloc[-1]) else np.nan
     return float(v) if pd.notna(v) else float("nan")
 
@@ -159,7 +149,6 @@ def _opp_fga_roll10_last(df: pd.DataFrame, opp_abbr: str, *, as_of_date: str | N
         t.groupby("TEAM_ID", sort=False)["TEAM_FGA"]
         .transform(
             lambda x: x.astype(float)
-            .shift(1)
             .rolling(10, min_periods=1)
             .mean()
             .round(2)
@@ -184,12 +173,11 @@ def rpm_pipeline(df, name, date):
     # 1 — REB_PER_MIN_season_avg
     res.append(_season_expanding_tail(pdf, "REB_PER_MIN", seasons))
 
-    # 2 — RBC_PER_MIN_10_ewm (rpm_features shift(1)+ewm+round)
+    # 2 — RBC_PER_MIN_10_ewm
     if "RBC_PER_MIN" in pdf.columns:
         v = (
             pdf["RBC_PER_MIN"]
             .astype(float)
-            .shift(1)
             .ewm(span=10, adjust=False)
             .mean()
             .round(2)
@@ -266,13 +254,13 @@ def rpm_pipeline(df, name, date):
         else float("nan")
     )
 
-    # 11 — RPM_SEASON_STD (notebook: expanding().std().shift(1))
+    # 11 — RPM_SEASON_STD
     if "PLAYER_ID" in pdf.columns:
         rpm_std_series = pdf.groupby("PLAYER_ID", group_keys=False)["REB_PER_MIN"].transform(
-            lambda x: x.astype(float).expanding().std().shift(1)
+            lambda x: x.astype(float).expanding().std()
         )
     else:
-        rpm_std_series = pdf["REB_PER_MIN"].astype(float).expanding().std().shift(1)
+        rpm_std_series = pdf["REB_PER_MIN"].astype(float).expanding().std()
     res.append(float(rpm_std_series.iloc[-1]) if pd.notna(rpm_std_series.iloc[-1]) else float("nan"))
 
     # 12 — OREB_PCT_season_avg
