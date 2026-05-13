@@ -4,7 +4,7 @@ projectedStartingFive = {
     "BOS": ["Derrick White", "Baylor Scheierman", "Luka Garza", "Jaylen Brown", "Ron Harper"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
-    "CLE": ["Evan Mobley", "Dean Wade", "Donovan Mitchell", "Jarrett Allen", "James Harden"],
+    "CLE": ["Donovan Mitchell", "Evan Mobley", "Dean Wade", "James Harden", "Jarrett Allen"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
     "DEN": ["Christian Braun", "Jamal Murray", "Nikola Jokic", "Cameron Johnson", "Spencer Jones"],
     "DET": ["Tobias Harris", "Jalen Duren", "Ausar Thompson", "Cade Cunningham"],
@@ -66,6 +66,6 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DET": ["Caris LeVert", "Duncan Robinson", "Kevin Huerter"],
+    "DET": ["Caris LeVert", "Kevin Huerter"],
 }
 
