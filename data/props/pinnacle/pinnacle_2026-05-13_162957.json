@@ -1,0 +1,445 @@
+{
+  "fetched_at": "2026-05-13T16:32:30-07:00",
+  "source": "pinnacle_selenium",
+  "sport": "nba",
+  "list_page": "https://www.pinnacle.com/en/basketball/nba/matchups/#all",
+  "parallel_workers_configured": 6,
+  "parallel_workers_effective": 1,
+  "games_per_worker_target": 2,
+  "arcadia_timeout_s": 90.0,
+  "arcadia_poll_s": 0.22,
+  "games": [
+    {
+      "matchup_id": 1630480204,
+      "source_url": "https://www.pinnacle.com/en/basketball/nba/cleveland-cavaliers-vs-detroit-pistons/1630480204/#all",
+      "slug": "cleveland-cavaliers-vs-detroit-pistons",
+      "error": "Message: \nStacktrace:\n\tchromedriver!GetHandleVerifier [0x7ff6ff601e35+2e8d45]\n\tchromedriver!GetHandleVerifier [0x7ff6ff32e6c0+155d0]\n\tchromedriver!(No symbol) [0x7ff6ff07d57d]\n\tchromedriver!(No symbol) [0x7ff6ff0d767e]\n\tchromedriver!(No symbol) [0x7ff6ff0d798c]\n\tchromedriver!(No symbol) [0x7ff6ff1280c7]\n\tchromedriver!(No symbol) [0x7ff6ff124c63]\n\tchromedriver!(No symbol) [0x7ff6ff0c9d58]\n\tchromedriver!(No symbol) [0x7ff6ff0cac43]\n\tchromedriver!GetHandleVerifier [0x7ff6ff62dab9+3149c9]\n\tchromedriver!GetHandleVerifier [0x7ff6ff62802b+30ef3b]\n\tchromedriver!GetHandleVerifier [0x7ff6ff64c872+333782]\n\tchromedriver!GetHandleVerifier [0x7ff6ff34b785+32695]\n\tchromedriver!GetHandleVerifier [0x7ff6ff3542bc+3b1cc]\n\tchromedriver!GetHandleVerifier [0x7ff6ff337f24+1ee34]\n\tchromedriver!GetHandleVerifier [0x7ff6ff3380b4+1efc4]\n\tchromedriver!GetHandleVerifier [0x7ff6ff31bf27+2e37]\n\tKERNEL32!BaseThreadInitThunk [0x7ffd1b8ee957+17]\n\tntdll!RtlUserThreadStart [0x7ffd1da8427c+2c]\n",
+      "props": [],
+      "league": "NBA"
+    },
+    {
+      "matchup_id": 1630628196,
+      "source_url": "https://www.pinnacle.com/en/basketball/nba/san-antonio-spurs-vs-minnesota-timberwolves/1630628196/#all",
+      "path": "/en/basketball/nba/san-antonio-spurs-vs-minnesota-timberwolves/1630628196/",
+      "league": "NBA",
+      "start_time": null,
+      "label": "San Antonio Spurs vs Minnesota Timberwolves",
+      "participants": [
+        "San Antonio Spurs",
+        "Minnesota Timberwolves"
+      ],
+      "props": [
+        {
+          "stat": "assists",
+          "player": "Anthony Edwards",
+          "line": 4.5,
+          "market_id": 1630710185,
+          "decimal_over": 2.34,
+          "decimal_under": 1.556,
+          "american_over": 134,
+          "american_under": -180
+        },
+        {
+          "stat": "points",
+          "player": "Anthony Edwards",
+          "line": 25.5,
+          "market_id": 1630710191,
+          "decimal_over": 1.719,
+          "decimal_under": 2.05,
+          "american_over": -139,
+          "american_under": 105
+        },
+        {
+          "stat": "rebounds",
+          "player": "Anthony Edwards",
+          "line": 5.5,
+          "market_id": 1630710203,
+          "decimal_over": 1.649,
+          "decimal_under": 2.16,
+          "american_over": -154,
+          "american_under": 116
+        },
+        {
+          "stat": "assists",
+          "player": "Ayo Dosunmu",
+          "line": 3.5,
+          "market_id": 1630710218,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "points",
+          "player": "Ayo Dosunmu",
+          "line": 13.5,
+          "market_id": 1630710221,
+          "decimal_over": 2.0,
+          "decimal_under": 1.758,
+          "american_over": -100,
+          "american_under": -132
+        },
+        {
+          "stat": "rebounds",
+          "player": "Ayo Dosunmu",
+          "line": 3.5,
+          "market_id": 1630710227,
+          "decimal_over": 1.855,
+          "decimal_under": 1.885,
+          "american_over": -117,
+          "american_under": -113
+        },
+        {
+          "stat": "assists",
+          "player": "De'Aaron Fox",
+          "line": 5.5,
+          "market_id": 1630710233,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "points",
+          "player": "De'Aaron Fox",
+          "line": 16.5,
+          "market_id": 1630710236,
+          "decimal_over": 1.806,
+          "decimal_under": 1.935,
+          "american_over": -124,
+          "american_under": -107
+        },
+        {
+          "stat": "rebounds",
+          "player": "De'Aaron Fox",
+          "line": 3.5,
+          "market_id": 1630710242,
+          "decimal_over": 2.0,
+          "decimal_under": 1.758,
+          "american_over": -100,
+          "american_under": -132
+        },
+        {
+          "stat": "assists",
+          "player": "Devin Vassell",
+          "line": 2.5,
+          "market_id": 1630710248,
+          "decimal_over": 2.12,
+          "decimal_under": 1.676,
+          "american_over": 112,
+          "american_under": -148
+        },
+        {
+          "stat": "points",
+          "player": "Devin Vassell",
+          "line": 12.5,
+          "market_id": 1630710251,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "rebounds",
+          "player": "Devin Vassell",
+          "line": 4.5,
+          "market_id": 1630710257,
+          "decimal_over": 2.34,
+          "decimal_under": 1.556,
+          "american_over": 134,
+          "american_under": -180
+        },
+        {
+          "stat": "assists",
+          "player": "Dylan Harper",
+          "line": 3.5,
+          "market_id": 1630710263,
+          "decimal_over": 2.16,
+          "decimal_under": 1.645,
+          "american_over": 116,
+          "american_under": -155
+        },
+        {
+          "stat": "points",
+          "player": "Dylan Harper",
+          "line": 10.5,
+          "market_id": 1630710266,
+          "decimal_over": 1.741,
+          "decimal_under": 2.02,
+          "american_over": -135,
+          "american_under": 102
+        },
+        {
+          "stat": "rebounds",
+          "player": "Dylan Harper",
+          "line": 3.5,
+          "market_id": 1630710272,
+          "decimal_over": 1.694,
+          "decimal_under": 2.08,
+          "american_over": -144,
+          "american_under": 108
+        },
+        {
+          "stat": "assists",
+          "player": "Jaden McDaniels",
+          "line": 2.5,
+          "market_id": 1630710278,
+          "decimal_over": 2.3,
+          "decimal_under": 1.575,
+          "american_over": 130,
+          "american_under": -174
+        },
+        {
+          "stat": "points",
+          "player": "Jaden McDaniels",
+          "line": 16.5,
+          "market_id": 1630710281,
+          "decimal_over": 2.0,
+          "decimal_under": 1.758,
+          "american_over": -100,
+          "american_under": -132
+        },
+        {
+          "stat": "rebounds",
+          "player": "Jaden McDaniels",
+          "line": 5.5,
+          "market_id": 1630710287,
+          "decimal_over": 2.1,
+          "decimal_under": 1.685,
+          "american_over": 110,
+          "american_under": -146
+        },
+        {
+          "stat": "assists",
+          "player": "Julian Champagnie",
+          "line": 1.5,
+          "market_id": 1630710293,
+          "decimal_over": 2.26,
+          "decimal_under": 1.595,
+          "american_over": 126,
+          "american_under": -168
+        },
+        {
+          "stat": "points",
+          "player": "Julian Champagnie",
+          "line": 8.5,
+          "market_id": 1630710296,
+          "decimal_over": 1.769,
+          "decimal_under": 1.98,
+          "american_over": -130,
+          "american_under": -102
+        },
+        {
+          "stat": "rebounds",
+          "player": "Julian Champagnie",
+          "line": 5.5,
+          "market_id": 1630710302,
+          "decimal_over": 2.04,
+          "decimal_under": 1.725,
+          "american_over": 104,
+          "american_under": -138
+        },
+        {
+          "stat": "assists",
+          "player": "Julius Randle",
+          "line": 3.5,
+          "market_id": 1630710308,
+          "decimal_over": 1.658,
+          "decimal_under": 2.14,
+          "american_over": -152,
+          "american_under": 114
+        },
+        {
+          "stat": "points",
+          "player": "Julius Randle",
+          "line": 16.5,
+          "market_id": 1630710311,
+          "decimal_over": 1.971,
+          "decimal_under": 1.775,
+          "american_over": -103,
+          "american_under": -129
+        },
+        {
+          "stat": "rebounds",
+          "player": "Julius Randle",
+          "line": 6.5,
+          "market_id": 1630710317,
+          "decimal_over": 2.18,
+          "decimal_under": 1.637,
+          "american_over": 118,
+          "american_under": -157
+        },
+        {
+          "stat": "points",
+          "player": "Keldon Johnson",
+          "line": 8.5,
+          "market_id": 1630710323,
+          "decimal_over": 1.781,
+          "decimal_under": 1.962,
+          "american_over": -128,
+          "american_under": -104
+        },
+        {
+          "stat": "rebounds",
+          "player": "Keldon Johnson",
+          "line": 3.5,
+          "market_id": 1630710326,
+          "decimal_over": 2.04,
+          "decimal_under": 1.725,
+          "american_over": 104,
+          "american_under": -138
+        },
+        {
+          "stat": "assists",
+          "player": "Naz Reid",
+          "line": 2.5,
+          "market_id": 1630710332,
+          "decimal_over": 2.58,
+          "decimal_under": 1.465,
+          "american_over": 158,
+          "american_under": -215
+        },
+        {
+          "stat": "points",
+          "player": "Naz Reid",
+          "line": 12.5,
+          "market_id": 1630710335,
+          "decimal_over": 1.909,
+          "decimal_under": 1.833,
+          "american_over": -110,
+          "american_under": -120
+        },
+        {
+          "stat": "rebounds",
+          "player": "Naz Reid",
+          "line": 6.5,
+          "market_id": 1630710341,
+          "decimal_over": 1.69,
+          "decimal_under": 2.09,
+          "american_over": -145,
+          "american_under": 109
+        },
+        {
+          "stat": "assists",
+          "player": "Rudy Gobert",
+          "line": 1.5,
+          "market_id": 1630710344,
+          "decimal_over": 2.04,
+          "decimal_under": 1.725,
+          "american_over": 104,
+          "american_under": -138
+        },
+        {
+          "stat": "points",
+          "player": "Rudy Gobert",
+          "line": 6.5,
+          "market_id": 1630710347,
+          "decimal_over": 1.926,
+          "decimal_under": 1.82,
+          "american_over": -108,
+          "american_under": -122
+        },
+        {
+          "stat": "rebounds",
+          "player": "Rudy Gobert",
+          "line": 8.5,
+          "market_id": 1630710353,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "assists",
+          "player": "Stephon Castle",
+          "line": 6.5,
+          "market_id": 1630710359,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "points",
+          "player": "Stephon Castle",
+          "line": 16.5,
+          "market_id": 1630710362,
+          "decimal_over": 1.82,
+          "decimal_under": 1.926,
+          "american_over": -122,
+          "american_under": -108
+        },
+        {
+          "stat": "rebounds",
+          "player": "Stephon Castle",
+          "line": 5.5,
+          "market_id": 1630710368,
+          "decimal_over": 2.28,
+          "decimal_under": 1.585,
+          "american_over": 128,
+          "american_under": -171
+        },
+        {
+          "stat": "assists",
+          "player": "Terrence Shannon Jr.",
+          "line": 1.5,
+          "market_id": 1630710374,
+          "decimal_over": 1.637,
+          "decimal_under": 2.18,
+          "american_over": -157,
+          "american_under": 118
+        },
+        {
+          "stat": "points",
+          "player": "Terrence Shannon Jr.",
+          "line": 6.5,
+          "market_id": 1630710377,
+          "decimal_over": 1.917,
+          "decimal_under": 1.826,
+          "american_over": -109,
+          "american_under": -121
+        },
+        {
+          "stat": "rebounds",
+          "player": "Terrence Shannon Jr.",
+          "line": 1.5,
+          "market_id": 1630710383,
+          "decimal_over": 1.532,
+          "decimal_under": 2.4,
+          "american_over": -188,
+          "american_under": 140
+        },
+        {
+          "stat": "assists",
+          "player": "Victor Wembanyama",
+          "line": 3.5,
+          "market_id": 1630710389,
+          "decimal_over": 2.36,
+          "decimal_under": 1.549,
+          "american_over": 136,
+          "american_under": -182
+        },
+        {
+          "stat": "points",
+          "player": "Victor Wembanyama",
+          "line": 27.5,
+          "market_id": 1630710392,
+          "decimal_over": 1.943,
+          "decimal_under": 1.806,
+          "american_over": -106,
+          "american_under": -124
+        },
+        {
+          "stat": "rebounds",
+          "player": "Victor Wembanyama",
+          "line": 13.5,
+          "market_id": 1630710398,
+          "decimal_over": 1.917,
+          "decimal_under": 1.82,
+          "american_over": -109,
+          "american_under": -122
+        }
+      ]
+    }
+  ]
+}
