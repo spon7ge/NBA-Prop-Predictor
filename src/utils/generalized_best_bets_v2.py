@@ -35,7 +35,9 @@ import pandas as pd
 # Constants
 # ─────────────────────────────────────────────────────────────────────────────
 SHARP_BOOK_ORDER = ["Pinnacle", "FanDuel", "DraftKings", "BetMGM", "BetOnline.ag", "Bovada"]
-TEAM_BOOK_ORDER  = ["Circa", "BetOnline.ag"]
+TEAM_BOOK_ORDER  = ["Circa", "BetOnline.ag", "FanDuel", "DraftKings"]
+CIRCA_BETONLINE_TEAM_LINES_DIR = Path("data/props/circa+betonline_team_lines")
+DK_FD_TEAM_LINES_DIR = Path("data/props/dk+fd_team_lines")
 
 # CATEGORY column in CSVs → internal market key
 CATEGORY_TO_MARKET: dict[str, str] = {
@@ -191,7 +193,7 @@ def find_opp(player_canonical: str, players_df: pd.DataFrame,
     rows = players_df.loc[players_df["PLAYER_NAME"] == player_canonical, "TEAM_ABBREVIATION"]
     if rows.empty:
         return None, None
-    player_team = rows.iloc[-1]
+    player_team = rows.iloc[0]
     base = datetime.strptime(game_date, "%Y-%m-%d")
     for i in range(max_days_ahead + 1):
         d = (base + timedelta(days=i)).strftime("%Y-%m-%d")
@@ -207,50 +209,75 @@ def find_opp(player_canonical: str, players_df: pd.DataFrame,
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Team line index — compatible with circa+betonline_team_lines JSON format
+# Team line index — compatible with team-lines JSON format
 # ─────────────────────────────────────────────────────────────────────────────
+def _load_team_odds_json(team_odds_source) -> dict:
+    """
+    Accepts a path to a JSON file, a directory of JSON files, or an already-loaded dict.
+    Directories resolve to their most recently modified JSON file.
+    """
+    if team_odds_source is None:
+        return {"records": []}
+    if not isinstance(team_odds_source, (str, Path)):
+        return team_odds_source
+
+    path = Path(team_odds_source)
+    if path.is_dir():
+        files = list(path.glob("*.json"))
+        if not files:
+            return {"records": []}
+        path = max(files, key=lambda f: f.stat().st_mtime)
+
+    with open(path) as f:
+        return json.load(f)
+
+
 def build_team_line_index(team_odds_source) -> dict:
     """
     Accepts a path to a JSON file or an already-loaded dict.
-    Returns dict keyed by frozenset({home_abbr, away_abbr}) with Circa / BetOnline.ag
-    spread and total lines.
+    Returns dict keyed by frozenset({home_abbr, away_abbr}) with team spread
+    and total lines. Book priority: Circa → BetOnline.ag → FanDuel → DraftKings.
     """
-    if isinstance(team_odds_source, (str, Path)):
-        with open(team_odds_source) as f:
-            data = json.load(f)
-    else:
-        data = team_odds_source
+    primary_source = (
+        team_odds_source
+        if team_odds_source is not None
+        else CIRCA_BETONLINE_TEAM_LINES_DIR
+    )
+    sources = [_load_team_odds_json(primary_source)]
+    if DK_FD_TEAM_LINES_DIR.is_dir():
+        sources.append(_load_team_odds_json(DK_FD_TEAM_LINES_DIR))
 
     idx: dict = {}
-    for rec in data.get("records", []):
-        home_full = rec.get("HOME")
-        away_full = rec.get("AWAY")
-        if home_full not in TEAM_FULL_TO_ABBR or away_full not in TEAM_FULL_TO_ABBR:
-            continue
-        home_ab = TEAM_FULL_TO_ABBR[home_full]
-        away_ab = TEAM_FULL_TO_ABBR[away_full]
-        key = frozenset({home_ab, away_ab})
-        if key not in idx:
-            idx[key] = {
-                "HOME_abbr": home_ab, "AWAY_abbr": away_ab,
-                "HOME_full": home_full, "AWAY_full": away_full,
-            }
-        bk = rec.get("BOOKMAKER")
-        if bk not in TEAM_BOOK_ORDER:
-            continue
-        slot = idx[key].setdefault(bk, {"spread_line": None, "total_line": None})
-        mkt  = rec.get("MARKET")
-        line = rec.get("LINE")
-        if mkt == "Spread":
-            slot["spread_line"] = line      # home-team perspective
-        elif mkt == "Totals":
-            slot["total_line"] = line
+    for data in sources:
+        for rec in data.get("records", []):
+            home_full = rec.get("HOME")
+            away_full = rec.get("AWAY")
+            if home_full not in TEAM_FULL_TO_ABBR or away_full not in TEAM_FULL_TO_ABBR:
+                continue
+            home_ab = TEAM_FULL_TO_ABBR[home_full]
+            away_ab = TEAM_FULL_TO_ABBR[away_full]
+            key = frozenset({home_ab, away_ab})
+            if key not in idx:
+                idx[key] = {
+                    "HOME_abbr": home_ab, "AWAY_abbr": away_ab,
+                    "HOME_full": home_full, "AWAY_full": away_full,
+                }
+            bk = rec.get("BOOKMAKER")
+            if bk not in TEAM_BOOK_ORDER:
+                continue
+            slot = idx[key].setdefault(bk, {"spread_line": None, "total_line": None})
+            mkt  = rec.get("MARKET")
+            line = rec.get("LINE")
+            if mkt == "Spread":
+                slot["spread_line"] = line      # home-team perspective
+            elif mkt == "Totals":
+                slot["total_line"] = line
     return idx
 
 
 def get_team_game_context(team_line_idx: dict, player_team_abbr: str,
                           opp_abbr: str, is_home: int) -> dict:
-    """Circa first, BetOnline.ag fallback. Converts spread to player-team perspective."""
+    """Use team-book priority order. Converts spread to player-team perspective."""
     blank = {"book_used": None, "game_total": None, "spread": None, "team_total_implied": None}
     if player_team_abbr is None or opp_abbr is None:
         return blank
@@ -263,14 +290,10 @@ def get_team_game_context(team_line_idx: dict, player_team_abbr: str,
             continue
         spread_home = slot.get("spread_line")
         total_line  = slot.get("total_line")
-        if spread_home is None and total_line is None:
+        if spread_home is None or total_line is None:
             continue
-        spread_for_team = None
-        if spread_home is not None:
-            spread_for_team = spread_home if is_home else -spread_home
-        team_total_implied = None
-        if total_line is not None and spread_for_team is not None:
-            team_total_implied = (total_line / 2.0) - (spread_for_team / 2.0)
+        spread_for_team = spread_home if is_home else -spread_home
+        team_total_implied = (total_line / 2.0) - (spread_for_team / 2.0)
         return {
             "book_used":          book,
             "game_total":         _to_opt_float(total_line),
@@ -666,7 +689,7 @@ def enrich_dfs_picks(
         print(f"  DFS rows: {len(dfs_wide)} across {platforms}")
         print(f"  Sharp books available: {list(sharp_books.keys())}")
 
-    team_line_idx = {} if team_odds_source is None else build_team_line_index(team_odds_source)
+    team_line_idx = build_team_line_index(team_odds_source)
 
     if verbose:
         print("  Fetching league team ratings (NBA API)...")
