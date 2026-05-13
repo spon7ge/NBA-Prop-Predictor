@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.95652,
-    "EV": 426.088,
-    "EV_DOLLARS": 42.6088,
-    "KELLY": 47.3431,
+    "PARLAY_PROB": 0.95947,
+    "EV": 427.71,
+    "EV_DOLLARS": 42.771,
+    "KELLY": 47.5233,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.002,
-          "p_under": 0.998,
+          "p_over": 0.003,
+          "p_under": 0.997,
           "lean": "UNDER",
           "min_q10": 18.38,
           "min_q50": 18.38,
@@ -186,7 +186,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.998
+        "p_win": 0.997
       },
       {
         "platform": "Betr DFS",
@@ -206,8 +206,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.02,
-          "p_under": 0.98,
+          "p_over": 0.018,
+          "p_under": 0.982,
           "lean": "UNDER",
           "min_q10": 7.19,
           "min_q50": 7.19,
@@ -302,7 +302,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.98
+        "p_win": 0.982
       },
       {
         "platform": "Betr DFS",
@@ -322,8 +322,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.009,
-          "p_under": 0.978,
+          "p_over": 0.008,
+          "p_under": 0.98,
           "lean": "UNDER",
           "min_q10": 9.95,
           "min_q50": 9.96,
@@ -426,19 +426,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.978
+        "p_win": 0.98
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.998,
+    "ANCHOR_WIN_PROB": 0.997,
     "ANCHOR_NAME": "Tobias Harris"
   },
   {
-    "PARLAY_PROB": 0.91348,
-    "EV": 402.416,
-    "EV_DOLLARS": 40.2416,
-    "KELLY": 44.7129,
+    "PARLAY_PROB": 0.90876,
+    "EV": 399.816,
+    "EV_DOLLARS": 39.9816,
+    "KELLY": 44.424,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -461,8 +461,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.043,
-          "p_under": 0.957,
+          "p_over": 0.046,
+          "p_under": 0.954,
           "lean": "UNDER",
           "min_q10": 7.79,
           "min_q50": 7.79,
@@ -589,7 +589,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.957
+        "p_win": 0.954
       },
       {
         "platform": "Betr DFS",
@@ -609,8 +609,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.023,
-          "p_under": 0.977,
+          "p_over": 0.025,
+          "p_under": 0.975,
           "lean": "UNDER",
           "min_q10": 11.13,
           "min_q50": 11.14,
@@ -713,7 +713,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.977
+        "p_win": 0.975
       },
       {
         "platform": "Betr DFS",
@@ -843,13 +843,13 @@
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
     "ANCHOR_WIN_PROB": 0.977,
-    "ANCHOR_NAME": "De'Aaron Fox"
+    "ANCHOR_NAME": "Stephon Castle"
   },
   {
-    "PARLAY_PROB": 0.7432,
-    "EV": 308.763,
-    "EV_DOLLARS": 30.8763,
-    "KELLY": 34.307,
+    "PARLAY_PROB": 0.7455,
+    "EV": 310.027,
+    "EV_DOLLARS": 31.0027,
+    "KELLY": 34.4474,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -872,8 +872,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.023,
-          "p_under": 0.963,
+          "p_over": 0.021,
+          "p_under": 0.966,
           "lean": "UNDER",
           "min_q10": 6.96,
           "min_q50": 7.1,
@@ -984,7 +984,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.963
+        "p_win": 0.966
       },
       {
         "platform": "Betr DFS",
@@ -1004,8 +1004,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.122,
-          "p_under": 0.877,
+          "p_over": 0.126,
+          "p_under": 0.874,
           "lean": "UNDER",
           "min_q10": 24.12,
           "min_q50": 24.12,
@@ -1124,7 +1124,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.877
+        "p_win": 0.874
       },
       {
         "platform": "Betr DFS",
@@ -1144,8 +1144,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.12,
-          "p_under": 0.88,
+          "p_over": 0.117,
+          "p_under": 0.883,
           "lean": "UNDER",
           "min_q10": 13.36,
           "min_q50": 13.36,
@@ -1272,19 +1272,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.88
+        "p_win": 0.883
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.963,
+    "ANCHOR_WIN_PROB": 0.966,
     "ANCHOR_NAME": "Rudy Gobert"
   },
   {
-    "PARLAY_PROB": 0.54779,
-    "EV": 201.283,
-    "EV_DOLLARS": 20.1283,
-    "KELLY": 22.3647,
+    "PARLAY_PROB": 0.54028,
+    "EV": 197.153,
+    "EV_DOLLARS": 19.7153,
+    "KELLY": 21.9059,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -1307,8 +1307,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.089,
-          "p_under": 0.87,
+          "p_over": 0.091,
+          "p_under": 0.868,
           "lean": "UNDER",
           "min_q10": 9.38,
           "min_q50": 9.38,
@@ -1411,7 +1411,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.87
+        "p_win": 0.868
       },
       {
         "platform": "Betr DFS",
@@ -1431,8 +1431,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.154,
-          "p_under": 0.792,
+          "p_over": 0.159,
+          "p_under": 0.78,
           "lean": "UNDER",
           "min_q10": 20.93,
           "min_q50": 20.93,
@@ -1551,7 +1551,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.792
+        "p_win": 0.78
       },
       {
         "platform": "Betr DFS",
@@ -1571,8 +1571,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.121,
-          "p_under": 0.795,
+          "p_over": 0.122,
+          "p_under": 0.798,
           "lean": "UNDER",
           "min_q10": 6.38,
           "min_q50": 6.38,
@@ -1667,12 +1667,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.795
+        "p_win": 0.798
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "opp-team/same-game",
-    "ANCHOR_WIN_PROB": 0.87,
+    "ANCHOR_WIN_PROB": 0.868,
     "ANCHOR_NAME": "Naz Reid"
   }
 ]

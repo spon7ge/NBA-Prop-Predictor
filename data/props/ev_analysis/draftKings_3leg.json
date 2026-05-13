@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.81469,
-    "EV": 307.344,
-    "EV_DOLLARS": 30.7344,
-    "KELLY": 38.418,
+    "PARLAY_PROB": 0.80752,
+    "EV": 303.758,
+    "EV_DOLLARS": 30.3758,
+    "KELLY": 37.9698,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.0,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.147,
-          "p_under": 0.853,
+          "p_over": 0.151,
+          "p_under": 0.849,
           "lean": "UNDER",
           "min_q10": 11.92,
           "min_q50": 11.92,
@@ -154,7 +154,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.853
+        "p_win": 0.849
       },
       {
         "platform": "DraftKings Pick6",
@@ -174,8 +174,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.043,
-          "p_under": 0.957,
+          "p_over": 0.046,
+          "p_under": 0.954,
           "lean": "UNDER",
           "min_q10": 7.79,
           "min_q50": 7.79,
@@ -302,7 +302,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.957
+        "p_win": 0.954
       },
       {
         "platform": "DraftKings Pick6",
@@ -322,8 +322,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.002,
-          "p_under": 0.998,
+          "p_over": 0.003,
+          "p_under": 0.997,
           "lean": "UNDER",
           "min_q10": 18.38,
           "min_q50": 18.38,
@@ -482,19 +482,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.998
+        "p_win": 0.997
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "2+1/same-game",
-    "ANCHOR_WIN_PROB": 0.998,
+    "ANCHOR_WIN_PROB": 0.997,
     "ANCHOR_NAME": "Tobias Harris"
   },
   {
-    "PARLAY_PROB": 0.53637,
-    "EV": 168.187,
-    "EV_DOLLARS": 16.8187,
-    "KELLY": 21.0233,
+    "PARLAY_PROB": 0.52864,
+    "EV": 164.322,
+    "EV_DOLLARS": 16.4322,
+    "KELLY": 20.5402,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.0,
     "N_LEGS": 3,
@@ -517,8 +517,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.305,
-          "p_under": 0.695,
+          "p_over": 0.315,
+          "p_under": 0.685,
           "lean": "UNDER",
           "min_q10": 20.93,
           "min_q50": 20.93,
@@ -637,7 +637,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.695
+        "p_win": 0.685
       },
       {
         "platform": "DraftKings Pick6",
@@ -657,8 +657,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.122,
-          "p_under": 0.877,
+          "p_over": 0.126,
+          "p_under": 0.874,
           "lean": "UNDER",
           "min_q10": 24.12,
           "min_q50": 24.12,
@@ -777,7 +777,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.877
+        "p_win": 0.874
       },
       {
         "platform": "DraftKings Pick6",
@@ -797,8 +797,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.12,
-          "p_under": 0.88,
+          "p_over": 0.117,
+          "p_under": 0.883,
           "lean": "UNDER",
           "min_q10": 13.36,
           "min_q50": 13.36,
@@ -925,12 +925,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.88
+        "p_win": 0.883
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "2+1/same-game",
-    "ANCHOR_WIN_PROB": 0.88,
+    "ANCHOR_WIN_PROB": 0.883,
     "ANCHOR_NAME": "Jalen Duren"
   }
 ]

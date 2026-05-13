@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.85129,
-    "EV": 155.388,
-    "EV_DOLLARS": 15.5388,
-    "KELLY": 38.8471,
+    "PARLAY_PROB": 0.84645,
+    "EV": 153.936,
+    "EV_DOLLARS": 15.3936,
+    "KELLY": 38.484,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 2.0,
     "N_LEGS": 2,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.002,
-          "p_under": 0.998,
+          "p_over": 0.003,
+          "p_under": 0.997,
           "lean": "UNDER",
           "min_q10": 18.38,
           "min_q50": 18.38,
@@ -186,7 +186,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.998
+        "p_win": 0.997
       },
       {
         "platform": "DraftKings Pick6",
@@ -206,8 +206,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.147,
-          "p_under": 0.853,
+          "p_over": 0.151,
+          "p_under": 0.849,
           "lean": "UNDER",
           "min_q10": 11.92,
           "min_q50": 11.92,
@@ -334,7 +334,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.853
+        "p_win": 0.849
       }
     ],
     "STRATEGY_TIER": 2,
@@ -342,10 +342,10 @@
     "ANCHOR_WIN_PROB": 0.0
   },
   {
-    "PARLAY_PROB": 0.66511,
-    "EV": 99.534,
-    "EV_DOLLARS": 9.9534,
-    "KELLY": 24.8836,
+    "PARLAY_PROB": 0.65349,
+    "EV": 96.047,
+    "EV_DOLLARS": 9.6047,
+    "KELLY": 24.0118,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 2.0,
     "N_LEGS": 2,
@@ -368,8 +368,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.043,
-          "p_under": 0.957,
+          "p_over": 0.046,
+          "p_under": 0.954,
           "lean": "UNDER",
           "min_q10": 7.79,
           "min_q50": 7.79,
@@ -496,7 +496,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.957
+        "p_win": 0.954
       },
       {
         "platform": "DraftKings Pick6",
@@ -516,8 +516,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.305,
-          "p_under": 0.695,
+          "p_over": 0.315,
+          "p_under": 0.685,
           "lean": "UNDER",
           "min_q10": 20.93,
           "min_q50": 20.93,
@@ -636,7 +636,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.695
+        "p_win": 0.685
       }
     ],
     "STRATEGY_TIER": 2,
