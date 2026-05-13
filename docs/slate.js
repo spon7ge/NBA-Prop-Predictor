@@ -110,6 +110,13 @@ function enrichedUrls() {
     ? window.location.pathname : "";
   var inDocs = path.indexOf("/docs/") !== -1;
   var now = new Date();
+  // Prefer stable "latest" pointer (pipeline should write this).
+  // Falls back to date-based files for backwards compatibility.
+  var latest = "dfs_enriched_latest.json";
+  var la = "data/props/enriched/" + latest;
+  var lb = "../data/props/enriched/" + latest;
+  urls.push(inDocs ? lb : la);
+  urls.push(inDocs ? la : lb);
   for (var i = 0; i < 7; i++) {
     var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
     var y = d.getFullYear();

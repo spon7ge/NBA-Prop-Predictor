@@ -751,6 +751,8 @@ def enrich_dfs_picks(
     run_ts       = generated_at.strftime("%H%M%S")
     enriched_path = output_dir / f"dfs_enriched_{today_str}_{run_ts}.json"
     aligned_path  = output_dir / f"dfs_sharp_aligned_{today_str}_{run_ts}.json"
+    enriched_latest_path = output_dir / "dfs_enriched_latest.json"
+    aligned_latest_path  = output_dir / "dfs_sharp_aligned_latest.json"
 
     meta = {
         "generated_at": generated_at.isoformat() + "Z",
@@ -760,9 +762,16 @@ def enrich_dfs_picks(
     }
     with open(enriched_path, "w") as f:
         json.dump({**meta, "picks": enriched_rows}, f, indent=2, default=_json_default)
+    with open(enriched_latest_path, "w") as f:
+        json.dump({**meta, "picks": enriched_rows}, f, indent=2, default=_json_default)
 
     aligned = [r for r in enriched_rows if r["sharp_aligned"]]
     with open(aligned_path, "w") as f:
+        json.dump(
+            {**meta, "n_sharp_aligned": len(aligned), "picks": aligned},
+            f, indent=2, default=_json_default,
+        )
+    with open(aligned_latest_path, "w") as f:
         json.dump(
             {**meta, "n_sharp_aligned": len(aligned), "picks": aligned},
             f, indent=2, default=_json_default,
@@ -777,5 +786,7 @@ def enrich_dfs_picks(
               f"dfs_only: {n_dfs_only} | conflict: {n_conflict} | no_model: {n_nomodel}")
         print(f"  → {enriched_path}")
         print(f"  → {aligned_path}")
+        print(f"  → {enriched_latest_path} (latest)")
+        print(f"  → {aligned_latest_path} (latest)")
 
     return enriched_path, aligned_path, pd.DataFrame(enriched_rows)
