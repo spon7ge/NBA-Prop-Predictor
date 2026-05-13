@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.95262,
-    "EV": 423.941,
-    "EV_DOLLARS": 42.3941,
-    "KELLY": 47.1046,
+    "PARLAY_PROB": 0.94972,
+    "EV": 422.345,
+    "EV_DOLLARS": 42.2345,
+    "KELLY": 46.9272,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.002,
-          "p_under": 0.998,
+          "p_over": 0.003,
+          "p_under": 0.997,
           "lean": "UNDER",
           "min_q10": 18.38,
           "min_q50": 18.38,
@@ -186,7 +186,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.998
+        "p_win": 0.997
       },
       {
         "platform": "PrizePicks",
@@ -206,8 +206,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.023,
-          "p_under": 0.977,
+          "p_over": 0.025,
+          "p_under": 0.975,
           "lean": "UNDER",
           "min_q10": 11.13,
           "min_q50": 11.14,
@@ -310,7 +310,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.977
+        "p_win": 0.975
       },
       {
         "platform": "PrizePicks",
@@ -439,14 +439,14 @@
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.998,
+    "ANCHOR_WIN_PROB": 0.997,
     "ANCHOR_NAME": "Tobias Harris"
   },
   {
-    "PARLAY_PROB": 0.67982,
-    "EV": 273.903,
-    "EV_DOLLARS": 27.3903,
-    "KELLY": 30.4337,
+    "PARLAY_PROB": 0.68121,
+    "EV": 274.666,
+    "EV_DOLLARS": 27.4666,
+    "KELLY": 30.5185,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -469,8 +469,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.19,
-          "p_under": 0.81,
+          "p_over": 0.183,
+          "p_under": 0.817,
           "lean": "UNDER",
           "min_q10": 7.19,
           "min_q50": 7.19,
@@ -573,7 +573,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.81
+        "p_win": 0.817
       },
       {
         "platform": "PrizePicks",
@@ -593,8 +593,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.043,
-          "p_under": 0.957,
+          "p_over": 0.046,
+          "p_under": 0.954,
           "lean": "UNDER",
           "min_q10": 7.79,
           "min_q50": 7.79,
@@ -721,7 +721,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.957
+        "p_win": 0.954
       },
       {
         "platform": "PrizePicks",
@@ -741,8 +741,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.122,
-          "p_under": 0.877,
+          "p_over": 0.126,
+          "p_under": 0.874,
           "lean": "UNDER",
           "min_q10": 24.12,
           "min_q50": 24.12,
@@ -861,12 +861,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.877
+        "p_win": 0.874
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.957,
+    "ANCHOR_WIN_PROB": 0.954,
     "ANCHOR_NAME": "Ausar Thompson"
   }
 ]

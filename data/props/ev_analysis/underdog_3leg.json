@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.95262,
-    "EV": 423.941,
-    "EV_DOLLARS": 42.3941,
-    "KELLY": 47.1046,
+    "PARLAY_PROB": 0.94972,
+    "EV": 422.345,
+    "EV_DOLLARS": 42.2345,
+    "KELLY": 46.9272,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.002,
-          "p_under": 0.998,
+          "p_over": 0.003,
+          "p_under": 0.997,
           "lean": "UNDER",
           "min_q10": 18.38,
           "min_q50": 18.38,
@@ -186,7 +186,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.998
+        "p_win": 0.997
       },
       {
         "platform": "Underdog",
@@ -206,8 +206,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.023,
-          "p_under": 0.977,
+          "p_over": 0.025,
+          "p_under": 0.975,
           "lean": "UNDER",
           "min_q10": 11.13,
           "min_q50": 11.14,
@@ -310,7 +310,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.977
+        "p_win": 0.975
       },
       {
         "platform": "Underdog",
@@ -439,7 +439,7 @@
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.998,
+    "ANCHOR_WIN_PROB": 0.997,
     "ANCHOR_NAME": "Tobias Harris"
   }
 ]
