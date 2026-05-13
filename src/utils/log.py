@@ -11,13 +11,15 @@ Human-readable mirror (same rows as the JSONL ledger, indented envelope):
 
 Further ledgers:
 
-    data/logs/slates.jsonl       — one row per leg in each exported slate (long format)
+    data/logs/dfs_enriched.jsonl      — one row per pick from dfs_enriched_*.json
+    data/logs/dfs_sharp_aligned.jsonl — one row per pick from dfs_sharp_aligned_*.json
+    data/logs/slates.jsonl       — one row per exported slate with all legs attached
 
     data/logs/results.jsonl      — compact reconciled rows (keys + model medians, side, outcomes)
 
 ``snapshot`` accepts any ``slate_paths`` shape ``{bookmaker: {"2leg": path, "3leg": path}}``.
 Slate JSON may include optional parlay-level fields (e.g. strategy tier); those are
-copied onto each leg row when present.
+kept on the slate row alongside flattened leg columns and the raw ``LEGS`` list.
 
 Dedup/replace semantics for predictions (JSONL + bundle mirror):
 
@@ -33,11 +35,12 @@ Dedup/replace semantics for predictions (JSONL + bundle mirror):
         as separate history rows (line history retained).
 
 Dedup key for slates:
-    ``(DATE, SLATE_ID, PLAYER_NAME, MARKET, LINE_BOOKMAKER, LINE)``
+    ``(DATE, SLATE_ID)``
 """
 
 
 import json
+import re
 import numpy as np
 import pandas as pd
 from datetime import date, datetime
@@ -48,12 +51,17 @@ from src.utils.helpers import normalize_game_date_series
 LOGS_DIR               = Path("data/logs")
 PREDICTIONS_FILE       = LOGS_DIR / "predictions.jsonl"
 PREDICTIONS_LEDGER_JSON = LOGS_DIR / "predictions_ledger.json"
+DFS_ENRICHED_FILE      = LOGS_DIR / "dfs_enriched.jsonl"
+DFS_SHARP_ALIGNED_FILE = LOGS_DIR / "dfs_sharp_aligned.jsonl"
 SLATES_FILE            = LOGS_DIR / "slates.jsonl"
 RESULTS_FILE      = LOGS_DIR / "results.jsonl"
+DFS_ENRICHED_DIR       = Path("data/props/enriched")
+SLATES_DIR             = Path("data/props/ev_analysis")
 
 # Columns used to identify a unique prediction entry
 _PRED_KEY   = ["DATE", "PLAYER_NAME", "MARKET", "LINE_BOOKMAKER", "LINE"]
-_SLATE_KEY  = ["DATE", "SLATE_ID", "PLAYER_NAME", "MARKET", "LINE_BOOKMAKER", "LINE"]
+_DFS_PICK_KEY = ["DATE", "PLAYER_NAME", "MARKET", "LINE_BOOKMAKER", "LINE"]
+_SLATE_KEY  = ["DATE", "SLATE_ID"]
 _RESULT_KEY = ["DATE", "PLAYER_NAME", "MARKET", "LINE_BOOKMAKER"]
 
 # Mapping from model MARKET label → base_df column
@@ -170,7 +178,7 @@ def _dedup_and_write(new_df: pd.DataFrame, path: Path, key_cols: list[str]) -> N
             lambda r: tuple(r[c] for c in key_cols) in new_keys, axis=1
         )
         existing = existing[~mask]
-        combined = pd.concat([existing, new_df], ignore_index=True)
+        combined = new_df if existing.empty else pd.concat([existing, new_df], ignore_index=True)
         _write_jsonl(combined, path)
     else:
         _append_jsonl(new_df.to_dict("records"), path)
@@ -203,6 +211,236 @@ def _sync_predictions_ledger_json() -> None:
     PREDICTIONS_LEDGER_JSON.parent.mkdir(parents=True, exist_ok=True)
     with open(PREDICTIONS_LEDGER_JSON, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
+
+
+def _date_from_meta_or_path(meta: dict, path: Path, default: str | None = None) -> str:
+    if meta.get("current_date"):
+        return str(meta["current_date"])
+    match = re.search(r"(\d{8})", path.stem)
+    if match:
+        raw = match.group(1)
+        return f"{raw[:4]}-{raw[4:6]}-{raw[6:]}"
+    return default or datetime.today().strftime("%Y-%m-%d")
+
+
+def _load_json_payload(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+
+def _dfs_pick_rows_from_file(
+    path: Path,
+    *,
+    run_timestamp: str | None = None,
+) -> list[dict]:
+    data = _load_json_payload(path)
+    if data is None:
+        return []
+    picks = data.get("picks", []) if isinstance(data, dict) else data
+    meta = {k: v for k, v in data.items() if k != "picks"} if isinstance(data, dict) else {}
+    if not isinstance(picks, list):
+        return []
+
+    date_str = _date_from_meta_or_path(meta, path)
+    ts = run_timestamp or meta.get("generated_at") or datetime.now().isoformat(timespec="seconds")
+    rows: list[dict] = []
+    for pick in picks:
+        if not isinstance(pick, dict):
+            continue
+        model = pick.get("model") or {}
+        sharp = pick.get("sharp") or {}
+        consensus = pick.get("consensus") or {}
+        game_context = pick.get("game_context") or {}
+        side = pick.get("side") or model.get("lean")
+        rows.append({
+            "DATE": date_str,
+            "RUN_TIMESTAMP": ts,
+            "SOURCE_FILE": path.name,
+            "SOURCE_GENERATED_AT": meta.get("generated_at"),
+            "LINE_BOOKMAKER": pick.get("platform"),
+            "PLAYER_NAME": pick.get("player") or pick.get("display_name"),
+            "MARKET": pick.get("market"),
+            "LINE": pick.get("dfs_line"),
+            "SIDE": str(side).lower() if side is not None else None,
+            "P_WIN": pick.get("p_win"),
+            "P_OVER": model.get("p_over"),
+            "P_UNDER": model.get("p_under"),
+            "MIN_Q10": model.get("min_q10"),
+            "MIN_Q50": model.get("min_q50"),
+            "MIN_Q90": model.get("min_q90"),
+            "STAT_Q10": model.get("stat_q10"),
+            "STAT_Q50": model.get("stat_q50"),
+            "STAT_Q90": model.get("stat_q90"),
+            "SHARP_SOURCE": sharp.get("source"),
+            "SHARP_LINE": sharp.get("line"),
+            "SHARP_LEAN": sharp.get("lean"),
+            "CONSENSUS_N_BOOKS_SAME_LINE": consensus.get("n_books_same_line"),
+            "GAME_TOTAL": game_context.get("game_total"),
+            "SPREAD": game_context.get("spread"),
+            "TEAM": pick.get("team_abbr") or pick.get("team"),
+            "OPPONENT": pick.get("opponent_abbr") or pick.get("opponent"),
+            "TIER": pick.get("tier"),
+            "SHARP_ALIGNED": pick.get("sharp_aligned"),
+            "PICK": pick,
+        })
+    return rows
+
+
+def _track_dfs_pick_files(
+    pattern: str,
+    ledger_path: Path,
+    *,
+    enriched_dir: str | Path = DFS_ENRICHED_DIR,
+    run_timestamp: str | None = None,
+) -> int:
+    rows: list[dict] = []
+    for path in sorted(Path(enriched_dir).expanduser().glob(pattern)):
+        rows.extend(_dfs_pick_rows_from_file(path, run_timestamp=run_timestamp))
+
+    if not rows:
+        print(f"[log] {ledger_path.name:<18} no data to log")
+        return 0
+
+    df = pd.DataFrame(rows)
+    _dedup_and_write(df, ledger_path, _DFS_PICK_KEY)
+    print(f"[log] {ledger_path.name:<18} {len(rows):>4} rows")
+    return len(rows)
+
+
+def _bookmaker_from_slate_path(path: Path, fallback: str | None = None) -> str:
+    if fallback:
+        return fallback
+    stem = path.stem.replace("_3leg", "")
+    return {
+        "betr": "Betr DFS",
+        "draftKings": "DraftKings Pick6",
+        "prizepicks": "PrizePicks",
+        "underdog": "Underdog",
+    }.get(stem, stem)
+
+
+def _slate_type_from_path(path: Path, fallback: str | None = None) -> str:
+    if fallback:
+        return str(fallback)
+    return "3leg" if path.stem.endswith("_3leg") else "2leg"
+
+
+def _slate_rows_from_file(
+    path: Path,
+    *,
+    bookmaker: str | None = None,
+    slate_type: str | None = None,
+    date: str | None = None,
+    run_timestamp: str | None = None,
+) -> list[dict]:
+    pairs = _load_json_payload(path)
+    if not isinstance(pairs, list) or not pairs:
+        return []
+
+    date_str = date or datetime.today().strftime("%Y-%m-%d")
+    ts = run_timestamp or datetime.now().isoformat(timespec="seconds")
+    book = _bookmaker_from_slate_path(path, bookmaker)
+    slate_kind = _slate_type_from_path(path, slate_type)
+    rows: list[dict] = []
+
+    for idx, pair in enumerate(pairs):
+        if not isinstance(pair, dict):
+            continue
+        slate_id = f"{date_str}_{book.replace(' ', '_')}_{slate_kind}_{idx:04d}"
+        slate_row = {
+            "DATE": date_str,
+            "RUN_TIMESTAMP": ts,
+            "SLATE_ID": slate_id,
+            "SLATE_TYPE": slate_kind,
+            "LINE_BOOKMAKER": book,
+            "PARLAY_PROB": pair.get("PARLAY_PROB"),
+            "EV": pair.get("EV"),
+            "EV_DOLLARS": pair.get("EV_DOLLARS"),
+            "KELLY": pair.get("KELLY"),
+            "PARLAY_N_LEGS": pair.get("N_LEGS"),
+            "STRATEGY_TIER": pair.get("STRATEGY_TIER"),
+            "COMBO_PROFILE": pair.get("COMBO_PROFILE"),
+            "ANCHOR_NAME": pair.get("ANCHOR_NAME"),
+            "ANCHOR_WIN_PROB": pair.get("ANCHOR_WIN_PROB"),
+            "STAKE_DOLLARS": pair.get("STAKE_DOLLARS"),
+            "COMBINED_PAYOUT_MULT": pair.get("COMBINED_PAYOUT_MULT") or pair.get("NET_PAYOUT_MULT"),
+            "SLATE_SOURCE": pair.get("SOURCE") or path.name,
+        }
+        legs: list[dict] = []
+
+        nested_legs = pair.get("LEGS")
+        if isinstance(nested_legs, list):
+            n_legs = pair.get("N_LEGS") or len(nested_legs)
+            slate_row["PARLAY_N_LEGS"] = n_legs
+            for leg in nested_legs:
+                if not isinstance(leg, dict):
+                    continue
+                model = leg.get("model") or {}
+                game_context = leg.get("game_context") or {}
+                side = leg.get("side") or model.get("lean")
+                gt_leg = game_context.get("game_total")
+                legs.append({
+                    "PLAYER_NAME": leg.get("player") or leg.get("display_name"),
+                    "MARKET": leg.get("market"),
+                    "LINE": leg.get("dfs_line"),
+                    "SIDE": str(side).lower() if side is not None else None,
+                    "PREDICTION": model.get("stat_q50"),
+                    "MODEL_PROB": leg.get("p_win"),
+                    "TEAM": leg.get("team_abbr") or leg.get("team"),
+                    "OPPONENT": leg.get("opponent_abbr") or leg.get("opponent"),
+                    "SPREAD": game_context.get("spread"),
+                    "TOTAL": gt_leg,
+                    "GAME_TOTAL": gt_leg,
+                    "PAYOUT_MULT": pair.get("NET_PAYOUT_MULT"),
+                    "OPP_DEF_RATING_RANK": game_context.get("opp_def_rating_rank"),
+                    "OPP_PACE_RANK": game_context.get("opp_pace_rank"),
+                })
+        else:
+            n_raw = pair.get("N_LEGS")
+            if n_raw is not None:
+                try:
+                    n_legs = int(n_raw)
+                except (TypeError, ValueError):
+                    n_legs = 0
+            else:
+                n_legs = 3 if pair.get("NAME 3") is not None else 2
+            if n_legs not in (2, 3):
+                n_legs = 3 if "3" in slate_kind else 2
+            slate_row["PARLAY_N_LEGS"] = n_legs
+
+            for leg_idx in range(1, n_legs + 1):
+                gt_leg = pair.get(f"GAME_TOTAL {leg_idx}")
+                tot_leg = pair.get(f"TOTAL {leg_idx}")
+                legs.append({
+                    "PLAYER_NAME": pair.get(f"NAME {leg_idx}"),
+                    "MARKET": pair.get(f"MARKET {leg_idx}"),
+                    "LINE": pair.get(f"LINE {leg_idx}"),
+                    "SIDE": pair.get(f"SIDE {leg_idx}"),
+                    "PREDICTION": pair.get(f"PREDICTION {leg_idx}"),
+                    "MODEL_PROB": pair.get(f"MODEL_PROB {leg_idx}"),
+                    "TEAM": pair.get(f"TEAM {leg_idx}"),
+                    "OPPONENT": pair.get(f"OPPONENT {leg_idx}"),
+                    "SPREAD": pair.get(f"SPREAD {leg_idx}"),
+                    "TOTAL": tot_leg,
+                    "GAME_TOTAL": gt_leg if gt_leg is not None else tot_leg,
+                    "PAYOUT_MULT": pair.get(f"PAYOUT_MULT {leg_idx}"),
+                    "OPP_DEF_RATING_RANK": pair.get(f"OPP_DEF_RATING_RANK {leg_idx}"),
+                    "OPP_PACE_RANK": pair.get(f"OPP_PACE_RANK {leg_idx}"),
+                })
+
+        if not legs:
+            continue
+        slate_row["PLAYER_NAMES"] = " | ".join(
+            str(leg["PLAYER_NAME"]) for leg in legs if leg.get("PLAYER_NAME") is not None
+        )
+        slate_row["LEGS"] = legs
+        for leg_idx, leg in enumerate(legs, start=1):
+            for key, value in leg.items():
+                slate_row[f"{key}_{leg_idx}"] = value
+        rows.append(slate_row)
+    return rows
 
 
 # ── Core API ──────────────────────────────────────────────────────────────────
@@ -294,72 +532,20 @@ def snapshot(
             path = Path(path_str)
             if not path.exists():
                 continue
-            try:
-                pairs = json.loads(path.read_text(encoding="utf-8"))
-            except (json.JSONDecodeError, ValueError):
-                continue
-            if not pairs:
-                continue
-
-            for idx, pair in enumerate(pairs):
-                if not isinstance(pair, dict):
-                    continue
-                n_raw = pair.get("N_LEGS")
-                if n_raw is not None:
-                    try:
-                        n_legs = int(n_raw)
-                    except (TypeError, ValueError):
-                        n_legs = 0
-                else:
-                    n_legs = 3 if pair.get("NAME 3") is not None else 2
-                if n_legs not in (2, 3):
-                    n_legs = 3 if "3" in str(slate_type) else 2
-
-                slate_id = f"{date}_{bookmaker.replace(' ', '_')}_{slate_type}_{idx:04d}"
-                parlay_meta = {
-                    "PARLAY_N_LEGS": n_legs,
-                    "STRATEGY_TIER": pair.get("STRATEGY_TIER"),
-                    "COMBO_PROFILE": pair.get("COMBO_PROFILE"),
-                    "ANCHOR_NAME": pair.get("ANCHOR_NAME"),
-                    "ANCHOR_WIN_PROB": pair.get("ANCHOR_WIN_PROB"),
-                    "STAKE_DOLLARS": pair.get("STAKE_DOLLARS"),
-                    "COMBINED_PAYOUT_MULT": pair.get("COMBINED_PAYOUT_MULT"),
-                    "SLATE_SOURCE": pair.get("SOURCE"),
-                }
-                for leg in range(1, n_legs + 1):
-                    gt_leg = pair.get(f"GAME_TOTAL {leg}")
-                    tot_leg = pair.get(f"TOTAL {leg}")
-                    leg_row = {
-                        "DATE":          date,
-                        "RUN_TIMESTAMP": run_timestamp,
-                        "SLATE_ID":      slate_id,
-                        "SLATE_TYPE":    slate_type,
-                        "LINE_BOOKMAKER":bookmaker,
-                        "PARLAY_PROB":   pair.get("PARLAY_PROB"),
-                        "EV":            pair.get("EV"),
-                        "KELLY":         pair.get("KELLY"),
-                        "PLAYER_NAME":   pair.get(f"NAME {leg}"),
-                        "MARKET":        pair.get(f"MARKET {leg}"),
-                        "LINE":          pair.get(f"LINE {leg}"),
-                        "SIDE":          pair.get(f"SIDE {leg}"),
-                        "PREDICTION":    pair.get(f"PREDICTION {leg}"),
-                        "MODEL_PROB":    pair.get(f"MODEL_PROB {leg}"),
-                        "TEAM":          pair.get(f"TEAM {leg}"),
-                        "OPPONENT":      pair.get(f"OPPONENT {leg}"),
-                        "SPREAD":               pair.get(f"SPREAD {leg}"),
-                        "TOTAL":                tot_leg,
-                        "GAME_TOTAL":           gt_leg if gt_leg is not None else tot_leg,
-                        "PAYOUT_MULT":          pair.get(f"PAYOUT_MULT {leg}"),
-                        "OPP_DEF_RATING_RANK": pair.get(f"OPP_DEF_RATING_RANK {leg}"),
-                        "OPP_PACE_RANK":        pair.get(f"OPP_PACE_RANK {leg}"),
-                        **parlay_meta,
-                    }
-                    slate_rows.append(leg_row)
+            slate_rows.extend(
+                _slate_rows_from_file(
+                    path,
+                    bookmaker=bookmaker,
+                    slate_type=slate_type,
+                    date=date,
+                    run_timestamp=run_timestamp,
+                )
+            )
 
     if slate_rows:
         slate_df = pd.DataFrame(slate_rows)
         _dedup_and_write(slate_df, SLATES_FILE, _SLATE_KEY)
-        print(f"[log] slates       {len(slate_rows):>4} leg rows  ({date})")
+        print(f"[log] slates       {len(slate_rows):>4} slate rows  ({date})")
     else:
         print("[log] slates       no data to log")
 
@@ -570,13 +756,92 @@ def _score_prediction(pred: pd.Series, game_day: pd.DataFrame) -> tuple:
 
 # ── Analysis helpers ──────────────────────────────────────────────────────────
 
+def track_dfs_enriched(
+    enriched_dir: str | Path = DFS_ENRICHED_DIR,
+    *,
+    run_timestamp: str | None = None,
+) -> int:
+    """Track every ``dfs_enriched_*.json`` pick into ``dfs_enriched.jsonl``."""
+    return _track_dfs_pick_files(
+        "dfs_enriched_*.json",
+        DFS_ENRICHED_FILE,
+        enriched_dir=enriched_dir,
+        run_timestamp=run_timestamp,
+    )
+
+
+def track_dfs_sharp_aligned(
+    enriched_dir: str | Path = DFS_ENRICHED_DIR,
+    *,
+    run_timestamp: str | None = None,
+) -> int:
+    """Track every ``dfs_sharp_aligned_*.json`` pick into ``dfs_sharp_aligned.jsonl``."""
+    return _track_dfs_pick_files(
+        "dfs_sharp_aligned_*.json",
+        DFS_SHARP_ALIGNED_FILE,
+        enriched_dir=enriched_dir,
+        run_timestamp=run_timestamp,
+    )
+
+
+def track_all_slates(
+    slates_dir: str | Path = SLATES_DIR,
+    *,
+    date: str | None = None,
+    run_timestamp: str | None = None,
+) -> int:
+    """Track all current slate JSONs in ``data/props/ev_analysis`` into ``slates.jsonl``."""
+    if date is None:
+        date = datetime.today().strftime("%Y-%m-%d")
+    if run_timestamp is None:
+        run_timestamp = datetime.now().isoformat(timespec="seconds")
+
+    rows: list[dict] = []
+    for path in sorted(Path(slates_dir).expanduser().glob("*.json")):
+        rows.extend(_slate_rows_from_file(path, date=date, run_timestamp=run_timestamp))
+
+    if not rows:
+        print("[log] slates       no data to log")
+        return 0
+
+    slate_df = pd.DataFrame(rows)
+    _dedup_and_write(slate_df, SLATES_FILE, _SLATE_KEY)
+    print(f"[log] slates       {len(rows):>4} slate rows  ({date})")
+    return len(rows)
+
+
+def track_all(
+    *,
+    enriched_dir: str | Path = DFS_ENRICHED_DIR,
+    slates_dir: str | Path = SLATES_DIR,
+    date: str | None = None,
+    run_timestamp: str | None = None,
+) -> dict[str, int]:
+    """Track enriched picks, sharp-aligned picks, and slate legs with ledger deduping."""
+    return {
+        "dfs_enriched": track_dfs_enriched(enriched_dir, run_timestamp=run_timestamp),
+        "dfs_sharp_aligned": track_dfs_sharp_aligned(enriched_dir, run_timestamp=run_timestamp),
+        "slates": track_all_slates(slates_dir, date=date, run_timestamp=run_timestamp),
+    }
+
+
+def load_dfs_enriched() -> pd.DataFrame:
+    """Load the full DFS enriched picks ledger."""
+    return _read_jsonl(DFS_ENRICHED_FILE)
+
+
+def load_dfs_sharp_aligned() -> pd.DataFrame:
+    """Load the full DFS sharp-aligned picks ledger."""
+    return _read_jsonl(DFS_SHARP_ALIGNED_FILE)
+
+
 def load_predictions() -> pd.DataFrame:
     """Load the full predictions ledger."""
     return _read_jsonl(PREDICTIONS_FILE)
 
 
 def load_slates() -> pd.DataFrame:
-    """Load the full slates ledger (long format — one row per leg)."""
+    """Load the full slates ledger (one row per slate, with attached legs)."""
     return _read_jsonl(SLATES_FILE)
 
 
@@ -695,7 +960,8 @@ def calibration(bucket_size: float = 0.05) -> pd.DataFrame:
 def slate_results() -> pd.DataFrame:
     """
     Join slates to results on (DATE, PLAYER_NAME, MARKET, LINE_BOOKMAKER).
-    Each row is a slate leg with HIT and ACTUAL_STAT filled in.
+    The slate ledger is stored as one row per slate; this helper expands ``LEGS``
+    back to one row per leg with HIT and ACTUAL_STAT filled in.
     Group by SLATE_ID to check full parlay wins:
 
         sr = slate_results()
@@ -705,6 +971,43 @@ def slate_results() -> pd.DataFrame:
     results = load_results()
     if slates.empty or results.empty:
         return pd.DataFrame()
+
+    leg_rows: list[dict] = []
+    if "LEGS" in slates.columns:
+        for _, slate in slates.iterrows():
+            legs = slate.get("LEGS") or []
+            if not isinstance(legs, list):
+                continue
+            slate_meta = {
+                c: slate.get(c)
+                for c in [
+                    "DATE",
+                    "RUN_TIMESTAMP",
+                    "SLATE_ID",
+                    "SLATE_TYPE",
+                    "LINE_BOOKMAKER",
+                    "PARLAY_PROB",
+                    "EV",
+                    "EV_DOLLARS",
+                    "KELLY",
+                    "PARLAY_N_LEGS",
+                    "STRATEGY_TIER",
+                    "COMBO_PROFILE",
+                    "PLAYER_NAMES",
+                ]
+                if c in slates.columns
+            }
+            for leg_idx, leg in enumerate(legs, start=1):
+                if not isinstance(leg, dict):
+                    continue
+                leg_rows.append({
+                    **slate_meta,
+                    "LEG_INDEX": leg_idx,
+                    **leg,
+                })
+        slates = pd.DataFrame(leg_rows)
+        if slates.empty:
+            return pd.DataFrame()
 
     key_cols    = ["DATE", "PLAYER_NAME", "MARKET", "LINE_BOOKMAKER"]
     result_cols = key_cols + ["HIT", "ACTUAL_STAT", "ACTUAL_MIN", "MISS_REASON"]

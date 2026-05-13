@@ -746,12 +746,14 @@ def enrich_dfs_picks(
         if rec is not None:
             enriched_rows.append(rec)
 
-    today_str     = current_date.replace("-", "")
-    enriched_path = output_dir / f"dfs_enriched_{today_str}.json"
-    aligned_path  = output_dir / f"dfs_sharp_aligned_{today_str}.json"
+    generated_at = datetime.utcnow()
+    today_str    = current_date.replace("-", "")
+    run_ts       = generated_at.strftime("%H%M%S")
+    enriched_path = output_dir / f"dfs_enriched_{today_str}_{run_ts}.json"
+    aligned_path  = output_dir / f"dfs_sharp_aligned_{today_str}_{run_ts}.json"
 
     meta = {
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "generated_at": generated_at.isoformat() + "Z",
         "current_date": current_date,
         "n_dfs_picks":  int(len(dfs_wide)),
         "n_enriched":   int(len(enriched_rows)),
