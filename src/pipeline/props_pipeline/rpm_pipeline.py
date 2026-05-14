@@ -173,19 +173,15 @@ def rpm_pipeline(df, name, date):
     # 1 — REB_PER_MIN_season_avg
     res.append(_season_expanding_tail(pdf, "REB_PER_MIN", seasons))
 
-    # 2 — RBC_PER_MIN_10_ewm
-    if "RBC_PER_MIN" in pdf.columns:
-        v = (
-            pdf["RBC_PER_MIN"]
-            .astype(float)
-            .ewm(span=10, adjust=False)
-            .mean()
-            .round(2)
-            .iloc[-1]
-        )
-        res.append(float(v) if pd.notna(v) else float("nan"))
-    else:
-        res.append(float("nan"))
+    # 2 — REB_PER_MIN_10_ewm
+    reb_per_min = pdf['REB_PER_MIN'].astype(float).ewm(span=10, adjust=False).mean().iloc[-1]
+    res.append(float(reb_per_min) if pd.notna(reb_per_min) else float("nan"))
+
+    # 2b — RBC_PER_MIN_10_ewm
+    rbc_per_min = pdf['RBC'] / pdf['MIN'].replace(0, np.nan)
+    rbc_10_ewm = rbc_per_min.astype(float).ewm(span=10, adjust=False).mean().iloc[-1]
+    res.append(float(rbc_10_ewm) if pd.notna(rbc_10_ewm) else float("nan"))
+
 
     # 3 — POSITION_ENC (notebook); fall back to POSITION_ENCODED when only that exists on raw logs
     if "POSITION_ENC" in last.index and pd.notna(last.get("POSITION_ENC")):
@@ -271,11 +267,9 @@ def rpm_pipeline(df, name, date):
     )
 
     # 13 — DREB_PER_MIN_season_avg
-    res.append(
-        _season_expanding_tail(pdf, "DREB_PER_MIN", seasons)
-        if "DREB_PER_MIN" in pdf.columns
-        else float("nan")
-    )
+    pdf['DREB_PER_MIN'] = pdf['DREB'] / pdf['MIN'].replace(0, np.nan)
+    res.append(pdf['DREB_PER_MIN'].mean().astype(float))
+
 
     # 14 — OPP_FGA_roll10
     if "OPP_FGA_roll10" in last.index and pd.notna(last.get("OPP_FGA_roll10")):
