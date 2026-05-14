@@ -1,0 +1,121 @@
+{
+  "pulled_at_utc": "2026-05-14T22:07:12.294091+00:00",
+  "bookmakers": [
+    "Circa",
+    "BetOnline.ag"
+  ],
+  "events_fetched": 24,
+  "odds_format": "american",
+  "markets_included": [
+    "Spread",
+    "Totals"
+  ],
+  "odds_payload_count": 2,
+  "record_count": 8,
+  "records": [
+    {
+      "MARKET": "Spread",
+      "LINE": 4.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504950,
+      "HOME": "Minnesota Timberwolves",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-16T01:30:00Z",
+      "HOME_ODDS": -105,
+      "AWAY_ODDS": -115,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 218.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504950,
+      "HOME": "Minnesota Timberwolves",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-16T01:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": 4.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504950,
+      "HOME": "Minnesota Timberwolves",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-16T01:30:00Z",
+      "HOME_ODDS": -105,
+      "AWAY_ODDS": -115,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 218.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504950,
+      "HOME": "Minnesota Timberwolves",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-16T01:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -3.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504996,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-15T23:00:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 209.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70504996,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-15T23:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -4,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504996,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-15T23:00:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 209.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70504996,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "Detroit Pistons",
+      "START": "2026-05-15T23:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    }
+  ]
+}
