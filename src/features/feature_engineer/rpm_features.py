@@ -36,7 +36,7 @@ def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
 
 def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
     cols = [
-        'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN'
+        'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'USG_PCT', 'DIST_PER_MIN'
     ]
 
     for span in [3, 5, 10]:
@@ -208,7 +208,7 @@ def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 # ---- Opponent stats ---------------------------------------------------------------
 def _opponent_stats(df):
-    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS', 'TEAM_FG_PCT', 'TEAM_FGA', 'TEAM_FG3A']
+    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS', 'TEAM_FG_PCT', 'TEAM_FGA', 'TEAM_FG3A', 'TEAM_EFG_PCT']
     available_stat_cols = [c for c in stat_cols if c in df.columns]
 
     team_game = (
@@ -220,7 +220,7 @@ def _opponent_stats(df):
     opp_cols = []
     for col in available_stat_cols:
         base = col.replace('TEAM_', '')
-        for window in [5, 10]:
+        for window in [5, 10, 20]:
             avg_col = f'{base}_roll{window}'
             team_game[avg_col] = (
                 team_game.groupby('TEAM_ABBREVIATION')[col]
