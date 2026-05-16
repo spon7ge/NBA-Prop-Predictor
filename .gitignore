@@ -17,3 +17,6 @@ __pycache__/
 # Ignore all data in TRAIN_DATA (files are too large, can be redownloaded)
 DATA/CSV_FILES/TRAIN_DATA/
 data/processed/training/
+
+# large pbp files
+data/raw/season_stats/*_pbp.csv

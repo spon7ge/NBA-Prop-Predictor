@@ -20,7 +20,8 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _expectedPace(df)
     df = _detect_star_players(df)
     df = _HomeAwayAverages(df)
-    
+    df = _pbp_stint_features(df)
+
     return df
 
 
@@ -648,5 +649,28 @@ def _HomeAwayAverages(player_data, player_id_col='PLAYER_ID', date_col='GAME_DAT
 
         df[f'PLAYER_HOME_{metric}_DELTA'] = (df[home_col] - overall_avg).fillna(0).round(2)
         df[f'PLAYER_AWAY_{metric}_DELTA'] = (df[away_col] - overall_avg).fillna(0).round(2)
+
+    return df
+
+
+# ── PBP stint rolling features ────────────────────────────────────────────────
+
+def _pbp_stint_features(df: pd.DataFrame) -> pd.DataFrame:
+    cols = ['avg_stint_min', 'max_stint_min', 'total_stints', 'avg_entry_sec']
+    present = [c for c in cols if c in df.columns]
+    if not present:
+        return df
+
+    for col in present:
+        # season avg: expanding mean within player-season, no leakage
+        df[f'{col}_season_avg'] = (
+            df.groupby(['PLAYER_ID', 'SEASON_YEAR'])[col]
+            .transform(lambda x: x.shift(1).expanding().mean().round(2))
+        )
+        # EWM-10: exponentially weighted recent form
+        df[f'{col}_10_ewm'] = (
+            df.groupby('PLAYER_ID')[col]
+            .transform(lambda x: x.shift(1).ewm(span=10, adjust=False).mean().round(2))
+        )
 
     return df
