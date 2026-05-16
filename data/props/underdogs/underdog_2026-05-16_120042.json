@@ -1,0 +1,4345 @@
+{
+  "source": "Underdog Fantasy",
+  "fetched_at": "2026-05-16T19:00:44Z",
+  "count": 482,
+  "picks": [
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "points",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T11:04:58Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "points",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T11:04:58Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "points",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T13:10:55Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "points",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T13:10:55Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "40.5",
+      "updated_at": "2026-05-16T16:20:11Z",
+      "choice": "over",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "40.5",
+      "updated_at": "2026-05-16T16:20:11Z",
+      "choice": "under",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "41.5",
+      "updated_at": "2026-05-16T15:53:04Z",
+      "choice": "over",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "41.5",
+      "updated_at": "2026-05-16T15:53:04Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "rebounds",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T17:00:18Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "rebounds",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T17:00:18Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T07:08:43Z",
+      "choice": "over",
+      "american_price": "-157",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T12:39:28Z",
+      "choice": "under",
+      "american_price": "+130",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "assists",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:11:25Z",
+      "choice": "over",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "assists",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:11:25Z",
+      "choice": "under",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T08:24:15Z",
+      "choice": "over",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "under",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "over",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "under",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:32:22Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:32:22Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T08:15:27Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T08:15:27Z",
+      "choice": "under",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "rebs_asts",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T16:26:26Z",
+      "choice": "over",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "rebs_asts",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T16:26:26Z",
+      "choice": "under",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_rebs",
+      "stat_value": "37.5",
+      "updated_at": "2026-05-16T16:18:05Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_rebs",
+      "stat_value": "37.5",
+      "updated_at": "2026-05-16T16:18:05Z",
+      "choice": "under",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_rebs",
+      "stat_value": "34.5",
+      "updated_at": "2026-05-16T08:11:47Z",
+      "choice": "over",
+      "american_price": "-117",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_rebs",
+      "stat_value": "34.5",
+      "updated_at": "2026-05-16T08:11:47Z",
+      "choice": "under",
+      "american_price": "-105",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T12:39:29Z",
+      "choice": "over",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "pts_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T12:39:29Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_asts",
+      "stat_value": "36.5",
+      "updated_at": "2026-05-16T10:59:41Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "pts_asts",
+      "stat_value": "36.5",
+      "updated_at": "2026-05-16T10:59:41Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T17:37:31Z",
+      "choice": "over",
+      "american_price": "+450",
+      "payout_multiplier": "2.46"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:58:00Z",
+      "choice": "under",
+      "american_price": "+363",
+      "payout_multiplier": "2.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "period_1_points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T09:20:29Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "period_1_points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T15:43:47Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "period_1_points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:11:15Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "period_1_points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:11:15Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T07:08:43Z",
+      "choice": "over",
+      "american_price": "+158",
+      "payout_multiplier": "1.13"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T07:08:43Z",
+      "choice": "under",
+      "american_price": "-197",
+      "payout_multiplier": "0.74"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T16:26:47Z",
+      "choice": "over",
+      "american_price": "+138",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T16:26:47Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:47:03Z",
+      "choice": "over",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:47:03Z",
+      "choice": "under",
+      "american_price": "+137",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "turnovers",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T11:21:15Z",
+      "choice": "over",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "turnovers",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T11:21:15Z",
+      "choice": "under",
+      "american_price": "-167",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "over",
+      "american_price": "+175",
+      "payout_multiplier": "1.22"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T13:53:36Z",
+      "choice": "under",
+      "american_price": "-223",
+      "payout_multiplier": "0.71"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "blocks",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T08:07:34Z",
+      "choice": "over",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "blocks",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T08:07:34Z",
+      "choice": "under",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "blks_stls",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:43:49Z",
+      "choice": "over",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "blks_stls",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T11:21:16Z",
+      "choice": "under",
+      "american_price": "-132",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:26:25Z",
+      "choice": "over",
+      "american_price": "+153",
+      "payout_multiplier": "1.11"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:26:25Z",
+      "choice": "under",
+      "american_price": "-189",
+      "payout_multiplier": "0.75"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:57:33Z",
+      "choice": "over",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:57:33Z",
+      "choice": "under",
+      "american_price": "+108",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T13:53:36Z",
+      "choice": "over",
+      "american_price": "+127",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "under",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "field_goals_att",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "over",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Shai Gilgeous-Alexander",
+      "stat_name": "field_goals_att",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "field_goals_att",
+      "stat_value": "17.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Victor Wembanyama",
+      "stat_name": "field_goals_att",
+      "stat_value": "17.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "under",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "points",
+      "stat_value": "26.5",
+      "updated_at": "2026-05-16T04:50:59Z",
+      "choice": "over",
+      "american_price": "-122",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "points",
+      "stat_value": "26.5",
+      "updated_at": "2026-05-16T04:50:59Z",
+      "choice": "under",
+      "american_price": "-102",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "points",
+      "stat_value": "26.5",
+      "updated_at": "2026-05-16T12:20:36Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "points",
+      "stat_value": "26.5",
+      "updated_at": "2026-05-16T12:20:36Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "points",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T13:22:07Z",
+      "choice": "over",
+      "american_price": "-102",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "points",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T13:22:07Z",
+      "choice": "under",
+      "american_price": "-122",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "points",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T18:12:29Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "points",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T18:12:29Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "40.5",
+      "updated_at": "2026-05-16T14:23:20Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "40.5",
+      "updated_at": "2026-05-16T14:23:20Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T08:17:15Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T08:17:15Z",
+      "choice": "under",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T16:31:49Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T16:31:49Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "34.5",
+      "updated_at": "2026-05-16T15:51:44Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "34.5",
+      "updated_at": "2026-05-16T15:51:44Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "over",
+      "american_price": "+114",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "under",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "rebounds",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T04:50:50Z",
+      "choice": "over",
+      "american_price": "+125",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "rebounds",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T04:50:50Z",
+      "choice": "under",
+      "american_price": "-154",
+      "payout_multiplier": "0.81"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T14:20:18Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T14:20:18Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "assists",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T15:40:20Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "assists",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T15:40:20Z",
+      "choice": "under",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T17:38:44Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T17:38:44Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "assists",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T17:54:41Z",
+      "choice": "over",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "assists",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T17:54:41Z",
+      "choice": "under",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "assists",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T11:05:49Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "assists",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T11:05:49Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:29:36Z",
+      "choice": "over",
+      "american_price": "+124",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:29:36Z",
+      "choice": "under",
+      "american_price": "-152",
+      "payout_multiplier": "0.81"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T08:07:02Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T08:07:02Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T10:59:19Z",
+      "choice": "over",
+      "american_price": "-139",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T10:59:19Z",
+      "choice": "under",
+      "american_price": "+113",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:53:47Z",
+      "choice": "over",
+      "american_price": "+128",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:56:51Z",
+      "choice": "under",
+      "american_price": "-157",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "rebs_asts",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T08:00:04Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "rebs_asts",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "under",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "rebs_asts",
+      "stat_value": "13.5",
+      "updated_at": "2026-05-16T15:39:07Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "rebs_asts",
+      "stat_value": "13.5",
+      "updated_at": "2026-05-16T15:52:35Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "rebs_asts",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T04:56:08Z",
+      "choice": "over",
+      "american_price": "-136",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "rebs_asts",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T04:56:08Z",
+      "choice": "under",
+      "american_price": "+110",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:39:05Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:39:05Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_rebs",
+      "stat_value": "31.5",
+      "updated_at": "2026-05-16T04:56:52Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_rebs",
+      "stat_value": "31.5",
+      "updated_at": "2026-05-16T04:56:52Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_rebs",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "over",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_rebs",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_rebs",
+      "stat_value": "30.5",
+      "updated_at": "2026-05-16T10:58:29Z",
+      "choice": "over",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_rebs",
+      "stat_value": "30.5",
+      "updated_at": "2026-05-16T10:58:29Z",
+      "choice": "under",
+      "american_price": "-104",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_rebs",
+      "stat_value": "23.5",
+      "updated_at": "2026-05-16T13:24:07Z",
+      "choice": "over",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_rebs",
+      "stat_value": "23.5",
+      "updated_at": "2026-05-16T13:24:07Z",
+      "choice": "under",
+      "american_price": "-104",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_asts",
+      "stat_value": "35.5",
+      "updated_at": "2026-05-16T04:56:16Z",
+      "choice": "over",
+      "american_price": "-121",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "pts_asts",
+      "stat_value": "35.5",
+      "updated_at": "2026-05-16T04:56:16Z",
+      "choice": "under",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_asts",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T16:41:40Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "pts_asts",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T16:41:40Z",
+      "choice": "under",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_asts",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T11:03:13Z",
+      "choice": "over",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "pts_asts",
+      "stat_value": "29.5",
+      "updated_at": "2026-05-16T11:03:13Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_asts",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T18:22:47Z",
+      "choice": "over",
+      "american_price": "-118",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "pts_asts",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T18:22:47Z",
+      "choice": "under",
+      "american_price": "-105",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:41:40Z",
+      "choice": "over",
+      "american_price": "+509",
+      "payout_multiplier": "2.79"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:15:49Z",
+      "choice": "over",
+      "american_price": "+139",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T13:36:49Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "over",
+      "american_price": "+1120",
+      "payout_multiplier": "6.36"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "triple_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:53:46Z",
+      "choice": "over",
+      "american_price": "+2240",
+      "payout_multiplier": "13.74"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "triple_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:52:25Z",
+      "choice": "over",
+      "american_price": "+1270",
+      "payout_multiplier": "7.3"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T16:09:58Z",
+      "choice": "over",
+      "american_price": "+108",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T16:09:58Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "period_1_points",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T04:57:39Z",
+      "choice": "over",
+      "american_price": "-136",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "period_1_points",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T04:57:39Z",
+      "choice": "under",
+      "american_price": "+110",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T04:56:34Z",
+      "choice": "over",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T04:56:34Z",
+      "choice": "under",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "period_1_points",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T11:21:14Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "period_1_points",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T11:13:21Z",
+      "choice": "under",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:27Z",
+      "choice": "over",
+      "american_price": "+140",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:06Z",
+      "choice": "under",
+      "american_price": "-173",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:06Z",
+      "choice": "over",
+      "american_price": "+164",
+      "payout_multiplier": "1.17"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:06Z",
+      "choice": "under",
+      "american_price": "-205",
+      "payout_multiplier": "0.73"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:53:38Z",
+      "choice": "over",
+      "american_price": "+128",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "period_1_assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:41:42Z",
+      "choice": "under",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T03:17:57Z",
+      "choice": "over",
+      "american_price": "-145",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:12Z",
+      "choice": "under",
+      "american_price": "+120",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "turnovers",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T09:09:53Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "turnovers",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T09:09:53Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "turnovers",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:50:28Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "turnovers",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:34:21Z",
+      "choice": "under",
+      "american_price": "-136",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:57:58Z",
+      "choice": "over",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "under",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:25Z",
+      "choice": "over",
+      "american_price": "+170",
+      "payout_multiplier": "1.19"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:32:45Z",
+      "choice": "under",
+      "american_price": "-213",
+      "payout_multiplier": "0.72"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:32:47Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T10:29:27Z",
+      "choice": "under",
+      "american_price": "-136",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:50:28Z",
+      "choice": "over",
+      "american_price": "+108",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:56:47Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:33Z",
+      "choice": "over",
+      "american_price": "+131",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:39:05Z",
+      "choice": "under",
+      "american_price": "-164",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "three_points_att",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:40:08Z",
+      "choice": "over",
+      "american_price": "+119",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "three_points_att",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T15:32:45Z",
+      "choice": "under",
+      "american_price": "-143",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "three_points_att",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T15:52:35Z",
+      "choice": "over",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "three_points_att",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T15:52:35Z",
+      "choice": "under",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "field_goals_att",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T16:15:49Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Cade Cunningham",
+      "stat_name": "field_goals_att",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T15:56:51Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "three_points_att",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T16:15:47Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "James Harden",
+      "stat_name": "three_points_att",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T16:17:40Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "field_goals_att",
+      "stat_value": "14.5",
+      "updated_at": "2026-05-16T09:35:16Z",
+      "choice": "over",
+      "american_price": "-102",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "field_goals_att",
+      "stat_value": "14.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "under",
+      "american_price": "-122",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "field_goals_att",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T15:39:06Z",
+      "choice": "over",
+      "american_price": "-104",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Donovan Mitchell",
+      "stat_name": "field_goals_att",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T15:39:06Z",
+      "choice": "under",
+      "american_price": "-118",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T09:35:16Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "De'Aaron Fox",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T11:13:21Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T17:37:32Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T17:37:32Z",
+      "choice": "under",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T16:36:23Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T16:36:23Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:59:01Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:59:01Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T14:30:09Z",
+      "choice": "over",
+      "american_price": "+173",
+      "payout_multiplier": "1.21"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T14:30:09Z",
+      "choice": "under",
+      "american_price": "-218",
+      "payout_multiplier": "0.72"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T17:53:17Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T17:53:17Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "pts_rebs",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "pts_rebs",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:26:48Z",
+      "choice": "over",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T17:37:32Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T13:19:07Z",
+      "choice": "over",
+      "american_price": "+121",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T09:56:14Z",
+      "choice": "under",
+      "american_price": "-143",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:37:32Z",
+      "choice": "over",
+      "american_price": "+128",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T07:08:45Z",
+      "choice": "under",
+      "american_price": "-154",
+      "payout_multiplier": "0.81"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T09:23:48Z",
+      "choice": "over",
+      "american_price": "-141",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T09:23:48Z",
+      "choice": "under",
+      "american_price": "+115",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:43:49Z",
+      "choice": "over",
+      "american_price": "-136",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Chet Holmgren",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:43:49Z",
+      "choice": "under",
+      "american_price": "+110",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "points",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T18:24:44Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "points",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T18:24:44Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T14:19:37Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T14:19:37Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T17:38:28Z",
+      "choice": "over",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T17:38:28Z",
+      "choice": "under",
+      "american_price": "-109",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T16:41:43Z",
+      "choice": "over",
+      "american_price": "-107",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T16:41:43Z",
+      "choice": "under",
+      "american_price": "-115",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T15:40:20Z",
+      "choice": "under",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:15:58Z",
+      "choice": "over",
+      "american_price": "-150",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:19:06Z",
+      "choice": "under",
+      "american_price": "+123",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:57:59Z",
+      "choice": "over",
+      "american_price": "+124",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:57:59Z",
+      "choice": "under",
+      "american_price": "-152",
+      "payout_multiplier": "0.81"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:52:26Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T16:41:42Z",
+      "choice": "under",
+      "american_price": "-136",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:37:10Z",
+      "choice": "over",
+      "american_price": "+127",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T18:22:48Z",
+      "choice": "under",
+      "american_price": "-154",
+      "payout_multiplier": "0.81"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:35Z",
+      "choice": "over",
+      "american_price": "+167",
+      "payout_multiplier": "1.18"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:35Z",
+      "choice": "under",
+      "american_price": "-209",
+      "payout_multiplier": "0.72"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T12:53:20Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T12:53:20Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_rebs",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T16:14:25Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_rebs",
+      "stat_value": "24.5",
+      "updated_at": "2026-05-16T16:14:25Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T17:40:25Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "pts_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T17:40:25Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "over",
+      "american_price": "+204",
+      "payout_multiplier": "1.36"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "under",
+      "american_price": "-257",
+      "payout_multiplier": "0.68"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "period_1_points",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "period_1_points",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "under",
+      "american_price": "+105",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T13:20:23Z",
+      "choice": "over",
+      "american_price": "-173",
+      "payout_multiplier": "0.77"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:40:20Z",
+      "choice": "under",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "over",
+      "american_price": "+138",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "turnovers",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:40:11Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "blocks",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:13Z",
+      "choice": "over",
+      "american_price": "+144",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "blocks",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:13Z",
+      "choice": "under",
+      "american_price": "-179",
+      "payout_multiplier": "0.77"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "blks_stls",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:30:58Z",
+      "choice": "over",
+      "american_price": "+119",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Evan Mobley",
+      "stat_name": "blks_stls",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:31:22Z",
+      "choice": "under",
+      "american_price": "-145",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "three_points_att",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T09:23:54Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Devin Vassell",
+      "stat_name": "three_points_att",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T07:08:53Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T18:14:25Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T18:14:25Z",
+      "choice": "under",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T12:21:10Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T12:21:10Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T16:40:10Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T17:09:17Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T16:56:00Z",
+      "choice": "over",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T16:56:00Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "points",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T13:53:37Z",
+      "choice": "over",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "points",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T13:53:37Z",
+      "choice": "under",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T14:35:46Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "25.5",
+      "updated_at": "2026-05-16T14:35:46Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T16:56:05Z",
+      "choice": "over",
+      "american_price": "-124",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T16:56:05Z",
+      "choice": "under",
+      "american_price": "+101",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T15:28:08Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T15:28:08Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "17.5",
+      "updated_at": "2026-05-16T17:26:35Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "17.5",
+      "updated_at": "2026-05-16T17:26:35Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T04:55:25Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T04:55:25Z",
+      "choice": "under",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "rebounds",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "over",
+      "american_price": "+122",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "rebounds",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "under",
+      "american_price": "-150",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "rebounds",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T15:52:03Z",
+      "choice": "over",
+      "american_price": "-118",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "rebounds",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T15:52:03Z",
+      "choice": "under",
+      "american_price": "-104",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T09:55:11Z",
+      "choice": "over",
+      "american_price": "-162",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T09:55:11Z",
+      "choice": "under",
+      "american_price": "+130",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "rebounds",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T13:21:17Z",
+      "choice": "over",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "rebounds",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T13:21:17Z",
+      "choice": "under",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T09:35:24Z",
+      "choice": "over",
+      "american_price": "-148",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T09:35:24Z",
+      "choice": "under",
+      "american_price": "+120",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T10:05:40Z",
+      "choice": "over",
+      "american_price": "-143",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T10:04:57Z",
+      "choice": "under",
+      "american_price": "+117",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:56:51Z",
+      "choice": "over",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:56:51Z",
+      "choice": "under",
+      "american_price": "-167",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:37:09Z",
+      "choice": "over",
+      "american_price": "+165",
+      "payout_multiplier": "1.17"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:37:30Z",
+      "choice": "under",
+      "american_price": "-205",
+      "payout_multiplier": "0.73"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:39:48Z",
+      "choice": "over",
+      "american_price": "+142",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:39:48Z",
+      "choice": "under",
+      "american_price": "-176",
+      "payout_multiplier": "0.77"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T07:09:09Z",
+      "choice": "over",
+      "american_price": "-179",
+      "payout_multiplier": "0.76"
+    },
+    {
+      "full_name": "Dylan Harper",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:43:50Z",
+      "choice": "under",
+      "american_price": "+146",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T15:48:59Z",
+      "choice": "over",
+      "american_price": "+108",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T15:48:59Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:40:12Z",
+      "choice": "over",
+      "american_price": "+599",
+      "payout_multiplier": "3.33"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "over",
+      "american_price": "+654",
+      "payout_multiplier": "3.69"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:52:34Z",
+      "choice": "over",
+      "american_price": "+309",
+      "payout_multiplier": "1.73"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:33:20Z",
+      "choice": "under",
+      "american_price": "-400",
+      "payout_multiplier": "0.62"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:15:48Z",
+      "choice": "over",
+      "american_price": "+120",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:15:48Z",
+      "choice": "under",
+      "american_price": "-148",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:27Z",
+      "choice": "over",
+      "american_price": "-145",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:15:49Z",
+      "choice": "under",
+      "american_price": "+119",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T13:35:15Z",
+      "choice": "over",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:03Z",
+      "choice": "under",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T06:57:04Z",
+      "choice": "over",
+      "american_price": "+113",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T13:36:48Z",
+      "choice": "under",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:32:47Z",
+      "choice": "over",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:04Z",
+      "choice": "under",
+      "american_price": "+129",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T18:22:47Z",
+      "choice": "over",
+      "american_price": "+171",
+      "payout_multiplier": "1.2"
+    },
+    {
+      "full_name": "Alex Caruso",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:26:24Z",
+      "choice": "under",
+      "american_price": "-205",
+      "payout_multiplier": "0.73"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:39:26Z",
+      "choice": "over",
+      "american_price": "+116",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:40:07Z",
+      "choice": "under",
+      "american_price": "-141",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:41:42Z",
+      "choice": "over",
+      "american_price": "+161",
+      "payout_multiplier": "1.15"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:50:16Z",
+      "choice": "under",
+      "american_price": "-200",
+      "payout_multiplier": "0.74"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T05:42:01Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T05:42:01Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:09:17Z",
+      "choice": "over",
+      "american_price": "+175",
+      "payout_multiplier": "1.22"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "blocks",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:09:17Z",
+      "choice": "under",
+      "american_price": "-218",
+      "payout_multiplier": "0.71"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:17:42Z",
+      "choice": "over",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Jarrett Allen",
+      "stat_name": "blks_stls",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:56:48Z",
+      "choice": "under",
+      "american_price": "+112",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "blks_stls",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T17:09:17Z",
+      "choice": "over",
+      "american_price": "+133",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Ausar Thompson",
+      "stat_name": "blks_stls",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T17:09:17Z",
+      "choice": "under",
+      "american_price": "-164",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "field_goals_att",
+      "stat_value": "14.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "over",
+      "american_price": "-115",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "field_goals_att",
+      "stat_value": "14.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "under",
+      "american_price": "-106",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "over",
+      "american_price": "+112",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Tobias Harris",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:41:41Z",
+      "choice": "under",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "points",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T16:23:35Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "points",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T16:23:35Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:52:24Z",
+      "choice": "over",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:52:24Z",
+      "choice": "under",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T18:24:05Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T18:24:05Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "points",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T17:34:12Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "points",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T17:34:12Z",
+      "choice": "under",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T08:11:33Z",
+      "choice": "over",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T08:11:33Z",
+      "choice": "under",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T15:30:37Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T15:33:19Z",
+      "choice": "under",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:33:13Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:33:13Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "22.5",
+      "updated_at": "2026-05-16T13:21:35Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "22.5",
+      "updated_at": "2026-05-16T13:21:35Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T17:37:10Z",
+      "choice": "over",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T17:37:10Z",
+      "choice": "under",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T15:56:47Z",
+      "choice": "over",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T15:56:47Z",
+      "choice": "under",
+      "american_price": "-112",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T14:20:41Z",
+      "choice": "over",
+      "american_price": "-124",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "rebounds",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T14:20:41Z",
+      "choice": "under",
+      "american_price": "+101",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "under",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T09:23:47Z",
+      "choice": "over",
+      "american_price": "+108",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T07:08:45Z",
+      "choice": "under",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T04:52:05Z",
+      "choice": "over",
+      "american_price": "+109",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T04:52:05Z",
+      "choice": "under",
+      "american_price": "-134",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:33:30Z",
+      "choice": "over",
+      "american_price": "+119",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:33:30Z",
+      "choice": "under",
+      "american_price": "-145",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T08:05:13Z",
+      "choice": "over",
+      "american_price": "-150",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T08:05:13Z",
+      "choice": "under",
+      "american_price": "+122",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:02Z",
+      "choice": "over",
+      "american_price": "+135",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "three_points_made",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:34:21Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T10:07:47Z",
+      "choice": "over",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Keldon Johnson",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T13:53:36Z",
+      "choice": "under",
+      "american_price": "+127",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:50:15Z",
+      "choice": "over",
+      "american_price": "+112",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Dennis Schroder",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:39:05Z",
+      "choice": "under",
+      "american_price": "-141",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T13:24:31Z",
+      "choice": "over",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T13:24:31Z",
+      "choice": "under",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "pts_rebs",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T15:36:35Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "pts_rebs",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T15:36:35Z",
+      "choice": "under",
+      "american_price": "-120",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:52:13Z",
+      "choice": "over",
+      "american_price": "+176",
+      "payout_multiplier": "1.22"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:52:13Z",
+      "choice": "under",
+      "american_price": "-223",
+      "payout_multiplier": "0.71"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:39:07Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Jalen Duren",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:39:28Z",
+      "choice": "under",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T09:35:18Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Lu Dort",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T13:15:59Z",
+      "choice": "under",
+      "american_price": "+105",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "three_points_att",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T05:40:05Z",
+      "choice": "over",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Max Strus",
+      "stat_name": "three_points_att",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T05:40:05Z",
+      "choice": "under",
+      "american_price": "+114",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T11:04:16Z",
+      "choice": "over",
+      "american_price": "+101",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "points",
+      "stat_value": "16.5",
+      "updated_at": "2026-05-16T11:04:16Z",
+      "choice": "under",
+      "american_price": "-124",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T08:08:13Z",
+      "choice": "over",
+      "american_price": "-107",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "27.5",
+      "updated_at": "2026-05-16T08:08:13Z",
+      "choice": "under",
+      "american_price": "-115",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T11:28:37Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T11:21:16Z",
+      "choice": "under",
+      "american_price": "+106",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "assists",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T15:47:04Z",
+      "choice": "over",
+      "american_price": "-150",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "assists",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T17:37:25Z",
+      "choice": "under",
+      "american_price": "+119",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T14:31:27Z",
+      "choice": "over",
+      "american_price": "+159",
+      "payout_multiplier": "1.14"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T14:31:27Z",
+      "choice": "under",
+      "american_price": "-200",
+      "payout_multiplier": "0.74"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T11:21:16Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T16:26:48Z",
+      "choice": "under",
+      "american_price": "+108",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_rebs",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T08:24:16Z",
+      "choice": "over",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_rebs",
+      "stat_value": "21.5",
+      "updated_at": "2026-05-16T08:24:16Z",
+      "choice": "under",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_asts",
+      "stat_value": "22.5",
+      "updated_at": "2026-05-16T08:08:21Z",
+      "choice": "over",
+      "american_price": "-105",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "pts_asts",
+      "stat_value": "22.5",
+      "updated_at": "2026-05-16T08:08:21Z",
+      "choice": "under",
+      "american_price": "-118",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T12:39:30Z",
+      "choice": "over",
+      "american_price": "+530",
+      "payout_multiplier": "2.91"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T08:24:16Z",
+      "choice": "over",
+      "american_price": "+112",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "period_1_points",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T08:24:16Z",
+      "choice": "under",
+      "american_price": "-137",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T11:28:37Z",
+      "choice": "over",
+      "american_price": "+150",
+      "payout_multiplier": "1.1"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T12:39:05Z",
+      "choice": "under",
+      "american_price": "-186",
+      "payout_multiplier": "0.75"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "turnovers",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:53:37Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "turnovers",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:19:07Z",
+      "choice": "under",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T17:37:12Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Stephon Castle",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T13:16:00Z",
+      "choice": "under",
+      "american_price": "-139",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T12:21:32Z",
+      "choice": "over",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T12:21:32Z",
+      "choice": "under",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:07:23Z",
+      "choice": "over",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T08:07:23Z",
+      "choice": "under",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:36:33Z",
+      "choice": "over",
+      "american_price": "-130",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:36:33Z",
+      "choice": "under",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:53:37Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T15:53:37Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:01Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:52:33Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T08:17:25Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T08:17:25Z",
+      "choice": "under",
+      "american_price": "-136",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:33:15Z",
+      "choice": "over",
+      "american_price": "-200",
+      "payout_multiplier": "0.73"
+    },
+    {
+      "full_name": "Caris LeVert",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:53:07Z",
+      "choice": "under",
+      "american_price": "+160",
+      "payout_multiplier": "1.15"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:37:32Z",
+      "choice": "over",
+      "american_price": "+175",
+      "payout_multiplier": "1.22"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T10:05:40Z",
+      "choice": "under",
+      "american_price": "-218",
+      "payout_multiplier": "0.71"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T13:53:37Z",
+      "choice": "over",
+      "american_price": "+157",
+      "payout_multiplier": "1.13"
+    },
+    {
+      "full_name": "Cason Wallace",
+      "stat_name": "steals",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T07:09:14Z",
+      "choice": "under",
+      "american_price": "-197",
+      "payout_multiplier": "0.74"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "points",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T17:38:28Z",
+      "choice": "over",
+      "american_price": "-141",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "points",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T17:38:28Z",
+      "choice": "under",
+      "american_price": "+114",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T13:15:59Z",
+      "choice": "over",
+      "american_price": "-110",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T13:15:59Z",
+      "choice": "under",
+      "american_price": "-113",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T08:18:06Z",
+      "choice": "over",
+      "american_price": "+105",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "20.5",
+      "updated_at": "2026-05-16T08:18:06Z",
+      "choice": "under",
+      "american_price": "-129",
+      "payout_multiplier": "0.87"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "15.5",
+      "updated_at": "2026-05-16T17:37:11Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "rebounds",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T07:49:44Z",
+      "choice": "over",
+      "american_price": "+110",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "rebounds",
+      "stat_value": "9.5",
+      "updated_at": "2026-05-16T07:49:44Z",
+      "choice": "under",
+      "american_price": "-136",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:26:47Z",
+      "choice": "over",
+      "american_price": "-139",
+      "payout_multiplier": "0.85"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:26:47Z",
+      "choice": "under",
+      "american_price": "+113",
+      "payout_multiplier": "1.06"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T16:26:46Z",
+      "choice": "over",
+      "american_price": "+130",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "assists",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T17:37:10Z",
+      "choice": "under",
+      "american_price": "-162",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T18:22:48Z",
+      "choice": "over",
+      "american_price": "-162",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T18:22:48Z",
+      "choice": "under",
+      "american_price": "+131",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T16:26:24Z",
+      "choice": "over",
+      "american_price": "-106",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T16:26:24Z",
+      "choice": "under",
+      "american_price": "-117",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T17:42:00Z",
+      "choice": "over",
+      "american_price": "+336",
+      "payout_multiplier": "1.86"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T17:42:00Z",
+      "choice": "under",
+      "american_price": "-455",
+      "payout_multiplier": "0.6"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T07:58:08Z",
+      "choice": "over",
+      "american_price": "+133",
+      "payout_multiplier": "1.09"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T08:01:31Z",
+      "choice": "under",
+      "american_price": "-167",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T12:39:27Z",
+      "choice": "over",
+      "american_price": "+117",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Isaiah Hartenstein",
+      "stat_name": "period_1_rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T12:39:27Z",
+      "choice": "under",
+      "american_price": "-143",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "three_points_att",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T18:22:48Z",
+      "choice": "over",
+      "american_price": "+100",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Julian Champagnie",
+      "stat_name": "three_points_att",
+      "stat_value": "5.5",
+      "updated_at": "2026-05-16T18:22:48Z",
+      "choice": "under",
+      "american_price": "-122",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "points",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:51:41Z",
+      "choice": "over",
+      "american_price": "-173",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "points",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T15:51:41Z",
+      "choice": "under",
+      "american_price": "+140",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:27:39Z",
+      "choice": "over",
+      "american_price": "-122",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "points",
+      "stat_value": "8.5",
+      "updated_at": "2026-05-16T16:27:39Z",
+      "choice": "under",
+      "american_price": "-102",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T17:19:52Z",
+      "choice": "over",
+      "american_price": "-132",
+      "payout_multiplier": "0.86"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T17:19:52Z",
+      "choice": "under",
+      "american_price": "+107",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:52:25Z",
+      "choice": "over",
+      "american_price": "+116",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:52:25Z",
+      "choice": "under",
+      "american_price": "-143",
+      "payout_multiplier": "0.83"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:40:20Z",
+      "choice": "over",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:34Z",
+      "choice": "under",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:31:45Z",
+      "choice": "over",
+      "american_price": "-141",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Dean Wade",
+      "stat_name": "three_points_made",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:31:45Z",
+      "choice": "under",
+      "american_price": "+114",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:52:34Z",
+      "choice": "over",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    },
+    {
+      "full_name": "Duncan Robinson",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T17:09:16Z",
+      "choice": "under",
+      "american_price": "+116",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T04:51:38Z",
+      "choice": "over",
+      "american_price": "-105",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "points",
+      "stat_value": "11.5",
+      "updated_at": "2026-05-16T04:51:38Z",
+      "choice": "under",
+      "american_price": "-117",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T15:33:19Z",
+      "choice": "over",
+      "american_price": "-105",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "points",
+      "stat_value": "6.5",
+      "updated_at": "2026-05-16T15:33:19Z",
+      "choice": "under",
+      "american_price": "-118",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "points",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T16:26:26Z",
+      "choice": "over",
+      "american_price": "-124",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "points",
+      "stat_value": "12.5",
+      "updated_at": "2026-05-16T16:26:26Z",
+      "choice": "under",
+      "american_price": "+101",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "points",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T12:21:49Z",
+      "choice": "over",
+      "american_price": "+102",
+      "payout_multiplier": "1.02"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "points",
+      "stat_value": "7.5",
+      "updated_at": "2026-05-16T12:21:49Z",
+      "choice": "under",
+      "american_price": "-125",
+      "payout_multiplier": "0.89"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T15:43:49Z",
+      "choice": "over",
+      "american_price": "-103",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "19.5",
+      "updated_at": "2026-05-16T10:05:39Z",
+      "choice": "under",
+      "american_price": "-117",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "13.5",
+      "updated_at": "2026-05-16T15:52:43Z",
+      "choice": "over",
+      "american_price": "+103",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "13.5",
+      "updated_at": "2026-05-16T15:52:43Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:29:30Z",
+      "choice": "over",
+      "american_price": "+105",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "10.5",
+      "updated_at": "2026-05-16T18:29:30Z",
+      "choice": "under",
+      "american_price": "-129",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T04:51:10Z",
+      "choice": "over",
+      "american_price": "-114",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "pts_rebs_asts",
+      "stat_value": "18.5",
+      "updated_at": "2026-05-16T04:51:10Z",
+      "choice": "under",
+      "american_price": "-108",
+      "payout_multiplier": "1.0"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T13:16:00Z",
+      "choice": "over",
+      "american_price": "-164",
+      "payout_multiplier": "0.79"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "rebounds",
+      "stat_value": "2.5",
+      "updated_at": "2026-05-16T13:16:00Z",
+      "choice": "under",
+      "american_price": "+134",
+      "payout_multiplier": "1.1"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:58:31Z",
+      "choice": "over",
+      "american_price": "-129",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "rebounds",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T16:58:31Z",
+      "choice": "under",
+      "american_price": "+105",
+      "payout_multiplier": "1.04"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T15:56:50Z",
+      "choice": "over",
+      "american_price": "+128",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "rebounds",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T13:36:49Z",
+      "choice": "under",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T18:22:49Z",
+      "choice": "over",
+      "american_price": "+136",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T18:22:49Z",
+      "choice": "under",
+      "american_price": "-170",
+      "payout_multiplier": "0.78"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T14:29:20Z",
+      "choice": "over",
+      "american_price": "-124",
+      "payout_multiplier": "0.94"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "assists",
+      "stat_value": "3.5",
+      "updated_at": "2026-05-16T14:29:20Z",
+      "choice": "under",
+      "american_price": "+101",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:29:01Z",
+      "choice": "over",
+      "american_price": "+104",
+      "payout_multiplier": "1.03"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T16:29:01Z",
+      "choice": "under",
+      "american_price": "-127",
+      "payout_multiplier": "0.88"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:53:46Z",
+      "choice": "over",
+      "american_price": "+118",
+      "payout_multiplier": "1.08"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:52:12Z",
+      "choice": "under",
+      "american_price": "-150",
+      "payout_multiplier": "0.82"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T17:37:31Z",
+      "choice": "over",
+      "american_price": "+178",
+      "payout_multiplier": "1.23"
+    },
+    {
+      "full_name": "Ajay Mitchell",
+      "stat_name": "three_points_made",
+      "stat_value": "1.5",
+      "updated_at": "2026-05-16T15:43:48Z",
+      "choice": "under",
+      "american_price": "-233",
+      "payout_multiplier": "0.7"
+    },
+    {
+      "full_name": "Paul Reed",
+      "stat_name": "double_doubles",
+      "stat_value": "0.5",
+      "updated_at": "2026-05-16T15:53:46Z",
+      "choice": "over",
+      "american_price": "+868",
+      "payout_multiplier": "4.81"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:52:12Z",
+      "choice": "over",
+      "american_price": "+128",
+      "payout_multiplier": "1.07"
+    },
+    {
+      "full_name": "Daniss Jenkins",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:52:12Z",
+      "choice": "under",
+      "american_price": "-159",
+      "payout_multiplier": "0.8"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:52:25Z",
+      "choice": "over",
+      "american_price": "+111",
+      "payout_multiplier": "1.05"
+    },
+    {
+      "full_name": "Sam Merrill",
+      "stat_name": "three_points_att",
+      "stat_value": "4.5",
+      "updated_at": "2026-05-16T15:38:06Z",
+      "choice": "under",
+      "american_price": "-139",
+      "payout_multiplier": "0.84"
+    }
+  ]
+}
