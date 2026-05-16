@@ -242,6 +242,8 @@ def get_game_minutes_summary(stints_df: pd.DataFrame) -> pd.DataFrame:
                                 (lower = tends to enter later in periods)
         entry_regularity_std  – std dev of entry times
                                 (lower = more predictable rotation)
+        first_stint_min       – duration of player's first Q1 stint (minutes)
+        in_closing_lineup     – True if on court at any point in final 2 min
     """
     grp = stints_df.groupby(["personId", "playerName", "teamId"])
     summary = grp.agg(
@@ -260,9 +262,97 @@ def get_game_minutes_summary(stints_df: pd.DataFrame) -> pd.DataFrame:
                 "avg_entry_sec", "entry_regularity_std"]:
         summary[col] = summary[col].round(2)
 
+    # first_stint_min: duration of the player's opening stint in Q1
+    q1_first = (
+        stints_df[(stints_df["period"] == 1) & (stints_df["stint_num"] == 1)]
+        [["personId", "stint_min"]]
+        .rename(columns={"stint_min": "first_stint_min"})
+    )
+    summary = summary.merge(q1_first, on="personId", how="left")
+    summary["first_stint_min"] = summary["first_stint_min"].round(2)
+
+    # in_closing_lineup: player had any stint overlapping the final 2 min of the game
+    # A stint covers seconds-remaining [exit_sec → entry_sec]; last 2 min = [0, 120].
+    final_period = int(stints_df["period"].max())
+    closing_pids = stints_df[
+        (stints_df["period"] == final_period) &
+        (stints_df["entry_sec"] > 0) &
+        (stints_df["exit_sec"] < 120)
+    ]["personId"].unique()
+    summary["in_closing_lineup"] = summary["personId"].isin(closing_pids)
+
     return summary.sort_values(
         ["teamId", "total_game_min"], ascending=[True, False]
     ).reset_index(drop=True)
+
+
+def get_clutch_minutes(pbp_df: pd.DataFrame, stints_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Computes time each player spent on court during clutch windows: the last 5
+    minutes of the final period when the score margin is 5 or fewer points.
+
+    Returns DataFrame with columns [personId, clutch_min].
+    Returns zeros for all players when score columns are absent.
+    """
+    home_col = next((c for c in ("scoreHome", "homeScore") if c in pbp_df.columns), None)
+    away_col = next((c for c in ("scoreAway", "awayScore") if c in pbp_df.columns), None)
+    all_pids = stints_df["personId"].unique()
+
+    if home_col is None or away_col is None:
+        return pd.DataFrame({"personId": all_pids, "clutch_min": 0.0})
+
+    df = pbp_df.copy()
+    df["_sec"]  = df["clock"].apply(_clock_to_seconds)
+    df["_home"] = pd.to_numeric(df[home_col], errors="coerce").ffill()
+    df["_away"] = pd.to_numeric(df[away_col], errors="coerce").ffill()
+    df["_diff"] = (df["_home"] - df["_away"]).abs()
+
+    final_period = int(stints_df["period"].max())
+    period_rows = (
+        df[df["period"] == final_period]
+        .sort_values("_sec", ascending=False)
+        .reset_index(drop=True)
+    )
+
+    # Each consecutive pair of PBP rows defines a time window; mark it clutch
+    # if seconds remaining <= 300 and score margin <= 5 at the window's start.
+    clutch_windows: list[tuple[float, float]] = []
+    for i in range(len(period_rows) - 1):
+        row = period_rows.iloc[i]
+        nxt = period_rows.iloc[i + 1]
+        w_hi, w_lo = float(row["_sec"]), float(nxt["_sec"])
+        if w_hi <= 300.0 and float(row["_diff"]) <= 5.0:
+            clutch_windows.append((w_hi, w_lo))
+    if not period_rows.empty:
+        last = period_rows.iloc[-1]
+        if float(last["_sec"]) <= 300.0 and float(last["_diff"]) <= 5.0:
+            clutch_windows.append((float(last["_sec"]), 0.0))
+
+    final_stints = stints_df[stints_df["period"] == final_period]
+    pid_clutch: dict[int, float] = {}
+
+    for pid, group in final_stints.groupby("personId"):
+        total = 0.0
+        for _, stint in group.iterrows():
+            s_hi = float(stint["entry_sec"])
+            s_lo = float(stint["exit_sec"])
+            for w_hi, w_lo in clutch_windows:
+                overlap = max(0.0, min(s_hi, w_hi) - max(s_lo, w_lo))
+                total += overlap
+        pid_clutch[int(pid)] = round(total / 60, 4)
+
+    rows = [{"personId": pid, "clutch_min": val} for pid, val in pid_clutch.items()]
+    if not rows:
+        return pd.DataFrame({"personId": all_pids, "clutch_min": 0.0})
+
+    clutch_result = pd.DataFrame(rows)
+    missing_pids = set(int(p) for p in all_pids) - set(pid_clutch.keys())
+    if missing_pids:
+        clutch_result = pd.concat([
+            clutch_result,
+            pd.DataFrame({"personId": list(missing_pids), "clutch_min": 0.0}),
+        ], ignore_index=True)
+    return clutch_result
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -276,10 +366,19 @@ def analyze_player_minutes(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         'stints'    – raw stint-level rows
         'by_period' – per-player per-period summary
         'by_game'   – per-player game totals + predictive features
+                      (includes first_stint_min, in_closing_lineup,
+                       clutch_min, clutch_min_rate)
     """
     stints    = get_player_stints(df)
     by_period = get_player_minutes_summary(stints)
     by_game   = get_game_minutes_summary(stints)
+
+    clutch = get_clutch_minutes(df, stints)
+    by_game = by_game.merge(clutch, on="personId", how="left")
+    by_game["clutch_min"] = by_game["clutch_min"].fillna(0.0)
+    by_game["clutch_min_rate"] = (
+        by_game["clutch_min"] / by_game["total_game_min"].replace(0, np.nan)
+    ).round(3).fillna(0.0)
 
     periods = sorted(stints["period"].unique())
     print("=" * 55)
