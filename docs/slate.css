@@ -1014,6 +1014,18 @@ body.faq-page-body .slate-header {
   .card--3leg .legs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .card--5leg .legs,
+  .card--6leg .legs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .card--5leg .legs {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .card--6leg .legs {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }
 .leg {
   display: flex;
@@ -1113,13 +1125,22 @@ body.faq-page-body .slate-header {
   color: #9a9a92;
 }
 @media (min-width: 560px) {
-  .card-footer:not(.card-footer--triple) {
+  .card-footer:not(.card-footer--triple):not(.card-footer--multi) {
     grid-template-columns: 1fr 1fr;
   }
 }
 @media (min-width: 560px) {
-  .card-footer--triple {
+  .card-footer--triple,
+  .card-footer--multi {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .card--5leg .card-footer--multi {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .card--6leg .card-footer--multi {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 .load-msg {
