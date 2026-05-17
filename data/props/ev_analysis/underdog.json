@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.57765,
-    "EV": 73.296,
-    "EV_DOLLARS": 7.3296,
-    "KELLY": 18.324,
+    "PARLAY_PROB": 0.57235,
+    "EV": 71.706,
+    "EV_DOLLARS": 7.1706,
+    "KELLY": 17.9266,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 2.0,
     "N_LEGS": 2,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.682,
-          "p_under": 0.318,
+          "p_over": 0.683,
+          "p_under": 0.317,
           "lean": "OVER",
           "min_q10": 25.46,
           "min_q50": 34.72,
@@ -178,7 +178,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.682
+        "p_win": 0.683
       },
       {
         "platform": "Underdog",
@@ -198,8 +198,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.847,
-          "p_under": 0.153,
+          "p_over": 0.838,
+          "p_under": 0.162,
           "lean": "OVER",
           "min_q10": 21.89,
           "min_q50": 28.65,
@@ -334,7 +334,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.847
+        "p_win": 0.838
       }
     ],
     "STRATEGY_TIER": 2,
@@ -342,10 +342,10 @@
     "ANCHOR_WIN_PROB": 0.0
   },
   {
-    "PARLAY_PROB": 0.4736,
-    "EV": 42.079,
-    "EV_DOLLARS": 4.2079,
-    "KELLY": 10.5198,
+    "PARLAY_PROB": 0.46432,
+    "EV": 39.297,
+    "EV_DOLLARS": 3.9298,
+    "KELLY": 9.8244,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 2.0,
     "N_LEGS": 2,
@@ -368,8 +368,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.366,
-          "p_under": 0.634,
+          "p_over": 0.385,
+          "p_under": 0.615,
           "lean": "UNDER",
           "min_q10": 18.36,
           "min_q50": 26.48,
@@ -520,7 +520,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.634
+        "p_win": 0.615
       },
       {
         "platform": "Underdog",
@@ -540,8 +540,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.747,
-          "p_under": 0.253,
+          "p_over": 0.755,
+          "p_under": 0.245,
           "lean": "OVER",
           "min_q10": 33.53,
           "min_q50": 41.14,
@@ -692,7 +692,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.747
+        "p_win": 0.755
       }
     ],
     "STRATEGY_TIER": 2,
@@ -700,10 +700,10 @@
     "ANCHOR_WIN_PROB": 0.0
   },
   {
-    "PARLAY_PROB": 0.35251,
-    "EV": 5.754,
-    "EV_DOLLARS": 0.5754,
-    "KELLY": 1.4384,
+    "PARLAY_PROB": 0.34256,
+    "EV": 2.767,
+    "EV_DOLLARS": 0.2767,
+    "KELLY": 0.6916,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 2.0,
     "N_LEGS": 2,
@@ -726,8 +726,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.424,
-          "p_under": 0.576,
+          "p_over": 0.443,
+          "p_under": 0.557,
           "lean": "UNDER",
           "min_q10": 35.58,
           "min_q50": 44.87,
@@ -846,7 +846,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.576
+        "p_win": 0.557
       },
       {
         "platform": "Underdog",
@@ -866,8 +866,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.388,
-          "p_under": 0.612,
+          "p_over": 0.385,
+          "p_under": 0.615,
           "lean": "UNDER",
           "min_q10": 27.52,
           "min_q50": 34.46,
@@ -1026,7 +1026,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.612
+        "p_win": 0.615
       }
     ],
     "STRATEGY_TIER": 2,

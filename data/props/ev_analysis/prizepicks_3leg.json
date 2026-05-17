@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.50169,
-    "EV": 175.93,
-    "EV_DOLLARS": 17.593,
-    "KELLY": 19.5478,
+    "PARLAY_PROB": 0.5078,
+    "EV": 179.292,
+    "EV_DOLLARS": 17.9292,
+    "KELLY": 19.9214,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.938,
-          "p_under": 0.062,
+          "p_over": 0.942,
+          "p_under": 0.059,
           "lean": "OVER",
           "min_q10": 23.21,
           "min_q50": 31.89,
@@ -170,7 +170,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.938
+        "p_win": 0.942
       },
       {
         "platform": "PrizePicks",
@@ -190,8 +190,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.284,
-          "p_under": 0.716,
+          "p_over": 0.286,
+          "p_under": 0.714,
           "lean": "UNDER",
           "min_q10": 16.11,
           "min_q50": 21.13,
@@ -278,7 +278,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.716
+        "p_win": 0.714
       },
       {
         "platform": "PrizePicks",
@@ -298,8 +298,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.747,
-          "p_under": 0.253,
+          "p_over": 0.755,
+          "p_under": 0.245,
           "lean": "OVER",
           "min_q10": 33.53,
           "min_q50": 41.14,
@@ -450,19 +450,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.747
+        "p_win": 0.755
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.938,
+    "ANCHOR_WIN_PROB": 0.942,
     "ANCHOR_NAME": "Ajay Mitchell"
   },
   {
-    "PARLAY_PROB": 0.43728,
-    "EV": 140.505,
-    "EV_DOLLARS": 14.0505,
-    "KELLY": 15.6117,
+    "PARLAY_PROB": 0.43801,
+    "EV": 140.908,
+    "EV_DOLLARS": 14.0908,
+    "KELLY": 15.6564,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -485,8 +485,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.344,
-          "p_under": 0.656,
+          "p_over": 0.335,
+          "p_under": 0.665,
           "lean": "UNDER",
           "min_q10": 31.29,
           "min_q50": 39.41,
@@ -605,7 +605,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.656
+        "p_win": 0.665
       },
       {
         "platform": "PrizePicks",
@@ -625,8 +625,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.787,
-          "p_under": 0.213,
+          "p_over": 0.786,
+          "p_under": 0.214,
           "lean": "OVER",
           "min_q10": 27.97,
           "min_q50": 37.93,
@@ -777,7 +777,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.787
+        "p_win": 0.786
       },
       {
         "platform": "PrizePicks",
@@ -797,8 +797,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.847,
-          "p_under": 0.153,
+          "p_over": 0.838,
+          "p_under": 0.162,
           "lean": "OVER",
           "min_q10": 21.89,
           "min_q50": 28.65,
@@ -933,19 +933,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.847
+        "p_win": 0.838
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.847,
+    "ANCHOR_WIN_PROB": 0.838,
     "ANCHOR_NAME": "Dylan Harper"
   },
   {
-    "PARLAY_PROB": 0.28365,
-    "EV": 56.006,
-    "EV_DOLLARS": 5.6006,
-    "KELLY": 6.2228,
+    "PARLAY_PROB": 0.27177,
+    "EV": 49.473,
+    "EV_DOLLARS": 4.9473,
+    "KELLY": 5.497,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -968,8 +968,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.366,
-          "p_under": 0.634,
+          "p_over": 0.385,
+          "p_under": 0.615,
           "lean": "UNDER",
           "min_q10": 18.36,
           "min_q50": 26.48,
@@ -1120,7 +1120,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.634
+        "p_win": 0.615
       },
       {
         "platform": "PrizePicks",
@@ -1140,8 +1140,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.682,
-          "p_under": 0.318,
+          "p_over": 0.683,
+          "p_under": 0.317,
           "lean": "OVER",
           "min_q10": 25.46,
           "min_q50": 34.72,
@@ -1292,7 +1292,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.682
+        "p_win": 0.683
       },
       {
         "platform": "PrizePicks",
@@ -1312,8 +1312,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.656,
-          "p_under": 0.344,
+          "p_over": 0.647,
+          "p_under": 0.352,
           "lean": "OVER",
           "min_q10": 21.73,
           "min_q50": 31.63,
@@ -1432,19 +1432,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.656
+        "p_win": 0.647
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.682,
+    "ANCHOR_WIN_PROB": 0.683,
     "ANCHOR_NAME": "Chet Holmgren"
   },
   {
-    "PARLAY_PROB": 0.25465,
-    "EV": 40.056,
-    "EV_DOLLARS": 4.0056,
-    "KELLY": 4.4507,
+    "PARLAY_PROB": 0.25651,
+    "EV": 41.081,
+    "EV_DOLLARS": 4.1081,
+    "KELLY": 4.5646,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -1467,8 +1467,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.388,
-          "p_under": 0.612,
+          "p_over": 0.385,
+          "p_under": 0.615,
           "lean": "UNDER",
           "min_q10": 27.52,
           "min_q50": 34.46,
@@ -1627,7 +1627,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.612
+        "p_win": 0.615
       },
       {
         "platform": "PrizePicks",
@@ -1647,8 +1647,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.389,
-          "p_under": 0.611,
+          "p_over": 0.383,
+          "p_under": 0.617,
           "lean": "UNDER",
           "min_q10": 14.74,
           "min_q50": 23.32,
@@ -1759,7 +1759,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.611
+        "p_win": 0.617
       },
       {
         "platform": "PrizePicks",
@@ -1779,8 +1779,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.681,
-          "p_under": 0.319,
+          "p_over": 0.676,
+          "p_under": 0.324,
           "lean": "OVER",
           "min_q10": 25.44,
           "min_q50": 33.44,
@@ -1931,19 +1931,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.681
+        "p_win": 0.676
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.681,
+    "ANCHOR_WIN_PROB": 0.676,
     "ANCHOR_NAME": "Stephon Castle"
   },
   {
-    "PARLAY_PROB": 0.2142,
-    "EV": 17.808,
-    "EV_DOLLARS": 1.7808,
-    "KELLY": 1.9786,
+    "PARLAY_PROB": 0.22249,
+    "EV": 22.369,
+    "EV_DOLLARS": 2.2369,
+    "KELLY": 2.4855,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -1966,8 +1966,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.373,
-          "p_under": 0.627,
+          "p_over": 0.363,
+          "p_under": 0.637,
           "lean": "UNDER",
           "min_q10": 18.55,
           "min_q50": 26.06,
@@ -2070,7 +2070,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.627
+        "p_win": 0.637
       },
       {
         "platform": "PrizePicks",
@@ -2090,8 +2090,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.589,
-          "p_under": 0.411,
+          "p_over": 0.593,
+          "p_under": 0.407,
           "lean": "OVER",
           "min_q10": 22.91,
           "min_q50": 30.58,
@@ -2234,7 +2234,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.589
+        "p_win": 0.593
       },
       {
         "platform": "PrizePicks",
@@ -2254,8 +2254,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.42,
-          "p_under": 0.58,
+          "p_over": 0.411,
+          "p_under": 0.589,
           "lean": "UNDER",
           "min_q10": 23.27,
           "min_q50": 29.67,
@@ -2398,19 +2398,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.58
+        "p_win": 0.589
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.627,
+    "ANCHOR_WIN_PROB": 0.637,
     "ANCHOR_NAME": "Luguentz Dort"
   },
   {
-    "PARLAY_PROB": 0.18942,
-    "EV": 4.18,
-    "EV_DOLLARS": 0.418,
-    "KELLY": 0.4644,
+    "PARLAY_PROB": 0.18026,
+    "EV": -0.857,
+    "EV_DOLLARS": -0.0857,
+    "KELLY": 0.0,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -2433,8 +2433,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.401,
-          "p_under": 0.599,
+          "p_over": 0.404,
+          "p_under": 0.596,
           "lean": "UNDER",
           "min_q10": 22.32,
           "min_q50": 31.74,
@@ -2601,7 +2601,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.599
+        "p_win": 0.596
       },
       {
         "platform": "PrizePicks",
@@ -2621,8 +2621,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.424,
-          "p_under": 0.576,
+          "p_over": 0.443,
+          "p_under": 0.557,
           "lean": "UNDER",
           "min_q10": 35.58,
           "min_q50": 44.87,
@@ -2741,7 +2741,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.576
+        "p_win": 0.557
       },
       {
         "platform": "PrizePicks",
@@ -2761,8 +2761,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.451,
-          "p_under": 0.549,
+          "p_over": 0.457,
+          "p_under": 0.543,
           "lean": "UNDER",
           "min_q10": 22.48,
           "min_q50": 29.83,
@@ -2913,18 +2913,18 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.549
+        "p_win": 0.543
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.599,
+    "ANCHOR_WIN_PROB": 0.596,
     "ANCHOR_NAME": "Victor Wembanyama"
   },
   {
-    "PARLAY_PROB": 0.15064,
-    "EV": -17.148,
-    "EV_DOLLARS": -1.7148,
+    "PARLAY_PROB": 0.15054,
+    "EV": -17.203,
+    "EV_DOLLARS": -1.7203,
     "KELLY": 0.0,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
@@ -2948,8 +2948,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.408,
-          "p_under": 0.49,
+          "p_over": 0.411,
+          "p_under": 0.495,
           "lean": "UNDER",
           "min_q10": 18.81,
           "min_q50": 26.41,
@@ -3076,7 +3076,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.49
+        "p_win": 0.495
       },
       {
         "platform": "PrizePicks",
@@ -3096,8 +3096,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.561,
-          "p_under": 0.439,
+          "p_over": 0.557,
+          "p_under": 0.443,
           "lean": "OVER",
           "min_q10": 14.51,
           "min_q50": 20.32,
@@ -3224,7 +3224,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.561
+        "p_win": 0.557
       },
       {
         "platform": "PrizePicks",
@@ -3244,8 +3244,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.548,
-          "p_under": 0.452,
+          "p_over": 0.546,
+          "p_under": 0.454,
           "lean": "OVER",
           "min_q10": 18.69,
           "min_q50": 25.37,
@@ -3380,12 +3380,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.548
+        "p_win": 0.546
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.561,
+    "ANCHOR_WIN_PROB": 0.557,
     "ANCHOR_NAME": "Alex Caruso"
   }
 ]
