@@ -1,9 +1,9 @@
 [
   {
-    "PARLAY_PROB": 0.32625,
-    "EV": 63.127,
-    "EV_DOLLARS": 6.3127,
-    "KELLY": 7.8909,
+    "PARLAY_PROB": 0.32752,
+    "EV": 63.758,
+    "EV_DOLLARS": 6.3758,
+    "KELLY": 7.9698,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.0,
     "N_LEGS": 3,
@@ -26,8 +26,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.352,
-          "p_under": 0.648,
+          "p_over": 0.362,
+          "p_under": 0.637,
           "lean": "UNDER",
           "min_q10": 22.48,
           "min_q50": 29.83,
@@ -154,7 +154,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.648
+        "p_win": 0.637
       },
       {
         "platform": "DraftKings Pick6",
@@ -174,8 +174,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.326,
-          "p_under": 0.674,
+          "p_over": 0.319,
+          "p_under": 0.681,
           "lean": "UNDER",
           "min_q10": 27.52,
           "min_q50": 34.46,
@@ -302,7 +302,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.674
+        "p_win": 0.681
       },
       {
         "platform": "DraftKings Pick6",
@@ -322,8 +322,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.747,
-          "p_under": 0.253,
+          "p_over": 0.755,
+          "p_under": 0.245,
           "lean": "OVER",
           "min_q10": 33.53,
           "min_q50": 41.14,
@@ -474,19 +474,19 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.747
+        "p_win": 0.755
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "2+1/same-game",
-    "ANCHOR_WIN_PROB": 0.747,
+    "ANCHOR_WIN_PROB": 0.755,
     "ANCHOR_NAME": "James Harden"
   },
   {
-    "PARLAY_PROB": 0.25952,
-    "EV": 29.762,
-    "EV_DOLLARS": 2.9762,
-    "KELLY": 3.7203,
+    "PARLAY_PROB": 0.25561,
+    "EV": 27.805,
+    "EV_DOLLARS": 2.7805,
+    "KELLY": 3.4756,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.0,
     "N_LEGS": 3,
@@ -509,8 +509,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.344,
-          "p_under": 0.656,
+          "p_over": 0.335,
+          "p_under": 0.665,
           "lean": "UNDER",
           "min_q10": 31.29,
           "min_q50": 39.41,
@@ -629,7 +629,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.656
+        "p_win": 0.665
       },
       {
         "platform": "DraftKings Pick6",
@@ -649,8 +649,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.366,
-          "p_under": 0.634,
+          "p_over": 0.385,
+          "p_under": 0.615,
           "lean": "UNDER",
           "min_q10": 18.36,
           "min_q50": 26.48,
@@ -801,7 +801,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.634
+        "p_win": 0.615
       },
       {
         "platform": "DraftKings Pick6",
@@ -821,8 +821,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.377,
-          "p_under": 0.624,
+          "p_over": 0.375,
+          "p_under": 0.625,
           "lean": "UNDER",
           "min_q10": 19.88,
           "min_q50": 25.53,
@@ -885,18 +885,18 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.624
+        "p_win": 0.625
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "2+1/same-game",
-    "ANCHOR_WIN_PROB": 0.656,
+    "ANCHOR_WIN_PROB": 0.665,
     "ANCHOR_NAME": "Donovan Mitchell"
   },
   {
-    "PARLAY_PROB": 0.19677,
-    "EV": -1.613,
-    "EV_DOLLARS": -0.1613,
+    "PARLAY_PROB": 0.19455,
+    "EV": -2.726,
+    "EV_DOLLARS": -0.2726,
     "KELLY": 0.0,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.0,
@@ -920,8 +920,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.424,
-          "p_under": 0.576,
+          "p_over": 0.443,
+          "p_under": 0.557,
           "lean": "UNDER",
           "min_q10": 35.58,
           "min_q50": 44.87,
@@ -1040,7 +1040,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.576
+        "p_win": 0.557
       },
       {
         "platform": "DraftKings Pick6",
@@ -1060,8 +1060,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.589,
-          "p_under": 0.411,
+          "p_over": 0.593,
+          "p_under": 0.407,
           "lean": "OVER",
           "min_q10": 22.91,
           "min_q50": 30.58,
@@ -1204,7 +1204,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.589
+        "p_win": 0.593
       },
       {
         "platform": "DraftKings Pick6",
@@ -1224,8 +1224,8 @@
           "no_vig_under": null
         },
         "model": {
-          "p_over": 0.42,
-          "p_under": 0.58,
+          "p_over": 0.411,
+          "p_under": 0.589,
           "lean": "UNDER",
           "min_q10": 23.27,
           "min_q50": 29.67,
@@ -1368,12 +1368,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.58
+        "p_win": 0.589
       }
     ],
     "STRATEGY_TIER": 1,
     "COMBO_PROFILE": "2+1/same-game",
-    "ANCHOR_WIN_PROB": 0.589,
+    "ANCHOR_WIN_PROB": 0.593,
     "ANCHOR_NAME": "Jarrett Allen"
   }
 ]

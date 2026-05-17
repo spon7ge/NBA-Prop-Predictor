@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T19:07:13.852855Z",
+  "generated_at": "2026-05-17T03:18:42.584956Z",
   "n_picks": 2397,
   "ledger_source": "predictions.jsonl",
   "dedupe_key_columns": [
@@ -226945,8 +226945,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.695,
-      "P_UNDER": 0.305,
+      "P_OVER": 0.699,
+      "P_UNDER": 0.301,
       "lean": "OVER",
       "MIN_Q10": 23.21,
       "MIN_Q50": 31.89,
@@ -226955,7 +226955,7 @@
       "STAT_Q50": 4.82,
       "STAT_Q90": 9.85,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -227084,8 +227084,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.424,
-      "P_UNDER": 0.576,
+      "P_OVER": 0.443,
+      "P_UNDER": 0.557,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -227094,7 +227094,7 @@
       "STAT_Q50": 8.48,
       "STAT_Q90": 15.37,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -227215,8 +227215,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.403,
-      "P_UNDER": 0.597,
+      "P_OVER": 0.404,
+      "P_UNDER": 0.596,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -227225,7 +227225,7 @@
       "STAT_Q50": 3.33,
       "STAT_Q90": 8.21,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -227354,8 +227354,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.438,
-      "P_UNDER": 0.562,
+      "P_OVER": 0.437,
+      "P_UNDER": 0.563,
       "lean": "UNDER",
       "MIN_Q10": 27.97,
       "MIN_Q50": 37.93,
@@ -227364,7 +227364,7 @@
       "STAT_Q50": 6.33,
       "STAT_Q90": 11.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -227493,8 +227493,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.344,
-      "P_UNDER": 0.656,
+      "P_OVER": 0.335,
+      "P_UNDER": 0.665,
       "lean": "UNDER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -227503,7 +227503,7 @@
       "STAT_Q50": 3.16,
       "STAT_Q90": 7.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -227624,8 +227624,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.437,
-      "P_UNDER": 0.563,
+      "P_OVER": 0.439,
+      "P_UNDER": 0.561,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -227634,7 +227634,7 @@
       "STAT_Q50": 2.63,
       "STAT_Q90": 6.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -227763,8 +227763,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.481,
-      "P_UNDER": 0.425,
+      "P_OVER": 0.487,
+      "P_UNDER": 0.42,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -227773,7 +227773,7 @@
       "STAT_Q50": 6.62,
       "STAT_Q90": 12.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -227902,8 +227902,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.515,
-      "P_UNDER": 0.485,
+      "P_OVER": 0.516,
+      "P_UNDER": 0.484,
       "lean": "OVER",
       "MIN_Q10": 25.44,
       "MIN_Q50": 33.44,
@@ -227912,7 +227912,7 @@
       "STAT_Q50": 6.67,
       "STAT_Q90": 13.3,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -228011,7 +228011,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228110,7 +228110,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228217,7 +228217,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228316,7 +228316,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228399,7 +228399,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228482,7 +228482,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228565,7 +228565,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228648,7 +228648,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228722,7 +228722,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228796,7 +228796,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228870,7 +228870,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -228944,7 +228944,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229018,7 +229018,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229092,7 +229092,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229166,7 +229166,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229240,7 +229240,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229314,7 +229314,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229388,7 +229388,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229462,7 +229462,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229536,7 +229536,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229610,7 +229610,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229684,7 +229684,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229758,7 +229758,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229832,7 +229832,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229906,7 +229906,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -229980,7 +229980,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230054,7 +230054,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230128,7 +230128,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230202,7 +230202,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230276,7 +230276,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230350,7 +230350,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230424,7 +230424,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230498,7 +230498,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230572,7 +230572,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230646,7 +230646,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230720,7 +230720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230794,7 +230794,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230868,7 +230868,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -230942,7 +230942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231016,7 +231016,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231090,7 +231090,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231164,7 +231164,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231317,8 +231317,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.938,
-      "P_UNDER": 0.062,
+      "P_OVER": 0.942,
+      "P_UNDER": 0.059,
       "lean": "OVER",
       "MIN_Q10": 23.21,
       "MIN_Q50": 31.89,
@@ -231327,7 +231327,7 @@
       "STAT_Q50": 18.47,
       "STAT_Q90": 30.78,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -231464,8 +231464,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.561,
-      "P_UNDER": 0.439,
+      "P_OVER": 0.557,
+      "P_UNDER": 0.443,
       "lean": "OVER",
       "MIN_Q10": 14.51,
       "MIN_Q50": 20.32,
@@ -231474,7 +231474,7 @@
       "STAT_Q50": 6.47,
       "STAT_Q90": 16.13,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231627,8 +231627,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.51,
-      "P_UNDER": 0.49,
+      "P_OVER": 0.502,
+      "P_UNDER": 0.498,
       "lean": "OVER",
       "MIN_Q10": 18.81,
       "MIN_Q50": 26.41,
@@ -231637,7 +231637,7 @@
       "STAT_Q50": 8.22,
       "STAT_Q90": 19.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -231822,8 +231822,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.415,
-      "P_UNDER": 0.585,
+      "P_OVER": 0.41,
+      "P_UNDER": 0.59,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -231832,7 +231832,7 @@
       "STAT_Q50": 29.25,
       "STAT_Q90": 40.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -231969,8 +231969,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.479,
-      "P_UNDER": 0.521,
+      "P_OVER": 0.472,
+      "P_UNDER": 0.527,
       "lean": "UNDER",
       "MIN_Q10": 13.6,
       "MIN_Q50": 19.69,
@@ -231979,7 +231979,7 @@
       "STAT_Q50": 5.5,
       "STAT_Q90": 12.87,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -232140,8 +232140,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.682,
-      "P_UNDER": 0.318,
+      "P_OVER": 0.683,
+      "P_UNDER": 0.317,
       "lean": "OVER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -232150,7 +232150,7 @@
       "STAT_Q50": 17.61,
       "STAT_Q90": 28.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -232311,8 +232311,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.366,
-      "P_UNDER": 0.634,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -232321,7 +232321,7 @@
       "STAT_Q50": 8.87,
       "STAT_Q90": 21.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -232482,8 +232482,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.787,
-      "P_UNDER": 0.213,
+      "P_OVER": 0.786,
+      "P_UNDER": 0.214,
       "lean": "OVER",
       "MIN_Q10": 27.97,
       "MIN_Q50": 37.93,
@@ -232492,7 +232492,7 @@
       "STAT_Q50": 21.76,
       "STAT_Q90": 32.38,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -232613,8 +232613,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.721,
-      "P_UNDER": 0.279,
+      "P_OVER": 0.725,
+      "P_UNDER": 0.275,
       "lean": "OVER",
       "MIN_Q10": 15.37,
       "MIN_Q50": 24.55,
@@ -232623,7 +232623,7 @@
       "STAT_Q50": 8.74,
       "STAT_Q90": 20.45,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -232786,7 +232786,7 @@
       "STAT_Q50": 11.7,
       "STAT_Q90": 22.51,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -232971,8 +232971,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.558,
-      "P_UNDER": 0.442,
+      "P_OVER": 0.566,
+      "P_UNDER": 0.434,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -232981,7 +232981,7 @@
       "STAT_Q50": 28.02,
       "STAT_Q90": 39.97,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -233126,8 +233126,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.847,
-      "P_UNDER": 0.153,
+      "P_OVER": 0.838,
+      "P_UNDER": 0.162,
       "lean": "OVER",
       "MIN_Q10": 21.89,
       "MIN_Q50": 28.65,
@@ -233136,7 +233136,7 @@
       "STAT_Q50": 12.33,
       "STAT_Q90": 26.01,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -233305,8 +233305,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.388,
-      "P_UNDER": 0.612,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -233315,7 +233315,7 @@
       "STAT_Q50": 15.02,
       "STAT_Q90": 25.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -233476,8 +233476,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.451,
-      "P_UNDER": 0.549,
+      "P_OVER": 0.457,
+      "P_UNDER": 0.543,
       "lean": "UNDER",
       "MIN_Q10": 22.48,
       "MIN_Q50": 29.83,
@@ -233486,7 +233486,7 @@
       "STAT_Q50": 12.02,
       "STAT_Q90": 25.0,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -233647,8 +233647,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.747,
-      "P_UNDER": 0.253,
+      "P_OVER": 0.755,
+      "P_UNDER": 0.245,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -233657,7 +233657,7 @@
       "STAT_Q50": 23.59,
       "STAT_Q90": 35.8,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -233810,8 +233810,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.589,
-      "P_UNDER": 0.411,
+      "P_OVER": 0.593,
+      "P_UNDER": 0.407,
       "lean": "OVER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -233820,7 +233820,7 @@
       "STAT_Q50": 12.69,
       "STAT_Q90": 24.14,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -233973,8 +233973,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.591,
-      "P_UNDER": 0.409,
+      "P_OVER": 0.584,
+      "P_UNDER": 0.416,
       "lean": "OVER",
       "MIN_Q10": 21.08,
       "MIN_Q50": 26.3,
@@ -233983,7 +233983,7 @@
       "STAT_Q50": 9.75,
       "STAT_Q90": 21.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -234120,8 +234120,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.573,
-      "P_UNDER": 0.427,
+      "P_OVER": 0.57,
+      "P_UNDER": 0.43,
       "lean": "OVER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -234130,7 +234130,7 @@
       "STAT_Q50": 8.97,
       "STAT_Q90": 21.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -234283,8 +234283,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.42,
-      "P_UNDER": 0.58,
+      "P_OVER": 0.411,
+      "P_UNDER": 0.589,
       "lean": "UNDER",
       "MIN_Q10": 23.27,
       "MIN_Q50": 29.67,
@@ -234293,7 +234293,7 @@
       "STAT_Q50": 10.37,
       "STAT_Q90": 22.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -234448,7 +234448,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -234593,8 +234593,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.66,
-      "P_UNDER": 0.34,
+      "P_OVER": 0.67,
+      "P_UNDER": 0.33,
       "lean": "OVER",
       "MIN_Q10": 12.5,
       "MIN_Q50": 21.85,
@@ -234603,7 +234603,7 @@
       "STAT_Q50": 7.29,
       "STAT_Q90": 19.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -234788,8 +234788,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.499,
-      "P_UNDER": 0.5,
+      "P_OVER": 0.494,
+      "P_UNDER": 0.506,
       "lean": "UNDER",
       "MIN_Q10": 31.39,
       "MIN_Q50": 41.17,
@@ -234798,7 +234798,7 @@
       "STAT_Q50": 34.4,
       "STAT_Q90": 44.16,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -234959,8 +234959,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.681,
-      "P_UNDER": 0.319,
+      "P_OVER": 0.676,
+      "P_UNDER": 0.324,
       "lean": "OVER",
       "MIN_Q10": 25.44,
       "MIN_Q50": 33.44,
@@ -234969,7 +234969,7 @@
       "STAT_Q50": 18.04,
       "STAT_Q90": 32.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -235138,8 +235138,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.507,
-      "P_UNDER": 0.492,
+      "P_OVER": 0.506,
+      "P_UNDER": 0.494,
       "lean": "OVER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -235148,7 +235148,7 @@
       "STAT_Q50": 17.78,
       "STAT_Q90": 29.34,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -235325,8 +235325,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.401,
-      "P_UNDER": 0.599,
+      "P_OVER": 0.404,
+      "P_UNDER": 0.596,
       "lean": "UNDER",
       "MIN_Q10": 22.32,
       "MIN_Q50": 31.74,
@@ -235335,7 +235335,7 @@
       "STAT_Q50": 20.99,
       "STAT_Q90": 36.57,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -235450,7 +235450,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -235573,7 +235573,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -235696,7 +235696,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -235819,7 +235819,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -235942,7 +235942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236065,7 +236065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236188,7 +236188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236311,7 +236311,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236426,7 +236426,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236549,7 +236549,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236672,7 +236672,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236795,7 +236795,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -236918,7 +236918,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237033,7 +237033,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237148,7 +237148,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237263,7 +237263,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237386,7 +237386,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237509,7 +237509,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237624,7 +237624,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237747,7 +237747,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237862,7 +237862,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -237977,7 +237977,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238100,7 +238100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238223,7 +238223,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238346,7 +238346,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238469,7 +238469,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238592,7 +238592,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238715,7 +238715,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238838,7 +238838,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -238953,7 +238953,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239076,7 +239076,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239199,7 +239199,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239322,7 +239322,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239445,7 +239445,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239568,7 +239568,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239691,7 +239691,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239806,7 +239806,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -239921,7 +239921,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240036,7 +240036,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240159,7 +240159,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240282,7 +240282,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240405,7 +240405,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240528,7 +240528,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240675,7 +240675,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240822,7 +240822,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -240969,7 +240969,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241116,7 +241116,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241263,7 +241263,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241410,7 +241410,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241557,7 +241557,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241704,7 +241704,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241851,7 +241851,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -241998,7 +241998,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242145,7 +242145,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242292,7 +242292,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242439,7 +242439,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242586,7 +242586,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242725,7 +242725,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -242872,7 +242872,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243019,7 +243019,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243166,7 +243166,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243313,7 +243313,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243460,7 +243460,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243589,8 +243589,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.391,
-      "P_UNDER": 0.528,
+      "P_OVER": 0.378,
+      "P_UNDER": 0.537,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -243599,7 +243599,7 @@
       "STAT_Q50": 6.11,
       "STAT_Q90": 10.59,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -243736,8 +243736,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.473,
-      "P_UNDER": 0.527,
+      "P_OVER": 0.477,
+      "P_UNDER": 0.523,
       "lean": "UNDER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -243746,7 +243746,7 @@
       "STAT_Q50": 7.98,
       "STAT_Q90": 13.02,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -243875,8 +243875,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.442,
-      "P_UNDER": 0.558,
+      "P_OVER": 0.484,
+      "P_UNDER": 0.515,
       "lean": "UNDER",
       "MIN_Q10": 27.97,
       "MIN_Q50": 37.93,
@@ -243885,7 +243885,7 @@
       "STAT_Q50": 3.85,
       "STAT_Q90": 7.51,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -244006,8 +244006,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.501,
+      "P_OVER": 0.395,
+      "P_UNDER": 0.492,
       "lean": "UNDER",
       "MIN_Q10": 23.16,
       "MIN_Q50": 30.52,
@@ -244016,7 +244016,7 @@
       "STAT_Q50": 3.79,
       "STAT_Q90": 7.72,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -244145,8 +244145,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.549,
-      "P_UNDER": 0.312,
+      "P_OVER": 0.544,
+      "P_UNDER": 0.316,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -244155,7 +244155,7 @@
       "STAT_Q50": 4.89,
       "STAT_Q90": 8.41,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -244269,7 +244269,7 @@
       "sharp_aligned": false,
       "tier": "conflict",
       "P_OVER": 0.688,
-      "P_UNDER": 0.21,
+      "P_UNDER": 0.205,
       "lean": "OVER",
       "MIN_Q10": 21.89,
       "MIN_Q50": 28.65,
@@ -244278,7 +244278,7 @@
       "STAT_Q50": 4.6,
       "STAT_Q90": 10.1,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -244415,8 +244415,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.326,
-      "P_UNDER": 0.674,
+      "P_OVER": 0.319,
+      "P_UNDER": 0.681,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -244425,7 +244425,7 @@
       "STAT_Q50": 7.69,
       "STAT_Q90": 13.58,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -244562,7 +244562,7 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.37,
+      "P_OVER": 0.371,
       "P_UNDER": 0.562,
       "lean": "UNDER",
       "MIN_Q10": 18.69,
@@ -244572,7 +244572,7 @@
       "STAT_Q50": 8.03,
       "STAT_Q90": 13.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -244709,8 +244709,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.352,
-      "P_UNDER": 0.648,
+      "P_OVER": 0.362,
+      "P_UNDER": 0.637,
       "lean": "UNDER",
       "MIN_Q10": 22.48,
       "MIN_Q50": 29.83,
@@ -244719,7 +244719,7 @@
       "STAT_Q50": 8.7,
       "STAT_Q90": 16.79,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -244848,8 +244848,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.463,
-      "P_UNDER": 0.537,
+      "P_OVER": 0.458,
+      "P_UNDER": 0.542,
       "lean": "UNDER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -244858,7 +244858,7 @@
       "STAT_Q50": 5.08,
       "STAT_Q90": 9.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -244987,8 +244987,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.364,
-      "P_UNDER": 0.636,
+      "P_OVER": 0.372,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -244997,7 +244997,7 @@
       "STAT_Q50": 7.11,
       "STAT_Q90": 14.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -245118,8 +245118,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.455,
-      "P_UNDER": 0.439,
+      "P_OVER": 0.459,
+      "P_UNDER": 0.44,
       "lean": "OVER",
       "MIN_Q10": 21.08,
       "MIN_Q50": 26.3,
@@ -245128,7 +245128,7 @@
       "STAT_Q50": 4.74,
       "STAT_Q90": 10.61,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -245249,8 +245249,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.389,
-      "P_UNDER": 0.611,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -245259,7 +245259,7 @@
       "STAT_Q50": 4.0,
       "STAT_Q90": 9.57,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -245388,8 +245388,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.559,
-      "P_UNDER": 0.441,
+      "P_OVER": 0.549,
+      "P_UNDER": 0.451,
       "lean": "OVER",
       "MIN_Q10": 23.27,
       "MIN_Q50": 29.67,
@@ -245398,7 +245398,7 @@
       "STAT_Q50": 5.34,
       "STAT_Q90": 10.52,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -245529,7 +245529,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -245650,8 +245650,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.252,
-      "P_UNDER": 0.643,
+      "P_OVER": 0.251,
+      "P_UNDER": 0.639,
       "lean": "UNDER",
       "MIN_Q10": 31.39,
       "MIN_Q50": 41.17,
@@ -245660,7 +245660,7 @@
       "STAT_Q50": 3.67,
       "STAT_Q90": 6.94,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -245781,8 +245781,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.491,
-      "P_UNDER": 0.401,
+      "P_OVER": 0.489,
+      "P_UNDER": 0.403,
       "lean": "OVER",
       "MIN_Q10": 25.44,
       "MIN_Q50": 33.44,
@@ -245791,7 +245791,7 @@
       "STAT_Q50": 4.88,
       "STAT_Q90": 10.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -245920,8 +245920,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.492,
-      "P_UNDER": 0.508,
+      "P_OVER": 0.495,
+      "P_UNDER": 0.504,
       "lean": "UNDER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -245930,7 +245930,7 @@
       "STAT_Q50": 6.97,
       "STAT_Q90": 12.5,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -246045,7 +246045,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246168,7 +246168,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246291,7 +246291,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246414,7 +246414,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246537,7 +246537,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246660,7 +246660,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246783,7 +246783,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -246906,7 +246906,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247021,7 +247021,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247136,7 +247136,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247259,7 +247259,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247374,7 +247374,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247497,7 +247497,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247571,7 +247571,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247645,7 +247645,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247736,7 +247736,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247810,7 +247810,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247884,7 +247884,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -247958,7 +247958,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248065,7 +248065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248180,7 +248180,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248295,7 +248295,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248410,7 +248410,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248517,7 +248517,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248646,8 +248646,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.424,
-      "P_UNDER": 0.576,
+      "P_OVER": 0.443,
+      "P_UNDER": 0.557,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -248656,7 +248656,7 @@
       "STAT_Q50": 8.48,
       "STAT_Q90": 15.37,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248785,8 +248785,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.344,
-      "P_UNDER": 0.656,
+      "P_OVER": 0.335,
+      "P_UNDER": 0.665,
       "lean": "UNDER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -248795,7 +248795,7 @@
       "STAT_Q50": 3.16,
       "STAT_Q90": 7.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -248894,7 +248894,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -249001,7 +249001,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -249100,7 +249100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -249253,8 +249253,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.51,
-      "P_UNDER": 0.49,
+      "P_OVER": 0.502,
+      "P_UNDER": 0.498,
       "lean": "OVER",
       "MIN_Q10": 18.81,
       "MIN_Q50": 26.41,
@@ -249263,7 +249263,7 @@
       "STAT_Q50": 8.22,
       "STAT_Q90": 19.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -249448,8 +249448,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.415,
-      "P_UNDER": 0.585,
+      "P_OVER": 0.41,
+      "P_UNDER": 0.59,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -249458,7 +249458,7 @@
       "STAT_Q50": 29.25,
       "STAT_Q90": 40.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -249603,8 +249603,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.668,
-      "P_UNDER": 0.332,
+      "P_OVER": 0.664,
+      "P_UNDER": 0.336,
       "lean": "OVER",
       "MIN_Q10": 15.58,
       "MIN_Q50": 24.44,
@@ -249613,7 +249613,7 @@
       "STAT_Q50": 8.59,
       "STAT_Q90": 23.03,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -249774,8 +249774,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.366,
-      "P_UNDER": 0.634,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -249784,7 +249784,7 @@
       "STAT_Q50": 8.87,
       "STAT_Q90": 21.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -249969,8 +249969,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.558,
-      "P_UNDER": 0.442,
+      "P_OVER": 0.566,
+      "P_UNDER": 0.434,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -249979,7 +249979,7 @@
       "STAT_Q50": 28.02,
       "STAT_Q90": 39.97,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -250132,8 +250132,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.692,
-      "P_UNDER": 0.308,
+      "P_OVER": 0.7,
+      "P_UNDER": 0.3,
       "lean": "OVER",
       "MIN_Q10": 19.88,
       "MIN_Q50": 25.53,
@@ -250142,7 +250142,7 @@
       "STAT_Q50": 9.76,
       "STAT_Q90": 24.46,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -250311,8 +250311,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.388,
-      "P_UNDER": 0.612,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -250321,7 +250321,7 @@
       "STAT_Q50": 15.02,
       "STAT_Q90": 25.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -250482,8 +250482,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.747,
-      "P_UNDER": 0.253,
+      "P_OVER": 0.755,
+      "P_UNDER": 0.245,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -250492,7 +250492,7 @@
       "STAT_Q50": 23.59,
       "STAT_Q90": 35.8,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -250645,8 +250645,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.589,
-      "P_UNDER": 0.411,
+      "P_OVER": 0.593,
+      "P_UNDER": 0.407,
       "lean": "OVER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -250655,7 +250655,7 @@
       "STAT_Q50": 12.69,
       "STAT_Q90": 24.14,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -250808,8 +250808,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.42,
-      "P_UNDER": 0.58,
+      "P_OVER": 0.411,
+      "P_UNDER": 0.589,
       "lean": "UNDER",
       "MIN_Q10": 23.27,
       "MIN_Q50": 29.67,
@@ -250818,7 +250818,7 @@
       "STAT_Q50": 10.37,
       "STAT_Q90": 22.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -250973,7 +250973,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -251118,8 +251118,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.66,
-      "P_UNDER": 0.34,
+      "P_OVER": 0.67,
+      "P_UNDER": 0.33,
       "lean": "OVER",
       "MIN_Q10": 12.5,
       "MIN_Q50": 21.85,
@@ -251128,7 +251128,7 @@
       "STAT_Q50": 7.29,
       "STAT_Q90": 19.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -251297,8 +251297,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.507,
-      "P_UNDER": 0.492,
+      "P_OVER": 0.506,
+      "P_UNDER": 0.494,
       "lean": "OVER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -251307,7 +251307,7 @@
       "STAT_Q50": 17.78,
       "STAT_Q90": 29.34,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -251430,7 +251430,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -251553,7 +251553,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -251676,7 +251676,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -251799,7 +251799,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -251922,7 +251922,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252037,7 +252037,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252152,7 +252152,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252275,7 +252275,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252349,7 +252349,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252472,7 +252472,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252595,7 +252595,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252718,7 +252718,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252841,7 +252841,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -252956,7 +252956,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253079,7 +253079,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253226,7 +253226,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253373,7 +253373,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253512,7 +253512,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253659,7 +253659,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253806,7 +253806,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -253953,7 +253953,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254100,7 +254100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254247,7 +254247,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254394,7 +254394,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254533,7 +254533,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254680,7 +254680,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -254809,8 +254809,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.549,
-      "P_UNDER": 0.312,
+      "P_OVER": 0.544,
+      "P_UNDER": 0.316,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -254819,7 +254819,7 @@
       "STAT_Q50": 4.89,
       "STAT_Q90": 8.41,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -254892,8 +254892,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.377,
-      "P_UNDER": 0.624,
+      "P_OVER": 0.375,
+      "P_UNDER": 0.625,
       "lean": "UNDER",
       "MIN_Q10": 19.88,
       "MIN_Q50": 25.53,
@@ -254902,7 +254902,7 @@
       "STAT_Q50": 2.34,
       "STAT_Q90": 6.38,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255039,8 +255039,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.326,
-      "P_UNDER": 0.674,
+      "P_OVER": 0.319,
+      "P_UNDER": 0.681,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -255049,7 +255049,7 @@
       "STAT_Q50": 7.69,
       "STAT_Q90": 13.58,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255186,8 +255186,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.352,
-      "P_UNDER": 0.648,
+      "P_OVER": 0.362,
+      "P_UNDER": 0.637,
       "lean": "UNDER",
       "MIN_Q10": 22.48,
       "MIN_Q50": 29.83,
@@ -255196,7 +255196,7 @@
       "STAT_Q50": 8.7,
       "STAT_Q90": 16.79,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255325,8 +255325,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.463,
-      "P_UNDER": 0.537,
+      "P_OVER": 0.458,
+      "P_UNDER": 0.542,
       "lean": "UNDER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -255335,7 +255335,7 @@
       "STAT_Q50": 5.08,
       "STAT_Q90": 9.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -255464,8 +255464,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.492,
-      "P_UNDER": 0.508,
+      "P_OVER": 0.495,
+      "P_UNDER": 0.504,
       "lean": "UNDER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -255474,7 +255474,7 @@
       "STAT_Q50": 6.97,
       "STAT_Q90": 12.5,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -255597,7 +255597,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255720,7 +255720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255843,7 +255843,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -255958,7 +255958,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256073,7 +256073,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256188,7 +256188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256295,7 +256295,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256418,7 +256418,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256547,8 +256547,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.424,
-      "P_UNDER": 0.576,
+      "P_OVER": 0.443,
+      "P_UNDER": 0.557,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -256557,7 +256557,7 @@
       "STAT_Q50": 8.48,
       "STAT_Q90": 15.37,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256621,8 +256621,8 @@
       "is_conflict": false,
       "sharp_aligned": false,
       "tier": "no_model",
-      "P_OVER": 0.474,
-      "P_UNDER": 0.526,
+      "P_OVER": 0.475,
+      "P_UNDER": 0.525,
       "lean": "UNDER",
       "MIN_Q10": 15.58,
       "MIN_Q50": 24.44,
@@ -256631,7 +256631,7 @@
       "STAT_Q50": 1.89,
       "STAT_Q90": 6.06,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -256744,8 +256744,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.374,
-      "P_UNDER": 0.626,
+      "P_OVER": 0.378,
+      "P_UNDER": 0.622,
       "lean": "UNDER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -256754,7 +256754,7 @@
       "STAT_Q50": 1.23,
       "STAT_Q90": 4.4,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256875,8 +256875,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.403,
-      "P_UNDER": 0.597,
+      "P_OVER": 0.404,
+      "P_UNDER": 0.596,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -256885,7 +256885,7 @@
       "STAT_Q50": 3.33,
       "STAT_Q90": 8.21,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -256982,8 +256982,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.284,
-      "P_UNDER": 0.716,
+      "P_OVER": 0.286,
+      "P_UNDER": 0.714,
       "lean": "UNDER",
       "MIN_Q10": 16.11,
       "MIN_Q50": 21.13,
@@ -256992,7 +256992,7 @@
       "STAT_Q50": 0.75,
       "STAT_Q90": 4.26,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -257121,8 +257121,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.344,
-      "P_UNDER": 0.656,
+      "P_OVER": 0.335,
+      "P_UNDER": 0.665,
       "lean": "UNDER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -257131,7 +257131,7 @@
       "STAT_Q50": 3.16,
       "STAT_Q90": 7.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257260,8 +257260,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.656,
-      "P_UNDER": 0.344,
+      "P_OVER": 0.647,
+      "P_UNDER": 0.352,
       "lean": "OVER",
       "MIN_Q10": 21.73,
       "MIN_Q50": 31.63,
@@ -257270,7 +257270,7 @@
       "STAT_Q50": 5.48,
       "STAT_Q90": 11.05,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -257399,8 +257399,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.481,
-      "P_UNDER": 0.425,
+      "P_OVER": 0.487,
+      "P_UNDER": 0.42,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -257409,7 +257409,7 @@
       "STAT_Q50": 6.62,
       "STAT_Q90": 12.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -257508,7 +257508,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257607,7 +257607,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257714,7 +257714,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257813,7 +257813,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257896,7 +257896,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -257970,7 +257970,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258044,7 +258044,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258118,7 +258118,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258192,7 +258192,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258266,7 +258266,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258340,7 +258340,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258414,7 +258414,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258488,7 +258488,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258562,7 +258562,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258636,7 +258636,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258710,7 +258710,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258784,7 +258784,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258858,7 +258858,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -258932,7 +258932,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259006,7 +259006,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259080,7 +259080,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259154,7 +259154,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259228,7 +259228,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259302,7 +259302,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259376,7 +259376,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259450,7 +259450,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259524,7 +259524,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259598,7 +259598,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259672,7 +259672,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259746,7 +259746,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259820,7 +259820,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259894,7 +259894,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -259968,7 +259968,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260042,7 +260042,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260116,7 +260116,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260190,7 +260190,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260264,7 +260264,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260338,7 +260338,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260412,7 +260412,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260486,7 +260486,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260639,8 +260639,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.938,
-      "P_UNDER": 0.062,
+      "P_OVER": 0.942,
+      "P_UNDER": 0.059,
       "lean": "OVER",
       "MIN_Q10": 23.21,
       "MIN_Q50": 31.89,
@@ -260649,7 +260649,7 @@
       "STAT_Q50": 18.47,
       "STAT_Q90": 30.78,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -260786,8 +260786,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.561,
-      "P_UNDER": 0.439,
+      "P_OVER": 0.557,
+      "P_UNDER": 0.443,
       "lean": "OVER",
       "MIN_Q10": 14.51,
       "MIN_Q50": 20.32,
@@ -260796,7 +260796,7 @@
       "STAT_Q50": 6.47,
       "STAT_Q90": 16.13,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -260949,8 +260949,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.51,
-      "P_UNDER": 0.49,
+      "P_OVER": 0.502,
+      "P_UNDER": 0.498,
       "lean": "OVER",
       "MIN_Q10": 18.81,
       "MIN_Q50": 26.41,
@@ -260959,7 +260959,7 @@
       "STAT_Q50": 8.22,
       "STAT_Q90": 19.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -261144,8 +261144,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.415,
-      "P_UNDER": 0.585,
+      "P_OVER": 0.41,
+      "P_UNDER": 0.59,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -261154,7 +261154,7 @@
       "STAT_Q50": 29.25,
       "STAT_Q90": 40.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -261291,8 +261291,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.479,
-      "P_UNDER": 0.521,
+      "P_OVER": 0.472,
+      "P_UNDER": 0.527,
       "lean": "UNDER",
       "MIN_Q10": 13.6,
       "MIN_Q50": 19.69,
@@ -261301,7 +261301,7 @@
       "STAT_Q50": 5.5,
       "STAT_Q90": 12.87,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -261462,8 +261462,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.682,
-      "P_UNDER": 0.318,
+      "P_OVER": 0.683,
+      "P_UNDER": 0.317,
       "lean": "OVER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -261472,7 +261472,7 @@
       "STAT_Q50": 17.61,
       "STAT_Q90": 28.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -261633,8 +261633,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.366,
-      "P_UNDER": 0.634,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -261643,7 +261643,7 @@
       "STAT_Q50": 8.87,
       "STAT_Q90": 21.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -261804,8 +261804,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.787,
-      "P_UNDER": 0.213,
+      "P_OVER": 0.786,
+      "P_UNDER": 0.214,
       "lean": "OVER",
       "MIN_Q10": 27.97,
       "MIN_Q50": 37.93,
@@ -261814,7 +261814,7 @@
       "STAT_Q50": 21.76,
       "STAT_Q90": 32.38,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -261943,8 +261943,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.566,
-      "P_UNDER": 0.434,
+      "P_OVER": 0.562,
+      "P_UNDER": 0.438,
       "lean": "OVER",
       "MIN_Q10": 16.11,
       "MIN_Q50": 21.13,
@@ -261953,7 +261953,7 @@
       "STAT_Q50": 4.85,
       "STAT_Q90": 12.9,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -262116,7 +262116,7 @@
       "STAT_Q50": 11.7,
       "STAT_Q90": 22.51,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -262301,8 +262301,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.558,
-      "P_UNDER": 0.442,
+      "P_OVER": 0.566,
+      "P_UNDER": 0.434,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -262311,7 +262311,7 @@
       "STAT_Q50": 28.02,
       "STAT_Q90": 39.97,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -262464,8 +262464,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.692,
-      "P_UNDER": 0.308,
+      "P_OVER": 0.7,
+      "P_UNDER": 0.3,
       "lean": "OVER",
       "MIN_Q10": 19.88,
       "MIN_Q50": 25.53,
@@ -262474,7 +262474,7 @@
       "STAT_Q50": 9.76,
       "STAT_Q90": 24.46,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -262619,8 +262619,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.847,
-      "P_UNDER": 0.153,
+      "P_OVER": 0.838,
+      "P_UNDER": 0.162,
       "lean": "OVER",
       "MIN_Q10": 21.89,
       "MIN_Q50": 28.65,
@@ -262629,7 +262629,7 @@
       "STAT_Q50": 12.33,
       "STAT_Q90": 26.01,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -262798,8 +262798,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.388,
-      "P_UNDER": 0.612,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -262808,7 +262808,7 @@
       "STAT_Q50": 15.02,
       "STAT_Q90": 25.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -262953,8 +262953,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.548,
-      "P_UNDER": 0.452,
+      "P_OVER": 0.546,
+      "P_UNDER": 0.454,
       "lean": "OVER",
       "MIN_Q10": 18.69,
       "MIN_Q50": 25.37,
@@ -262963,7 +262963,7 @@
       "STAT_Q50": 8.43,
       "STAT_Q90": 16.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263124,8 +263124,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.451,
-      "P_UNDER": 0.549,
+      "P_OVER": 0.457,
+      "P_UNDER": 0.543,
       "lean": "UNDER",
       "MIN_Q10": 22.48,
       "MIN_Q50": 29.83,
@@ -263134,7 +263134,7 @@
       "STAT_Q50": 12.02,
       "STAT_Q90": 25.0,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263295,8 +263295,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.811,
-      "P_UNDER": 0.189,
+      "P_OVER": 0.81,
+      "P_UNDER": 0.19,
       "lean": "OVER",
       "MIN_Q10": 21.73,
       "MIN_Q50": 31.63,
@@ -263305,7 +263305,7 @@
       "STAT_Q50": 17.29,
       "STAT_Q90": 30.67,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263466,8 +263466,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.747,
-      "P_UNDER": 0.253,
+      "P_OVER": 0.755,
+      "P_UNDER": 0.245,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -263476,7 +263476,7 @@
       "STAT_Q50": 23.59,
       "STAT_Q90": 35.8,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263629,8 +263629,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.589,
-      "P_UNDER": 0.411,
+      "P_OVER": 0.593,
+      "P_UNDER": 0.407,
       "lean": "OVER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -263639,7 +263639,7 @@
       "STAT_Q50": 12.69,
       "STAT_Q90": 24.14,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263792,8 +263792,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.591,
-      "P_UNDER": 0.409,
+      "P_OVER": 0.584,
+      "P_UNDER": 0.416,
       "lean": "OVER",
       "MIN_Q10": 21.08,
       "MIN_Q50": 26.3,
@@ -263802,7 +263802,7 @@
       "STAT_Q50": 9.75,
       "STAT_Q90": 21.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -263939,8 +263939,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.573,
-      "P_UNDER": 0.427,
+      "P_OVER": 0.57,
+      "P_UNDER": 0.43,
       "lean": "OVER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -263949,7 +263949,7 @@
       "STAT_Q50": 8.97,
       "STAT_Q90": 21.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -264102,8 +264102,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.42,
-      "P_UNDER": 0.58,
+      "P_OVER": 0.411,
+      "P_UNDER": 0.589,
       "lean": "UNDER",
       "MIN_Q10": 23.27,
       "MIN_Q50": 29.67,
@@ -264112,7 +264112,7 @@
       "STAT_Q50": 10.37,
       "STAT_Q90": 22.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -264267,7 +264267,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -264412,8 +264412,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.66,
-      "P_UNDER": 0.34,
+      "P_OVER": 0.67,
+      "P_UNDER": 0.33,
       "lean": "OVER",
       "MIN_Q10": 12.5,
       "MIN_Q50": 21.85,
@@ -264422,7 +264422,7 @@
       "STAT_Q50": 7.29,
       "STAT_Q90": 19.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -264607,8 +264607,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.499,
-      "P_UNDER": 0.5,
+      "P_OVER": 0.494,
+      "P_UNDER": 0.506,
       "lean": "UNDER",
       "MIN_Q10": 31.39,
       "MIN_Q50": 41.17,
@@ -264617,7 +264617,7 @@
       "STAT_Q50": 34.4,
       "STAT_Q90": 44.16,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -264778,8 +264778,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.681,
-      "P_UNDER": 0.319,
+      "P_OVER": 0.676,
+      "P_UNDER": 0.324,
       "lean": "OVER",
       "MIN_Q10": 25.44,
       "MIN_Q50": 33.44,
@@ -264788,7 +264788,7 @@
       "STAT_Q50": 18.04,
       "STAT_Q90": 32.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -264957,8 +264957,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.507,
-      "P_UNDER": 0.492,
+      "P_OVER": 0.506,
+      "P_UNDER": 0.494,
       "lean": "OVER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -264967,7 +264967,7 @@
       "STAT_Q50": 17.78,
       "STAT_Q90": 29.34,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -265144,8 +265144,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.401,
-      "P_UNDER": 0.599,
+      "P_OVER": 0.404,
+      "P_UNDER": 0.596,
       "lean": "UNDER",
       "MIN_Q10": 22.32,
       "MIN_Q50": 31.74,
@@ -265154,7 +265154,7 @@
       "STAT_Q50": 20.99,
       "STAT_Q90": 36.57,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265269,7 +265269,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265384,7 +265384,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265507,7 +265507,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265630,7 +265630,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265704,7 +265704,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265819,7 +265819,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -265942,7 +265942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266065,7 +266065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266188,7 +266188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266271,7 +266271,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266394,7 +266394,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266517,7 +266517,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266591,7 +266591,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266706,7 +266706,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266829,7 +266829,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -266952,7 +266952,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267075,7 +267075,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267198,7 +267198,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267321,7 +267321,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267436,7 +267436,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267551,7 +267551,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267666,7 +267666,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267740,7 +267740,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267863,7 +267863,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -267986,7 +267986,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268101,7 +268101,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268224,7 +268224,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268339,7 +268339,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268454,7 +268454,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268577,7 +268577,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268700,7 +268700,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268815,7 +268815,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -268938,7 +268938,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269061,7 +269061,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269184,7 +269184,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269307,7 +269307,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269430,7 +269430,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269553,7 +269553,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269627,7 +269627,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269742,7 +269742,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269865,7 +269865,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -269988,7 +269988,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270111,7 +270111,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270234,7 +270234,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270357,7 +270357,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270480,7 +270480,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270595,7 +270595,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270718,7 +270718,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270833,7 +270833,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -270948,7 +270948,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271071,7 +271071,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271194,7 +271194,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271317,7 +271317,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271440,7 +271440,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271587,7 +271587,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271734,7 +271734,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -271881,7 +271881,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272028,7 +272028,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272167,7 +272167,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272314,7 +272314,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272461,7 +272461,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272608,7 +272608,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272755,7 +272755,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272846,7 +272846,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -272985,7 +272985,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273132,7 +273132,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273279,7 +273279,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273426,7 +273426,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273573,7 +273573,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273720,7 +273720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -273867,7 +273867,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274014,7 +274014,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274161,7 +274161,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274308,7 +274308,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274455,7 +274455,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274594,7 +274594,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274677,7 +274677,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274816,7 +274816,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -274963,7 +274963,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275102,7 +275102,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275241,7 +275241,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275388,7 +275388,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275535,7 +275535,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275682,7 +275682,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275829,7 +275829,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -275966,8 +275966,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.408,
-      "P_UNDER": 0.49,
+      "P_OVER": 0.411,
+      "P_UNDER": 0.495,
       "lean": "UNDER",
       "MIN_Q10": 18.81,
       "MIN_Q50": 26.41,
@@ -275976,7 +275976,7 @@
       "STAT_Q50": 5.46,
       "STAT_Q90": 12.48,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -276105,8 +276105,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.391,
-      "P_UNDER": 0.528,
+      "P_OVER": 0.378,
+      "P_UNDER": 0.537,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -276115,7 +276115,7 @@
       "STAT_Q50": 6.11,
       "STAT_Q90": 10.59,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -276236,8 +276236,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.406,
-      "P_UNDER": 0.461,
+      "P_OVER": 0.401,
+      "P_UNDER": 0.466,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -276246,7 +276246,7 @@
       "STAT_Q50": 2.61,
       "STAT_Q90": 7.0,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -276375,8 +276375,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.549,
-      "P_UNDER": 0.312,
+      "P_OVER": 0.544,
+      "P_UNDER": 0.316,
       "lean": "OVER",
       "MIN_Q10": 31.29,
       "MIN_Q50": 39.41,
@@ -276385,7 +276385,7 @@
       "STAT_Q50": 4.89,
       "STAT_Q90": 8.41,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -276522,8 +276522,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.326,
-      "P_UNDER": 0.674,
+      "P_OVER": 0.319,
+      "P_UNDER": 0.681,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -276532,7 +276532,7 @@
       "STAT_Q50": 7.69,
       "STAT_Q90": 13.58,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -276661,8 +276661,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.463,
-      "P_UNDER": 0.537,
+      "P_OVER": 0.458,
+      "P_UNDER": 0.542,
       "lean": "UNDER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -276671,7 +276671,7 @@
       "STAT_Q50": 5.08,
       "STAT_Q90": 9.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -276800,8 +276800,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.364,
-      "P_UNDER": 0.636,
+      "P_OVER": 0.372,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -276810,7 +276810,7 @@
       "STAT_Q50": 7.11,
       "STAT_Q90": 14.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -276931,8 +276931,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.389,
-      "P_UNDER": 0.611,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -276941,7 +276941,7 @@
       "STAT_Q50": 4.0,
       "STAT_Q90": 9.57,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -277054,8 +277054,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.373,
-      "P_UNDER": 0.627,
+      "P_OVER": 0.363,
+      "P_UNDER": 0.637,
       "lean": "UNDER",
       "MIN_Q10": 18.55,
       "MIN_Q50": 26.06,
@@ -277064,7 +277064,7 @@
       "STAT_Q50": 2.35,
       "STAT_Q90": 5.56,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -277193,8 +277193,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.559,
-      "P_UNDER": 0.441,
+      "P_OVER": 0.549,
+      "P_UNDER": 0.451,
       "lean": "OVER",
       "MIN_Q10": 23.27,
       "MIN_Q50": 29.67,
@@ -277203,7 +277203,7 @@
       "STAT_Q50": 5.34,
       "STAT_Q90": 10.52,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -277334,7 +277334,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -277463,8 +277463,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.492,
-      "P_UNDER": 0.508,
+      "P_OVER": 0.495,
+      "P_UNDER": 0.504,
       "lean": "UNDER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -277473,7 +277473,7 @@
       "STAT_Q50": 6.97,
       "STAT_Q90": 12.5,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -277610,8 +277610,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.459,
-      "P_UNDER": 0.541,
+      "P_OVER": 0.446,
+      "P_UNDER": 0.554,
       "lean": "UNDER",
       "MIN_Q10": 22.32,
       "MIN_Q50": 31.74,
@@ -277620,7 +277620,7 @@
       "STAT_Q50": 11.87,
       "STAT_Q90": 20.19,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -277735,7 +277735,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -277858,7 +277858,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -277973,7 +277973,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278096,7 +278096,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278219,7 +278219,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278342,7 +278342,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278465,7 +278465,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278580,7 +278580,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278703,7 +278703,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278826,7 +278826,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -278949,7 +278949,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279072,7 +279072,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279195,7 +279195,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279310,7 +279310,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279425,7 +279425,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279540,7 +279540,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279614,7 +279614,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279737,7 +279737,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279852,7 +279852,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -279975,7 +279975,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280049,7 +280049,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280140,7 +280140,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280214,7 +280214,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280288,7 +280288,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280362,7 +280362,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280477,7 +280477,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280592,7 +280592,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280707,7 +280707,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280781,7 +280781,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280855,7 +280855,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -280984,8 +280984,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.424,
-      "P_UNDER": 0.576,
+      "P_OVER": 0.443,
+      "P_UNDER": 0.557,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -280994,7 +280994,7 @@
       "STAT_Q50": 8.48,
       "STAT_Q90": 15.37,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -281179,8 +281179,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.415,
-      "P_UNDER": 0.585,
+      "P_OVER": 0.41,
+      "P_UNDER": 0.59,
       "lean": "UNDER",
       "MIN_Q10": 35.58,
       "MIN_Q50": 44.87,
@@ -281189,7 +281189,7 @@
       "STAT_Q50": 29.25,
       "STAT_Q90": 40.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -281326,8 +281326,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.479,
-      "P_UNDER": 0.521,
+      "P_OVER": 0.472,
+      "P_UNDER": 0.527,
       "lean": "UNDER",
       "MIN_Q10": 13.6,
       "MIN_Q50": 19.69,
@@ -281336,7 +281336,7 @@
       "STAT_Q50": 5.5,
       "STAT_Q90": 12.87,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -281497,8 +281497,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.682,
-      "P_UNDER": 0.318,
+      "P_OVER": 0.683,
+      "P_UNDER": 0.317,
       "lean": "OVER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -281507,7 +281507,7 @@
       "STAT_Q50": 17.61,
       "STAT_Q90": 28.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -281668,8 +281668,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.366,
-      "P_UNDER": 0.634,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 18.36,
       "MIN_Q50": 26.48,
@@ -281678,7 +281678,7 @@
       "STAT_Q50": 8.87,
       "STAT_Q90": 21.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -281841,7 +281841,7 @@
       "STAT_Q50": 11.7,
       "STAT_Q90": 22.51,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -281994,8 +281994,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.692,
-      "P_UNDER": 0.308,
+      "P_OVER": 0.7,
+      "P_UNDER": 0.3,
       "lean": "OVER",
       "MIN_Q10": 19.88,
       "MIN_Q50": 25.53,
@@ -282004,7 +282004,7 @@
       "STAT_Q50": 9.76,
       "STAT_Q90": 24.46,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -282149,8 +282149,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.847,
-      "P_UNDER": 0.153,
+      "P_OVER": 0.838,
+      "P_UNDER": 0.162,
       "lean": "OVER",
       "MIN_Q10": 21.89,
       "MIN_Q50": 28.65,
@@ -282159,7 +282159,7 @@
       "STAT_Q50": 12.33,
       "STAT_Q90": 26.01,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -282328,8 +282328,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.388,
-      "P_UNDER": 0.612,
+      "P_OVER": 0.385,
+      "P_UNDER": 0.615,
       "lean": "UNDER",
       "MIN_Q10": 27.52,
       "MIN_Q50": 34.46,
@@ -282338,7 +282338,7 @@
       "STAT_Q50": 15.02,
       "STAT_Q90": 25.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -282499,8 +282499,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.747,
-      "P_UNDER": 0.253,
+      "P_OVER": 0.755,
+      "P_UNDER": 0.245,
       "lean": "OVER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -282509,7 +282509,7 @@
       "STAT_Q50": 23.59,
       "STAT_Q90": 35.8,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -282662,8 +282662,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.591,
-      "P_UNDER": 0.409,
+      "P_OVER": 0.584,
+      "P_UNDER": 0.416,
       "lean": "OVER",
       "MIN_Q10": 21.08,
       "MIN_Q50": 26.3,
@@ -282672,7 +282672,7 @@
       "STAT_Q50": 9.75,
       "STAT_Q90": 21.54,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -282809,8 +282809,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.573,
-      "P_UNDER": 0.427,
+      "P_OVER": 0.57,
+      "P_UNDER": 0.43,
       "lean": "OVER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -282819,7 +282819,7 @@
       "STAT_Q50": 8.97,
       "STAT_Q90": 21.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -282964,8 +282964,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.66,
-      "P_UNDER": 0.34,
+      "P_OVER": 0.67,
+      "P_UNDER": 0.33,
       "lean": "OVER",
       "MIN_Q10": 12.5,
       "MIN_Q50": 21.85,
@@ -282974,7 +282974,7 @@
       "STAT_Q50": 7.29,
       "STAT_Q90": 19.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -283143,8 +283143,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.507,
-      "P_UNDER": 0.492,
+      "P_OVER": 0.506,
+      "P_UNDER": 0.494,
       "lean": "OVER",
       "MIN_Q10": 27.96,
       "MIN_Q50": 37.94,
@@ -283153,7 +283153,7 @@
       "STAT_Q50": 17.78,
       "STAT_Q90": 29.34,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -283276,7 +283276,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -283399,7 +283399,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -283522,7 +283522,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -283645,7 +283645,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -283768,7 +283768,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -283891,7 +283891,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284014,7 +284014,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284137,7 +284137,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284260,7 +284260,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284383,7 +284383,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284506,7 +284506,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284629,7 +284629,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284752,7 +284752,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -284875,7 +284875,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285022,7 +285022,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285169,7 +285169,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285316,7 +285316,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285455,7 +285455,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285602,7 +285602,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285749,7 +285749,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285832,7 +285832,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -285979,7 +285979,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286126,7 +286126,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286273,7 +286273,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286420,7 +286420,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286557,8 +286557,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.473,
-      "P_UNDER": 0.527,
+      "P_OVER": 0.477,
+      "P_UNDER": 0.523,
       "lean": "UNDER",
       "MIN_Q10": 25.46,
       "MIN_Q50": 34.72,
@@ -286567,7 +286567,7 @@
       "STAT_Q50": 7.98,
       "STAT_Q90": 13.02,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286696,8 +286696,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.463,
-      "P_UNDER": 0.537,
+      "P_OVER": 0.458,
+      "P_UNDER": 0.542,
       "lean": "UNDER",
       "MIN_Q10": 33.53,
       "MIN_Q50": 41.14,
@@ -286706,7 +286706,7 @@
       "STAT_Q50": 5.08,
       "STAT_Q90": 9.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -286835,8 +286835,8 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.364,
-      "P_UNDER": 0.636,
+      "P_OVER": 0.372,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
       "MIN_Q10": 22.91,
       "MIN_Q50": 30.58,
@@ -286845,7 +286845,7 @@
       "STAT_Q50": 7.11,
       "STAT_Q90": 14.55,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -286966,8 +286966,8 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.389,
-      "P_UNDER": 0.611,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
       "MIN_Q10": 14.74,
       "MIN_Q50": 23.32,
@@ -286976,7 +286976,7 @@
       "STAT_Q50": 4.0,
       "STAT_Q90": 9.57,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "over"
     },
     {
@@ -287099,7 +287099,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     },
     {
@@ -287206,7 +287206,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T12:07:13",
+      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
       "SIDE": "under"
     }
   ],
@@ -287214,5 +287214,5 @@
     "min": "2026-05-12",
     "max": "2026-05-16"
   },
-  "latest_run_timestamp": "2026-05-16T12:07:13"
+  "latest_run_timestamp": "2026-05-16T20:18:42"
 }
