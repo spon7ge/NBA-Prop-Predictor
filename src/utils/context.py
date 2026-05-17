@@ -10,7 +10,7 @@ outPlayers: dict = {}
 # CONTEXT ADJUSTMENT CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Reliability damping: adjustment_effective = raw_delta * (n / (n + tau))
+# Bayesian prior strength: larger values make context samples move projections less.
 CONTEXT_RELIABILITY_TAU = 20
 
 # Relative importance by market component.
@@ -76,7 +76,7 @@ def player_scenarios(df: pd.DataFrame, player_name: str, stat_name: str, min_min
 
     total_n = len(pdf)
     overall_median = pdf[stat_name].median() if total_n > 0 else None
-    _empty = {"median": None, "shrunk_median": None, "delta": 0.0, "hit_rate_vs_overall": None, "n": 0}
+    _empty = {"median": None, "shrunk_median": None, "delta": 0.0, "hit_rate_vs_overall": None, "n": 0, "iqr": None, "std_est": None}
 
     if total_n == 0 or pd.isna(overall_median):
         return {
@@ -91,11 +91,15 @@ def player_scenarios(df: pd.DataFrame, player_name: str, stat_name: str, min_min
         n = len(subset)
         if n == 0: return dict(_empty)
         med = subset[stat_name].median()
+        iqr = subset[stat_name].quantile(0.75) - subset[stat_name].quantile(0.25)
+        std_est = iqr / 1.349 if pd.notna(iqr) and iqr > 0 else subset[stat_name].std()
         shrunk = (n * med + K * overall_median) / (n + K)
         return {
             "median": round(med, 4), "shrunk_median": round(shrunk, 4),
             "delta": round(shrunk - overall_median, 4),
             "hit_rate_vs_overall": round((subset[stat_name] >= overall_median).mean(), 4),
+            "iqr": round(iqr, 4) if pd.notna(iqr) else None,
+            "std_est": round(std_est, 4) if pd.notna(std_est) else None,
             "n": n,
         }
 
@@ -188,25 +192,47 @@ def adjust_predictions(
         if opp_def_rating > t.get("p67", float("-inf")): return "weak_def"
         return "mid_def"
 
-    def _build_delta(sc, n_stars, s_key, pace_key, def_key, *, component_weights, pct_mode: bool = False) -> tuple[float, dict]:
+    def _build_delta(sc, n_stars, s_key, pace_key, def_key, *, prior_mean: float | None = None, component_weights, pct_mode: bool = False) -> tuple[float, dict]:
         star_key = min(n_stars, max(sc.get("active_stars", {}).keys(), default=3))
-        overall_median = sc.get("overall_median") or 0.0
+        overall_median = float(sc.get("overall_median") or 0.0)
+        prior_mean = float(prior_mean if prior_mean is not None else overall_median)
 
-        d_stars_raw, n_st = _delta(sc, "active_stars", star_key)
-        d_pace_raw, n_pa  = _delta(sc, "opp_pace", pace_key)
-        d_spread_raw, n_sp = _delta(sc, "spread", s_key) if s_key and s_key != "pick_em" else (0.0, 0)
-        d_def_raw, n_df = _delta(sc, "opp_def", def_key) if def_key else (0.0, 0)
+        overall_iqr = sc.get("overall_iqr")
+        prior_sd = (overall_iqr / 1.349) if overall_iqr and overall_iqr > 0 else max(abs(prior_mean) * 0.25, 1e-6)
+        prior_var = max((prior_sd ** 2) / CONTEXT_RELIABILITY_TAU, 1e-6)
 
-        d_stars = d_stars_raw * reliability_weight(n_st)
-        d_pace  = d_pace_raw  * reliability_weight(n_pa)
-        d_spread= d_spread_raw * reliability_weight(n_sp)
-        d_def   = d_def_raw   * reliability_weight(n_df)
+        def _bayes_component(*key_path) -> tuple[float, int, float | None]:
+            node = sc
+            for k in key_path:
+                if not isinstance(node, dict): return 0.0, 0, None
+                node = node.get(k)
+            if not isinstance(node, dict): return 0.0, 0, None
 
-        if pct_mode:
-            d_stars = safe_pct_delta(overall_median, d_stars)
-            d_pace  = safe_pct_delta(overall_median, d_pace)
-            d_spread= safe_pct_delta(overall_median, d_spread)
-            d_def   = safe_pct_delta(overall_median, d_def)
+            n = int(node.get("n", 0))
+            context_mean = node.get("median")
+            if n <= 0 or context_mean is None: return 0.0, n, None
+
+            context_sd = node.get("std_est")
+            if context_sd is None or context_sd <= 0:
+                context_sd = prior_sd
+
+            likelihood_var = max((float(context_sd) ** 2) / n, 1e-6)
+            prior_precision = 1.0 / prior_var
+            likelihood_precision = 1.0 / likelihood_var
+            posterior_mean = (
+                prior_mean * prior_precision +
+                float(context_mean) * likelihood_precision
+            ) / (prior_precision + likelihood_precision)
+
+            delta = posterior_mean - prior_mean
+            if pct_mode:
+                delta = safe_pct_delta(prior_mean, delta)
+            return float(delta), n, float(posterior_mean)
+
+        d_stars, n_st, post_st = _bayes_component("active_stars", star_key)
+        d_pace, n_pa, post_pa = _bayes_component("opp_pace", pace_key)
+        d_spread, n_sp, post_sp = _bayes_component("spread", s_key) if s_key and s_key != "pick_em" else (0.0, 0, None)
+        d_def, n_df, post_df = _bayes_component("opp_def", def_key) if def_key else (0.0, 0, None)
 
         weighted_total = (
             component_weights["stars"]  * d_stars +
@@ -216,10 +242,10 @@ def adjust_predictions(
         )
 
         log = {
-            "stars": (round(d_stars, 4), n_st, component_weights["stars"]),
-            "pace": (round(d_pace, 4), pace_key, component_weights["pace"]),
-            "spread": (round(d_spread, 4), s_key, component_weights["spread"]),
-            "opp_def": (round(d_def, 4), def_key, component_weights["def"]),
+            "stars": (round(d_stars, 4), n_st, component_weights["stars"], round(post_st, 4) if post_st is not None else None),
+            "pace": (round(d_pace, 4), pace_key, component_weights["pace"], round(post_pa, 4) if post_pa is not None else None),
+            "spread": (round(d_spread, 4), s_key, component_weights["spread"], round(post_sp, 4) if post_sp is not None else None),
+            "opp_def": (round(d_def, 4), def_key, component_weights["def"], round(post_df, 4) if post_df is not None else None),
         }
         return weighted_total, log
 
@@ -252,13 +278,13 @@ def adjust_predictions(
         min_pace, rate_pace = _pace_key(min_sc, total), _pace_key(rate_sc, total)
         min_def, rate_def = _def_key(min_sc, opp_def_rating), _def_key(rate_sc, opp_def_rating)
 
-        raw_min_delta, min_log = _build_delta(min_sc, n_stars, s_key, min_pace, min_def, component_weights=MIN_CONTEXT_WEIGHTS, pct_mode=False)
-        raw_rate_pct_delta, rate_log = _build_delta(rate_sc, n_stars, s_key, rate_pace, rate_def, component_weights=RATE_CONTEXT_WEIGHTS, pct_mode=True)
+        orig_min_q50, orig_rate_q50 = float(row["MIN_Q50"]), float(row["RATE_Q50"])
+        raw_min_delta, min_log = _build_delta(min_sc, n_stars, s_key, min_pace, min_def, prior_mean=orig_min_q50, component_weights=MIN_CONTEXT_WEIGHTS, pct_mode=False)
+        raw_rate_pct_delta, rate_log = _build_delta(rate_sc, n_stars, s_key, rate_pace, rate_def, prior_mean=orig_rate_q50, component_weights=RATE_CONTEXT_WEIGHTS, pct_mode=True)
 
         min_delta = float(np.clip(raw_min_delta, -delta_cap_min, delta_cap_min))
         rate_pct_delta = float(np.clip(raw_rate_pct_delta, -MAX_RATE_PCT_CHANGE, MAX_RATE_PCT_CHANGE))
 
-        orig_min_q50, orig_rate_q50 = float(row["MIN_Q50"]), float(row["RATE_Q50"])
         new_min_q50 = max(orig_min_q50 + min_adjust_weight * min_delta, 0.0)
         
         rate_multiplier = 1.0 + (rate_adjust_weight * rate_pct_delta)

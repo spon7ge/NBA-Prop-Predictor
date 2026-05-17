@@ -51,6 +51,20 @@ BOOKMAKER_3LEG_PATHS = {
     'DraftKings Pick6': 'data/props/ev_analysis/draftKings_3leg.json',
 }
 
+BOOKMAKER_5LEG_PATHS = {
+    'PrizePicks':       'data/props/ev_analysis/prizepicks_5leg.json',
+    'Underdog':         'data/props/ev_analysis/underdog_5leg.json',
+    'Betr DFS':         'data/props/ev_analysis/betr_5leg.json',
+    'DraftKings Pick6': 'data/props/ev_analysis/draftKings_5leg.json',
+}
+
+BOOKMAKER_6LEG_PATHS = {
+    'PrizePicks':       'data/props/ev_analysis/prizepicks_6leg.json',
+    'Underdog':         'data/props/ev_analysis/underdog_6leg.json',
+    'Betr DFS':         'data/props/ev_analysis/betr_6leg.json',
+    'DraftKings Pick6': 'data/props/ev_analysis/draftKings_6leg.json',
+}
+
 
 def normalize_game_date_series(s: pd.Series) -> pd.Series:
     """
