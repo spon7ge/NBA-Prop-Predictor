@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T03:18:42.584956Z",
+  "generated_at": "2026-05-17T04:44:40.131257Z",
   "n_picks": 2397,
   "ledger_source": "predictions.jsonl",
   "dedupe_key_columns": [
@@ -226945,17 +226945,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.699,
-      "P_UNDER": 0.301,
+      "P_OVER": 0.605,
+      "P_UNDER": 0.395,
       "lean": "OVER",
-      "MIN_Q10": 23.21,
-      "MIN_Q50": 31.89,
-      "MIN_Q90": 35.54,
-      "STAT_Q10": 1.34,
-      "STAT_Q50": 4.82,
-      "STAT_Q90": 9.85,
+      "MIN_Q10": 19.99,
+      "MIN_Q50": 29.15,
+      "MIN_Q90": 32.32,
+      "STAT_Q10": 1.05,
+      "STAT_Q50": 4.01,
+      "STAT_Q90": 8.14,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -227084,18 +227084,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.443,
-      "P_UNDER": 0.557,
+      "P_OVER": 0.447,
+      "P_UNDER": 0.553,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 3.8,
-      "STAT_Q50": 8.48,
-      "STAT_Q90": 15.37,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 8.62,
+      "STAT_Q90": 15.47,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -227215,17 +227215,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.404,
-      "P_UNDER": 0.596,
+      "P_OVER": 0.38,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 0.68,
-      "STAT_Q50": 3.33,
-      "STAT_Q90": 8.21,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 0.6,
+      "STAT_Q50": 3.15,
+      "STAT_Q90": 7.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -227354,17 +227354,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.437,
-      "P_UNDER": 0.563,
+      "P_OVER": 0.434,
+      "P_UNDER": 0.566,
       "lean": "UNDER",
-      "MIN_Q10": 27.97,
-      "MIN_Q50": 37.93,
-      "MIN_Q90": 40.48,
-      "STAT_Q10": 1.76,
-      "STAT_Q50": 6.33,
-      "STAT_Q90": 11.66,
+      "MIN_Q10": 25.1,
+      "MIN_Q50": 35.49,
+      "MIN_Q90": 37.61,
+      "STAT_Q10": 1.68,
+      "STAT_Q50": 6.3,
+      "STAT_Q90": 11.52,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -227493,17 +227493,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.335,
-      "P_UNDER": 0.665,
+      "P_OVER": 0.373,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 0.74,
-      "STAT_Q50": 3.16,
-      "STAT_Q90": 7.09,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 0.79,
+      "STAT_Q50": 3.46,
+      "STAT_Q90": 7.7,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -227624,17 +227624,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.439,
-      "P_UNDER": 0.561,
+      "P_OVER": 0.482,
+      "P_UNDER": 0.518,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 0.59,
-      "STAT_Q50": 2.63,
-      "STAT_Q90": 6.54,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 0.64,
+      "STAT_Q50": 2.93,
+      "STAT_Q90": 7.26,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -227763,17 +227763,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.487,
-      "P_UNDER": 0.42,
+      "P_OVER": 0.489,
+      "P_UNDER": 0.428,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 2.82,
-      "STAT_Q50": 6.62,
-      "STAT_Q90": 12.55,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 2.76,
+      "STAT_Q50": 6.72,
+      "STAT_Q90": 12.62,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -227899,21 +227899,21 @@
         "avg_stat": 4.5,
         "over_rate_at_line": 0.375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.516,
-      "P_UNDER": 0.484,
-      "lean": "OVER",
-      "MIN_Q10": 25.44,
-      "MIN_Q50": 33.44,
-      "MIN_Q90": 39.08,
-      "STAT_Q10": 2.43,
-      "STAT_Q50": 6.67,
-      "STAT_Q90": 13.3,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
+      "lean": "UNDER",
+      "MIN_Q10": 21.64,
+      "MIN_Q50": 30.21,
+      "MIN_Q90": 35.28,
+      "STAT_Q10": 2.07,
+      "STAT_Q50": 6.02,
+      "STAT_Q90": 12.01,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -228011,7 +228011,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228110,7 +228110,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228217,7 +228217,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228316,7 +228316,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228399,7 +228399,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228482,7 +228482,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228565,7 +228565,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228648,7 +228648,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228722,7 +228722,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228796,7 +228796,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228870,7 +228870,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -228944,7 +228944,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229018,7 +229018,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229092,7 +229092,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229166,7 +229166,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229240,7 +229240,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229314,7 +229314,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229388,7 +229388,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229462,7 +229462,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229536,7 +229536,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229610,7 +229610,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229684,7 +229684,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229758,7 +229758,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229832,7 +229832,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229906,7 +229906,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -229980,7 +229980,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230054,7 +230054,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230128,7 +230128,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230202,7 +230202,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230276,7 +230276,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230350,7 +230350,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230424,7 +230424,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230498,7 +230498,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230572,7 +230572,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230646,7 +230646,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230720,7 +230720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230794,7 +230794,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230868,7 +230868,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -230942,7 +230942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -231016,7 +231016,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -231090,7 +231090,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -231164,7 +231164,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -231317,17 +231317,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.942,
-      "P_UNDER": 0.059,
+      "P_OVER": 0.885,
+      "P_UNDER": 0.115,
       "lean": "OVER",
-      "MIN_Q10": 23.21,
-      "MIN_Q50": 31.89,
-      "MIN_Q90": 35.54,
-      "STAT_Q10": 7.16,
-      "STAT_Q50": 18.47,
-      "STAT_Q90": 30.78,
+      "MIN_Q10": 19.99,
+      "MIN_Q50": 29.15,
+      "MIN_Q90": 32.32,
+      "STAT_Q10": 5.78,
+      "STAT_Q50": 15.82,
+      "STAT_Q90": 26.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -231464,18 +231464,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.557,
-      "P_UNDER": 0.443,
+      "P_OVER": 0.71,
+      "P_UNDER": 0.29,
       "lean": "OVER",
-      "MIN_Q10": 14.51,
-      "MIN_Q50": 20.32,
-      "MIN_Q90": 25.3,
-      "STAT_Q10": 1.1,
-      "STAT_Q50": 6.47,
-      "STAT_Q90": 16.13,
+      "MIN_Q10": 17.08,
+      "MIN_Q50": 22.51,
+      "MIN_Q90": 27.87,
+      "STAT_Q10": 1.38,
+      "STAT_Q50": 7.65,
+      "STAT_Q90": 18.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -231627,18 +231627,18 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.502,
-      "P_UNDER": 0.498,
+      "P_OVER": 0.545,
+      "P_UNDER": 0.455,
       "lean": "OVER",
-      "MIN_Q10": 18.81,
-      "MIN_Q50": 26.41,
-      "MIN_Q90": 36.22,
-      "STAT_Q10": 2.7,
-      "STAT_Q50": 8.22,
-      "STAT_Q90": 19.24,
+      "MIN_Q10": 18.29,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 35.7,
+      "STAT_Q10": 2.86,
+      "STAT_Q50": 8.8,
+      "STAT_Q90": 20.67,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -231822,17 +231822,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.41,
-      "P_UNDER": 0.59,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 14.87,
-      "STAT_Q50": 29.25,
-      "STAT_Q90": 40.23,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 13.92,
+      "STAT_Q50": 28.38,
+      "STAT_Q90": 38.61,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -231966,21 +231966,21 @@
         "avg_stat": 9.5,
         "over_rate_at_line": 0.625
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.472,
-      "P_UNDER": 0.527,
-      "lean": "UNDER",
-      "MIN_Q10": 13.6,
-      "MIN_Q50": 19.69,
-      "MIN_Q90": 25.11,
-      "STAT_Q10": 1.21,
-      "STAT_Q50": 5.5,
-      "STAT_Q90": 12.87,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.586,
+      "P_UNDER": 0.414,
+      "lean": "OVER",
+      "MIN_Q10": 18.72,
+      "MIN_Q50": 24.05,
+      "MIN_Q90": 30.23,
+      "STAT_Q10": 1.64,
+      "STAT_Q50": 6.6,
+      "STAT_Q90": 15.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -232140,17 +232140,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.683,
-      "P_UNDER": 0.317,
+      "P_OVER": 0.674,
+      "P_UNDER": 0.326,
       "lean": "OVER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
-      "STAT_Q10": 7.76,
-      "STAT_Q50": 17.61,
-      "STAT_Q90": 28.54,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
+      "STAT_Q10": 7.45,
+      "STAT_Q50": 17.72,
+      "STAT_Q90": 28.53,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -232311,17 +232311,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 2.19,
-      "STAT_Q50": 8.87,
-      "STAT_Q90": 21.96,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 2.07,
+      "STAT_Q50": 8.91,
+      "STAT_Q90": 22.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -232482,17 +232482,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.786,
-      "P_UNDER": 0.214,
+      "P_OVER": 0.739,
+      "P_UNDER": 0.261,
       "lean": "OVER",
-      "MIN_Q10": 27.97,
-      "MIN_Q50": 37.93,
-      "MIN_Q90": 40.48,
-      "STAT_Q10": 8.65,
-      "STAT_Q50": 21.76,
-      "STAT_Q90": 32.38,
+      "MIN_Q10": 25.1,
+      "MIN_Q50": 35.49,
+      "MIN_Q90": 37.61,
+      "STAT_Q10": 7.83,
+      "STAT_Q50": 20.55,
+      "STAT_Q90": 30.36,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -232613,17 +232613,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.725,
-      "P_UNDER": 0.275,
+      "P_OVER": 0.719,
+      "P_UNDER": 0.281,
       "lean": "OVER",
-      "MIN_Q10": 15.37,
-      "MIN_Q50": 24.55,
-      "MIN_Q90": 31.65,
-      "STAT_Q10": 1.7,
-      "STAT_Q50": 8.74,
-      "STAT_Q90": 20.45,
+      "MIN_Q10": 13.3,
+      "MIN_Q50": 22.79,
+      "MIN_Q90": 29.58,
+      "STAT_Q10": 1.59,
+      "STAT_Q50": 8.76,
+      "STAT_Q90": 20.64,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -232776,17 +232776,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.542,
-      "P_UNDER": 0.458,
+      "P_OVER": 0.751,
+      "P_UNDER": 0.249,
       "lean": "OVER",
-      "MIN_Q10": 23.16,
-      "MIN_Q50": 30.52,
-      "MIN_Q90": 35.34,
-      "STAT_Q10": 4.62,
-      "STAT_Q50": 11.7,
-      "STAT_Q90": 22.51,
+      "MIN_Q10": 25.51,
+      "MIN_Q50": 32.51,
+      "MIN_Q90": 37.69,
+      "STAT_Q10": 5.58,
+      "STAT_Q50": 13.64,
+      "STAT_Q90": 26.3,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -232971,17 +232971,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.566,
-      "P_UNDER": 0.434,
+      "P_OVER": 0.522,
+      "P_UNDER": 0.478,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 13.38,
-      "STAT_Q50": 28.02,
-      "STAT_Q90": 39.97,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 12.42,
+      "STAT_Q50": 26.88,
+      "STAT_Q90": 37.98,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -233126,17 +233126,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.838,
-      "P_UNDER": 0.162,
+      "P_OVER": 0.842,
+      "P_UNDER": 0.159,
       "lean": "OVER",
-      "MIN_Q10": 21.89,
-      "MIN_Q50": 28.65,
-      "MIN_Q90": 35.17,
-      "STAT_Q10": 4.78,
-      "STAT_Q50": 12.33,
-      "STAT_Q90": 26.01,
+      "MIN_Q10": 18.73,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 32.01,
+      "STAT_Q10": 4.55,
+      "STAT_Q50": 12.42,
+      "STAT_Q90": 26.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -233305,18 +233305,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.469,
+      "P_UNDER": 0.531,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 6.89,
-      "STAT_Q50": 15.02,
-      "STAT_Q90": 25.88,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 7.24,
+      "STAT_Q50": 16.17,
+      "STAT_Q90": 27.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -233473,20 +233473,20 @@
         "avg_stat": 12.117647058823529,
         "over_rate_at_line": 0.29411764705882354
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.457,
-      "P_UNDER": 0.543,
-      "lean": "UNDER",
-      "MIN_Q10": 22.48,
-      "MIN_Q50": 29.83,
-      "MIN_Q90": 37.35,
-      "STAT_Q10": 4.95,
-      "STAT_Q50": 12.02,
-      "STAT_Q90": 25.0,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.557,
+      "P_UNDER": 0.443,
+      "lean": "OVER",
+      "MIN_Q10": 21.79,
+      "MIN_Q50": 29.24,
+      "MIN_Q90": 36.66,
+      "STAT_Q10": 5.45,
+      "STAT_Q50": 13.37,
+      "STAT_Q90": 27.84,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -233647,17 +233647,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.755,
-      "P_UNDER": 0.245,
+      "P_OVER": 0.705,
+      "P_UNDER": 0.295,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 10.77,
-      "STAT_Q50": 23.59,
-      "STAT_Q90": 35.8,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 10.02,
+      "STAT_Q50": 22.71,
+      "STAT_Q90": 34.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -233810,17 +233810,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.593,
-      "P_UNDER": 0.407,
+      "P_OVER": 0.535,
+      "P_UNDER": 0.465,
       "lean": "OVER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 4.4,
-      "STAT_Q50": 12.69,
-      "STAT_Q90": 24.14,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 3.92,
+      "STAT_Q50": 11.94,
+      "STAT_Q90": 22.79,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -233973,17 +233973,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.584,
-      "P_UNDER": 0.416,
+      "P_OVER": 0.615,
+      "P_UNDER": 0.385,
       "lean": "OVER",
-      "MIN_Q10": 21.08,
-      "MIN_Q50": 26.3,
-      "MIN_Q90": 34.0,
-      "STAT_Q10": 3.49,
-      "STAT_Q50": 9.75,
-      "STAT_Q90": 21.54,
+      "MIN_Q10": 23.23,
+      "MIN_Q50": 28.13,
+      "MIN_Q90": 36.15,
+      "STAT_Q10": 3.73,
+      "STAT_Q50": 10.12,
+      "STAT_Q90": 22.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -234120,17 +234120,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.57,
-      "P_UNDER": 0.43,
+      "P_OVER": 0.595,
+      "P_UNDER": 0.405,
       "lean": "OVER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 2.34,
-      "STAT_Q50": 8.97,
-      "STAT_Q90": 21.83,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 2.39,
+      "STAT_Q50": 9.52,
+      "STAT_Q90": 23.26,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -234283,18 +234283,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.411,
-      "P_UNDER": 0.589,
+      "P_OVER": 0.376,
+      "P_UNDER": 0.625,
       "lean": "UNDER",
-      "MIN_Q10": 23.27,
-      "MIN_Q50": 29.67,
-      "MIN_Q90": 35.16,
-      "STAT_Q10": 2.42,
-      "STAT_Q50": 10.37,
-      "STAT_Q90": 22.66,
+      "MIN_Q10": 20.15,
+      "MIN_Q50": 27.02,
+      "MIN_Q90": 32.04,
+      "STAT_Q10": 2.1,
+      "STAT_Q50": 9.44,
+      "STAT_Q90": 20.65,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -234448,7 +234448,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -234593,17 +234593,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.67,
-      "P_UNDER": 0.33,
+      "P_OVER": 0.636,
+      "P_UNDER": 0.363,
       "lean": "OVER",
-      "MIN_Q10": 12.5,
-      "MIN_Q50": 21.85,
-      "MIN_Q90": 30.21,
-      "STAT_Q10": 1.29,
-      "STAT_Q50": 7.29,
-      "STAT_Q90": 19.55,
+      "MIN_Q10": 11.35,
+      "MIN_Q50": 20.87,
+      "MIN_Q90": 29.06,
+      "STAT_Q10": 1.17,
+      "STAT_Q50": 6.96,
+      "STAT_Q90": 18.81,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -234788,17 +234788,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.494,
-      "P_UNDER": 0.506,
+      "P_OVER": 0.463,
+      "P_UNDER": 0.537,
       "lean": "UNDER",
-      "MIN_Q10": 31.39,
-      "MIN_Q50": 41.17,
-      "MIN_Q90": 42.01,
-      "STAT_Q10": 17.09,
-      "STAT_Q50": 34.4,
-      "STAT_Q90": 44.16,
+      "MIN_Q10": 27.97,
+      "MIN_Q50": 38.26,
+      "MIN_Q90": 38.59,
+      "STAT_Q10": 16.1,
+      "STAT_Q50": 33.8,
+      "STAT_Q90": 42.89,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -234959,18 +234959,18 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.676,
-      "P_UNDER": 0.324,
+      "P_OVER": 0.577,
+      "P_UNDER": 0.423,
       "lean": "OVER",
-      "MIN_Q10": 25.44,
-      "MIN_Q50": 33.44,
-      "MIN_Q90": 39.08,
-      "STAT_Q10": 7.08,
-      "STAT_Q50": 18.04,
-      "STAT_Q90": 32.33,
+      "MIN_Q10": 21.64,
+      "MIN_Q50": 30.21,
+      "MIN_Q90": 35.28,
+      "STAT_Q10": 5.9,
+      "STAT_Q50": 15.97,
+      "STAT_Q90": 28.59,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -235135,21 +235135,21 @@
         "avg_stat": 14.6875,
         "over_rate_at_line": 0.4375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.506,
-      "P_UNDER": 0.494,
-      "lean": "OVER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 7.09,
-      "STAT_Q50": 17.78,
-      "STAT_Q90": 29.34,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
+      "lean": "UNDER",
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 5.97,
+      "STAT_Q50": 15.93,
+      "STAT_Q90": 26.05,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -235325,17 +235325,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.404,
-      "P_UNDER": 0.596,
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
       "lean": "UNDER",
-      "MIN_Q10": 22.32,
-      "MIN_Q50": 31.74,
-      "MIN_Q90": 37.12,
-      "STAT_Q10": 8.77,
-      "STAT_Q50": 20.99,
-      "STAT_Q90": 36.57,
+      "MIN_Q10": 22.22,
+      "MIN_Q50": 31.66,
+      "MIN_Q90": 37.02,
+      "STAT_Q10": 9.25,
+      "STAT_Q50": 22.19,
+      "STAT_Q90": 38.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -235450,7 +235450,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -235573,7 +235573,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -235696,7 +235696,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -235819,7 +235819,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -235942,7 +235942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236065,7 +236065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236188,7 +236188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236311,7 +236311,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236426,7 +236426,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236549,7 +236549,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236672,7 +236672,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236795,7 +236795,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -236918,7 +236918,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237033,7 +237033,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237148,7 +237148,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237263,7 +237263,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237386,7 +237386,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237509,7 +237509,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237624,7 +237624,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237747,7 +237747,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237862,7 +237862,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -237977,7 +237977,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238100,7 +238100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238223,7 +238223,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238346,7 +238346,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238469,7 +238469,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238592,7 +238592,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238715,7 +238715,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238838,7 +238838,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -238953,7 +238953,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239076,7 +239076,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239199,7 +239199,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239322,7 +239322,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239445,7 +239445,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239568,7 +239568,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239691,7 +239691,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239806,7 +239806,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -239921,7 +239921,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240036,7 +240036,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240159,7 +240159,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240282,7 +240282,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240405,7 +240405,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240528,7 +240528,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240675,7 +240675,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240822,7 +240822,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -240969,7 +240969,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241116,7 +241116,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241263,7 +241263,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241410,7 +241410,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241557,7 +241557,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241704,7 +241704,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241851,7 +241851,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -241998,7 +241998,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242145,7 +242145,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242292,7 +242292,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242439,7 +242439,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242586,7 +242586,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242725,7 +242725,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -242872,7 +242872,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243019,7 +243019,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243166,7 +243166,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243313,7 +243313,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243460,7 +243460,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243592,14 +243592,14 @@
       "P_OVER": 0.378,
       "P_UNDER": 0.537,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 2.12,
-      "STAT_Q50": 6.11,
-      "STAT_Q90": 10.59,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 2.0,
+      "STAT_Q50": 5.95,
+      "STAT_Q90": 10.21,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -243736,17 +243736,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.477,
-      "P_UNDER": 0.523,
+      "P_OVER": 0.5,
+      "P_UNDER": 0.5,
       "lean": "UNDER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
-      "STAT_Q10": 3.18,
-      "STAT_Q50": 7.98,
-      "STAT_Q90": 13.02,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
+      "STAT_Q10": 3.17,
+      "STAT_Q50": 8.32,
+      "STAT_Q90": 13.5,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -243875,17 +243875,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.484,
-      "P_UNDER": 0.515,
+      "P_OVER": 0.439,
+      "P_UNDER": 0.561,
       "lean": "UNDER",
-      "MIN_Q10": 27.97,
-      "MIN_Q50": 37.93,
-      "MIN_Q90": 40.48,
-      "STAT_Q10": 1.0,
+      "MIN_Q10": 25.1,
+      "MIN_Q50": 35.49,
+      "MIN_Q90": 37.61,
+      "STAT_Q10": 0.95,
       "STAT_Q50": 3.85,
-      "STAT_Q90": 7.51,
+      "STAT_Q90": 7.45,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -244006,17 +244006,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.395,
-      "P_UNDER": 0.492,
+      "P_OVER": 0.417,
+      "P_UNDER": 0.475,
       "lean": "UNDER",
-      "MIN_Q10": 23.16,
-      "MIN_Q50": 30.52,
-      "MIN_Q90": 35.34,
-      "STAT_Q10": 1.09,
-      "STAT_Q50": 3.79,
-      "STAT_Q90": 7.72,
+      "MIN_Q10": 25.51,
+      "MIN_Q50": 32.51,
+      "MIN_Q90": 37.69,
+      "STAT_Q10": 1.19,
+      "STAT_Q50": 4.0,
+      "STAT_Q90": 8.15,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -244145,17 +244145,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.544,
-      "P_UNDER": 0.316,
+      "P_OVER": 0.468,
+      "P_UNDER": 0.409,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 1.59,
-      "STAT_Q50": 4.89,
-      "STAT_Q90": 8.41,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 1.5,
+      "STAT_Q50": 4.77,
+      "STAT_Q90": 8.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -244268,17 +244268,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.688,
-      "P_UNDER": 0.205,
+      "P_OVER": 0.624,
+      "P_UNDER": 0.262,
       "lean": "OVER",
-      "MIN_Q10": 21.89,
-      "MIN_Q50": 28.65,
-      "MIN_Q90": 35.17,
-      "STAT_Q10": 1.37,
-      "STAT_Q50": 4.6,
-      "STAT_Q90": 10.1,
+      "MIN_Q10": 18.73,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 32.01,
+      "STAT_Q10": 1.14,
+      "STAT_Q50": 4.03,
+      "STAT_Q90": 8.91,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -244415,17 +244415,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.319,
-      "P_UNDER": 0.681,
+      "P_OVER": 0.336,
+      "P_UNDER": 0.664,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 3.08,
-      "STAT_Q50": 7.69,
-      "STAT_Q90": 13.58,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 3.13,
+      "STAT_Q50": 8.02,
+      "STAT_Q90": 14.15,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -244562,17 +244562,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.371,
-      "P_UNDER": 0.562,
+      "P_OVER": 0.404,
+      "P_UNDER": 0.526,
       "lean": "UNDER",
-      "MIN_Q10": 18.69,
-      "MIN_Q50": 25.37,
-      "MIN_Q90": 29.2,
-      "STAT_Q10": 3.24,
-      "STAT_Q50": 8.03,
-      "STAT_Q90": 13.55,
+      "MIN_Q10": 17.85,
+      "MIN_Q50": 24.65,
+      "MIN_Q90": 28.36,
+      "STAT_Q10": 3.36,
+      "STAT_Q50": 8.45,
+      "STAT_Q90": 14.27,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -244709,17 +244709,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.362,
-      "P_UNDER": 0.637,
+      "P_OVER": 0.388,
+      "P_UNDER": 0.612,
       "lean": "UNDER",
-      "MIN_Q10": 22.48,
-      "MIN_Q50": 29.83,
-      "MIN_Q90": 37.35,
-      "STAT_Q10": 3.45,
-      "STAT_Q50": 8.7,
-      "STAT_Q90": 16.79,
+      "MIN_Q10": 21.79,
+      "MIN_Q50": 29.24,
+      "MIN_Q90": 36.66,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 9.49,
+      "STAT_Q90": 18.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -244848,17 +244848,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.458,
-      "P_UNDER": 0.542,
+      "P_OVER": 0.454,
+      "P_UNDER": 0.546,
       "lean": "UNDER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 1.54,
-      "STAT_Q50": 5.08,
-      "STAT_Q90": 9.31,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 1.47,
+      "STAT_Q50": 5.01,
+      "STAT_Q90": 9.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -244987,17 +244987,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.372,
-      "P_UNDER": 0.627,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
       "lean": "UNDER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 2.52,
-      "STAT_Q50": 7.11,
-      "STAT_Q90": 14.55,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 2.48,
+      "STAT_Q50": 7.38,
+      "STAT_Q90": 15.17,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -245118,17 +245118,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.459,
-      "P_UNDER": 0.44,
+      "P_OVER": 0.473,
+      "P_UNDER": 0.421,
       "lean": "OVER",
-      "MIN_Q10": 21.08,
-      "MIN_Q50": 26.3,
-      "MIN_Q90": 34.0,
-      "STAT_Q10": 1.92,
-      "STAT_Q50": 4.74,
-      "STAT_Q90": 10.61,
+      "MIN_Q10": 23.23,
+      "MIN_Q50": 28.13,
+      "MIN_Q90": 36.15,
+      "STAT_Q10": 2.03,
+      "STAT_Q50": 4.86,
+      "STAT_Q90": 10.81,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -245249,17 +245249,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.383,
-      "P_UNDER": 0.617,
+      "P_OVER": 0.387,
+      "P_UNDER": 0.613,
       "lean": "UNDER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 1.09,
-      "STAT_Q50": 4.0,
-      "STAT_Q90": 9.57,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 1.08,
+      "STAT_Q50": 4.14,
+      "STAT_Q90": 9.92,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -245388,17 +245388,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.549,
-      "P_UNDER": 0.451,
+      "P_OVER": 0.524,
+      "P_UNDER": 0.476,
       "lean": "OVER",
-      "MIN_Q10": 23.27,
-      "MIN_Q50": 29.67,
-      "MIN_Q90": 35.16,
-      "STAT_Q10": 1.8,
-      "STAT_Q50": 5.34,
-      "STAT_Q90": 10.52,
+      "MIN_Q10": 20.15,
+      "MIN_Q50": 27.02,
+      "MIN_Q90": 32.04,
+      "STAT_Q10": 1.63,
+      "STAT_Q50": 5.06,
+      "STAT_Q90": 9.97,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -245529,7 +245529,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -245650,17 +245650,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.251,
-      "P_UNDER": 0.639,
+      "P_OVER": 0.243,
+      "P_UNDER": 0.653,
       "lean": "UNDER",
-      "MIN_Q10": 31.39,
-      "MIN_Q50": 41.17,
-      "MIN_Q90": 42.01,
-      "STAT_Q10": 1.24,
-      "STAT_Q50": 3.67,
-      "STAT_Q90": 6.94,
+      "MIN_Q10": 27.97,
+      "MIN_Q50": 38.26,
+      "MIN_Q90": 38.59,
+      "STAT_Q10": 1.2,
+      "STAT_Q50": 3.72,
+      "STAT_Q90": 6.93,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -245778,20 +245778,20 @@
         "avg_stat": 4.125,
         "over_rate_at_line": 0.375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.489,
-      "P_UNDER": 0.403,
-      "lean": "OVER",
-      "MIN_Q10": 25.44,
-      "MIN_Q50": 33.44,
-      "MIN_Q90": 39.08,
-      "STAT_Q10": 1.61,
-      "STAT_Q50": 4.88,
-      "STAT_Q90": 10.23,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.444,
+      "P_UNDER": 0.448,
+      "lean": "UNDER",
+      "MIN_Q10": 21.64,
+      "MIN_Q50": 30.21,
+      "MIN_Q90": 35.28,
+      "STAT_Q10": 1.39,
+      "STAT_Q50": 4.47,
+      "STAT_Q90": 9.36,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -245920,18 +245920,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.495,
-      "P_UNDER": 0.504,
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
       "lean": "UNDER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 2.28,
-      "STAT_Q50": 6.97,
-      "STAT_Q90": 12.5,
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 1.98,
+      "STAT_Q50": 6.43,
+      "STAT_Q90": 11.42,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Betr DFS",
@@ -246045,7 +246045,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246168,7 +246168,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246291,7 +246291,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246414,7 +246414,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246537,7 +246537,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246660,7 +246660,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246783,7 +246783,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -246906,7 +246906,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247021,7 +247021,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247136,7 +247136,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247259,7 +247259,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247374,7 +247374,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247497,7 +247497,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247571,7 +247571,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247645,7 +247645,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247736,7 +247736,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247810,7 +247810,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247884,7 +247884,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -247958,7 +247958,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248065,7 +248065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248180,7 +248180,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248295,7 +248295,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248410,7 +248410,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248517,7 +248517,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248646,18 +248646,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.443,
-      "P_UNDER": 0.557,
+      "P_OVER": 0.447,
+      "P_UNDER": 0.553,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 3.8,
-      "STAT_Q50": 8.48,
-      "STAT_Q90": 15.37,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 8.62,
+      "STAT_Q90": 15.47,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -248785,17 +248785,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.335,
-      "P_UNDER": 0.665,
+      "P_OVER": 0.373,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 0.74,
-      "STAT_Q50": 3.16,
-      "STAT_Q90": 7.09,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 0.79,
+      "STAT_Q50": 3.46,
+      "STAT_Q90": 7.7,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -248894,7 +248894,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -249001,7 +249001,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -249100,7 +249100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -249253,18 +249253,18 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.502,
-      "P_UNDER": 0.498,
+      "P_OVER": 0.545,
+      "P_UNDER": 0.455,
       "lean": "OVER",
-      "MIN_Q10": 18.81,
-      "MIN_Q50": 26.41,
-      "MIN_Q90": 36.22,
-      "STAT_Q10": 2.7,
-      "STAT_Q50": 8.22,
-      "STAT_Q90": 19.24,
+      "MIN_Q10": 18.29,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 35.7,
+      "STAT_Q10": 2.86,
+      "STAT_Q50": 8.8,
+      "STAT_Q90": 20.67,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -249448,17 +249448,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.41,
-      "P_UNDER": 0.59,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 14.87,
-      "STAT_Q50": 29.25,
-      "STAT_Q90": 40.23,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 13.92,
+      "STAT_Q50": 28.38,
+      "STAT_Q90": 38.61,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -249603,17 +249603,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.664,
-      "P_UNDER": 0.336,
+      "P_OVER": 0.674,
+      "P_UNDER": 0.326,
       "lean": "OVER",
-      "MIN_Q10": 15.58,
-      "MIN_Q50": 24.44,
-      "MIN_Q90": 33.25,
-      "STAT_Q10": 1.61,
-      "STAT_Q50": 8.59,
-      "STAT_Q90": 23.03,
+      "MIN_Q10": 13.69,
+      "MIN_Q50": 22.83,
+      "MIN_Q90": 31.36,
+      "STAT_Q10": 1.55,
+      "STAT_Q50": 8.83,
+      "STAT_Q90": 23.92,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -249774,17 +249774,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 2.19,
-      "STAT_Q50": 8.87,
-      "STAT_Q90": 21.96,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 2.07,
+      "STAT_Q50": 8.91,
+      "STAT_Q90": 22.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -249969,17 +249969,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.566,
-      "P_UNDER": 0.434,
+      "P_OVER": 0.522,
+      "P_UNDER": 0.478,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 13.38,
-      "STAT_Q50": 28.02,
-      "STAT_Q90": 39.97,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 12.42,
+      "STAT_Q50": 26.88,
+      "STAT_Q90": 37.98,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -250132,17 +250132,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.7,
-      "P_UNDER": 0.3,
+      "P_OVER": 0.738,
+      "P_UNDER": 0.262,
       "lean": "OVER",
-      "MIN_Q10": 19.88,
-      "MIN_Q50": 25.53,
-      "MIN_Q90": 37.34,
-      "STAT_Q10": 3.15,
-      "STAT_Q50": 9.76,
-      "STAT_Q90": 24.46,
+      "MIN_Q10": 21.98,
+      "MIN_Q50": 27.32,
+      "MIN_Q90": 39.44,
+      "STAT_Q10": 3.76,
+      "STAT_Q50": 11.27,
+      "STAT_Q90": 27.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -250311,18 +250311,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.469,
+      "P_UNDER": 0.531,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 6.89,
-      "STAT_Q50": 15.02,
-      "STAT_Q90": 25.88,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 7.24,
+      "STAT_Q50": 16.17,
+      "STAT_Q90": 27.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -250482,17 +250482,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.755,
-      "P_UNDER": 0.245,
+      "P_OVER": 0.705,
+      "P_UNDER": 0.295,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 10.77,
-      "STAT_Q50": 23.59,
-      "STAT_Q90": 35.8,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 10.02,
+      "STAT_Q50": 22.71,
+      "STAT_Q90": 34.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -250645,17 +250645,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.593,
-      "P_UNDER": 0.407,
+      "P_OVER": 0.535,
+      "P_UNDER": 0.465,
       "lean": "OVER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 4.4,
-      "STAT_Q50": 12.69,
-      "STAT_Q90": 24.14,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 3.92,
+      "STAT_Q50": 11.94,
+      "STAT_Q90": 22.79,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -250808,18 +250808,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.411,
-      "P_UNDER": 0.589,
+      "P_OVER": 0.376,
+      "P_UNDER": 0.625,
       "lean": "UNDER",
-      "MIN_Q10": 23.27,
-      "MIN_Q50": 29.67,
-      "MIN_Q90": 35.16,
-      "STAT_Q10": 2.42,
-      "STAT_Q50": 10.37,
-      "STAT_Q90": 22.66,
+      "MIN_Q10": 20.15,
+      "MIN_Q50": 27.02,
+      "MIN_Q90": 32.04,
+      "STAT_Q10": 2.1,
+      "STAT_Q50": 9.44,
+      "STAT_Q90": 20.65,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -250973,7 +250973,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -251118,17 +251118,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.67,
-      "P_UNDER": 0.33,
+      "P_OVER": 0.636,
+      "P_UNDER": 0.363,
       "lean": "OVER",
-      "MIN_Q10": 12.5,
-      "MIN_Q50": 21.85,
-      "MIN_Q90": 30.21,
-      "STAT_Q10": 1.29,
-      "STAT_Q50": 7.29,
-      "STAT_Q90": 19.55,
+      "MIN_Q10": 11.35,
+      "MIN_Q50": 20.87,
+      "MIN_Q90": 29.06,
+      "STAT_Q10": 1.17,
+      "STAT_Q50": 6.96,
+      "STAT_Q90": 18.81,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -251294,21 +251294,21 @@
         "avg_stat": 14.6875,
         "over_rate_at_line": 0.4375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.506,
-      "P_UNDER": 0.494,
-      "lean": "OVER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 7.09,
-      "STAT_Q50": 17.78,
-      "STAT_Q90": 29.34,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
+      "lean": "UNDER",
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 5.97,
+      "STAT_Q50": 15.93,
+      "STAT_Q90": 26.05,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -251430,7 +251430,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -251553,7 +251553,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -251676,7 +251676,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -251799,7 +251799,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -251922,7 +251922,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252037,7 +252037,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252152,7 +252152,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252275,7 +252275,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252349,7 +252349,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252472,7 +252472,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252595,7 +252595,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252718,7 +252718,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252841,7 +252841,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -252956,7 +252956,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253079,7 +253079,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253226,7 +253226,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253373,7 +253373,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253512,7 +253512,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253659,7 +253659,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253806,7 +253806,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -253953,7 +253953,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254100,7 +254100,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254247,7 +254247,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254394,7 +254394,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254533,7 +254533,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254680,7 +254680,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -254809,17 +254809,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.544,
-      "P_UNDER": 0.316,
+      "P_OVER": 0.468,
+      "P_UNDER": 0.409,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 1.59,
-      "STAT_Q50": 4.89,
-      "STAT_Q90": 8.41,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 1.5,
+      "STAT_Q50": 4.77,
+      "STAT_Q90": 8.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -254892,17 +254892,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.375,
-      "P_UNDER": 0.625,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
       "lean": "UNDER",
-      "MIN_Q10": 19.88,
-      "MIN_Q50": 25.53,
-      "MIN_Q90": 37.34,
-      "STAT_Q10": 0.38,
-      "STAT_Q50": 2.34,
-      "STAT_Q90": 6.38,
+      "MIN_Q10": 21.98,
+      "MIN_Q50": 27.32,
+      "MIN_Q90": 39.44,
+      "STAT_Q10": 0.4,
+      "STAT_Q50": 2.39,
+      "STAT_Q90": 6.43,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255039,17 +255039,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.319,
-      "P_UNDER": 0.681,
+      "P_OVER": 0.336,
+      "P_UNDER": 0.664,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 3.08,
-      "STAT_Q50": 7.69,
-      "STAT_Q90": 13.58,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 3.13,
+      "STAT_Q50": 8.02,
+      "STAT_Q90": 14.15,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255186,17 +255186,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.362,
-      "P_UNDER": 0.637,
+      "P_OVER": 0.388,
+      "P_UNDER": 0.612,
       "lean": "UNDER",
-      "MIN_Q10": 22.48,
-      "MIN_Q50": 29.83,
-      "MIN_Q90": 37.35,
-      "STAT_Q10": 3.45,
-      "STAT_Q50": 8.7,
-      "STAT_Q90": 16.79,
+      "MIN_Q10": 21.79,
+      "MIN_Q50": 29.24,
+      "MIN_Q90": 36.66,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 9.49,
+      "STAT_Q90": 18.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255325,17 +255325,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.458,
-      "P_UNDER": 0.542,
+      "P_OVER": 0.454,
+      "P_UNDER": 0.546,
       "lean": "UNDER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 1.54,
-      "STAT_Q50": 5.08,
-      "STAT_Q90": 9.31,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 1.47,
+      "STAT_Q50": 5.01,
+      "STAT_Q90": 9.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -255464,18 +255464,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.495,
-      "P_UNDER": 0.504,
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
       "lean": "UNDER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 2.28,
-      "STAT_Q50": 6.97,
-      "STAT_Q90": 12.5,
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 1.98,
+      "STAT_Q50": 6.43,
+      "STAT_Q90": 11.42,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "DraftKings Pick6",
@@ -255597,7 +255597,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255720,7 +255720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255843,7 +255843,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -255958,7 +255958,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256073,7 +256073,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256188,7 +256188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256295,7 +256295,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256418,7 +256418,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256547,18 +256547,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.443,
-      "P_UNDER": 0.557,
+      "P_OVER": 0.447,
+      "P_UNDER": 0.553,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 3.8,
-      "STAT_Q50": 8.48,
-      "STAT_Q90": 15.37,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 8.62,
+      "STAT_Q90": 15.47,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -256621,17 +256621,17 @@
       "is_conflict": false,
       "sharp_aligned": false,
       "tier": "no_model",
-      "P_OVER": 0.475,
-      "P_UNDER": 0.525,
+      "P_OVER": 0.483,
+      "P_UNDER": 0.516,
       "lean": "UNDER",
-      "MIN_Q10": 15.58,
-      "MIN_Q50": 24.44,
-      "MIN_Q90": 33.25,
-      "STAT_Q10": 0.38,
-      "STAT_Q50": 1.89,
-      "STAT_Q90": 6.06,
+      "MIN_Q10": 13.69,
+      "MIN_Q50": 22.83,
+      "MIN_Q90": 31.36,
+      "STAT_Q10": 0.39,
+      "STAT_Q50": 2.06,
+      "STAT_Q90": 6.68,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -256744,17 +256744,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.378,
-      "P_UNDER": 0.622,
+      "P_OVER": 0.37,
+      "P_UNDER": 0.63,
       "lean": "UNDER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
       "STAT_Q10": 0.0,
       "STAT_Q50": 1.23,
-      "STAT_Q90": 4.4,
+      "STAT_Q90": 4.38,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256875,17 +256875,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.404,
-      "P_UNDER": 0.596,
+      "P_OVER": 0.38,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 0.68,
-      "STAT_Q50": 3.33,
-      "STAT_Q90": 8.21,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 0.6,
+      "STAT_Q50": 3.15,
+      "STAT_Q90": 7.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -256982,17 +256982,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.286,
-      "P_UNDER": 0.714,
+      "P_OVER": 0.292,
+      "P_UNDER": 0.708,
       "lean": "UNDER",
-      "MIN_Q10": 16.11,
-      "MIN_Q50": 21.13,
-      "MIN_Q90": 28.78,
+      "MIN_Q10": 18.54,
+      "MIN_Q50": 23.2,
+      "MIN_Q90": 31.21,
       "STAT_Q10": 0.0,
-      "STAT_Q50": 0.75,
-      "STAT_Q90": 4.26,
+      "STAT_Q50": 0.94,
+      "STAT_Q90": 5.29,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -257121,17 +257121,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.335,
-      "P_UNDER": 0.665,
+      "P_OVER": 0.373,
+      "P_UNDER": 0.627,
       "lean": "UNDER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 0.74,
-      "STAT_Q50": 3.16,
-      "STAT_Q90": 7.09,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 0.79,
+      "STAT_Q50": 3.46,
+      "STAT_Q90": 7.7,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257260,17 +257260,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.647,
-      "P_UNDER": 0.352,
+      "P_OVER": 0.654,
+      "P_UNDER": 0.346,
       "lean": "OVER",
-      "MIN_Q10": 21.73,
-      "MIN_Q50": 31.63,
-      "MIN_Q90": 36.88,
-      "STAT_Q10": 1.71,
-      "STAT_Q50": 5.48,
-      "STAT_Q90": 11.05,
+      "MIN_Q10": 24.21,
+      "MIN_Q50": 33.74,
+      "MIN_Q90": 39.36,
+      "STAT_Q10": 1.79,
+      "STAT_Q50": 5.49,
+      "STAT_Q90": 11.08,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -257399,17 +257399,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.487,
-      "P_UNDER": 0.42,
+      "P_OVER": 0.489,
+      "P_UNDER": 0.428,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 2.82,
-      "STAT_Q50": 6.62,
-      "STAT_Q90": 12.55,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 2.76,
+      "STAT_Q50": 6.72,
+      "STAT_Q90": 12.62,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -257508,7 +257508,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257607,7 +257607,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257714,7 +257714,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257813,7 +257813,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257896,7 +257896,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -257970,7 +257970,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258044,7 +258044,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258118,7 +258118,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258192,7 +258192,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258266,7 +258266,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258340,7 +258340,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258414,7 +258414,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258488,7 +258488,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258562,7 +258562,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258636,7 +258636,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258710,7 +258710,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258784,7 +258784,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258858,7 +258858,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -258932,7 +258932,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259006,7 +259006,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259080,7 +259080,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259154,7 +259154,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259228,7 +259228,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259302,7 +259302,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259376,7 +259376,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259450,7 +259450,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259524,7 +259524,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259598,7 +259598,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259672,7 +259672,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259746,7 +259746,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259820,7 +259820,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259894,7 +259894,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -259968,7 +259968,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260042,7 +260042,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260116,7 +260116,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260190,7 +260190,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260264,7 +260264,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260338,7 +260338,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260412,7 +260412,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260486,7 +260486,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -260639,17 +260639,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.942,
-      "P_UNDER": 0.059,
+      "P_OVER": 0.885,
+      "P_UNDER": 0.115,
       "lean": "OVER",
-      "MIN_Q10": 23.21,
-      "MIN_Q50": 31.89,
-      "MIN_Q90": 35.54,
-      "STAT_Q10": 7.16,
-      "STAT_Q50": 18.47,
-      "STAT_Q90": 30.78,
+      "MIN_Q10": 19.99,
+      "MIN_Q50": 29.15,
+      "MIN_Q90": 32.32,
+      "STAT_Q10": 5.78,
+      "STAT_Q50": 15.82,
+      "STAT_Q90": 26.23,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -260786,18 +260786,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.557,
-      "P_UNDER": 0.443,
+      "P_OVER": 0.71,
+      "P_UNDER": 0.29,
       "lean": "OVER",
-      "MIN_Q10": 14.51,
-      "MIN_Q50": 20.32,
-      "MIN_Q90": 25.3,
-      "STAT_Q10": 1.1,
-      "STAT_Q50": 6.47,
-      "STAT_Q90": 16.13,
+      "MIN_Q10": 17.08,
+      "MIN_Q50": 22.51,
+      "MIN_Q90": 27.87,
+      "STAT_Q10": 1.38,
+      "STAT_Q50": 7.65,
+      "STAT_Q90": 18.96,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -260949,18 +260949,18 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.502,
-      "P_UNDER": 0.498,
+      "P_OVER": 0.545,
+      "P_UNDER": 0.455,
       "lean": "OVER",
-      "MIN_Q10": 18.81,
-      "MIN_Q50": 26.41,
-      "MIN_Q90": 36.22,
-      "STAT_Q10": 2.7,
-      "STAT_Q50": 8.22,
-      "STAT_Q90": 19.24,
+      "MIN_Q10": 18.29,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 35.7,
+      "STAT_Q10": 2.86,
+      "STAT_Q50": 8.8,
+      "STAT_Q90": 20.67,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -261144,17 +261144,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.41,
-      "P_UNDER": 0.59,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 14.87,
-      "STAT_Q50": 29.25,
-      "STAT_Q90": 40.23,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 13.92,
+      "STAT_Q50": 28.38,
+      "STAT_Q90": 38.61,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -261288,21 +261288,21 @@
         "avg_stat": 9.5,
         "over_rate_at_line": 0.625
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.472,
-      "P_UNDER": 0.527,
-      "lean": "UNDER",
-      "MIN_Q10": 13.6,
-      "MIN_Q50": 19.69,
-      "MIN_Q90": 25.11,
-      "STAT_Q10": 1.21,
-      "STAT_Q50": 5.5,
-      "STAT_Q90": 12.87,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.586,
+      "P_UNDER": 0.414,
+      "lean": "OVER",
+      "MIN_Q10": 18.72,
+      "MIN_Q50": 24.05,
+      "MIN_Q90": 30.23,
+      "STAT_Q10": 1.64,
+      "STAT_Q50": 6.6,
+      "STAT_Q90": 15.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -261462,17 +261462,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.683,
-      "P_UNDER": 0.317,
+      "P_OVER": 0.674,
+      "P_UNDER": 0.326,
       "lean": "OVER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
-      "STAT_Q10": 7.76,
-      "STAT_Q50": 17.61,
-      "STAT_Q90": 28.54,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
+      "STAT_Q10": 7.45,
+      "STAT_Q50": 17.72,
+      "STAT_Q90": 28.53,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -261633,17 +261633,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 2.19,
-      "STAT_Q50": 8.87,
-      "STAT_Q90": 21.96,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 2.07,
+      "STAT_Q50": 8.91,
+      "STAT_Q90": 22.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -261804,17 +261804,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.786,
-      "P_UNDER": 0.214,
+      "P_OVER": 0.739,
+      "P_UNDER": 0.261,
       "lean": "OVER",
-      "MIN_Q10": 27.97,
-      "MIN_Q50": 37.93,
-      "MIN_Q90": 40.48,
-      "STAT_Q10": 8.65,
-      "STAT_Q50": 21.76,
-      "STAT_Q90": 32.38,
+      "MIN_Q10": 25.1,
+      "MIN_Q50": 35.49,
+      "MIN_Q90": 37.61,
+      "STAT_Q10": 7.83,
+      "STAT_Q50": 20.55,
+      "STAT_Q90": 30.36,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -261943,17 +261943,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.562,
-      "P_UNDER": 0.438,
+      "P_OVER": 0.61,
+      "P_UNDER": 0.39,
       "lean": "OVER",
-      "MIN_Q10": 16.11,
-      "MIN_Q50": 21.13,
-      "MIN_Q90": 28.78,
-      "STAT_Q10": 0.59,
-      "STAT_Q50": 4.85,
-      "STAT_Q90": 12.9,
+      "MIN_Q10": 18.54,
+      "MIN_Q50": 23.2,
+      "MIN_Q90": 31.21,
+      "STAT_Q10": 0.7,
+      "STAT_Q50": 5.43,
+      "STAT_Q90": 14.28,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -262106,17 +262106,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.542,
-      "P_UNDER": 0.458,
+      "P_OVER": 0.751,
+      "P_UNDER": 0.249,
       "lean": "OVER",
-      "MIN_Q10": 23.16,
-      "MIN_Q50": 30.52,
-      "MIN_Q90": 35.34,
-      "STAT_Q10": 4.62,
-      "STAT_Q50": 11.7,
-      "STAT_Q90": 22.51,
+      "MIN_Q10": 25.51,
+      "MIN_Q50": 32.51,
+      "MIN_Q90": 37.69,
+      "STAT_Q10": 5.58,
+      "STAT_Q50": 13.64,
+      "STAT_Q90": 26.3,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -262301,17 +262301,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.566,
-      "P_UNDER": 0.434,
+      "P_OVER": 0.522,
+      "P_UNDER": 0.478,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 13.38,
-      "STAT_Q50": 28.02,
-      "STAT_Q90": 39.97,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 12.42,
+      "STAT_Q50": 26.88,
+      "STAT_Q90": 37.98,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -262464,17 +262464,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.7,
-      "P_UNDER": 0.3,
+      "P_OVER": 0.738,
+      "P_UNDER": 0.262,
       "lean": "OVER",
-      "MIN_Q10": 19.88,
-      "MIN_Q50": 25.53,
-      "MIN_Q90": 37.34,
-      "STAT_Q10": 3.15,
-      "STAT_Q50": 9.76,
-      "STAT_Q90": 24.46,
+      "MIN_Q10": 21.98,
+      "MIN_Q50": 27.32,
+      "MIN_Q90": 39.44,
+      "STAT_Q10": 3.76,
+      "STAT_Q50": 11.27,
+      "STAT_Q90": 27.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -262619,17 +262619,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.838,
-      "P_UNDER": 0.162,
+      "P_OVER": 0.842,
+      "P_UNDER": 0.159,
       "lean": "OVER",
-      "MIN_Q10": 21.89,
-      "MIN_Q50": 28.65,
-      "MIN_Q90": 35.17,
-      "STAT_Q10": 4.78,
-      "STAT_Q50": 12.33,
-      "STAT_Q90": 26.01,
+      "MIN_Q10": 18.73,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 32.01,
+      "STAT_Q10": 4.55,
+      "STAT_Q50": 12.42,
+      "STAT_Q90": 26.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -262798,18 +262798,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.469,
+      "P_UNDER": 0.531,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 6.89,
-      "STAT_Q50": 15.02,
-      "STAT_Q90": 25.88,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 7.24,
+      "STAT_Q50": 16.17,
+      "STAT_Q90": 27.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -262953,17 +262953,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.546,
-      "P_UNDER": 0.454,
+      "P_OVER": 0.578,
+      "P_UNDER": 0.422,
       "lean": "OVER",
-      "MIN_Q10": 18.69,
-      "MIN_Q50": 25.37,
-      "MIN_Q90": 29.2,
-      "STAT_Q10": 2.9,
-      "STAT_Q50": 8.43,
-      "STAT_Q90": 16.31,
+      "MIN_Q10": 17.85,
+      "MIN_Q50": 24.65,
+      "MIN_Q90": 28.36,
+      "STAT_Q10": 2.99,
+      "STAT_Q50": 8.85,
+      "STAT_Q90": 17.1,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263121,20 +263121,20 @@
         "avg_stat": 12.117647058823529,
         "over_rate_at_line": 0.23529411764705882
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified",
-      "P_OVER": 0.457,
-      "P_UNDER": 0.543,
-      "lean": "UNDER",
-      "MIN_Q10": 22.48,
-      "MIN_Q50": 29.83,
-      "MIN_Q90": 37.35,
-      "STAT_Q10": 4.95,
-      "STAT_Q50": 12.02,
-      "STAT_Q90": 25.0,
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict",
+      "P_OVER": 0.557,
+      "P_UNDER": 0.443,
+      "lean": "OVER",
+      "MIN_Q10": 21.79,
+      "MIN_Q50": 29.24,
+      "MIN_Q90": 36.66,
+      "STAT_Q10": 5.45,
+      "STAT_Q50": 13.37,
+      "STAT_Q90": 27.84,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263295,17 +263295,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.81,
-      "P_UNDER": 0.19,
+      "P_OVER": 0.885,
+      "P_UNDER": 0.115,
       "lean": "OVER",
-      "MIN_Q10": 21.73,
-      "MIN_Q50": 31.63,
-      "MIN_Q90": 36.88,
-      "STAT_Q10": 6.71,
-      "STAT_Q50": 17.29,
-      "STAT_Q90": 30.67,
+      "MIN_Q10": 24.21,
+      "MIN_Q50": 33.74,
+      "MIN_Q90": 39.36,
+      "STAT_Q10": 8.3,
+      "STAT_Q50": 20.46,
+      "STAT_Q90": 36.31,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263466,17 +263466,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.755,
-      "P_UNDER": 0.245,
+      "P_OVER": 0.705,
+      "P_UNDER": 0.295,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 10.77,
-      "STAT_Q50": 23.59,
-      "STAT_Q90": 35.8,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 10.02,
+      "STAT_Q50": 22.71,
+      "STAT_Q90": 34.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263629,17 +263629,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.593,
-      "P_UNDER": 0.407,
+      "P_OVER": 0.535,
+      "P_UNDER": 0.465,
       "lean": "OVER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 4.4,
-      "STAT_Q50": 12.69,
-      "STAT_Q90": 24.14,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 3.92,
+      "STAT_Q50": 11.94,
+      "STAT_Q90": 22.79,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263792,17 +263792,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.584,
-      "P_UNDER": 0.416,
+      "P_OVER": 0.615,
+      "P_UNDER": 0.385,
       "lean": "OVER",
-      "MIN_Q10": 21.08,
-      "MIN_Q50": 26.3,
-      "MIN_Q90": 34.0,
-      "STAT_Q10": 3.49,
-      "STAT_Q50": 9.75,
-      "STAT_Q90": 21.54,
+      "MIN_Q10": 23.23,
+      "MIN_Q50": 28.13,
+      "MIN_Q90": 36.15,
+      "STAT_Q10": 3.73,
+      "STAT_Q50": 10.12,
+      "STAT_Q90": 22.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -263939,17 +263939,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.57,
-      "P_UNDER": 0.43,
+      "P_OVER": 0.595,
+      "P_UNDER": 0.405,
       "lean": "OVER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 2.34,
-      "STAT_Q50": 8.97,
-      "STAT_Q90": 21.83,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 2.39,
+      "STAT_Q50": 9.52,
+      "STAT_Q90": 23.26,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -264102,18 +264102,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.411,
-      "P_UNDER": 0.589,
+      "P_OVER": 0.376,
+      "P_UNDER": 0.625,
       "lean": "UNDER",
-      "MIN_Q10": 23.27,
-      "MIN_Q50": 29.67,
-      "MIN_Q90": 35.16,
-      "STAT_Q10": 2.42,
-      "STAT_Q50": 10.37,
-      "STAT_Q90": 22.66,
+      "MIN_Q10": 20.15,
+      "MIN_Q50": 27.02,
+      "MIN_Q90": 32.04,
+      "STAT_Q10": 2.1,
+      "STAT_Q50": 9.44,
+      "STAT_Q90": 20.65,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -264267,7 +264267,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -264412,17 +264412,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.67,
-      "P_UNDER": 0.33,
+      "P_OVER": 0.636,
+      "P_UNDER": 0.363,
       "lean": "OVER",
-      "MIN_Q10": 12.5,
-      "MIN_Q50": 21.85,
-      "MIN_Q90": 30.21,
-      "STAT_Q10": 1.29,
-      "STAT_Q50": 7.29,
-      "STAT_Q90": 19.55,
+      "MIN_Q10": 11.35,
+      "MIN_Q50": 20.87,
+      "MIN_Q90": 29.06,
+      "STAT_Q10": 1.17,
+      "STAT_Q50": 6.96,
+      "STAT_Q90": 18.81,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -264607,17 +264607,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.494,
-      "P_UNDER": 0.506,
+      "P_OVER": 0.463,
+      "P_UNDER": 0.537,
       "lean": "UNDER",
-      "MIN_Q10": 31.39,
-      "MIN_Q50": 41.17,
-      "MIN_Q90": 42.01,
-      "STAT_Q10": 17.09,
-      "STAT_Q50": 34.4,
-      "STAT_Q90": 44.16,
+      "MIN_Q10": 27.97,
+      "MIN_Q50": 38.26,
+      "MIN_Q90": 38.59,
+      "STAT_Q10": 16.1,
+      "STAT_Q50": 33.8,
+      "STAT_Q90": 42.89,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -264778,18 +264778,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.676,
-      "P_UNDER": 0.324,
+      "P_OVER": 0.577,
+      "P_UNDER": 0.423,
       "lean": "OVER",
-      "MIN_Q10": 25.44,
-      "MIN_Q50": 33.44,
-      "MIN_Q90": 39.08,
-      "STAT_Q10": 7.08,
-      "STAT_Q50": 18.04,
-      "STAT_Q90": 32.33,
+      "MIN_Q10": 21.64,
+      "MIN_Q50": 30.21,
+      "MIN_Q90": 35.28,
+      "STAT_Q10": 5.9,
+      "STAT_Q50": 15.97,
+      "STAT_Q90": 28.59,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -264954,21 +264954,21 @@
         "avg_stat": 14.6875,
         "over_rate_at_line": 0.4375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.506,
-      "P_UNDER": 0.494,
-      "lean": "OVER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 7.09,
-      "STAT_Q50": 17.78,
-      "STAT_Q90": 29.34,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
+      "lean": "UNDER",
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 5.97,
+      "STAT_Q50": 15.93,
+      "STAT_Q90": 26.05,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -265144,17 +265144,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.404,
-      "P_UNDER": 0.596,
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
       "lean": "UNDER",
-      "MIN_Q10": 22.32,
-      "MIN_Q50": 31.74,
-      "MIN_Q90": 37.12,
-      "STAT_Q10": 8.77,
-      "STAT_Q50": 20.99,
-      "STAT_Q90": 36.57,
+      "MIN_Q10": 22.22,
+      "MIN_Q50": 31.66,
+      "MIN_Q90": 37.02,
+      "STAT_Q10": 9.25,
+      "STAT_Q50": 22.19,
+      "STAT_Q90": 38.66,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265269,7 +265269,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265384,7 +265384,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265507,7 +265507,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265630,7 +265630,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265704,7 +265704,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265819,7 +265819,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -265942,7 +265942,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266065,7 +266065,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266188,7 +266188,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266271,7 +266271,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266394,7 +266394,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266517,7 +266517,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266591,7 +266591,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266706,7 +266706,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266829,7 +266829,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -266952,7 +266952,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267075,7 +267075,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267198,7 +267198,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267321,7 +267321,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267436,7 +267436,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267551,7 +267551,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267666,7 +267666,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267740,7 +267740,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267863,7 +267863,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -267986,7 +267986,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268101,7 +268101,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268224,7 +268224,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268339,7 +268339,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268454,7 +268454,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268577,7 +268577,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268700,7 +268700,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268815,7 +268815,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -268938,7 +268938,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269061,7 +269061,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269184,7 +269184,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269307,7 +269307,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269430,7 +269430,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269553,7 +269553,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269627,7 +269627,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269742,7 +269742,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269865,7 +269865,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -269988,7 +269988,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270111,7 +270111,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270234,7 +270234,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270357,7 +270357,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270480,7 +270480,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270595,7 +270595,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270718,7 +270718,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270833,7 +270833,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -270948,7 +270948,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271071,7 +271071,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271194,7 +271194,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271317,7 +271317,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271440,7 +271440,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271587,7 +271587,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271734,7 +271734,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -271881,7 +271881,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272028,7 +272028,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272167,7 +272167,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272314,7 +272314,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272461,7 +272461,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272608,7 +272608,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272755,7 +272755,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272846,7 +272846,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -272985,7 +272985,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273132,7 +273132,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273279,7 +273279,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273426,7 +273426,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273573,7 +273573,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273720,7 +273720,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -273867,7 +273867,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274014,7 +274014,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274161,7 +274161,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274308,7 +274308,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274455,7 +274455,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274594,7 +274594,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274677,7 +274677,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274816,7 +274816,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -274963,7 +274963,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275102,7 +275102,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275241,7 +275241,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275388,7 +275388,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275535,7 +275535,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275682,7 +275682,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275829,7 +275829,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -275963,20 +275963,20 @@
         "avg_stat": 6.882352941176471,
         "over_rate_at_line": 0.4117647058823529
       },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified",
-      "P_OVER": 0.411,
-      "P_UNDER": 0.495,
-      "lean": "UNDER",
-      "MIN_Q10": 18.81,
-      "MIN_Q50": 26.41,
-      "MIN_Q90": 36.22,
-      "STAT_Q10": 1.88,
-      "STAT_Q50": 5.46,
-      "STAT_Q90": 12.48,
+      "is_conflict": true,
+      "sharp_aligned": false,
+      "tier": "conflict",
+      "P_OVER": 0.462,
+      "P_UNDER": 0.444,
+      "lean": "OVER",
+      "MIN_Q10": 18.29,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 35.7,
+      "STAT_Q10": 2.0,
+      "STAT_Q50": 5.86,
+      "STAT_Q90": 13.43,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -276108,14 +276108,14 @@
       "P_OVER": 0.378,
       "P_UNDER": 0.537,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 2.12,
-      "STAT_Q50": 6.11,
-      "STAT_Q90": 10.59,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 2.0,
+      "STAT_Q50": 5.95,
+      "STAT_Q90": 10.21,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -276236,17 +276236,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.401,
-      "P_UNDER": 0.466,
+      "P_OVER": 0.384,
+      "P_UNDER": 0.481,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 0.34,
-      "STAT_Q50": 2.61,
-      "STAT_Q90": 7.0,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 0.3,
+      "STAT_Q50": 2.48,
+      "STAT_Q90": 6.71,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -276375,17 +276375,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.544,
-      "P_UNDER": 0.316,
+      "P_OVER": 0.468,
+      "P_UNDER": 0.409,
       "lean": "OVER",
-      "MIN_Q10": 31.29,
-      "MIN_Q50": 39.41,
-      "MIN_Q90": 40.58,
-      "STAT_Q10": 1.59,
-      "STAT_Q50": 4.89,
-      "STAT_Q90": 8.41,
+      "MIN_Q10": 28.39,
+      "MIN_Q50": 36.94,
+      "MIN_Q90": 37.68,
+      "STAT_Q10": 1.5,
+      "STAT_Q50": 4.77,
+      "STAT_Q90": 8.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -276522,18 +276522,18 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.319,
-      "P_UNDER": 0.681,
+      "P_OVER": 0.336,
+      "P_UNDER": 0.664,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 3.08,
-      "STAT_Q50": 7.69,
-      "STAT_Q90": 13.58,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 3.13,
+      "STAT_Q50": 8.02,
+      "STAT_Q90": 14.15,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -276661,17 +276661,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.458,
-      "P_UNDER": 0.542,
+      "P_OVER": 0.454,
+      "P_UNDER": 0.546,
       "lean": "UNDER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 1.54,
-      "STAT_Q50": 5.08,
-      "STAT_Q90": 9.31,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 1.47,
+      "STAT_Q50": 5.01,
+      "STAT_Q90": 9.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -276800,17 +276800,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.372,
-      "P_UNDER": 0.627,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
       "lean": "UNDER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 2.52,
-      "STAT_Q50": 7.11,
-      "STAT_Q90": 14.55,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 2.48,
+      "STAT_Q50": 7.38,
+      "STAT_Q90": 15.17,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -276931,17 +276931,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.383,
-      "P_UNDER": 0.617,
+      "P_OVER": 0.387,
+      "P_UNDER": 0.613,
       "lean": "UNDER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 1.09,
-      "STAT_Q50": 4.0,
-      "STAT_Q90": 9.57,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 1.08,
+      "STAT_Q50": 4.14,
+      "STAT_Q90": 9.92,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -277054,18 +277054,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.363,
-      "P_UNDER": 0.637,
+      "P_OVER": 0.491,
+      "P_UNDER": 0.509,
       "lean": "UNDER",
-      "MIN_Q10": 18.55,
-      "MIN_Q50": 26.06,
-      "MIN_Q90": 32.21,
-      "STAT_Q10": 0.48,
-      "STAT_Q50": 2.35,
-      "STAT_Q90": 5.56,
+      "MIN_Q10": 20.53,
+      "MIN_Q50": 27.74,
+      "MIN_Q90": 34.19,
+      "STAT_Q10": 0.61,
+      "STAT_Q50": 2.9,
+      "STAT_Q90": 6.86,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "PrizePicks",
@@ -277193,17 +277193,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.549,
-      "P_UNDER": 0.451,
+      "P_OVER": 0.524,
+      "P_UNDER": 0.476,
       "lean": "OVER",
-      "MIN_Q10": 23.27,
-      "MIN_Q50": 29.67,
-      "MIN_Q90": 35.16,
-      "STAT_Q10": 1.8,
-      "STAT_Q50": 5.34,
-      "STAT_Q90": 10.52,
+      "MIN_Q10": 20.15,
+      "MIN_Q50": 27.02,
+      "MIN_Q90": 32.04,
+      "STAT_Q10": 1.63,
+      "STAT_Q50": 5.06,
+      "STAT_Q90": 9.97,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -277334,7 +277334,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -277463,17 +277463,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.495,
-      "P_UNDER": 0.504,
+      "P_OVER": 0.442,
+      "P_UNDER": 0.558,
       "lean": "UNDER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 2.28,
-      "STAT_Q50": 6.97,
-      "STAT_Q90": 12.5,
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 1.98,
+      "STAT_Q50": 6.43,
+      "STAT_Q90": 11.42,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -277610,17 +277610,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.446,
-      "P_UNDER": 0.554,
+      "P_OVER": 0.464,
+      "P_UNDER": 0.536,
       "lean": "UNDER",
-      "MIN_Q10": 22.32,
-      "MIN_Q50": 31.74,
-      "MIN_Q90": 37.12,
-      "STAT_Q10": 5.12,
-      "STAT_Q50": 11.87,
-      "STAT_Q90": 20.19,
+      "MIN_Q10": 22.22,
+      "MIN_Q50": 31.66,
+      "MIN_Q90": 37.02,
+      "STAT_Q10": 5.23,
+      "STAT_Q50": 12.15,
+      "STAT_Q90": 20.65,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -277735,7 +277735,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -277858,7 +277858,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -277973,7 +277973,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278096,7 +278096,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278219,7 +278219,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278342,7 +278342,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278465,7 +278465,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278580,7 +278580,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278703,7 +278703,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278826,7 +278826,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -278949,7 +278949,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279072,7 +279072,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279195,7 +279195,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279310,7 +279310,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279425,7 +279425,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279540,7 +279540,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279614,7 +279614,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279737,7 +279737,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279852,7 +279852,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -279975,7 +279975,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280049,7 +280049,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280140,7 +280140,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280214,7 +280214,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280288,7 +280288,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280362,7 +280362,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280477,7 +280477,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280592,7 +280592,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280707,7 +280707,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280781,7 +280781,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280855,7 +280855,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -280984,18 +280984,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.443,
-      "P_UNDER": 0.557,
+      "P_OVER": 0.447,
+      "P_UNDER": 0.553,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 3.8,
-      "STAT_Q50": 8.48,
-      "STAT_Q90": 15.37,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 3.72,
+      "STAT_Q50": 8.62,
+      "STAT_Q90": 15.47,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Underdog",
@@ -281179,17 +281179,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.41,
-      "P_UNDER": 0.59,
+      "P_OVER": 0.383,
+      "P_UNDER": 0.617,
       "lean": "UNDER",
-      "MIN_Q10": 35.58,
-      "MIN_Q50": 44.87,
-      "MIN_Q90": 45.86,
-      "STAT_Q10": 14.87,
-      "STAT_Q50": 29.25,
-      "STAT_Q90": 40.23,
+      "MIN_Q10": 31.99,
+      "MIN_Q50": 41.82,
+      "MIN_Q90": 42.27,
+      "STAT_Q10": 13.92,
+      "STAT_Q50": 28.38,
+      "STAT_Q90": 38.61,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -281323,21 +281323,21 @@
         "avg_stat": 9.5,
         "over_rate_at_line": 0.625
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.472,
-      "P_UNDER": 0.527,
-      "lean": "UNDER",
-      "MIN_Q10": 13.6,
-      "MIN_Q50": 19.69,
-      "MIN_Q90": 25.11,
-      "STAT_Q10": 1.21,
-      "STAT_Q50": 5.5,
-      "STAT_Q90": 12.87,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.586,
+      "P_UNDER": 0.414,
+      "lean": "OVER",
+      "MIN_Q10": 18.72,
+      "MIN_Q50": 24.05,
+      "MIN_Q90": 30.23,
+      "STAT_Q10": 1.64,
+      "STAT_Q50": 6.6,
+      "STAT_Q90": 15.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Underdog",
@@ -281497,17 +281497,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.683,
-      "P_UNDER": 0.317,
+      "P_OVER": 0.674,
+      "P_UNDER": 0.326,
       "lean": "OVER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
-      "STAT_Q10": 7.76,
-      "STAT_Q50": 17.61,
-      "STAT_Q90": 28.54,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
+      "STAT_Q10": 7.45,
+      "STAT_Q50": 17.72,
+      "STAT_Q90": 28.53,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -281668,17 +281668,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.62,
       "lean": "UNDER",
-      "MIN_Q10": 18.36,
-      "MIN_Q50": 26.48,
-      "MIN_Q90": 34.24,
-      "STAT_Q10": 2.19,
-      "STAT_Q50": 8.87,
-      "STAT_Q90": 21.96,
+      "MIN_Q10": 16.0,
+      "MIN_Q50": 24.47,
+      "MIN_Q90": 31.88,
+      "STAT_Q10": 2.07,
+      "STAT_Q50": 8.91,
+      "STAT_Q90": 22.22,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -281831,17 +281831,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.542,
-      "P_UNDER": 0.458,
+      "P_OVER": 0.751,
+      "P_UNDER": 0.249,
       "lean": "OVER",
-      "MIN_Q10": 23.16,
-      "MIN_Q50": 30.52,
-      "MIN_Q90": 35.34,
-      "STAT_Q10": 4.62,
-      "STAT_Q50": 11.7,
-      "STAT_Q90": 22.51,
+      "MIN_Q10": 25.51,
+      "MIN_Q50": 32.51,
+      "MIN_Q90": 37.69,
+      "STAT_Q10": 5.58,
+      "STAT_Q50": 13.64,
+      "STAT_Q90": 26.3,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -281994,17 +281994,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.7,
-      "P_UNDER": 0.3,
+      "P_OVER": 0.738,
+      "P_UNDER": 0.262,
       "lean": "OVER",
-      "MIN_Q10": 19.88,
-      "MIN_Q50": 25.53,
-      "MIN_Q90": 37.34,
-      "STAT_Q10": 3.15,
-      "STAT_Q50": 9.76,
-      "STAT_Q90": 24.46,
+      "MIN_Q10": 21.98,
+      "MIN_Q50": 27.32,
+      "MIN_Q90": 39.44,
+      "STAT_Q10": 3.76,
+      "STAT_Q50": 11.27,
+      "STAT_Q90": 27.88,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -282149,17 +282149,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.838,
-      "P_UNDER": 0.162,
+      "P_OVER": 0.842,
+      "P_UNDER": 0.159,
       "lean": "OVER",
-      "MIN_Q10": 21.89,
-      "MIN_Q50": 28.65,
-      "MIN_Q90": 35.17,
-      "STAT_Q10": 4.78,
-      "STAT_Q50": 12.33,
-      "STAT_Q90": 26.01,
+      "MIN_Q10": 18.73,
+      "MIN_Q50": 25.96,
+      "MIN_Q90": 32.01,
+      "STAT_Q10": 4.55,
+      "STAT_Q50": 12.42,
+      "STAT_Q90": 26.33,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -282328,18 +282328,18 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.385,
-      "P_UNDER": 0.615,
+      "P_OVER": 0.469,
+      "P_UNDER": 0.531,
       "lean": "UNDER",
-      "MIN_Q10": 27.52,
-      "MIN_Q50": 34.46,
-      "MIN_Q90": 39.36,
-      "STAT_Q10": 6.89,
-      "STAT_Q50": 15.02,
-      "STAT_Q90": 25.88,
+      "MIN_Q10": 25.49,
+      "MIN_Q50": 32.74,
+      "MIN_Q90": 37.33,
+      "STAT_Q10": 7.24,
+      "STAT_Q50": 16.17,
+      "STAT_Q90": 27.83,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "under"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "over"
     },
     {
       "LINE_BOOKMAKER": "Underdog",
@@ -282499,17 +282499,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.755,
-      "P_UNDER": 0.245,
+      "P_OVER": 0.705,
+      "P_UNDER": 0.295,
       "lean": "OVER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 10.77,
-      "STAT_Q50": 23.59,
-      "STAT_Q90": 35.8,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 10.02,
+      "STAT_Q50": 22.71,
+      "STAT_Q90": 34.12,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -282662,17 +282662,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.584,
-      "P_UNDER": 0.416,
+      "P_OVER": 0.615,
+      "P_UNDER": 0.385,
       "lean": "OVER",
-      "MIN_Q10": 21.08,
-      "MIN_Q50": 26.3,
-      "MIN_Q90": 34.0,
-      "STAT_Q10": 3.49,
-      "STAT_Q50": 9.75,
-      "STAT_Q90": 21.54,
+      "MIN_Q10": 23.23,
+      "MIN_Q50": 28.13,
+      "MIN_Q90": 36.15,
+      "STAT_Q10": 3.73,
+      "STAT_Q50": 10.12,
+      "STAT_Q90": 22.24,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -282809,17 +282809,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.57,
-      "P_UNDER": 0.43,
+      "P_OVER": 0.595,
+      "P_UNDER": 0.405,
       "lean": "OVER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 2.34,
-      "STAT_Q50": 8.97,
-      "STAT_Q90": 21.83,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 2.39,
+      "STAT_Q50": 9.52,
+      "STAT_Q90": 23.26,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -282964,17 +282964,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.67,
-      "P_UNDER": 0.33,
+      "P_OVER": 0.636,
+      "P_UNDER": 0.363,
       "lean": "OVER",
-      "MIN_Q10": 12.5,
-      "MIN_Q50": 21.85,
-      "MIN_Q90": 30.21,
-      "STAT_Q10": 1.29,
-      "STAT_Q50": 7.29,
-      "STAT_Q90": 19.55,
+      "MIN_Q10": 11.35,
+      "MIN_Q50": 20.87,
+      "MIN_Q90": 29.06,
+      "STAT_Q10": 1.17,
+      "STAT_Q50": 6.96,
+      "STAT_Q90": 18.81,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -283140,21 +283140,21 @@
         "avg_stat": 14.6875,
         "over_rate_at_line": 0.4375
       },
-      "is_conflict": true,
-      "sharp_aligned": false,
-      "tier": "conflict",
-      "P_OVER": 0.506,
-      "P_UNDER": 0.494,
-      "lean": "OVER",
-      "MIN_Q10": 27.96,
-      "MIN_Q50": 37.94,
-      "MIN_Q90": 40.99,
-      "STAT_Q10": 7.09,
-      "STAT_Q50": 17.78,
-      "STAT_Q90": 29.34,
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified",
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
+      "lean": "UNDER",
+      "MIN_Q10": 23.96,
+      "MIN_Q50": 34.54,
+      "MIN_Q90": 36.99,
+      "STAT_Q10": 5.97,
+      "STAT_Q50": 15.93,
+      "STAT_Q90": 26.05,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
-      "SIDE": "over"
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
+      "SIDE": "under"
     },
     {
       "LINE_BOOKMAKER": "Underdog",
@@ -283276,7 +283276,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -283399,7 +283399,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -283522,7 +283522,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -283645,7 +283645,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -283768,7 +283768,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -283891,7 +283891,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284014,7 +284014,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284137,7 +284137,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284260,7 +284260,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284383,7 +284383,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284506,7 +284506,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284629,7 +284629,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284752,7 +284752,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -284875,7 +284875,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285022,7 +285022,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285169,7 +285169,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285316,7 +285316,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285455,7 +285455,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285602,7 +285602,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285749,7 +285749,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285832,7 +285832,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -285979,7 +285979,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286126,7 +286126,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286273,7 +286273,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286420,7 +286420,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286557,17 +286557,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.477,
-      "P_UNDER": 0.523,
+      "P_OVER": 0.5,
+      "P_UNDER": 0.5,
       "lean": "UNDER",
-      "MIN_Q10": 25.46,
-      "MIN_Q50": 34.72,
-      "MIN_Q90": 37.69,
-      "STAT_Q10": 3.18,
-      "STAT_Q50": 7.98,
-      "STAT_Q90": 13.02,
+      "MIN_Q10": 22.61,
+      "MIN_Q50": 32.3,
+      "MIN_Q90": 34.84,
+      "STAT_Q10": 3.17,
+      "STAT_Q50": 8.32,
+      "STAT_Q90": 13.5,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286696,17 +286696,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.458,
-      "P_UNDER": 0.542,
+      "P_OVER": 0.454,
+      "P_UNDER": 0.546,
       "lean": "UNDER",
-      "MIN_Q10": 33.53,
-      "MIN_Q50": 41.14,
-      "MIN_Q90": 42.89,
-      "STAT_Q10": 1.54,
-      "STAT_Q50": 5.08,
-      "STAT_Q90": 9.31,
+      "MIN_Q10": 30.11,
+      "MIN_Q50": 38.24,
+      "MIN_Q90": 39.47,
+      "STAT_Q10": 1.47,
+      "STAT_Q50": 5.01,
+      "STAT_Q90": 9.09,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -286835,17 +286835,17 @@
       "is_conflict": true,
       "sharp_aligned": false,
       "tier": "conflict",
-      "P_OVER": 0.372,
-      "P_UNDER": 0.627,
+      "P_OVER": 0.381,
+      "P_UNDER": 0.619,
       "lean": "UNDER",
-      "MIN_Q10": 22.91,
-      "MIN_Q50": 30.58,
-      "MIN_Q90": 37.32,
-      "STAT_Q10": 2.52,
-      "STAT_Q50": 7.11,
-      "STAT_Q90": 14.55,
+      "MIN_Q10": 19.83,
+      "MIN_Q50": 27.96,
+      "MIN_Q90": 34.24,
+      "STAT_Q10": 2.48,
+      "STAT_Q50": 7.38,
+      "STAT_Q90": 15.17,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -286966,17 +286966,17 @@
       "is_conflict": false,
       "sharp_aligned": true,
       "tier": "sharp_verified",
-      "P_OVER": 0.383,
-      "P_UNDER": 0.617,
+      "P_OVER": 0.387,
+      "P_UNDER": 0.613,
       "lean": "UNDER",
-      "MIN_Q10": 14.74,
-      "MIN_Q50": 23.32,
-      "MIN_Q90": 30.01,
-      "STAT_Q10": 1.09,
-      "STAT_Q50": 4.0,
-      "STAT_Q90": 9.57,
+      "MIN_Q10": 13.51,
+      "MIN_Q50": 22.28,
+      "MIN_Q90": 28.78,
+      "STAT_Q10": 1.08,
+      "STAT_Q50": 4.14,
+      "STAT_Q90": 9.92,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "over"
     },
     {
@@ -287099,7 +287099,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     },
     {
@@ -287206,7 +287206,7 @@
       "STAT_Q50": null,
       "STAT_Q90": null,
       "DATE": "2026-05-16",
-      "RUN_TIMESTAMP": "2026-05-16T20:18:42",
+      "RUN_TIMESTAMP": "2026-05-16T21:44:39",
       "SIDE": "under"
     }
   ],
@@ -287214,5 +287214,5 @@
     "min": "2026-05-12",
     "max": "2026-05-16"
   },
-  "latest_run_timestamp": "2026-05-16T20:18:42"
+  "latest_run_timestamp": "2026-05-16T21:44:39"
 }
