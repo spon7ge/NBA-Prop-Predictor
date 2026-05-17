@@ -4,10 +4,10 @@ projectedStartingFive = {
     "BOS": ["Derrick White", "Baylor Scheierman", "Luka Garza", "Jaylen Brown", "Ron Harper"],
     "CHA": ["Moussa Diabaté", "Miles Bridges", "LaMelo Ball", "Kon Knueppel", "Brandon Miller"],
     "CHI": ["Tre Jones", "Collin Sexton", "Lachlan Olbrich", "Patrick Williams", "Leonard Miller"],
-    "CLE": ["Dean Wade", "Evan Mobley", "Jarrett Allen", "Donovan Mitchell", "James Harden"],
+    "CLE": ["James Harden", "Evan Mobley", "Donovan Mitchell", "Dean Wade", "Jarrett Allen"],
     "DAL": ["Max Christie", "Ryan Nembhard", "Khris Middleton", "Dwight Powell"],
     "DEN": ["Christian Braun", "Jamal Murray", "Nikola Jokic", "Cameron Johnson", "Spencer Jones"],
-    "DET": ["Cade Cunningham", "Ausar Thompson", "Tobias Harris", "Jalen Duren", "Daniss Jenkins"],
+    "DET": ["Cade Cunningham", "Tobias Harris", "Ausar Thompson", "Daniss Jenkins", "Jalen Duren"],
     "GSW": ["Brandin Podziemski", "Draymond Green", "Stephen Curry", "Kristaps Porziņģis", "De'Anthony Melton"],
     "HOU": ["Amen Thompson", "Reed Sheppard", "Tari Eason", "Jabari Smith", "Alperen Sengun"],
     "IND": ["Micah Potter", "Ethan Thompson", "Kobe Brown", "Quenton Jackson", "Jalen Slawson"],
@@ -66,6 +66,6 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DET": ["Kevin Huerter", "Caris LeVert", "Duncan Robinson"],
+    "DET": ["Duncan Robinson", "Kevin Huerter", "Caris LeVert"],
 }
 
