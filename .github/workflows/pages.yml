@@ -50,8 +50,11 @@ jobs:
           if [ -f "data/props/ev_analysis/underdog_enriched.json" ]; then
             cp data/props/ev_analysis/underdog_enriched.json docs/data/props/ev_analysis/underdog_enriched.json
           fi
-          # 3-leg slates (optional files are skipped if not present yet, e.g. betr_3leg.json)
-          for f in prizepicks_3leg.json underdog_3leg.json draftKings_3leg.json betr_3leg.json; do
+          # Multi-leg slates (optional; skipped if not present yet)
+          for f in \
+            prizepicks_3leg.json underdog_3leg.json draftKings_3leg.json betr_3leg.json \
+            prizepicks_5leg.json underdog_5leg.json draftKings_5leg.json betr_5leg.json \
+            prizepicks_6leg.json underdog_6leg.json draftKings_6leg.json betr_6leg.json; do
             if [ -f "data/props/ev_analysis/$f" ]; then
               cp "data/props/ev_analysis/$f" "docs/data/props/ev_analysis/$f"
             fi

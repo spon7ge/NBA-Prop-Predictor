@@ -57,6 +57,7 @@ def main(
         load_base_df, load_team_odds, load_player_lines,
         load_models, merge_with_bookmaker,
         BOOKMAKER_SLATE_PATHS, BOOKMAKER_3LEG_PATHS,
+        BOOKMAKER_5LEG_PATHS, BOOKMAKER_6LEG_PATHS,
     )
 
     if bookmakers is None:
@@ -180,6 +181,8 @@ def main(
             platform=bk,
             out_2leg=BOOKMAKER_SLATE_PATHS.get(bk),
             out_3leg=BOOKMAKER_3LEG_PATHS.get(bk),
+            out_5leg=BOOKMAKER_5LEG_PATHS.get(bk),
+            out_6leg=BOOKMAKER_6LEG_PATHS.get(bk),
             stake_dollars=10.0,
             top_n=top_n,
             kelly_fraction=kelly_fraction,
@@ -216,6 +219,8 @@ def main(
         bk: {
             "2leg": BOOKMAKER_SLATE_PATHS.get(bk, ""),
             "3leg": BOOKMAKER_3LEG_PATHS.get(bk, ""),
+            "5leg": BOOKMAKER_5LEG_PATHS.get(bk, ""),
+            "6leg": BOOKMAKER_6LEG_PATHS.get(bk, ""),
         }
         for bk in bookmakers
     }
