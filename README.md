@@ -9,6 +9,13 @@ HoopVista is a personal NBA player-prop research stack: a probabilistic/modeling
 
 ---
 
+## Learn more
+
+- **[explainer.md](explainer.md)** — How the project works in plain English (no coding or math jargon).
+- **[workflow.md](workflow.md)** — End-to-end technical workflow: daily scripts, pipeline steps, models, and data flow.
+
+---
+
 ## Disclaimer
 
 This project was made for **educational purposes only**. Sports betting involves risk and my model is no where near as good as the actual bookmakers. Gamble responsibly.
