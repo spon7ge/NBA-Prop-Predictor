@@ -1,5 +1,5 @@
 """
-Utility helpers for building 2- and 3-leg DFS slates.
+Utility helpers for building 2-, 3-, 5-, and 6-leg DFS slates (4-leg skipped).
 
 2-Leg strategy tiers (higher = better):
   Tier 3 — same high-total game, opposite teams (game-environment correlation)
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import math
+from collections import Counter
 from itertools import combinations
 from pathlib import Path
 from typing import Any
@@ -110,15 +111,27 @@ def _valid_two_leg(chunk: list[dict]) -> bool:
 
 def _valid_three_leg(chunk: list[dict]) -> bool:
     """Three legs must be distinct players, ≥2 teams, all positive p_win."""
-    if len(chunk) != 3:
+    return _valid_n_leg(chunk, 3)
+
+
+def _valid_n_leg(chunk: list[dict], n: int, *, max_per_team: int | None = None) -> bool:
+    """Distinct players, ≥2 teams, capped teammates per team, positive p_win."""
+    if len(chunk) != n:
         return False
     players = [leg["prop_key"][0] for leg in chunk]
-    if len(set(players)) < 3:  # duplicate player
+    if len(set(players)) < n:
         return False
-    teams = [leg["team"] for leg in chunk]
-    if len(set(teams)) < 2:  # all same team — too correlated
+    team_counts = Counter(leg["team"] for leg in chunk)
+    if len(team_counts) < 2:
+        return False
+    cap = max_per_team if max_per_team is not None else (1 if n == 2 else 2)
+    if max(team_counts.values()) > cap:
         return False
     return all(leg["p_win"] > 0 for leg in chunk)
+
+
+def _teammate_pairs(chunk: list[dict]) -> list[tuple[dict, dict]]:
+    return [(a, b) for a, b in combinations(chunk, 2) if a["team"] == b["team"]]
 
 
 # ---------------------------------------------------------------------------
@@ -213,9 +226,82 @@ def _strategy_tier_profile_3leg(
     return tier, profile, anchor["p_win"], anchor["player"]
 
 
+def _strategy_tier_profile_nleg(
+    chunk: list[dict], hi_total: float, n: int
+) -> tuple[int, str, float, str | None]:
+    """Strategy tier for n-leg combos (n ∈ {2, 3, 5, 6})."""
+    if n == 2:
+        a, b = chunk
+        tier, profile = _strategy_tier_profile_2leg(a, b, hi_total)
+        return tier, profile, 0.0, None
+    if n == 3:
+        return _strategy_tier_profile_3leg(chunk, hi_total)
+
+    pairs = _teammate_pairs(chunk)
+    n_pairs = len(pairs)
+    games = {leg["game_key"] for leg in chunk if leg.get("game_key")}
+    n_games = len(games)
+    hi_pairs = sum(1 for a, _ in pairs if _is_high_total(a, hi_total))
+    pair_game_keys = {a["game_key"] for a, _ in pairs if a.get("game_key")}
+    pairs_in_distinct_games = n_pairs >= 2 and len(pair_game_keys) >= n_pairs
+
+    anchor = max(chunk, key=lambda x: x["p_win"])
+    anchor_p, anchor_name = anchor["p_win"], anchor["player"]
+
+    if n == 5:
+        if n_pairs >= 2 and hi_pairs >= 2 and pairs_in_distinct_games and n_games >= 3:
+            return 3, "5leg/2pair+/high-total", anchor_p, anchor_name
+        if n_pairs >= 1 and n_games >= 3:
+            return 2, "5leg/teammate-pair", anchor_p, anchor_name
+        if n_games >= 2:
+            return 1, "5leg/diverse", anchor_p, anchor_name
+        return 0, "standard", 0.0, None
+
+    if n == 6:
+        if n_pairs >= 3 and hi_pairs >= 2 and n_games >= 3:
+            return 3, "6leg/3pair/high-total", anchor_p, anchor_name
+        if n_pairs >= 2 and n_games >= 3:
+            return 2, "6leg/2pair+", anchor_p, anchor_name
+        if n_games >= 2:
+            return 1, "6leg/diverse", anchor_p, anchor_name
+        return 0, "standard", 0.0, None
+
+    raise ValueError(f"unsupported leg count: {n}")
+
+
 # ---------------------------------------------------------------------------
 # Leg ordering
 # ---------------------------------------------------------------------------
+
+def _order_n_leg_row(chunk: list[dict], n: int) -> list[dict]:
+    """Anchor first, then teammate pairs grouped by team; falls back to p_win order."""
+    if n == 3:
+        return _order_three_leg_row(chunk)
+
+    pairs = _teammate_pairs(chunk)
+    if pairs:
+        used: set[int] = set()
+        ordered: list[dict] = []
+        indep = max(chunk, key=lambda x: x["p_win"])
+        ordered.append(indep)
+        used.add(id(indep))
+        for a, b in sorted(pairs, key=lambda ab: ab[0]["team"]):
+            for leg in sorted((a, b), key=lambda x: x["player"]):
+                if id(leg) not in used:
+                    ordered.append(leg)
+                    used.add(id(leg))
+        for leg in sorted(chunk, key=lambda x: (x["team"], x["player"])):
+            if id(leg) not in used:
+                ordered.append(leg)
+        return ordered
+
+    anchor = max(chunk, key=lambda x: x["p_win"])
+    rest = sorted(
+        [leg for leg in chunk if leg is not anchor],
+        key=lambda x: (x["team"], x["player"]),
+    )
+    return [anchor] + rest
+
 
 def _order_three_leg_row(chunk: list[dict]) -> list[dict]:
     """Return chunk reordered: independent anchor first, then the 2 teammates.

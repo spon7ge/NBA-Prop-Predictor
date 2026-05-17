@@ -3,15 +3,14 @@ slates.py — leg preparation and slate building for DFS platforms.
 
 Public API:
   line_probs_for_market        – model predictions + book lines → P_OVER/P_UNDER per player
-  build_dfs_slates_from_aligned – 2- and 3-leg slates from dfs_sharp_aligned JSON
+  build_dfs_slates_from_aligned – 2-, 3-, 5-, and 6-leg slates from dfs_sharp_aligned JSON
 
 Internal helpers:
   _line_lookup_from_lines_df
   _json_ready
   _prep_legs_dfs
   _build_row_nleg_dfs
-  _generate_candidates_dfs_2leg
-  _generate_candidates_dfs_3leg
+  _generate_candidates_dfs_nleg
 """
 
 import json
@@ -22,25 +21,31 @@ import numpy as np
 import pandas as pd
 
 from src.utils.slates_helper import (
-    _valid_two_leg,
-    _valid_three_leg,
-    _strategy_tier_profile_2leg,
-    _strategy_tier_profile_3leg,
-    _order_three_leg_row,
-    _high_total_threshold,
     _greedy_slates,
+    _high_total_threshold,
+    _order_n_leg_row,
+    _strategy_tier_profile_nleg,
+    _valid_n_leg,
     load_sharp_aligned,
     _json_ready as _ud_json_ready,
     _game_ctx as _ud_game_ctx,
 )
 
-# Net-profit multipliers per platform: (2-leg, 3-leg)
-_DFS_PLATFORM_PAYOUTS: dict[str, tuple[float, float]] = {
-    "PrizePicks":       (2.0, 4.5),
-    "Underdog":         (2.0, 4.5),
-    "Betr DFS":         (2.0, 4.5),
-    "DraftKings Pick6": (2.0, 4.0),
+# Leg counts produced (4-leg intentionally skipped).
+SLATE_LEG_COUNTS: tuple[int, ...] = (2, 3, 5, 6)
+
+# Net-profit multipliers per platform and leg count (total payout − 1).
+_DFS_PLATFORM_PAYOUTS: dict[str, dict[int, float]] = {
+    "PrizePicks":       {2: 2.0, 3: 4.5, 5: 19.0, 6: 36.5},
+    "Underdog":         {2: 2.0, 3: 4.5, 5: 19.0, 6: 36.5},
+    "Betr DFS":         {2: 2.0, 3: 4.5, 5: 19.0, 6: 36.5},
+    "DraftKings Pick6": {2: 2.0, 3: 4.0, 5: 19.0, 6: 24.0},
 }
+
+_DEFAULT_PAYOUTS: dict[int, float] = {2: 2.0, 3: 4.5, 5: 19.0, 6: 36.5}
+
+# Cap pool size for 5/6-leg enumeration (C(24,6) ≈ 134k combos).
+_NLEG_COMBO_POOL_MAX = 24
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -165,6 +170,18 @@ def _prep_legs_dfs(picks: list[dict], platform: str) -> list[dict]:
     return legs
 
 
+def _legs_for_nleg_combos(legs: list[dict], n_leg: int) -> list[dict]:
+    """Use full leg pool for 2/3-leg; top pool by p_win for 5/6-leg combos."""
+    if n_leg < 5 or len(legs) <= _NLEG_COMBO_POOL_MAX:
+        return legs
+    ranked = sorted(legs, key=lambda x: x["p_win"], reverse=True)
+    return ranked[:_NLEG_COMBO_POOL_MAX]
+
+
+def _net_mult_for(platform: str, n_leg: int) -> float:
+    return _DFS_PLATFORM_PAYOUTS.get(platform, _DEFAULT_PAYOUTS).get(n_leg, _DEFAULT_PAYOUTS[n_leg])
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # SLATE ROW BUILDER
 # ─────────────────────────────────────────────────────────────────────────────
@@ -211,36 +228,56 @@ def _build_row_nleg_dfs(
 # CANDIDATE GENERATION
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _generate_candidates_dfs_2leg(legs, stake, kelly_fraction, hi_total, net_mult):
-    records = []
-    for idxs in combinations(range(len(legs)), 2):
-        chunk = [legs[i] for i in idxs]
-        if not _valid_two_leg(chunk):
-            continue
-        a, b = chunk
-        tier, profile = _strategy_tier_profile_2leg(a, b, hi_total)
-        extras = {"STRATEGY_TIER": tier, "COMBO_PROFILE": profile, "ANCHOR_WIN_PROB": 0.0}
-        records.append(_build_row_nleg_dfs(chunk, net_mult=net_mult, stake=stake, kelly_fraction=kelly_fraction, row_extras=extras))
-    records.sort(key=lambda r: (r.get("STRATEGY_TIER", 0), r["EV_DOLLARS"]), reverse=True)
-    return records
+def _generate_candidates_dfs_nleg(
+    legs: list[dict],
+    n_leg: int,
+    stake: float,
+    kelly_fraction: float,
+    hi_total: float,
+    net_mult: float,
+) -> list[dict]:
+    pool = _legs_for_nleg_combos(legs, n_leg)
+    if len(pool) < n_leg:
+        return []
 
-
-def _generate_candidates_dfs_3leg(legs, stake, kelly_fraction, hi_total, net_mult):
     records = []
-    for idxs in combinations(range(len(legs)), 3):
-        chunk = [legs[i] for i in idxs]
-        if not _valid_three_leg(chunk):
+    for idxs in combinations(range(len(pool)), n_leg):
+        chunk = [pool[i] for i in idxs]
+        if not _valid_n_leg(chunk, n_leg):
             continue
-        tier, profile, anchor_p, anchor_name = _strategy_tier_profile_3leg(chunk, hi_total)
+        tier, profile, anchor_p, anchor_name = _strategy_tier_profile_nleg(chunk, hi_total, n_leg)
         if tier <= 0:
             continue
-        ordered = _order_three_leg_row(chunk)
-        extras: dict = {"STRATEGY_TIER": tier, "COMBO_PROFILE": profile, "ANCHOR_WIN_PROB": round(anchor_p, 4)}
+        ordered = _order_n_leg_row(chunk, n_leg)
+        extras: dict = {
+            "STRATEGY_TIER": tier,
+            "COMBO_PROFILE": profile,
+            "ANCHOR_WIN_PROB": round(anchor_p, 4),
+        }
         if anchor_name is not None:
             extras["ANCHOR_NAME"] = anchor_name
-        records.append(_build_row_nleg_dfs(ordered, net_mult=net_mult, stake=stake, kelly_fraction=kelly_fraction, row_extras=extras))
-    records.sort(key=lambda r: (r.get("STRATEGY_TIER", 0), r.get("ANCHOR_WIN_PROB", 0.0), r["EV_DOLLARS"]), reverse=True)
+        records.append(
+            _build_row_nleg_dfs(
+                ordered,
+                net_mult=net_mult,
+                stake=stake,
+                kelly_fraction=kelly_fraction,
+                row_extras=extras,
+            )
+        )
+
+    sort_key = (
+        (lambda r: (r.get("STRATEGY_TIER", 0), r.get("ANCHOR_WIN_PROB", 0.0), r["EV_DOLLARS"]))
+        if n_leg >= 3
+        else (lambda r: (r.get("STRATEGY_TIER", 0), r["EV_DOLLARS"]))
+    )
+    records.sort(key=sort_key, reverse=True)
     return records
+
+
+def _write_slate_json(records: list[dict], out_path: Path) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(_ud_json_ready(records), indent=2), encoding="utf-8")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -251,57 +288,70 @@ def build_dfs_slates_from_aligned(
     aligned_path: str | Path,
     platform: str,
     *,
+    out_paths: dict[int, str | Path | None] | None = None,
     out_2leg: str | Path | None = None,
     out_3leg: str | Path | None = None,
+    out_5leg: str | Path | None = None,
+    out_6leg: str | Path | None = None,
     stake_dollars: float = 10.0,
     top_n: int = 10,
     kelly_fraction: float = 0.5,
     verbose: bool = True,
-) -> tuple[str | None, str | None]:
+) -> dict[int, str | None]:
     """
-    Build 2- and 3-leg slates for one DFS platform from the dfs_sharp_aligned JSON
-    written by enrich_dfs_picks(). Uses the same strategy-tiering logic as
-    underdog_slates.py: same-game preference, high-total preference, 2+1 structure.
+    Build 2-, 3-, 5-, and 6-leg slates (skip 4) for one DFS platform from the
+    dfs_sharp_aligned JSON written by enrich_dfs_picks().
 
-    Returns (path_2leg, path_3leg) — None for each if not produced.
+    Pass ``out_paths={2: path, 3: path, 5: path, 6: path}`` or individual
+    ``out_2leg`` / ``out_3leg`` / ``out_5leg`` / ``out_6leg`` kwargs.
+
+    Returns ``{leg_count: output_path_or_None}`` for each count in SLATE_LEG_COUNTS.
     """
+    paths: dict[int, str | Path | None] = dict(out_paths or {})
+    for n_leg, kw in ((2, out_2leg), (3, out_3leg), (5, out_5leg), (6, out_6leg)):
+        if kw is not None:
+            paths[n_leg] = kw
+
+    result: dict[int, str | None] = {n: None for n in SLATE_LEG_COUNTS}
+
     path = Path(aligned_path).expanduser().resolve()
     if not path.is_file():
         if verbose:
             print(f"  [{platform}] aligned JSON not found: {path}")
-        return None, None
+        return result
 
     _, all_picks = load_sharp_aligned(path)
     legs = _prep_legs_dfs(all_picks, platform)
     if len(legs) < 2:
         if verbose:
             print(f"  [{platform}] ≥2 legs needed after filtering (have {len(legs)}) — skipping")
-        return None, None
+        return result
 
-    net_mult_2, net_mult_3 = _DFS_PLATFORM_PAYOUTS.get(platform, (2.0, 4.5))
     hi_total = _high_total_threshold(legs)
-    path_2: str | None = None
-    path_3: str | None = None
 
-    cand2  = _generate_candidates_dfs_2leg(legs, stake_dollars, kelly_fraction, hi_total, net_mult_2)
-    slate2 = _greedy_slates(cand2, top_n)
-    if slate2 and out_2leg:
-        out2 = Path(out_2leg)
-        out2.parent.mkdir(parents=True, exist_ok=True)
-        out2.write_text(json.dumps(_ud_json_ready(slate2), indent=2), encoding="utf-8")
-        path_2 = str(out2)
-        if verbose:
-            print(f"  {platform} 2-leg: {len(slate2)} slates → {out2}")
-
-    if len(legs) >= 3 and out_3leg:
-        cand3  = _generate_candidates_dfs_3leg(legs, stake_dollars, kelly_fraction, hi_total, net_mult_3)
-        slate3 = _greedy_slates(cand3, top_n)
-        if slate3:
-            out3 = Path(out_3leg)
-            out3.parent.mkdir(parents=True, exist_ok=True)
-            out3.write_text(json.dumps(_ud_json_ready(slate3), indent=2), encoding="utf-8")
-            path_3 = str(out3)
+    for n_leg in SLATE_LEG_COUNTS:
+        out = paths.get(n_leg)
+        if out is None:
+            continue
+        if len(legs) < n_leg:
             if verbose:
-                print(f"  {platform} 3-leg: {len(slate3)} slates → {out3}")
+                print(f"  [{platform}] {n_leg}-leg: need ≥{n_leg} legs (have {len(legs)}) — skipping")
+            continue
 
-    return path_2, path_3
+        net_mult = _net_mult_for(platform, n_leg)
+        candidates = _generate_candidates_dfs_nleg(
+            legs, n_leg, stake_dollars, kelly_fraction, hi_total, net_mult
+        )
+        slate = _greedy_slates(candidates, top_n)
+        if not slate:
+            if verbose:
+                print(f"  [{platform}] {n_leg}-leg: no slates after filtering")
+            continue
+
+        out_path = Path(out)
+        _write_slate_json(slate, out_path)
+        result[n_leg] = str(out_path)
+        if verbose:
+            print(f"  {platform} {n_leg}-leg: {len(slate)} slates → {out_path}")
+
+    return result

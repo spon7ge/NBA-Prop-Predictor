@@ -309,10 +309,17 @@ def _track_dfs_pick_files(
     return len(rows)
 
 
+_SLATE_LEG_SUFFIXES = ("_6leg", "_5leg", "_3leg", "_2leg")
+
+
 def _bookmaker_from_slate_path(path: Path, fallback: str | None = None) -> str:
     if fallback:
         return fallback
-    stem = path.stem.replace("_3leg", "")
+    stem = path.stem
+    for suffix in _SLATE_LEG_SUFFIXES:
+        if stem.endswith(suffix):
+            stem = stem[: -len(suffix)]
+            break
     return {
         "betr": "Betr DFS",
         "draftKings": "DraftKings Pick6",
@@ -324,7 +331,10 @@ def _bookmaker_from_slate_path(path: Path, fallback: str | None = None) -> str:
 def _slate_type_from_path(path: Path, fallback: str | None = None) -> str:
     if fallback:
         return str(fallback)
-    return "3leg" if path.stem.endswith("_3leg") else "2leg"
+    for suffix in _SLATE_LEG_SUFFIXES:
+        if path.stem.endswith(suffix):
+            return suffix[1:]
+    return "2leg"
 
 
 def _slate_rows_from_file(
@@ -406,8 +416,8 @@ def _slate_rows_from_file(
                     n_legs = 0
             else:
                 n_legs = 3 if pair.get("NAME 3") is not None else 2
-            if n_legs not in (2, 3):
-                n_legs = 3 if "3" in slate_kind else 2
+            if n_legs not in (2, 3, 5, 6):
+                n_legs = int(slate_kind.replace("leg", "")) if slate_kind.replace("leg", "").isdigit() else 2
             slate_row["PARLAY_N_LEGS"] = n_legs
 
             for leg_idx in range(1, n_legs + 1):
@@ -501,8 +511,8 @@ def snapshot(
 
     Args:
         all_line_probs:  Enriched prop-level DataFrame. Must contain ``LINE_BOOKMAKER``.
-        slate_paths:     ``{bookmaker: {"2leg": path, "3leg": path}}``. Empty or
-                         whitespace paths are skipped; any bookmaker keys may appear.
+        slate_paths:     ``{bookmaker: {"2leg": path, "3leg": path, "5leg": path, "6leg": path}}``.
+                         Empty or whitespace paths are skipped.
         date:            Override date string 'YYYY-MM-DD' (defaults to today).
         run_timestamp:   Override ISO timestamp (defaults to now).
     """
