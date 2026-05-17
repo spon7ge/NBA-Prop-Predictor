@@ -1,0 +1,121 @@
+{
+  "pulled_at_utc": "2026-05-17T23:00:56.882394+00:00",
+  "bookmakers": [
+    "Circa",
+    "BetOnline.ag"
+  ],
+  "events_fetched": 22,
+  "odds_format": "american",
+  "markets_included": [
+    "Spread",
+    "Totals"
+  ],
+  "odds_payload_count": 2,
+  "record_count": 8,
+  "records": [
+    {
+      "MARKET": "Spread",
+      "LINE": -4,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505004,
+      "HOME": "Detroit Pistons",
+      "AWAY": "Cleveland Cavaliers",
+      "START": "2026-05-18T00:00:00Z",
+      "HOME_ODDS": -112,
+      "AWAY_ODDS": -108,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 204.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505004,
+      "HOME": "Detroit Pistons",
+      "AWAY": "Cleveland Cavaliers",
+      "START": "2026-05-18T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -118,
+      "UNDER": -103
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505004,
+      "HOME": "Detroit Pistons",
+      "AWAY": "Cleveland Cavaliers",
+      "START": "2026-05-18T00:00:00Z",
+      "HOME_ODDS": -105,
+      "AWAY_ODDS": -115,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 204,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505004,
+      "HOME": "Detroit Pistons",
+      "AWAY": "Cleveland Cavaliers",
+      "START": "2026-05-18T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -6.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505032,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-19T00:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 219,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505032,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-19T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -115,
+      "UNDER": -105
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -6.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505032,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-19T00:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 219,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505032,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-19T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    }
+  ]
+}

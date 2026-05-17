@@ -1,169 +1,13 @@
 [
   {
-    "PARLAY_PROB": 0.43605,
-    "EV": 139.827,
-    "EV_DOLLARS": 13.9827,
-    "KELLY": 15.5363,
+    "PARLAY_PROB": 0.4849,
+    "EV": 166.694,
+    "EV_DOLLARS": 16.6694,
+    "KELLY": 18.5216,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
     "LEGS": [
-      {
-        "platform": "Betr DFS",
-        "player": "Caris LeVert",
-        "display_name": "Caris LeVert",
-        "team_abbr": "DET",
-        "team": "Detroit Pistons",
-        "opponent_abbr": "CLE",
-        "opponent": "Cleveland Cavaliers",
-        "is_home": 1,
-        "market": "PTS",
-        "dfs_line": 6.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.734,
-          "p_under": 0.266,
-          "lean": "OVER",
-          "min_q10": 13.69,
-          "min_q50": 22.83,
-          "min_q90": 31.36,
-          "stat_q10": 1.55,
-          "stat_q50": 8.83,
-          "stat_q90": 23.92
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 6.5,
-          "no_vig_over": 0.5263157894736842,
-          "no_vig_under": 0.47368421052631576,
-          "american_over": -125.0,
-          "american_under": 100.0,
-          "lean": "OVER"
-        },
-        "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5259467237802301,
-          "n_books_any_line": 10,
-          "mean_no_vig_over_any_line": 0.49041003394200755,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 6.5,
-              "no_vig_over": 0.5263157894736842,
-              "no_vig_under": 0.47368421052631576,
-              "american_over": -125.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 6.5,
-              "no_vig_over": 0.5379072681704261,
-              "no_vig_under": 0.46209273182957394,
-              "american_over": -136.0,
-              "american_under": 102.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 6.5,
-              "no_vig_over": 0.528066528066528,
-              "no_vig_under": 0.47193347193347185,
-              "american_over": -127.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 6.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 6.5,
-              "no_vig_over": 0.5226570545829042,
-              "no_vig_under": 0.4773429454170958,
-              "american_over": -125.0,
-              "american_under": -103.0
-            },
-            {
-              "book": "Bovada",
-              "line": 5.5,
-              "no_vig_over": 0.625,
-              "no_vig_under": 0.375,
-              "american_over": -200.0,
-              "american_under": 150.0
-            },
-            {
-              "book": "Bovada",
-              "line": 6.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "Bovada",
-              "line": 7.5,
-              "no_vig_over": 0.4458598726114649,
-              "no_vig_under": 0.554140127388535,
-              "american_over": 110.0,
-              "american_under": -145.0
-            },
-            {
-              "book": "Bovada",
-              "line": 8.5,
-              "no_vig_over": 0.375,
-              "no_vig_under": 0.625,
-              "american_over": 150.0,
-              "american_under": -200.0
-            },
-            {
-              "book": "Bovada",
-              "line": 9.5,
-              "no_vig_over": 0.30256012412723043,
-              "no_vig_under": 0.6974398758727697,
-              "american_over": 210.0,
-              "american_under": -290.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": -4.5,
-          "team_total_implied": 104.75,
-          "team_pace": 99.88,
-          "team_pace_rank": 19.0,
-          "team_def_rating": 108.9,
-          "team_def_rating_rank": 2.0,
-          "opp_pace": 100.7,
-          "opp_pace_rank": 13.0,
-          "opp_def_rating": 114.1,
-          "opp_def_rating_rank": 15.0
-        },
-        "form": {
-          "over_l5": 0.8,
-          "over_l10": 0.6,
-          "over_l15": 0.4
-        },
-        "vs_opp": {
-          "n_games": 12,
-          "avg_stat": 7.833333333333333,
-          "over_rate_at_line": 0.5
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "OVER",
-        "p_win": 0.734
-      },
       {
         "platform": "Betr DFS",
         "player": "Ajay Mitchell",
@@ -203,10 +47,10 @@
           "lean": "OVER"
         },
         "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5182152463017023,
-          "n_books_any_line": 12,
-          "mean_no_vig_over_any_line": 0.4921493872610885,
+          "n_books_same_line": 5,
+          "mean_no_vig_over_same_line": 0.5126647417147923,
+          "n_books_any_line": 11,
+          "mean_no_vig_over_any_line": 0.49411283469862916,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -219,26 +63,26 @@
             {
               "book": "FanDuel",
               "line": 12.5,
-              "no_vig_over": 0.5191532258064516,
-              "no_vig_under": 0.4808467741935484,
-              "american_over": -125.0,
-              "american_under": -106.0
+              "no_vig_over": 0.5,
+              "no_vig_under": 0.5,
+              "american_over": -114.0,
+              "american_under": -114.0
             },
             {
               "book": "DraftKings",
               "line": 12.5,
-              "no_vig_over": 0.5310164041860369,
-              "no_vig_under": 0.468983595813963,
-              "american_over": -129.0,
-              "american_under": 101.0
+              "no_vig_over": 0.5145711906744379,
+              "no_vig_under": 0.48542880932556204,
+              "american_over": -120.0,
+              "american_under": -106.0
             },
             {
               "book": "BetMGM",
-              "line": 12.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
+              "line": 13.5,
+              "no_vig_over": 0.4796954314720812,
+              "no_vig_under": 0.5203045685279188,
+              "american_over": -105.0,
+              "american_under": -125.0
             },
             {
               "book": "BetOnline.ag",
@@ -251,58 +95,50 @@
             {
               "book": "Bovada",
               "line": 10.5,
-              "no_vig_over": 0.66,
-              "no_vig_under": 0.33999999999999997,
-              "american_over": -240.0,
-              "american_under": 175.0
+              "no_vig_over": 0.6456256921373201,
+              "no_vig_under": 0.35437430786268,
+              "american_over": -220.0,
+              "american_under": 165.0
             },
             {
               "book": "Bovada",
               "line": 11.5,
-              "no_vig_over": 0.6017069701280228,
-              "no_vig_under": 0.3982930298719772,
-              "american_over": -180.0,
-              "american_under": 135.0
+              "no_vig_over": 0.5751633986928104,
+              "no_vig_under": 0.4248366013071895,
+              "american_over": -160.0,
+              "american_under": 120.0
             },
             {
               "book": "Bovada",
               "line": 12.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
+              "no_vig_over": 0.5101214574898786,
+              "no_vig_under": 0.48987854251012153,
+              "american_over": -120.0,
+              "american_under": -110.0
             },
             {
               "book": "Bovada",
               "line": 13.5,
-              "no_vig_over": 0.4693877551020409,
-              "no_vig_under": 0.5306122448979592,
-              "american_over": 100.0,
-              "american_under": -130.0
+              "no_vig_over": 0.4458598726114649,
+              "no_vig_under": 0.554140127388535,
+              "american_over": 110.0,
+              "american_under": -145.0
             },
             {
               "book": "Bovada",
               "line": 14.5,
-              "no_vig_over": 0.40847201210287437,
-              "no_vig_under": 0.5915279878971256,
-              "american_over": 130.0,
-              "american_under": -170.0
+              "no_vig_over": 0.39094650205761317,
+              "no_vig_under": 0.6090534979423868,
+              "american_over": 140.0,
+              "american_under": -185.0
             },
             {
               "book": "Bovada",
               "line": 15.5,
-              "no_vig_over": 0.35437430786268,
-              "no_vig_under": 0.6456256921373201,
-              "american_over": 165.0,
-              "american_under": -220.0
-            },
-            {
-              "book": "Bovada",
-              "line": 16.5,
-              "no_vig_over": 0.30256012412723043,
-              "no_vig_under": 0.6974398758727697,
-              "american_over": 210.0,
-              "american_under": -290.0
+              "no_vig_over": 0.3346265761396702,
+              "no_vig_under": 0.6653734238603297,
+              "american_over": 180.0,
+              "american_under": -245.0
             }
           ]
         },
@@ -338,15 +174,15 @@
       },
       {
         "platform": "Betr DFS",
-        "player": "Chet Holmgren",
-        "display_name": "Chet Holmgren",
-        "team_abbr": "OKC",
-        "team": "Oklahoma City Thunder",
-        "opponent_abbr": "SAS",
-        "opponent": "San Antonio Spurs",
+        "player": "Caris LeVert",
+        "display_name": "Caris LeVert",
+        "team_abbr": "DET",
+        "team": "Detroit Pistons",
+        "opponent_abbr": "CLE",
+        "opponent": "Cleveland Cavaliers",
         "is_home": 1,
         "market": "PTS",
-        "dfs_line": 16.5,
+        "dfs_line": 6.5,
         "dfs_odds": {
           "american_over": -137.0,
           "american_under": -137.0,
@@ -354,185 +190,146 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.669,
-          "p_under": 0.331,
+          "p_over": 0.747,
+          "p_under": 0.253,
           "lean": "OVER",
-          "min_q10": 22.61,
-          "min_q50": 32.3,
-          "min_q90": 34.84,
-          "stat_q10": 7.45,
-          "stat_q50": 17.72,
-          "stat_q90": 28.53
+          "min_q10": 13.69,
+          "min_q50": 22.83,
+          "min_q90": 31.36,
+          "stat_q10": 1.55,
+          "stat_q50": 8.83,
+          "stat_q90": 23.92
         },
         "sharp": {
           "source": "Pinnacle",
           "is_fallback": false,
-          "line": 16.5,
-          "no_vig_over": 0.5084288604180714,
-          "no_vig_under": 0.4915711395819285,
-          "american_over": -116.0,
-          "american_under": -108.0,
+          "line": 6.5,
+          "no_vig_over": 0.5226781857451405,
+          "no_vig_under": 0.4773218142548596,
+          "american_over": -121.0,
+          "american_under": 100.0,
           "lean": "OVER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.49524040495907745,
-          "n_books_any_line": 12,
-          "mean_no_vig_over_any_line": 0.4899795875830479,
+          "mean_no_vig_over_same_line": 0.5209299415353783,
+          "n_books_any_line": 9,
+          "mean_no_vig_over_any_line": 0.5050062302865646,
           "offerings": [
             {
               "book": "Pinnacle",
-              "line": 16.5,
-              "no_vig_over": 0.5084288604180714,
-              "no_vig_under": 0.4915711395819285,
-              "american_over": -116.0,
-              "american_under": -108.0
+              "line": 6.5,
+              "no_vig_over": 0.5226781857451405,
+              "no_vig_under": 0.4773218142548596,
+              "american_over": -121.0,
+              "american_under": 100.0
             },
             {
               "book": "FanDuel",
-              "line": 16.5,
-              "no_vig_over": 0.5060689431946916,
-              "no_vig_under": 0.4939310568053083,
-              "american_over": -118.0,
-              "american_under": -112.0
+              "line": 6.5,
+              "no_vig_over": 0.5238589211618258,
+              "no_vig_under": 0.47614107883817425,
+              "american_over": -125.0,
+              "american_under": -102.0
             },
             {
               "book": "DraftKings",
-              "line": 16.5,
-              "no_vig_over": 0.48240894039735094,
-              "no_vig_under": 0.517591059602649,
-              "american_over": -105.0,
-              "american_under": -122.0
+              "line": 6.5,
+              "no_vig_over": 0.5259594617046021,
+              "no_vig_under": 0.47404053829539794,
+              "american_over": -126.0,
+              "american_under": -101.0
             },
             {
               "book": "BetMGM",
-              "line": 16.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
+              "line": 6.5,
+              "no_vig_over": 0.5101214574898786,
+              "no_vig_under": 0.48987854251012153,
+              "american_over": -120.0,
+              "american_under": -110.0
             },
             {
               "book": "BetOnline.ag",
-              "line": 16.5,
-              "no_vig_over": 0.4948402542722694,
-              "no_vig_under": 0.5051597457277305,
-              "american_over": -111.0,
-              "american_under": -116.0
+              "line": 6.5,
+              "no_vig_over": 0.5226570545829042,
+              "no_vig_under": 0.4773429454170958,
+              "american_over": -125.0,
+              "american_under": -103.0
             },
             {
               "book": "Bovada",
-              "line": 13.5,
-              "no_vig_over": 0.6529968454258674,
-              "no_vig_under": 0.34700315457413244,
-              "american_over": -230.0,
-              "american_under": 170.0
+              "line": 5.5,
+              "no_vig_over": 0.6161482461945731,
+              "no_vig_under": 0.3838517538054269,
+              "american_over": -190.0,
+              "american_under": 145.0
             },
             {
               "book": "Bovada",
-              "line": 14.5,
-              "no_vig_over": 0.5915279878971256,
-              "no_vig_under": 0.40847201210287437,
-              "american_over": -170.0,
-              "american_under": 130.0
+              "line": 6.5,
+              "no_vig_over": 0.5203045685279188,
+              "no_vig_under": 0.4796954314720812,
+              "american_over": -125.0,
+              "american_under": -105.0
             },
             {
               "book": "Bovada",
-              "line": 15.5,
-              "no_vig_over": 0.5407914020517831,
-              "no_vig_under": 0.4592085979482169,
-              "american_over": -135.0,
-              "american_under": 105.0
+              "line": 7.5,
+              "no_vig_over": 0.43668122270742354,
+              "no_vig_under": 0.5633187772925764,
+              "american_over": 115.0,
+              "american_under": -150.0
             },
             {
               "book": "Bovada",
-              "line": 16.5,
-              "no_vig_over": 0.4796954314720812,
-              "no_vig_under": 0.5203045685279188,
-              "american_over": -105.0,
-              "american_under": -125.0
-            },
-            {
-              "book": "Bovada",
-              "line": 17.5,
-              "no_vig_over": 0.4248366013071895,
-              "no_vig_under": 0.5751633986928104,
-              "american_over": 120.0,
-              "american_under": -160.0
-            },
-            {
-              "book": "Bovada",
-              "line": 18.5,
-              "no_vig_over": 0.375,
-              "no_vig_under": 0.625,
-              "american_over": 150.0,
-              "american_under": -200.0
-            },
-            {
-              "book": "Bovada",
-              "line": 19.5,
-              "no_vig_over": 0.32315978456014366,
-              "no_vig_under": 0.6768402154398564,
-              "american_over": 190.0,
-              "american_under": -260.0
+              "line": 8.5,
+              "no_vig_over": 0.3666469544648137,
+              "no_vig_under": 0.6333530455351862,
+              "american_over": 155.0,
+              "american_under": -210.0
             }
           ]
         },
         "game_context": {
           "book_used": "Circa",
-          "game_total": 219.0,
-          "spread": -6.5,
-          "team_total_implied": 112.75,
-          "team_pace": 100.37,
-          "team_pace_rank": 16.0,
-          "team_def_rating": 106.5,
-          "team_def_rating_rank": 1.0,
-          "opp_pace": 100.72,
-          "opp_pace_rank": 12.0,
-          "opp_def_rating": 110.4,
-          "opp_def_rating_rank": 3.0
+          "game_total": 204.0,
+          "spread": -5.0,
+          "team_total_implied": 104.5,
+          "team_pace": 99.88,
+          "team_pace_rank": 19.0,
+          "team_def_rating": 108.9,
+          "team_def_rating_rank": 2.0,
+          "opp_pace": 100.7,
+          "opp_pace_rank": 13.0,
+          "opp_def_rating": 114.1,
+          "opp_def_rating_rank": 15.0
         },
         "form": {
-          "over_l5": 0.6,
-          "over_l10": 0.8,
-          "over_l15": 0.6666666666666666
+          "over_l5": 0.8,
+          "over_l10": 0.6,
+          "over_l15": 0.4
         },
         "vs_opp": {
-          "n_games": 5,
-          "avg_stat": 12.2,
-          "over_rate_at_line": 0.4
+          "n_games": 12,
+          "avg_stat": 7.833333333333333,
+          "over_rate_at_line": 0.5
         },
         "is_conflict": false,
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.669
-      }
-    ],
-    "STRATEGY_TIER": 2,
-    "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.888,
-    "ANCHOR_NAME": "Ajay Mitchell"
-  },
-  {
-    "PARLAY_PROB": 0.40826,
-    "EV": 124.542,
-    "EV_DOLLARS": 12.4542,
-    "KELLY": 13.838,
-    "STAKE_DOLLARS": 10.0,
-    "NET_PAYOUT_MULT": 4.5,
-    "N_LEGS": 3,
-    "LEGS": [
+        "p_win": 0.747
+      },
       {
         "platform": "Betr DFS",
-        "player": "Evan Mobley",
-        "display_name": "Evan Mobley",
-        "team_abbr": "CLE",
-        "team": "Cleveland Cavaliers",
-        "opponent_abbr": "DET",
-        "opponent": "Detroit Pistons",
-        "is_home": 0,
-        "market": "REB",
+        "player": "Duncan Robinson",
+        "display_name": "Duncan Robinson",
+        "team_abbr": "DET",
+        "team": "Detroit Pistons",
+        "opponent_abbr": "CLE",
+        "opponent": "Cleveland Cavaliers",
+        "is_home": 1,
+        "market": "PTS",
         "dfs_line": 8.5,
         "dfs_odds": {
           "american_over": -137.0,
@@ -541,79 +338,87 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.348,
-          "p_under": 0.652,
-          "lean": "UNDER",
-          "min_q10": 25.49,
-          "min_q50": 32.74,
-          "min_q90": 37.33,
-          "stat_q10": 3.13,
-          "stat_q50": 8.02,
-          "stat_q90": 14.15
+          "p_over": 0.731,
+          "p_under": 0.269,
+          "lean": "OVER",
+          "min_q10": 21.98,
+          "min_q50": 27.32,
+          "min_q90": 39.44,
+          "stat_q10": 3.76,
+          "stat_q50": 11.27,
+          "stat_q90": 27.88
         },
         "sharp": {
           "source": "Pinnacle",
           "is_fallback": false,
           "line": 8.5,
-          "no_vig_over": 0.4677478655173823,
-          "no_vig_under": 0.5322521344826178,
-          "american_over": 102.0,
-          "american_under": -129.0,
-          "lean": "UNDER"
+          "no_vig_over": 0.5108342361863488,
+          "no_vig_under": 0.4891657638136511,
+          "american_over": -115.0,
+          "american_under": -105.0,
+          "lean": "OVER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.47179033953886673,
-          "n_books_any_line": 8,
-          "mean_no_vig_over_any_line": 0.4728352405554783,
+          "mean_no_vig_over_same_line": 0.48740182860488224,
+          "n_books_any_line": 10,
+          "mean_no_vig_over_any_line": 0.4839608939130874,
           "offerings": [
             {
               "book": "Pinnacle",
               "line": 8.5,
-              "no_vig_over": 0.4677478655173823,
-              "no_vig_under": 0.5322521344826178,
-              "american_over": 102.0,
-              "american_under": -129.0
+              "no_vig_over": 0.5108342361863488,
+              "no_vig_under": 0.4891657638136511,
+              "american_over": -115.0,
+              "american_under": -105.0
             },
             {
               "book": "FanDuel",
               "line": 8.5,
-              "no_vig_over": 0.4718423169750604,
-              "no_vig_under": 0.5281576830249397,
-              "american_over": -102.0,
-              "american_under": -130.0
+              "no_vig_over": 0.48542880932556204,
+              "no_vig_under": 0.5145711906744379,
+              "american_over": -106.0,
+              "american_under": -120.0
             },
             {
               "book": "DraftKings",
               "line": 8.5,
-              "no_vig_over": 0.47268091306459453,
-              "no_vig_under": 0.5273190869354056,
-              "american_over": -102.0,
-              "american_under": -129.0
+              "no_vig_over": 0.4791397221410989,
+              "no_vig_under": 0.520860277858901,
+              "american_over": -103.0,
+              "american_under": -123.0
             },
             {
               "book": "BetMGM",
               "line": 8.5,
-              "no_vig_over": 0.4796954314720812,
-              "no_vig_under": 0.5203045685279188,
-              "american_over": -105.0,
-              "american_under": -125.0
+              "no_vig_over": 0.48987854251012153,
+              "no_vig_under": 0.5101214574898786,
+              "american_over": -110.0,
+              "american_under": -120.0
             },
             {
               "book": "BetOnline.ag",
               "line": 8.5,
-              "no_vig_over": 0.4693877551020409,
-              "no_vig_under": 0.5306122448979592,
-              "american_over": 100.0,
-              "american_under": -130.0
+              "no_vig_over": 0.48974190636412124,
+              "no_vig_under": 0.5102580936358787,
+              "american_over": -109.0,
+              "american_under": -119.0
+            },
+            {
+              "book": "Bovada",
+              "line": 6.5,
+              "no_vig_over": 0.6333530455351862,
+              "no_vig_under": 0.3666469544648137,
+              "american_over": -210.0,
+              "american_under": 155.0
             },
             {
               "book": "Bovada",
               "line": 7.5,
-              "no_vig_over": 0.5915279878971256,
-              "no_vig_under": 0.40847201210287437,
-              "american_over": -170.0,
-              "american_under": 130.0
+              "no_vig_over": 0.554140127388535,
+              "no_vig_under": 0.4458598726114649,
+              "american_over": -145.0,
+              "american_under": 110.0
             },
             {
               "book": "Bovada",
@@ -626,18 +431,221 @@
             {
               "book": "Bovada",
               "line": 9.5,
-              "no_vig_over": 0.36041189931350115,
-              "no_vig_under": 0.6395881006864989,
-              "american_over": 160.0,
-              "american_under": -215.0
+              "no_vig_over": 0.3982930298719772,
+              "no_vig_under": 0.6017069701280228,
+              "american_over": 135.0,
+              "american_under": -180.0
+            },
+            {
+              "book": "Bovada",
+              "line": 10.5,
+              "no_vig_over": 0.32941176470588235,
+              "no_vig_under": 0.6705882352941177,
+              "american_over": 185.0,
+              "american_under": -250.0
             }
           ]
         },
         "game_context": {
           "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": 4.5,
-          "team_total_implied": 100.25,
+          "game_total": 204.0,
+          "spread": -5.0,
+          "team_total_implied": 104.5,
+          "team_pace": 99.88,
+          "team_pace_rank": 19.0,
+          "team_def_rating": 108.9,
+          "team_def_rating_rank": 2.0,
+          "opp_pace": 100.7,
+          "opp_pace_rank": 13.0,
+          "opp_def_rating": 114.1,
+          "opp_def_rating_rank": 15.0
+        },
+        "form": {
+          "over_l5": 0.6,
+          "over_l10": 0.8,
+          "over_l15": 0.8666666666666667
+        },
+        "vs_opp": {
+          "n_games": 24,
+          "avg_stat": 10.166666666666666,
+          "over_rate_at_line": 0.4583333333333333
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "OVER",
+        "p_win": 0.731
+      }
+    ],
+    "STRATEGY_TIER": 2,
+    "COMBO_PROFILE": "2+1/teammates",
+    "ANCHOR_WIN_PROB": 0.888,
+    "ANCHOR_NAME": "Ajay Mitchell"
+  },
+  {
+    "PARLAY_PROB": 0.44051,
+    "EV": 142.279,
+    "EV_DOLLARS": 14.2279,
+    "KELLY": 15.8087,
+    "STAKE_DOLLARS": 10.0,
+    "NET_PAYOUT_MULT": 4.5,
+    "N_LEGS": 3,
+    "LEGS": [
+      {
+        "platform": "Betr DFS",
+        "player": "James Harden",
+        "display_name": "James Harden",
+        "team_abbr": "CLE",
+        "team": "Cleveland Cavaliers",
+        "opponent_abbr": "DET",
+        "opponent": "Detroit Pistons",
+        "is_home": 0,
+        "market": "PTS",
+        "dfs_line": 18.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.705,
+          "p_under": 0.295,
+          "lean": "OVER",
+          "min_q10": 30.11,
+          "min_q50": 38.24,
+          "min_q90": 39.47,
+          "stat_q10": 10.02,
+          "stat_q50": 22.71,
+          "stat_q90": 34.12
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 19.5,
+          "no_vig_over": 0.46997389033942555,
+          "no_vig_under": 0.5300261096605744,
+          "american_over": 103.0,
+          "american_under": -125.0,
+          "lean": "OVER"
+        },
+        "consensus": {
+          "n_books_same_line": 4,
+          "mean_no_vig_over_same_line": 0.5137905384681172,
+          "n_books_any_line": 13,
+          "mean_no_vig_over_any_line": 0.4987182414045221,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 19.5,
+              "no_vig_over": 0.46997389033942555,
+              "no_vig_under": 0.5300261096605744,
+              "american_over": 103.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 18.5,
+              "no_vig_over": 0.5041554124246831,
+              "no_vig_under": 0.4958445875753168,
+              "american_over": -115.0,
+              "american_under": -111.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 18.5,
+              "no_vig_over": 0.510397604391948,
+              "no_vig_under": 0.4896023956080519,
+              "american_over": -118.0,
+              "american_under": -108.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 18.5,
+              "no_vig_over": 0.5203045685279188,
+              "no_vig_under": 0.4796954314720812,
+              "american_over": -125.0,
+              "american_under": -105.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 19.5,
+              "no_vig_over": 0.4948402542722694,
+              "no_vig_under": 0.5051597457277305,
+              "american_over": -111.0,
+              "american_under": -116.0
+            },
+            {
+              "book": "Bovada",
+              "line": 15.5,
+              "no_vig_over": 0.6875,
+              "no_vig_under": 0.3125,
+              "american_over": -275.0,
+              "american_under": 200.0
+            },
+            {
+              "book": "Bovada",
+              "line": 16.5,
+              "no_vig_over": 0.625,
+              "no_vig_under": 0.375,
+              "american_over": -200.0,
+              "american_under": 150.0
+            },
+            {
+              "book": "Bovada",
+              "line": 17.5,
+              "no_vig_over": 0.5751633986928104,
+              "no_vig_under": 0.4248366013071895,
+              "american_over": -160.0,
+              "american_under": 120.0
+            },
+            {
+              "book": "Bovada",
+              "line": 18.5,
+              "no_vig_over": 0.5203045685279188,
+              "no_vig_under": 0.4796954314720812,
+              "american_over": -125.0,
+              "american_under": -105.0
+            },
+            {
+              "book": "Bovada",
+              "line": 19.5,
+              "no_vig_over": 0.4693877551020409,
+              "no_vig_under": 0.5306122448979592,
+              "american_over": 100.0,
+              "american_under": -130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 20.5,
+              "no_vig_over": 0.4165029469548134,
+              "no_vig_under": 0.5834970530451867,
+              "american_over": 125.0,
+              "american_under": -165.0
+            },
+            {
+              "book": "Bovada",
+              "line": 21.5,
+              "no_vig_over": 0.3666469544648137,
+              "no_vig_under": 0.6333530455351862,
+              "american_over": 155.0,
+              "american_under": -210.0
+            },
+            {
+              "book": "Bovada",
+              "line": 22.5,
+              "no_vig_over": 0.32315978456014366,
+              "no_vig_under": 0.6768402154398564,
+              "american_over": 190.0,
+              "american_under": -260.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": 5.0,
+          "team_total_implied": 99.5,
           "team_pace": 100.7,
           "team_pace_rank": 13.0,
           "team_def_rating": 114.1,
@@ -648,20 +656,20 @@
           "opp_def_rating_rank": 2.0
         },
         "form": {
-          "over_l5": 0.0,
-          "over_l10": 0.2,
-          "over_l15": 0.3333333333333333
+          "over_l5": 1.0,
+          "over_l10": 0.8,
+          "over_l15": 0.6
         },
         "vs_opp": {
-          "n_games": 18,
-          "avg_stat": 7.388888888888889,
-          "over_rate_at_line": 0.3333333333333333
+          "n_games": 15,
+          "avg_stat": 22.4,
+          "over_rate_at_line": 0.7333333333333333
         },
         "is_conflict": false,
         "sharp_aligned": true,
         "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.652
+        "side": "OVER",
+        "p_win": 0.705
       },
       {
         "platform": "Betr DFS",
@@ -681,8 +689,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.749,
-          "p_under": 0.251,
+          "p_over": 0.751,
+          "p_under": 0.249,
           "lean": "OVER",
           "min_q10": 25.51,
           "min_q50": 32.51,
@@ -703,9 +711,9 @@
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5072378336934317,
+          "mean_no_vig_over_same_line": 0.505874909467599,
           "n_books_any_line": 11,
-          "mean_no_vig_over_any_line": 0.4993142379889008,
+          "mean_no_vig_over_any_line": 0.49857082477481035,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -718,26 +726,26 @@
             {
               "book": "FanDuel",
               "line": 11.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -114.0,
-              "american_under": -114.0
+              "no_vig_over": 0.4939310568053083,
+              "no_vig_under": 0.5060689431946916,
+              "american_over": -112.0,
+              "american_under": -118.0
             },
             {
               "book": "DraftKings",
               "line": 11.5,
-              "no_vig_over": 0.5217643644805572,
-              "no_vig_under": 0.47823563551944287,
-              "american_over": -124.0,
-              "american_under": -103.0
+              "no_vig_over": 0.5166631951676735,
+              "no_vig_under": 0.4833368048323266,
+              "american_over": -121.0,
+              "american_under": -105.0
             },
             {
               "book": "BetMGM",
               "line": 11.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
+              "no_vig_over": 0.4928711096627016,
+              "no_vig_under": 0.5071288903372982,
+              "american_over": -111.0,
+              "american_under": -118.0
             },
             {
               "book": "BetOnline.ag",
@@ -825,7 +833,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.749
+        "p_win": 0.751
       },
       {
         "platform": "Betr DFS",
@@ -845,8 +853,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.836,
-          "p_under": 0.164,
+          "p_over": 0.832,
+          "p_under": 0.168,
           "lean": "OVER",
           "min_q10": 18.73,
           "min_q50": 25.96,
@@ -859,105 +867,105 @@
           "source": "Pinnacle",
           "is_fallback": false,
           "line": 10.5,
-          "no_vig_over": 0.5168918918918919,
-          "no_vig_under": 0.4831081081081081,
-          "american_over": -120.0,
-          "american_under": -104.0,
+          "no_vig_over": 0.5471308734450537,
+          "no_vig_under": 0.45286912655494616,
+          "american_over": -137.0,
+          "american_under": 109.0,
           "lean": "OVER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5063736730506988,
+          "mean_no_vig_over_same_line": 0.51327970970703,
           "n_books_any_line": 11,
-          "mean_no_vig_over_any_line": 0.4886235733005964,
+          "mean_no_vig_over_any_line": 0.4876507914379877,
           "offerings": [
             {
               "book": "Pinnacle",
               "line": 10.5,
-              "no_vig_over": 0.5168918918918919,
-              "no_vig_under": 0.4831081081081081,
-              "american_over": -120.0,
-              "american_under": -104.0
+              "no_vig_over": 0.5471308734450537,
+              "no_vig_under": 0.45286912655494616,
+              "american_over": -137.0,
+              "american_under": 109.0
             },
             {
               "book": "FanDuel",
               "line": 10.5,
-              "no_vig_over": 0.5060689431946916,
-              "no_vig_under": 0.4939310568053083,
+              "no_vig_over": 0.5039916972696792,
+              "no_vig_under": 0.496008302730321,
               "american_over": -118.0,
-              "american_under": -112.0
+              "american_under": -114.0
             },
             {
               "book": "DraftKings",
               "line": 10.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -113.0,
-              "american_under": -113.0
+              "no_vig_over": 0.4937655860349127,
+              "no_vig_under": 0.5062344139650873,
+              "american_over": -110.0,
+              "american_under": -116.0
             },
             {
               "book": "BetMGM",
               "line": 10.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
+              "no_vig_over": 0.5346534653465347,
+              "no_vig_under": 0.4653465346534653,
+              "american_over": -135.0,
+              "american_under": 100.0
             },
             {
               "book": "BetOnline.ag",
               "line": 10.5,
-              "no_vig_over": 0.5051597457277305,
-              "no_vig_under": 0.4948402542722694,
-              "american_over": -116.0,
-              "american_under": -111.0
+              "no_vig_over": 0.5102580936358787,
+              "no_vig_under": 0.48974190636412124,
+              "american_over": -119.0,
+              "american_under": -109.0
             },
             {
               "book": "Bovada",
               "line": 8.5,
-              "no_vig_over": 0.6456256921373201,
-              "no_vig_under": 0.35437430786268,
-              "american_over": -220.0,
-              "american_under": 165.0
+              "no_vig_over": 0.6333530455351862,
+              "no_vig_under": 0.3666469544648137,
+              "american_over": -210.0,
+              "american_under": 155.0
             },
             {
               "book": "Bovada",
               "line": 9.5,
-              "no_vig_over": 0.5751633986928104,
-              "no_vig_under": 0.4248366013071895,
-              "american_over": -160.0,
-              "american_under": 120.0
+              "no_vig_over": 0.5633187772925764,
+              "no_vig_under": 0.43668122270742354,
+              "american_over": -150.0,
+              "american_under": 115.0
             },
             {
               "book": "Bovada",
               "line": 10.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
+              "no_vig_over": 0.48987854251012153,
+              "no_vig_under": 0.5101214574898786,
+              "american_over": -110.0,
+              "american_under": -120.0
             },
             {
               "book": "Bovada",
               "line": 11.5,
-              "no_vig_over": 0.43668122270742354,
-              "no_vig_under": 0.5633187772925764,
-              "american_over": 115.0,
-              "american_under": -150.0
+              "no_vig_over": 0.4248366013071895,
+              "no_vig_under": 0.5751633986928104,
+              "american_over": 120.0,
+              "american_under": -160.0
             },
             {
               "book": "Bovada",
               "line": 12.5,
-              "no_vig_over": 0.3666469544648137,
-              "no_vig_under": 0.6333530455351862,
-              "american_over": 155.0,
-              "american_under": -210.0
+              "no_vig_over": 0.36041189931350115,
+              "no_vig_under": 0.6395881006864989,
+              "american_over": 160.0,
+              "american_under": -215.0
             },
             {
               "book": "Bovada",
               "line": 13.5,
-              "no_vig_over": 0.3125,
-              "no_vig_under": 0.6875,
-              "american_over": 200.0,
-              "american_under": -275.0
+              "no_vig_over": 0.30256012412723043,
+              "no_vig_under": 0.6974398758727697,
+              "american_over": 210.0,
+              "american_under": -290.0
             }
           ]
         },
@@ -989,195 +997,23 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.836
+        "p_win": 0.832
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.836,
+    "ANCHOR_WIN_PROB": 0.832,
     "ANCHOR_NAME": "Dylan Harper"
   },
   {
-    "PARLAY_PROB": 0.28451,
-    "EV": 56.483,
-    "EV_DOLLARS": 5.6483,
-    "KELLY": 6.2759,
+    "PARLAY_PROB": 0.30592,
+    "EV": 68.255,
+    "EV_DOLLARS": 6.8255,
+    "KELLY": 7.5839,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
     "LEGS": [
-      {
-        "platform": "Betr DFS",
-        "player": "Tobias Harris",
-        "display_name": "Tobias Harris",
-        "team_abbr": "DET",
-        "team": "Detroit Pistons",
-        "opponent_abbr": "CLE",
-        "opponent": "Cleveland Cavaliers",
-        "is_home": 1,
-        "market": "PTS",
-        "dfs_line": 16.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.374,
-          "p_under": 0.625,
-          "lean": "UNDER",
-          "min_q10": 23.96,
-          "min_q50": 34.54,
-          "min_q90": 36.99,
-          "stat_q10": 5.97,
-          "stat_q50": 15.93,
-          "stat_q90": 26.05
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 16.5,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5,
-          "american_over": -112.0,
-          "american_under": -112.0,
-          "lean": "UNDER"
-        },
-        "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.4925014064375297,
-          "n_books_any_line": 12,
-          "mean_no_vig_over_any_line": 0.4948945867057459,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 16.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -112.0,
-              "american_under": -112.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 16.5,
-              "no_vig_over": 0.48581617766250607,
-              "no_vig_under": 0.5141838223374939,
-              "american_over": -108.0,
-              "american_under": -122.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 16.5,
-              "no_vig_over": 0.487517163899638,
-              "no_vig_under": 0.512482836100362,
-              "american_over": -107.0,
-              "american_under": -119.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 16.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 16.5,
-              "no_vig_over": 0.49179655455291227,
-              "no_vig_under": 0.5082034454470877,
-              "american_over": -110.0,
-              "american_under": -118.0
-            },
-            {
-              "book": "Bovada",
-              "line": 13.5,
-              "no_vig_over": 0.6653734238603297,
-              "no_vig_under": 0.3346265761396702,
-              "american_over": -245.0,
-              "american_under": 180.0
-            },
-            {
-              "book": "Bovada",
-              "line": 14.5,
-              "no_vig_over": 0.6090534979423868,
-              "no_vig_under": 0.39094650205761317,
-              "american_over": -185.0,
-              "american_under": 140.0
-            },
-            {
-              "book": "Bovada",
-              "line": 15.5,
-              "no_vig_over": 0.554140127388535,
-              "no_vig_under": 0.4458598726114649,
-              "american_over": -145.0,
-              "american_under": 110.0
-            },
-            {
-              "book": "Bovada",
-              "line": 16.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 17.5,
-              "no_vig_over": 0.43668122270742354,
-              "no_vig_under": 0.5633187772925764,
-              "american_over": 115.0,
-              "american_under": -150.0
-            },
-            {
-              "book": "Bovada",
-              "line": 18.5,
-              "no_vig_over": 0.3838517538054269,
-              "no_vig_under": 0.6161482461945731,
-              "american_over": 145.0,
-              "american_under": -190.0
-            },
-            {
-              "book": "Bovada",
-              "line": 19.5,
-              "no_vig_over": 0.3346265761396702,
-              "no_vig_under": 0.6653734238603297,
-              "american_over": 180.0,
-              "american_under": -245.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": -4.5,
-          "team_total_implied": 104.75,
-          "team_pace": 99.88,
-          "team_pace_rank": 19.0,
-          "team_def_rating": 108.9,
-          "team_def_rating_rank": 2.0,
-          "opp_pace": 100.7,
-          "opp_pace_rank": 13.0,
-          "opp_def_rating": 114.1,
-          "opp_def_rating_rank": 15.0
-        },
-        "form": {
-          "over_l5": 0.2,
-          "over_l10": 0.6,
-          "over_l15": 0.7333333333333333
-        },
-        "vs_opp": {
-          "n_games": 16,
-          "avg_stat": 14.6875,
-          "over_rate_at_line": 0.4375
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.625
-      },
       {
         "platform": "Betr DFS",
         "player": "De'Aaron Fox",
@@ -1196,8 +1032,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.739,
-          "p_under": 0.262,
+          "p_over": 0.744,
+          "p_under": 0.256,
           "lean": "OVER",
           "min_q10": 25.1,
           "min_q50": 35.49,
@@ -1217,10 +1053,10 @@
           "lean": "OVER"
         },
         "consensus": {
-          "n_books_same_line": 5,
-          "mean_no_vig_over_same_line": 0.5086411249571942,
-          "n_books_any_line": 12,
-          "mean_no_vig_over_any_line": 0.4977907035386487,
+          "n_books_same_line": 6,
+          "mean_no_vig_over_same_line": 0.5154215267201646,
+          "n_books_any_line": 13,
+          "mean_no_vig_over_any_line": 0.4996623470054261,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -1241,82 +1077,90 @@
             {
               "book": "DraftKings",
               "line": 15.5,
-              "no_vig_over": 0.4896023956080519,
-              "no_vig_under": 0.510397604391948,
-              "american_over": -108.0,
-              "american_under": -118.0
+              "no_vig_over": 0.5145711906744379,
+              "no_vig_under": 0.48542880932556204,
+              "american_over": -120.0,
+              "american_under": -106.0
             },
             {
               "book": "BetMGM",
-              "line": 16.5,
-              "no_vig_over": 0.4554079696394686,
-              "no_vig_under": 0.5445920303605313,
-              "american_over": 105.0,
-              "american_under": -140.0
+              "line": 15.5,
+              "no_vig_over": 0.5,
+              "no_vig_under": 0.5,
+              "american_over": -115.0,
+              "american_under": -115.0
             },
             {
               "book": "BetOnline.ag",
               "line": 15.5,
-              "no_vig_over": 0.5082034454470877,
-              "no_vig_under": 0.49179655455291227,
-              "american_over": -118.0,
-              "american_under": -110.0
+              "no_vig_over": 0.5123152709359606,
+              "no_vig_under": 0.4876847290640395,
+              "american_over": -120.0,
+              "american_under": -108.0
             },
             {
               "book": "Bovada",
               "line": 12.5,
-              "no_vig_over": 0.6705882352941177,
-              "no_vig_under": 0.32941176470588235,
-              "american_over": -250.0,
-              "american_under": 185.0
+              "no_vig_over": 0.6875,
+              "no_vig_under": 0.3125,
+              "american_over": -275.0,
+              "american_under": 200.0
             },
             {
               "book": "Bovada",
               "line": 13.5,
-              "no_vig_over": 0.6090534979423868,
-              "no_vig_under": 0.39094650205761317,
-              "american_over": -185.0,
-              "american_under": 140.0
+              "no_vig_over": 0.6333530455351862,
+              "no_vig_under": 0.3666469544648137,
+              "american_over": -210.0,
+              "american_under": 155.0
             },
             {
               "book": "Bovada",
               "line": 14.5,
-              "no_vig_over": 0.554140127388535,
-              "no_vig_under": 0.4458598726114649,
-              "american_over": -145.0,
-              "american_under": 110.0
+              "no_vig_over": 0.5751633986928104,
+              "no_vig_under": 0.4248366013071895,
+              "american_over": -160.0,
+              "american_under": 120.0
             },
             {
               "book": "Bovada",
               "line": 15.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
+              "no_vig_over": 0.5101214574898786,
+              "no_vig_under": 0.48987854251012153,
+              "american_over": -120.0,
+              "american_under": -110.0
             },
             {
               "book": "Bovada",
               "line": 16.5,
-              "no_vig_over": 0.43668122270742354,
-              "no_vig_under": 0.5633187772925764,
-              "american_over": 115.0,
-              "american_under": -150.0
+              "no_vig_over": 0.4592085979482169,
+              "no_vig_under": 0.5407914020517831,
+              "american_over": 105.0,
+              "american_under": -135.0
             },
             {
               "book": "Bovada",
               "line": 17.5,
-              "no_vig_over": 0.375,
-              "no_vig_under": 0.625,
-              "american_over": 150.0,
-              "american_under": -200.0
+              "no_vig_over": 0.3982930298719772,
+              "no_vig_under": 0.6017069701280228,
+              "american_over": 135.0,
+              "american_under": -180.0
             },
             {
               "book": "Bovada",
               "line": 18.5,
-              "no_vig_over": 0.32941176470588235,
-              "no_vig_under": 0.6705882352941177,
-              "american_over": 185.0,
-              "american_under": -250.0
+              "no_vig_over": 0.34700315457413244,
+              "no_vig_under": 0.6529968454258674,
+              "american_over": 170.0,
+              "american_under": -230.0
+            },
+            {
+              "book": "Bovada",
+              "line": 19.5,
+              "no_vig_over": 0.30256012412723043,
+              "no_vig_under": 0.6974398758727697,
+              "american_over": 210.0,
+              "american_under": -290.0
             }
           ]
         },
@@ -1348,18 +1192,150 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.739
+        "p_win": 0.744
       },
       {
         "platform": "Betr DFS",
-        "player": "Julian Champagnie",
-        "display_name": "Julian Champagnie",
-        "team_abbr": "SAS",
-        "team": "San Antonio Spurs",
-        "opponent_abbr": "OKC",
-        "opponent": "Oklahoma City Thunder",
+        "player": "Donovan Mitchell",
+        "display_name": "Donovan Mitchell",
+        "team_abbr": "CLE",
+        "team": "Cleveland Cavaliers",
+        "opponent_abbr": "DET",
+        "opponent": "Detroit Pistons",
         "is_home": 0,
-        "market": "PTS",
+        "market": "AST",
+        "dfs_line": 3.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": null,
+          "no_vig_over": null,
+          "no_vig_under": null
+        },
+        "model": {
+          "p_over": 0.377,
+          "p_under": 0.623,
+          "lean": "UNDER",
+          "min_q10": 28.39,
+          "min_q50": 36.94,
+          "min_q90": 37.68,
+          "stat_q10": 0.79,
+          "stat_q50": 3.46,
+          "stat_q90": 7.7
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 3.5,
+          "no_vig_over": 0.46997389033942555,
+          "no_vig_under": 0.5300261096605744,
+          "american_over": 103.0,
+          "american_under": -125.0,
+          "lean": "UNDER"
+        },
+        "consensus": {
+          "n_books_same_line": 6,
+          "mean_no_vig_over_same_line": 0.45175185382258953,
+          "n_books_any_line": 7,
+          "mean_no_vig_over_any_line": 0.4785856033745766,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 3.5,
+              "no_vig_over": 0.46997389033942555,
+              "no_vig_under": 0.5300261096605744,
+              "american_over": 103.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 3.5,
+              "no_vig_over": 0.4456393635827931,
+              "no_vig_under": 0.5543606364172068,
+              "american_over": 112.0,
+              "american_under": -142.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 3.5,
+              "no_vig_over": 0.42372881355932207,
+              "no_vig_under": 0.576271186440678,
+              "american_over": 121.0,
+              "american_under": -160.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 3.5,
+              "no_vig_over": 0.48987854251012153,
+              "no_vig_under": 0.5101214574898786,
+              "american_over": -110.0,
+              "american_under": -120.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 3.5,
+              "no_vig_over": 0.4564539116366858,
+              "no_vig_under": 0.5435460883633142,
+              "american_over": 106.0,
+              "american_under": -137.0
+            },
+            {
+              "book": "Bovada",
+              "line": 2.5,
+              "no_vig_over": 0.6395881006864989,
+              "no_vig_under": 0.36041189931350115,
+              "american_over": -215.0,
+              "american_under": 160.0
+            },
+            {
+              "book": "Bovada",
+              "line": 3.5,
+              "no_vig_over": 0.4248366013071895,
+              "no_vig_under": 0.5751633986928104,
+              "american_over": 120.0,
+              "american_under": -160.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": 5.0,
+          "team_total_implied": 99.5,
+          "team_pace": 100.7,
+          "team_pace_rank": 13.0,
+          "team_def_rating": 114.1,
+          "team_def_rating_rank": 15.0,
+          "opp_pace": 99.88,
+          "opp_pace_rank": 19.0,
+          "opp_def_rating": 108.9,
+          "opp_def_rating_rank": 2.0
+        },
+        "form": {
+          "over_l5": 0.2,
+          "over_l10": 0.2,
+          "over_l15": 0.13333333333333333
+        },
+        "vs_opp": {
+          "n_games": 15,
+          "avg_stat": 3.1333333333333333,
+          "over_rate_at_line": 0.26666666666666666
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.623
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Evan Mobley",
+        "display_name": "Evan Mobley",
+        "team_abbr": "CLE",
+        "team": "Cleveland Cavaliers",
+        "opponent_abbr": "DET",
+        "opponent": "Detroit Pistons",
+        "is_home": 0,
+        "market": "REB",
         "dfs_line": 8.5,
         "dfs_odds": {
           "american_over": -137.0,
@@ -1368,99 +1344,91 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.616,
-          "p_under": 0.384,
-          "lean": "OVER",
-          "min_q10": 23.23,
-          "min_q50": 28.13,
-          "min_q90": 36.15,
-          "stat_q10": 3.73,
-          "stat_q50": 10.12,
-          "stat_q90": 22.24
+          "p_over": 0.34,
+          "p_under": 0.66,
+          "lean": "UNDER",
+          "min_q10": 25.49,
+          "min_q50": 32.74,
+          "min_q90": 37.33,
+          "stat_q10": 3.13,
+          "stat_q50": 8.02,
+          "stat_q90": 14.15
         },
         "sharp": {
           "source": "Pinnacle",
           "is_fallback": false,
           "line": 8.5,
-          "no_vig_over": 0.5424146427314326,
-          "no_vig_under": 0.4575853572685674,
-          "american_over": -134.0,
-          "american_under": 107.0,
-          "lean": "OVER"
+          "no_vig_over": 0.46787015568068896,
+          "no_vig_under": 0.532129844319311,
+          "american_over": 104.0,
+          "american_under": -126.0,
+          "lean": "UNDER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5349558376083049,
-          "n_books_any_line": 11,
-          "mean_no_vig_over_any_line": 0.5160970006132317,
+          "mean_no_vig_over_same_line": 0.46535386428312714,
+          "n_books_any_line": 9,
+          "mean_no_vig_over_any_line": 0.48639650434788995,
           "offerings": [
             {
               "book": "Pinnacle",
               "line": 8.5,
-              "no_vig_over": 0.5424146427314326,
-              "no_vig_under": 0.4575853572685674,
-              "american_over": -134.0,
-              "american_under": 107.0
+              "no_vig_over": 0.46787015568068896,
+              "no_vig_under": 0.532129844319311,
+              "american_over": 104.0,
+              "american_under": -126.0
             },
             {
               "book": "FanDuel",
               "line": 8.5,
-              "no_vig_over": 0.5191532258064516,
-              "no_vig_under": 0.4808467741935484,
-              "american_over": -125.0,
-              "american_under": -106.0
+              "no_vig_over": 0.449438202247191,
+              "no_vig_under": 0.550561797752809,
+              "american_over": 110.0,
+              "american_under": -140.0
             },
             {
               "book": "DraftKings",
               "line": 8.5,
-              "no_vig_over": 0.5301681503461919,
-              "no_vig_under": 0.46983184965380814,
-              "american_over": -128.0,
-              "american_under": 101.0
+              "no_vig_over": 0.47268091306459453,
+              "no_vig_under": 0.5273190869354056,
+              "american_over": -102.0,
+              "american_under": -129.0
             },
             {
               "book": "BetMGM",
               "line": 8.5,
-              "no_vig_over": 0.5346534653465347,
-              "no_vig_under": 0.4653465346534653,
-              "american_over": -135.0,
-              "american_under": 100.0
+              "no_vig_over": 0.4796954314720812,
+              "no_vig_under": 0.5203045685279188,
+              "american_over": -105.0,
+              "american_under": -125.0
             },
             {
               "book": "BetOnline.ag",
               "line": 8.5,
-              "no_vig_over": 0.552733296521259,
-              "no_vig_under": 0.44726670347874103,
-              "american_over": -143.0,
-              "american_under": 110.0
+              "no_vig_over": 0.46322988528598974,
+              "no_vig_under": 0.5367701147140101,
+              "american_over": 103.0,
+              "american_under": -133.0
             },
             {
               "book": "Bovada",
               "line": 6.5,
-              "no_vig_over": 0.6920583468395461,
-              "no_vig_under": 0.3079416531604538,
-              "american_over": -280.0,
-              "american_under": 205.0
+              "no_vig_over": 0.6875,
+              "no_vig_under": 0.3125,
+              "american_over": -275.0,
+              "american_under": 200.0
             },
             {
               "book": "Bovada",
               "line": 7.5,
-              "no_vig_over": 0.6090534979423868,
-              "no_vig_under": 0.39094650205761317,
-              "american_over": -185.0,
-              "american_under": 140.0
+              "no_vig_over": 0.5633187772925764,
+              "no_vig_under": 0.43668122270742354,
+              "american_over": -150.0,
+              "american_under": 115.0
             },
             {
               "book": "Bovada",
               "line": 8.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "Bovada",
-              "line": 9.5,
               "no_vig_over": 0.4592085979482169,
               "no_vig_under": 0.5407914020517831,
               "american_over": 105.0,
@@ -1468,15 +1436,522 @@
             },
             {
               "book": "Bovada",
-              "line": 10.5,
-              "no_vig_over": 0.3838517538054269,
-              "no_vig_under": 0.6161482461945731,
-              "american_over": 145.0,
-              "american_under": -190.0
+              "line": 9.5,
+              "no_vig_over": 0.3346265761396702,
+              "no_vig_under": 0.6653734238603297,
+              "american_over": 180.0,
+              "american_under": -245.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": 5.0,
+          "team_total_implied": 99.5,
+          "team_pace": 100.7,
+          "team_pace_rank": 13.0,
+          "team_def_rating": 114.1,
+          "team_def_rating_rank": 15.0,
+          "opp_pace": 99.88,
+          "opp_pace_rank": 19.0,
+          "opp_def_rating": 108.9,
+          "opp_def_rating_rank": 2.0
+        },
+        "form": {
+          "over_l5": 0.0,
+          "over_l10": 0.2,
+          "over_l15": 0.3333333333333333
+        },
+        "vs_opp": {
+          "n_games": 18,
+          "avg_stat": 7.388888888888889,
+          "over_rate_at_line": 0.3333333333333333
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.66
+      }
+    ],
+    "STRATEGY_TIER": 2,
+    "COMBO_PROFILE": "2+1/teammates",
+    "ANCHOR_WIN_PROB": 0.744,
+    "ANCHOR_NAME": "De'Aaron Fox"
+  },
+  {
+    "PARLAY_PROB": 0.29759,
+    "EV": 63.676,
+    "EV_DOLLARS": 6.3676,
+    "KELLY": 7.0751,
+    "STAKE_DOLLARS": 10.0,
+    "NET_PAYOUT_MULT": 4.5,
+    "N_LEGS": 3,
+    "LEGS": [
+      {
+        "platform": "Betr DFS",
+        "player": "Tobias Harris",
+        "display_name": "Tobias Harris",
+        "team_abbr": "DET",
+        "team": "Detroit Pistons",
+        "opponent_abbr": "CLE",
+        "opponent": "Cleveland Cavaliers",
+        "is_home": 1,
+        "market": "PTS",
+        "dfs_line": 16.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.379,
+          "p_under": 0.621,
+          "lean": "UNDER",
+          "min_q10": 23.96,
+          "min_q50": 34.54,
+          "min_q90": 36.99,
+          "stat_q10": 5.97,
+          "stat_q50": 15.93,
+          "stat_q90": 26.05
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 16.5,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5,
+          "american_over": -110.0,
+          "american_under": -110.0,
+          "lean": "UNDER"
+        },
+        "consensus": {
+          "n_books_same_line": 6,
+          "mean_no_vig_over_same_line": 0.5046151602442271,
+          "n_books_any_line": 12,
+          "mean_no_vig_over_any_line": 0.4889613715699353,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 16.5,
+              "no_vig_over": 0.5,
+              "no_vig_under": 0.5,
+              "american_over": -110.0,
+              "american_under": -110.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 16.5,
+              "no_vig_over": 0.47614107883817425,
+              "no_vig_under": 0.5238589211618258,
+              "american_over": -102.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 16.5,
+              "no_vig_over": 0.528066528066528,
+              "no_vig_under": 0.47193347193347185,
+              "american_over": -127.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 16.5,
+              "no_vig_over": 0.4928711096627016,
+              "no_vig_under": 0.5071288903372982,
+              "american_over": -111.0,
+              "american_under": -118.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 16.5,
+              "no_vig_over": 0.5,
+              "no_vig_under": 0.5,
+              "american_over": -114.0,
+              "american_under": -114.0
             },
             {
               "book": "Bovada",
-              "line": 11.5,
+              "line": 14.5,
+              "no_vig_over": 0.6456256921373201,
+              "no_vig_under": 0.35437430786268,
+              "american_over": -220.0,
+              "american_under": 165.0
+            },
+            {
+              "book": "Bovada",
+              "line": 15.5,
+              "no_vig_over": 0.5915279878971256,
+              "no_vig_under": 0.40847201210287437,
+              "american_over": -170.0,
+              "american_under": 130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 16.5,
+              "no_vig_over": 0.5306122448979592,
+              "no_vig_under": 0.4693877551020409,
+              "american_over": -130.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "Bovada",
+              "line": 17.5,
+              "no_vig_over": 0.4796954314720812,
+              "no_vig_under": 0.5203045685279188,
+              "american_over": -105.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "Bovada",
+              "line": 18.5,
+              "no_vig_over": 0.4248366013071895,
+              "no_vig_under": 0.5751633986928104,
+              "american_over": 120.0,
+              "american_under": -160.0
+            },
+            {
+              "book": "Bovada",
+              "line": 19.5,
+              "no_vig_over": 0.375,
+              "no_vig_under": 0.625,
+              "american_over": 150.0,
+              "american_under": -200.0
+            },
+            {
+              "book": "Bovada",
+              "line": 20.5,
+              "no_vig_over": 0.32315978456014366,
+              "no_vig_under": 0.6768402154398564,
+              "american_over": 190.0,
+              "american_under": -260.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": -5.0,
+          "team_total_implied": 104.5,
+          "team_pace": 99.88,
+          "team_pace_rank": 19.0,
+          "team_def_rating": 108.9,
+          "team_def_rating_rank": 2.0,
+          "opp_pace": 100.7,
+          "opp_pace_rank": 13.0,
+          "opp_def_rating": 114.1,
+          "opp_def_rating_rank": 15.0
+        },
+        "form": {
+          "over_l5": 0.2,
+          "over_l10": 0.6,
+          "over_l15": 0.7333333333333333
+        },
+        "vs_opp": {
+          "n_games": 16,
+          "avg_stat": 14.6875,
+          "over_rate_at_line": 0.4375
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.621
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Alex Caruso",
+        "display_name": "Alex Caruso",
+        "team_abbr": "OKC",
+        "team": "Oklahoma City Thunder",
+        "opponent_abbr": "SAS",
+        "opponent": "San Antonio Spurs",
+        "is_home": 1,
+        "market": "PTS",
+        "dfs_line": 6.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.711,
+          "p_under": 0.289,
+          "lean": "OVER",
+          "min_q10": 17.08,
+          "min_q50": 22.51,
+          "min_q90": 27.87,
+          "stat_q10": 1.38,
+          "stat_q50": 7.65,
+          "stat_q90": 18.96
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 6.5,
+          "no_vig_over": 0.5199445750755795,
+          "no_vig_under": 0.48005542492442055,
+          "american_over": -122.0,
+          "american_under": -103.0,
+          "lean": "OVER"
+        },
+        "consensus": {
+          "n_books_same_line": 4,
+          "mean_no_vig_over_same_line": 0.5389560214712792,
+          "n_books_any_line": 10,
+          "mean_no_vig_over_any_line": 0.4971966491986272,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 6.5,
+              "no_vig_over": 0.5199445750755795,
+              "no_vig_under": 0.48005542492442055,
+              "american_over": -122.0,
+              "american_under": -103.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 6.5,
+              "no_vig_over": 0.5379072681704261,
+              "no_vig_under": 0.46209273182957394,
+              "american_over": -136.0,
+              "american_under": 102.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 7.5,
+              "no_vig_over": 0.47614107883817425,
+              "no_vig_under": 0.5238589211618258,
+              "american_over": -102.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 6.5,
+              "no_vig_over": 0.5346534653465347,
+              "no_vig_under": 0.4653465346534653,
+              "american_over": -135.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 7.5,
+              "no_vig_over": 0.47438944435338465,
+              "no_vig_under": 0.5256105556466153,
+              "american_over": -102.0,
+              "american_under": -127.0
+            },
+            {
+              "book": "Bovada",
+              "line": 5.5,
+              "no_vig_over": 0.6529968454258674,
+              "no_vig_under": 0.34700315457413244,
+              "american_over": -230.0,
+              "american_under": 170.0
+            },
+            {
+              "book": "Bovada",
+              "line": 6.5,
+              "no_vig_over": 0.5633187772925764,
+              "no_vig_under": 0.43668122270742354,
+              "american_over": -150.0,
+              "american_under": 115.0
+            },
+            {
+              "book": "Bovada",
+              "line": 7.5,
+              "no_vig_over": 0.4796954314720812,
+              "no_vig_under": 0.5203045685279188,
+              "american_over": -105.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "Bovada",
+              "line": 8.5,
+              "no_vig_over": 0.3982930298719772,
+              "no_vig_under": 0.6017069701280228,
+              "american_over": 135.0,
+              "american_under": -180.0
+            },
+            {
+              "book": "Bovada",
+              "line": 9.5,
+              "no_vig_over": 0.3346265761396702,
+              "no_vig_under": 0.6653734238603297,
+              "american_over": 180.0,
+              "american_under": -245.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 219.0,
+          "spread": -6.5,
+          "team_total_implied": 112.75,
+          "team_pace": 100.37,
+          "team_pace_rank": 16.0,
+          "team_def_rating": 106.5,
+          "team_def_rating_rank": 1.0,
+          "opp_pace": 100.72,
+          "opp_pace_rank": 12.0,
+          "opp_def_rating": 110.4,
+          "opp_def_rating_rank": 3.0
+        },
+        "form": {
+          "over_l5": 0.4,
+          "over_l10": 0.4,
+          "over_l15": 0.5333333333333333
+        },
+        "vs_opp": {
+          "n_games": 7,
+          "avg_stat": 7.142857142857143,
+          "over_rate_at_line": 0.5714285714285714
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "OVER",
+        "p_win": 0.711
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Chet Holmgren",
+        "display_name": "Chet Holmgren",
+        "team_abbr": "OKC",
+        "team": "Oklahoma City Thunder",
+        "opponent_abbr": "SAS",
+        "opponent": "San Antonio Spurs",
+        "is_home": 1,
+        "market": "PTS",
+        "dfs_line": 16.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.674,
+          "p_under": 0.326,
+          "lean": "OVER",
+          "min_q10": 22.61,
+          "min_q50": 32.3,
+          "min_q90": 34.84,
+          "stat_q10": 7.45,
+          "stat_q50": 17.72,
+          "stat_q90": 28.53
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 16.5,
+          "no_vig_over": 0.5084288604180714,
+          "no_vig_under": 0.4915711395819285,
+          "american_over": -116.0,
+          "american_under": -108.0,
+          "lean": "OVER"
+        },
+        "consensus": {
+          "n_books_same_line": 5,
+          "mean_no_vig_over_same_line": 0.49270884537566656,
+          "n_books_any_line": 12,
+          "mean_no_vig_over_any_line": 0.48898233234472505,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 16.5,
+              "no_vig_over": 0.5084288604180714,
+              "no_vig_under": 0.4915711395819285,
+              "american_over": -116.0,
+              "american_under": -108.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 16.5,
+              "no_vig_over": 0.4939310568053083,
+              "no_vig_under": 0.5060689431946916,
+              "american_over": -112.0,
+              "american_under": -118.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 15.5,
+              "no_vig_over": 0.5301681503461919,
+              "no_vig_under": 0.46983184965380814,
+              "american_over": -128.0,
+              "american_under": 101.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 16.5,
+              "no_vig_over": 0.5,
+              "no_vig_under": 0.5,
+              "american_over": -115.0,
+              "american_under": -115.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 16.5,
+              "no_vig_over": 0.49179655455291227,
+              "no_vig_under": 0.5082034454470877,
+              "american_over": -110.0,
+              "american_under": -118.0
+            },
+            {
+              "book": "Bovada",
+              "line": 13.5,
+              "no_vig_over": 0.6456256921373201,
+              "no_vig_under": 0.35437430786268,
+              "american_over": -220.0,
+              "american_under": 165.0
+            },
+            {
+              "book": "Bovada",
+              "line": 14.5,
+              "no_vig_over": 0.5915279878971256,
+              "no_vig_under": 0.40847201210287437,
+              "american_over": -170.0,
+              "american_under": 130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 15.5,
+              "no_vig_over": 0.5306122448979592,
+              "no_vig_under": 0.4693877551020409,
+              "american_over": -130.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "Bovada",
+              "line": 16.5,
+              "no_vig_over": 0.4693877551020409,
+              "no_vig_under": 0.5306122448979592,
+              "american_over": 100.0,
+              "american_under": -130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 17.5,
+              "no_vig_over": 0.4165029469548134,
+              "no_vig_under": 0.5834970530451867,
+              "american_over": 125.0,
+              "american_under": -165.0
+            },
+            {
+              "book": "Bovada",
+              "line": 18.5,
+              "no_vig_over": 0.3666469544648137,
+              "no_vig_under": 0.6333530455351862,
+              "american_over": 155.0,
+              "american_under": -210.0
+            },
+            {
+              "book": "Bovada",
+              "line": 19.5,
               "no_vig_over": 0.32315978456014366,
               "no_vig_under": 0.6768402154398564,
               "american_over": 190.0,
@@ -1487,44 +1962,44 @@
         "game_context": {
           "book_used": "Circa",
           "game_total": 219.0,
-          "spread": 6.5,
-          "team_total_implied": 106.25,
-          "team_pace": 100.72,
-          "team_pace_rank": 12.0,
-          "team_def_rating": 110.4,
-          "team_def_rating_rank": 3.0,
-          "opp_pace": 100.37,
-          "opp_pace_rank": 16.0,
-          "opp_def_rating": 106.5,
-          "opp_def_rating_rank": 1.0
+          "spread": -6.5,
+          "team_total_implied": 112.75,
+          "team_pace": 100.37,
+          "team_pace_rank": 16.0,
+          "team_def_rating": 106.5,
+          "team_def_rating_rank": 1.0,
+          "opp_pace": 100.72,
+          "opp_pace_rank": 12.0,
+          "opp_def_rating": 110.4,
+          "opp_def_rating_rank": 3.0
         },
         "form": {
-          "over_l5": 0.2,
-          "over_l10": 0.5,
-          "over_l15": 0.5333333333333333
+          "over_l5": 0.6,
+          "over_l10": 0.8,
+          "over_l15": 0.6666666666666666
         },
         "vs_opp": {
-          "n_games": 8,
-          "avg_stat": 6.375,
-          "over_rate_at_line": 0.25
+          "n_games": 5,
+          "avg_stat": 12.2,
+          "over_rate_at_line": 0.4
         },
         "is_conflict": false,
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.616
+        "p_win": 0.674
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.739,
-    "ANCHOR_NAME": "De'Aaron Fox"
+    "ANCHOR_WIN_PROB": 0.711,
+    "ANCHOR_NAME": "Alex Caruso"
   },
   {
-    "PARLAY_PROB": 0.26937,
-    "EV": 48.151,
-    "EV_DOLLARS": 4.8151,
-    "KELLY": 5.3502,
+    "PARLAY_PROB": 0.26197,
+    "EV": 44.081,
+    "EV_DOLLARS": 4.4081,
+    "KELLY": 4.8979,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
@@ -1547,8 +2022,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.375,
-          "p_under": 0.625,
+          "p_over": 0.379,
+          "p_under": 0.621,
           "lean": "UNDER",
           "min_q10": 19.83,
           "min_q50": 27.96,
@@ -1561,44 +2036,36 @@
           "source": "Pinnacle",
           "is_fallback": false,
           "line": 7.5,
-          "no_vig_over": 0.495787700084246,
-          "no_vig_under": 0.5042122999157539,
-          "american_over": -110.0,
-          "american_under": -114.0,
+          "no_vig_over": 0.4935039625828245,
+          "no_vig_under": 0.5064960374171755,
+          "american_over": -107.0,
+          "american_under": -113.0,
           "lean": "UNDER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5042025344053044,
+          "mean_no_vig_over_same_line": 0.5071957468439571,
           "n_books_any_line": 8,
-          "mean_no_vig_over_any_line": 0.5042583700296566,
+          "mean_no_vig_over_any_line": 0.5084342535820677,
           "offerings": [
             {
               "book": "Pinnacle",
               "line": 7.5,
-              "no_vig_over": 0.495787700084246,
-              "no_vig_under": 0.5042122999157539,
-              "american_over": -110.0,
-              "american_under": -114.0
+              "no_vig_over": 0.4935039625828245,
+              "no_vig_under": 0.5064960374171755,
+              "american_over": -107.0,
+              "american_under": -113.0
             },
             {
               "book": "FanDuel",
               "line": 7.5,
-              "no_vig_over": 0.5060689431946916,
-              "no_vig_under": 0.4939310568053083,
-              "american_over": -118.0,
-              "american_under": -112.0
+              "no_vig_over": 0.4958445875753168,
+              "no_vig_under": 0.5041554124246831,
+              "american_over": -111.0,
+              "american_under": -115.0
             },
             {
               "book": "DraftKings",
-              "line": 7.5,
-              "no_vig_over": 0.5030539946249695,
-              "no_vig_under": 0.49694600537503053,
-              "american_over": -116.0,
-              "american_under": -113.0
-            },
-            {
-              "book": "BetMGM",
               "line": 7.5,
               "no_vig_over": 0.5203045685279188,
               "no_vig_under": 0.4796954314720812,
@@ -1606,44 +2073,52 @@
               "american_under": -105.0
             },
             {
+              "book": "BetMGM",
+              "line": 7.5,
+              "no_vig_over": 0.5101214574898786,
+              "no_vig_under": 0.48987854251012153,
+              "american_over": -120.0,
+              "american_under": -110.0
+            },
+            {
               "book": "BetOnline.ag",
               "line": 7.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -114.0,
-              "american_under": -114.0
+              "no_vig_over": 0.5030953363598845,
+              "no_vig_under": 0.4969046636401156,
+              "american_over": -115.0,
+              "american_under": -112.0
             },
             {
               "book": "Bovada",
               "line": 6.5,
-              "no_vig_over": 0.625,
-              "no_vig_under": 0.375,
-              "american_over": -200.0,
-              "american_under": 150.0
+              "no_vig_over": 0.6333530455351862,
+              "no_vig_under": 0.3666469544648137,
+              "american_over": -210.0,
+              "american_under": 155.0
             },
             {
               "book": "Bovada",
               "line": 7.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
+              "no_vig_over": 0.5203045685279188,
+              "no_vig_under": 0.4796954314720812,
+              "american_over": -125.0,
+              "american_under": -105.0
             },
             {
               "book": "Bovada",
               "line": 8.5,
-              "no_vig_over": 0.3838517538054269,
-              "no_vig_under": 0.6161482461945731,
-              "american_over": 145.0,
-              "american_under": -190.0
+              "no_vig_over": 0.39094650205761317,
+              "no_vig_under": 0.6090534979423868,
+              "american_over": 140.0,
+              "american_under": -185.0
             }
           ]
         },
         "game_context": {
           "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": 4.5,
-          "team_total_implied": 100.25,
+          "game_total": 204.0,
+          "spread": 5.0,
+          "team_total_implied": 99.5,
           "team_pace": 100.7,
           "team_pace_rank": 13.0,
           "team_def_rating": 114.1,
@@ -1667,7 +2142,442 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.625
+        "p_win": 0.621
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Jalen Williams",
+        "display_name": "Jalen Williams",
+        "team_abbr": "OKC",
+        "team": "Oklahoma City Thunder",
+        "opponent_abbr": "SAS",
+        "opponent": "San Antonio Spurs",
+        "is_home": 1,
+        "market": "AST",
+        "dfs_line": 4.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.652,
+          "p_under": 0.348,
+          "lean": "OVER",
+          "min_q10": 24.21,
+          "min_q50": 33.74,
+          "min_q90": 39.36,
+          "stat_q10": 1.79,
+          "stat_q50": 5.49,
+          "stat_q90": 11.08
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 4.5,
+          "no_vig_over": 0.5147710487444609,
+          "no_vig_under": 0.4852289512555391,
+          "american_over": -119.0,
+          "american_under": -105.0,
+          "lean": "OVER"
+        },
+        "consensus": {
+          "n_books_same_line": 6,
+          "mean_no_vig_over_same_line": 0.4897732839717541,
+          "n_books_any_line": 8,
+          "mean_no_vig_over_any_line": 0.4916582849962743,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 4.5,
+              "no_vig_over": 0.5147710487444609,
+              "no_vig_under": 0.4852289512555391,
+              "american_over": -119.0,
+              "american_under": -105.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 4.5,
+              "no_vig_over": 0.4939310568053083,
+              "no_vig_under": 0.5060689431946916,
+              "american_over": -112.0,
+              "american_under": -118.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 4.5,
+              "no_vig_over": 0.494909179767044,
+              "no_vig_under": 0.5050908202329559,
+              "american_over": -112.0,
+              "american_under": -117.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 4.5,
+              "no_vig_over": 0.4554079696394686,
+              "no_vig_under": 0.5445920303605313,
+              "american_over": 105.0,
+              "american_under": -140.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 4.5,
+              "no_vig_over": 0.48974190636412124,
+              "no_vig_under": 0.5102580936358787,
+              "american_over": -109.0,
+              "american_under": -119.0
+            },
+            {
+              "book": "Bovada",
+              "line": 3.5,
+              "no_vig_over": 0.66,
+              "no_vig_under": 0.33999999999999997,
+              "american_over": -240.0,
+              "american_under": 175.0
+            },
+            {
+              "book": "Bovada",
+              "line": 4.5,
+              "no_vig_over": 0.48987854251012153,
+              "no_vig_under": 0.5101214574898786,
+              "american_over": -110.0,
+              "american_under": -120.0
+            },
+            {
+              "book": "Bovada",
+              "line": 5.5,
+              "no_vig_over": 0.3346265761396702,
+              "no_vig_under": 0.6653734238603297,
+              "american_over": 180.0,
+              "american_under": -245.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 219.0,
+          "spread": -6.5,
+          "team_total_implied": 112.75,
+          "team_pace": 100.37,
+          "team_pace_rank": 16.0,
+          "team_def_rating": 106.5,
+          "team_def_rating_rank": 1.0,
+          "opp_pace": 100.72,
+          "opp_pace_rank": 12.0,
+          "opp_def_rating": 110.4,
+          "opp_def_rating_rank": 3.0
+        },
+        "form": {
+          "over_l5": 0.6,
+          "over_l10": 0.6,
+          "over_l15": 0.6
+        },
+        "vs_opp": {
+          "n_games": 7,
+          "avg_stat": 5.714285714285714,
+          "over_rate_at_line": 0.7142857142857143
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "OVER",
+        "p_win": 0.652
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Shai Gilgeous-Alexander",
+        "display_name": "Shai Gilgeous-Alexander",
+        "team_abbr": "OKC",
+        "team": "Oklahoma City Thunder",
+        "opponent_abbr": "SAS",
+        "opponent": "San Antonio Spurs",
+        "is_home": 1,
+        "market": "REB",
+        "dfs_line": 4.0,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.252,
+          "p_under": 0.647,
+          "lean": "UNDER",
+          "min_q10": 27.97,
+          "min_q50": 38.26,
+          "min_q90": 38.59,
+          "stat_q10": 1.2,
+          "stat_q50": 3.72,
+          "stat_q90": 6.93
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 3.5,
+          "no_vig_over": 0.5713702544563886,
+          "no_vig_under": 0.4286297455436114,
+          "american_over": -152.0,
+          "american_under": 121.0,
+          "lean": "UNDER"
+        },
+        "consensus": {
+          "n_books_same_line": 0,
+          "mean_no_vig_over_same_line": null,
+          "n_books_any_line": 7,
+          "mean_no_vig_over_any_line": 0.491263788682363,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 3.5,
+              "no_vig_over": 0.5713702544563886,
+              "no_vig_under": 0.4286297455436114,
+              "american_over": -152.0,
+              "american_under": 121.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 3.5,
+              "no_vig_over": 0.571741584224155,
+              "no_vig_under": 0.4282584157758449,
+              "american_over": -158.0,
+              "american_under": 118.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 4.5,
+              "no_vig_over": 0.4260237780713342,
+              "no_vig_under": 0.5739762219286657,
+              "american_over": 120.0,
+              "american_under": -158.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 4.5,
+              "no_vig_over": 0.43348916277093075,
+              "no_vig_under": 0.5665108372290693,
+              "american_over": 115.0,
+              "american_under": -155.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 4.5,
+              "no_vig_over": 0.41985715204941765,
+              "no_vig_under": 0.5801428479505822,
+              "american_over": 124.0,
+              "american_under": -161.0
+            },
+            {
+              "book": "Bovada",
+              "line": 3.5,
+              "no_vig_over": 0.5915279878971256,
+              "no_vig_under": 0.40847201210287437,
+              "american_over": -170.0,
+              "american_under": 130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 4.5,
+              "no_vig_over": 0.4248366013071895,
+              "no_vig_under": 0.5751633986928104,
+              "american_over": 120.0,
+              "american_under": -160.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 219.0,
+          "spread": -6.5,
+          "team_total_implied": 112.75,
+          "team_pace": 100.37,
+          "team_pace_rank": 16.0,
+          "team_def_rating": 106.5,
+          "team_def_rating_rank": 1.0,
+          "opp_pace": 100.72,
+          "opp_pace_rank": 12.0,
+          "opp_def_rating": 110.4,
+          "opp_def_rating_rank": 3.0
+        },
+        "form": {
+          "over_l5": 0.0,
+          "over_l10": 0.0,
+          "over_l15": 0.13333333333333333
+        },
+        "vs_opp": {
+          "n_games": 7,
+          "avg_stat": 4.142857142857143,
+          "over_rate_at_line": 0.2857142857142857
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.647
+      }
+    ],
+    "STRATEGY_TIER": 2,
+    "COMBO_PROFILE": "2+1/teammates",
+    "ANCHOR_WIN_PROB": 0.652,
+    "ANCHOR_NAME": "Jalen Williams"
+  },
+  {
+    "PARLAY_PROB": 0.25045,
+    "EV": 37.746,
+    "EV_DOLLARS": 3.7746,
+    "KELLY": 4.1939,
+    "STAKE_DOLLARS": 10.0,
+    "NET_PAYOUT_MULT": 4.5,
+    "N_LEGS": 3,
+    "LEGS": [
+      {
+        "platform": "Betr DFS",
+        "player": "Jalen Duren",
+        "display_name": "Jalen Duren",
+        "team_abbr": "DET",
+        "team": "Detroit Pistons",
+        "opponent_abbr": "CLE",
+        "opponent": "Cleveland Cavaliers",
+        "is_home": 1,
+        "market": "REB",
+        "dfs_line": 9.0,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.348,
+          "p_under": 0.602,
+          "lean": "UNDER",
+          "min_q10": 21.79,
+          "min_q50": 29.24,
+          "min_q90": 36.66,
+          "stat_q10": 3.72,
+          "stat_q50": 9.49,
+          "stat_q90": 18.33
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 8.5,
+          "no_vig_over": 0.5205006473888649,
+          "no_vig_under": 0.47949935261113513,
+          "american_over": -120.0,
+          "american_under": -101.0,
+          "lean": "UNDER"
+        },
+        "consensus": {
+          "n_books_same_line": 0,
+          "mean_no_vig_over_same_line": null,
+          "n_books_any_line": 9,
+          "mean_no_vig_over_any_line": 0.5173401004788949,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 8.5,
+              "no_vig_over": 0.5205006473888649,
+              "no_vig_under": 0.47949935261113513,
+              "american_over": -120.0,
+              "american_under": -101.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 8.5,
+              "no_vig_over": 0.5289256198347108,
+              "no_vig_under": 0.4710743801652893,
+              "american_over": -128.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 9.5,
+              "no_vig_over": 0.45494346518445195,
+              "no_vig_under": 0.545056534815548,
+              "american_over": 106.0,
+              "american_under": -139.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 8.5,
+              "no_vig_over": 0.5346534653465347,
+              "no_vig_under": 0.4653465346534653,
+              "american_over": -135.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 8.5,
+              "no_vig_over": 0.5306122448979592,
+              "no_vig_under": 0.4693877551020409,
+              "american_over": -130.0,
+              "american_under": 100.0
+            },
+            {
+              "book": "Bovada",
+              "line": 7.5,
+              "no_vig_over": 0.6875,
+              "no_vig_under": 0.3125,
+              "american_over": -275.0,
+              "american_under": 200.0
+            },
+            {
+              "book": "Bovada",
+              "line": 8.5,
+              "no_vig_over": 0.5751633986928104,
+              "no_vig_under": 0.4248366013071895,
+              "american_over": -160.0,
+              "american_under": 120.0
+            },
+            {
+              "book": "Bovada",
+              "line": 9.5,
+              "no_vig_over": 0.4693877551020409,
+              "no_vig_under": 0.5306122448979592,
+              "american_over": 100.0,
+              "american_under": -130.0
+            },
+            {
+              "book": "Bovada",
+              "line": 10.5,
+              "no_vig_over": 0.35437430786268,
+              "no_vig_under": 0.6456256921373201,
+              "american_over": 165.0,
+              "american_under": -220.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": -5.0,
+          "team_total_implied": 104.5,
+          "team_pace": 99.88,
+          "team_pace_rank": 19.0,
+          "team_def_rating": 108.9,
+          "team_def_rating_rank": 2.0,
+          "opp_pace": 100.7,
+          "opp_pace_rank": 13.0,
+          "opp_def_rating": 114.1,
+          "opp_def_rating_rank": 15.0
+        },
+        "form": {
+          "over_l5": 0.2,
+          "over_l10": 0.5,
+          "over_l15": 0.4666666666666667
+        },
+        "vs_opp": {
+          "n_games": 17,
+          "avg_stat": 9.117647058823529,
+          "over_rate_at_line": 0.5882352941176471
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.602
       },
       {
         "platform": "Betr DFS",
@@ -1687,8 +2597,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.659,
-          "p_under": 0.341,
+          "p_over": 0.646,
+          "p_under": 0.353,
           "lean": "OVER",
           "min_q10": 18.72,
           "min_q50": 24.05,
@@ -1708,10 +2618,10 @@
           "lean": "OVER"
         },
         "consensus": {
-          "n_books_same_line": 3,
-          "mean_no_vig_over_same_line": 0.5147211632299148,
+          "n_books_same_line": 4,
+          "mean_no_vig_over_same_line": 0.5161170145544158,
           "n_books_any_line": 9,
-          "mean_no_vig_over_any_line": 0.4807559604526688,
+          "mean_no_vig_over_any_line": 0.48796669366249656,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -1739,11 +2649,11 @@
             },
             {
               "book": "BetMGM",
-              "line": 6.5,
-              "no_vig_over": 0.4554079696394686,
-              "no_vig_under": 0.5445920303605313,
-              "american_over": 105.0,
-              "american_under": -140.0
+              "line": 5.5,
+              "no_vig_over": 0.5203045685279188,
+              "no_vig_under": 0.4796954314720812,
+              "american_over": -125.0,
+              "american_under": -105.0
             },
             {
               "book": "BetOnline.ag",
@@ -1815,458 +2725,7 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.659
-      },
-      {
-        "platform": "Betr DFS",
-        "player": "Shai Gilgeous-Alexander",
-        "display_name": "Shai Gilgeous-Alexander",
-        "team_abbr": "OKC",
-        "team": "Oklahoma City Thunder",
-        "opponent_abbr": "SAS",
-        "opponent": "San Antonio Spurs",
-        "is_home": 1,
-        "market": "REB",
-        "dfs_line": 4.0,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.242,
-          "p_under": 0.654,
-          "lean": "UNDER",
-          "min_q10": 27.97,
-          "min_q50": 38.26,
-          "min_q90": 38.59,
-          "stat_q10": 1.2,
-          "stat_q50": 3.72,
-          "stat_q90": 6.93
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 3.5,
-          "no_vig_over": 0.5713702544563886,
-          "no_vig_under": 0.4286297455436114,
-          "american_over": -152.0,
-          "american_under": 121.0,
-          "lean": "UNDER"
-        },
-        "consensus": {
-          "n_books_same_line": 0,
-          "mean_no_vig_over_same_line": null,
-          "n_books_any_line": 7,
-          "mean_no_vig_over_any_line": 0.49606186652703393,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 3.5,
-              "no_vig_over": 0.5713702544563886,
-              "no_vig_under": 0.4286297455436114,
-              "american_over": -152.0,
-              "american_under": 121.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 3.5,
-              "no_vig_over": 0.571741584224155,
-              "no_vig_under": 0.4282584157758449,
-              "american_over": -158.0,
-              "american_under": 118.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 4.5,
-              "no_vig_over": 0.43538355217691777,
-              "no_vig_under": 0.5646164478230822,
-              "american_over": 115.0,
-              "american_under": -152.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 4.5,
-              "no_vig_over": 0.4248366013071895,
-              "no_vig_under": 0.5751633986928104,
-              "american_over": 120.0,
-              "american_under": -160.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 4.5,
-              "no_vig_over": 0.43071288068914054,
-              "no_vig_under": 0.5692871193108593,
-              "american_over": 118.0,
-              "american_under": -154.0
-            },
-            {
-              "book": "Bovada",
-              "line": 3.5,
-              "no_vig_over": 0.6017069701280228,
-              "no_vig_under": 0.3982930298719772,
-              "american_over": -180.0,
-              "american_under": 135.0
-            },
-            {
-              "book": "Bovada",
-              "line": 4.5,
-              "no_vig_over": 0.43668122270742354,
-              "no_vig_under": 0.5633187772925764,
-              "american_over": 115.0,
-              "american_under": -150.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 219.0,
-          "spread": -6.5,
-          "team_total_implied": 112.75,
-          "team_pace": 100.37,
-          "team_pace_rank": 16.0,
-          "team_def_rating": 106.5,
-          "team_def_rating_rank": 1.0,
-          "opp_pace": 100.72,
-          "opp_pace_rank": 12.0,
-          "opp_def_rating": 110.4,
-          "opp_def_rating_rank": 3.0
-        },
-        "form": {
-          "over_l5": 0.0,
-          "over_l10": 0.0,
-          "over_l15": 0.13333333333333333
-        },
-        "vs_opp": {
-          "n_games": 7,
-          "avg_stat": 4.142857142857143,
-          "over_rate_at_line": 0.2857142857142857
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.654
-      }
-    ],
-    "STRATEGY_TIER": 2,
-    "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.659,
-    "ANCHOR_NAME": "Cason Wallace"
-  },
-  {
-    "PARLAY_PROB": 0.23243,
-    "EV": 27.838,
-    "EV_DOLLARS": 2.7838,
-    "KELLY": 3.0931,
-    "STAKE_DOLLARS": 10.0,
-    "NET_PAYOUT_MULT": 4.5,
-    "N_LEGS": 3,
-    "LEGS": [
-      {
-        "platform": "Betr DFS",
-        "player": "Jalen Duren",
-        "display_name": "Jalen Duren",
-        "team_abbr": "DET",
-        "team": "Detroit Pistons",
-        "opponent_abbr": "CLE",
-        "opponent": "Cleveland Cavaliers",
-        "is_home": 1,
-        "market": "PTS",
-        "dfs_line": 11.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.551,
-          "p_under": 0.449,
-          "lean": "OVER",
-          "min_q10": 21.79,
-          "min_q50": 29.24,
-          "min_q90": 36.66,
-          "stat_q10": 5.45,
-          "stat_q50": 13.37,
-          "stat_q90": 27.84
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 11.5,
-          "no_vig_over": 0.5263157894736842,
-          "no_vig_under": 0.47368421052631576,
-          "american_over": -125.0,
-          "american_under": 100.0,
-          "lean": "OVER"
-        },
-        "consensus": {
-          "n_books_same_line": 5,
-          "mean_no_vig_over_same_line": 0.5258951413447686,
-          "n_books_any_line": 11,
-          "mean_no_vig_over_any_line": 0.5087292353660973,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 11.5,
-              "no_vig_over": 0.5263157894736842,
-              "no_vig_under": 0.47368421052631576,
-              "american_over": -125.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 11.5,
-              "no_vig_over": 0.532258064516129,
-              "no_vig_under": 0.4677419354838709,
-              "american_over": -132.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 11.5,
-              "no_vig_over": 0.5301681503461919,
-              "no_vig_under": 0.46983184965380814,
-              "american_over": -128.0,
-              "american_under": 101.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 11.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 12.5,
-              "no_vig_over": 0.4693877551020409,
-              "no_vig_under": 0.5306122448979592,
-              "american_over": 100.0,
-              "american_under": -130.0
-            },
-            {
-              "book": "Bovada",
-              "line": 9.5,
-              "no_vig_over": 0.6705882352941177,
-              "no_vig_under": 0.32941176470588235,
-              "american_over": -250.0,
-              "american_under": 185.0
-            },
-            {
-              "book": "Bovada",
-              "line": 10.5,
-              "no_vig_over": 0.6017069701280228,
-              "no_vig_under": 0.3982930298719772,
-              "american_over": -180.0,
-              "american_under": 135.0
-            },
-            {
-              "book": "Bovada",
-              "line": 11.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "Bovada",
-              "line": 12.5,
-              "no_vig_over": 0.4693877551020409,
-              "no_vig_under": 0.5306122448979592,
-              "american_over": 100.0,
-              "american_under": -130.0
-            },
-            {
-              "book": "Bovada",
-              "line": 13.5,
-              "no_vig_over": 0.40847201210287437,
-              "no_vig_under": 0.5915279878971256,
-              "american_over": 130.0,
-              "american_under": -170.0
-            },
-            {
-              "book": "Bovada",
-              "line": 14.5,
-              "no_vig_over": 0.34700315457413244,
-              "no_vig_under": 0.6529968454258674,
-              "american_over": 170.0,
-              "american_under": -230.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": -4.5,
-          "team_total_implied": 104.75,
-          "team_pace": 99.88,
-          "team_pace_rank": 19.0,
-          "team_def_rating": 108.9,
-          "team_def_rating_rank": 2.0,
-          "opp_pace": 100.7,
-          "opp_pace_rank": 13.0,
-          "opp_def_rating": 114.1,
-          "opp_def_rating_rank": 15.0
-        },
-        "form": {
-          "over_l5": 0.2,
-          "over_l10": 0.1,
-          "over_l15": 0.26666666666666666
-        },
-        "vs_opp": {
-          "n_games": 17,
-          "avg_stat": 12.117647058823529,
-          "over_rate_at_line": 0.29411764705882354
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "OVER",
-        "p_win": 0.551
-      },
-      {
-        "platform": "Betr DFS",
-        "player": "Jalen Williams",
-        "display_name": "Jalen Williams",
-        "team_abbr": "OKC",
-        "team": "Oklahoma City Thunder",
-        "opponent_abbr": "SAS",
-        "opponent": "San Antonio Spurs",
-        "is_home": 1,
-        "market": "AST",
-        "dfs_line": 4.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.653,
-          "p_under": 0.347,
-          "lean": "OVER",
-          "min_q10": 24.21,
-          "min_q50": 33.74,
-          "min_q90": 39.36,
-          "stat_q10": 1.79,
-          "stat_q50": 5.49,
-          "stat_q90": 11.08
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 4.5,
-          "no_vig_over": 0.5147710487444609,
-          "no_vig_under": 0.4852289512555391,
-          "american_over": -119.0,
-          "american_under": -105.0,
-          "lean": "OVER"
-        },
-        "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5007646562844035,
-          "n_books_any_line": 8,
-          "mean_no_vig_over_any_line": 0.5044753076261197,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 4.5,
-              "no_vig_over": 0.5147710487444609,
-              "no_vig_under": 0.4852289512555391,
-              "american_over": -119.0,
-              "american_under": -105.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 4.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 4.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 4.5,
-              "no_vig_over": 0.4796954314720812,
-              "no_vig_under": 0.5203045685279188,
-              "american_over": -105.0,
-              "american_under": -125.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 4.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -114.0,
-              "american_under": -114.0
-            },
-            {
-              "book": "Bovada",
-              "line": 3.5,
-              "no_vig_over": 0.6768402154398564,
-              "no_vig_under": 0.32315978456014366,
-              "american_over": -260.0,
-              "american_under": 190.0
-            },
-            {
-              "book": "Bovada",
-              "line": 4.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "Bovada",
-              "line": 5.5,
-              "no_vig_over": 0.35437430786268,
-              "no_vig_under": 0.6456256921373201,
-              "american_over": 165.0,
-              "american_under": -220.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 219.0,
-          "spread": -6.5,
-          "team_total_implied": 112.75,
-          "team_pace": 100.37,
-          "team_pace_rank": 16.0,
-          "team_def_rating": 106.5,
-          "team_def_rating_rank": 1.0,
-          "opp_pace": 100.72,
-          "opp_pace_rank": 12.0,
-          "opp_def_rating": 110.4,
-          "opp_def_rating_rank": 3.0
-        },
-        "form": {
-          "over_l5": 0.6,
-          "over_l10": 0.6,
-          "over_l15": 0.6
-        },
-        "vs_opp": {
-          "n_games": 7,
-          "avg_stat": 5.714285714285714,
-          "over_rate_at_line": 0.7142857142857143
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "OVER",
-        "p_win": 0.653
+        "p_win": 0.646
       },
       {
         "platform": "Betr DFS",
@@ -2286,8 +2745,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.646,
-          "p_under": 0.354,
+          "p_over": 0.644,
+          "p_under": 0.356,
           "lean": "OVER",
           "min_q10": 20.53,
           "min_q50": 27.74,
@@ -2307,10 +2766,10 @@
           "lean": "OVER"
         },
         "consensus": {
-          "n_books_same_line": 4,
-          "mean_no_vig_over_same_line": 0.5378491847640482,
-          "n_books_any_line": 10,
-          "mean_no_vig_over_any_line": 0.48085094280678115,
+          "n_books_same_line": 5,
+          "mean_no_vig_over_same_line": 0.5280104330743307,
+          "n_books_any_line": 9,
+          "mean_no_vig_over_any_line": 0.49076847137754026,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -2331,66 +2790,58 @@
             {
               "book": "DraftKings",
               "line": 5.5,
-              "no_vig_over": 0.53514579518242,
-              "no_vig_under": 0.46485420481757994,
-              "american_over": -131.0,
-              "american_under": 103.0
+              "no_vig_over": 0.5238589211618258,
+              "no_vig_under": 0.47614107883817425,
+              "american_over": -125.0,
+              "american_under": -102.0
             },
             {
               "book": "BetMGM",
               "line": 6.5,
-              "no_vig_over": 0.43348916277093075,
-              "no_vig_under": 0.5665108372290693,
-              "american_over": 115.0,
-              "american_under": -155.0
+              "no_vig_over": 0.3959708232025009,
+              "no_vig_under": 0.6040291767974991,
+              "american_over": 135.0,
+              "american_under": -185.0
             },
             {
               "book": "BetOnline.ag",
-              "line": 6.5,
-              "no_vig_over": 0.44726670347874103,
-              "no_vig_under": 0.552733296521259,
-              "american_over": 110.0,
-              "american_under": -143.0
+              "line": 5.5,
+              "no_vig_over": 0.5306122448979592,
+              "no_vig_under": 0.4693877551020409,
+              "american_over": -130.0,
+              "american_under": 100.0
             },
             {
               "book": "Bovada",
               "line": 4.5,
-              "no_vig_over": 0.6395881006864989,
-              "no_vig_under": 0.36041189931350115,
-              "american_over": -215.0,
-              "american_under": 160.0
+              "no_vig_over": 0.6090534979423868,
+              "no_vig_under": 0.39094650205761317,
+              "american_over": -185.0,
+              "american_under": 140.0
             },
             {
               "book": "Bovada",
               "line": 5.5,
-              "no_vig_over": 0.5407914020517831,
-              "no_vig_under": 0.4592085979482169,
-              "american_over": -135.0,
-              "american_under": 105.0
+              "no_vig_over": 0.5101214574898786,
+              "no_vig_under": 0.48987854251012153,
+              "american_over": -120.0,
+              "american_under": -110.0
             },
             {
               "book": "Bovada",
               "line": 6.5,
-              "no_vig_over": 0.4592085979482169,
-              "no_vig_under": 0.5407914020517831,
-              "american_over": 105.0,
-              "american_under": -135.0
+              "no_vig_over": 0.4248366013071895,
+              "no_vig_under": 0.5751633986928104,
+              "american_over": 120.0,
+              "american_under": -160.0
             },
             {
               "book": "Bovada",
               "line": 7.5,
-              "no_vig_over": 0.375,
-              "no_vig_under": 0.625,
-              "american_over": 150.0,
-              "american_under": -200.0
-            },
-            {
-              "book": "Bovada",
-              "line": 8.5,
-              "no_vig_over": 0.30256012412723043,
-              "no_vig_under": 0.6974398758727697,
-              "american_over": 210.0,
-              "american_under": -290.0
+              "no_vig_over": 0.34700315457413244,
+              "no_vig_under": 0.6529968454258674,
+              "american_over": 170.0,
+              "american_under": -230.0
             }
           ]
         },
@@ -2422,34 +2873,34 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "OVER",
-        "p_win": 0.646
+        "p_win": 0.644
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.653,
-    "ANCHOR_NAME": "Jalen Williams"
+    "ANCHOR_WIN_PROB": 0.646,
+    "ANCHOR_NAME": "Cason Wallace"
   },
   {
-    "PARLAY_PROB": 0.18584,
-    "EV": 2.21,
-    "EV_DOLLARS": 0.221,
-    "KELLY": 0.2456,
+    "PARLAY_PROB": 0.18916,
+    "EV": 4.039,
+    "EV_DOLLARS": 0.4039,
+    "KELLY": 0.4488,
     "STAKE_DOLLARS": 10.0,
     "NET_PAYOUT_MULT": 4.5,
     "N_LEGS": 3,
     "LEGS": [
       {
         "platform": "Betr DFS",
-        "player": "James Harden",
-        "display_name": "James Harden",
-        "team_abbr": "CLE",
-        "team": "Cleveland Cavaliers",
-        "opponent_abbr": "DET",
-        "opponent": "Detroit Pistons",
-        "is_home": 0,
-        "market": "REB",
-        "dfs_line": 4.5,
+        "player": "Cade Cunningham",
+        "display_name": "Cade Cunningham",
+        "team_abbr": "DET",
+        "team": "Detroit Pistons",
+        "opponent_abbr": "CLE",
+        "opponent": "Cleveland Cavaliers",
+        "is_home": 1,
+        "market": "AST",
+        "dfs_line": 8.5,
         "dfs_odds": {
           "american_over": -137.0,
           "american_under": -137.0,
@@ -2457,43 +2908,183 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.449,
-          "p_under": 0.551,
+          "p_over": 0.499,
+          "p_under": 0.501,
           "lean": "UNDER",
-          "min_q10": 30.11,
-          "min_q50": 38.24,
-          "min_q90": 39.47,
-          "stat_q10": 1.47,
-          "stat_q50": 5.01,
-          "stat_q90": 9.09
+          "min_q10": 31.99,
+          "min_q50": 41.82,
+          "min_q90": 42.27,
+          "stat_q10": 3.72,
+          "stat_q50": 8.62,
+          "stat_q90": 15.47
         },
         "sharp": {
           "source": "Pinnacle",
           "is_fallback": false,
-          "line": 4.5,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5,
-          "american_over": -112.0,
-          "american_under": -112.0,
+          "line": 8.5,
+          "no_vig_over": 0.4773218142548596,
+          "no_vig_under": 0.5226781857451405,
+          "american_over": 100.0,
+          "american_under": -121.0,
           "lean": "UNDER"
         },
         "consensus": {
           "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5178023107843058,
+          "mean_no_vig_over_same_line": 0.4699654149229475,
           "n_books_any_line": 8,
-          "mean_no_vig_over_any_line": 0.5228404956688509,
+          "mean_no_vig_over_any_line": 0.5115494705129082,
           "offerings": [
             {
               "book": "Pinnacle",
-              "line": 4.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -112.0,
-              "american_under": -112.0
+              "line": 8.5,
+              "no_vig_over": 0.4773218142548596,
+              "no_vig_under": 0.5226781857451405,
+              "american_over": 100.0,
+              "american_under": -121.0
             },
             {
               "book": "FanDuel",
-              "line": 4.5,
+              "line": 8.5,
+              "no_vig_over": 0.4710743801652893,
+              "no_vig_under": 0.5289256198347108,
+              "american_over": 100.0,
+              "american_under": -128.0
+            },
+            {
+              "book": "DraftKings",
+              "line": 8.5,
+              "no_vig_over": 0.4735298908617039,
+              "no_vig_under": 0.5264701091382962,
+              "american_over": -102.0,
+              "american_under": -128.0
+            },
+            {
+              "book": "BetMGM",
+              "line": 8.5,
+              "no_vig_over": 0.4796954314720812,
+              "no_vig_under": 0.5203045685279188,
+              "american_over": -105.0,
+              "american_under": -125.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "line": 8.5,
+              "no_vig_over": 0.4723111001722865,
+              "no_vig_under": 0.5276888998277135,
+              "american_over": -101.0,
+              "american_under": -128.0
+            },
+            {
+              "book": "Bovada",
+              "line": 6.5,
+              "no_vig_over": 0.6974398758727697,
+              "no_vig_under": 0.30256012412723043,
+              "american_over": -290.0,
+              "american_under": 210.0
+            },
+            {
+              "book": "Bovada",
+              "line": 7.5,
+              "no_vig_over": 0.5751633986928104,
+              "no_vig_under": 0.4248366013071895,
+              "american_over": -160.0,
+              "american_under": 120.0
+            },
+            {
+              "book": "Bovada",
+              "line": 8.5,
+              "no_vig_over": 0.4458598726114649,
+              "no_vig_under": 0.554140127388535,
+              "american_over": 110.0,
+              "american_under": -145.0
+            }
+          ]
+        },
+        "game_context": {
+          "book_used": "Circa",
+          "game_total": 204.0,
+          "spread": -5.0,
+          "team_total_implied": 104.5,
+          "team_pace": 99.88,
+          "team_pace_rank": 19.0,
+          "team_def_rating": 108.9,
+          "team_def_rating_rank": 2.0,
+          "opp_pace": 100.7,
+          "opp_pace_rank": 13.0,
+          "opp_def_rating": 114.1,
+          "opp_def_rating_rank": 15.0
+        },
+        "form": {
+          "over_l5": 0.4,
+          "over_l10": 0.5,
+          "over_l15": 0.4666666666666667
+        },
+        "vs_opp": {
+          "n_games": 17,
+          "avg_stat": 8.058823529411764,
+          "over_rate_at_line": 0.4117647058823529
+        },
+        "is_conflict": false,
+        "sharp_aligned": true,
+        "tier": "sharp_verified",
+        "side": "UNDER",
+        "p_win": 0.501
+      },
+      {
+        "platform": "Betr DFS",
+        "player": "Julian Champagnie",
+        "display_name": "Julian Champagnie",
+        "team_abbr": "SAS",
+        "team": "San Antonio Spurs",
+        "opponent_abbr": "OKC",
+        "opponent": "Oklahoma City Thunder",
+        "is_home": 0,
+        "market": "PTS",
+        "dfs_line": 8.5,
+        "dfs_odds": {
+          "american_over": -137.0,
+          "american_under": -137.0,
+          "no_vig_over": 0.5,
+          "no_vig_under": 0.5
+        },
+        "model": {
+          "p_over": 0.621,
+          "p_under": 0.379,
+          "lean": "OVER",
+          "min_q10": 23.23,
+          "min_q50": 28.13,
+          "min_q90": 36.15,
+          "stat_q10": 3.73,
+          "stat_q50": 10.12,
+          "stat_q90": 22.24
+        },
+        "sharp": {
+          "source": "Pinnacle",
+          "is_fallback": false,
+          "line": 8.5,
+          "no_vig_over": 0.5471308734450537,
+          "no_vig_under": 0.45286912655494616,
+          "american_over": -137.0,
+          "american_under": 109.0,
+          "lean": "OVER"
+        },
+        "consensus": {
+          "n_books_same_line": 3,
+          "mean_no_vig_over_same_line": 0.5322987813831549,
+          "n_books_any_line": 11,
+          "mean_no_vig_over_any_line": 0.4972898724138547,
+          "offerings": [
+            {
+              "book": "Pinnacle",
+              "line": 8.5,
+              "no_vig_over": 0.5471308734450537,
+              "no_vig_under": 0.45286912655494616,
+              "american_over": -137.0,
+              "american_under": 109.0
+            },
+            {
+              "book": "FanDuel",
+              "line": 8.5,
               "no_vig_over": 0.5191532258064516,
               "no_vig_under": 0.4808467741935484,
               "american_over": -125.0,
@@ -2501,31 +3092,31 @@
             },
             {
               "book": "DraftKings",
-              "line": 4.5,
-              "no_vig_over": 0.5203045685279188,
-              "no_vig_under": 0.4796954314720812,
-              "american_over": -125.0,
-              "american_under": -105.0
+              "line": 9.5,
+              "no_vig_over": 0.4640371229698376,
+              "no_vig_under": 0.5359628770301624,
+              "american_over": 103.0,
+              "american_under": -132.0
             },
             {
               "book": "BetMGM",
-              "line": 4.5,
-              "no_vig_over": 0.5203045685279188,
-              "no_vig_under": 0.4796954314720812,
-              "american_over": -125.0,
-              "american_under": -105.0
+              "line": 9.5,
+              "no_vig_over": 0.4653465346534653,
+              "no_vig_under": 0.5346534653465347,
+              "american_over": 100.0,
+              "american_under": -135.0
             },
             {
               "book": "BetOnline.ag",
-              "line": 4.5,
-              "no_vig_over": 0.5164392569455861,
-              "no_vig_under": 0.483560743054414,
-              "american_over": -122.0,
-              "american_under": -106.0
+              "line": 9.5,
+              "no_vig_over": 0.46322988528598974,
+              "no_vig_under": 0.5367701147140101,
+              "american_over": 103.0,
+              "american_under": -133.0
             },
             {
               "book": "Bovada",
-              "line": 3.5,
+              "line": 6.5,
               "no_vig_over": 0.6920583468395461,
               "no_vig_under": 0.3079416531604538,
               "american_over": -280.0,
@@ -2533,7 +3124,15 @@
             },
             {
               "book": "Bovada",
-              "line": 4.5,
+              "line": 7.5,
+              "no_vig_over": 0.6090534979423868,
+              "no_vig_under": 0.39094650205761317,
+              "american_over": -185.0,
+              "american_under": 140.0
+            },
+            {
+              "book": "Bovada",
+              "line": 8.5,
               "no_vig_over": 0.5306122448979592,
               "no_vig_under": 0.4693877551020409,
               "american_over": -130.0,
@@ -2541,43 +3140,59 @@
             },
             {
               "book": "Bovada",
-              "line": 5.5,
-              "no_vig_over": 0.3838517538054269,
-              "no_vig_under": 0.6161482461945731,
-              "american_over": 145.0,
-              "american_under": -190.0
+              "line": 9.5,
+              "no_vig_over": 0.4592085979482169,
+              "no_vig_under": 0.5407914020517831,
+              "american_over": 105.0,
+              "american_under": -135.0
+            },
+            {
+              "book": "Bovada",
+              "line": 10.5,
+              "no_vig_over": 0.39094650205761317,
+              "no_vig_under": 0.6090534979423868,
+              "american_over": 140.0,
+              "american_under": -185.0
+            },
+            {
+              "book": "Bovada",
+              "line": 11.5,
+              "no_vig_over": 0.32941176470588235,
+              "no_vig_under": 0.6705882352941177,
+              "american_over": 185.0,
+              "american_under": -250.0
             }
           ]
         },
         "game_context": {
           "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": 4.5,
-          "team_total_implied": 100.25,
-          "team_pace": 100.7,
-          "team_pace_rank": 13.0,
-          "team_def_rating": 114.1,
-          "team_def_rating_rank": 15.0,
-          "opp_pace": 99.88,
-          "opp_pace_rank": 19.0,
-          "opp_def_rating": 108.9,
-          "opp_def_rating_rank": 2.0
+          "game_total": 219.0,
+          "spread": 6.5,
+          "team_total_implied": 106.25,
+          "team_pace": 100.72,
+          "team_pace_rank": 12.0,
+          "team_def_rating": 110.4,
+          "team_def_rating_rank": 3.0,
+          "opp_pace": 100.37,
+          "opp_pace_rank": 16.0,
+          "opp_def_rating": 106.5,
+          "opp_def_rating_rank": 1.0
         },
         "form": {
-          "over_l5": 0.4,
-          "over_l10": 0.6,
-          "over_l15": 0.7333333333333333
+          "over_l5": 0.2,
+          "over_l10": 0.5,
+          "over_l15": 0.5333333333333333
         },
         "vs_opp": {
-          "n_games": 15,
-          "avg_stat": 5.266666666666667,
-          "over_rate_at_line": 0.6
+          "n_games": 8,
+          "avg_stat": 6.375,
+          "over_rate_at_line": 0.25
         },
         "is_conflict": false,
         "sharp_aligned": true,
         "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.551
+        "side": "OVER",
+        "p_win": 0.621
       },
       {
         "platform": "Betr DFS",
@@ -2597,8 +3212,8 @@
           "no_vig_under": 0.5
         },
         "model": {
-          "p_over": 0.389,
-          "p_under": 0.611,
+          "p_over": 0.392,
+          "p_under": 0.608,
           "lean": "UNDER",
           "min_q10": 13.51,
           "min_q50": 22.28,
@@ -2619,9 +3234,9 @@
         },
         "consensus": {
           "n_books_same_line": 5,
-          "mean_no_vig_over_same_line": 0.5027906258320571,
-          "n_books_any_line": 7,
-          "mean_no_vig_over_any_line": 0.5059218755943264,
+          "mean_no_vig_over_same_line": 0.5219059930557169,
+          "n_books_any_line": 6,
+          "mean_no_vig_over_any_line": 0.49742166087976414,
           "offerings": [
             {
               "book": "Pinnacle",
@@ -2634,10 +3249,10 @@
             {
               "book": "DraftKings",
               "line": 3.5,
-              "no_vig_over": 0.4989820846905538,
-              "no_vig_under": 0.5010179153094463,
-              "american_over": -114.0,
-              "american_under": -115.0
+              "no_vig_over": 0.538355760730773,
+              "no_vig_under": 0.46164423926922693,
+              "american_over": -135.0,
+              "american_under": 103.0
             },
             {
               "book": "BetMGM",
@@ -2650,34 +3265,26 @@
             {
               "book": "BetOnline.ag",
               "line": 3.5,
-              "no_vig_over": 0.5030953363598845,
-              "no_vig_under": 0.4969046636401156,
-              "american_over": -115.0,
-              "american_under": -112.0
-            },
-            {
-              "book": "Bovada",
-              "line": 2.5,
-              "no_vig_over": 0.6875,
-              "no_vig_under": 0.3125,
-              "american_over": -275.0,
-              "american_under": 200.0
+              "no_vig_over": 0.5185070943861814,
+              "no_vig_under": 0.48149290561381863,
+              "american_over": -123.0,
+              "american_under": -105.0
             },
             {
               "book": "Bovada",
               "line": 3.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
+              "no_vig_over": 0.5407914020517831,
+              "no_vig_under": 0.4592085979482169,
+              "american_over": -135.0,
+              "american_under": 105.0
             },
             {
               "book": "Bovada",
               "line": 4.5,
-              "no_vig_over": 0.33999999999999997,
-              "no_vig_under": 0.66,
-              "american_over": 175.0,
-              "american_under": -240.0
+              "no_vig_over": 0.375,
+              "no_vig_under": 0.625,
+              "american_over": 150.0,
+              "american_under": -200.0
             }
           ]
         },
@@ -2709,675 +3316,12 @@
         "sharp_aligned": true,
         "tier": "sharp_verified",
         "side": "UNDER",
-        "p_win": 0.611
-      },
-      {
-        "platform": "Betr DFS",
-        "player": "Victor Wembanyama",
-        "display_name": "Victor Wembanyama",
-        "team_abbr": "SAS",
-        "team": "San Antonio Spurs",
-        "opponent_abbr": "OKC",
-        "opponent": "Oklahoma City Thunder",
-        "is_home": 0,
-        "market": "PTS",
-        "dfs_line": 24.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.448,
-          "p_under": 0.552,
-          "lean": "UNDER",
-          "min_q10": 22.22,
-          "min_q50": 31.66,
-          "min_q90": 37.02,
-          "stat_q10": 9.25,
-          "stat_q50": 22.19,
-          "stat_q90": 38.66
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 24.5,
-          "no_vig_over": 0.47280334728033474,
-          "no_vig_under": 0.5271966527196653,
-          "american_over": 100.0,
-          "american_under": -126.0,
-          "lean": "UNDER"
-        },
-        "consensus": {
-          "n_books_same_line": 5,
-          "mean_no_vig_over_same_line": 0.4852892088289017,
-          "n_books_any_line": 14,
-          "mean_no_vig_over_any_line": 0.4857329284313671,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 24.5,
-              "no_vig_over": 0.47280334728033474,
-              "no_vig_under": 0.5271966527196653,
-              "american_over": 100.0,
-              "american_under": -126.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 24.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 24.5,
-              "no_vig_over": 0.47614107883817425,
-              "no_vig_under": 0.5238589211618258,
-              "american_over": -102.0,
-              "american_under": -125.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 25.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 24.5,
-              "no_vig_over": 0.4876847290640395,
-              "no_vig_under": 0.5123152709359606,
-              "american_over": -108.0,
-              "american_under": -120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 20.5,
-              "no_vig_over": 0.6705882352941177,
-              "no_vig_under": 0.32941176470588235,
-              "american_over": -250.0,
-              "american_under": 185.0
-            },
-            {
-              "book": "Bovada",
-              "line": 21.5,
-              "no_vig_over": 0.625,
-              "no_vig_under": 0.375,
-              "american_over": -200.0,
-              "american_under": 150.0
-            },
-            {
-              "book": "Bovada",
-              "line": 22.5,
-              "no_vig_over": 0.5751633986928104,
-              "no_vig_under": 0.4248366013071895,
-              "american_over": -160.0,
-              "american_under": 120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 23.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "Bovada",
-              "line": 24.5,
-              "no_vig_over": 0.4796954314720812,
-              "no_vig_under": 0.5203045685279188,
-              "american_over": -105.0,
-              "american_under": -125.0
-            },
-            {
-              "book": "Bovada",
-              "line": 25.5,
-              "no_vig_over": 0.43668122270742354,
-              "no_vig_under": 0.5633187772925764,
-              "american_over": 115.0,
-              "american_under": -150.0
-            },
-            {
-              "book": "Bovada",
-              "line": 26.5,
-              "no_vig_over": 0.39094650205761317,
-              "no_vig_under": 0.6090534979423868,
-              "american_over": 140.0,
-              "american_under": -185.0
-            },
-            {
-              "book": "Bovada",
-              "line": 27.5,
-              "no_vig_over": 0.34700315457413244,
-              "no_vig_under": 0.6529968454258674,
-              "american_over": 170.0,
-              "american_under": -230.0
-            },
-            {
-              "book": "Bovada",
-              "line": 28.5,
-              "no_vig_over": 0.3079416531604538,
-              "no_vig_under": 0.6920583468395461,
-              "american_over": 205.0,
-              "american_under": -280.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 219.0,
-          "spread": 6.5,
-          "team_total_implied": 106.25,
-          "team_pace": 100.72,
-          "team_pace_rank": 12.0,
-          "team_def_rating": 110.4,
-          "team_def_rating_rank": 3.0,
-          "opp_pace": 100.37,
-          "opp_pace_rank": 16.0,
-          "opp_def_rating": 106.5,
-          "opp_def_rating_rank": 1.0
-        },
-        "form": {
-          "over_l5": 0.4,
-          "over_l10": 0.3,
-          "over_l15": 0.3333333333333333
-        },
-        "vs_opp": {
-          "n_games": 6,
-          "avg_stat": 16.333333333333332,
-          "over_rate_at_line": 0.0
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.552
+        "p_win": 0.608
       }
     ],
     "STRATEGY_TIER": 2,
     "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.611,
-    "ANCHOR_NAME": "Keldon Johnson"
-  },
-  {
-    "PARLAY_PROB": 0.12483,
-    "EV": -31.343,
-    "EV_DOLLARS": -3.1343,
-    "KELLY": 0.0,
-    "STAKE_DOLLARS": 10.0,
-    "NET_PAYOUT_MULT": 4.5,
-    "N_LEGS": 3,
-    "LEGS": [
-      {
-        "platform": "Betr DFS",
-        "player": "Stephon Castle",
-        "display_name": "Stephon Castle",
-        "team_abbr": "SAS",
-        "team": "San Antonio Spurs",
-        "opponent_abbr": "OKC",
-        "opponent": "Oklahoma City Thunder",
-        "is_home": 0,
-        "market": "REB",
-        "dfs_line": 5.0,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.436,
-          "p_under": 0.459,
-          "lean": "UNDER",
-          "min_q10": 21.64,
-          "min_q50": 30.21,
-          "min_q90": 35.28,
-          "stat_q10": 1.39,
-          "stat_q50": 4.47,
-          "stat_q90": 9.36
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 4.5,
-          "no_vig_over": 0.5788611224907825,
-          "no_vig_under": 0.4211388775092175,
-          "american_over": -157.0,
-          "american_under": 125.0,
-          "lean": "UNDER"
-        },
-        "consensus": {
-          "n_books_same_line": 0,
-          "mean_no_vig_over_same_line": null,
-          "n_books_any_line": 7,
-          "mean_no_vig_over_any_line": 0.49193906916022984,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 4.5,
-              "no_vig_over": 0.5788611224907825,
-              "no_vig_under": 0.4211388775092175,
-              "american_over": -157.0,
-              "american_under": 125.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 4.5,
-              "no_vig_over": 0.5785341998584389,
-              "no_vig_under": 0.421465800141561,
-              "american_over": -162.0,
-              "american_under": 122.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 5.5,
-              "no_vig_over": 0.4294725540195947,
-              "no_vig_under": 0.5705274459804054,
-              "american_over": 118.0,
-              "american_under": -156.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 5.5,
-              "no_vig_over": 0.43348916277093075,
-              "no_vig_under": 0.5665108372290693,
-              "american_over": 115.0,
-              "american_under": -155.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 5.5,
-              "no_vig_over": 0.42321644498186217,
-              "no_vig_under": 0.5767835550181378,
-              "american_over": 122.0,
-              "american_under": -159.0
-            },
-            {
-              "book": "Bovada",
-              "line": 4.5,
-              "no_vig_over": 0.5751633986928104,
-              "no_vig_under": 0.4248366013071895,
-              "american_over": -160.0,
-              "american_under": 120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 5.5,
-              "no_vig_over": 0.4248366013071895,
-              "no_vig_under": 0.5751633986928104,
-              "american_over": 120.0,
-              "american_under": -160.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 219.0,
-          "spread": 6.5,
-          "team_total_implied": 106.25,
-          "team_pace": 100.72,
-          "team_pace_rank": 12.0,
-          "team_def_rating": 110.4,
-          "team_def_rating_rank": 3.0,
-          "opp_pace": 100.37,
-          "opp_pace_rank": 16.0,
-          "opp_def_rating": 106.5,
-          "opp_def_rating_rank": 1.0
-        },
-        "form": {
-          "over_l5": 0.6,
-          "over_l10": 0.3,
-          "over_l15": 0.2
-        },
-        "vs_opp": {
-          "n_games": 8,
-          "avg_stat": 4.125,
-          "over_rate_at_line": 0.375
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "UNDER",
-        "p_win": 0.459
-      },
-      {
-        "platform": "Betr DFS",
-        "player": "Donovan Mitchell",
-        "display_name": "Donovan Mitchell",
-        "team_abbr": "CLE",
-        "team": "Cleveland Cavaliers",
-        "opponent_abbr": "DET",
-        "opponent": "Detroit Pistons",
-        "is_home": 0,
-        "market": "PTS",
-        "dfs_line": 25.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.521,
-          "p_under": 0.479,
-          "lean": "OVER",
-          "min_q10": 28.39,
-          "min_q50": 36.94,
-          "min_q90": 37.68,
-          "stat_q10": 12.42,
-          "stat_q50": 26.88,
-          "stat_q90": 37.98
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 25.5,
-          "no_vig_over": 0.5105400733589106,
-          "no_vig_under": 0.48945992664108945,
-          "american_over": -117.0,
-          "american_under": -107.0,
-          "lean": "OVER"
-        },
-        "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.517451145585321,
-          "n_books_any_line": 14,
-          "mean_no_vig_over_any_line": 0.49950440259757584,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 25.5,
-              "no_vig_over": 0.5105400733589106,
-              "no_vig_under": 0.48945992664108945,
-              "american_over": -117.0,
-              "american_under": -107.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 25.5,
-              "no_vig_over": 0.5060689431946916,
-              "no_vig_under": 0.4939310568053083,
-              "american_over": -118.0,
-              "american_under": -112.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 25.5,
-              "no_vig_over": 0.519675254742772,
-              "no_vig_under": 0.480324745257228,
-              "american_over": -123.0,
-              "american_under": -104.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 25.5,
-              "no_vig_over": 0.5101214574898786,
-              "no_vig_under": 0.48987854251012153,
-              "american_over": -120.0,
-              "american_under": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 25.5,
-              "no_vig_over": 0.5276888998277135,
-              "no_vig_under": 0.4723111001722865,
-              "american_over": -128.0,
-              "american_under": -101.0
-            },
-            {
-              "book": "Bovada",
-              "line": 22.5,
-              "no_vig_over": 0.6705882352941177,
-              "no_vig_under": 0.32941176470588235,
-              "american_over": -250.0,
-              "american_under": 185.0
-            },
-            {
-              "book": "Bovada",
-              "line": 23.5,
-              "no_vig_over": 0.625,
-              "no_vig_under": 0.375,
-              "american_over": -200.0,
-              "american_under": 150.0
-            },
-            {
-              "book": "Bovada",
-              "line": 24.5,
-              "no_vig_over": 0.5751633986928104,
-              "no_vig_under": 0.4248366013071895,
-              "american_over": -160.0,
-              "american_under": 120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 25.5,
-              "no_vig_over": 0.5306122448979592,
-              "no_vig_under": 0.4693877551020409,
-              "american_over": -130.0,
-              "american_under": 100.0
-            },
-            {
-              "book": "Bovada",
-              "line": 26.5,
-              "no_vig_over": 0.48987854251012153,
-              "no_vig_under": 0.5101214574898786,
-              "american_over": -110.0,
-              "american_under": -120.0
-            },
-            {
-              "book": "Bovada",
-              "line": 27.5,
-              "no_vig_over": 0.4458598726114649,
-              "no_vig_under": 0.554140127388535,
-              "american_over": 110.0,
-              "american_under": -145.0
-            },
-            {
-              "book": "Bovada",
-              "line": 28.5,
-              "no_vig_over": 0.3982930298719772,
-              "no_vig_under": 0.6017069701280228,
-              "american_over": 135.0,
-              "american_under": -180.0
-            },
-            {
-              "book": "Bovada",
-              "line": 29.5,
-              "no_vig_over": 0.36041189931350115,
-              "no_vig_under": 0.6395881006864989,
-              "american_over": 160.0,
-              "american_under": -215.0
-            },
-            {
-              "book": "Bovada",
-              "line": 30.5,
-              "no_vig_over": 0.32315978456014366,
-              "no_vig_under": 0.6768402154398564,
-              "american_over": 190.0,
-              "american_under": -260.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": 4.5,
-          "team_total_implied": 100.25,
-          "team_pace": 100.7,
-          "team_pace_rank": 13.0,
-          "team_def_rating": 114.1,
-          "team_def_rating_rank": 15.0,
-          "opp_pace": 99.88,
-          "opp_pace_rank": 19.0,
-          "opp_def_rating": 108.9,
-          "opp_def_rating_rank": 2.0
-        },
-        "form": {
-          "over_l5": 0.6,
-          "over_l10": 0.6,
-          "over_l15": 0.4
-        },
-        "vs_opp": {
-          "n_games": 15,
-          "avg_stat": 29.733333333333334,
-          "over_rate_at_line": 0.6
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "OVER",
-        "p_win": 0.521
-      },
-      {
-        "platform": "Betr DFS",
-        "player": "Max Strus",
-        "display_name": "Max Strus",
-        "team_abbr": "CLE",
-        "team": "Cleveland Cavaliers",
-        "opponent_abbr": "DET",
-        "opponent": "Detroit Pistons",
-        "is_home": 0,
-        "market": "REB",
-        "dfs_line": 4.5,
-        "dfs_odds": {
-          "american_over": -137.0,
-          "american_under": -137.0,
-          "no_vig_over": 0.5,
-          "no_vig_under": 0.5
-        },
-        "model": {
-          "p_over": 0.522,
-          "p_under": 0.478,
-          "lean": "OVER",
-          "min_q10": 20.15,
-          "min_q50": 27.02,
-          "min_q90": 32.04,
-          "stat_q10": 1.63,
-          "stat_q50": 5.06,
-          "stat_q90": 9.97
-        },
-        "sharp": {
-          "source": "Pinnacle",
-          "is_fallback": false,
-          "line": 4.5,
-          "no_vig_over": 0.5157232704402516,
-          "no_vig_under": 0.48427672955974843,
-          "american_over": -120.0,
-          "american_under": -105.0,
-          "lean": "OVER"
-        },
-        "consensus": {
-          "n_books_same_line": 6,
-          "mean_no_vig_over_same_line": 0.5052882988382282,
-          "n_books_any_line": 8,
-          "mean_no_vig_over_any_line": 0.5057630126115062,
-          "offerings": [
-            {
-              "book": "Pinnacle",
-              "line": 4.5,
-              "no_vig_over": 0.5157232704402516,
-              "no_vig_under": 0.48427672955974843,
-              "american_over": -120.0,
-              "american_under": -105.0
-            },
-            {
-              "book": "FanDuel",
-              "line": 4.5,
-              "no_vig_over": 0.5281576830249397,
-              "no_vig_under": 0.4718423169750604,
-              "american_over": -130.0,
-              "american_under": -102.0
-            },
-            {
-              "book": "DraftKings",
-              "line": 4.5,
-              "no_vig_over": 0.48784883956417835,
-              "no_vig_under": 0.5121511604358217,
-              "american_over": -109.0,
-              "american_under": -121.0
-            },
-            {
-              "book": "BetMGM",
-              "line": 4.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "line": 4.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -114.0,
-              "american_under": -114.0
-            },
-            {
-              "book": "Bovada",
-              "line": 3.5,
-              "no_vig_over": 0.66,
-              "no_vig_under": 0.33999999999999997,
-              "american_over": -240.0,
-              "american_under": 175.0
-            },
-            {
-              "book": "Bovada",
-              "line": 4.5,
-              "no_vig_over": 0.5,
-              "no_vig_under": 0.5,
-              "american_over": -115.0,
-              "american_under": -115.0
-            },
-            {
-              "book": "Bovada",
-              "line": 5.5,
-              "no_vig_over": 0.35437430786268,
-              "no_vig_under": 0.6456256921373201,
-              "american_over": 165.0,
-              "american_under": -220.0
-            }
-          ]
-        },
-        "game_context": {
-          "book_used": "Circa",
-          "game_total": 205.0,
-          "spread": 4.5,
-          "team_total_implied": 100.25,
-          "team_pace": 100.7,
-          "team_pace_rank": 13.0,
-          "team_def_rating": 114.1,
-          "team_def_rating_rank": 15.0,
-          "opp_pace": 99.88,
-          "opp_pace_rank": 19.0,
-          "opp_def_rating": 108.9,
-          "opp_def_rating_rank": 2.0
-        },
-        "form": {
-          "over_l5": 0.6,
-          "over_l10": 0.6,
-          "over_l15": 0.6666666666666666
-        },
-        "vs_opp": {
-          "n_games": 12,
-          "avg_stat": 5.333333333333333,
-          "over_rate_at_line": 0.6666666666666666
-        },
-        "is_conflict": false,
-        "sharp_aligned": true,
-        "tier": "sharp_verified",
-        "side": "OVER",
-        "p_win": 0.522
-      }
-    ],
-    "STRATEGY_TIER": 2,
-    "COMBO_PROFILE": "2+1/teammates",
-    "ANCHOR_WIN_PROB": 0.522,
-    "ANCHOR_NAME": "Max Strus"
+    "ANCHOR_WIN_PROB": 0.621,
+    "ANCHOR_NAME": "Julian Champagnie"
   }
 ]
