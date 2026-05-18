@@ -19,13 +19,13 @@ projectedStartingFive = {
     "MIN": ["Jaden McDaniels", "Rudy Gobert", "Ayo Dosunmu", "Julius Randle", "Anthony Edwards"],
     "NOP": ["Josh Oduro", "Jordan Hawkins", "Jeremiah Fears", "Derik Queen", "Micah Peavy"],
     "NYK": ["Jalen Brunson", "Josh Hart", "Mikal Bridges", "Miles McBride", "Karl-Anthony Towns"],
-    "OKC": ["Isaiah Hartenstein", "Chet Holmgren", "Shai Gilgeous-Alexander", "Luguentz Dort", "Ajay Mitchell"],
+    "OKC": ["Jalen Williams", "Luguentz Dort", "Shai Gilgeous-Alexander", "Chet Holmgren", "Isaiah Hartenstein"],
     "ORL": ["Jalen Suggs", "Desmond Bane", "Jamal Cain", "Wendell Carter", "Paolo Banchero"],
     "PHI": ["Tyrese Maxey", "Joel Embiid", "Kelly Oubre", "Paul George", "VJ Edgecombe"],
     "PHX": ["Collin Gillespie", "Oso Ighodaro", "Dillon Brooks", "Jalen Green", "Devin Booker"],
     "POR": ["Deni Avdija", "Donovan Clingan", "Toumani Camara", "Jrue Holiday", "Scoot Henderson"],
     "SAC": ["Precious Achiuwa", "Nique Clifford", "Devin Carter", "Maxime Raynaud", "Daeqwon Plowden"],
-    "SAS": ["Victor Wembanyama", "De'Aaron Fox", "Julian Champagnie", "Stephon Castle", "Devin Vassell"],
+    "SAS": ["Devin Vassell", "Victor Wembanyama", "Julian Champagnie", "Stephon Castle"],
     "TOR": ["Ja'Kobe Walter", "RJ Barrett", "Jakob Poeltl", "Scottie Barnes", "Jamal Shead"],
     "UTA": ["Bez Mbeng", "Blake Hinson", "Oscar Tshiebwe", "Ace Bailey", "Cody Williams"],
     "WAS": ["Jamir Watkins", "Anthony Gill", "Bub Carrington", "Justin Champagnie", "Will Riley"],
@@ -66,6 +66,6 @@ team3StarsPerTeam = {
 
 # Players listed as questionable/may not play
 questionablePlayers = {
-    "DET": ["Duncan Robinson", "Kevin Huerter", "Caris LeVert"],
+    "SAS": ["De'Aaron Fox", "Luke Kornet"],
 }
 
