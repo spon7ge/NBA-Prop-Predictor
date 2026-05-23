@@ -1,0 +1,628 @@
+[
+    {
+        "home_team": "New York Knicks",
+        "away_team": "Cleveland Cavaliers",
+        "commence_time": "2026-05-20T00:10:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-05-19T17:38:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -115,
+                                "point": 7.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -105,
+                                "point": -7.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -109,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -114,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -112,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -112,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -110,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -110,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-05-19T17:38:52Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -106,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -106,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -107,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -107,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -105,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -115,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-05-19T17:38:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -105,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -115,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-05-19T17:37:06Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -110,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -110,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-05-19T17:37:24Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -110,
+                                "point": 7.0
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -110,
+                                "point": -7.0
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetUS",
+                "last_updated": "2026-05-19T17:38:31Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Cleveland Cavaliers",
+                                "price": -110,
+                                "point": 6.5
+                            },
+                            {
+                                "name": "New York Knicks",
+                                "price": -110,
+                                "point": -6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 217.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 217.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "home_team": "Oklahoma City Thunder",
+        "away_team": "San Antonio Spurs",
+        "commence_time": "2026-05-21T00:40:00Z",
+        "bookmakers": [
+            {
+                "bookmaker": "BetRivers",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -112,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -112,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -113,
+                                "point": 215.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 215.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "FanDuel",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -112,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -108,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 215.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 215.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "DraftKings",
+                "last_updated": "2026-05-19T17:38:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -110,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 215.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 215.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "LowVig.ag",
+                "last_updated": "2026-05-19T17:38:52Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -106,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -106,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -107,
+                                "point": 216.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -107,
+                                "point": 216.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetMGM",
+                "last_updated": "2026-05-19T17:38:53Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -110,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -105,
+                                "point": 216.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -115,
+                                "point": 216.5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "BetOnline.ag",
+                "last_updated": "2026-05-19T17:39:15Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -110,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 216.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 216.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "Bovada",
+                "last_updated": "2026-05-19T17:37:06Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -110,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 216.0
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 216.0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "bookmaker": "MyBookie.ag",
+                "last_updated": "2026-05-19T17:37:24Z",
+                "markets": [
+                    {
+                        "market_key": "spreads",
+                        "outcomes": [
+                            {
+                                "name": "Oklahoma City Thunder",
+                                "price": -110,
+                                "point": -6.5
+                            },
+                            {
+                                "name": "San Antonio Spurs",
+                                "price": -110,
+                                "point": 6.5
+                            }
+                        ]
+                    },
+                    {
+                        "market_key": "totals",
+                        "outcomes": [
+                            {
+                                "name": "Over",
+                                "price": -110,
+                                "point": 215.5
+                            },
+                            {
+                                "name": "Under",
+                                "price": -110,
+                                "point": 215.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

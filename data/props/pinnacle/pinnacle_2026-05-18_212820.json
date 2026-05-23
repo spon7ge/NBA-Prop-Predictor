@@ -1,0 +1,260 @@
+{
+  "fetched_at": "2026-05-18T21:28:30-07:00",
+  "source": "pinnacle_selenium",
+  "sport": "nba",
+  "list_page": "https://www.pinnacle.com/en/basketball/nba/matchups/#all",
+  "parallel_workers_configured": 5,
+  "parallel_workers_effective": 1,
+  "games_per_worker_target": 2,
+  "arcadia_timeout_s": 90.0,
+  "arcadia_poll_s": 0.22,
+  "games": [
+    {
+      "matchup_id": 1630991090,
+      "source_url": "https://www.pinnacle.com/en/basketball/nba/cleveland-cavaliers-vs-new-york-knicks/1630991090/#all",
+      "path": "/en/basketball/nba/cleveland-cavaliers-vs-new-york-knicks/1630991090/",
+      "league": "NBA",
+      "start_time": null,
+      "label": "Cleveland Cavaliers vs New York Knicks",
+      "participants": [
+        "Cleveland Cavaliers",
+        "New York Knicks"
+      ],
+      "props": [
+        {
+          "stat": "points",
+          "player": "Donovan Mitchell",
+          "line": 26.5,
+          "market_id": 1631030241,
+          "decimal_over": 1.893,
+          "decimal_under": 1.847,
+          "american_over": -112,
+          "american_under": -118
+        },
+        {
+          "stat": "rebounds",
+          "player": "Donovan Mitchell",
+          "line": 4.5,
+          "market_id": 1631030247,
+          "decimal_over": 2.09,
+          "decimal_under": 1.758,
+          "american_over": 109,
+          "american_under": -132
+        },
+        {
+          "stat": "points",
+          "player": "Evan Mobley",
+          "line": 15.5,
+          "market_id": 1631030250,
+          "decimal_over": 1.952,
+          "decimal_under": 1.794,
+          "american_over": -105,
+          "american_under": -126
+        },
+        {
+          "stat": "assists",
+          "player": "Jalen Brunson",
+          "line": 5.5,
+          "market_id": 1631030259,
+          "decimal_over": 1.556,
+          "decimal_under": 2.34,
+          "american_over": -180,
+          "american_under": 134
+        },
+        {
+          "stat": "points",
+          "player": "Jalen Brunson",
+          "line": 27.5,
+          "market_id": 1631030262,
+          "decimal_over": 1.943,
+          "decimal_under": 1.8,
+          "american_over": -106,
+          "american_under": -125
+        },
+        {
+          "stat": "assists",
+          "player": "James Harden",
+          "line": 6.5,
+          "market_id": 1631030268,
+          "decimal_over": 1.82,
+          "decimal_under": 1.926,
+          "american_over": -122,
+          "american_under": -108
+        },
+        {
+          "stat": "points",
+          "player": "James Harden",
+          "line": 19.5,
+          "market_id": 1631030271,
+          "decimal_over": 2.0,
+          "decimal_under": 1.758,
+          "american_over": -100,
+          "american_under": -132
+        },
+        {
+          "stat": "assists",
+          "player": "Jarrett Allen",
+          "line": 1.5,
+          "market_id": 1631030277,
+          "decimal_over": 2.52,
+          "decimal_under": 1.488,
+          "american_over": 152,
+          "american_under": -205
+        },
+        {
+          "stat": "points",
+          "player": "Jarrett Allen",
+          "line": 12.5,
+          "market_id": 1631030280,
+          "decimal_over": 1.885,
+          "decimal_under": 1.855,
+          "american_over": -113,
+          "american_under": -117
+        },
+        {
+          "stat": "points",
+          "player": "Josh Hart",
+          "line": 11.5,
+          "market_id": 1631030286,
+          "decimal_over": 1.758,
+          "decimal_under": 2.0,
+          "american_over": -132,
+          "american_under": -100
+        },
+        {
+          "stat": "rebounds",
+          "player": "Josh Hart",
+          "line": 8.5,
+          "market_id": 1631030292,
+          "decimal_over": 1.962,
+          "decimal_under": 1.787,
+          "american_over": -104,
+          "american_under": -127
+        },
+        {
+          "stat": "assists",
+          "player": "Karl-Anthony Towns",
+          "line": 4.5,
+          "market_id": 1631030298,
+          "decimal_over": 1.877,
+          "decimal_under": 1.862,
+          "american_over": -114,
+          "american_under": -116
+        },
+        {
+          "stat": "points",
+          "player": "Max Strus",
+          "line": 8.5,
+          "market_id": 1631030307,
+          "decimal_over": 1.645,
+          "decimal_under": 2.16,
+          "american_over": -155,
+          "american_under": 116
+        },
+        {
+          "stat": "rebounds",
+          "player": "Max Strus",
+          "line": 4.5,
+          "market_id": 1631030310,
+          "decimal_over": 2.02,
+          "decimal_under": 1.741,
+          "american_over": 102,
+          "american_under": -135
+        },
+        {
+          "stat": "assists",
+          "player": "Mikal Bridges",
+          "line": 2.5,
+          "market_id": 1631030316,
+          "decimal_over": 1.82,
+          "decimal_under": 1.926,
+          "american_over": -122,
+          "american_under": -108
+        },
+        {
+          "stat": "points",
+          "player": "Mikal Bridges",
+          "line": 12.5,
+          "market_id": 1631030319,
+          "decimal_over": 1.741,
+          "decimal_under": 2.02,
+          "american_over": -135,
+          "american_under": 102
+        },
+        {
+          "stat": "points",
+          "player": "Miles McBride",
+          "line": 6.5,
+          "market_id": 1631030328,
+          "decimal_over": 1.69,
+          "decimal_under": 2.09,
+          "american_over": -145,
+          "american_under": 109
+        },
+        {
+          "stat": "points",
+          "player": "Mitchell Robinson",
+          "line": 4.5,
+          "market_id": 1631030331,
+          "decimal_over": 1.87,
+          "decimal_under": 1.87,
+          "american_over": -115,
+          "american_under": -115
+        },
+        {
+          "stat": "rebounds",
+          "player": "Mitchell Robinson",
+          "line": 7.5,
+          "market_id": 1631030334,
+          "decimal_over": 2.01,
+          "decimal_under": 1.746,
+          "american_over": 101,
+          "american_under": -134
+        },
+        {
+          "stat": "points",
+          "player": "OG Anunoby",
+          "line": 15.5,
+          "market_id": 1631030337,
+          "decimal_over": 1.787,
+          "decimal_under": 1.962,
+          "american_over": -127,
+          "american_under": -104
+        },
+        {
+          "stat": "points",
+          "player": "Karl-Anthony Towns",
+          "line": 18.5,
+          "market_id": 1631030346,
+          "decimal_over": 1.935,
+          "decimal_under": 1.806,
+          "american_over": -107,
+          "american_under": -124
+        },
+        {
+          "stat": "rebounds",
+          "player": "Karl-Anthony Towns",
+          "line": 11.5,
+          "market_id": 1631030352,
+          "decimal_over": 1.99,
+          "decimal_under": 1.763,
+          "american_over": -101,
+          "american_under": -131
+        }
+      ]
+    },
+    {
+      "matchup_id": 1630889863,
+      "source_url": "https://www.pinnacle.com/en/basketball/nba/san-antonio-spurs-vs-oklahoma-city-thunder/1630889863/#all",
+      "path": "/en/basketball/nba/san-antonio-spurs-vs-oklahoma-city-thunder/1630889863/",
+      "league": "NBA",
+      "start_time": null,
+      "label": "San Antonio Spurs vs Oklahoma City Thunder",
+      "participants": [
+        "San Antonio Spurs",
+        "Oklahoma City Thunder"
+      ],
+      "props": []
+    }
+  ]
+}
