@@ -103,6 +103,10 @@ def main(
     apm_q_models = models["apm"]["quantile_models"]
     rpm_q_models = models["rpm"]["quantile_models"]
 
+    # ── 3b. Load opponent defensive ratings ─────────────────────────────────
+    print("\n── Loading opponent def ratings ──")
+    def_ratings, league_avg_def_rtg, league_avg_pace = load_opp_def_ratings("Playoffs")
+
     # ── 4. Predict ───────────────────────────────────────────────────────────
     print("\n── Running predictions ──")
     pts_preds = predict_min_times_rate(
@@ -112,6 +116,9 @@ def main(
         min_quantile_models=min_q_models,
         stat_prefix="PTS",
         verbose=verbose,
+        def_ratings=def_ratings,
+        league_avg_def_rtg=league_avg_def_rtg,
+        league_avg_pace=league_avg_pace,
     )
     ast_preds = predict_min_times_rate(
         ast_names, base_df, base_df, current_date,
@@ -120,6 +127,9 @@ def main(
         min_quantile_models=min_q_models,
         stat_prefix="AST",
         verbose=verbose,
+        def_ratings=def_ratings,
+        league_avg_def_rtg=league_avg_def_rtg,
+        league_avg_pace=league_avg_pace,
     )
     reb_preds = predict_min_times_rate(
         reb_names, base_df, base_df, current_date,
@@ -128,6 +138,9 @@ def main(
         min_quantile_models=min_q_models,
         stat_prefix="REB",
         verbose=verbose,
+        def_ratings=def_ratings,
+        league_avg_def_rtg=league_avg_def_rtg,
+        league_avg_pace=league_avg_pace,
     )
 
     # ── 5. Context adjustments ───────────────────────────────────────────────
