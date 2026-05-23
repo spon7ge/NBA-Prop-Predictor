@@ -33,6 +33,28 @@ def _empirical_rates(history: np.ndarray, n: int, decay: float, jitter_lo: float
     return samples + np.random.normal(0, jitter_std, size=n)
 
 
+def _opp_rate_multiplier(row: dict, *, use_pace: bool = False, clip_lo: float = 0.88, clip_hi: float = 1.12) -> float:
+    """
+    Opponent-adjustment multiplier applied to the rate component of simulations.
+
+    DEF_RATING: higher = worse defense → multiplier > 1 (boost player rate).
+    PACE: higher = more possessions → multiplier > 1 (use for count stats only).
+    Returns 1.0 when any required key is missing or non-finite (backward-compatible).
+    Clipped to [clip_lo, clip_hi] to prevent extreme swings from small samples.
+    """
+    mult = 1.0
+    opp_def = row.get("OPP_DEF_RATING")
+    avg_def = row.get("LEAGUE_AVG_DEF_RATING")
+    if opp_def is not None and avg_def is not None and np.isfinite(opp_def) and np.isfinite(avg_def) and avg_def > 0:
+        mult *= opp_def / avg_def
+    if use_pace:
+        opp_pace = row.get("OPP_PACE")
+        avg_pace = row.get("LEAGUE_AVG_PACE")
+        if opp_pace is not None and avg_pace is not None and np.isfinite(opp_pace) and np.isfinite(avg_pace) and avg_pace > 0:
+            mult *= opp_pace / avg_pace
+    return float(np.clip(mult, clip_lo, clip_hi))
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # PRODUCTION: TRIANGULAR SAMPLERS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -65,7 +87,7 @@ def triangular_clip(
     right = max(right, mode)
 
     # downside skew: foul trouble / blowouts
-    mode = min(max(mode * 1.03, left), right)
+    mode = min(max(mode * 0.97, left), right)
 
     return np.clip(np.random.triangular(left, mode, right, size=n_sims), low, high)
 
@@ -97,65 +119,107 @@ def triangular_clip_with_u(row, q10, q50, q90, U, lo_scale, hi_scale, low, high,
 # PRODUCTION: SIMULATION RUNNERS
 # ─────────────────────────────────────────────────────────────────────────────
 
-def run_pts_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_history=5):
-    """
-    Points simulation: min × ppm.
-    Anchor (30 %): correlated triangular draws via shared U.
-    Empirical (70 %): minutes from triangular, rate resampled from history.
-    """
-    n_anchor   = int(n_sims * anchor_weight)
+def run_pts_simulation(row, n_sims=50_000, anchor_weight=0.3, decay=0.85, min_history=10):
+    n_anchor    = int(n_sims * anchor_weight)
     n_empirical = n_sims - n_anchor
 
-    U = np.random.uniform(0, 1, n_sims)
-    np.random.shuffle(U)
+    U        = np.random.uniform(0, 1, n_sims)
+    U_anchor = U[:n_anchor]
 
-    U_anchor        = U[:n_anchor]
-    sim_min_anchor  = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U_anchor, 0.75, 1.25, 0, 48)
-    sim_ppm_anchor  = triangular_clip_with_u(row, "RATE_Q10", "RATE_Q50", "RATE_Q90", U_anchor, 0.85, 1.15, 0, None)
+    sim_min_anchor = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U_anchor, 0.75, 1.25, 0, 48)
+    sim_ppm_anchor = triangular_clip_with_u(row, "RATE_Q10", "RATE_Q50", "RATE_Q90", U_anchor, 0.85, 1.15, 0, None)
 
     h = row.get("RATE_HISTORY")
-    if h is not None and len(h) >= min_history:
+    m = row.get("MIN_HISTORY")
+
+    use_paired = (
+        h is not None and m is not None
+        and len(h) >= min_history and len(m) == len(h)
+    )
+    use_rate_only = not use_paired and h is not None and len(h) >= min_history
+
+    if use_paired:
         h = np.array(h, dtype=float)
-        emp_rates       = _empirical_rates(h, n_empirical, decay, 0.05, 1.0)
-        sim_min_emp     = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)
-        sim_min         = np.concatenate([sim_min_emp, sim_min_anchor])
-        sim_ppm         = np.concatenate([np.clip(emp_rates, 0, None), sim_ppm_anchor])
+        m = np.array(m, dtype=float)
+
+        # Decay weights over game index (most recent = highest weight)
+        weights = _decay_weights(len(h), decay)
+
+        # Resample GAME INDICES — minutes and rate come from the same game
+        idx = np.random.choice(len(h), size=n_empirical, p=weights)
+        emp_min   = np.clip(m[idx] + np.random.normal(0, np.std(m) * 0.15, n_empirical), 0, 48)
+        emp_rates = np.clip(h[idx] + np.random.normal(0, np.std(h) * 0.15, n_empirical), 0, None)
+
+        sim_min = np.concatenate([sim_min_anchor, emp_min])
+        sim_ppm = np.concatenate([sim_ppm_anchor, emp_rates])
+
+    elif use_rate_only:
+        # Fallback: no MIN_HISTORY, original triangular minutes path
+        h         = np.array(h, dtype=float)
+        emp_rates = _empirical_rates(h, n_empirical, decay, 0.05, 1.0)
+        sim_min_emp = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)
+
+        sim_min = np.concatenate([sim_min_anchor, sim_min_emp])
+        sim_ppm = np.concatenate([sim_ppm_anchor, emp_rates])
+
     else:
         sim_min = sim_min_anchor
         sim_ppm = sim_ppm_anchor
 
-    return sim_min * sim_ppm
+    return sim_min * sim_ppm * _opp_rate_multiplier(row)
 
 
-def run_count_simulation(row, n_sims=10_000, anchor_weight=0.3, decay=0.85, min_history=5):
+def run_count_simulation(row, n_sims=50_000, anchor_weight=0.3, decay=0.85, min_history=10):
     """
     Poisson count simulation (AST / REB).
     λ per path = sim_min × sim_rate.  Final draw: Poisson(λ).
+
+    Empirical path (70%): paired MIN_HISTORY + RATE_HISTORY resampling by game
+    index preserves natural minutes/rate correlation.  Falls back to rate-only
+    triangular minutes if MIN_HISTORY is absent.
     """
     n_anchor    = int(n_sims * anchor_weight)
     n_empirical = n_sims - n_anchor
 
-    U = np.random.uniform(0, 1, n_sims)
-    np.random.shuffle(U)
+    U        = np.random.uniform(0, 1, n_sims)
+    U_anchor = U[:n_anchor]
 
-    U_anchor         = U[:n_anchor]
-    sim_min_anchor   = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U_anchor, 0.75, 1.25, 0, 48)
-    sim_rate_anchor  = triangular_clip_with_u(row, "RATE_Q10", "RATE_Q50", "RATE_Q90", U_anchor, 0.85, 1.15, 0, None)
+    sim_min_anchor  = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90",  U_anchor, 0.75, 1.25, 0, 48)
+    sim_rate_anchor = triangular_clip_with_u(row, "RATE_Q10", "RATE_Q50", "RATE_Q90", U_anchor, 0.85, 1.15, 0, None)
 
     h = row.get("RATE_HISTORY")
-    if h is not None and len(h) >= min_history:
+    m = row.get("MIN_HISTORY")
+
+    use_paired    = h is not None and m is not None and len(h) >= min_history and len(m) == len(h)
+    use_rate_only = not use_paired and h is not None and len(h) >= min_history
+
+    if use_paired:
         h = np.array(h, dtype=float)
-        emp_rates       = _empirical_rates(h, n_empirical, decay, 0.02, 0.5)
-        sim_min_emp     = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)
-        sim_min         = np.concatenate([sim_min_emp, sim_min_anchor])
-        sim_rate        = np.concatenate([np.clip(emp_rates, 0, None), sim_rate_anchor])
+        m = np.array(m, dtype=float)
+
+        weights = _decay_weights(len(h), decay)
+        idx     = np.random.choice(len(h), size=n_empirical, p=weights)
+
+        emp_min  = np.clip(m[idx] + np.random.normal(0, np.std(m) * 0.15, n_empirical), 0, 48)
+        emp_rate = np.clip(h[idx] + np.random.normal(0, np.std(h) * 0.15, n_empirical), 0, None)
+
+        sim_min  = np.concatenate([sim_min_anchor,  emp_min])
+        sim_rate = np.concatenate([sim_rate_anchor, emp_rate])
+
+    elif use_rate_only:
+        h           = np.array(h, dtype=float)
+        emp_rate    = _empirical_rates(h, n_empirical, decay, 0.02, 0.5)
+        sim_min_emp = triangular_clip_with_u(row, "MIN_Q10", "MIN_Q50", "MIN_Q90", U[n_anchor:], 0.75, 1.25, 0, 48)
+
+        sim_min  = np.concatenate([sim_min_anchor,  sim_min_emp])
+        sim_rate = np.concatenate([sim_rate_anchor, emp_rate])
+
     else:
         sim_min  = sim_min_anchor
         sim_rate = sim_rate_anchor
 
-    lam = np.clip(sim_min * sim_rate, 1e-6, None)
+    lam = np.clip(sim_min * sim_rate * _opp_rate_multiplier(row, use_pace=True), 1e-6, None)
     return np.random.poisson(lam).astype(float)
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # EXPERIMENTAL: GAMMA RATE ANCHOR
