@@ -141,7 +141,7 @@ def _json_default(o):
 _TEAM_RATINGS_CACHE = Path("data/raw/cache/team_ratings.csv")
 
 
-def fetch_team_ratings(*, force_refresh: bool = False) -> pd.DataFrame:
+def fetch_team_ratings(*, force_refresh: bool = True) -> pd.DataFrame:
     """Return team DEF_RATING / PACE indexed by TEAM_NAME.
 
     Resolution order:
@@ -162,6 +162,7 @@ def fetch_team_ratings(*, force_refresh: bool = False) -> pd.DataFrame:
         league_id_nullable="00",
         per_mode_detailed="PerGame",
         measure_type_detailed_defense="Advanced",
+        season_type_all_star="Playoffs"
     ).get_data_frames()[0]
     out = (
         df[["TEAM_NAME", "DEF_RATING", "DEF_RATING_RANK", "PACE", "PACE_RANK"]]

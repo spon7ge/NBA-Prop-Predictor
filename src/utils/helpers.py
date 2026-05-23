@@ -12,6 +12,7 @@ from datetime import datetime
 from src.features.feature_engineer.min_features import _detect_star_players
 from src.utils.dataScraper import generalized_best_bets
 from src.pipeline.props_pipeline.min_pipeline import min_pipeline
+from src.utils.helper_functions import findOpp
 from src.utils.context import (
     coerce_nonneg_monotone_quantiles,
     adjust_predictions,
@@ -95,6 +96,52 @@ def load_base_df() -> pd.DataFrame:
     base_df = pd.concat([s25, s26], ignore_index=True)
     print(f"base_df: {len(base_df)} rows, {base_df['PLAYER_NAME'].nunique()} players")
     return base_df
+
+
+# Static abbreviation → nba_api TEAM_ID mapping (stable across seasons).
+TEAM_ABV_TO_ID: dict[str, int] = {
+    "ATL": 1610612737, "BKN": 1610612751, "BOS": 1610612738, "CHA": 1610612766,
+    "CHI": 1610612741, "CLE": 1610612739, "DAL": 1610612742, "DEN": 1610612743,
+    "DET": 1610612765, "GSW": 1610612744, "HOU": 1610612745, "IND": 1610612754,
+    "LAC": 1610612746, "LAL": 1610612747, "MEM": 1610612763, "MIA": 1610612748,
+    "MIL": 1610612749, "MIN": 1610612750, "NOP": 1610612740, "NYK": 1610612752,
+    "OKC": 1610612760, "ORL": 1610612753, "PHI": 1610612755, "PHX": 1610612756,
+    "POR": 1610612757, "SAC": 1610612758, "SAS": 1610612759, "TOR": 1610612761,
+    "UTA": 1610612762, "WAS": 1610612764,
+}
+
+
+def load_opp_def_ratings(season_type: str = "Playoffs") -> tuple[dict, float, float]:
+    """
+    Fetch per-team DEF_RATING and PACE from nba_api for the current season_type.
+
+    Returns:
+      ratings           – dict[TEAM_ID (int) → {"DEF_RATING": float, "PACE": float}]
+      league_avg_def_rtg – float (mean across all teams)
+      league_avg_pace    – float (mean across all teams)
+
+    Keyed by TEAM_ID so it pairs with TEAM_ABV_TO_ID[opp_abv] in predict_min_times_rate().
+    Call once per session and pass the result into predict_min_times_rate().
+    """
+    from nba_api.stats.endpoints import leaguedashteamstats
+    df = leaguedashteamstats.LeagueDashTeamStats(
+        league_id_nullable="00",
+        per_mode_detailed="PerGame",
+        measure_type_detailed_defense="Advanced",
+        season_type_all_star=season_type,
+    ).get_data_frames()[0]
+
+    ratings = {
+        int(row["TEAM_ID"]): {
+            "DEF_RATING": float(row["DEF_RATING"]),
+            "PACE":       float(row["PACE"]),
+        }
+        for _, row in df.iterrows()
+    }
+    league_avg_def_rtg = float(df["DEF_RATING"].mean())
+    league_avg_pace    = float(df["PACE"].mean())
+    print(f"Loaded def ratings for {len(ratings)} teams  |  avg DEF_RTG={league_avg_def_rtg:.1f}  avg PACE={league_avg_pace:.1f}")
+    return ratings, league_avg_def_rtg, league_avg_pace
 
 
 def load_team_odds() -> pd.DataFrame:
@@ -335,14 +382,21 @@ def predict_min_times_rate(
     rate_pipeline,
     rate_quantile_models,
     min_quantile_models,
-    stat_prefix,  # "PTS", "AST", "REB", or "PTS+AST" (display market label)
+    stat_prefix,  # "PTS", "AST", or "REB" (display market label)
     verbose=True,
+    n_games=15,
+    def_ratings: dict | None = None,
+    league_avg_def_rtg: float | None = None,
+    league_avg_pace: float | None = None,
 ):
     """
     For each name: min quantiles × rate quantiles → implied stat (same quantile index).
 
     Raw XGB predictions are coerced to nonnegative, ordered q10≤q50≤q90 anchors for
     ``run_pts_simulation`` and sensible betting tails (see ``coerce_nonneg_monotone_quantiles``).
+
+    Pass def_ratings (from load_opp_def_ratings()) + league averages to inject opponent
+    defensive context into each row for use by the simulation multiplier.
     """
     q10, q50, q90 = "q_0.10", "q_0.50", "q_0.90"
     records = []
@@ -373,24 +427,36 @@ def predict_min_times_rate(
             r90 = float(rate_quantile_models[q90].predict(rate_arr)[0])
 
             pdf = prop_stats_df[prop_stats_df["PLAYER_NAME"] == name].sort_values("GAME_DATE")
+            opp_abv, home = findOpp(name, min_stats_df, current_date)
             rate_col = rate_col_by_market.get(stat_prefix, f"{stat_prefix}_PER_MIN")
             if rate_col not in pdf.columns:
                 raise KeyError(rate_col)
-            rate_history = pdf[rate_col].dropna().tail(10).tolist()
+            rate_history = pdf[rate_col].dropna().tail(n_games).tolist()
+            min_history = pdf["MIN"].dropna().tail(n_games).tolist()
 
             m10, m50, m90 = coerce_nonneg_monotone_quantiles(m10, m50, m90)
             r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
 
+            opp_team_id = TEAM_ABV_TO_ID.get(opp_abv) if opp_abv else None
+            opp_info = def_ratings.get(opp_team_id) if def_ratings and opp_team_id else None
             row = {
                 "PLAYER_NAME": name,
+                "PLAYER_TEAM": pdf["TEAM_ID"].iloc[-1] if not pdf.empty else np.nan,
+                "OPP_TEAM": opp_abv,
+                "HOME": home,
                 "MARKET": stat_prefix,
                 "MIN_Q10": round(m10, 2),
                 "MIN_Q50": round(m50, 2),
                 "MIN_Q90": round(m90, 2),
+                "MIN_HISTORY": min_history,
                 "RATE_Q10": round(r10, 4),
                 "RATE_Q50": round(r50, 4),
                 "RATE_Q90": round(r90, 4),
                 "RATE_HISTORY": rate_history,
+                "OPP_DEF_RATING":        opp_info["DEF_RATING"] if opp_info else np.nan,
+                "OPP_PACE":              opp_info["PACE"]       if opp_info else np.nan,
+                "LEAGUE_AVG_DEF_RATING": league_avg_def_rtg if league_avg_def_rtg is not None else np.nan,
+                "LEAGUE_AVG_PACE":       league_avg_pace    if league_avg_pace    is not None else np.nan,
             }
             s10, s50, s90 = m10 * r10, m50 * r50, m90 * r90
             s10, s50, s90 = coerce_nonneg_monotone_quantiles(s10, s50, s90)
