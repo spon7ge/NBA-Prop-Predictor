@@ -1,0 +1,121 @@
+{
+  "pulled_at_utc": "2026-05-25T22:41:48.102434+00:00",
+  "bookmakers": [
+    "Circa",
+    "BetOnline.ag"
+  ],
+  "events_fetched": 14,
+  "odds_format": "american",
+  "markets_included": [
+    "Spread",
+    "Totals"
+  ],
+  "odds_payload_count": 2,
+  "record_count": 8,
+  "records": [
+    {
+      "MARKET": "Spread",
+      "LINE": 2,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505046,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "New York Knicks",
+      "START": "2026-05-26T00:00:00Z",
+      "HOME_ODDS": -115,
+      "AWAY_ODDS": -105,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 218.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505046,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "New York Knicks",
+      "START": "2026-05-26T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -114,
+      "UNDER": -108
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": 2,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505046,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "New York Knicks",
+      "START": "2026-05-26T00:00:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 219,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505046,
+      "HOME": "Cleveland Cavaliers",
+      "AWAY": "New York Knicks",
+      "START": "2026-05-26T00:00:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -5.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505026,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-27T00:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 216.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505026,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-27T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -5.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505026,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-27T00:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 216.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505026,
+      "HOME": "Oklahoma City Thunder",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-05-27T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    }
+  ]
+}
