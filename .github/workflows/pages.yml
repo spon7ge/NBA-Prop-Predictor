@@ -59,11 +59,15 @@ jobs:
               cp "data/props/ev_analysis/$f" "docs/data/props/ev_analysis/$f"
             fi
           done
-          # Copy latest dfs_enriched_* file for the All Players view
+          # Copy enriched player data for the All Players view (slate.js reads dfs_enriched_latest.json)
           mkdir -p docs/data/props/enriched
-          latest=$(ls -t data/props/enriched/dfs_enriched_*.json 2>/dev/null | head -1)
-          if [ -n "$latest" ]; then
-            cp "$latest" "docs/data/props/enriched/$(basename $latest)"
+          if [ -f "data/props/enriched/dfs_enriched_latest.json" ]; then
+            cp data/props/enriched/dfs_enriched_latest.json docs/data/props/enriched/dfs_enriched_latest.json
+          else
+            latest=$(ls -t data/props/enriched/dfs_enriched_*.json 2>/dev/null | grep -v latest | head -1)
+            if [ -n "$latest" ]; then
+              cp "$latest" docs/data/props/enriched/dfs_enriched_latest.json
+            fi
           fi
       
       - name: Setup Pages
