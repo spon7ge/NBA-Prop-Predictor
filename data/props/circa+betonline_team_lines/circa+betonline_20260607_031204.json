@@ -1,0 +1,69 @@
+{
+  "pulled_at_utc": "2026-06-07T03:12:04.371902+00:00",
+  "bookmakers": [
+    "Circa",
+    "BetOnline.ag"
+  ],
+  "events_fetched": 5,
+  "odds_format": "american",
+  "markets_included": [
+    "Spread",
+    "Totals"
+  ],
+  "odds_payload_count": 1,
+  "record_count": 4,
+  "records": [
+    {
+      "MARKET": "Spread",
+      "LINE": -2,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505016,
+      "HOME": "New York Knicks",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-06-09T00:30:00Z",
+      "HOME_ODDS": -114,
+      "AWAY_ODDS": -106,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 215.5,
+      "BOOKMAKER": "BetOnline.ag",
+      "EVENT_ID": 70505016,
+      "HOME": "New York Knicks",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-06-09T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    },
+    {
+      "MARKET": "Spread",
+      "LINE": -2,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505016,
+      "HOME": "New York Knicks",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-06-09T00:30:00Z",
+      "HOME_ODDS": -110,
+      "AWAY_ODDS": -110,
+      "OVER": null,
+      "UNDER": null
+    },
+    {
+      "MARKET": "Totals",
+      "LINE": 215.5,
+      "BOOKMAKER": "Circa",
+      "EVENT_ID": 70505016,
+      "HOME": "New York Knicks",
+      "AWAY": "San Antonio Spurs",
+      "START": "2026-06-09T00:30:00Z",
+      "HOME_ODDS": null,
+      "AWAY_ODDS": null,
+      "OVER": -110,
+      "UNDER": -110
+    }
+  ]
+}
