@@ -650,6 +650,24 @@ a.header-link[aria-current="page"]:visited {
   color: #f1f1ec !important;
   background: rgba(255, 122, 46, 0.09);
 }
+.blog-figure {
+  margin: 24px 0;
+}
+.blog-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #111110;
+}
+.blog-figure figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #9a9a92;
+  text-align: center;
+}
 @media (max-width: 620px) {
   .blog-grid {
     grid-template-columns: 1fr;
