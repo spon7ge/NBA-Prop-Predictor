@@ -18,6 +18,11 @@ SELECT DISTINCT
     GAME_ID, GAME_DATE, MATCHUP, WL, OPP_OPP_ABBREVIATION_base
 FROM nyk_stats;
 
+CREATE OR REPLACE VIEW nyk_loc AS
+SELECT gameId, MAX(location) AS nyk_loc
+FROM pbp WHERE teamId = 1610612752
+GROUP BY 1;
+
 CREATE OR REPLACE VIEW games_enriched AS
 WITH base AS (
     SELECT
@@ -25,10 +30,7 @@ WITH base AS (
         p.playerNameI, p.actionType, p.description, p.shotValue,
         CAST(regexp_extract(p.clock, 'PT(\d+)M', 1) AS INT) * 60
             + CAST(regexp_extract(p.clock, 'M([\d.]+)S', 1) AS DOUBLE) AS secs_remaining,
-        FIRST(p.location) OVER (
-            PARTITION BY p.gameId ORDER BY p.actionNumber
-            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-        ) AS nyk_loc,
+        l.nyk_loc,
         LAST_VALUE(TRY_CAST(p.scoreHome AS DOUBLE) IGNORE NULLS) OVER (
             PARTITION BY p.gameId ORDER BY p.actionNumber
             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
@@ -38,6 +40,7 @@ WITH base AS (
             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
         ) AS score_away_n
     FROM pbp_nyk p
+    INNER JOIN nyk_loc l USING (gameId)
 )
 SELECT *,
     CASE WHEN nyk_loc = 'h' THEN COALESCE(score_home_n, 0) ELSE COALESCE(score_away_n, 0) END AS nyk_live,
