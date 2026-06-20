@@ -3,6 +3,9 @@
 Usage (from repo root):
   1. Run all cells in notebooks/NYK_Analysis.ipynb
   2. python scripts/export_nyk_blog_charts.py
+
+If sas-time-leading.png is missing from the notebook (cell 19 not run), use:
+  python scripts/export_sas_time_chart.py
 """
 import base64
 import json
@@ -18,6 +21,7 @@ CELL_EXPORTS = {
     10: ['clutch-time'],
     13: ['efficiency-wl', 'efficiency-net-rating'],
     16: ['comeback-frequency'],
+    19: ['sas-time-leading'],
 }
 
 
