@@ -10,7 +10,7 @@
   <title>When Analytics Lie: How the 2026 Knicks Won It All - HoopVista</title>
   <meta
     name="description"
-    content="A play-by-play and box-score breakdown of the 2026 Knicks' championship run — quarter splits, clutch time, comebacks, and where the numbers lied."
+    content="A play-by-play and box-score breakdown of the 2026 Knicks' championship run — quarter splits, clutch time, comebacks, Finals clock control vs SAS, and where the numbers lied."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -55,10 +55,7 @@
           Championship teams usually leave a clean analytical fingerprint: positive clutch differential, comfortable leads, efficiency that matches the scoreboard. The 2026 New York Knicks did none of that consistently — and still raised a banner.
         </p>
         <p>
-          This post walks through their full playoff run using two data layers: <strong>play-by-play event data</strong> for quarter splits, clutch windows, and comeback paths, and <strong>full box-score logs</strong> for efficiency and player impact. Every core metric below was computed in SQL (DuckDB) with window functions and CTEs; charts are visualization only.
-        </p>
-        <p>
-          The question is not whether the Knicks were good. They were. The question is <em>where the numbers told the truth</em> — and where a model would have bet against them anyway.
+          This post walks through their playoff run — quarter by quarter, in clutch time, on comeback nights, and in the Finals against San Antonio.
         </p>
 
         <h3>The Snapshot</h3>
@@ -247,6 +244,42 @@
           Comeback probability is nonlinear. Trailing by 8 with six minutes left in Q3 is not simply 2× harder than trailing by 4 — context dominates. NYK's comeback frequency points to <strong>mental edge and halftime adjustments</strong>, not a stable efficiency advantage you could plug into a spreadsheet.
         </p>
 
+        <h3>Finals Clock Control vs San Antonio</h3>
+        <p>
+          Max deficit tells you <em>how deep</em> the hole was. Game-clock share tells you <em>how long</em> they lived in it. For the Spurs series only, we split every minute of PBP between consecutive events into three buckets from NYK's perspective: <strong>leading</strong>, <strong>tied</strong>, or <strong>trailing</strong>.
+        </p>
+        <div class="blog-table-wrap">
+          <table class="blog-math-table">
+            <thead>
+              <tr>
+                <th>Finals vs SAS</th>
+                <th>Min leading</th>
+                <th>Min tied</th>
+                <th>Min trailing</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>G1 @ SAS</td><td>19.5</td><td>1.8</td><td>27.1</td><td>W</td></tr>
+              <tr><td>G2 @ SAS</td><td>23.9</td><td>1.6</td><td>22.5</td><td>W</td></tr>
+              <tr><td>G3 vs SAS</td><td>7.7</td><td>2.9</td><td>39.5</td><td>L</td></tr>
+              <tr><td>G4 vs SAS</td><td>0.9</td><td>0.5</td><td>46.6</td><td>W</td></tr>
+              <tr><td>G5 @ SAS</td><td>5.3</td><td>3.0</td><td>42.3</td><td>W</td></tr>
+              <tr><td><strong>Series total</strong></td><td><strong>57.3 (23%)</strong></td><td><strong>9.8 (4%)</strong></td><td><strong>178.0 (73%)</strong></td><td><strong>4–1</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="blog-figure">
+          <img src="images/nyk/sas-time-leading.png" alt="Stacked bar chart of minutes leading, tied, and trailing vs Spurs per Finals game and series total" loading="lazy" width="840" height="330" />
+          <figcaption>Game clock vs SAS — blue leading, gray tied, red trailing. Game 4 (29-pt comeback win) shows NYK ahead for under one minute of regulation.</figcaption>
+        </figure>
+        <p>
+          NYK spent <strong>73% of Finals clock trailing</strong> San Antonio — and still closed in five. The road wins (Games 1–2) were the most balanced on the clock; the closeout path (Games 4–5) was almost entirely played from behind on the scoreboard.
+        </p>
+        <p>
+          Game 4 is the clearest link between comeback depth and clock share: a 29-point max deficit, but more importantly <strong>46.6 minutes trailing vs 0.9 leading</strong>. That's not a team that controlled the game — it's a team that survived it long enough for a run to matter.
+        </p>
+
         <h3>Who Carried Them</h3>
         <div class="blog-table-wrap">
           <table class="blog-math-table">
@@ -270,38 +303,8 @@
           Brunson was the engine — nearly double the next option's scoring load. KAT led the core in plus/minus despite modest PPG: rim protection, spacing, and foul-drawing don't always show up in the points column. OG at 20.1 PPG on lower usage is high-leverage scoring from a 3-and-D profile. Hart and Bridges were connective tissue — championship rosters need glue guys who don't need the ball.
         </p>
 
-        <h3>How the SQL Layer Works</h3>
-        <p>
-          The analysis pipeline mirrors how a production analytics stack would treat this question:
-        </p>
-        <ol>
-          <li><strong>Raw PBP</strong> loaded from parquet into DuckDB (<code>games_enriched</code> view with running score via <code>LAST_VALUE</code> window functions; NYK home/away from <code>nyk_loc</code> on team rows only — early period events have blank <code>location</code>).</li>
-          <li><strong>Quarter splits</strong> via <code>LAG()</code> on end-of-period scores — no manual pandas groupby.</li>
-          <li><strong>Clutch filter</strong> as a SQL view: <code>period >= 4 AND secs_remaining <= 300 AND ABS(live_margin) <= 5</code>.</li>
-          <li><strong>Box scores</strong> joined on <code>gameId</code> for efficiency, player aggregates, and W/L splits.</li>
-        </ol>
-        <p>
-          Python handles charts. SQL owns the truth. That separation is deliberate — it's the same workflow you'd use if this were a nightly pipeline instead of a one-off championship postmortem.
-        </p>
-
-        <h3>The Honest Caveat</h3>
-        <p>
-          Nineteen games is a small sample. Playoff intensity, matchup-specific game plans, and injury context don't fully encode into net rating or clutch swing. You cannot backtest "championship probability" from this alone.
-        </p>
-        <p>
-          The 2026 Knicks also didn't defy analytics every night. When they shot well, the numbers loved them. They defied analytics on the nights they <em>couldn't</em> shoot — and still found 16 wins. That is harder to model than pure efficiency would suggest.
-        </p>
-
-        <h3>The Practical Takeaway</h3>
-        <ol>
-          <li>Aggregate net rating lied about how this team actually won — the path was volatile even when the average was elite.</li>
-          <li>Clutch splits from box-score tables miss the story; PBP-defined clutch windows showed NYK often gave ground late.</li>
-          <li>Quarter splits reveal adjustment (Q2 surges) better than full-game efficiency.</li>
-          <li>Comeback frequency is a separate skill from shooting efficiency — models that conflate them will misprice playoff series.</li>
-          <li>When building props or game models, separate <em>process</em> metrics from <em>path</em> metrics. The Knicks had elite process on average and a chaotic path almost every game.</li>
-        </ol>
         <p class="blog-post-callout">
-          The 2026 Knicks were 16–3 with a +15.3 net rating — and they trailed by 5+ in 11 of 19 playoff games, lost ground in clutch time more often than not, and led wire-to-wire exactly once. Analytics didn't lie about how good they were. They lied about how comfortable it was getting there. That's the gap worth modeling.
+          The 2026 Knicks were 16–3 with a +15.3 net rating — and they trailed by 5+ in 11 of 19 playoff games, lost ground in clutch time more often than not, and led wire-to-wire exactly once. Analytics didn't lie about how good they were. They lied about how comfortable it was getting there.
         </p>
       </article>
     </main>
