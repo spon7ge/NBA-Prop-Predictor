@@ -198,6 +198,16 @@ def _parse_args() -> argparse.Namespace:
     )
 
     p.add_argument(
+        "--db-upsert",
+        action="store_true",
+        help=(
+            "Upsert each raw DataFrame (player_base, player_adv, team_base, "
+            "team_adv, start_positions) into its raw.* Supabase table right "
+            "after fetching. Requires SUPABASE_DB_URL in .env and migration "
+            "scripts/migrations/001_raw_gamelogs.sql to have been applied."
+        ),
+    )
+    p.add_argument(
         "--skip-nba-fetch",
         action="store_true",
         help="Skip NBA API + start-position fetch; load frame from --parquet",
@@ -259,6 +269,7 @@ def main() -> int:
             start_position_delay=args.start_position_delay,
             start_position_workers=args.start_position_workers,
             checkpoint_path=str(ck_path),
+            db_upsert=args.db_upsert,
         )
         df = logs.build().get_df()
         print(f"✓ Built — shape: {df.shape}")

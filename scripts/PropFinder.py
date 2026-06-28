@@ -13,8 +13,8 @@ from src.scrapers.AFLPropFinder import AFLPropFinder
 from src.scrapers.TeamLines import fetchTeamLines
 from datetime import datetime
 
-nba_props = NBAPropFinder(region='us,eu')
-nba_props = NBAPropFinder(region='us_dfs')
+nba_props = NBAPropFinder(region='us,eu', db_upsert=True)
+nba_props = NBAPropFinder(region='us_dfs', db_upsert=True)
 # mlb_props = MLBPropFinder(region='us,eu')
 # soccer_props = SoccerPropFinder(region='us')
 # afl_props = AFLPropFinder(region='au')

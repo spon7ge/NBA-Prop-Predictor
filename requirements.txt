@@ -21,6 +21,9 @@ nba-api>=1.2.1
 # Utilities
 pytz>=2023.3
 python-dotenv>=1.0.0
+supabase>=2.0.0
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
 requests>=2.31.0
 playwright>=1.40.0
 certifi>=2024.0.0

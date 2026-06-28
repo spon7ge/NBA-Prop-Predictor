@@ -14,6 +14,7 @@ __pycache__/
 **/catboost_info/
 
 .env
+data/credentials/
 # Ignore all data in TRAIN_DATA (files are too large, can be redownloaded)
 DATA/CSV_FILES/TRAIN_DATA/
 data/processed/training/

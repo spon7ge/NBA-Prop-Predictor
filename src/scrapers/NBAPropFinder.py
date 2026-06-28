@@ -6,17 +6,17 @@ from pathlib import Path
 from datetime import datetime
 
 class NBAPropFinder():
-    def __init__(self, region='us_dfs'):
-        # Get data only from Odds API
+    def __init__(self, region='us_dfs', db_upsert: bool = False):
         print("Scraping Odds API...")
         self.region = region
-        # Store timestamp when data is pulled
         self.pull_timestamp = datetime.now()
         self.odds_data = Odds_Scraper(region=region)
         print("Organizing Data...")
         self.organizeData()
         self.dataframe = self.getDataFrame()
         self.save_data()
+        if db_upsert:
+            self.save_to_db()
         
     def organizeData(self):
         # Create maps for all the different prop types
@@ -113,4 +113,31 @@ class NBAPropFinder():
             print(f"Data pulled at: {self.pull_timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
         else:
             print("No NBA data to save (likely off-season)")
+
+    def save_to_db(self) -> None:
+        """Upsert the current prop lines into raw.props_dfs or raw.props_us.
+
+        Table is chosen by region:
+            us_dfs          → raw.props_dfs   (DFS books: PrizePicks, Underdog, …)
+            anything else   → raw.props_us    (US sportsbooks: DraftKings, FanDuel, …)
+
+        The OVER/UNDER column is renamed to over_under so it is a valid SQL
+        identifier. All other column names are lowercased by upsert_df().
+
+        Requires SUPABASE_DB_URL in .env and migration
+        scripts/migrations/002_raw_props.sql to have been applied.
+        """
+        if self.dataframe.empty:
+            print("No prop data to upsert (likely off-season)")
+            return
+
+        table = "props_dfs" if self.region == "us_dfs" else "props_us"
+
+        df = self.dataframe.rename(columns={"OVER/UNDER": "OVER_UNDER"})
+
+        try:
+            from src.utils.db import upsert_df
+            upsert_df(table, df)
+        except Exception as exc:
+            print(f"DB upsert failed for raw.{table}: {exc}")
     

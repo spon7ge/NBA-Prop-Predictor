@@ -76,8 +76,29 @@ class NBAGameLogs:
         skip_start_positions: bool = False,
         start_position_workers: int = 8,
         run_all_batches: bool = True,
+        db_upsert: bool = False,
     ) -> 'NBAGameLogs':
+        """Fetch all five source DataFrames from the NBA API.
+
+        Parameters
+        ----------
+        db_upsert:
+            When ``True``, each DataFrame is upserted into its ``raw.*`` table
+            in Supabase immediately after it is fetched — before ``.build()``
+            ever runs.  Requires ``SUPABASE_DB_URL`` in the environment and the
+            migration ``scripts/migrations/001_raw_gamelogs.sql`` to have been
+            applied.  Defaults to ``False`` so all existing callers are
+            unaffected.
+        """
         print(f"Fetching data for {self.season} {self.season_type}...")
+
+        def _upsert_raw(table: str, df) -> None:
+            """Lazy-import upsert_df so missing env vars only matter when db_upsert=True."""
+            try:
+                from src.utils.db import upsert_df
+                upsert_df(table, df)
+            except Exception as exc:
+                logger.warning("raw upsert failed for %s: %s", table, exc)
 
         def _player_logs(measure):
             return playergamelogs.PlayerGameLogs(
@@ -103,12 +124,23 @@ class NBAGameLogs:
             }
             self._player_base = futs['player_base'].result()
             print("✓ Player base")
+            if db_upsert:
+                _upsert_raw("player_base", self._player_base)
+
             self._player_adv = futs['player_advanced'].result()
             print("✓ Player advanced")
+            if db_upsert:
+                _upsert_raw("player_adv", self._player_adv)
+
             self._team_base = futs['team_base'].result()
             print("✓ Team base")
+            if db_upsert:
+                _upsert_raw("team_base", self._team_base)
+
             self._team_adv = futs['team_advanced'].result()
             print("✓ Team advanced")
+            if db_upsert:
+                _upsert_raw("team_adv", self._team_adv)
 
         if skip_start_positions:
             print("⚡ Skipping START_POSITION fetch")
@@ -120,6 +152,8 @@ class NBAGameLogs:
                 workers=start_position_workers,
                 run_all_batches=run_all_batches,
             )
+            if db_upsert and self._start_positions is not None:
+                _upsert_raw("start_positions", self._start_positions)
 
         return self
 
