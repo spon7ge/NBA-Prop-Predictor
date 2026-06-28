@@ -69,12 +69,58 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
 
 
 def _clean_val(v):
-    """Convert pandas NA sentinels to Python None for Postgres NULL."""
+    """Convert pandas NA / numpy sentinels to JSON-safe Python values."""
     if v is pd.NaT or v is pd.NA:
         return None
     if isinstance(v, float) and math.isnan(v):
         return None
+    if isinstance(v, (np.integer,)):
+        return int(v)
+    if isinstance(v, (np.floating,)):
+        return float(v)
+    if isinstance(v, pd.Timestamp):
+        return v.isoformat()
+    if isinstance(v, datetime):
+        return v.isoformat()
     return v
+
+
+def _upsert_df_postgres(
+    table: str,
+    records: list[dict],
+    schema: str,
+    conflict_cols: list[str],
+    cols: list[str],
+    batch_size: int,
+) -> None:
+    col_list = ", ".join(f'"{c}"' for c in cols)
+    params = ", ".join(f":{c}" for c in cols)
+    conflict = ", ".join(f'"{c}"' for c in conflict_cols)
+    update_cols = [c for c in cols if c not in conflict_cols]
+    updates = ", ".join(f'"{c}" = EXCLUDED."{c}"' for c in update_cols)
+
+    sql = text(
+        f"INSERT INTO {schema}.{table} ({col_list}) "
+        f"VALUES ({params}) "
+        f"ON CONFLICT ({conflict}) DO UPDATE SET {updates}"
+    )
+
+    engine = get_engine()
+    with engine.begin() as conn:
+        for i in range(0, len(records), batch_size):
+            conn.execute(sql, records[i : i + batch_size])
+
+
+def _upsert_df_supabase(
+    table: str,
+    records: list[dict],
+    schema: str,
+    conflict_cols: list[str],
+    batch_size: int,
+) -> None:
+    on_conflict = ",".join(conflict_cols)
+    for i in range(0, len(records), batch_size):
+        upsert(table, schema, records[i : i + batch_size], on_conflict=on_conflict)
 
 
 def upsert_df(
@@ -118,27 +164,21 @@ def upsert_df(
         {k: _clean_val(v) for k, v in row.items()}
         for row in df.to_dict(orient="records")
     ]
-
     cols = list(df.columns)
-    col_list  = ", ".join(f'"{c}"' for c in cols)
-    params    = ", ".join(f":{c}" for c in cols)
-    conflict  = ", ".join(f'"{c}"' for c in conflict_cols)
-    # Update every non-PK column, including fetched_at, on conflict.
-    update_cols = [c for c in cols if c not in conflict_cols]
-    updates = ", ".join(f'"{c}" = EXCLUDED."{c}"' for c in update_cols)
 
-    sql = text(
-        f"INSERT INTO {schema}.{table} ({col_list}) "
-        f"VALUES ({params}) "
-        f"ON CONFLICT ({conflict}) DO UPDATE SET {updates}"
-    )
+    # Prefer direct Postgres (faster for large frames). Fall back to supabase-py
+    # when SUPABASE_DB_URL is missing or the pooler connection string is wrong.
+    via = "postgres"
+    try:
+        _upsert_df_postgres(table, records, schema, conflict_cols, cols, batch_size)
+    except Exception as exc:
+        if not os.environ.get("SUPABASE_URL"):
+            raise
+        print(f"  → Postgres wire failed ({exc.__class__.__name__}); using supabase-py")
+        _upsert_df_supabase(table, records, schema, conflict_cols, batch_size)
+        via = "supabase-py"
 
-    engine = get_engine()
-    with engine.begin() as conn:
-        for i in range(0, len(records), batch_size):
-            conn.execute(sql, records[i : i + batch_size])
-
-    print(f"  ✓ raw.{table} — {len(records):,} rows upserted")
+    print(f"  ✓ raw.{table} — {len(records):,} rows upserted ({via})")
 
 
 if __name__ == "__main__":
