@@ -1,21 +1,6 @@
 import pandas as pd
 
-# Order must match training / saved quantile bundle `feature_names`.
-MIN_FEATURES = [
-    "MIN_10_ewm",
-    "MIN_SEASON_MEAN",
-    "STARTER_ROLL10_PCT",
-    "CONSEC_STARTS",
-    "MIN_RATE_OF_CHANGE",
-    "TEAM_MIN_RANK_L10",
-    "TEAM_USG_RANK_L10",
-    # for q10 & q90
-    "MIN_P10_L10",
-    "MIN_P90_L10",
-    "MIN_STD_L10",
-    "MIN_SEASON_STD",
-    "SPD_10_ewm",
-]
+from src.features.min_features import MIN_FEATURES
 
 
 def _consec_starts(starting_series: pd.Series) -> float:

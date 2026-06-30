@@ -1,24 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from src.features.ppm_features import PPM_FEATURES
 from src.utils.helper_functions import findOpp
-
-# Order must match training / saved quantile bundle `feature_names`.
-PPM_FEATURES = [
-    "PTS_PER_MIN_season_avg",
-    "PTS_PER_MIN_X_OPP_PTS_ALLOWED",
-    "CFGA_PER_MIN_X_OPP_FG_PCT_ALLOWED",
-    "FGA_PER_MIN_X_OPP_DEF_RATING",
-    "FG3A_PER_MIN_X_OPP_FG3A_ALLOWED",
-    "FTA_PER_MIN_X_OPP_FTA_ALLOWED",
-    "PPM_SEASON_STD",
-    "TEAM_PTS_PER_MIN_RANK_L10",
-    "TEAM_USG_RANK_L10",
-    "TEAM_MIN_RANK_L10",
-    # percentiles
-    "PPM_P10_L10",
-    "PPM_P90_L10",
-]
 
 # ── Expected df columns for opponent lookups ───────────────────────────────────
 # OPP_PTS        : pts allowed per game (on opponent team rows)
@@ -168,17 +152,20 @@ def ppm_pipeline(df: pd.DataFrame, name: str, date: str):
         pdf["FGA_PER_MIN"] = pdf["FGA"].astype(float) / min_s
     if "FTA_PER_MIN" not in pdf.columns:
         pdf["FTA_PER_MIN"] = pdf["FTA"].astype(float) / min_s
-    if "FG3A_PER_MIN" not in pdf.columns:
-        pdf["FG3A_PER_MIN"] = pdf["FG3A"].astype(float) / min_s
+    if "CFGA_PER_MIN" not in pdf.columns:
+        pdf["CFGA_PER_MIN"] = pdf["CFGA"].astype(float) / min_s
+    if "3PA_PER_MIN" not in pdf.columns:
+        pdf["3PA_PER_MIN"] = pdf["FG3A"].astype(float) / min_s
 
     # ── Player season average (expanding) ─────────────────────────────────────
     ppm_season_avg = _season_expanding_tail(pdf, "PTS_PER_MIN")
 
     # ── Player EWM(span=10) — used as player side of interaction terms ─────────
-    ppm_ewm10  = _ewm10(pdf, "PTS_PER_MIN")
-    fga_ewm10  = _ewm10(pdf, "FGA_PER_MIN")
-    fta_ewm10  = _ewm10(pdf, "FTA_PER_MIN")
-    fg3a_ewm10 = _ewm10(pdf, "FG3A_PER_MIN")
+    ppm_ewm10   = _ewm10(pdf, "PTS_PER_MIN")
+    fga_ewm10   = _ewm10(pdf, "FGA_PER_MIN")
+    cfga_ewm10  = _ewm10(pdf, "CFGA_PER_MIN")
+    fta_ewm10   = _ewm10(pdf, "FTA_PER_MIN")
+    fg3a_ewm10  = _ewm10(pdf, "3PA_PER_MIN")
 
     # ── Opponent defensive stats (prior expanding mean from df) ───────────────
     opp_pts_allowed  = _opp_team_prior_metric(df, opp_abbr, "OPP_PTS",        as_of_date=date)
@@ -224,9 +211,9 @@ def ppm_pipeline(df: pd.DataFrame, name: str, date: str):
     return [
         ppm_season_avg,                                  # PTS_PER_MIN_season_avg
         _interaction(ppm_ewm10,  opp_pts_allowed),       # PTS_PER_MIN_X_OPP_PTS_ALLOWED
-        _interaction(fga_ewm10,  opp_fg_pct),            # CFGA_PER_MIN_X_OPP_FG_PCT_ALLOWED
-        _interaction(fga_ewm10,  opp_def_rating),        # FGA_PER_MIN_X_OPP_DEF_RATING
-        _interaction(fg3a_ewm10, opp_fg3a_allowed),      # FG3A_PER_MIN_X_OPP_FG3A_ALLOWED
+        _interaction(cfga_ewm10, opp_fg_pct),           # CFGA_PER_MIN_X_OPP_FG_PCT_ALLOWED
+        _interaction(fga_ewm10,  opp_def_rating),         # FGA_PER_MIN_X_OPP_DEF_RATING
+        _interaction(fg3a_ewm10, opp_fg3a_allowed),       # 3PA_PER_MIN_X_OPP_TEAM_FG3A_ALLOWED
         _interaction(fta_ewm10,  opp_fta_allowed),       # FTA_PER_MIN_X_OPP_FTA_ALLOWED
         ppm_season_std,                                  # PPM_SEASON_STD
         ppm_rank,                                        # TEAM_PTS_PER_MIN_RANK_L10
