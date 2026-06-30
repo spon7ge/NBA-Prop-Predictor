@@ -33,6 +33,21 @@ _TRACKING_SILVER_RENAME = {
     source: legacy for legacy, source in _TRACK_V3_LEGACY_ALIASES.items()
 }
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_DEFAULT_POSITIONS = _PROJECT_ROOT / "data/raw/player_positions/player_positions.csv"
+_DEFAULT_REFERENCE = _PROJECT_ROOT / "data/raw/season_stats/S26.csv"
+_DEFAULT_ROTOWIRE = _PROJECT_ROOT / "data/raw/rotowire/rotowire_nba_2025.csv"
+
+
+def _resolve_data_path(path: str | Path) -> Path:
+    """Resolve repo-relative data paths regardless of notebook/script cwd."""
+    p = Path(path)
+    if p.is_absolute():
+        return p
+    if p.exists():
+        return p.resolve()
+    return (_PROJECT_ROOT / p).resolve()
+
 
 def _db_to_frame(df: pd.DataFrame) -> pd.DataFrame:
     """``snake_case`` Postgres columns → ``SCREAMING_SNAKE`` modeling columns."""
@@ -63,10 +78,18 @@ def read_raw_tables(season: str, season_type: str) -> dict[str, pd.DataFrame]:
     game_filter, extra = _season_type_game_id_filter(season_type)
     where = f"season_year = %(season)s AND {game_filter}"
     params = {"season": season, **extra}
+    # start_positions has game_id/player_id only — scope via player_base game IDs.
+    start_positions_where = (
+        "game_id IN ("
+        "SELECT DISTINCT game_id FROM raw.player_base "
+        f"WHERE season_year = %(season)s AND {game_filter}"
+        ")"
+    )
 
     out: dict[str, pd.DataFrame] = {}
     for table in RAW_TABLES:
-        df = read_df(table, where=where, params=params)
+        table_where = start_positions_where if table == "start_positions" else where
+        df = read_df(table, where=table_where, params=params)
         if table == "start_positions":
             out[table] = _prepare_start_positions(df) if not df.empty else df
         else:
@@ -83,15 +106,20 @@ def merge_gamelogs(
     start_positions: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Merge five bronze tables into one player-game frame (no name/rotowire joins)."""
-    player_merged = player_base.merge(
-        player_adv,
-        on=["GAME_ID", "PLAYER_ID", "TEAM_ID"],
-        suffixes=("", "_adv"),
-    )
+    if player_adv is not None and not player_adv.empty:
+        player_merged = player_base.merge(
+            player_adv,
+            on=["GAME_ID", "PLAYER_ID", "TEAM_ID"],
+            suffixes=("", "_adv"),
+        )
+    else:
+        player_merged = player_base.copy()
 
     if start_positions is not None and not start_positions.empty:
         track_cols = ["GAME_ID", "PLAYER_ID"] + [
-            c for c in start_positions.columns if c not in ("GAME_ID", "PLAYER_ID")
+            c
+            for c in start_positions.columns
+            if c not in ("GAME_ID", "PLAYER_ID") and c not in player_merged.columns
         ]
         player_merged = player_merged.merge(
             start_positions[track_cols],
@@ -99,11 +127,14 @@ def merge_gamelogs(
             how="left",
         )
 
-    team_merged = team_base.merge(
-        team_adv,
-        on=["GAME_ID", "TEAM_ID"],
-        suffixes=("_base", "_adv"),
-    )
+    if team_adv is not None and not team_adv.empty:
+        team_merged = team_base.merge(
+            team_adv,
+            on=["GAME_ID", "TEAM_ID"],
+            suffixes=("_base", "_adv"),
+        )
+    else:
+        team_merged = team_base.copy()
 
     opp_team = team_merged.copy()
     opp_team = opp_team.add_prefix("TEAM_").rename(columns={
@@ -111,7 +142,7 @@ def merge_gamelogs(
         "TEAM_TEAM_ID": "OPP_TEAM_ID",
     })
     opp_team.columns = [
-        col.replace("TEAM_", "OPP_") if col.startswith("TEAM_") else col
+        ("OPP_" + col[5:]) if col.startswith("TEAM_") else col
         for col in opp_team.columns
     ]
 
@@ -134,6 +165,9 @@ def _redundant_cols(prefix: str) -> list[str]:
         "SEASON_YEAR_adv", "TEAM_ABBREVIATION_adv", "TEAM_NAME_adv",
         "GAME_DATE_adv", "MATCHUP_adv", "WL_adv", "MIN_adv",
         "AVAILABLE_FLAG_base", "AVAILABLE_FLAG_adv",
+        # team_base-only path (no team_adv merge → no _base/_adv suffixes)
+        "SEASON_YEAR", "TEAM_ABBREVIATION", "TEAM_NAME",
+        "GAME_DATE", "MATCHUP", "WL", "MIN", "AVAILABLE_FLAG",
     ]
     return [f"{prefix}{s}" for s in suffixes]
 
@@ -241,9 +275,15 @@ def merge_rotowire(player_df: pd.DataFrame, rotowire_long: pd.DataFrame) -> pd.D
 
 
 def merge_positions(df: pd.DataFrame, positions_path: str | Path) -> pd.DataFrame:
-    pos = pd.read_csv(positions_path).rename(
-        columns={"name_s26": "PLAYER_NAME", "pos": "POS", "age": "AGE"}
-    )
+    pos = pd.read_csv(positions_path)
+    rename = {"pos": "POS", "age": "AGE"}
+    if "name_s26" in pos.columns:
+        rename["name_s26"] = "PLAYER_NAME"
+    elif "name" in pos.columns:
+        rename["name"] = "PLAYER_NAME"
+    else:
+        raise ValueError("Positions CSV must contain 'name_s26' or 'name' column")
+    pos = pos.rename(columns=rename)[["PLAYER_NAME", "POS", "AGE"]]
     return df.merge(pos, on="PLAYER_NAME", how="left")
 
 
@@ -261,7 +301,7 @@ def enrich_gamelogs_silver(
     out["IS_PLAYOFF"] = is_playoff
 
     ref_path = Path(reference_season_csv)
-    ref = pd.read_csv(ref_path)
+    ref = pd.read_csv(ref_path, low_memory=False)
     if "PLAYER_NAME" not in ref.columns:
         raise ValueError("Reference CSV must contain PLAYER_NAME")
     canon = _build_name_canon_map(ref["PLAYER_NAME"])
@@ -282,13 +322,16 @@ def build_gamelogs_silver(
     season_type: str,
     *,
     raw_frames: dict[str, pd.DataFrame] | None = None,
-    positions_path: str | Path = "data/raw/player_positions/nba_2026_players.csv",
-    reference_season_csv: str | Path = "data/raw/season_stats/S26.csv",
-    rotowire_csv: str | Path = "data/raw/rotowire/rotowire_nba_2025.csv",
-    is_playoff: int = 0,
+    positions_path: str | Path = _DEFAULT_POSITIONS,
+    reference_season_csv: str | Path = _DEFAULT_REFERENCE,
+    rotowire_csv: str | Path = _DEFAULT_ROTOWIRE,
+    is_playoff: int | None = None,
     skip_rotowire: bool = False,
 ) -> pd.DataFrame:
     """Merge raw tables + positions + name canon + rotowire → silver frame."""
+    if is_playoff is None:
+        is_playoff = 1 if season_type == "Playoffs" else 0
+
     print(f"── Silver: {season} {season_type} ──")
 
     if raw_frames is None:
@@ -300,20 +343,23 @@ def build_gamelogs_silver(
             for k, v in raw_frames.items()
         }
 
-    for key in ("player_base", "player_adv", "team_base", "team_adv"):
+    for key in ("player_base", "team_base"):
         if key not in raw_frames or raw_frames[key].empty:
             raise ValueError(f"Missing or empty raw frame: {key}")
 
-    positions_path = Path(positions_path)
+    for key in ("player_adv", "team_adv"):
+        if key not in raw_frames or raw_frames[key].empty:
+            print(f"  ⚠ raw.{key} empty — silver merge will omit advanced stats")
+
+    positions_path = _resolve_data_path(positions_path)
     if not positions_path.exists():
         raise FileNotFoundError(f"Positions file not found: {positions_path}")
-    ref_path = Path(reference_season_csv)
+    ref_path = _resolve_data_path(reference_season_csv)
     if not ref_path.exists():
         raise FileNotFoundError(f"Reference CSV not found: {ref_path}")
-    if not skip_rotowire:
-        ro_path = Path(rotowire_csv)
-        if not ro_path.exists():
-            raise FileNotFoundError(f"Rotowire CSV not found: {ro_path}")
+    rotowire_path = _resolve_data_path(rotowire_csv)
+    if not skip_rotowire and not rotowire_path.exists():
+        raise FileNotFoundError(f"Rotowire CSV not found: {rotowire_path}")
 
     df = merge_gamelogs(
         raw_frames["player_base"],
@@ -327,15 +373,15 @@ def build_gamelogs_silver(
     df = enrich_gamelogs_silver(
         df,
         positions_path=positions_path,
-        reference_season_csv=reference_season_csv,
-        rotowire_csv=rotowire_csv,
+        reference_season_csv=ref_path,
+        rotowire_csv=rotowire_path,
         is_playoff=is_playoff,
         skip_rotowire=skip_rotowire,
     )
 
     missing = sorted(
         set(df["PLAYER_NAME"].astype(str))
-        - set(pd.read_csv(reference_season_csv)["PLAYER_NAME"].astype(str))
+        - set(pd.read_csv(ref_path, low_memory=False)["PLAYER_NAME"].astype(str))
     )
     print(f"  names — {df['PLAYER_NAME'].nunique()} unique | missing vs reference: {len(missing)}")
     if missing:

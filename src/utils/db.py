@@ -56,7 +56,15 @@ def get_engine():
     return create_engine(url, pool_pre_ping=True)
 
 
-# Conflict column defaults — one entry per raw.* table.
+# Column renames applied before silver upload (merge artifact cleanup).
+_SILVER_COLUMN_RENAME: dict[str, str] = {
+    "OPP_OPP_ABBREVIATION_base": "OPP_TEAM_ABBREVIATION",
+    "OPP_OPP_NAME_base": "OPP_TEAM_NAME",
+    "OPP_OPP_ABBREVIATION": "OPP_TEAM_ABBREVIATION",
+    "OPP_OPP_NAME": "OPP_TEAM_NAME",
+}
+
+# Conflict column defaults — one entry per raw.* / silver.* table.
 _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     # game-log tables (NBAGameLogs.fetch)
     "player_base":     ["game_id", "player_id"],
@@ -69,6 +77,8 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     # prop-line tables (NBAPropFinder)
     "props_dfs": ["bookmaker", "category", "name", "over_under", "commence_time"],
     "props_us":  ["bookmaker", "category", "name", "over_under", "commence_time"],
+    # silver layer (build_gamelogs_silver)
+    "player_gamelogs": ["game_id", "player_id"],
 }
 
 
@@ -76,7 +86,13 @@ def _normalize_col(name: str) -> str:
     """SCREAMING_SNAKE or camelCase → postgres snake_case (``gameId`` → ``game_id``)."""
     if "_" in name:
         return name.lower()
-    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", "_", name).lower()
+    s = re.sub(
+        r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])",
+        "_",
+        name,
+    ).lower()
+    # NBA stats: FG3M/FG3A → fg3m/fg3a (not fg3_m/fg3_a)
+    return re.sub(r"(\d)_([a-z])", r"\1\2", s)
 
 
 def _clean_val(v):
@@ -166,11 +182,13 @@ def upsert_df(
     schema: str = "raw",
     conflict_cols: list[str] | None = None,
     batch_size: int = 2000,
+    *,
+    lineage_col: str | None = "fetched_at",
 ) -> None:
     """Upsert a DataFrame into a Postgres/Supabase table.
 
     - Column names are normalized to Postgres snake_case (``GAME_ID``, ``gameId`` → ``game_id``).
-    - A ``fetched_at`` timestamp is stamped on every row.
+    - A lineage timestamp column (default ``fetched_at``) is stamped on every row.
     - NaN / NaT become NULL.
     - Rows are sent in batches of ``batch_size`` via ``execute_values`` (Postgres)
       or PostgREST upserts (supabase-py fallback).
@@ -196,7 +214,9 @@ def upsert_df(
 
     df = df.copy()
     df.columns = [_normalize_col(c) for c in df.columns]
-    df["fetched_at"] = datetime.now(timezone.utc)
+    df = _align_df_to_table(df, schema=schema, table=table)
+    if lineage_col:
+        df[lineage_col] = datetime.now(timezone.utc)
 
     cols, rows = _df_to_tuples(df)
 
@@ -218,7 +238,80 @@ def upsert_df(
         _upsert_df_supabase(table, records, schema, conflict_cols, batch_size)
         via = "supabase-py"
 
-    print(f"  ✓ raw.{table} — {len(rows):,} rows upserted ({via})")
+    print(f"  ✓ {schema}.{table} — {len(rows):,} rows upserted ({via})") 
+
+
+def prepare_silver_df(
+    df: pd.DataFrame,
+    *,
+    season_type: str,
+) -> pd.DataFrame:
+    """Normalize a ``build_gamelogs_silver`` frame for ``silver.player_gamelogs`` upload."""
+    out = df.copy()
+    rename = {k: v for k, v in _SILVER_COLUMN_RENAME.items() if k in out.columns}
+    if rename:
+        out = out.rename(columns=rename)
+    out["SEASON_TYPE"] = season_type
+    if "GAME_DATE" in out.columns:
+        out["GAME_DATE"] = pd.to_datetime(out["GAME_DATE"], errors="coerce").dt.date
+    return out
+
+
+@lru_cache(maxsize=32)
+def _table_columns(schema: str, table: str) -> frozenset[str]:
+    q = """
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = %(schema)s AND table_name = %(table)s
+    """
+    cols = pd.read_sql(q, get_engine(), params={"schema": schema, "table": table})[
+        "column_name"
+    ]
+    return frozenset(cols.astype(str).str.lower())
+
+
+def _align_df_to_table(
+    df: pd.DataFrame,
+    *,
+    schema: str,
+    table: str,
+) -> pd.DataFrame:
+    """Keep only columns that exist in the target table (snake_case names)."""
+    table_cols = _table_columns(schema, table)
+    out = df.copy()
+    out.columns = [_normalize_col(c) for c in out.columns]
+    keep = [c for c in out.columns if c in table_cols]
+    extra = sorted(set(out.columns) - table_cols)
+    if extra:
+        print(f"  → dropping {len(extra)} column(s) not in {schema}.{table}: {extra[:8]}{'…' if len(extra) > 8 else ''}")
+    return out[keep]
+
+
+def upsert_silver(
+    df: pd.DataFrame,
+    *,
+    season_type: str,
+    table: str = "player_gamelogs",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert a silver game-log frame into ``silver.player_gamelogs``.
+
+    Run ``scripts/migrations/003_silver_gamelogs.sql`` in Supabase before the first upload.
+    """
+    upload = prepare_silver_df(df, season_type=season_type)
+    upload = _align_df_to_table(
+        upload,
+        schema="silver",
+        table=table,
+    )
+    upsert_df(
+        table,
+        upload,
+        schema="silver",
+        conflict_cols=["game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col="built_at",
+    )
 
 
 def read_df(

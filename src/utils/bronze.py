@@ -72,7 +72,8 @@ def fetch_team_base(season: str, season_type: str) -> None:
         lambda: teamgamelogs.TeamGameLogs(
             season_nullable=season,
             season_type_nullable=season_type,
-            measure_type_team_game_logs_nullable="Base",
+            # nba_api quirk: TeamGameLogs uses the *player* measure param name.
+            measure_type_player_game_logs_nullable="Base",
         ).get_data_frames()[0],
         label="team_base",
     )
@@ -85,7 +86,7 @@ def fetch_team_adv(season: str, season_type: str) -> None:
         lambda: teamgamelogs.TeamGameLogs(
             season_nullable=season,
             season_type_nullable=season_type,
-            measure_type_team_game_logs_nullable="Advanced",
+            measure_type_player_game_logs_nullable="Advanced",
         ).get_data_frames()[0],
         label="team_adv",
     )
