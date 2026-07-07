@@ -1,0 +1,26 @@
+Run the full pipeline
+cd dbt
+dbt run          # builds bronze → silver → gold in dependency order
+dbt test         # validates not_null + accepted_values constraints
+
+common commands:
+python scripts/run_dbt.py debug              # test DB connection first
+python scripts/run_dbt.py run                # full bronze → silver → gold
+python scripts/run_dbt.py run --select gold  # gold layer only
+python scripts/run_dbt.py test               # run all yml tests
+python scripts/run_dbt.py run --select silver_player_gamelogs+  # a model + all downstream
+
+Singular SQL tests (dbt/test/)
+assert_silver_player_gamelogs_unique_game_player.sql
+No duplicate (game_id, player_id) — composite PK
+assert_gold_player_game_stats_unique_game_player.sql
+No duplicate (game_id, player_id) — no player appears twice per game
+assert_valid_team_abbreviations.sql
+team_abbreviation and opp_team_abbreviation are valid NBA tricodes
+assert_silver_games_home_away_differ.sql
+Home team ≠ away team in every game
+Run it:
+
+python scripts/run_dbt.py test                          # all tests
+python scripts/run_dbt.py test --select silver          # silver only
+python scripts/run_dbt.py test --select gold            # gold only
