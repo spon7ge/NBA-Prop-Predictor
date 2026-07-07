@@ -15,6 +15,13 @@ __pycache__/
 
 .env
 data/credentials/
+frontend/node_modules/
+frontend/dist/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
 # Ignore all data in TRAIN_DATA (files are too large, can be redownloaded)
 DATA/CSV_FILES/TRAIN_DATA/
 data/processed/training/

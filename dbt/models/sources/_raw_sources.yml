@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Untouched scraper / API landing tables in the raw schema.
+    schema: raw
+    tables:
+      - name: team_base
+        description: NBA team box-score logs (one row per team per game).
+      - name: props_dfs
+        description: DFS book player props (PrizePicks, Underdog, …).
+      - name: props_us
+        description: US sportsbook player props (DraftKings, FanDuel, …).
+      - name: games
+        description: Odds-API game events (home/away, commence time).

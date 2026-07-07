@@ -24,60 +24,62 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Update last updated timestamp
-        run: |
-          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          if [ -f docs/index.html ]; then
-            sed -i "s/BUILD_TIMESTAMP/$TIMESTAMP/g" docs/index.html
-          fi
-      
-      - name: Cache-bust slate assets (avoid stale CSS/JS on GitHub Pages)
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache-bust static pages (blog, contact, faq)
         run: |
           SHORT=$(echo "${{ github.sha }}" | cut -c1-7)
-          for f in docs/*.html; do
+          for f in frontend/public/*.html; do
             [ -f "$f" ] || continue
             sed -i "s/PAGES_ASSET_VERSION/$SHORT/g" "$f"
           done
-      
-      - name: Copy EV data (JSON slates + Underdog enriched line probs) to docs folder
+
+      - name: Copy EV data to frontend public folder
         run: |
-          mkdir -p docs/data/props/ev_analysis
-          cp data/props/ev_analysis/prizepicks.json docs/data/props/ev_analysis/prizepicks.json
-          cp data/props/ev_analysis/underdog.json docs/data/props/ev_analysis/underdog.json
-          cp data/props/ev_analysis/draftKings.json docs/data/props/ev_analysis/draftKings.json
-          cp data/props/ev_analysis/betr.json docs/data/props/ev_analysis/betr.json
+          mkdir -p frontend/public/data/props/ev_analysis
+          cp data/props/ev_analysis/prizepicks.json frontend/public/data/props/ev_analysis/prizepicks.json
+          cp data/props/ev_analysis/underdog.json frontend/public/data/props/ev_analysis/underdog.json
+          cp data/props/ev_analysis/draftKings.json frontend/public/data/props/ev_analysis/draftKings.json
+          cp data/props/ev_analysis/betr.json frontend/public/data/props/ev_analysis/betr.json
           if [ -f "data/props/ev_analysis/underdog_enriched.json" ]; then
-            cp data/props/ev_analysis/underdog_enriched.json docs/data/props/ev_analysis/underdog_enriched.json
+            cp data/props/ev_analysis/underdog_enriched.json frontend/public/data/props/ev_analysis/underdog_enriched.json
           fi
-          # Multi-leg slates (optional; skipped if not present yet)
           for f in \
             prizepicks_3leg.json underdog_3leg.json draftKings_3leg.json betr_3leg.json \
             prizepicks_5leg.json underdog_5leg.json draftKings_5leg.json betr_5leg.json \
             prizepicks_6leg.json underdog_6leg.json draftKings_6leg.json betr_6leg.json; do
             if [ -f "data/props/ev_analysis/$f" ]; then
-              cp "data/props/ev_analysis/$f" "docs/data/props/ev_analysis/$f"
+              cp "data/props/ev_analysis/$f" "frontend/public/data/props/ev_analysis/$f"
             fi
           done
-          # Copy enriched player data for the All Players view (slate.js reads dfs_enriched_latest.json)
-          mkdir -p docs/data/props/enriched
+          mkdir -p frontend/public/data/props/enriched
           if [ -f "data/props/enriched/dfs_enriched_latest.json" ]; then
-            cp data/props/enriched/dfs_enriched_latest.json docs/data/props/enriched/dfs_enriched_latest.json
+            cp data/props/enriched/dfs_enriched_latest.json frontend/public/data/props/enriched/dfs_enriched_latest.json
           else
             latest=$(ls -t data/props/enriched/dfs_enriched_*.json 2>/dev/null | grep -v latest | head -1)
             if [ -n "$latest" ]; then
-              cp "$latest" docs/data/props/enriched/dfs_enriched_latest.json
+              cp "$latest" frontend/public/data/props/enriched/dfs_enriched_latest.json
             fi
           fi
-      
+
+      - name: Install and build React frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs'
-      
+          path: './frontend/dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

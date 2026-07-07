@@ -48,8 +48,8 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--start-position-delay", type=float, default=2.5)
     p.add_argument("--start-position-workers", type=int, default=5)
     p.add_argument("--is-playoff-flag", type=int, default=1, choices=(0, 1))
-    p.add_argument("--rotowire-season", default="2025")
-    p.add_argument("--rotowire-csv", default="data/raw/rotowire/rotowire_nba_2025.csv")
+    p.add_argument("--rotowire-season", default=None, help="Rotowire API year (default: start year of --season)")
+    p.add_argument("--rotowire-csv", default=None, help="Rotowire CSV path (default: data/raw/rotowire/rotowire_nba_{Y}.csv)")
     p.add_argument("--skip-rotowire", action="store_true")
     p.add_argument("--rotowire-headed", action="store_true")
     p.add_argument("--db-upsert", action="store_true")
@@ -82,7 +82,12 @@ def main() -> int:
         sys.path.insert(0, str(PROJECT_ROOT))
 
     from src.utils.nbaPlayerLogs import NBAGameLogs
-    from src.utils.silver import build_gamelogs_silver, enrich_gamelogs_silver
+    from src.utils.silver import (
+        build_gamelogs_silver,
+        enrich_gamelogs_silver,
+        rotowire_csv_for_season,
+        rotowire_season_year,
+    )
     from src.scrapers.rotowire_scraper import run_scrape as run_rotowire_scrape
 
     pos_path = PROJECT_ROOT / args.positions
@@ -90,9 +95,11 @@ def main() -> int:
     out_path = PROJECT_ROOT / args.out
     rotowire_path = (
         Path(args.rotowire_csv)
-        if Path(args.rotowire_csv).is_absolute()
-        else PROJECT_ROOT / args.rotowire_csv
+        if args.rotowire_csv
+        else rotowire_csv_for_season(args.season)
     )
+    if not rotowire_path.is_absolute():
+        rotowire_path = PROJECT_ROOT / rotowire_path
     checkpoint = Path(args.checkpoint)
     if not checkpoint.is_absolute():
         checkpoint = PROJECT_ROOT / checkpoint
@@ -136,9 +143,10 @@ def main() -> int:
 
         if not args.skip_rotowire:
             print("── Rotowire scrape ──")
+            rw_season = args.rotowire_season or rotowire_season_year(args.season)
             asyncio.run(
                 run_rotowire_scrape(
-                    season=args.rotowire_season,
+                    season=rw_season,
                     output_file=rotowire_path,
                     headless=not args.rotowire_headed,
                 )
@@ -153,6 +161,7 @@ def main() -> int:
             rotowire_csv=rotowire_path,
             is_playoff=args.is_playoff_flag,
             skip_rotowire=args.skip_rotowire,
+            scrape_rotowire=False,
         )
 
     print("── Gold features ──")
