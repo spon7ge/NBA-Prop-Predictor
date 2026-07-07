@@ -80,6 +80,7 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     # gold layer
     "player_min_model": ["game_id", "player_id"],
     "player_ppm_model": ["game_id", "player_id"],
+    "predictions": ["prop", "game_id", "player_id"],
 }
 
 
@@ -374,6 +375,32 @@ def upsert_ppm_gold(
         conflict_cols=["game_id", "player_id"],
         batch_size=batch_size,
         lineage_col="built_at",
+    )
+
+
+def upsert_ml_predictions(
+    df: pd.DataFrame,
+    *,
+    table: str = "predictions",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert model predictions into ``ml.predictions``.
+
+    Expects snake_case columns from ``prepare_predictions_upload``.
+    Run ``db/migrations/008_ml_predictions.sql`` before the first upload.
+    """
+    upload = _align_df_to_table(
+        df,
+        schema="ml",
+        table=table,
+    )
+    upsert_df(
+        table,
+        upload,
+        schema="ml",
+        conflict_cols=["prop", "game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col=None,
     )
 
 

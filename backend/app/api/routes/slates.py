@@ -1,41 +1,77 @@
-import json
-from pathlib import Path
+"""GET /api/slates/{book} — latest prop lines per bookmaker from silver.silver_props."""
+from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+import datetime
 
-from app.core.config import BOOK_FILE_BASE, DATA_DIR, VALID_LEG_COUNTS
+from fastapi import APIRouter, HTTPException, Query
+
+from app.core import db
 
 router = APIRouter(tags=["slates"])
 
+_BOOK_ALIASES = {
+    "prizepicks": ["prizepicks", "prize picks"],
+    "underdog": ["underdog", "underdog fantasy"],
+    "draftkings": ["draftkings", "draftkings pick6", "dk pick6"],
+    "betr": ["betr", "betr dfs"],
+}
 
-def _slate_path(book: str, legs: int) -> Path:
-    base = BOOK_FILE_BASE.get(book)
-    if base is None:
+_PROPS_SQL = """
+SELECT
+    bookmaker,
+    market_category,
+    player_id,
+    player_name,
+    player_name_raw,
+    normalized_name,
+    side,
+    game_date,
+    line,
+    odds,
+    last_update_at,
+    prop_source
+FROM silver.silver_props
+WHERE game_date = %(game_date)s
+  AND lower(bookmaker) = ANY(%(bookmakers)s)
+ORDER BY player_name, market_category, side
+LIMIT %(limit)s
+"""
+
+
+def _bookmaker_names(book: str) -> list[str]:
+    key = book.lower()
+    names = _BOOK_ALIASES.get(key)
+    if names is None:
         raise HTTPException(
             status_code=400,
-            detail=f"Unknown book '{book}'. Valid: {', '.join(BOOK_FILE_BASE)}",
+            detail=f"Unknown book '{book}'. Valid: {', '.join(_BOOK_ALIASES)}",
         )
-    if legs not in VALID_LEG_COUNTS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid leg count {legs}. Valid: {sorted(VALID_LEG_COUNTS)}",
-        )
-    filename = f"{base}.json" if legs == 2 else f"{base}_{legs}leg.json"
-    return DATA_DIR / "ev_analysis" / filename
-
-
-def _read_json(path: Path) -> object:
-    if not path.exists():
-        raise HTTPException(status_code=404, detail=f"File not found: {path.name}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    return [n.lower() for n in names]
 
 
 @router.get("/slates/{book}")
-def get_slate(book: str, legs: int = 2) -> object:
-    return _read_json(_slate_path(book, legs))
-
-
-@router.get("/enriched")
-def get_enriched() -> object:
-    path = DATA_DIR / "enriched" / "dfs_enriched_latest.json"
-    return _read_json(path)
+def get_slate(
+    book: str,
+    date: str | None = Query(
+        default=None,
+        pattern=r"^\d{4}-\d{2}-\d{2}$",
+        description="Slate date. Defaults to today.",
+    ),
+    limit: int = Query(default=500, ge=1, le=2000),
+) -> dict:
+    """Return the latest prop lines for a DFS book from **silver.silver_props**."""
+    target_date = date or str(datetime.date.today())
+    rows = db.query(
+        _PROPS_SQL,
+        {
+            "game_date": target_date,
+            "bookmakers": _bookmaker_names(book),
+            "limit": limit,
+        },
+    )
+    return {
+        "book": book.lower(),
+        "game_date": target_date,
+        "count": len(rows),
+        "props": rows,
+    }

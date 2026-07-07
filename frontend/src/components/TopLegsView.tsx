@@ -3,6 +3,7 @@ import type { Book, FlatParlayRow, LegCount } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
 import { hasAnySlates, loadAllSlates, mapRowN, slateJsonFilename } from "@/lib/slate";
 import { Dropdown } from "@/components/Dropdown";
+import { LoadingMessage } from "@/components/LoadingSkeleton";
 import { ParlayCard } from "@/components/ParlayCard";
 
 type SlatesState = Record<LegCount, Record<Book, FlatParlayRow[]>>;
@@ -44,7 +45,18 @@ export function TopLegsView() {
       </p>
     );
   } else if (!slates) {
-    content = <p className="load-msg">Loading slates…</p>;
+    content = (
+      <>
+        <LoadingMessage>Loading slates…</LoadingMessage>
+        <div className="parlay-skeleton-list" aria-hidden="true">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className="card card--skeleton">
+              <span className="skeleton-block skeleton-block--card" />
+            </div>
+          ))}
+        </div>
+      </>
+    );
   } else if (SLATE_LEG_COUNTS.indexOf(activeLegs) === -1) {
     content = (
       <p className="load-msg">

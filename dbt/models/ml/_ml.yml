@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: features
+    description: >
+      Shared ML input layer for all prop models. Includes L5/L10 rolling
+      averages, rolling usage (usg_pct_roll5/10), schedule context
+      (is_home, days_rest, is_b2b), and opponent defensive ratings.
+      One row per (game_id, player_id).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: game_date
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: is_home
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_b2b
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: usg_pct_roll5
+        description: Rolling average usage rate over prior 5 games.
+      - name: usg_pct_roll10
+        description: Rolling average usage rate over prior 10 games.
+      - name: opp_def_rating_roll10
+        description: Opponent L10 defensive rating (prior games only).
+
+  - name: features_min
+    description: >
+      MIN quantile model inputs. Extends ml.features with columns from
+      src.features.min_features.MIN_FEATURES plus target (min).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: min_10_ewm
+      - name: team_min_rank_l10
+
+  - name: features_ppm
+    description: >
+      PPM quantile model inputs. Extends ml.features with columns from
+      src.features.ppm_features.PPM_FEATURES plus target (pts_per_min).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: team_pts_per_min_rank_l10
+
+  - name: features_rpm
+    description: >
+      RPM quantile model inputs. Extends ml.features with columns from
+      src.features.rpm_features.RPM_FEATURES plus target (reb_per_min).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: reb_per_min_season_avg
+        description: Season-to-date mean REB/MIN (prior games only).
+
+  - name: features_apm
+    description: >
+      APM quantile model inputs. Extends ml.features with columns from
+      src.features.apm_features.APM_FEATURES plus target (ast_per_min).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: ast_per_min_season_avg
+        description: Season-to-date mean AST/MIN (prior games only).

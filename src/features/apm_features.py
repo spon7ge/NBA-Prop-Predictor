@@ -1,5 +1,16 @@
 import pandas as pd
 
+# Order must match training / saved quantile bundle `feature_names`.
+APM_FEATURES = [
+    "AST_PER_MIN_season_avg",
+    "TEAM_AST_PER_MIN_RANK_L10",
+    "OPP_TEAM_AST_ALLOWED",
+    "PASS_PER_MIN_5_ewm",
+    "POSITION_ENCODED",
+    "AST_PER_MIN_STD_SEASON",
+    "APM_TREND",
+]
+
 def apm_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df = df.sort_values(['PLAYER_ID', 'GAME_DATE'])

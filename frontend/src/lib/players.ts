@@ -146,6 +146,7 @@ export function aggregateEnrichedByPlayer(rows: EnrichedPick[]): PlayerGroup[] {
     if (!map[key]) {
       map[key] = {
         player: key,
+        playerId: r.player_id,
         displayName: r.display_name || r.player || "",
         team: r.team_abbr || "",
         opp: r.opponent_abbr || null,
@@ -160,6 +161,7 @@ export function aggregateEnrichedByPlayer(rows: EnrichedPick[]): PlayerGroup[] {
       order.push(key);
     }
     const agg = map[key];
+    if (r.player_id && !agg.playerId) agg.playerId = r.player_id;
     agg.picks.push(r);
     if (r.market) agg.markets[r.market] = true;
     if (r.platform) agg.platforms[r.platform] = true;

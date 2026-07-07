@@ -1,18 +1,15 @@
-"""Pydantic schemas for /games/{date} endpoint.
-
-Source table: silver.silver_games
-"""
+"""Pydantic schemas for /games/{date} endpoint."""
 from __future__ import annotations
 
 import datetime
 
 from pydantic import BaseModel
 
-from app.schemas.prediction import PropPrediction
+from app.schemas.ml_prediction import MLPrediction
+from app.schemas.prop import PropLine
 
 
 class Game(BaseModel):
-    """One row from silver_games."""
     game_date: datetime.date
     game_id: str | None = None
     event_id: int | None = None
@@ -25,5 +22,15 @@ class Game(BaseModel):
 
 
 class GameWithProps(Game):
-    """Game enriched with all prop lines for that matchup."""
-    props: list[PropPrediction] = []
+    props: list[PropLine] = []
+
+
+class GameWithPredictions(Game):
+    predictions: list[MLPrediction] = []
+
+
+class GameSlate(BaseModel):
+    game_date: datetime.date
+    games: list[Game]
+    props: list[PropLine] = []
+    predictions: list[MLPrediction] = []

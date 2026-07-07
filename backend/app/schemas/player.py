@@ -82,6 +82,17 @@ class RollingAvg10(BaseModel):
     min_rate_of_change: float | None = None
 
 
+class MLPredictionSummary(BaseModel):
+    """Latest model output for one prop type."""
+    prop: str
+    game_id: str
+    prediction: float
+    predicted_at: datetime.datetime
+    game_date: datetime.date | None = None
+
+    model_config = {"from_attributes": True}
+
+
 class PlayerProfile(BaseModel):
     """Full player response — profile + recent games + rolling context."""
     player_id: int
@@ -93,5 +104,6 @@ class PlayerProfile(BaseModel):
     recent_games: list[PlayerGame] = []
     rolling_avg_5: RollingAvg5 | None = None
     rolling_avg_10: RollingAvg10 | None = None
+    predictions: list["MLPredictionSummary"] = []
 
     model_config = {"from_attributes": True}

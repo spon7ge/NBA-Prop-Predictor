@@ -53,6 +53,9 @@ select
     gl.poss,
     gl.ast_pct,
     gl.ast_to,
+    gl.oreb_pct,
+    gl.dreb_pct,
+    gl.reb_pct,
     -- tracking
     gl.spd,
     gl.dist,
@@ -106,7 +109,12 @@ select
     gl.poss / nullif(gl.min, 0) as poss_per_min,
     gl.sast / nullif(gl.min, 0) as sast_per_min,
     gl.pass / nullif(gl.min, 0) as pass_per_min,
-    gl.tchs / nullif(gl.min, 0) as tchs_per_min
+    gl.tchs / nullif(gl.min, 0) as tchs_per_min,
+    gl.oreb / nullif(gl.min, 0) as oreb_per_min,
+    gl.dreb / nullif(gl.min, 0) as dreb_per_min,
+    gl.orbc / nullif(gl.min, 0) as orbc_per_min,
+    gl.drbc / nullif(gl.min, 0) as drbc_per_min,
+    gl.rbc  / nullif(gl.min, 0) as rbc_per_min
 from gamelogs as gl
 left join players as p
     on gl.player_id = p.player_id

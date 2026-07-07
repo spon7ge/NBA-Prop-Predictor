@@ -7,6 +7,7 @@ import {
   edgeBucketClass,
   pickEdge,
 } from "@/lib/players";
+import { PlayerStatsPanel } from "@/components/PlayerStatsPanel";
 import {
   fmt1,
   fmtNumOrDash,
@@ -310,6 +311,7 @@ export function PlayerBlock({
       </button>
       {expanded && (
         <div className="player-block-body">
+          <PlayerStatsPanel playerId={p.playerId} enabled={expanded} />
           <PlayerExpandedBody picks={p.picks} sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
         </div>
       )}

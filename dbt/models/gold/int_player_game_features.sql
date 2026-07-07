@@ -79,6 +79,26 @@ player_windows as (
             order by b.game_date
             rows between 5 preceding and 1 preceding
         ) as tchs_per_min_roll5,
+        avg(b.pass_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 5 preceding and 1 preceding
+        ) as pass_per_min_roll5,
+        avg(b.oreb_pct) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 5 preceding and 1 preceding
+        ) as oreb_pct_roll5,
+        avg(b.dreb_pct) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 5 preceding and 1 preceding
+        ) as dreb_pct_roll5,
+        avg(b.rbc_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 5 preceding and 1 preceding
+        ) as rbc_per_min_roll5,
 
         -- L10 player rolls
         avg(b.min) over (
@@ -156,6 +176,26 @@ player_windows as (
             order by b.game_date
             rows between 10 preceding and 1 preceding
         ) as spd_roll10,
+        avg(b.pass_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as pass_per_min_roll10,
+        avg(b.oreb_pct) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as oreb_pct_roll10,
+        avg(b.dreb_pct) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as dreb_pct_roll10,
+        avg(b.rbc_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as rbc_per_min_roll10,
 
         -- Season-to-date means (prior games only)
         avg(b.min) over (
@@ -168,6 +208,16 @@ player_windows as (
             order by b.game_date
             rows between unbounded preceding and 1 preceding
         ) as pts_per_min_season_avg,
+        avg(b.reb_per_min) over (
+            partition by b.player_id, b.season_year
+            order by b.game_date
+            rows between unbounded preceding and 1 preceding
+        ) as reb_per_min_season_avg,
+        avg(b.ast_per_min) over (
+            partition by b.player_id, b.season_year
+            order by b.game_date
+            rows between unbounded preceding and 1 preceding
+        ) as ast_per_min_season_avg,
 
         -- Dispersion (L10 window)
         stddev_samp(b.min) over (
@@ -195,6 +245,16 @@ player_windows as (
             order by b.game_date
             rows between 10 preceding and 1 preceding
         ) as ppm_p90_l10,
+        min(b.reb_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as reb_per_min_p10_l10,
+        max(b.reb_per_min) over (
+            partition by b.player_id
+            order by b.game_date
+            rows between 10 preceding and 1 preceding
+        ) as reb_per_min_p90_l10,
 
         -- Starter roll (L10)
         avg(b.starting) over (
@@ -230,6 +290,16 @@ player_ranks as (
             order by pw.game_date
             rows between unbounded preceding and 1 preceding
         ) as ppm_season_std,
+        stddev_samp(pw.reb_per_min) over (
+            partition by pw.player_id, pw.season_year
+            order by pw.game_date
+            rows between unbounded preceding and 1 preceding
+        ) as rpm_season_std,
+        stddev_samp(pw.ast_per_min) over (
+            partition by pw.player_id, pw.season_year
+            order by pw.game_date
+            rows between unbounded preceding and 1 preceding
+        ) as ast_per_min_std_season,
         dense_rank() over (
             partition by pw.team_id, pw.game_date
             order by pw.min_roll10 desc nulls last, pw.player_id asc
@@ -242,10 +312,30 @@ player_ranks as (
             partition by pw.team_id, pw.game_date
             order by pw.pts_per_min_roll10 desc nulls last, pw.player_id asc
         ) as team_pts_per_min_rank_l10,
+        dense_rank() over (
+            partition by pw.team_id, pw.game_date
+            order by pw.ast_per_min_roll10 desc nulls last, pw.player_id asc
+        ) as team_ast_per_min_rank_l10,
         pw.min_roll10 - lag(pw.min_roll10, 4) over (
             partition by pw.player_id
             order by pw.game_date
         ) as min_rate_of_change,
+        pw.reb_per_min_roll10 - lag(pw.reb_per_min_roll10, 5) over (
+            partition by pw.player_id
+            order by pw.game_date
+        ) / 5.0 as reb_roll10_slope,
+        pw.oreb_pct_roll10 / nullif(pw.dreb_pct_roll10, 0) as oreb_dreb_ratio,
+        pw.ast_per_min_roll5 - pw.ast_per_min_season_avg as apm_trend,
+        case upper(trim(coalesce(pw.pos, 'UNK')))
+            when 'G' then 0
+            when 'F' then 1
+            when 'C' then 2
+            when 'G-F' then 3
+            when 'F-G' then 4
+            when 'F-C' then 5
+            when 'C-F' then 6
+            else 7
+        end as position_encoded,
         sum(pw.starting) over (
             partition by pw.player_id
             order by pw.game_date
@@ -492,6 +582,10 @@ select
     pr.poss_per_min_roll5,
     pr.sast_per_min_roll5,
     pr.tchs_per_min_roll5,
+    pr.pass_per_min_roll5,
+    pr.oreb_pct_roll5,
+    pr.dreb_pct_roll5,
+    pr.rbc_per_min_roll5,
     -- L10 player rolls
     pr.min_roll10,
     pr.pts_roll10,
@@ -508,16 +602,26 @@ select
     pr.fta_per_min_roll10,
     pr.cfga_per_min_roll10,
     pr.spd_roll10,
+    pr.pass_per_min_roll10,
+    pr.oreb_pct_roll10,
+    pr.dreb_pct_roll10,
+    pr.rbc_per_min_roll10,
     -- season-to-date
     pr.min_season_mean,
     pr.pts_per_min_season_avg,
+    pr.reb_per_min_season_avg,
+    pr.ast_per_min_season_avg,
     pr.min_std_l10,
-    pr.ppm_season_std,
     pr.min_p10_l10,
     pr.min_p90_l10,
     pr.ppm_p10_l10,
     pr.ppm_p90_l10,
+    pr.reb_per_min_p10_l10,
+    pr.reb_per_min_p90_l10,
     pr.min_season_std,
+    pr.ppm_season_std,
+    pr.rpm_season_std,
+    pr.ast_per_min_std_season,
     pr.starter_roll10_pct,
     -- schedule
     pr.days_rest,
@@ -527,7 +631,13 @@ select
     pr.team_min_rank_l10,
     pr.team_usg_rank_l10,
     pr.team_pts_per_min_rank_l10,
+    pr.team_ast_per_min_rank_l10,
     pr.min_rate_of_change,
+    pr.reb_roll10_slope,
+    pr.oreb_dreb_ratio,
+    pr.apm_trend,
+    pr.position_encoded,
+    pr.position_encoded as position_enc,
     pr.consec_starts_raw as consec_starts,
     -- placeholder availability flags (populated downstream)
     0::smallint as top_player_active,
@@ -540,6 +650,9 @@ select
     pr.cfga_per_min_roll10 as cfga_per_min_10_ewm,
     pr.fg3a_per_min_roll10 as fg3a_per_min_10_ewm,
     pr.fta_per_min_roll10  as fta_per_min_10_ewm,
+    pr.rbc_per_min_roll10  as rbc_per_min_10_ewm,
+    pr.reb_per_min_roll10  as reb_per_min_10_ewm,
+    pr.pass_per_min_roll5  as pass_per_min_5_ewm,
     -- interaction features (player rate × opponent defensive profile)
     pr.pts_per_min_roll10  * oa.opp_team_pts_allowed          as pts_per_min_x_opp_pts_allowed,
     pr.cfga_per_min_roll10 * oa.opp_team_fg_pct_allowed        as cfga_per_min_x_opp_fg_pct_allowed,

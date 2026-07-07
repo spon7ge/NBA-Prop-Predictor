@@ -1,17 +1,21 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { EnrichedPick, PlayersGroupSort } from "@/types/slate";
 import type { PlayersSortKey } from "@/lib/constants";
-import { fetchEnrichedPicks } from "@/lib/api";
 import {
   aggregateEnrichedByPlayer,
   filterByPlatform,
   filterByTier,
   filterPlayerRows,
   filterPlayerRowsByStat,
-  filterSupportedPicks,
   sortPlayerGroups,
 } from "@/lib/players";
+import { useEnrichedPicks } from "@/lib/queries";
 import { PlayerBlock } from "@/components/PlayerBlock";
+import {
+  ErrorPanel,
+  LoadingMessage,
+  PlayersListSkeleton,
+} from "@/components/LoadingSkeleton";
 
 function FilterPills<T extends string>({
   items,
@@ -54,8 +58,11 @@ function FilterPills<T extends string>({
 }
 
 export function AllPlayersView() {
-  const [allEnriched, setAllEnriched] = useState<EnrichedPick[]>([]);
-  const [state, setState] = useState<"idle" | "loading" | "loaded">("idle");
+  const { data, isLoading, isError, error, refetch, isFetching } = useEnrichedPicks();
+  const allEnriched = data?.picks ?? [];
+  const dataSource = data?.source;
+  const gameDate = data?.gameDate;
+
   const [search, setSearch] = useState("");
   const [activeStat, setActiveStat] = useState<string | null>(null);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
@@ -64,17 +71,6 @@ export function AllPlayersView() {
   const [groupSort, setGroupSort] = useState<PlayersGroupSort>("edge_desc");
   const [sortKey, setSortKey] = useState<PlayersSortKey | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-
-  useEffect(() => {
-    if (state !== "idle") return;
-    setState("loading");
-    fetchEnrichedPicks()
-      .then((picks) => {
-        setAllEnriched(filterSupportedPicks(picks));
-        setState("loaded");
-      })
-      .catch(() => setState("loaded"));
-  }, [state]);
 
   function handleSort(key: PlayersSortKey) {
     if (sortKey === key) {
@@ -86,17 +82,30 @@ export function AllPlayersView() {
   }
 
   let panel: ReactNode;
-  if (state === "loading") {
-    panel = <p className="load-msg">Loading player data…</p>;
+  if (isLoading) {
+    panel = (
+      <>
+        <LoadingMessage>Loading player data…</LoadingMessage>
+        <PlayersListSkeleton count={5} />
+      </>
+    );
+  } else if (isError) {
+    panel = (
+      <ErrorPanel
+        message={error instanceof Error ? error.message : "Failed to load player data."}
+        onRetry={() => refetch()}
+      />
+    );
   } else if (!allEnriched.length) {
     panel = (
       <p className="load-msg load-err">
-        No player data found. Ensure <code>dfs_enriched_YYYYMMDD.json</code> exists under{" "}
+        No player data found. Start the backend API or ensure{" "}
+        <code>dfs_enriched_YYYYMMDD.json</code> exists under{" "}
         <code>data/props/enriched/</code>.
       </p>
     );
   } else {
-    let picks = allEnriched.slice();
+    let picks: EnrichedPick[] = allEnriched.slice();
     picks = filterByPlatform(picks, activePlatform);
     picks = filterByTier(picks, activeTier);
     picks = filterPlayerRowsByStat(picks, activeStat);
@@ -112,6 +121,15 @@ export function AllPlayersView() {
             <div className="players-grouped-count">
               <b>{players.length}</b> {players.length === 1 ? "player" : "players"} ·{" "}
               <span className="dim">{picks.length} props</span>
+              {dataSource && (
+                <span className={`data-source-badge data-source-badge--${dataSource}`}>
+                  {dataSource === "api" ? "Live API" : "Static JSON"}
+                  {gameDate ? ` · ${gameDate}` : ""}
+                </span>
+              )}
+              {isFetching && !isLoading && (
+                <span className="data-source-badge data-source-badge--refreshing">Updating…</span>
+              )}
             </div>
             <div className="players-sort-bar" role="group" aria-label="Sort players">
               <span>Sort</span>
@@ -174,6 +192,7 @@ export function AllPlayersView() {
             spellCheck={false}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            disabled={isLoading}
           />
         </div>
         <div className="stat-filter-divider" aria-hidden="true" />

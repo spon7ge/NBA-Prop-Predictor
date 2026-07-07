@@ -71,6 +71,7 @@ export interface MappedParlay {
 }
 
 export interface EnrichedPick {
+  player_id?: number;
   player?: string;
   display_name?: string;
   team_abbr?: string;
@@ -95,7 +96,10 @@ export interface EnrichedPick {
     n_books_same_line?: number;
   };
   game_context?: {
+    spread?: number;
+    game_total?: number;
     opp_def_rating_rank?: number;
+    opp_pace_rank?: number;
   };
   form?: {
     over_l5?: number;
@@ -110,6 +114,7 @@ export interface EnrichedPick {
 
 export interface PlayerGroup {
   player: string;
+  playerId?: number;
   displayName: string;
   team: string;
   opp: string | null;

@@ -69,6 +69,53 @@ dbt/
       _silver.yml
 ```
 
+## ML models (Phase 7)
+
+| Model | Source | What it does |
+|-------|--------|--------------|
+| `ml.features` | `int_player_game_features` | Shared ML inputs: L5/L10 rolls, usage, home/away, rest days, opponent def rating |
+| `ml.features_min` | `features` + MIN model cols | MIN quantile model (`src/features/min_features.py`) |
+| `ml.features_ppm` | `features` + PPM model cols | PPM quantile model (`src/features/ppm_features.py`) |
+| `ml.features_rpm` | `features` + RPM model cols | RPM quantile model (`src/features/rpm_features.py`) |
+| `ml.features_apm` | `features` + APM model cols | APM quantile model (`src/features/apm_features.py`) |
+
+Apply the ML schema migration once:
+
+```
+db/migrations/007_ml_schema.sql
+```
+
+```bash
+python scripts/run_dbt.py run --select ml
+python scripts/run_dbt.py test --select ml
+```
+
+Load from Python:
+
+```python
+from src.utils.ml import read_ml_features
+min_df = read_ml_features("min", season_year="2025-26")
+```
+
+## ML prediction pipeline (Phase 8)
+
+Train from `ml.features_*` and save a joblib bundle:
+
+```bash
+python scripts/train_model.py --prop min
+python scripts/train_model.py --prop all --season-year 2025-26
+```
+
+Generate predictions and write to `ml.predictions`:
+
+```bash
+# Apply db/migrations/008_ml_predictions.sql once
+python scripts/generate_predictions.py --prop min
+python scripts/generate_predictions.py --prop all --game-date 2026-05-12
+```
+
+Each row includes `player_id`, `game_id`, `prediction` (median quantile), and `predicted_at`.
+
 ## Next (Gold)
 
 Gold models will read from `silver.*` for model-ready features (MIN/PPM pipelines).
