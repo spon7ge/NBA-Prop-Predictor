@@ -1,12 +1,27 @@
 version: 2
 
 sources:
+  - name: silver
+    description: >
+      Python-managed merged tables in the silver schema. Populated by
+      src/utils/silver.py — these are NOT dbt-managed but serve as
+      upstream inputs for silver dbt models.
+    schema: silver
+    tables:
+      - name: player_gamelogs
+        description: >
+          Merged player-level gamelogs combining Base, Advanced, Tracking,
+          and team-context stats per player per game. Populated by the
+          Python silver pipeline before dbt runs.
+
   - name: raw
     description: Untouched scraper / API landing tables in the raw schema.
     schema: raw
     tables:
       - name: team_base
         description: NBA team box-score logs (one row per team per game).
+      - name: player_base
+        description: NBA player box-score logs (one row per player per game).
       - name: props_dfs
         description: DFS book player props (PrizePicks, Underdog, …).
       - name: props_us

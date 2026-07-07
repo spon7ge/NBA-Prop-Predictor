@@ -12,16 +12,23 @@ models:
         description: Odds-API event id when sourced from raw.games.
       - name: game_date
         description: Calendar date of the game (DATE).
+        tests: [not_null]
       - name: commence_at
         description: Game start timestamp from Odds-API (TIMESTAMPTZ).
       - name: home_team
-        description: Home team name or abbreviation.
+        description: Home team name or abbreviation (raw, not standardized).
+        tests: [not_null]
       - name: away_team
-        description: Away team name or abbreviation.
+        description: Away team name or abbreviation (raw, not standardized).
+        tests: [not_null]
       - name: season_year
         description: NBA season label (e.g. 2025-26).
       - name: source
         description: Row origin — gamelogs or odds_api.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['gamelogs', 'odds_api']
       - name: fetched_at
         description: Last time the raw row was written.
 
@@ -37,11 +44,21 @@ models:
         tests: [not_null]
       - name: side
         description: over or under (lowercase).
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['over', 'under']
       - name: game_date
         description: Slate date (DATE).
+        tests: [not_null]
       - name: line
         description: Prop line (DOUBLE PRECISION).
+        tests: [not_null]
       - name: odds
         description: American odds (INTEGER).
       - name: prop_source
         description: dfs or us — which raw table the row came from.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['dfs', 'us']

@@ -43,6 +43,13 @@ def _set_dbt_env_from_url(url: str) -> None:
     os.environ["DBT_SSLMODE"] = sslmode
 
 
+def _dbt_executable() -> str:
+    venv_dbt = PROJECT_ROOT / "nba_model" / "Scripts" / "dbt.exe"
+    if venv_dbt.is_file():
+        return str(venv_dbt)
+    return "dbt"
+
+
 def main(argv: list[str] | None = None) -> int:
     _load_dotenv()
     url = os.environ.get("SUPABASE_DB_URL")
@@ -55,8 +62,8 @@ def main(argv: list[str] | None = None) -> int:
     if not args:
         args = ["run"]
 
-    cmd = ["dbt", *args]
-    print("→", " ".join(cmd), f"(cwd={DBT_DIR})")
+    cmd = [_dbt_executable(), *args]
+    print(">", " ".join(cmd), f"(cwd={DBT_DIR})")
     result = subprocess.run(
         cmd,
         cwd=DBT_DIR,

@@ -1,0 +1,155 @@
+version: 2
+
+models:
+  - name: silver_players
+    description: >
+      One row per NBA player_id from gamelogs. Canonical display name, normalized
+      name for matching, latest team, and all observed name aliases.
+    columns:
+      - name: player_id
+        description: NBA player identifier. Primary key.
+        tests: [unique, not_null]
+      - name: player_name
+        description: Most-common display name for this player.
+        tests: [not_null]
+      - name: normalized_name
+        description: Lowercase, punctuation-stripped name used for prop matching.
+        tests: [not_null]
+      - name: team_abbreviation
+        description: Latest team tricode (standardized).
+
+  - name: silver_games
+    description: >
+      Deduped games with standardized home/away tricodes from bronze_games.
+    columns:
+      - name: game_id
+        description: NBA game id when sourced from gamelogs.
+      - name: game_date
+        description: Calendar date of the game.
+        tests: [not_null]
+      - name: home_team_abbrev
+        description: Standardized home team tricode.
+        tests: [not_null]
+      - name: away_team_abbrev
+        description: Standardized away team tricode.
+        tests: [not_null]
+      - name: season_year
+        description: NBA season label (e.g. 2025-26).
+      - name: source
+        description: Row origin — gamelogs or odds_api.
+        tests:
+          - accepted_values:
+              values: ['gamelogs', 'odds_api']
+              where: "source is not null"
+
+  - name: silver_props
+    description: >
+      Deduped prop lines with standardized markets, normalized player names,
+      and player_id when matched to silver_players.
+    columns:
+      - name: bookmaker
+        tests: [not_null]
+      - name: market_category
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: normalized_name
+        tests: [not_null]
+      - name: side
+        description: over or under (lowercase).
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['over', 'under']
+      - name: game_date
+        description: Slate date for the prop.
+        tests: [not_null]
+      - name: line
+        description: Prop line value.
+        tests: [not_null]
+      - name: prop_source
+        description: dfs or us — source sportsbook category.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['dfs', 'us']
+
+  - name: silver_player_gamelogs
+    description: >
+      Enriched player-gamelog fact table. Wraps the Python-merged silver.player_gamelogs
+      table (base + advanced + tracking + team context), attaches normalized_name from
+      silver_players, and derives per-minute rate columns and flag fields used by all
+      gold feature models.
+    columns:
+      - name: game_id
+        description: NBA 10-digit game identifier.
+        tests: [not_null]
+      - name: player_id
+        description: NBA player identifier.
+        tests: [not_null]
+      - name: game_date
+        description: Calendar date of the game.
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: team_abbreviation
+        description: Player's team tricode for this game.
+        tests: [not_null]
+      - name: opp_team_abbreviation
+        description: Opposing team tricode.
+        tests: [not_null]
+      - name: season_year
+        description: Season label (e.g. 2025-26).
+        tests: [not_null]
+      - name: season_type
+        description: Game type.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Regular Season', 'Playoffs', 'PlayIn', 'Pre Season']
+      - name: wl
+        description: Win or loss for the player's team.
+        tests:
+          - accepted_values:
+              values: ['W', 'L']
+              where: "wl is not null"
+      - name: starting
+        description: 1 if player started, 0 otherwise (derived from start_position).
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_home
+        description: 1 if home game (matchup contains " vs."), 0 if away.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_playoff
+        description: 1 if Playoffs game, 0 otherwise.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+              where: "is_playoff is not null"
+      - name: min
+        description: Minutes played.
+        tests: [not_null]
+      - name: pts
+        tests: [not_null]
+      - name: reb
+        tests: [not_null]
+      - name: ast
+        tests: [not_null]
+      - name: pts_per_min
+        description: Points per minute played (null when min = 0).
+      - name: reb_per_min
+      - name: ast_per_min
+      - name: tov_per_min
+      - name: fga_per_min
+      - name: fg3a_per_min
+      - name: fta_per_min
+      - name: cfga_per_min
+      - name: poss_per_min
+      - name: sast_per_min
+      - name: pass_per_min
+      - name: tchs_per_min

@@ -1,0 +1,294 @@
+version: 2
+
+models:
+  # ── Intermediate ────────────────────────────────────────────────────────────
+  - name: int_player_game_features
+    description: >
+      Shared intermediate table that computes all window features in one pass
+      over silver_player_gamelogs. L5/L10 rolling averages, season-to-date
+      means, dispersion statistics, team-relative ranks, schedule flags,
+      and opponent defensive rolling context are all assembled here.
+      Downstream gold models SELECT specific column subsets from this table —
+      they never re-read silver directly.
+    columns:
+      - name: game_id
+        description: NBA 10-digit game identifier.
+        tests: [not_null]
+      - name: player_id
+        description: NBA player identifier.
+        tests: [not_null]
+      - name: game_date
+        description: Calendar date of the game.
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: team_abbreviation
+        tests: [not_null]
+      - name: starting
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_home
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_b2b
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+  # ── Gold output tables ──────────────────────────────────────────────────────
+  - name: gold_player_game_stats
+    description: >
+      Analytics-ready per-game box score for every player-game.
+      Includes raw counting stats, advanced efficiency metrics, tracking
+      data, and derived per-minute rates. One row per (game_id, player_id).
+      This is the primary table for ad-hoc player analysis and model training.
+    columns:
+      - name: game_id
+        description: NBA 10-digit game identifier.
+        tests: [not_null]
+      - name: player_id
+        description: NBA player identifier.
+        tests: [not_null]
+      - name: game_date
+        description: Calendar date of the game.
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: season_year
+        tests: [not_null]
+      - name: season_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Regular Season', 'Playoffs', 'PlayIn', 'Pre Season']
+      - name: team_abbreviation
+        description: Player's team tricode for this game.
+        tests: [not_null]
+      - name: opp_team_abbreviation
+        description: Opposing team tricode.
+        tests: [not_null]
+      - name: wl
+        description: Win or loss result for the player's team.
+        tests:
+          - accepted_values:
+              values: ['W', 'L']
+              where: "wl is not null"
+      - name: starting
+        description: 1 if the player started, 0 otherwise.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_home
+        description: 1 if home game, 0 if away.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_playoff
+        description: 1 if Playoffs game, 0 otherwise.
+        tests:
+          - accepted_values:
+              values: [0, 1]
+              where: "is_playoff is not null"
+      - name: min
+        description: Minutes played.
+        tests: [not_null]
+      - name: pts
+        tests: [not_null]
+      - name: reb
+        tests: [not_null]
+      - name: ast
+        tests: [not_null]
+      - name: usg_pct
+        description: Usage percentage.
+      - name: pts_per_min
+        description: Points per minute (null when min = 0).
+      - name: reb_per_min
+      - name: ast_per_min
+
+  - name: gold_player_rolling_avg_5
+    description: >
+      L5 prior-game rolling averages per player-game. All windows exclude
+      the current game (rows between 5 preceding and 1 preceding) so these
+      are leak-free pre-game features. Used for short-term form signals.
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: game_date
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: team_abbreviation
+        tests: [not_null]
+      - name: min_roll5
+        description: Average minutes over the prior 5 games (null if < 1 prior game).
+      - name: pts_roll5
+        description: Average points over the prior 5 games.
+      - name: pts_per_min_roll5
+        description: Average pts/min over the prior 5 games.
+      - name: reb_roll5
+      - name: ast_roll5
+      - name: tov_roll5
+      - name: usg_pct_roll5
+      - name: plus_minus_roll5
+
+  - name: gold_player_rolling_avg_10
+    description: >
+      L10 prior-game rolling averages plus MIN-model and PPM-model feature
+      columns. Covers all of min_features.MIN_FEATURES and
+      ppm_features.PPM_FEATURES used in the Python gold.py training pipeline.
+      Windows exclude the current game for data-leakage safety.
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: game_date
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: team_abbreviation
+        tests: [not_null]
+      - name: min_roll10
+        description: Average minutes over the prior 10 games.
+      - name: pts_roll10
+      - name: reb_roll10
+      - name: ast_roll10
+      - name: min_10_ewm
+        description: Proxy EWM for minutes (min_roll10 alias for model compatibility).
+      - name: min_season_mean
+        description: Season-to-date mean minutes (prior games only).
+      - name: starter_roll10_pct
+        description: Fraction of prior 10 games where player started.
+      - name: consec_starts
+        description: Running total of starts in the season up to and including this game.
+      - name: min_rate_of_change
+        description: Difference between current min_roll10 and min_roll10 four games ago.
+      - name: team_min_rank_l10
+        description: >
+          Dense rank of this player's min_roll10 within their team on this game
+          date (1 = most minutes). Used to identify primary rotation players.
+        tests: [not_null]
+      - name: team_usg_rank_l10
+        description: Dense rank of usg_pct_roll10 within team on this game date.
+        tests: [not_null]
+
+  - name: gold_matchup_features
+    description: >
+      Opponent + schedule context per player-game. Provides pre-game defensive
+      environment (opponent pace, defensive rating, season-to-date allowed
+      averages) and fatigue signals (is_b2b, days_rest, game_number).
+      Joins cleanly with gold_player_rolling_avg_5/10 on (player_id, game_date).
+    columns:
+      - name: game_id
+        tests: [not_null]
+      - name: player_id
+        tests: [not_null]
+      - name: game_date
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: team_abbreviation
+        tests: [not_null]
+      - name: opp_team_abbreviation
+        tests: [not_null]
+      - name: is_home
+        description: 1 if home game, 0 if away.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: is_b2b
+        description: 1 if this game is the second of a back-to-back (days_rest = 1).
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: days_rest
+        description: Calendar days since this player's previous game.
+      - name: game_number
+        description: Zero-indexed game number within the season for this player.
+        tests: [not_null]
+      - name: expected_pace
+        description: Average of team_pace_roll10 and opp_pace_roll10.
+      - name: pace_differential
+        description: team_pace_roll10 minus opp_pace_roll10.
+      - name: opp_def_rating_roll10
+        description: Opponent's L10 defensive rating (prior games, lower = better defence).
+      - name: opp_team_pts_allowed
+        description: Opponent season-to-date average points allowed per game.
+      - name: opp_team_fta_allowed
+      - name: opp_team_fg3a_allowed
+      - name: opp_team_fg_pct_allowed
+      - name: team_spread
+        description: Vegas spread for this team (negative = favourite).
+      - name: game_total
+        description: Vegas over/under total for the game.
+
+  - name: gold_prop_history
+    description: >
+      Every prop line from silver_props enriched with player team, game
+      context (home/away teams, season), and pre-game rolling features from
+      gold_player_rolling_avg_5, gold_player_rolling_avg_10, and
+      gold_matchup_features. The definitive table for historical prop analysis,
+      EV modelling, and prediction audit trails.
+    columns:
+      - name: bookmaker
+        tests: [not_null]
+      - name: market_category
+        tests: [not_null]
+      - name: player_name
+        tests: [not_null]
+      - name: normalized_name
+        tests: [not_null]
+      - name: side
+        description: over or under.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['over', 'under']
+      - name: game_date
+        tests: [not_null]
+      - name: line
+        description: Prop line value.
+        tests: [not_null]
+      - name: odds
+        description: American odds.
+      - name: prop_source
+        description: dfs or us — source sportsbook category.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['dfs', 'us']
+      - name: player_team_abbrev
+        description: Player's current team tricode from silver_players.
+      - name: home_team_abbrev
+        description: Home team tricode for this game date (from silver_games).
+      - name: away_team_abbrev
+        description: Away team tricode for this game date (from silver_games).
+      - name: min_roll5
+        description: Player's average minutes over prior 5 games.
+      - name: pts_per_min_roll5
+        description: Player's avg pts/min over prior 5 games.
+      - name: min_roll10
+        description: Player's average minutes over prior 10 games.
+      - name: pts_per_min_roll10
+        description: Player's avg pts/min over prior 10 games.
+      - name: team_min_rank_l10
+        description: Player's minutes rank within their team (L10 window).
+      - name: expected_pace
+        description: Expected pace for this matchup.
+      - name: opp_def_rating_roll10
+        description: Opponent's L10 defensive rating.
+      - name: team_spread
+        description: Vegas spread for the player's team.
+      - name: game_total
+        description: Vegas over/under for the game.

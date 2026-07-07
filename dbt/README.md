@@ -37,6 +37,19 @@ python scripts/run_dbt.py test --select bronze  # run column tests
 
 Both are **views** in the `bronze` schema — no heavy transforms (that’s Silver).
 
+## Silver models (Phase 4b)
+
+| Model | Source | What it does |
+|-------|--------|--------------|
+| `silver.silver_players` | `raw.player_base` | One row per `player_id`; canonical name; `normalized_name`; latest team; name aliases |
+| `silver.silver_games` | `bronze.bronze_games` | Dedupe games; map full team names → tricodes |
+| `silver.silver_props` | `bronze.bronze_player_props` | Join players; standardize markets; dedupe to latest line |
+
+```bash
+python scripts/run_dbt.py run --select silver
+python scripts/run_dbt.py test --select silver
+```
+
 ## Project layout
 
 ```
@@ -49,8 +62,13 @@ dbt/
       bronze_games.sql
       bronze_player_props.sql
       _bronze.yml
+    silver/
+      silver_players.sql
+      silver_games.sql
+      silver_props.sql
+      _silver.yml
 ```
 
-## Next (Silver)
+## Next (Gold)
 
-Silver models will read from `bronze.*` — e.g. join props to games, merge gamelog tables into `silver.player_gamelogs` via dbt instead of Python-only.
+Gold models will read from `silver.*` for model-ready features (MIN/PPM pipelines).

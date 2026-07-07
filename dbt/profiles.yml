@@ -11,7 +11,7 @@ hoopvista:
       password: "{{ env_var('DBT_PASSWORD') }}"
       port: "{{ env_var('DBT_PORT', '5432') | int }}"
       dbname: "{{ env_var('DBT_DBNAME', 'postgres') }}"
-      schema: bronze
+      schema: public
       threads: 4
       sslmode: require
       connect_timeout: 30
