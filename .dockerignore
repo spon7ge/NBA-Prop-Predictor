@@ -1,0 +1,45 @@
+# Git & local artifacts
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+
+# Large / generated data (mount at runtime instead)
+data/backtest/
+data/raw/
+data/props/
+docs/data/
+
+# Frontend & node
+frontend/node_modules
+frontend/dist
+
+# Airflow runtime
+airflow/logs
+airflow/runtime
+
+# dbt build output
+dbt/target
+dbt/dbt_packages
+dbt/logs
+
+# Env & secrets (inject via compose)
+.env
+.env.*
+!.env.docker.example
+
+# IDE & OS
+.vscode
+.idea
+.DS_Store
+*.ipynb_checkpoints
+
+# Model binaries (mount or bake separately)
+src/models/saved_models/*.joblib
+
+# Notebooks (not needed in images)
+notebooks/

@@ -1,0 +1,95 @@
+# HoopVista — Phase 12 Docker stack
+#
+# Services:
+#   postgres  Local Postgres (optional — use Supabase by overriding SUPABASE_DB_URL)
+#   api       FastAPI backend (read-only DB queries)
+#   etl       Ingestion + dbt + ML predictions (one-shot via `docker compose run`)
+#
+# Quick start:
+#   cp .env.docker.example .env
+#   docker compose up -d postgres api
+#   docker compose run --rm etl dbt
+#
+# See docker/README.md for full docs.
+
+name: hoopvista
+
+services:
+  # ── Local Postgres (disable when using external Supabase) ─────────────────────
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hoopvista}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hoopvista}
+      POSTGRES_DB: ${POSTGRES_DB:-hoopvista}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/migrations:/docker-migrations:ro
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hoopvista} -d ${POSTGRES_DB:-hoopvista}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    profiles: ["local-db"]
+
+  # ── FastAPI backend ─────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    env_file:
+      - path: .env
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:-postgresql://${POSTGRES_USER:-hoopvista}:${POSTGRES_PASSWORD:-hoopvista}@host.docker.internal:${POSTGRES_PORT:-5433}/${POSTGRES_DB:-hoopvista}?sslmode=disable}
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+  # ── ETL: ingest → silver → dbt → predictions ────────────────────────────────
+  etl:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.etl
+    env_file:
+      - path: .env
+        required: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:-postgresql://${POSTGRES_USER:-hoopvista}:${POSTGRES_PASSWORD:-hoopvista}@host.docker.internal:${POSTGRES_PORT:-5433}/${POSTGRES_DB:-hoopvista}?sslmode=disable}
+      HOOPVISTA_NBA_SEASON: ${HOOPVISTA_NBA_SEASON:-2025-26}
+      HOOPVISTA_SEASON_TYPE: "${HOOPVISTA_SEASON_TYPE:-Regular Season}"
+      HOOPVISTA_ROTOWIRE_SEASON: ${HOOPVISTA_ROTOWIRE_SEASON:-2025}
+      GAME_DATE: ${GAME_DATE:-}
+      API_KEY: ${API_KEY:-}
+      API_KEY_IO_1: ${API_KEY_IO_1:-}
+      API_KEY_IO_2: ${API_KEY_IO_2:-}
+    volumes:
+      - ./data:/app/data
+      - ./src/models/saved_models:/app/src/models/saved_models
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+    profiles: ["etl"]
+
+volumes:
+  pgdata:

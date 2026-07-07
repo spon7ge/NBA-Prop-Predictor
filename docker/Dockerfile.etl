@@ -1,0 +1,26 @@
+# Ingestion + dbt + ML prediction pipeline
+FROM python:3.12-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends bash git curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements-etl.txt .
+RUN pip install --no-cache-dir -r requirements-etl.txt \
+    && playwright install --with-deps chromium
+
+COPY scripts/ scripts/
+COPY src/ src/
+COPY dbt/ dbt/
+COPY docker/etl-entrypoint.sh /usr/local/bin/etl-entrypoint.sh
+RUN chmod +x /usr/local/bin/etl-entrypoint.sh
+
+ENV PYTHONPATH=/app \
+    HOOPVISTA_NBA_SEASON=2025-26 \
+    HOOPVISTA_SEASON_TYPE="Regular Season" \
+    HOOPVISTA_ROTOWIRE_SEASON=2025
+
+ENTRYPOINT ["etl-entrypoint.sh"]
+CMD ["full"]

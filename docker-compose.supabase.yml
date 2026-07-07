@@ -1,0 +1,15 @@
+# Override for external Supabase (no local Postgres container).
+#
+# Usage:
+#   cp .env.docker.example .env   # set SUPABASE_DB_URL to Supabase
+#   docker compose -f docker-compose.yml -f docker-compose.supabase.yml up -d api
+
+services:
+  postgres:
+    profiles: ["disabled"]
+
+  api:
+    depends_on: !reset null
+
+  etl:
+    depends_on: !reset null
