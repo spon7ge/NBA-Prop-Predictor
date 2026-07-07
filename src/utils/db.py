@@ -1,9 +1,8 @@
 import math
 import os
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from functools import lru_cache
-
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
@@ -23,7 +22,6 @@ def get_client() -> Client:
     # the service role key is not set (read-only / public operations only).
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
     return create_client(url, key)
-
 
 def upsert(table: str, schema: str, rows: list[dict], on_conflict: str) -> None:
     """Small-batch upsert via supabase-py / PostgREST."""
@@ -79,6 +77,9 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     "props_us":  ["bookmaker", "category", "name", "over_under", "commence_time"],
     # silver layer (build_gamelogs_silver)
     "player_gamelogs": ["game_id", "player_id"],
+    # gold layer
+    "player_min_model": ["game_id", "player_id"],
+    "player_ppm_model": ["game_id", "player_id"],
 }
 
 
@@ -108,6 +109,8 @@ def _clean_val(v):
     if isinstance(v, pd.Timestamp):
         return v.isoformat()
     if isinstance(v, datetime):
+        return v.isoformat()
+    if isinstance(v, date):
         return v.isoformat()
     return v
 
@@ -308,6 +311,66 @@ def upsert_silver(
         table,
         upload,
         schema="silver",
+        conflict_cols=["game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col="built_at",
+    )
+
+
+def upsert_gold(
+    df: pd.DataFrame,
+    *,
+    table: str = "player_min_model",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert the MIN quantile model gold frame into ``gold.player_min_model``.
+
+    Expects ``MIN_FEATURES`` plus ``MIN``, ``GAME_DATE``, ``PLAYER_NAME``, ``STARTING``,
+    and ``GAME_ID`` / ``PLAYER_ID`` for the primary key. Run
+    ``scripts/migrations/004_gold_min_model.sql`` in Supabase before the first upload.
+    """
+    from src.utils.gold import prepare_gold_min_df
+
+    upload = prepare_gold_min_df(df)
+    upload = _align_df_to_table(
+        upload,
+        schema="gold",
+        table=table,
+    )
+    upsert_df(
+        table,
+        upload,
+        schema="gold",
+        conflict_cols=["game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col="built_at",
+    )
+
+
+def upsert_ppm_gold(
+    df: pd.DataFrame,
+    *,
+    table: str = "player_ppm_model",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert the PPM quantile model gold frame into ``gold.player_ppm_model``.
+
+    Expects ``PPM_FEATURES`` plus ``PTS_PER_MIN``, ``MIN``, ``GAME_DATE``,
+    ``PLAYER_NAME``, ``STARTING``, and ``GAME_ID`` / ``PLAYER_ID`` for the primary key.
+    Run ``scripts/migrations/005_gold_ppm_model.sql`` in Supabase before the first upload.
+    """
+    from src.utils.gold import prepare_gold_ppm_df
+
+    upload = prepare_gold_ppm_df(df)
+    upload = _align_df_to_table(
+        upload,
+        schema="gold",
+        table=table,
+    )
+    upsert_df(
+        table,
+        upload,
+        schema="gold",
         conflict_cols=["game_id", "player_id"],
         batch_size=batch_size,
         lineage_col="built_at",

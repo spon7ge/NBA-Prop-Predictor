@@ -37,7 +37,7 @@ except ImportError:
 
 PAGE_URL = "https://www.rotowire.com/betting/nba/archive.php"
 API_URL = "https://www.rotowire.com/betting/nba/tables/games-archive.php"
-TARGET_SEASON = "2025"
+TARGET_SEASON = "2019"
 OUTPUT_FILE = f"rotowire_nba_{TARGET_SEASON}.csv"
 HEADLESS = True  # Set False to watch the browser
 

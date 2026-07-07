@@ -36,7 +36,53 @@ _TRACKING_SILVER_RENAME = {
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _DEFAULT_POSITIONS = _PROJECT_ROOT / "data/raw/player_positions/player_positions.csv"
 _DEFAULT_REFERENCE = _PROJECT_ROOT / "data/raw/season_stats/S26.csv"
-_DEFAULT_ROTOWIRE = _PROJECT_ROOT / "data/raw/rotowire/rotowire_nba_2025.csv"
+_ROTOWIRE_DIR = _PROJECT_ROOT / "data/raw/rotowire"
+
+
+def rotowire_season_year(nba_season: str) -> str:
+    """NBA season label → Rotowire API season year (``2025-26`` → ``2025``)."""
+    parts = nba_season.strip().split("-")
+    if len(parts) >= 2 and parts[0].isdigit():
+        return parts[0]
+    return nba_season.strip()[:4]
+
+
+def rotowire_csv_for_season(
+    nba_season: str,
+    *,
+    rotowire_dir: str | Path | None = None,
+) -> Path:
+    """Default rotowire archive path for an NBA season (``2024-25`` → ``rotowire_nba_2024.csv``)."""
+    year = rotowire_season_year(nba_season)
+    base = Path(rotowire_dir) if rotowire_dir else _ROTOWIRE_DIR
+    return base / f"rotowire_nba_{year}.csv"
+
+
+def _ensure_rotowire_csv(
+    nba_season: str,
+    path: Path,
+    *,
+    headless: bool = True,
+) -> Path:
+    """Scrape Rotowire archive when the season CSV is missing."""
+    if path.exists():
+        return path
+
+    import asyncio
+
+    from src.scrapers.rotowire_scraper import run_scrape
+
+    api_season = rotowire_season_year(nba_season)
+    print(f"  rotowire CSV missing — scraping API season {api_season} → {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    asyncio.run(
+        run_scrape(
+            season=api_season,
+            output_file=path,
+            headless=headless,
+        )
+    )
+    return path
 
 
 def _resolve_data_path(path: str | Path) -> Path:
@@ -324,11 +370,19 @@ def build_gamelogs_silver(
     raw_frames: dict[str, pd.DataFrame] | None = None,
     positions_path: str | Path = _DEFAULT_POSITIONS,
     reference_season_csv: str | Path = _DEFAULT_REFERENCE,
-    rotowire_csv: str | Path = _DEFAULT_ROTOWIRE,
+    rotowire_csv: str | Path | None = None,
     is_playoff: int | None = None,
     skip_rotowire: bool = False,
+    scrape_rotowire: bool | None = None,
+    rotowire_headless: bool = True,
 ) -> pd.DataFrame:
-    """Merge raw tables + positions + name canon + rotowire → silver frame."""
+    """Merge raw tables + positions + name canon + rotowire → silver frame.
+
+  ``rotowire_csv`` defaults to ``data/raw/rotowire/rotowire_nba_{Y}.csv`` where
+    ``Y`` is the start year of ``season`` (``2025-26`` → ``2025``). When
+    ``skip_rotowire`` is False and the file is missing, Rotowire is scraped
+    automatically unless ``scrape_rotowire=False``.
+    """
     if is_playoff is None:
         is_playoff = 1 if season_type == "Playoffs" else 0
 
@@ -357,9 +411,24 @@ def build_gamelogs_silver(
     ref_path = _resolve_data_path(reference_season_csv)
     if not ref_path.exists():
         raise FileNotFoundError(f"Reference CSV not found: {ref_path}")
-    rotowire_path = _resolve_data_path(rotowire_csv)
-    if not skip_rotowire and not rotowire_path.exists():
-        raise FileNotFoundError(f"Rotowire CSV not found: {rotowire_path}")
+
+    rotowire_path: Path | None = None
+    if not skip_rotowire:
+        rotowire_path = _resolve_data_path(
+            rotowire_csv if rotowire_csv is not None else rotowire_csv_for_season(season)
+        )
+        should_scrape = scrape_rotowire if scrape_rotowire is not None else not rotowire_path.exists()
+        if should_scrape:
+            _ensure_rotowire_csv(season, rotowire_path, headless=rotowire_headless)
+        elif not rotowire_path.exists():
+            raise FileNotFoundError(
+                f"Rotowire CSV not found: {rotowire_path} "
+                f"(API season {rotowire_season_year(season)!r})"
+            )
+        print(
+            f"  rotowire — API season {rotowire_season_year(season)!r} "
+            f"from {rotowire_path.name}"
+        )
 
     df = merge_gamelogs(
         raw_frames["player_base"],
@@ -374,7 +443,7 @@ def build_gamelogs_silver(
         df,
         positions_path=positions_path,
         reference_season_csv=ref_path,
-        rotowire_csv=rotowire_path,
+        rotowire_csv=rotowire_path or rotowire_csv_for_season(season),
         is_playoff=is_playoff,
         skip_rotowire=skip_rotowire,
     )
