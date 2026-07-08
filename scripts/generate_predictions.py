@@ -59,7 +59,7 @@ def main() -> int:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 
-    from src.utils.db import upsert_ml_predictions
+    from src.utils.db import get_active_model_registry_entry, upsert_ml_predictions
     from src.utils.ml import (
         predict_quantiles,
         prepare_predictions_upload,
@@ -83,12 +83,37 @@ def main() -> int:
             continue
 
         print(f"  {len(features):,} rows loaded")
+
+        # Resolve model path: explicit flag > registry > directory scan (legacy).
+        model_path = args.model_path
+        active_model_id: str | None = None
+
+        if model_path is None:
+            registry_entry = get_active_model_registry_entry(prop)
+            if registry_entry is not None:
+                active_model_id = registry_entry["model_id"]
+                model_path = registry_entry.get("joblib_path")
+                print(f"  Registry: model_id={active_model_id}, path={model_path}")
+            else:
+                print(
+                    f"  WARNING: no active model found in ml.model_registry for '{prop}'. "
+                    "Falling back to directory scan. Run train_model.py to register a model."
+                )
+
         preds = predict_quantiles(
             prop,
             features,
-            model_path=args.model_path,
+            model_path=model_path,
             models_dir=args.models_dir,
         )
+
+        # Stamp the registry model_id onto every prediction row.
+        # predict_quantiles already sets MODEL_ID from bundle["model_id"] when the
+        # bundle was saved by the new train_prop_model; override with the registry
+        # value if we got one from the DB (handles both old and new bundles).
+        if active_model_id is not None:
+            preds["MODEL_ID"] = active_model_id
+
         upload = prepare_predictions_upload(preds)
         print(f"  {len(upload):,} predictions generated")
 

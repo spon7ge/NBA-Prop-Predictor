@@ -124,4 +124,19 @@ with DAG(
         ),
     )
 
-    start >> ingest_apis >> load_raw_tables >> dbt_run >> dbt_test >> generate_predictions >> end
+    # ── 5. Score predictions against realized outcomes ─────────────────────────
+    # Runs gold_prediction_accuracy dbt model after yesterday's box scores have
+    # landed (guaranteed by the ingest step at the top of each pipeline run).
+    # gold_prop_history is already up-to-date from the earlier dbt_run step.
+    score_predictions = BashOperator(
+        task_id="score_predictions",
+        bash_command=_cmd(
+            "python",
+            "scripts/run_dbt.py",
+            "run",
+            "--select",
+            "gold_prediction_accuracy",
+        ),
+    )
+
+    start >> ingest_apis >> load_raw_tables >> dbt_run >> dbt_test >> generate_predictions >> score_predictions >> end

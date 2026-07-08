@@ -14,6 +14,23 @@ sources:
           and team-context stats per player per game. Populated by the
           Python silver pipeline before dbt runs.
 
+  - name: ml
+    description: >
+      ML schema — model artifacts and predictions written by Python scripts.
+      These tables are NOT dbt-managed but serve as upstream inputs for
+      gold scoring models.
+    schema: ml
+    tables:
+      - name: predictions
+        description: >
+          Quantile regression model outputs (Q50 stored as `prediction`).
+          Written by scripts/generate_predictions.py after each slate.
+          PK: (prop, game_id, player_id).
+      - name: model_registry
+        description: >
+          Registry of trained model versions with metadata and joblib paths.
+          PK: model_id (UUID).
+
   - name: raw
     description: Untouched scraper / API landing tables in the raw schema.
     schema: raw

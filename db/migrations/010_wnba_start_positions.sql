@@ -1,0 +1,43 @@
+-- WNBA starter positions + tracking (BoxScorePlayerTrackV3, per game).
+-- position is '' for bench players, G/F/C for starters.
+
+CREATE TABLE IF NOT EXISTS raw.wnba_start_positions (
+    game_id                              TEXT        NOT NULL,
+    player_id                            BIGINT      NOT NULL,
+    fetched_at                           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    team_id                              BIGINT,
+    team_city                            TEXT,
+    team_name                            TEXT,
+    team_tricode                         TEXT,
+    team_slug                            TEXT,
+    first_name                           TEXT,
+    family_name                          TEXT,
+    name_i                               TEXT,
+    player_slug                          TEXT,
+    position                             TEXT,
+    comment                              TEXT,
+    jersey_num                           TEXT,
+    minutes                              TEXT,
+    speed                                NUMERIC,
+    distance                             NUMERIC,
+    rebound_chances_offensive            NUMERIC,
+    rebound_chances_defensive            NUMERIC,
+    rebound_chances_total                NUMERIC,
+    touches                              NUMERIC,
+    secondary_assists                    NUMERIC,
+    free_throw_assists                   NUMERIC,
+    passes                               NUMERIC,
+    assists                              NUMERIC,
+    contested_field_goals_made           NUMERIC,
+    contested_field_goals_attempted      NUMERIC,
+    contested_field_goal_percentage      NUMERIC,
+    uncontested_field_goals_made         NUMERIC,
+    uncontested_field_goals_attempted    NUMERIC,
+    uncontested_field_goals_percentage   NUMERIC,
+    field_goal_percentage                NUMERIC,
+    defended_at_rim_field_goals_made     NUMERIC,
+    defended_at_rim_field_goals_attempted NUMERIC,
+    defended_at_rim_field_goal_percentage NUMERIC,
+
+    PRIMARY KEY (game_id, player_id)
+);

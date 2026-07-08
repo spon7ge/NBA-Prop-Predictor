@@ -70,6 +70,12 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     "team_base":       ["game_id", "team_id"],
     "team_adv":        ["game_id", "team_id"],
     "start_positions": ["game_id", "player_id"],
+    # WNBA game-log tables (WNBAGameLogs.fetch)
+    "wnba_player_base": ["game_id", "player_id"],
+    "wnba_player_adv":  ["game_id", "player_id"],
+    "wnba_team_base":   ["game_id", "team_id"],
+    "wnba_team_adv":    ["game_id", "team_id"],
+    "wnba_start_positions": ["game_id", "player_id"],
     # play-by-play (NBAPlayByPlay / PlayByPlayV3 parquet)
     "pbp": ["game_id", "action_id"],
     # prop-line tables (NBAPropFinder)
@@ -77,6 +83,7 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     "props_us":  ["bookmaker", "category", "name", "over_under", "commence_time"],
     # silver layer (build_gamelogs_silver)
     "player_gamelogs": ["game_id", "player_id"],
+    "wnba_player_gamelogs": ["game_id", "player_id"],
     # gold layer
     "player_min_model": ["game_id", "player_id"],
     "player_ppm_model": ["game_id", "player_id"],
@@ -218,16 +225,17 @@ def upsert_df(
 
     df = df.copy()
     df.columns = [_normalize_col(c) for c in df.columns]
-    df = _align_df_to_table(df, schema=schema, table=table)
     if lineage_col:
         df[lineage_col] = datetime.now(timezone.utc)
 
-    cols, rows = _df_to_tuples(df)
-
     # Prefer direct Postgres (faster for large frames). Fall back to supabase-py
-    # when SUPABASE_DB_URL is missing or the pooler connection string is wrong.
+    # when SUPABASE_DB_URL is missing or the wire connection fails. Column
+    # alignment uses information_schema and must stay inside the Postgres try so
+    # REST fallback still works when port 5432/6543 is unreachable.
     via = "postgres"
     try:
+        aligned = _align_df_to_table(df, schema=schema, table=table)
+        cols, rows = _df_to_tuples(aligned)
         _upsert_df_postgres(table, rows, schema, conflict_cols, cols, batch_size)
     except Exception as exc:
         if not os.environ.get("SUPABASE_URL"):
@@ -236,8 +244,9 @@ def upsert_df(
             raise
         print(
             f"  → Postgres wire failed ({exc.__class__.__name__}); "
-            "using supabase-py (much slower — set SUPABASE_DB_URL for bulk loads)"
+            "using supabase-py (much slower — fix SUPABASE_DB_URL for bulk loads)"
         )
+        cols, rows = _df_to_tuples(df)
         records = [dict(zip(cols, row)) for row in rows]
         _upsert_df_supabase(table, records, schema, conflict_cols, batch_size)
         via = "supabase-py"
@@ -404,18 +413,174 @@ def upsert_ml_predictions(
     )
 
 
+def insert_model_registry(
+    *,
+    model_id: str,
+    prop_type: str,
+    trained_at,
+    feature_set_version: str | None,
+    training_season: str | None,
+    validation_metrics: dict | None,
+    joblib_path: str | None,
+) -> None:
+    """Record a new training run and mark it as the active model for ``prop_type``.
+
+    Deactivates all previous entries for the same prop so exactly one is_active
+    row exists per prop at any time.
+    """
+    import json as _json
+
+    trained_at_str = trained_at.isoformat() if hasattr(trained_at, "isoformat") else trained_at
+    metrics_json = _json.dumps(validation_metrics) if validation_metrics is not None else None
+
+    engine = get_engine()
+    conn = engine.raw_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE ml.model_registry SET is_active = FALSE WHERE prop_type = %s",
+            (prop_type,),
+        )
+        cur.execute(
+            """
+            INSERT INTO ml.model_registry
+                (model_id, prop_type, trained_at, feature_set_version, training_season,
+                 validation_metrics, joblib_path, is_active)
+            VALUES (%s, %s, %s, %s, %s, %s::jsonb, %s, TRUE)
+            ON CONFLICT (model_id) DO UPDATE SET
+                prop_type           = EXCLUDED.prop_type,
+                trained_at          = EXCLUDED.trained_at,
+                feature_set_version = EXCLUDED.feature_set_version,
+                training_season     = EXCLUDED.training_season,
+                validation_metrics  = EXCLUDED.validation_metrics,
+                joblib_path         = EXCLUDED.joblib_path,
+                is_active           = EXCLUDED.is_active
+            """,
+            (
+                model_id,
+                prop_type,
+                trained_at_str,
+                feature_set_version,
+                training_season,
+                metrics_json,
+                joblib_path,
+            ),
+        )
+        conn.commit()
+        print(f"  ✓ ml.model_registry — {prop_type} → {model_id} (active)")
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cur.close()
+        conn.close()
+
+
+def get_active_model_registry_entry(prop_type: str) -> dict | None:
+    """Return the active model_registry row for ``prop_type``, or ``None``.
+
+    Returns a dict with keys: model_id, prop_type, trained_at, feature_set_version,
+    training_season, validation_metrics, joblib_path, is_active.
+    """
+    q = """
+        SELECT model_id::text, prop_type, trained_at, feature_set_version,
+               training_season, validation_metrics, joblib_path, is_active
+        FROM ml.model_registry
+        WHERE prop_type = %(prop_type)s AND is_active = TRUE
+        ORDER BY trained_at DESC
+        LIMIT 1
+    """
+    try:
+        df = pd.read_sql(q, get_engine(), params={"prop_type": prop_type})
+        if df.empty:
+            return None
+        return df.iloc[0].to_dict()
+    except Exception as exc:
+        print(f"  → Could not query ml.model_registry ({exc.__class__.__name__}): {exc}")
+        return None
+
+
 def read_df(
     table: str,
     schema: str = "raw",
     *,
     where: str | None = None,
     params: dict | list | tuple | None = None,
+    eq: dict[str, object] | None = None,
+    like: dict[str, str] | None = None,
+    in_: dict[str, list] | None = None,
 ) -> pd.DataFrame:
-    """Read a Postgres/Supabase table into a DataFrame."""
+    """Read a Postgres/Supabase table into a DataFrame.
+
+    Tries direct Postgres first. On connection/auth failure, falls back to
+    supabase-py when ``eq`` / ``like`` / ``in_`` filters are provided.
+    """
     q = f'SELECT * FROM "{schema}"."{table}"'
     if where:
         q += f" WHERE {where}"
-    return pd.read_sql(q, get_engine(), params=params)
+    try:
+        return pd.read_sql(q, get_engine(), params=params)
+    except Exception as exc:
+        if not os.environ.get("SUPABASE_URL") or not (eq or like or in_):
+            raise
+        print(
+            f"  → Postgres read failed ({exc.__class__.__name__}); "
+            f"using supabase-py for {schema}.{table}"
+        )
+        return _read_df_rest(table, schema=schema, eq=eq, like=like, in_=in_)
+
+
+def _read_df_rest(
+    table: str,
+    *,
+    schema: str = "raw",
+    eq: dict[str, object] | None = None,
+    like: dict[str, str] | None = None,
+    in_: dict[str, list] | None = None,
+    page_size: int = 1000,
+) -> pd.DataFrame:
+    """Paginated table read via PostgREST (for when direct Postgres is unavailable)."""
+    client = get_client()
+
+    def _base_query():
+        q = client.schema(schema).table(table).select("*")
+        for col, val in (eq or {}).items():
+            q = q.eq(col, val)
+        for col, val in (like or {}).items():
+            q = q.like(col, val)
+        return q
+
+    if in_:
+        frames: list[pd.DataFrame] = []
+        for col, values in in_.items():
+            chunk_size = 150
+            for i in range(0, len(values), chunk_size):
+                chunk = values[i : i + chunk_size]
+                offset = 0
+                while True:
+                    q = _base_query().in_(col, chunk).range(offset, offset + page_size - 1)
+                    batch = q.execute().data
+                    if not batch:
+                        break
+                    frames.append(pd.DataFrame(batch))
+                    if len(batch) < page_size:
+                        break
+                    offset += page_size
+        if not frames:
+            return pd.DataFrame()
+        return pd.concat(frames, ignore_index=True)
+
+    offset = 0
+    frames = []
+    while True:
+        batch = _base_query().range(offset, offset + page_size - 1).execute().data
+        if not batch:
+            break
+        frames.append(pd.DataFrame(batch))
+        if len(batch) < page_size:
+            break
+        offset += page_size
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
 
 
 if __name__ == "__main__":

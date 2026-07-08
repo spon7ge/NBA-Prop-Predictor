@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -246,6 +249,28 @@ def fit_quantile_models(
     return models
 
 
+def _compute_val_metrics(
+    models: dict[str, object],
+    X_val: pd.DataFrame,
+    y_val: pd.Series,
+) -> dict:
+    """Compute pinball loss per quantile and MAE on the P50 over the held-out split."""
+    metrics: dict[str, float] = {}
+    for key, model in models.items():
+        q = float(key.split("_", 1)[1])
+        y_pred = model.predict(X_val)
+        errors = y_val.values - y_pred
+        pinball = float(np.mean(np.where(errors >= 0, q * errors, (q - 1) * errors)))
+        metrics[f"pinball_{key}"] = round(pinball, 4)
+
+    if "q_0.50" in models:
+        y_pred_median = models["q_0.50"].predict(X_val)
+        mae = float(np.mean(np.abs(y_val.values - y_pred_median)))
+        metrics["mae_p50"] = round(mae, 4)
+
+    return metrics
+
+
 def train_prop_model(
     prop: str,
     *,
@@ -255,8 +280,15 @@ def train_prop_model(
     models_dir: str | Path = _DEFAULT_MODELS_DIR,
     save_path: str | Path | None = None,
 ) -> Path:
-    """Train a quantile model from ``ml.features_*`` and save a joblib bundle."""
+    """Train a quantile model from ``ml.features_*``, register it, and save a joblib bundle.
+
+    Each call generates a fresh UUID, inserts a row into ``ml.model_registry``,
+    and saves the bundle as ``{prop}_{model_id}.joblib``.  The new entry is
+    automatically made the active model for that prop_type.
+    """
     import joblib
+
+    from src.utils.db import insert_model_registry
 
     prop = prop.lower()
     df = read_ml_features(prop, season_year=season_year, season_type=season_type)
@@ -267,29 +299,57 @@ def train_prop_model(
     X_train, y_train, X_val, y_val = _time_split(X, y, val_fraction=val_fraction)
     models = fit_quantile_models(X_train, y_train, X_val, y_val)
 
+    val_metrics = _compute_val_metrics(models, X_val, y_val)
+
+    feature_names = ML_PROP_FEATURES[prop]
+    feat_hash = hashlib.sha256(json.dumps(sorted(feature_names)).encode()).hexdigest()[:8]
+    feature_set_version = f"v_{feat_hash}"
+
+    training_season: str | None = None
+    if "SEASON_YEAR" in df.columns and df["SEASON_YEAR"].notna().any():
+        seasons = sorted(str(s) for s in df["SEASON_YEAR"].dropna().unique())
+        training_season = ",".join(seasons)
+
     train_end = None
     if "GAME_DATE" in df.columns and df["GAME_DATE"].notna().any():
         train_end = pd.to_datetime(df["GAME_DATE"], errors="coerce").max()
 
+    model_id = str(uuid.uuid4())
+    saved_at = datetime.now(timezone.utc)
+
     out_dir = Path(models_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     if save_path is None:
-        stamp = datetime.now(timezone.utc).date().isoformat()
-        save_path = out_dir / f"{prop}_quantile_xgb_{stamp}.joblib"
+        save_path = out_dir / f"{prop}_{model_id}.joblib"
     else:
         save_path = Path(save_path)
 
     bundle = {
         "prop": prop,
+        "model_id": model_id,
         "quantile_models": models,
-        "feature_names": ML_PROP_FEATURES[prop],
+        "feature_names": feature_names,
         "target": ML_PROP_TARGETS[prop],
+        "feature_set_version": feature_set_version,
+        "training_season": training_season,
+        "validation_metrics": val_metrics,
         "train_rows": int(len(X_train)),
         "val_rows": int(len(X_val)),
         "train_end": train_end,
-        "saved_at": datetime.now(timezone.utc),
+        "saved_at": saved_at,
     }
     joblib.dump(bundle, save_path)
+
+    insert_model_registry(
+        model_id=model_id,
+        prop_type=prop,
+        trained_at=saved_at,
+        feature_set_version=feature_set_version,
+        training_season=training_season,
+        validation_metrics=val_metrics,
+        joblib_path=str(save_path),
+    )
+
     return save_path
 
 
@@ -339,6 +399,7 @@ def predict_quantiles(
     out["PREDICTION"] = out["Q_0.50"]
     out["PROP"] = prop
     out["MODEL_PATH"] = bundle.get("model_path")
+    out["MODEL_ID"] = bundle.get("model_id")
     out["PREDICTED_AT"] = datetime.now(timezone.utc)
     return out.reset_index(drop=True)
 
@@ -374,6 +435,11 @@ def prepare_predictions_upload(predictions: pd.DataFrame) -> pd.DataFrame:
     elif "model_path" not in out.columns:
         out["model_path"] = None
 
+    if "MODEL_ID" in out.columns:
+        out["model_id"] = out["MODEL_ID"].astype(str).where(out["MODEL_ID"].notna(), None)
+    elif "model_id" not in out.columns:
+        out["model_id"] = None
+
     keep = [
         "prop",
         "game_id",
@@ -383,6 +449,7 @@ def prepare_predictions_upload(predictions: pd.DataFrame) -> pd.DataFrame:
         "game_date",
         "player_name",
         "model_path",
+        "model_id",
     ]
     out = out[keep]
     out = out[out["prediction"].notna() & out["player_id"].notna()]

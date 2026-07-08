@@ -1,0 +1,326 @@
+-- Each table is the "bronze" source-of-truth for one WNBAGameLogs DataFrame:
+--   raw.wnba_player_base ← PlayerGameLogs(league_id='10', measure_type='Base')
+--   raw.wnba_player_adv  ← PlayerGameLogs(league_id='10', measure_type='Advanced')
+--   raw.wnba_team_base   ← TeamGameLogs(league_id='10', measure_type='Base')
+--   raw.wnba_team_adv    ← TeamGameLogs(league_id='10', measure_type='Advanced')
+--
+-- Primary keys are the natural composite keys used for silver merges.
+-- fetched_at records when Python last wrote this row (updated on every upsert).
+-- All stat columns are NUMERIC so downstream casts are lossless.
+
+CREATE SCHEMA IF NOT EXISTS raw;
+
+-- ── raw.wnba_player_base ───────────────────────────────────────────────────────────
+-- Source: PlayerGameLogs(measure_type='Base')
+
+CREATE TABLE IF NOT EXISTS raw.wnba_player_base (
+    -- identity / join keys
+    game_id               TEXT        NOT NULL,
+    player_id             BIGINT      NOT NULL,
+    -- lineage
+    fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- descriptive
+    season_year           TEXT,
+    player_name           TEXT,
+    nickname              TEXT,
+    team_id               BIGINT,
+    team_abbreviation     TEXT,
+    team_name             TEXT,
+    game_date             TEXT,
+    matchup               TEXT,
+    wl                    TEXT,
+    -- box-score stats
+    min                   NUMERIC,
+    fgm                   NUMERIC,
+    fga                   NUMERIC,
+    fg_pct                NUMERIC,
+    fg3m                  NUMERIC,
+    fg3a                  NUMERIC,
+    fg3_pct               NUMERIC,
+    ftm                   NUMERIC,
+    fta                   NUMERIC,
+    ft_pct                NUMERIC,
+    oreb                  NUMERIC,
+    dreb                  NUMERIC,
+    reb                   NUMERIC,
+    ast                   NUMERIC,
+    tov                   NUMERIC,
+    stl                   NUMERIC,
+    blk                   NUMERIC,
+    blka                  NUMERIC,
+    pf                    NUMERIC,
+    pfd                   NUMERIC,
+    pts                   NUMERIC,
+    plus_minus            NUMERIC,
+    nba_fantasy_pts       NUMERIC,
+    dd2                   NUMERIC,
+    td3                   NUMERIC,
+    wnba_fantasy_pts      NUMERIC,
+    -- rank columns
+    gp_rank               NUMERIC,
+    w_rank                NUMERIC,
+    l_rank                NUMERIC,
+    w_pct_rank            NUMERIC,
+    min_rank              NUMERIC,
+    fgm_rank              NUMERIC,
+    fga_rank              NUMERIC,
+    fg_pct_rank           NUMERIC,
+    fg3m_rank             NUMERIC,
+    fg3a_rank             NUMERIC,
+    fg3_pct_rank          NUMERIC,
+    ftm_rank              NUMERIC,
+    fta_rank              NUMERIC,
+    ft_pct_rank           NUMERIC,
+    oreb_rank             NUMERIC,
+    dreb_rank             NUMERIC,
+    reb_rank              NUMERIC,
+    ast_rank              NUMERIC,
+    tov_rank              NUMERIC,
+    stl_rank              NUMERIC,
+    blk_rank              NUMERIC,
+    blka_rank              NUMERIC,
+    pf_rank               NUMERIC,
+    pfd_rank              NUMERIC,
+    pts_rank              NUMERIC,
+    plus_minus_rank       NUMERIC,
+    nba_fantasy_pts_rank  NUMERIC,
+    dd2_rank              NUMERIC,
+    td3_rank              NUMERIC,
+    wnba_fantasy_pts_rank NUMERIC,
+    available_flag        TEXT,
+    min_sec               TEXT,
+    team_count            NUMERIC,
+
+    PRIMARY KEY (game_id, player_id)
+);
+
+-- ── raw.wnba_player_adv ────────────────────────────────────────────────────────────
+-- Source: PlayerGameLogs(measure_type='Advanced')
+
+CREATE TABLE IF NOT EXISTS raw.wnba_player_adv (
+    -- identity / join keys
+    game_id               TEXT        NOT NULL,
+    player_id             BIGINT      NOT NULL,
+    -- lineage
+    fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- descriptive
+    season_year           TEXT,
+    player_name           TEXT,
+    nickname              TEXT,
+    team_id               BIGINT,
+    team_abbreviation     TEXT,
+    team_name             TEXT,
+    game_date             TEXT,
+    matchup               TEXT,
+    wl                    TEXT,
+    min                   NUMERIC,
+    -- advanced metrics
+    e_off_rating          NUMERIC,
+    off_rating            NUMERIC,
+    sp_work_off_rating    NUMERIC,
+    e_def_rating          NUMERIC,
+    def_rating            NUMERIC,
+    sp_work_def_rating    NUMERIC,
+    e_net_rating          NUMERIC,
+    net_rating            NUMERIC,
+    sp_work_net_rating    NUMERIC,
+    ast_pct               NUMERIC,
+    ast_to                NUMERIC,
+    ast_ratio             NUMERIC,
+    oreb_pct              NUMERIC,
+    dreb_pct              NUMERIC,
+    reb_pct               NUMERIC,
+    tm_tov_pct            NUMERIC,
+    e_tov_pct             NUMERIC,
+    efg_pct               NUMERIC,
+    ts_pct                NUMERIC,
+    usg_pct               NUMERIC,
+    e_usg_pct             NUMERIC,
+    e_pace                NUMERIC,
+    pace                  NUMERIC,
+    pace_per40            NUMERIC,
+    sp_work_pace          NUMERIC,
+    pie                   NUMERIC,
+    poss                  NUMERIC,
+    fgm                   NUMERIC,
+    fga                   NUMERIC,
+    fgm_pg                NUMERIC,
+    fga_pg                NUMERIC,
+    fg_pct                NUMERIC,
+    -- rank columns
+    gp_rank               NUMERIC,
+    w_rank                NUMERIC,
+    l_rank                NUMERIC,
+    w_pct_rank            NUMERIC,
+    min_rank              NUMERIC,
+    e_off_rating_rank     NUMERIC,
+    off_rating_rank       NUMERIC,
+    sp_work_off_rating_rank NUMERIC,
+    e_def_rating_rank     NUMERIC,
+    def_rating_rank       NUMERIC,
+    sp_work_def_rating_rank NUMERIC,
+    e_net_rating_rank     NUMERIC,
+    net_rating_rank       NUMERIC,
+    sp_work_net_rating_rank NUMERIC,
+    ast_pct_rank          NUMERIC,
+    ast_to_rank           NUMERIC,
+    ast_ratio_rank        NUMERIC,
+    oreb_pct_rank         NUMERIC,
+    dreb_pct_rank         NUMERIC,
+    reb_pct_rank          NUMERIC,
+    tm_tov_pct_rank       NUMERIC,
+    e_tov_pct_rank        NUMERIC,
+    efg_pct_rank          NUMERIC,
+    ts_pct_rank           NUMERIC,
+    usg_pct_rank          NUMERIC,
+    e_usg_pct_rank        NUMERIC,
+    e_pace_rank           NUMERIC,
+    pace_rank             NUMERIC,
+    sp_work_pace_rank     NUMERIC,
+    pie_rank              NUMERIC,
+    fgm_rank              NUMERIC,
+    fga_rank              NUMERIC,
+    fgm_pg_rank           NUMERIC,
+    fga_pg_rank           NUMERIC,
+    fg_pct_rank           NUMERIC,
+    available_flag        TEXT,
+    min_sec               TEXT,
+    team_count            NUMERIC,
+
+    PRIMARY KEY (game_id, player_id)
+);
+
+-- ── raw.wnba_team_base ─────────────────────────────────────────────────────────────
+-- Source: TeamGameLogs(measure_type='Base')
+
+CREATE TABLE IF NOT EXISTS raw.wnba_team_base (
+    -- identity / join keys
+    game_id               TEXT        NOT NULL,
+    team_id               BIGINT      NOT NULL,
+    -- lineage
+    fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- descriptive
+    season_year           TEXT,
+    team_abbreviation     TEXT,
+    team_name             TEXT,
+    game_date             TEXT,
+    matchup               TEXT,
+    wl                    TEXT,
+    -- box-score stats
+    min                   NUMERIC,
+    fgm                   NUMERIC,
+    fga                   NUMERIC,
+    fg_pct                NUMERIC,
+    fg3m                  NUMERIC,
+    fg3a                  NUMERIC,
+    fg3_pct               NUMERIC,
+    ftm                   NUMERIC,
+    fta                   NUMERIC,
+    ft_pct                NUMERIC,
+    oreb                  NUMERIC,
+    dreb                  NUMERIC,
+    reb                   NUMERIC,
+    ast                   NUMERIC,
+    tov                   NUMERIC,
+    stl                   NUMERIC,
+    blk                   NUMERIC,
+    blka                  NUMERIC,
+    pf                    NUMERIC,
+    pfd                   NUMERIC,
+    pts                   NUMERIC,
+    plus_minus            NUMERIC,
+    -- rank columns
+    gp_rank               NUMERIC,
+    w_rank                NUMERIC,
+    l_rank                NUMERIC,
+    w_pct_rank            NUMERIC,
+    min_rank              NUMERIC,
+    fgm_rank              NUMERIC,
+    fga_rank              NUMERIC,
+    fg_pct_rank           NUMERIC,
+    fg3m_rank             NUMERIC,
+    fg3a_rank             NUMERIC,
+    fg3_pct_rank          NUMERIC,
+    ftm_rank              NUMERIC,
+    fta_rank              NUMERIC,
+    ft_pct_rank           NUMERIC,
+    oreb_rank             NUMERIC,
+    dreb_rank             NUMERIC,
+    reb_rank              NUMERIC,
+    ast_rank              NUMERIC,
+    tov_rank              NUMERIC,
+    stl_rank              NUMERIC,
+    blk_rank              NUMERIC,
+    blka_rank             NUMERIC,
+    pf_rank               NUMERIC,
+    pfd_rank              NUMERIC,
+    pts_rank              NUMERIC,
+    plus_minus_rank       NUMERIC,
+    available_flag        TEXT,
+
+    PRIMARY KEY (game_id, team_id)
+);
+
+-- ── raw.wnba_team_adv ──────────────────────────────────────────────────────────────
+-- Source: TeamGameLogs(measure_type='Advanced')
+
+CREATE TABLE IF NOT EXISTS raw.wnba_team_adv (
+    -- identity / join keys
+    game_id               TEXT        NOT NULL,
+    team_id               BIGINT      NOT NULL,
+    -- lineage
+    fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- descriptive
+    season_year           TEXT,
+    team_abbreviation     TEXT,
+    team_name             TEXT,
+    game_date             TEXT,
+    matchup               TEXT,
+    wl                    TEXT,
+    min                   NUMERIC,
+    -- advanced metrics
+    e_off_rating          NUMERIC,
+    off_rating            NUMERIC,
+    e_def_rating          NUMERIC,
+    def_rating            NUMERIC,
+    e_net_rating          NUMERIC,
+    net_rating            NUMERIC,
+    ast_pct               NUMERIC,
+    ast_to                NUMERIC,
+    ast_ratio             NUMERIC,
+    oreb_pct              NUMERIC,
+    dreb_pct              NUMERIC,
+    reb_pct               NUMERIC,
+    tm_tov_pct            NUMERIC,
+    efg_pct               NUMERIC,
+    ts_pct                NUMERIC,
+    e_pace                NUMERIC,
+    pace                  NUMERIC,
+    pace_per40            NUMERIC,
+    poss                  NUMERIC,
+    pie                   NUMERIC,
+    -- rank columns
+    gp_rank               NUMERIC,
+    w_rank                NUMERIC,
+    l_rank                NUMERIC,
+    w_pct_rank            NUMERIC,
+    min_rank              NUMERIC,
+    off_rating_rank       NUMERIC,
+    def_rating_rank       NUMERIC,
+    net_rating_rank       NUMERIC,
+    ast_pct_rank          NUMERIC,
+    ast_to_rank           NUMERIC,
+    ast_ratio_rank        NUMERIC,
+    oreb_pct_rank         NUMERIC,
+    dreb_pct_rank         NUMERIC,
+    reb_pct_rank          NUMERIC,
+    tm_tov_pct_rank       NUMERIC,
+    efg_pct_rank          NUMERIC,
+    ts_pct_rank           NUMERIC,
+    pace_rank             NUMERIC,
+    pie_rank              NUMERIC,
+    available_flag        TEXT,
+
+    PRIMARY KEY (game_id, team_id)
+);
+
