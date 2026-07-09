@@ -1,4 +1,4 @@
-# Ingestion + dbt + ML prediction pipeline
+# Ingestion + transforms + ML prediction pipeline
 FROM python:3.12-slim
 
 RUN apt-get update \

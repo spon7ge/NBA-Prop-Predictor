@@ -4,7 +4,7 @@ HoopVista daily data pipeline.
 Steps:
   1. Ingest APIs      — NBA stats, odds/props, Rotowire metadata
   2. Load raw tables  — merge raw.* into silver.player_gamelogs
-  3. dbt run          — bronze → silver → gold → ml
+  3. Transform        — bronze → silver → gold → ml (Python → Supabase)
   4. Generate predictions — write ml.predictions for the slate date
 
 Requires env (repo-root .env or Airflow Variables):
@@ -50,7 +50,7 @@ def _cmd(*parts: str) -> str:
 
 with DAG(
     dag_id="hoopvista_daily_pipeline",
-    description="Ingest APIs → load tables → dbt → ML predictions",
+    description="Ingest APIs → load tables → transforms → ML predictions",
     schedule="0 6,14,22 * * *",  # 3× daily (ET-ish; adjust TZ in Airflow config)
     start_date=datetime(2026, 1, 1),
     catchup=False,
@@ -67,7 +67,9 @@ with DAG(
             task_id="nba_stats",
             bash_command=_cmd(
                 "python",
-                "src/utils/nbaPlayerLogs.py",
+                "src/utils/playerLogs.py",
+                "--league",
+                "nba",
                 f"--season {NBA_SEASON}",
                 f'--season-type "{SEASON_TYPE}"',
                 "--db-upsert",
@@ -100,15 +102,15 @@ with DAG(
         ),
     )
 
-    # ── 3. dbt run ─────────────────────────────────────────────────────────────
-    dbt_run = BashOperator(
-        task_id="dbt_run",
-        bash_command=_cmd("python", "scripts/run_dbt.py", "run"),
+    # ── 3. Materialize transforms (bronze/silver/gold/ml → Supabase) ───────────
+    run_transforms = BashOperator(
+        task_id="run_transforms",
+        bash_command=_cmd("python", "scripts/run_transforms.py"),
     )
 
-    dbt_test = BashOperator(
-        task_id="dbt_test",
-        bash_command=_cmd("python", "scripts/run_dbt.py", "test", "--select", "ml"),
+    transform_test = BashOperator(
+        task_id="transform_test",
+        bash_command=_cmd("python", "scripts/run_transforms.py", "--test", "ml"),
         trigger_rule="all_done",
     )
 
@@ -124,19 +126,15 @@ with DAG(
         ),
     )
 
-    # ── 5. Score predictions against realized outcomes ─────────────────────────
-    # Runs gold_prediction_accuracy dbt model after yesterday's box scores have
-    # landed (guaranteed by the ingest step at the top of each pipeline run).
-    # gold_prop_history is already up-to-date from the earlier dbt_run step.
+    # Runs gold_prediction_accuracy after yesterday's box scores have landed.
     score_predictions = BashOperator(
         task_id="score_predictions",
         bash_command=_cmd(
             "python",
-            "scripts/run_dbt.py",
-            "run",
+            "scripts/run_transforms.py",
             "--select",
             "gold_prediction_accuracy",
         ),
     )
 
-    start >> ingest_apis >> load_raw_tables >> dbt_run >> dbt_test >> generate_predictions >> score_predictions >> end
+    start >> ingest_apis >> load_raw_tables >> run_transforms >> transform_test >> generate_predictions >> score_predictions >> end

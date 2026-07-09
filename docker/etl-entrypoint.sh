@@ -14,7 +14,8 @@ GAME_DATE="${GAME_DATE:-$(date +%F)}"
 
 run_ingest() {
   echo "── 1/4 Ingest APIs ──"
-  python src/utils/nbaPlayerLogs.py \
+  python src/utils/playerLogs.py \
+    --league nba \
     --season "$NBA_SEASON" \
     --season-type "$SEASON_TYPE" \
     --db-upsert \
@@ -30,10 +31,10 @@ run_silver() {
     --season-type "$SEASON_TYPE"
 }
 
-run_dbt() {
-  echo "── 3/4 dbt run ──"
-  python scripts/run_dbt.py run
-  python scripts/run_dbt.py test --select ml
+run_transforms() {
+  echo "── 3/4 Materialize transforms → Supabase ──"
+  python scripts/run_transforms.py
+  python scripts/run_transforms.py --test ml
 }
 
 run_predict() {
@@ -47,7 +48,7 @@ run_predict() {
 run_full() {
   run_ingest
   run_silver
-  run_dbt
+  run_transforms
   run_predict
 }
 
@@ -56,7 +57,7 @@ usage() {
 HoopVista ETL — usage:
   etl-entrypoint.sh ingest   Fetch NBA stats, odds, Rotowire → raw.*
   etl-entrypoint.sh silver   Merge raw.* → silver.player_gamelogs
-  etl-entrypoint.sh dbt      Run dbt models + ml tests
+  etl-entrypoint.sh transforms Materialize bronze/silver/gold/ml → Supabase
   etl-entrypoint.sh predict  Write ml.predictions for GAME_DATE
   etl-entrypoint.sh full     Run all steps (default)
   etl-entrypoint.sh shell    Interactive bash
@@ -69,7 +70,8 @@ shift || true
 case "$cmd" in
   ingest) run_ingest "$@" ;;
   silver) run_silver "$@" ;;
-  dbt) run_dbt "$@" ;;
+  transforms) run_transforms "$@" ;;
+  dbt) echo "Note: 'dbt' is deprecated; use 'transforms'." >&2; run_transforms "$@" ;;
   predict) run_predict "$@" ;;
   full) run_full "$@" ;;
   shell) exec bash "$@" ;;

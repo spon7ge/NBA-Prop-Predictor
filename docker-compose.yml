@@ -3,12 +3,12 @@
 # Services:
 #   postgres  Local Postgres (optional — use Supabase by overriding SUPABASE_DB_URL)
 #   api       FastAPI backend (read-only DB queries)
-#   etl       Ingestion + dbt + ML predictions (one-shot via `docker compose run`)
+#   etl       Ingestion + transforms + ML predictions (one-shot via `docker compose run`)
 #
 # Quick start:
 #   cp .env.docker.example .env
 #   docker compose up -d postgres api
-#   docker compose run --rm etl dbt
+#   docker compose run --rm etl transforms
 #
 # See docker/README.md for full docs.
 

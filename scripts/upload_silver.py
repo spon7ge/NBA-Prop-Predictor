@@ -1,7 +1,7 @@
 """
 Build silver.player_gamelogs from raw.* tables and upsert to Supabase.
 
-Run after NBA bronze ingest (and ideally Rotowire scrape) and before dbt.
+Run after NBA bronze ingest (and ideally Rotowire scrape).
 
 Examples (from repo root):
 

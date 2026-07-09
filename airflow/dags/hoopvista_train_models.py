@@ -1,7 +1,7 @@
 """
 Weekly model retraining (separate from daily predictions).
 
-Run after dbt ml features are fresh. Models are reused by generate_predictions.py.
+Run after ml feature tables are fresh. Models are reused by generate_predictions.py.
 """
 
 from __future__ import annotations
@@ -39,9 +39,9 @@ with DAG(
         "retry_delay": timedelta(minutes=10),
     },
 ) as dag:
-    dbt_ml = BashOperator(
-        task_id="dbt_ml_features",
-        bash_command=_cmd("python", "scripts/run_dbt.py", "run", "--select", "ml"),
+    build_ml_features = BashOperator(
+        task_id="build_ml_features",
+        bash_command=_cmd("python", "scripts/run_transforms.py", "--select", "ml"),
     )
 
     train_models = BashOperator(
@@ -55,4 +55,4 @@ with DAG(
         ),
     )
 
-    dbt_ml >> train_models
+    build_ml_features >> train_models

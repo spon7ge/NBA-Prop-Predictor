@@ -1,6 +1,6 @@
 """GET /api/models/{model_id}/accuracy — backtesting metrics per model version.
 
-Reads from gold.gold_prediction_accuracy (dbt-managed table).
+Reads from gold.gold_prediction_accuracy (populated by run_transforms.py).
 All arithmetic is done in the DB; this route is purely read-only.
 """
 from __future__ import annotations

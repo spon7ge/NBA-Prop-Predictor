@@ -14,7 +14,7 @@ from src.utils.silver import (
     _prepare_start_positions,
     merge_gamelogs,
 )
-from src.utils.wnbaPlayerLogs import RAW_TABLE_BY_DATASET
+from src.utils.playerLogs import RAW_TABLE_BY_DATASET
 
 # In-memory / read_raw keys → Supabase ``raw.wnba_*`` table names.
 RAW_KEYS: tuple[str, ...] = tuple(RAW_TABLE_BY_DATASET.keys())
