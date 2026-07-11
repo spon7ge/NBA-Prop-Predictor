@@ -1,8 +1,9 @@
 -- Gold layer: WNBA model frames (parallel to NBA gold tables).
--- Source: src.utils.gold.build_*_gold_from_silver(..., league="wnba")
+-- Source: src.pipeline.gold.build_*_gold_from_silver(..., league="wnba")
 -- Upload: src.utils.db.upsert_prop_gold(prop, df, league="wnba")
 --
--- Same column shapes as 004–007; separate tables so NBA/WNBA never mix.
+-- MIN columns follow src.pipeline.features.wnba_min_features.WNBA_MIN_FEATURES
+-- (not a copy of the NBA min schema).
 
 CREATE SCHEMA IF NOT EXISTS gold;
 
@@ -28,18 +29,14 @@ CREATE TABLE IF NOT EXISTS gold.wnba_player_min_model (
     min_p90_l10                  NUMERIC,
     min_std_l10                  NUMERIC,
     min_season_std               NUMERIC,
-    spd_10_ewm                   NUMERIC,
     usg_pct_lag1                 NUMERIC,
     usg_pct_lag2                 NUMERIC,
     ast_pct_lag1                 NUMERIC,
-    ast_pct_lag2                 NUMERIC,
     pie_lag1                     NUMERIC,
-    pie_lag2                     NUMERIC,
     games_played_last_7_days     SMALLINT,
     games_played_last_14_days    SMALLINT,
     min_sum_last_7_days          NUMERIC,
-    top_player_active            SMALLINT,
-    active_stars_count           SMALLINT,
+    days_rest                    NUMERIC,
 
     PRIMARY KEY (game_id, player_id)
 );

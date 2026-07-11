@@ -21,7 +21,7 @@ from src.pipeline.features.apm_features import (
 from src.pipeline.features.min_features import (
     MIN_FEATURES,
     build_min_dataset,
-    prepare_season_df as prepare_min_season_df,
+    prepare_season_df as prepare_nba_min_season_df,
 )
 from src.pipeline.features.ppm_features import (
     PPM_FEATURES,
@@ -32,6 +32,11 @@ from src.pipeline.features.rpm_features import (
     RPM_FEATURES,
     build_rpm_dataset,
     prepare_season_df as prepare_rpm_season_df,
+)
+from src.pipeline.features.wnba_min_features import (
+    WNBA_MIN_FEATURES,
+    build_wnba_min_dataset,
+    prepare_season_df as prepare_wnba_min_season_df,
 )
 
 LeagueKey = Literal["nba", "wnba"]
@@ -44,38 +49,34 @@ _SILVER_TABLE: dict[LeagueKey, str] = {
     "wnba": "wnba_player_gamelogs",
 }
 
-# Features + target + shared metadata for each prop's gold upload frame.
-GOLD_MIN_MODEL_COLUMNS = MIN_FEATURES + ["MIN", "GAME_DATE", "PLAYER_NAME", "STARTING"]
-GOLD_PPM_MODEL_COLUMNS = PPM_FEATURES + [
-    "PTS_PER_MIN",
-    "MIN",
-    "GAME_DATE",
-    "PLAYER_NAME",
-    "STARTING",
-]
-GOLD_APM_MODEL_COLUMNS = APM_FEATURES + [
-    "AST_PER_MIN",
-    "MIN",
-    "GAME_DATE",
-    "PLAYER_NAME",
-    "STARTING",
-]
-GOLD_RPM_MODEL_COLUMNS = RPM_FEATURES + [
-    "REB_PER_MIN",
-    "MIN",
-    "GAME_DATE",
-    "PLAYER_NAME",
-    "STARTING",
-]
+_META = ["MIN", "GAME_DATE", "PLAYER_NAME", "STARTING"]
 
-GOLD_PROP_COLUMNS = {
-    "min": GOLD_MIN_MODEL_COLUMNS,
-    "ppm": GOLD_PPM_MODEL_COLUMNS,
-    "apm": GOLD_APM_MODEL_COLUMNS,
-    "rpm": GOLD_RPM_MODEL_COLUMNS,
+# Features + target + shared metadata for each prop's gold upload frame.
+GOLD_NBA_MIN_MODEL_COLUMNS = MIN_FEATURES + _META
+GOLD_WNBA_MIN_MODEL_COLUMNS = WNBA_MIN_FEATURES + _META
+GOLD_PPM_MODEL_COLUMNS = PPM_FEATURES + ["PTS_PER_MIN", *_META]
+GOLD_APM_MODEL_COLUMNS = APM_FEATURES + ["AST_PER_MIN", *_META]
+GOLD_RPM_MODEL_COLUMNS = RPM_FEATURES + ["REB_PER_MIN", *_META]
+
+# Back-compat alias (NBA).
+GOLD_MIN_MODEL_COLUMNS = GOLD_NBA_MIN_MODEL_COLUMNS
+
+GOLD_PROP_COLUMNS: dict[LeagueKey, dict[str, list[str]]] = {
+    "nba": {
+        "min": GOLD_NBA_MIN_MODEL_COLUMNS,
+        "ppm": GOLD_PPM_MODEL_COLUMNS,
+        "apm": GOLD_APM_MODEL_COLUMNS,
+        "rpm": GOLD_RPM_MODEL_COLUMNS,
+    },
+    "wnba": {
+        "min": GOLD_WNBA_MIN_MODEL_COLUMNS,
+        # PPM/APM/RPM still share NBA feature modules until wnba_*_features exist.
+        "ppm": GOLD_PPM_MODEL_COLUMNS,
+        "apm": GOLD_APM_MODEL_COLUMNS,
+        "rpm": GOLD_RPM_MODEL_COLUMNS,
+    },
 }
 
-# prop → unprefixed suffix; league is prepended at lookup time.
 _GOLD_PROP_SUFFIX = {
     "min": "player_min_model",
     "ppm": "player_ppm_model",
@@ -99,6 +100,16 @@ def gold_table(prop: str, league: LeagueKey = "nba") -> str:
     return GOLD_PROP_TABLES[league][prop]
 
 
+def gold_columns(prop: str, league: LeagueKey = "nba") -> list[str]:
+    """Return gold upload columns for a prop × league."""
+    prop = prop.lower()
+    if league not in GOLD_PROP_COLUMNS:
+        raise ValueError(f"Unknown league {league!r}; expected one of {sorted(GOLD_PROP_COLUMNS)}")
+    if prop not in GOLD_PROP_COLUMNS[league]:
+        raise ValueError(f"Unknown prop {prop!r}; expected one of {sorted(GOLD_PROP_COLUMNS[league])}")
+    return GOLD_PROP_COLUMNS[league][prop]
+
+
 def prepare_gold_df(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """Select and normalize a prop gold upload frame."""
     required = list(_GOLD_KEYS) + columns
@@ -112,8 +123,8 @@ def prepare_gold_df(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     return out
 
 
-def prepare_gold_min_df(df: pd.DataFrame) -> pd.DataFrame:
-    return prepare_gold_df(df, GOLD_MIN_MODEL_COLUMNS)
+def prepare_gold_min_df(df: pd.DataFrame, *, league: LeagueKey = "nba") -> pd.DataFrame:
+    return prepare_gold_df(df, gold_columns("min", league=league))
 
 
 def prepare_gold_ppm_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -131,8 +142,18 @@ def prepare_gold_rpm_df(df: pd.DataFrame) -> pd.DataFrame:
 def build_min_gold_dataset(
     season_dfs: list[pd.DataFrame],
     season_map: dict[int, str] | None = None,
+    *,
+    league: LeagueKey = "nba",
 ) -> pd.DataFrame:
-    return prepare_gold_min_df(build_min_dataset(season_dfs, season_map=season_map))
+    if league == "wnba":
+        return prepare_gold_min_df(
+            build_wnba_min_dataset(season_dfs, season_map=season_map),
+            league="wnba",
+        )
+    return prepare_gold_min_df(
+        build_min_dataset(season_dfs, season_map=season_map),
+        league="nba",
+    )
 
 
 def build_ppm_gold_dataset(
@@ -191,11 +212,20 @@ def build_min_gold_from_silver(
     season_label: str | None = None,
     league: LeagueKey = "nba",
 ) -> pd.DataFrame:
+    cols = gold_columns("min", league=league)
     df = _read_silver_slice(season_year, season_type, league=league)
     if df.empty:
-        return _empty_gold(GOLD_MIN_MODEL_COLUMNS)
+        return _empty_gold(cols)
     label = season_label or season_year
-    return prepare_gold_min_df(prepare_min_season_df(df, season_label=label))
+    if league == "wnba":
+        return prepare_gold_min_df(
+            prepare_wnba_min_season_df(df, season_label=label),
+            league="wnba",
+        )
+    return prepare_gold_min_df(
+        prepare_nba_min_season_df(df, season_label=label),
+        league="nba",
+    )
 
 
 def build_ppm_gold_from_silver(

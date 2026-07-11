@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from src.pipeline.features._common import fatigue_features
+
 MIN_FEATURES = [
     "MIN_10_ewm",
     "MIN_SEASON_MEAN",
@@ -44,7 +46,7 @@ def min_features(df: pd.DataFrame) -> pd.DataFrame:
     df = _rolling_player(df)
     df = _ewm_player(df)
     df = _lag_features(df)
-    df = _fatigue_features(df)
+    df = fatigue_features(df)
     df = _starter_features(df)
     df = _detect_star_players(df)
     df = _quantile_model_features(df)
@@ -103,36 +105,6 @@ def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
             if col not in df.columns:
                 continue
             df[f"{col}_lag{lag}"] = df.groupby("PLAYER_ID")[col].shift(lag)
-    return df
-
-
-def _fatigue_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Calendar-window fatigue proxies from prior games only (excludes current game)."""
-    df = df.copy()
-    games_7 = np.zeros(len(df), dtype=int)
-    games_14 = np.zeros(len(df), dtype=int)
-    min_sum_7 = np.zeros(len(df), dtype=float)
-
-    for idx in df.groupby("PLAYER_ID").groups.values():
-        pos = df.index.get_indexer(idx)
-        order = np.argsort(df.loc[idx, "GAME_DATE"].to_numpy())
-        pos = pos[order]
-        dates = df.loc[idx, "GAME_DATE"].to_numpy(dtype="datetime64[ns]")[order]
-        mins = df.loc[idx, "MIN"].to_numpy(dtype=float)[order]
-
-        for i in range(1, len(pos)):
-            d = dates[i]
-            prior_dates = dates[:i]
-            prior_mins = mins[:i]
-            mask_7 = prior_dates >= (d - np.timedelta64(7, "D"))
-            mask_14 = prior_dates >= (d - np.timedelta64(14, "D"))
-            games_7[pos[i]] = mask_7.sum()
-            games_14[pos[i]] = mask_14.sum()
-            min_sum_7[pos[i]] = prior_mins[mask_7].sum()
-
-    df["GAMES_PLAYED_LAST_7_DAYS"] = games_7
-    df["GAMES_PLAYED_LAST_14_DAYS"] = games_14
-    df["MIN_SUM_LAST_7_DAYS"] = min_sum_7.round(1)
     return df
 
 

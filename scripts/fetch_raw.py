@@ -52,7 +52,7 @@ def main() -> int:
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 
-    from src.utils.fetch import LEAGUES, GameLogs
+    from src.pipeline.fetch import LEAGUES, GameLogs
 
     args = _parse_args()
     season = args.season or LEAGUES[args.league].default_season

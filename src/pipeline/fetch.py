@@ -6,7 +6,7 @@ stay as the API returns them.
 
 Examples::
 
-    from src.utils.fetch import GameLogs
+    from src.pipeline.fetch import GameLogs
     GameLogs("2025-26", season_type="Regular Season", league="nba").fetch()
     GameLogs("2025", season_type="Playoffs", league="wnba").fetch()
 """

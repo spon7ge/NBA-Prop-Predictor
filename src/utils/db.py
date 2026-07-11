@@ -327,7 +327,7 @@ def upsert_gold(
     from src.pipeline.gold import gold_table, prepare_gold_min_df
 
     table = table or gold_table("min", league=league)  # type: ignore[arg-type]
-    upload = prepare_gold_min_df(df)
+    upload = prepare_gold_min_df(df, league=league)  # type: ignore[arg-type]
     upload = _align_df_to_table(upload, schema="gold", table=table)
     upsert_df(
         table,

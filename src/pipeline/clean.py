@@ -40,7 +40,7 @@ from typing import Literal
 import pandas as pd
 
 from src.utils.db import read_df, upsert_df
-from src.utils.fetch import LEAGUES, LeagueKey
+from src.pipeline.fetch import LEAGUES, LeagueKey
 
 # BoxScorePlayerTrackV3 snake_case → abbreviated silver column names.
 _TRACKING_SILVER_RENAME: dict[str, str] = {
