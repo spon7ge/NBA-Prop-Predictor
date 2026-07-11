@@ -1,26 +1,25 @@
--- Each table is the "bronze" source-of-truth for one NBAGameLogs DataFrame:
---   raw.player_base     ← PlayerGameLogs(measure_type='Base')
---   raw.player_adv      ← PlayerGameLogs(measure_type='Advanced')
---   raw.team_base       ← TeamGameLogs(measure_type='Base')
---   raw.team_adv        ← TeamGameLogs(measure_type='Advanced')
---   raw.start_positions ← BoxScorePlayerTrackV3 (per-game tracking / START_POSITION)
+-- Raw NBA game-log tables — one table per nba_api endpoint.
+--   raw.nba_player_base      ← PlayerGameLogs(measure_type='Base')
+--   raw.nba_player_adv       ← PlayerGameLogs(measure_type='Advanced')
+--   raw.nba_team_base        ← TeamGameLogs(measure_type='Base')
+--   raw.nba_team_adv         ← TeamGameLogs(measure_type='Advanced')
+--   raw.nba_player_tracking  ← BoxScorePlayerTrackV3 (per-game tracking / position)
 --
--- Primary keys are the natural composite keys used by NBAGameLogs.build() for its merges.
--- fetched_at records when Python last wrote this row (updated on every upsert).
--- All stat columns are NUMERIC so downstream casts are lossless.
+-- Column names are the endpoint fields after snake_case normalization
+-- (GAME_ID → game_id, firstName → first_name). Only game_id / player_id /
+-- team_id are renamed in fetch.py; everything else is the API as returned.
+-- fetched_at is stamped on every upsert.
 
 CREATE SCHEMA IF NOT EXISTS raw;
 
--- ── raw.player_base ───────────────────────────────────────────────────────────
+-- ── raw.nba_player_base ───────────────────────────────────────────────────────
 -- Source: PlayerGameLogs(measure_type='Base')
 
-CREATE TABLE IF NOT EXISTS raw.player_base (
-    -- identity / join keys
+CREATE TABLE IF NOT EXISTS raw.nba_player_base (
     game_id               TEXT        NOT NULL,
     player_id             BIGINT      NOT NULL,
-    -- lineage
     fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    -- descriptive
+
     season_year           TEXT,
     player_name           TEXT,
     nickname              TEXT,
@@ -30,7 +29,6 @@ CREATE TABLE IF NOT EXISTS raw.player_base (
     game_date             TEXT,
     matchup               TEXT,
     wl                    TEXT,
-    -- box-score stats
     min                   NUMERIC,
     fgm                   NUMERIC,
     fga                   NUMERIC,
@@ -57,7 +55,6 @@ CREATE TABLE IF NOT EXISTS raw.player_base (
     dd2                   NUMERIC,
     td3                   NUMERIC,
     wnba_fantasy_pts      NUMERIC,
-    -- rank columns
     gp_rank               NUMERIC,
     w_rank                NUMERIC,
     l_rank                NUMERIC,
@@ -79,7 +76,7 @@ CREATE TABLE IF NOT EXISTS raw.player_base (
     tov_rank              NUMERIC,
     stl_rank              NUMERIC,
     blk_rank              NUMERIC,
-    blka_rank              NUMERIC,
+    blka_rank             NUMERIC,
     pf_rank               NUMERIC,
     pfd_rank              NUMERIC,
     pts_rank              NUMERIC,
@@ -95,16 +92,14 @@ CREATE TABLE IF NOT EXISTS raw.player_base (
     PRIMARY KEY (game_id, player_id)
 );
 
--- ── raw.player_adv ────────────────────────────────────────────────────────────
+-- ── raw.nba_player_adv ────────────────────────────────────────────────────────
 -- Source: PlayerGameLogs(measure_type='Advanced')
 
-CREATE TABLE IF NOT EXISTS raw.player_adv (
-    -- identity / join keys
+CREATE TABLE IF NOT EXISTS raw.nba_player_adv (
     game_id               TEXT        NOT NULL,
     player_id             BIGINT      NOT NULL,
-    -- lineage
     fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    -- descriptive
+
     season_year           TEXT,
     player_name           TEXT,
     nickname              TEXT,
@@ -115,7 +110,6 @@ CREATE TABLE IF NOT EXISTS raw.player_adv (
     matchup               TEXT,
     wl                    TEXT,
     min                   NUMERIC,
-    -- advanced metrics
     e_off_rating          NUMERIC,
     off_rating            NUMERIC,
     sp_work_off_rating    NUMERIC,
@@ -148,7 +142,6 @@ CREATE TABLE IF NOT EXISTS raw.player_adv (
     fgm_pg                NUMERIC,
     fga_pg                NUMERIC,
     fg_pct                NUMERIC,
-    -- rank columns
     gp_rank               NUMERIC,
     w_rank                NUMERIC,
     l_rank                NUMERIC,
@@ -191,23 +184,20 @@ CREATE TABLE IF NOT EXISTS raw.player_adv (
     PRIMARY KEY (game_id, player_id)
 );
 
--- ── raw.team_base ─────────────────────────────────────────────────────────────
+-- ── raw.nba_team_base ─────────────────────────────────────────────────────────
 -- Source: TeamGameLogs(measure_type='Base')
 
-CREATE TABLE IF NOT EXISTS raw.team_base (
-    -- identity / join keys
+CREATE TABLE IF NOT EXISTS raw.nba_team_base (
     game_id               TEXT        NOT NULL,
     team_id               BIGINT      NOT NULL,
-    -- lineage
     fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    -- descriptive
+
     season_year           TEXT,
     team_abbreviation     TEXT,
     team_name             TEXT,
     game_date             TEXT,
     matchup               TEXT,
     wl                    TEXT,
-    -- box-score stats
     min                   NUMERIC,
     fgm                   NUMERIC,
     fga                   NUMERIC,
@@ -230,7 +220,6 @@ CREATE TABLE IF NOT EXISTS raw.team_base (
     pfd                   NUMERIC,
     pts                   NUMERIC,
     plus_minus            NUMERIC,
-    -- rank columns
     gp_rank               NUMERIC,
     w_rank                NUMERIC,
     l_rank                NUMERIC,
@@ -262,16 +251,14 @@ CREATE TABLE IF NOT EXISTS raw.team_base (
     PRIMARY KEY (game_id, team_id)
 );
 
--- ── raw.team_adv ──────────────────────────────────────────────────────────────
+-- ── raw.nba_team_adv ──────────────────────────────────────────────────────────
 -- Source: TeamGameLogs(measure_type='Advanced')
 
-CREATE TABLE IF NOT EXISTS raw.team_adv (
-    -- identity / join keys
+CREATE TABLE IF NOT EXISTS raw.nba_team_adv (
     game_id               TEXT        NOT NULL,
     team_id               BIGINT      NOT NULL,
-    -- lineage
     fetched_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    -- descriptive
+
     season_year           TEXT,
     team_abbreviation     TEXT,
     team_name             TEXT,
@@ -279,7 +266,6 @@ CREATE TABLE IF NOT EXISTS raw.team_adv (
     matchup               TEXT,
     wl                    TEXT,
     min                   NUMERIC,
-    -- advanced metrics
     e_off_rating          NUMERIC,
     off_rating            NUMERIC,
     e_def_rating          NUMERIC,
@@ -300,7 +286,6 @@ CREATE TABLE IF NOT EXISTS raw.team_adv (
     pace_per40            NUMERIC,
     poss                  NUMERIC,
     pie                   NUMERIC,
-    -- rank columns
     gp_rank               NUMERIC,
     w_rank                NUMERIC,
     l_rank                NUMERIC,
@@ -325,49 +310,46 @@ CREATE TABLE IF NOT EXISTS raw.team_adv (
     PRIMARY KEY (game_id, team_id)
 );
 
--- ── raw.start_positions ───────────────────────────────────────────────────────
--- Source: BoxScorePlayerTrackV3 — one row per player per game (full API response).
--- position is '' for bench players, a letter (G/F/C) for starters.
+-- ── raw.nba_player_tracking ───────────────────────────────────────────────────
+-- Source: BoxScorePlayerTrackV3 — one row per player per game.
+-- position is '' for bench players, G/F/C for starters.
 
-CREATE TABLE IF NOT EXISTS raw.start_positions (
-    -- identity / join keys
-    game_id                              TEXT        NOT NULL,
-    player_id                            BIGINT      NOT NULL,
-    -- lineage
-    fetched_at                           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    -- team / player descriptive
-    team_id                              BIGINT,
-    team_city                            TEXT,
-    team_name                            TEXT,
-    team_tricode                         TEXT,
-    team_slug                            TEXT,
-    first_name                           TEXT,
-    family_name                          TEXT,
-    name_i                               TEXT,
-    player_slug                          TEXT,
-    position                             TEXT,
-    comment                              TEXT,
-    jersey_num                           TEXT,
-    -- tracking stats
-    minutes                              TEXT,
-    speed                                NUMERIC,
-    distance                             NUMERIC,
-    rebound_chances_offensive            NUMERIC,
-    rebound_chances_defensive            NUMERIC,
-    rebound_chances_total                NUMERIC,
-    touches                              NUMERIC,
-    secondary_assists                    NUMERIC,
-    free_throw_assists                   NUMERIC,
-    passes                               NUMERIC,
-    assists                              NUMERIC,
-    contested_field_goals_made           NUMERIC,
-    contested_field_goals_attempted      NUMERIC,
-    contested_field_goal_percentage      NUMERIC,
-    uncontested_field_goals_made         NUMERIC,
-    uncontested_field_goals_attempted    NUMERIC,
-    uncontested_field_goals_percentage   NUMERIC,
-    field_goal_percentage                NUMERIC,
-    defended_at_rim_field_goals_made     NUMERIC,
+CREATE TABLE IF NOT EXISTS raw.nba_player_tracking (
+    game_id                               TEXT        NOT NULL,
+    player_id                             BIGINT      NOT NULL,
+    fetched_at                            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    team_id                               BIGINT,
+    team_city                             TEXT,
+    team_name                             TEXT,
+    team_tricode                          TEXT,
+    team_slug                             TEXT,
+    first_name                            TEXT,
+    family_name                           TEXT,
+    name_i                                TEXT,
+    player_slug                           TEXT,
+    position                              TEXT,
+    comment                               TEXT,
+    jersey_num                            TEXT,
+    minutes                               TEXT,
+    speed                                 NUMERIC,
+    distance                              NUMERIC,
+    rebound_chances_offensive             NUMERIC,
+    rebound_chances_defensive             NUMERIC,
+    rebound_chances_total                 NUMERIC,
+    touches                               NUMERIC,
+    secondary_assists                     NUMERIC,
+    free_throw_assists                    NUMERIC,
+    passes                                NUMERIC,
+    assists                               NUMERIC,
+    contested_field_goals_made            NUMERIC,
+    contested_field_goals_attempted       NUMERIC,
+    contested_field_goal_percentage       NUMERIC,
+    uncontested_field_goals_made          NUMERIC,
+    uncontested_field_goals_attempted     NUMERIC,
+    uncontested_field_goals_percentage    NUMERIC,
+    field_goal_percentage                 NUMERIC,
+    defended_at_rim_field_goals_made      NUMERIC,
     defended_at_rim_field_goals_attempted NUMERIC,
     defended_at_rim_field_goal_percentage NUMERIC,
 

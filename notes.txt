@@ -1,26 +1,29 @@
-Run the full pipeline
-cd dbt
-dbt run          # builds bronze → silver → gold in dependency order
-dbt test         # validates not_null + accepted_values constraints
+activate virtual env:
+.\nba_model\Scripts\Activate.ps1
 
-common commands:
-python scripts/run_dbt.py debug              # test DB connection first
-python scripts/run_dbt.py run                # full bronze → silver → gold
-python scripts/run_dbt.py run --select gold  # gold layer only
-python scripts/run_dbt.py test               # run all yml tests
-python scripts/run_dbt.py run --select silver_player_gamelogs+  # a model + all downstream
 
-Singular SQL tests (dbt/test/)
-assert_silver_player_gamelogs_unique_game_player.sql
-No duplicate (game_id, player_id) — composite PK
-assert_gold_player_game_stats_unique_game_player.sql
-No duplicate (game_id, player_id) — no player appears twice per game
-assert_valid_team_abbreviations.sql
-team_abbreviation and opp_team_abbreviation are valid NBA tricodes
-assert_silver_games_home_away_differ.sql
-Home team ≠ away team in every game
+How to use Fetch.py in CLI
+python scripts/fetch_raw.py --league nba --season 2025-26 --season-type "Regular Season"
+python scripts/fetch_raw.py --league nba --season 2025-26 --season-type Playoffs
+python scripts/fetch_raw.py --league wnba --season 2025
 
-Run it:
-python scripts/run_dbt.py test                          # all tests
-python scripts/run_dbt.py test --select silver          # silver only
-python scripts/run_dbt.py test --select gold            # gold only
+In Notebook:
+from src.utils.fetch import GameLogs
+
+# NBA regular season → upserts to raw.* by default
+logs = GameLogs("2025-26", season_type="Regular Season", league="nba")
+logs.fetch()
+
+# Playoffs
+GameLogs("2025-26", season_type="Playoffs", league="nba").fetch()
+
+# WNBA
+GameLogs("2025", season_type="Regular Season", league="wnba").fetch()
+
+
+How to build silver (merge 5 raw tables → silver.*)
+from src.utils.clean import build_silver
+
+build_silver("2025-26", "Regular Season", league="nba")   # → silver.nba_player_gamelogs
+build_silver("2025-26", "Playoffs", league="nba")
+build_silver("2025", "Regular Season", league="wnba")     # → silver.wnba_player_gamelogs

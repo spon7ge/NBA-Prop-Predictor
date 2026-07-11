@@ -12,10 +12,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.features.apm_features import APM_FEATURES
-from src.features.min_features import MIN_FEATURES
-from src.features.ppm_features import PPM_FEATURES
-from src.features.rpm_features import RPM_FEATURES
+from src.pipeline.features.apm_features import APM_FEATURES
+from src.pipeline.features.min_features import MIN_FEATURES
+from src.pipeline.features.ppm_features import PPM_FEATURES
+from src.pipeline.features.rpm_features import RPM_FEATURES
 
 ML_PROP_TABLES = {
     "min": "features_min",

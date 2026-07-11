@@ -1,10 +1,10 @@
 -- Silver layer: one denormalized row per player-game.
--- Source: src.utils.silver.build_gamelogs_silver
--- Upload: src.utils.db.upsert_silver
+-- Source: src.utils.clean.build_silver
+-- Upload: src.utils.clean.upsert_silver
 
 CREATE SCHEMA IF NOT EXISTS silver;
 
-CREATE TABLE IF NOT EXISTS silver.player_gamelogs (
+CREATE TABLE IF NOT EXISTS silver.nba_player_gamelogs (
     game_id                              TEXT        NOT NULL,
     player_id                            BIGINT      NOT NULL,
     built_at                             TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS silver.player_gamelogs (
     PRIMARY KEY (game_id, player_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_silver_pg_season ON silver.player_gamelogs (season_year, season_type);
-CREATE INDEX IF NOT EXISTS idx_silver_pg_date ON silver.player_gamelogs (game_date);
-CREATE INDEX IF NOT EXISTS idx_silver_pg_player ON silver.player_gamelogs (player_id);
-CREATE INDEX IF NOT EXISTS idx_silver_pg_team ON silver.player_gamelogs (team_abbreviation);
+CREATE INDEX IF NOT EXISTS idx_silver_nba_pg_season ON silver.nba_player_gamelogs (season_year, season_type);
+CREATE INDEX IF NOT EXISTS idx_silver_nba_pg_date ON silver.nba_player_gamelogs (game_date);
+CREATE INDEX IF NOT EXISTS idx_silver_nba_pg_player ON silver.nba_player_gamelogs (player_id);
+CREATE INDEX IF NOT EXISTS idx_silver_nba_pg_team ON silver.nba_player_gamelogs (team_abbreviation);

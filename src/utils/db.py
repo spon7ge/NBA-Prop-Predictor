@@ -54,39 +54,44 @@ def get_engine():
     return create_engine(url, pool_pre_ping=True)
 
 
-# Column renames applied before silver upload (merge artifact cleanup).
-_SILVER_COLUMN_RENAME: dict[str, str] = {
-    "OPP_OPP_ABBREVIATION_base": "OPP_TEAM_ABBREVIATION",
-    "OPP_OPP_NAME_base": "OPP_TEAM_NAME",
-    "OPP_OPP_ABBREVIATION": "OPP_TEAM_ABBREVIATION",
-    "OPP_OPP_NAME": "OPP_TEAM_NAME",
-}
-
-# Conflict column defaults — one entry per raw.* / silver.* table.
+# Conflict column defaults for raw.* (and other) upsert targets.
 _RAW_CONFLICT_COLS: dict[str, list[str]] = {
-    # game-log tables (NBAGameLogs.fetch)
-    "player_base":     ["game_id", "player_id"],
-    "player_adv":      ["game_id", "player_id"],
-    "team_base":       ["game_id", "team_id"],
-    "team_adv":        ["game_id", "team_id"],
-    "start_positions": ["game_id", "player_id"],
-    # WNBA game-log tables (WNBAGameLogs.fetch)
+    # NBA game-log tables (GameLogs.fetch)
+    "nba_player_base":     ["game_id", "player_id"],
+    "nba_player_adv":      ["game_id", "player_id"],
+    "nba_team_base":       ["game_id", "team_id"],
+    "nba_team_adv":        ["game_id", "team_id"],
+    "nba_player_tracking": ["game_id", "player_id"],
+    # WNBA game-log tables
     "wnba_player_base": ["game_id", "player_id"],
     "wnba_player_adv":  ["game_id", "player_id"],
     "wnba_team_base":   ["game_id", "team_id"],
     "wnba_team_adv":    ["game_id", "team_id"],
     "wnba_start_positions": ["game_id", "player_id"],
-    # play-by-play (NBAPlayByPlay / PlayByPlayV3 parquet)
+    # play-by-play
     "pbp": ["game_id", "action_id"],
-    # prop-line tables (NBAPropFinder)
-    "props_dfs": ["bookmaker", "category", "name", "over_under", "commence_time"],
-    "props_us":  ["bookmaker", "category", "name", "over_under", "commence_time"],
-    # silver layer (build_gamelogs_silver)
-    "player_gamelogs": ["game_id", "player_id"],
+    # prop-line tables
+    "nba_props_dfs": ["bookmaker", "category", "name", "over_under", "commence_time"],
+    "nba_props_us":  ["bookmaker", "category", "name", "over_under", "commence_time"],
+    "wnba_props_dfs": ["bookmaker", "category", "name", "over_under", "commence_time", "data_pulled_at", "line"],
+    "wnba_props_us":  ["bookmaker", "category", "name", "over_under", "commence_time", "data_pulled_at", "line"],
+    # silver
+    "nba_player_gamelogs": ["game_id", "player_id"],
     "wnba_player_gamelogs": ["game_id", "player_id"],
-    # gold layer
+    # gold / ml
+    "nba_player_min_model": ["game_id", "player_id"],
+    "nba_player_ppm_model": ["game_id", "player_id"],
+    "nba_player_apm_model": ["game_id", "player_id"],
+    "nba_player_rpm_model": ["game_id", "player_id"],
+    "wnba_player_min_model": ["game_id", "player_id"],
+    "wnba_player_ppm_model": ["game_id", "player_id"],
+    "wnba_player_apm_model": ["game_id", "player_id"],
+    "wnba_player_rpm_model": ["game_id", "player_id"],
+    # legacy unprefixed gold names (pre-league split)
     "player_min_model": ["game_id", "player_id"],
     "player_ppm_model": ["game_id", "player_id"],
+    "player_apm_model": ["game_id", "player_id"],
+    "player_rpm_model": ["game_id", "player_id"],
     "predictions": ["prop", "game_id", "player_id"],
 }
 
@@ -108,12 +113,25 @@ def _clean_val(v):
     """Convert pandas NA / numpy sentinels to JSON-safe Python values."""
     if v is pd.NaT or v is pd.NA:
         return None
+    if v is None:
+        return None
+    try:
+        if pd.isna(v):
+            return None
+    except (TypeError, ValueError):
+        pass
     if isinstance(v, float) and math.isnan(v):
         return None
-    if isinstance(v, (np.integer,)):
+    if isinstance(v, (np.integer, int)) and not isinstance(v, bool):
         return int(v)
-    if isinstance(v, (np.floating,)):
-        return float(v)
+    if isinstance(v, (np.floating, float)):
+        fv = float(v)
+        if math.isnan(fv):
+            return None
+        # Whole-number floats → int (player_id / team_id must not be "203827.0").
+        if fv == int(fv):
+            return int(fv)
+        return fv
     if isinstance(v, pd.Timestamp):
         return v.isoformat()
     if isinstance(v, datetime):
@@ -228,6 +246,14 @@ def upsert_df(
     if lineage_col:
         df[lineage_col] = datetime.now(timezone.utc)
 
+    pk_cols = [c for c in conflict_cols if c in df.columns]
+    if pk_cols:
+        before = len(df)
+        df = df.dropna(subset=pk_cols)
+        dropped = before - len(df)
+        if dropped:
+            print(f"  → dropped {dropped} row(s) with null PK ({', '.join(pk_cols)})")
+
     # Prefer direct Postgres (faster for large frames). Fall back to supabase-py
     # when SUPABASE_DB_URL is missing or the wire connection fails. Column
     # alignment uses information_schema and must stay inside the Postgres try so
@@ -254,22 +280,6 @@ def upsert_df(
     print(f"  ✓ {schema}.{table} — {len(rows):,} rows upserted ({via})") 
 
 
-def prepare_silver_df(
-    df: pd.DataFrame,
-    *,
-    season_type: str,
-) -> pd.DataFrame:
-    """Normalize a ``build_gamelogs_silver`` frame for ``silver.player_gamelogs`` upload."""
-    out = df.copy()
-    rename = {k: v for k, v in _SILVER_COLUMN_RENAME.items() if k in out.columns}
-    if rename:
-        out = out.rename(columns=rename)
-    out["SEASON_TYPE"] = season_type
-    if "GAME_DATE" in out.columns:
-        out["GAME_DATE"] = pd.to_datetime(out["GAME_DATE"], errors="coerce").dt.date
-    return out
-
-
 @lru_cache(maxsize=32)
 def _table_columns(schema: str, table: str) -> frozenset[str]:
     q = """
@@ -291,6 +301,12 @@ def _align_df_to_table(
 ) -> pd.DataFrame:
     """Keep only columns that exist in the target table (snake_case names)."""
     table_cols = _table_columns(schema, table)
+    if not table_cols:
+        raise RuntimeError(
+            f"No columns found for {schema}.{table} — "
+            "table is missing or migration was not applied. "
+            "Check information_schema / run the matching db/migrations/*.sql."
+        )
     out = df.copy()
     out.columns = [_normalize_col(c) for c in out.columns]
     keep = [c for c in out.columns if c in table_cols]
@@ -300,53 +316,19 @@ def _align_df_to_table(
     return out[keep]
 
 
-def upsert_silver(
-    df: pd.DataFrame,
-    *,
-    season_type: str,
-    table: str = "player_gamelogs",
-    batch_size: int = 2000,
-) -> None:
-    """Upsert a silver game-log frame into ``silver.player_gamelogs``.
-
-    Run ``scripts/migrations/003_silver_gamelogs.sql`` in Supabase before the first upload.
-    """
-    upload = prepare_silver_df(df, season_type=season_type)
-    upload = _align_df_to_table(
-        upload,
-        schema="silver",
-        table=table,
-    )
-    upsert_df(
-        table,
-        upload,
-        schema="silver",
-        conflict_cols=["game_id", "player_id"],
-        batch_size=batch_size,
-        lineage_col="built_at",
-    )
-
-
 def upsert_gold(
     df: pd.DataFrame,
     *,
-    table: str = "player_min_model",
+    table: str | None = None,
+    league: str = "nba",
     batch_size: int = 2000,
 ) -> None:
-    """Upsert the MIN quantile model gold frame into ``gold.player_min_model``.
+    """Upsert the MIN quantile model gold frame into ``gold.{league}_player_min_model``."""
+    from src.pipeline.gold import gold_table, prepare_gold_min_df
 
-    Expects ``MIN_FEATURES`` plus ``MIN``, ``GAME_DATE``, ``PLAYER_NAME``, ``STARTING``,
-    and ``GAME_ID`` / ``PLAYER_ID`` for the primary key. Run
-    ``scripts/migrations/004_gold_min_model.sql`` in Supabase before the first upload.
-    """
-    from src.utils.gold import prepare_gold_min_df
-
+    table = table or gold_table("min", league=league)  # type: ignore[arg-type]
     upload = prepare_gold_min_df(df)
-    upload = _align_df_to_table(
-        upload,
-        schema="gold",
-        table=table,
-    )
+    upload = _align_df_to_table(upload, schema="gold", table=table)
     upsert_df(
         table,
         upload,
@@ -360,23 +342,16 @@ def upsert_gold(
 def upsert_ppm_gold(
     df: pd.DataFrame,
     *,
-    table: str = "player_ppm_model",
+    table: str | None = None,
+    league: str = "nba",
     batch_size: int = 2000,
 ) -> None:
-    """Upsert the PPM quantile model gold frame into ``gold.player_ppm_model``.
+    """Upsert the PPM quantile model gold frame into ``gold.{league}_player_ppm_model``."""
+    from src.pipeline.gold import gold_table, prepare_gold_ppm_df
 
-    Expects ``PPM_FEATURES`` plus ``PTS_PER_MIN``, ``MIN``, ``GAME_DATE``,
-    ``PLAYER_NAME``, ``STARTING``, and ``GAME_ID`` / ``PLAYER_ID`` for the primary key.
-    Run ``scripts/migrations/005_gold_ppm_model.sql`` in Supabase before the first upload.
-    """
-    from src.utils.gold import prepare_gold_ppm_df
-
+    table = table or gold_table("ppm", league=league)  # type: ignore[arg-type]
     upload = prepare_gold_ppm_df(df)
-    upload = _align_df_to_table(
-        upload,
-        schema="gold",
-        table=table,
-    )
+    upload = _align_df_to_table(upload, schema="gold", table=table)
     upsert_df(
         table,
         upload,
@@ -384,6 +359,79 @@ def upsert_ppm_gold(
         conflict_cols=["game_id", "player_id"],
         batch_size=batch_size,
         lineage_col="built_at",
+    )
+
+
+def upsert_apm_gold(
+    df: pd.DataFrame,
+    *,
+    table: str | None = None,
+    league: str = "nba",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert the APM quantile model gold frame into ``gold.{league}_player_apm_model``."""
+    from src.pipeline.gold import gold_table, prepare_gold_apm_df
+
+    table = table or gold_table("apm", league=league)  # type: ignore[arg-type]
+    upload = prepare_gold_apm_df(df)
+    upload = _align_df_to_table(upload, schema="gold", table=table)
+    upsert_df(
+        table,
+        upload,
+        schema="gold",
+        conflict_cols=["game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col="built_at",
+    )
+
+
+def upsert_rpm_gold(
+    df: pd.DataFrame,
+    *,
+    table: str | None = None,
+    league: str = "nba",
+    batch_size: int = 2000,
+) -> None:
+    """Upsert the RPM quantile model gold frame into ``gold.{league}_player_rpm_model``."""
+    from src.pipeline.gold import gold_table, prepare_gold_rpm_df
+
+    table = table or gold_table("rpm", league=league)  # type: ignore[arg-type]
+    upload = prepare_gold_rpm_df(df)
+    upload = _align_df_to_table(upload, schema="gold", table=table)
+    upsert_df(
+        table,
+        upload,
+        schema="gold",
+        conflict_cols=["game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col="built_at",
+    )
+
+
+def upsert_prop_gold(
+    prop: str,
+    df: pd.DataFrame,
+    *,
+    league: str = "nba",
+    batch_size: int = 2000,
+) -> None:
+    """Dispatch gold upsert for one prop × league."""
+    from src.pipeline.gold import gold_table
+
+    prop = prop.lower()
+    upserts = {
+        "min": upsert_gold,
+        "ppm": upsert_ppm_gold,
+        "apm": upsert_apm_gold,
+        "rpm": upsert_rpm_gold,
+    }
+    if prop not in upserts:
+        raise ValueError(f"Unknown prop {prop!r}; expected one of {sorted(upserts)}")
+    upserts[prop](
+        df,
+        table=gold_table(prop, league=league),  # type: ignore[arg-type]
+        league=league,
+        batch_size=batch_size,
     )
 
 

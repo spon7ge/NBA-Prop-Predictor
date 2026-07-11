@@ -1,0 +1,530 @@
+import numpy as np
+import pandas as pd
+
+# Order must match training / saved quantile bundle `feature_names`.
+RPM_FEATURES = [
+    "REB_PER_MIN_season_avg",
+    "REB_PER_MIN_10_ewm",
+    "OREB_DREB_RATIO",
+    "POSITION_ENC",
+    "RBC_PER_MIN_10_ewm",
+    "RPM_SEASON_STD",
+    "REB_ROLL10_SLOPE",
+    "REB_PER_MIN_P10_L10",
+    "REB_PER_MIN_P90_L10",
+]
+
+DEFAULT_SEASON_MAP = {0: "S22", 1: "S23", 2: "S24", 3: "S25", 4: "S26"}
+
+
+def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Leakage-safe feature pipeline for the RPM quantile model."""
+    df = df.copy()
+    df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
+    df = df.sort_values(["PLAYER_ID", "GAME_DATE"]).reset_index(drop=True)
+
+    if "STARTING" not in df.columns and "START_POSITION" in df.columns:
+        df["STARTING"] = df["START_POSITION"].notna().astype(int)
+
+    df = _per_min_features(df)
+    df = _rolling_player(df)
+    df = _ewm_player(df)
+    df = _lag_features(df)
+    df = _starter_features(df)
+    df = _season_averages(df)
+    df = _efficiency_trends(df)
+    df = _team_context(df)
+    df = _schedule_features(df)
+    df = _volatility_features(df)
+    df = _opponent_stats(df)
+    df = _expectedPace(df)
+    df = _detect_star_players(df)
+    df = _team_allowed_context(df)
+    df = _quantile_model_features(df)
+    return df
+
+
+def prepare_season_df(df: pd.DataFrame, season_label: str | None = None) -> pd.DataFrame:
+    """Feature-engineer one season and optionally tag it for holdout splits."""
+    season_df = rpm_features(df)
+    if season_label is not None:
+        season_df["SEASON"] = season_label
+    min_reg = season_df["MIN"].clip(upper=48)
+    return season_df[(min_reg >= 10) | (season_df["STARTING"] == 1)]
+
+
+def build_rpm_dataset(
+    season_dfs: list[pd.DataFrame],
+    season_map: dict[int, str] | None = None,
+) -> pd.DataFrame:
+    """Build the concatenated RPM-model training frame across seasons."""
+    season_map = season_map or DEFAULT_SEASON_MAP
+    res = [
+        prepare_season_df(season_df, season_label=season_map[i])
+        for i, season_df in enumerate(season_dfs)
+    ]
+    df = pd.concat(res, ignore_index=True)
+    df.drop(columns=["Unnamed: 0"], inplace=True, errors="ignore")
+    return df
+
+
+def _per_min_features(df: pd.DataFrame) -> pd.DataFrame:
+    per_min_map = {
+        "REB_PER_MIN": ("REB", "MIN"),
+        "OREB_PER_MIN": ("OREB", "MIN"),
+        "DREB_PER_MIN": ("DREB", "MIN"),
+        "ORBC_PER_MIN": ("ORBC", "MIN"),
+        "DRBC_PER_MIN": ("DRBC", "MIN"),
+        "RBC_PER_MIN": ("RBC", "MIN"),
+        "DIST_PER_MIN": ("DIST", "MIN"),
+    }
+    for out_col, (num_col, den_col) in per_min_map.items():
+        if out_col in df.columns:
+            continue
+        if num_col not in df.columns or den_col not in df.columns:
+            continue
+        df[out_col] = df[num_col] / df[den_col].replace(0, np.nan)
+    return df
+
+
+def _quantile_model_features(df: pd.DataFrame) -> pd.DataFrame:
+    player_rpm = df.groupby("PLAYER_ID")["REB_PER_MIN"]
+    df["RPM_SEASON_STD"] = player_rpm.transform(lambda x: x.expanding().std().shift(1))
+    df["REB_PER_MIN_P10_L10"] = player_rpm.transform(
+        lambda x: x.shift(1).rolling(10, min_periods=5).quantile(0.1)
+    )
+    df["REB_PER_MIN_P90_L10"] = player_rpm.transform(
+        lambda x: x.shift(1).rolling(10, min_periods=5).quantile(0.9)
+    )
+    if "REB_PER_MIN_roll10" in df.columns:
+        df["REB_ROLL10_SLOPE"] = (
+            df.groupby("PLAYER_ID")["REB_PER_MIN_roll10"].transform(
+                lambda x: x.shift(1).rolling(5).apply(
+                    lambda y: np.polyfit(np.arange(len(y)), y, 1)[0],
+                    raw=True,
+                )
+            )
+        )
+    if "OREB_PCT_10_ewm" in df.columns and "DREB_PCT_10_ewm" in df.columns:
+        df["OREB_DREB_RATIO"] = (
+            df["OREB_PCT_10_ewm"] / df["DREB_PCT_10_ewm"].replace(0, np.nan)
+        )
+    if "POS" in df.columns:
+        df["POSITION_ENC"] = pd.Categorical(df["POS"]).codes
+    return df
+
+
+# ── 1. Rolling player performance ─────────────────────────────────────────────
+
+def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
+    cols = ['MIN', 'PLUS_MINUS', 'REB', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN']
+
+    for window in [3,5,10]:
+        for col in cols:
+            df[f'{col}_roll{window}'] = (
+                df.groupby('PLAYER_ID')[col]
+                .transform(lambda x: x.shift(1).rolling(window).mean().round(2))
+            )
+
+    return df
+
+def _ewm_player(df: pd.DataFrame) -> pd.DataFrame:
+    cols = [
+        'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'USG_PCT', 'DIST_PER_MIN'
+    ]
+
+    for span in [3, 5, 10]:
+        for col in cols:
+            df[f'{col}_{span}_ewm'] = (
+                df.groupby('PLAYER_ID')[col]
+                .transform(
+                    lambda x: x.shift(1).ewm(span=span, adjust=False).mean().round(2)
+                )
+            )
+
+    return df
+# ── 2. Lag features ───────────────────────────────────────────────────────────
+
+def _lag_features(df: pd.DataFrame) -> pd.DataFrame:
+    cols = ['MIN', 'PLUS_MINUS', 'REB', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'STARTING']
+
+    for lag in [1, 2]:
+        for col in cols:
+            df[f'{col}_lag{lag}'] = df.groupby('PLAYER_ID')[col].shift(lag)
+
+    return df
+
+
+# ── 3. Starter / role ─────────────────────────────────────────────────────────
+
+def _starter_features(df: pd.DataFrame) -> pd.DataFrame:
+    df['STARTER_ROLL10_PCT'] = (
+        df.groupby('PLAYER_ID')['STARTING']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    return df
+
+
+# ── 4. Season averages (expanding) ───────────────────────────────────────────
+
+def _season_averages(df: pd.DataFrame) -> pd.DataFrame:
+    cols = ['MIN', 'REB', 'REB_PCT', 'OREB_PCT', 'DREB_PCT', 'REB_PER_MIN', 'OREB_PER_MIN', 'DREB_PER_MIN', 'ORBC_PER_MIN', 'DRBC_PER_MIN', 'RBC_PER_MIN']
+
+    for col in cols:
+        df[f'{col}_season_avg'] = (
+            df.groupby(['PLAYER_ID', 'SEASON_YEAR'])[col]
+            .transform(lambda x: x.shift(1).expanding().mean().round(2))
+        )
+
+    return df
+
+
+# ── 5. Efficiency trends ──────────────────────────────────────────────────────
+
+def _efficiency_trends(df: pd.DataFrame) -> pd.DataFrame:
+    df['REB_PER_MIN_roll5'] = df['REB_roll5'] / df['MIN_roll5'].replace(0, pd.NA)
+
+    df['PLUS_MINUS_roll5'] = (
+        df.groupby('PLAYER_ID')['PLUS_MINUS']
+        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+    )
+
+    return df
+
+
+# ── 6. Team context ───────────────────────────────────────────────────────────
+
+def _team_context(df: pd.DataFrame) -> pd.DataFrame:
+    # ── Team pace: one row per team per game, then map back ──────────────────
+    team_pace = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_PACE']
+        .transform(lambda x: x.shift(1).rolling(5).mean().round(2))
+    )
+    team_reb = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_REB']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    team_fg_pct = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_FG_PCT']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    team_fga = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_FGA']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    team_fg3a = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .groupby('TEAM_ID')['TEAM_FG3A']
+        .transform(lambda x: x.shift(1).rolling(10).mean().round(2))
+    )
+    team_pace_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_PACE_roll10=team_pace.values)[['TEAM_ID', 'GAME_ID', 'TEAM_PACE_roll10']]
+    )
+    team_reb_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_REB_roll10=team_reb.values)[['TEAM_ID', 'GAME_ID', 'TEAM_REB_roll10']]
+    )
+    team_fg_pct_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_FG_PCT_roll10=team_fg_pct.values)[['TEAM_ID', 'GAME_ID', 'TEAM_FG_PCT_roll10']]
+    )
+    team_fga_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_FGA_roll10=team_fga.values)[['TEAM_ID', 'GAME_ID', 'TEAM_FGA_roll10']]
+    )
+    team_fg3a_map = (
+        df.drop_duplicates(subset=['TEAM_ID', 'GAME_ID'])
+        .sort_values(['TEAM_ID', 'GAME_DATE'])
+        .assign(TEAM_FG3A_roll10=team_fg3a.values)[['TEAM_ID', 'GAME_ID', 'TEAM_FG3A_roll10']]
+    )
+
+    df = df.merge(team_pace_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_reb_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_fg_pct_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_fga_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+    df = df.merge(team_fg3a_map, on=['TEAM_ID', 'GAME_ID'], how='left')
+
+    # ── MIN share and POSS share are player-level so these are fine as-is ─────
+    df["MIN_share_proxy_roll10"] = round(df["MIN_roll10"] / (48 * 10), 2)
+    #percentage of team's points scored by the player
+    df["REB_share_proxy_roll10"] = round(df["REB_roll10"] / (df["TEAM_REB_roll10"]), 2)
+
+    return df
+
+# ── 8. Schedule / rest ────────────────────────────────────────────────────────
+
+def _schedule_features(df: pd.DataFrame) -> pd.DataFrame:
+    df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+
+    df['DAYS_REST'] = (
+        df.groupby('PLAYER_ID')['GAME_DATE']
+        .diff().dt.days.fillna(3)
+    )
+
+    df['IS_B2B']  = (df['DAYS_REST'] == 1).astype(int)
+    df['IS_HOME'] = df['MATCHUP'].str.contains('vs', na=False).astype(int)
+
+    df['GAME_NUMBER'] = (
+        df.groupby(['PLAYER_ID', 'SEASON_YEAR'])
+        .cumcount()
+    )
+
+    return df
+
+
+# ── 9. Volatility ─────────────────────────────────────────────────────────────
+
+def _volatility_features(df: pd.DataFrame) -> pd.DataFrame:
+    df['MIN_std10'] = (
+        df.groupby('PLAYER_ID')['MIN']
+        .transform(lambda x: x.shift(1).rolling(10).std().round(2))
+    )
+
+    df['REB_std10'] = (
+        df.groupby('PLAYER_ID')['REB']
+        .transform(lambda x: x.shift(1).rolling(10).std().round(2))
+    )
+
+    return df
+# ---- Opponent stats ---------------------------------------------------------------
+def _opponent_stats(df):
+    stat_cols = ['TEAM_DEF_RATING', 'TEAM_PACE', 'TEAM_POSS', 'TEAM_FG_PCT', 'TEAM_FGA', 'TEAM_FG3A', 'TEAM_EFG_PCT']
+    available_stat_cols = [c for c in stat_cols if c in df.columns]
+
+    team_game = (
+        df[['GAME_ID', 'GAME_DATE', 'TEAM_ABBREVIATION'] + available_stat_cols]
+        .drop_duplicates(subset=['GAME_ID', 'TEAM_ABBREVIATION'])
+        .sort_values(['TEAM_ABBREVIATION', 'GAME_DATE'])
+    )
+
+    opp_cols = []
+    for col in available_stat_cols:
+        base = col.replace('TEAM_', '')
+        for window in [5, 10, 20]:
+            avg_col = f'{base}_roll{window}'
+            team_game[avg_col] = (
+                team_game.groupby('TEAM_ABBREVIATION')[col]
+                .transform(lambda x, w=window: x.shift(1).rolling(w, min_periods=1).mean().round(2))
+            )
+            opp_cols.append(avg_col)
+
+    opp_rename = {col: f'OPP_{col}' for col in opp_cols}
+
+    team_game_opp = (
+        team_game[['GAME_ID', 'TEAM_ABBREVIATION'] + opp_cols]
+        .rename(columns={**{'TEAM_ABBREVIATION': 'OPP_OPP_ABBREVIATION_base'}, **opp_rename})
+    )
+
+    return df.merge(team_game_opp, on=['GAME_ID', 'OPP_OPP_ABBREVIATION_base'], how='left')
+
+# ---- Expected Pace and Points -----------------------
+def _expectedPace(df):
+    df = df.copy()
+    df['EXPECTED_PACE'] = ((df['TEAM_PACE_roll10'] + df['OPP_PACE_roll10']) / 2).round(2)
+    df['PACE_DIFFERENTIAL'] = df['TEAM_PACE_roll10'] - df['OPP_PACE_roll10']    
+    return df
+
+# ---- Finding Star Players -----------------------
+def _detect_star_players(df, min_minutes=10, min_games=10, name_dict=None):
+    df = df.copy()
+    
+    # Try to import nameDict if not provided
+    if name_dict is None:
+        try:
+            from src.utils.team_info import nameDict
+            name_dict = nameDict
+        except ImportError:
+            name_dict = None
+    
+    # Normalize player names if name_dict is provided
+    if name_dict is not None:
+        # Create reverse mapping for normalization (map variations to canonical form)
+        # Also create forward mapping for consistency
+        normalized_names = {}
+        for variant, canonical in name_dict.items():
+            normalized_names[variant] = canonical
+            # Also map canonical to itself if not already present
+            if canonical not in normalized_names:
+                normalized_names[canonical] = canonical
+        
+        # Normalize PLAYER_NAME column
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME'].map(lambda x: normalized_names.get(x, x))
+    else:
+        df['PLAYER_NAME_NORM'] = df['PLAYER_NAME']
+    
+    # Create ACTIVE column based on minutes played
+    df['ACTIVE'] = (df['MIN'] >= min_minutes).astype(int)
+
+    # Season-long team star by composite score (only among active players)
+    active_players = df[df['ACTIVE'] == 1].copy()
+    
+    # Count games per player per team to filter by min_games
+    player_game_counts = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .size()
+        .reset_index(name='GAME_COUNT')
+    )
+    
+    # Filter to only players with enough games
+    eligible_players = player_game_counts[player_game_counts['GAME_COUNT'] >= min_games]
+    
+    # Filter active_players to only eligible players using merge
+    active_players = active_players.merge(
+        eligible_players[['TEAM_ID', 'PLAYER_NAME_NORM']],
+        on=['TEAM_ID', 'PLAYER_NAME_NORM'],
+        how='inner'
+    )
+    
+    # Calculate mean stats per player per team (using normalized names)
+    player_stats = (
+        active_players.groupby(['TEAM_ID', 'PLAYER_NAME_NORM'], dropna=False)
+        .agg({
+            'USG_PCT': 'mean',
+            'TS_PCT': 'mean',
+            'EFG_PCT': 'mean',
+            'PTS': 'mean',
+            'PIE': 'mean',  # Player Impact Estimate
+            'NET_RATING': 'mean',
+        })
+        .reset_index()
+        .rename(columns={'PLAYER_NAME_NORM': 'PLAYER_NAME'})
+    )
+    
+    # Fill NaN values with 0 for missing metrics
+    player_stats = player_stats.fillna(0)
+    
+    # Normalize metrics within each team (0-1 scale per team)
+    normalized_stats = player_stats.copy()
+    
+    for stat in ['USG_PCT', 'TS_PCT', 'EFG_PCT', 'PTS', 'PIE', 'NET_RATING']:
+        # Group by team and normalize
+        normalized_stats[f'{stat}_NORM'] = (
+            player_stats.groupby('TEAM_ID')[stat]
+            .transform(lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else 0)
+        )
+    
+    # Calculate composite star score with weighted metrics
+    # Weights prioritize usage, efficiency, and scoring
+    normalized_stats['STAR_SCORE'] = (
+        0.25 * normalized_stats['USG_PCT_NORM'] +      # Usage - how involved they are
+        0.20 * normalized_stats['TS_PCT_NORM'] +       # True shooting - efficiency
+        0.15 * normalized_stats['EFG_PCT_NORM'] +      # Effective FG% - shooting efficiency
+        0.20 * normalized_stats['PTS_NORM'] +          # Points - scoring volume
+        0.15 * normalized_stats['PIE_NORM'] +          # Player impact
+        0.05 * normalized_stats['NET_RATING_NORM']     # Net rating
+    )
+    
+    # Select top 3 highest scoring players per team
+    top_3 = (
+        normalized_stats.sort_values(['TEAM_ID', 'STAR_SCORE'], ascending=[True, False])
+        .groupby('TEAM_ID', as_index=False)
+        .head(3)
+        .copy()
+    )
+    top_3['STAR_RANK'] = top_3.groupby('TEAM_ID').cumcount() + 1
+
+    top_star_map    = top_3[top_3['STAR_RANK'] == 1].set_index('TEAM_ID')['PLAYER_NAME']
+    second_star_map = top_3[top_3['STAR_RANK'] == 2].set_index('TEAM_ID')['PLAYER_NAME']
+    third_star_map  = top_3[top_3['STAR_RANK'] == 3].set_index('TEAM_ID')['PLAYER_NAME']
+
+    df['TOP_STAR']    = df['TEAM_ID'].map(top_star_map)
+    df['SECOND_STAR'] = df['TEAM_ID'].map(second_star_map)
+    df['THIRD_STAR']  = df['TEAM_ID'].map(third_star_map)
+
+    star_by_team = top_star_map.to_dict()
+
+    # Map normalized star name back to dataframe
+    df['STAR_NAME'] = df['TEAM_ID'].map(star_by_team)
+    # Compare using normalized names to handle name variations
+    df['PLAYER_IS_TEAM_STAR'] = (df['PLAYER_NAME_NORM'] == df['STAR_NAME']).astype(int)
+
+    star_active_per_game = (
+        df[df['PLAYER_NAME_NORM'] == df['STAR_NAME']]
+        .groupby(['GAME_ID', 'TEAM_ID'], as_index=False)['ACTIVE']
+        .max()
+        .rename(columns={'ACTIVE': 'STAR_ACTIVE'})
+    )
+    df = df.merge(star_active_per_game, on=['GAME_ID', 'TEAM_ID'], how='left')
+    df['STAR_ACTIVE'] = df['STAR_ACTIVE'].fillna(0).astype(int)
+    df['STAR_SAT_OUT'] = ((df['PLAYER_IS_TEAM_STAR'] == 0) & (df['STAR_ACTIVE'] == 0)).astype(int)
+
+    df = df.drop(columns=['STAR_NAME', 'STAR_ACTIVE', 'ACTIVE', 'PLAYER_NAME_NORM'])
+
+    return df
+
+def _team_allowed_context(df: pd.DataFrame) -> pd.DataFrame:
+    required = [
+        "TEAM_ID",
+        "SEASON_YEAR",
+        "GAME_ID",
+        "GAME_DATE",
+        "OPP_POSS",
+        "OPP_REB",
+        "OPP_OREB",
+        "OPP_DREB",
+    ]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        return df
+
+    team_game = (
+        df.drop_duplicates(subset=["TEAM_ID", "GAME_ID"])
+        .sort_values(["TEAM_ID", "SEASON_YEAR", "GAME_DATE"])
+        .copy()
+    )
+
+    g = team_game.groupby(["TEAM_ID", "SEASON_YEAR"], sort=False)
+
+    def prior_expanding_mean(x):
+        return x.shift(1).expanding().mean().round(3)
+
+    for raw_col, new_col in [
+        ("OPP_POSS", "TEAM_POSS_ALLOWED"),
+        ("OPP_REB",  "TEAM_REB_ALLOWED"),
+        ("OPP_OREB", "TEAM_OREB_ALLOWED"),
+        ("OPP_DREB", "TEAM_DREB_ALLOWED"),
+    ]:
+        team_game[new_col] = g[raw_col].transform(prior_expanding_mean)
+
+    allowed_cols = [
+        "TEAM_ID",
+        "GAME_ID",
+        "TEAM_POSS_ALLOWED",
+        "TEAM_REB_ALLOWED",
+        "TEAM_OREB_ALLOWED",
+        "TEAM_DREB_ALLOWED",
+    ]
+
+    allowed_map = team_game[allowed_cols]
+    out = df.merge(allowed_map, on=["TEAM_ID", "GAME_ID"], how="left")
+
+    if "OPP_TEAM_ID" not in out.columns:
+        return out
+
+    opp_rename = {
+        "TEAM_ID":            "OPP_TEAM_ID",
+        "TEAM_POSS_ALLOWED":  "OPP_TEAM_POSS_ALLOWED",
+        "TEAM_REB_ALLOWED":   "OPP_TEAM_REB_ALLOWED",
+        "TEAM_OREB_ALLOWED":  "OPP_TEAM_OREB_ALLOWED",
+        "TEAM_DREB_ALLOWED":  "OPP_TEAM_DREB_ALLOWED",
+    }
+
+    opp_allowed_map = allowed_map.rename(columns=opp_rename)
+    return out.merge(opp_allowed_map, on=["OPP_TEAM_ID", "GAME_ID"], how="left")
+
+
+

@@ -1,7 +1,7 @@
 """
 Weekly model retraining (separate from daily predictions).
 
-Run after ml feature tables are fresh. Models are reused by generate_predictions.py.
+Models are reused by generate_predictions.py.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ def _cmd(*parts: str) -> str:
 with DAG(
     dag_id="hoopvista_train_models",
     description="Retrain quantile models for min/ppm/rpm/apm",
-    schedule="0 8 * * 1",  # Mondays 08:00
+    schedule="0 8 * * 1",
     start_date=datetime(2026, 1, 1),
     catchup=False,
     max_active_runs=1,
@@ -39,11 +39,6 @@ with DAG(
         "retry_delay": timedelta(minutes=10),
     },
 ) as dag:
-    build_ml_features = BashOperator(
-        task_id="build_ml_features",
-        bash_command=_cmd("python", "scripts/run_transforms.py", "--select", "ml"),
-    )
-
     train_models = BashOperator(
         task_id="train_all_models",
         bash_command=_cmd(
@@ -55,4 +50,4 @@ with DAG(
         ),
     )
 
-    build_ml_features >> train_models
+    train_models
