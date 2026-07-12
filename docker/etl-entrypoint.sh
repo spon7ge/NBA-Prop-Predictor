@@ -14,21 +14,23 @@ GAME_DATE="${GAME_DATE:-$(date +%F)}"
 
 run_ingest() {
   echo "── 1/4 Ingest APIs ──"
-  python src/utils/playerLogs.py \
+  python scripts/fetch_raw.py \
     --league nba \
     --season "$NBA_SEASON" \
     --season-type "$SEASON_TYPE" \
-    --db-upsert \
+    --raw-only \
     --sequential
   python scripts/PropFinder.py
   python src/scrapers/rotowire_scraper.py --season "$ROTOWIRE_SEASON"
 }
 
 run_silver() {
-  echo "── 2/4 Load silver tables ──"
-  python scripts/upload_silver.py \
+  echo "── 2/4 Merge raw → silver (pos + Rotowire) ──"
+  python scripts/fetch_raw.py \
+    --league nba \
     --season "$NBA_SEASON" \
-    --season-type "$SEASON_TYPE"
+    --season-type "$SEASON_TYPE" \
+    --silver-only
 }
 
 run_transforms() {
@@ -56,7 +58,7 @@ usage() {
   cat <<EOF
 HoopVista ETL — usage:
   etl-entrypoint.sh ingest   Fetch NBA stats, odds, Rotowire → raw.*
-  etl-entrypoint.sh silver   Merge raw.* → silver.player_gamelogs
+  etl-entrypoint.sh silver   Merge raw.* → silver (pos + Rotowire odds)
   etl-entrypoint.sh transforms Materialize bronze/silver/gold/ml → Supabase
   etl-entrypoint.sh predict  Write ml.predictions for GAME_DATE
   etl-entrypoint.sh full     Run all steps (default)

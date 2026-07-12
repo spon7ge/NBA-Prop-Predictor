@@ -5,12 +5,12 @@ tracking frames, drops ranks / duplicate / redundant columns, and upserts into
 ``silver.nba_player_gamelogs`` or ``silver.wnba_player_gamelogs``.
 
 Also enriches each row with:
-* ``pos``            — canonical position (G / F / C / PG / SG / SF / PF).
-                       Derived first from the ``start_position`` tracking field;
-                       falls back to ``data/raw/player_positions/`` CSVs when
-                       tracking data has no position for a player.
-* ``rw_over_under``  — Rotowire game over/under (NBA only).
-* ``rw_home_line``   — Rotowire home-team spread (NBA only).
+* ``pos``          — canonical position (G / F / C / PG / SG / SF / PF).
+                     Derived first from the ``start_position`` tracking field;
+                     falls back to ``data/raw/player_positions/`` CSVs when
+                     tracking data has no position for a player.
+* ``game_total``   — Rotowire game over/under (NBA only).
+* ``team_spread``  — Rotowire home-team spread (NBA only).
 
 Rotowire CSVs are produced by ``src.scrapers.rotowire_scraper`` which uses an
 API ``season`` string equal to the *start* year of the season, e.g. ``"2025"``
@@ -18,9 +18,9 @@ for the 2025-26 NBA season.  Expected path::
 
     data/raw/rotowire/rotowire_nba_{year}.csv
 
-When the CSV is absent and ``auto_scrape=True`` is passed to ``build_silver``
-(or ``load_rotowire``), the scraper is invoked automatically via
-``src.scrapers.rotowire_scraper.run_scrape``.
+When the CSV is absent and ``auto_scrape_rotowire=True`` is passed to
+``build_silver`` (or ``auto_scrape=True`` to ``load_rotowire``), the scraper
+is invoked automatically via ``src.scrapers.rotowire_scraper.run_scrape``.
 
 Player-position CSVs live in ``data/raw/player_positions/``.  Season-specific
 files (``nba_{end_year}_players.csv``) take priority; the aggregate
@@ -28,19 +28,72 @@ files (``nba_{end_year}_players.csv``) take priority; the aggregate
 
 Examples::
 
-    from src.utils.clean import build_silver
+    from src.pipeline.clean import build_silver, fetch_and_build_silver
+
+    # Clean only (raw.* already loaded)
     build_silver("2025-26", "Regular Season", league="nba")
-    build_silver("2025", "Regular Season", league="wnba")
+
+    # One shot: fetch endpoints → merge → pos + Rotowire → silver upsert
+    fetch_and_build_silver("2025-26", "Regular Season", league="nba")
 """
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Literal
 
 import pandas as pd
 
 from src.utils.db import read_df, upsert_df
 from src.pipeline.fetch import LEAGUES, LeagueKey
+
+# ---------------------------------------------------------------------------
+# Paths / lookup maps
+# ---------------------------------------------------------------------------
+
+_ROTOWIRE_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "rotowire"
+_PLAYER_POSITIONS_DIR = (
+    Path(__file__).resolve().parents[2] / "data" / "raw" / "player_positions"
+)
+
+# Rotowire sometimes uses different abbreviations than the NBA stats API.
+_RW_ABBREV_MAP: dict[str, str] = {
+    "PHO": "PHX",
+    "GS": "GSW",
+    "SA": "SAS",
+    "NO": "NOP",
+    "NY": "NYK",
+    "UTAH": "UTA",
+    "WSH": "WAS",
+    "CHA": "CHO",
+}
+
+# Maps values that may appear in the tracking ``position`` field to a concise
+# canonical form used in the ``pos`` silver column.
+_START_POS_CANONICAL: dict[str, str] = {
+    "Point Guard": "PG",
+    "Shooting Guard": "SG",
+    "Small Forward": "SF",
+    "Power Forward": "PF",
+    "Center": "C",
+    "Guard": "G",
+    "Forward": "F",
+    "Guard-Forward": "G-F",
+    "Forward-Guard": "F-G",
+    "Forward-Center": "F-C",
+    "Center-Forward": "C-F",
+    "PG": "PG",
+    "SG": "SG",
+    "SF": "SF",
+    "PF": "PF",
+    "C": "C",
+    "G": "G",
+    "F": "F",
+    "G-F": "G-F",
+    "F-G": "F-G",
+    "F-C": "F-C",
+    "C-F": "C-F",
+}
 
 # BoxScorePlayerTrackV3 snake_case → abbreviated silver column names.
 _TRACKING_SILVER_RENAME: dict[str, str] = {
@@ -94,7 +147,7 @@ def load_rotowire(
 
     Returns an empty DataFrame for non-NBA leagues or when the file is absent.
     Columns returned: ``rw_date``, ``rw_away``, ``rw_home``,
-    ``rw_over_under``, ``rw_home_line``.
+    ``game_total``, ``team_spread`` (silver schema names).
 
     Parameters
     ----------
@@ -130,10 +183,28 @@ def load_rotowire(
     game_split = df["Game"].str.split(r"\s*@\s*", n=1, expand=True, regex=True)
     df["rw_away"] = game_split[0].str.strip().map(lambda x: _RW_ABBREV_MAP.get(x, x))
     df["rw_home"] = game_split[1].str.strip().map(lambda x: _RW_ABBREV_MAP.get(x, x))
-    df["rw_date"] = pd.to_datetime(df["Tipoff"], errors="coerce").dt.date
+
+    # Tipoff is "Oct 21 7:30 PM" (no year). Prefer the CSV Season column, then
+    # bump Jan–Jul into the next calendar year (NBA season spans two years).
+    season_year = (
+        pd.to_numeric(df["Season"], errors="coerce").fillna(int(year)).astype(int)
+        if "Season" in df.columns
+        else pd.Series(int(year), index=df.index)
+    )
+    tip = df["Tipoff"].astype(str).str.strip()
+    parsed = pd.to_datetime(tip + " " + season_year.astype(str), errors="coerce")
+    jan_jul = parsed.dt.month.fillna(0).astype(int).between(1, 7)
+    if jan_jul.any():
+        parsed = parsed.copy()
+        parsed.loc[jan_jul] = pd.to_datetime(
+            tip[jan_jul] + " " + (season_year[jan_jul] + 1).astype(str),
+            errors="coerce",
+        )
+    df["rw_date"] = parsed.dt.normalize()
+
     return (
         df[["rw_date", "rw_away", "rw_home", "Over_Under", "Home_Line"]]
-        .rename(columns={"Over_Under": "rw_over_under", "Home_Line": "rw_home_line"})
+        .rename(columns={"Over_Under": "game_total", "Home_Line": "team_spread"})
     )
 
 
@@ -142,12 +213,18 @@ def enrich_rotowire(df: pd.DataFrame, rw: pd.DataFrame) -> pd.DataFrame:
 
     Matches on game date + home/away team abbreviations parsed from ``matchup``
     (``"BOS @ MIA"`` → away=BOS, home=MIA; ``"BOS vs. MIA"`` → home=BOS, away=MIA).
+
+    Writes silver columns ``game_total`` (over/under) and ``team_spread``
+    (home-team line).
     """
     if rw.empty or df.empty:
         return df
 
     out = df.copy()
-    out["_rw_date"] = pd.to_datetime(out["game_date"], errors="coerce").dt.date
+    # Both sides as normalized datetime64 so merge dtypes always agree.
+    out["_rw_date"] = pd.to_datetime(out["game_date"], errors="coerce").dt.normalize()
+    rw = rw.copy()
+    rw["rw_date"] = pd.to_datetime(rw["rw_date"], errors="coerce").dt.normalize()
 
     def _parse_matchup(matchup: str) -> tuple[str | None, str | None]:
         m = str(matchup)
@@ -170,8 +247,8 @@ def enrich_rotowire(df: pd.DataFrame, rw: pd.DataFrame) -> pd.DataFrame:
         how="left",
     ).drop(columns=["_rw_date", "_rw_away", "_rw_home", "rw_date", "rw_away", "rw_home"])
 
-    matched = merged["rw_over_under"].notna().sum()
-    print(f"  Rotowire: {matched:,} / {len(merged):,} rows matched")
+    matched = merged["game_total"].notna().sum()
+    print(f"  Rotowire: {matched:,} / {len(merged):,} rows matched (game_total / team_spread)")
     return merged
 
 
@@ -266,14 +343,21 @@ def enrich_pos(
         and not player_positions.empty
         and "player_name" in out.columns
     ):
-        missing_mask = out["pos"].isna()
-        if missing_mask.any():
-            out["_name_lower"] = out["player_name"].str.strip().str.lower()
-            out = out.merge(player_positions, on="_name_lower", how="left")
-            out.loc[missing_mask, "pos"] = out.loc[missing_mask, "pos_csv"]
-            out = out.drop(columns=["_name_lower", "pos_csv"], errors="ignore")
-            filled = (out["pos"].notna() & missing_mask).sum()
-            print(f"  pos CSV fallback: filled {filled:,} / {missing_mask.sum():,} missing positions")
+        missing_before = int(out["pos"].isna().sum())
+        if missing_before:
+            # map() keeps row alignment; merge + boolean .loc breaks when the
+            # frame index is non-unique (common after silver merges).
+            pos_map = (
+                player_positions.drop_duplicates(subset="_name_lower")
+                .set_index("_name_lower")["pos_csv"]
+            )
+            name_key = out["player_name"].str.strip().str.lower()
+            out["pos"] = out["pos"].fillna(name_key.map(pos_map))
+            filled = missing_before - int(out["pos"].isna().sum())
+            print(
+                f"  pos CSV fallback: filled {filled:,} / {missing_before:,} "
+                "missing positions"
+            )
 
     return out
 
@@ -479,8 +563,12 @@ def build_silver(
     league: Literal["nba", "wnba"] = "nba",
     db_upsert: bool = True,
     raw_frames: dict[str, pd.DataFrame] | None = None,
+    auto_scrape_rotowire: bool = False,
 ) -> pd.DataFrame:
     """Merge raw tables → silver frame; optionally upsert to Supabase.
+
+    Pipeline: merge five endpoints → ``pos`` (tracking + CSV) → Rotowire
+    ``game_total`` / ``team_spread`` (NBA) → optional silver upsert.
 
     Parameters
     ----------
@@ -497,6 +585,9 @@ def build_silver(
         Optional in-memory frames keyed by dataset name
         (``player_base``, ``player_adv``, ``team_base``, ``team_adv``,
         ``start_positions``). When omitted, tables are read from Supabase.
+    auto_scrape_rotowire:
+        When True and the Rotowire CSV is missing, scrape it automatically
+        (NBA only).
     """
     if league not in LEAGUES:
         raise ValueError(f"Unknown league: {league!r}")
@@ -538,8 +629,61 @@ def build_silver(
 
     print(f"  merged — {df.shape}")
 
+    positions = load_player_positions(season, league=league)
+    df = enrich_pos(df, positions)
+
+    rw = load_rotowire(
+        season,
+        league=league,
+        auto_scrape=auto_scrape_rotowire,
+    )
+    df = enrich_rotowire(df, rw)
+
     if db_upsert:
         upsert_silver(df, league=league)
 
     print(f"✓ Silver frame — {len(df):,} rows, {len(df.columns)} columns")
     return df
+
+
+def fetch_and_build_silver(
+    season: str,
+    season_type: str = "Regular Season",
+    *,
+    league: Literal["nba", "wnba"] = "nba",
+    db_upsert: bool = True,
+    auto_scrape_rotowire: bool = False,
+    datasets: list[str] | None = None,
+    parallel: bool = True,
+    checkpoint_path: str | None = None,
+    batch_size: int = 100,
+    start_position_delay: float = 0.3,
+    start_position_workers: int = 8,
+    run_all_batches: bool = True,
+) -> pd.DataFrame:
+    """Fetch raw endpoints, then merge + enrich into silver in one call.
+
+    Equivalent to ``GameLogs(...).fetch(...)`` followed by
+    ``build_silver(..., raw_frames=logs.data)``.
+    """
+    from src.pipeline.fetch import GameLogs
+
+    logs = GameLogs(season=season, season_type=season_type, league=league)
+    logs.fetch(
+        datasets=datasets,
+        parallel=parallel,
+        db_upsert=db_upsert,
+        checkpoint_path=checkpoint_path,
+        batch_size=batch_size,
+        start_position_delay=start_position_delay,
+        start_position_workers=start_position_workers,
+        run_all_batches=run_all_batches,
+    )
+    return build_silver(
+        season,
+        season_type,
+        league=league,
+        db_upsert=db_upsert,
+        raw_frames=logs.data,
+        auto_scrape_rotowire=auto_scrape_rotowire,
+    )

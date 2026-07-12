@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 from psycopg2.extras import execute_values
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from supabase import create_client, Client
 
 load_dotenv()
@@ -43,7 +43,8 @@ def get_engine():
     """Return a SQLAlchemy engine pointed at SUPABASE_DB_URL.
 
     Set SUPABASE_DB_URL in .env (see .env.example).
-    Port 5432 (direct) or 6543 (pooler) both work; prefer 5432 for bulk upserts.
+    Port 5432 (direct / session pooler) or 6543 (transaction pooler) both work;
+    prefer 5432 for bulk upserts and streamed reads (``read_df_streamed``).
     """
     url = os.environ.get("SUPABASE_DB_URL")
     if not url:
@@ -548,6 +549,13 @@ def get_active_model_registry_entry(prop_type: str) -> dict | None:
         return None
 
 
+def _is_timeout_error(exc: BaseException) -> bool:
+    if exc.__class__.__name__ == "QueryCanceled":
+        return True
+    msg = str(exc).lower()
+    return "statement timeout" in msg or "canceling statement" in msg
+
+
 def read_df(
     table: str,
     schema: str = "raw",
@@ -560,8 +568,9 @@ def read_df(
 ) -> pd.DataFrame:
     """Read a Postgres/Supabase table into a DataFrame.
 
-    Tries direct Postgres first. On connection/auth failure, falls back to
-    supabase-py when ``eq`` / ``like`` / ``in_`` filters are provided.
+    Tries direct Postgres first. On connection/auth/timeout failure, falls back
+    to paginated supabase-py when possible (``eq`` / ``like`` / ``in_``, or a
+    full-table read with no SQL ``where``).
     """
     q = f'SELECT * FROM "{schema}"."{table}"'
     if where:
@@ -569,13 +578,54 @@ def read_df(
     try:
         return pd.read_sql(q, get_engine(), params=params)
     except Exception as exc:
-        if not os.environ.get("SUPABASE_URL") or not (eq or like or in_):
+        can_rest = bool(os.environ.get("SUPABASE_URL")) and (
+            eq is not None or like is not None or in_ is not None or where is None
+        )
+        if not can_rest:
             raise
         print(
-            f"  → Postgres read failed ({exc.__class__.__name__}); "
+            f"  → Postgres read failed ({exc.__class__.__name__}"
+            f"{'; timeout' if _is_timeout_error(exc) else ''}); "
             f"using supabase-py for {schema}.{table}"
         )
         return _read_df_rest(table, schema=schema, eq=eq, like=like, in_=in_)
+
+
+def read_df_streamed(
+    table: str,
+    schema: str = "raw",
+    *,
+    where: str | None = None,
+    params: dict | None = None,
+    chunksize: int = 10_000,
+    statement_timeout_ms: int = 120_000,
+) -> pd.DataFrame:
+    """Server-side streamed table read (named cursor via ``stream_results``).
+
+    Unlike plain ``pd.read_sql(..., chunksize=...)`` on an engine (which often
+    still buffers the full result in psycopg2), this opens a connection with
+    ``stream_results=True`` so Postgres sends rows incrementally.
+
+    Prefer the **session** pooler / direct port (5432) for bulk pulls — the
+    transaction pooler (6543) can misbehave with long streamed reads and
+    ``SET LOCAL`` session settings.
+
+    ``where`` should use SQLAlchemy bind syntax (``:season``), not ``%(season)s``.
+    """
+    q = f'SELECT * FROM "{schema}"."{table}"'
+    if where:
+        q += f" WHERE {where}"
+
+    frames: list[pd.DataFrame] = []
+    # Set timeout *before* enabling stream_results — otherwise psycopg2 wraps
+    # SET LOCAL in DECLARE ... CURSOR FOR SET LOCAL ..., which is a syntax error.
+    with get_engine().connect() as conn:
+        if statement_timeout_ms and statement_timeout_ms > 0:
+            conn.execute(text(f"SET LOCAL statement_timeout = {int(statement_timeout_ms)}"))
+        streamed = conn.execution_options(stream_results=True)
+        for chunk in pd.read_sql(text(q), streamed, params=params or {}, chunksize=chunksize):
+            frames.append(chunk)
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
 
 
 def _read_df_rest(

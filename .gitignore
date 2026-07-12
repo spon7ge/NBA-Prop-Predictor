@@ -30,3 +30,6 @@ data/processed/training/
 data/raw/season_stats/*_pbp.csv
 data/raw/pbp_season_stats/
 notebooks/pbp_checkpoint.csv
+
+# local gold / season pull caches
+data/cache/
