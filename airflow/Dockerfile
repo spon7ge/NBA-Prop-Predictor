@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r /requirements.txt \
 
 ENV HOOPVISTA_REPO_ROOT=/opt/airflow/hoopvista \
     HOOPVISTA_NBA_SEASON=2025-26 \
+    HOOPVISTA_WNBA_SEASON=2025 \
     HOOPVISTA_SEASON_TYPE="Regular Season" \
-    HOOPVISTA_ROTOWIRE_SEASON=2025 \
+    HOOPVISTA_PROPFINDER_LEAGUE=wnba \
     PYTHONPATH=/opt/airflow/hoopvista

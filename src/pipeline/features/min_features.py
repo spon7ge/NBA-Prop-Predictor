@@ -3,6 +3,8 @@ import pandas as pd
 
 from src.pipeline.features._common import fatigue_features
 
+TARGET = "MIN"
+
 MIN_FEATURES = [
     "MIN_10_ewm",
     "MIN_SEASON_MEAN",
@@ -74,6 +76,66 @@ def build_min_dataset(
     df = pd.concat(res, ignore_index=True)
     df.drop(columns=["Unnamed: 0"], inplace=True, errors="ignore")
     return df
+
+
+def validate_min_dataset(
+    df: pd.DataFrame,
+    *,
+    feature_cols: list[str] | None = None,
+    key_cols: tuple[str, ...] = ("GAME_ID", "PLAYER_ID"),
+    require_season: bool = True,
+) -> dict[str, object]:
+    """Assert an engineered MIN frame is training-ready.
+
+    Checks required columns, no duplicate ``(GAME_ID, PLAYER_ID)`` rows, and
+    finite target values. ``feature_cols`` defaults to ``MIN_FEATURES``.
+    """
+    features = list(feature_cols) if feature_cols is not None else list(MIN_FEATURES)
+    if df.empty:
+        raise ValueError("MIN dataset is empty")
+
+    required = list(key_cols) + [TARGET, "GAME_DATE", *features]
+    if require_season:
+        required.append("SEASON")
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise KeyError(
+            f"MIN dataset missing {len(missing)} column(s): {missing[:20]}"
+            + ("..." if len(missing) > 20 else "")
+        )
+
+    dup_mask = df.duplicated(subset=list(key_cols), keep=False)
+    n_dup_rows = int(dup_mask.sum())
+    if n_dup_rows:
+        n_keys = int(df.loc[dup_mask, list(key_cols)].drop_duplicates().shape[0])
+        sample = (
+            df.loc[dup_mask, list(key_cols)]
+            .drop_duplicates()
+            .head(5)
+            .to_dict(orient="records")
+        )
+        raise ValueError(
+            f"MIN dataset has {n_dup_rows:,} duplicate rows across {n_keys:,} "
+            f"{key_cols} keys. Sample: {sample}"
+        )
+
+    y = pd.to_numeric(df[TARGET], errors="coerce")
+    n_bad_target = int((y.isna() | ~np.isfinite(y)).sum())
+    if n_bad_target:
+        raise ValueError(
+            f"MIN dataset has {n_bad_target:,} non-finite {TARGET} values"
+        )
+
+    summary: dict[str, object] = {
+        "rows": len(df),
+        "cols": df.shape[1],
+        "features": len(features),
+        "duplicate_keys": 0,
+        "bad_target": 0,
+    }
+    if "SEASON" in df.columns:
+        summary["seasons"] = df["SEASON"].value_counts().sort_index().to_dict()
+    return summary
 
 
 # ── Rolling / EWM (model inputs only) ────────────────────────────────────────

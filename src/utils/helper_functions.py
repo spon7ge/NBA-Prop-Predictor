@@ -89,8 +89,10 @@ def getUpcomingGamesCached(date):
 
 
 def findOpp(playerName, players_df, gameDate, max_days_ahead=3):
+    name_col = 'PLAYER_NAME' if 'PLAYER_NAME' in players_df.columns else 'player_name'
+    abbr_col = 'TEAM_ABBREVIATION' if 'TEAM_ABBREVIATION' in players_df.columns else 'team_abbreviation'
     player_team = players_df.loc[
-        players_df['PLAYER_NAME'] == playerName, 'TEAM_ABBREVIATION'
+        players_df[name_col] == playerName, abbr_col
     ].iloc[-1]
     
     base_date = datetime.strptime(gameDate, '%Y-%m-%d')

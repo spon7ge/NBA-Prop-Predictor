@@ -1,13 +1,13 @@
-# Docker — Phase 12
+# Docker
 
-Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline** (ingestion, dbt, ML predictions).
+Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline** (ingest → silver).
 
 ## Architecture
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────────────────┐
 │  postgres   │◄────│     api      │     │  etl (one-shot / scheduled) │
-│  (local)    │     │  FastAPI     │     │  ingest → silver → dbt → ML │
+│  (local)    │     │  FastAPI     │     │  ingest → silver            │
 └─────────────┘     └──────────────┘     └─────────────────────────────┘
        ▲                    ▲                          ▲
        │                    │                          │
@@ -20,7 +20,7 @@ Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline
 |---------|-------|------|---------|
 | `postgres` | `postgres:15-alpine` | 5432 | Local dev DB; auto-runs `db/migrations/*.sql` |
 | `api` | `docker/Dockerfile.api` | 8000 | Read-only FastAPI (`/api/health`, predictions, props) |
-| `etl` | `docker/Dockerfile.etl` | — | Ingest APIs, load silver, dbt, generate predictions |
+| `etl` | `docker/Dockerfile.etl` | — | Fetch NBA/WNBA raw + PropFinder, then clean → silver |
 
 ## Quick start (local Postgres)
 
@@ -37,10 +37,9 @@ curl http://localhost:8000/api/health
 open http://localhost:8000/docs
 
 # 4. Run ETL steps (postgres must be running from step 2)
-docker compose --profile etl run --rm etl dbt          # transforms only
-docker compose --profile etl run --rm etl full         # full pipeline
-docker compose --profile etl run --rm etl ingest       # NBA + odds + Rotowire
-docker compose --profile etl run --rm etl predict      # ml.predictions for today
+docker compose --profile etl run --rm etl full         # ingest → silver
+docker compose --profile etl run --rm etl ingest       # NBA + odds → raw.*
+docker compose --profile etl run --rm etl silver       # raw.* → silver.*
 ```
 
 ## External Supabase
@@ -55,7 +54,7 @@ docker compose -f docker-compose.yml -f docker-compose.supabase.yml up -d api
 docker compose --profile etl run --rm etl full
 ```
 
-Apply migrations once in Supabase SQL Editor (`db/migrations/001`–`008`) before first ETL run.
+Apply migrations once in Supabase SQL Editor (`db/migrations/`) before first ETL run.
 
 ## ETL commands
 
@@ -63,18 +62,18 @@ The ETL container entrypoint (`docker/etl-entrypoint.sh`):
 
 | Command | Steps |
 |---------|-------|
-| `ingest` | NBA stats → `raw.*`, odds → `raw.props_*`, Rotowire CSV |
-| `silver` | `scripts/upload_silver.py` → `silver.player_gamelogs` |
-| `dbt` | `dbt run` + `dbt test --select ml` |
-| `predict` | `generate_predictions.py --prop all` |
-| `full` | All of the above (default) |
+| `ingest` | NBA + WNBA stats → `raw.*`, odds → `raw.*_props_*` via PropFinder |
+| `silver` | NBA + WNBA `fetch_raw.py --silver-only` → `silver.*` |
+| `full` | ingest → silver (default) |
 | `shell` | Interactive bash inside container |
 
-Override slate date:
+PropFinder league (default `wnba` while NBA is out of season):
 
 ```bash
-GAME_DATE=2026-05-12 docker compose --profile etl run --rm etl predict
+HOOPVISTA_PROPFINDER_LEAGUE=all docker compose --profile etl run --rm etl ingest
 ```
+
+Gold feature builds and model training are manual (not part of this entrypoint).
 
 ## Build individually
 
@@ -93,13 +92,6 @@ docker build -f docker/Dockerfile.etl -t hoopvista-etl .
 | `./src/models/saved_models` | etl | Pre-trained `.joblib` models |
 | `./.env` | etl | API keys and DB URL |
 
-Train models before first `predict` (host or container):
-
-```bash
-docker compose --profile etl run --rm etl shell
-python scripts/train_model.py --prop all --season-year 2025-26
-```
-
 ## Compose profiles
 
 | Profile | Services | Use case |
@@ -117,8 +109,7 @@ python scripts/train_model.py --prop all --season-year 2025-26
 
 | Issue | Fix |
 |-------|-----|
-| API `503` / dbt `postgres` host not found | Start postgres first; set `SUPABASE_DB_URL` to `host.docker.internal:5433` in `.env` (see `.env.docker.example`) |
-| dbt SSL error locally | Use `?sslmode=disable` in local URL |
+| API `503` / DB host not found | Start postgres first; set `SUPABASE_DB_URL` to `host.docker.internal:5433` in `.env` (see `.env.docker.example`) |
+| SSL error locally | Use `?sslmode=disable` in local URL |
 | ETL ingest fails on odds | Set `API_KEY` in `.env` |
-| Predict step empty | Train models first; run `dbt run --select ml` |
-| Rotowire fails | Playwright + Chromium included in ETL image; check network |
+| PropFinder empty (NBA offseason) | Use `--league wnba` / `HOOPVISTA_PROPFINDER_LEAGUE=wnba` |

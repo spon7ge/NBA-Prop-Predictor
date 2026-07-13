@@ -137,6 +137,64 @@ def build_apm_dataset(
     return df
 
 
+def validate_apm_dataset(
+    df: pd.DataFrame,
+    *,
+    key_cols: tuple[str, ...] = ("GAME_ID", "PLAYER_ID"),
+    require_season: bool = True,
+) -> dict[str, object]:
+    """Assert an engineered APM frame is training-ready.
+
+    Checks required columns, no duplicate ``(GAME_ID, PLAYER_ID)`` rows, and
+    finite target values.
+    """
+    if df.empty:
+        raise ValueError("APM dataset is empty")
+
+    required = list(key_cols) + [TARGET, "MIN", "GAME_DATE", *APM_FEATURES]
+    if require_season:
+        required.append("SEASON")
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise KeyError(
+            f"APM dataset missing {len(missing)} column(s): {missing[:20]}"
+            + ("..." if len(missing) > 20 else "")
+        )
+
+    dup_mask = df.duplicated(subset=list(key_cols), keep=False)
+    n_dup_rows = int(dup_mask.sum())
+    if n_dup_rows:
+        n_keys = int(df.loc[dup_mask, list(key_cols)].drop_duplicates().shape[0])
+        sample = (
+            df.loc[dup_mask, list(key_cols)]
+            .drop_duplicates()
+            .head(5)
+            .to_dict(orient="records")
+        )
+        raise ValueError(
+            f"APM dataset has {n_dup_rows:,} duplicate rows across {n_keys:,} "
+            f"{key_cols} keys. Sample: {sample}"
+        )
+
+    y = pd.to_numeric(df[TARGET], errors="coerce")
+    n_bad_target = int((y.isna() | ~np.isfinite(y)).sum())
+    if n_bad_target:
+        raise ValueError(
+            f"APM dataset has {n_bad_target:,} non-finite {TARGET} values"
+        )
+
+    summary: dict[str, object] = {
+        "rows": len(df),
+        "cols": df.shape[1],
+        "features": len(APM_FEATURES),
+        "duplicate_keys": 0,
+        "bad_target": 0,
+    }
+    if "SEASON" in df.columns:
+        summary["seasons"] = df["SEASON"].value_counts().sort_index().to_dict()
+    return summary
+
+
 def feature_cols_from_df(df: pd.DataFrame) -> list[str]:
     """The fixed top-11 feature columns present on an engineered frame."""
     return [c for c in APM_FEATURES if c in df.columns]

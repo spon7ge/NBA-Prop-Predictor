@@ -1,14 +1,14 @@
-# HoopVista — Phase 12 Docker stack
+# HoopVista — Docker stack
 #
 # Services:
 #   postgres  Local Postgres (optional — use Supabase by overriding SUPABASE_DB_URL)
 #   api       FastAPI backend (read-only DB queries)
-#   etl       Ingestion + transforms + ML predictions (one-shot via `docker compose run`)
+#   etl       Ingest (fetch + PropFinder) → silver (one-shot via `docker compose run`)
 #
 # Quick start:
 #   cp .env.docker.example .env
-#   docker compose up -d postgres api
-#   docker compose run --rm etl transforms
+#   docker compose --profile local-db up -d postgres api
+#   docker compose --profile etl run --rm etl full
 #
 # See docker/README.md for full docs.
 
@@ -63,7 +63,7 @@ services:
       start_period: 20s
     restart: unless-stopped
 
-  # ── ETL: ingest → silver → dbt → predictions ────────────────────────────────
+  # ── ETL: ingest → silver ────────────────────────────────────────────────────
   etl:
     build:
       context: .
@@ -76,9 +76,9 @@ services:
     environment:
       SUPABASE_DB_URL: ${SUPABASE_DB_URL:-postgresql://${POSTGRES_USER:-hoopvista}:${POSTGRES_PASSWORD:-hoopvista}@host.docker.internal:${POSTGRES_PORT:-5433}/${POSTGRES_DB:-hoopvista}?sslmode=disable}
       HOOPVISTA_NBA_SEASON: ${HOOPVISTA_NBA_SEASON:-2025-26}
+      HOOPVISTA_WNBA_SEASON: ${HOOPVISTA_WNBA_SEASON:-2025}
       HOOPVISTA_SEASON_TYPE: "${HOOPVISTA_SEASON_TYPE:-Regular Season}"
-      HOOPVISTA_ROTOWIRE_SEASON: ${HOOPVISTA_ROTOWIRE_SEASON:-2025}
-      GAME_DATE: ${GAME_DATE:-}
+      HOOPVISTA_PROPFINDER_LEAGUE: ${HOOPVISTA_PROPFINDER_LEAGUE:-wnba}
       API_KEY: ${API_KEY:-}
       API_KEY_IO_1: ${API_KEY_IO_1:-}
       API_KEY_IO_2: ${API_KEY_IO_2:-}

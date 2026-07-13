@@ -94,6 +94,9 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     "player_apm_model": ["game_id", "player_id"],
     "player_rpm_model": ["game_id", "player_id"],
     "predictions": ["prop", "game_id", "player_id"],
+    # live prop predictions (per-league tables)
+    "nba_live_prop_predictions":  ["run_at", "game_date", "player_name", "market", "bookmaker"],
+    "wnba_live_prop_predictions": ["run_at", "game_date", "player_name", "market", "bookmaker"],
 }
 
 
@@ -457,6 +460,38 @@ def upsert_ml_predictions(
         upload,
         schema="ml",
         conflict_cols=["prop", "game_id", "player_id"],
+        batch_size=batch_size,
+        lineage_col=None,
+    )
+
+
+def upsert_live_prop_predictions(
+    df: pd.DataFrame,
+    *,
+    league: str,
+    batch_size: int = 500,
+) -> None:
+    """Upsert enriched live prop predictions into ``ml.{league}_live_prop_predictions``.
+
+    Run ``db/migrations/016_ml_live_prop_predictions.sql`` before the first call.
+    Conflict key: (run_at, game_date, player_name, market, bookmaker).
+
+    Parameters
+    ----------
+    df:
+        DataFrame of enriched picks (snake_case columns).
+    league:
+        ``'nba'`` or ``'wnba'`` — selects the target table.
+    """
+    if league not in ("nba", "wnba"):
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+    table = f"{league}_live_prop_predictions"
+    upload = _align_df_to_table(df, schema="ml", table=table)
+    upsert_df(
+        table,
+        upload,
+        schema="ml",
+        conflict_cols=["run_at", "game_date", "player_name", "market", "bookmaker"],
         batch_size=batch_size,
         lineage_col=None,
     )

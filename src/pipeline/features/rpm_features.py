@@ -1,24 +1,13 @@
-"""RPM quantile model feature engineering — TOP-22 feature subset (SHAP/perm/ablation-validated).
+"""RPM quantile model feature engineering — TOP-14 feature subset.
 
-Trimmed from the domain-reasoned top-25 down to 22 features that survived
-empirical validation: SHAP importance, permutation importance (with
-p-value), and leave-one-out ablation delta all had to agree a feature earns
-its place (see `keep` column of the validation run this was built from).
+Combines:
+* New rebound-specific features (season avg / EWM / quantiles / slope / ratio)
+* Survivors from SHAP + permutation + ablation (``keep=True`` only)
 
-Notably `player_REB_PER_MIN_ewma` ranked #1 on SHAP/permutation AND had a
-strongly positive ablation delta — unlike the analogous PTS_PER_MIN_ewma
-feature in the PPM model, which was dropped for being redundant. Rebounding
-rate benefits from the recency emphasis of an EWMA in a way scoring rate
-didn't; conclusions don't transfer across targets.
-
-Dropped this round:
-- `own_team_TEAM_PACE_roll10_mean` — negative ablation delta. Once opponent
-  rebounding strength and the player's own rate/chances are in the model,
-  pace added nothing.
-- `MIN_TREND_5v20` — negative ablation delta, even though the rebound-chance
-  trends (`RBC_TREND_5v20`, `DRBC_TREND_5v20`) both survived.
-- `opp_team_TEAM_FG_PCT_roll10_mean` — p=0.34, statistically indistinguishable
-  from noise.
+Dropped ``keep=False`` from the prior 18-feature set:
+``player_REB_PER_MIN_*`` rate windows, ``player_REB_PCT_*``,
+``player_OREB/DREB_PCT_*``, ``RBC/DRBC_TREND_5v20``, ``DAYS_REST``,
+``STARTING_rate_last10``.
 
 Leakage-safe: same-game box-score columns are only used as lagged rolling /
 expanding averages. Exposes the gold / ml API (`RPM_FEATURES`, `rpm_features`,
@@ -35,100 +24,47 @@ TARGET = "REB_PER_MIN"
 
 DEFAULT_SEASON_MAP = {0: "S22", 1: "S23", 2: "S24", 3: "S25", 4: "S26"}
 
-# Windows: 5/10 for feature means, 20 kept only as the "slow" side of the
-# MIN / RBC / DRBC 5-vs-20 role-trend deltas.
-ROLLING_WINDOWS = [5, 10, 20]
+ROLLING_WINDOWS = [5, 10]
 TEAM_ROLLING_WINDOWS = [10]
 
-# Stats needing rolling/ewma/expanding windows (roll5/roll10/roll20/expanding).
+# Rolling inputs for keep=True survivors + helpers used by new features.
 PLAYER_ROLL_STATS = [
     "REB_PER_MIN",
-    "REB_PCT",
-    "OREB_PCT",
-    "DREB_PCT",
-    "RBC",
     "ORBC",
     "DRBC",
     "MIN",
 ]
-
-# Stats needing only a season-to-date expanding mean.
 PLAYER_SEASON_STATS = [
-    "REB_PER_MIN",
-    "REB_PCT",
-    "DREB_PCT",
     "MIN",
 ]
 
-# Own-team context: TEAM_PACE failed validation (negative ablation delta),
-# so no own-team feature survives. Opponent context: only their rebound
-# percentage survived — TEAM_FG_PCT (opponent miss rate) was noise (p=0.34).
 TEAM_STATS_TO_ROLL: list[str] = []
 OPP_REBOUNDING_STATS_TO_ROLL = ["TEAM_REB_PCT"]
 
-# Static features: schedule, role, and physical/position proxy, plus the
-# rebound-chance trends that survived. MIN_TREND_5v20 dropped (negative
-# ablation delta) even though the RBC/DRBC trends both held up.
-_STATIC_FEATURES = [
-    "DAYS_REST",
-    "STARTING_rate_last10",
-    "POSITION_ENCODED",
-    "RBC_TREND_5v20",
-    "DRBC_TREND_5v20",
-]
-
-# The 22 features that survived SHAP + permutation importance + ablation
-# validation (all keep=True), hardcoded so trimming the pipeline above can
-# never silently change what gets exposed.
 RPM_FEATURES = [
-    # Recent rebounding rate (5)
-    "player_REB_PER_MIN_ewma",
-    "player_REB_PER_MIN_expanding_mean",
-    "player_REB_PER_MIN_season_mean",
-    "player_REB_PER_MIN_roll5_mean",
-    "player_REB_PER_MIN_roll10_mean",
-    # Rebound share / split (5)
-    "player_REB_PCT_season_mean",
-    "player_REB_PCT_roll10_mean",
-    "player_OREB_PCT_roll10_mean",
-    "player_DREB_PCT_season_mean",
-    "player_DREB_PCT_roll10_mean",
-    # Rebound chances (3)
+    # New rebound features
+    "REB_PER_MIN_season_avg",
+    "REB_PER_MIN_10_ewm",
+    "OREB_DREB_RATIO",
+    "POSITION_ENC",
+    "RBC_PER_MIN_10_ewm",
+    "RPM_SEASON_STD",
+    "REB_ROLL10_SLOPE",
+    "REB_PER_MIN_P10_L10",
+    "REB_PER_MIN_P90_L10",
+    # keep=True survivors from SHAP / perm / ablation
     "player_ORBC_roll10_mean",
-    "player_RBC_roll10_mean",
     "player_DRBC_roll10_mean",
-    # Minutes (3) — MIN_TREND_5v20 dropped, levels survived
-    "player_MIN_roll10_mean",
     "player_MIN_roll5_mean",
     "player_MIN_season_mean",
-    # Rebound-chance trend (2)
-    "RBC_TREND_5v20",
-    "DRBC_TREND_5v20",
-    # Physical / role proxy (2)
-    "POSITION_ENCODED",
-    "STARTING_rate_last10",
-    # Matchup / opportunity (1) — TEAM_FG_PCT and TEAM_PACE dropped
     "opp_team_TEAM_REB_PCT_roll10_mean",
-    # Schedule (1)
-    "DAYS_REST",
 ]
 
-assert len(RPM_FEATURES) == 22, f"expected 22 features, got {len(RPM_FEATURES)}"
-
-
-def _rolling_feature_names(stat_cols: list[str], windows: list[int], prefix: str) -> list[str]:
-    names: list[str] = []
-    for col in stat_cols:
-        for w in windows:
-            names.append(f"{prefix}_{col}_roll{w}_mean")
-            names.append(f"{prefix}_{col}_roll{w}_std")
-        names.append(f"{prefix}_{col}_ewma")
-        names.append(f"{prefix}_{col}_expanding_mean")
-    return names
+assert len(RPM_FEATURES) == 14, f"expected 14 features, got {len(RPM_FEATURES)}"
 
 
 def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Leakage-safe feature pipeline for the RPM model (top-22 subset)."""
+    """Leakage-safe feature pipeline for the RPM model."""
     df = df.copy()
     df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
     df = df.sort_values(["PLAYER_ID", "GAME_DATE"]).reset_index(drop=True)
@@ -139,11 +75,10 @@ def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
     if TARGET not in df.columns and {"REB", "MIN"}.issubset(df.columns):
         df[TARGET] = df["REB"] / df["MIN"].replace(0, np.nan)
 
-    df = _encode_categoricals(df)
-    df = _add_rest_and_schedule(df)
-    if "STARTING" in df.columns:
-        df = _add_starting_rate(df)
+    if "RBC" in df.columns and "MIN" in df.columns:
+        df["RBC_PER_MIN"] = df["RBC"] / df["MIN"].replace(0, np.nan)
 
+    df = _encode_categoricals(df)
     df = _add_rolling_and_expanding(
         df, group_col="PLAYER_ID", stat_cols=PLAYER_ROLL_STATS,
         windows=ROLLING_WINDOWS, prefix="player",
@@ -153,10 +88,16 @@ def rpm_features(df: pd.DataFrame) -> pd.DataFrame:
             df, group_cols=["PLAYER_ID", "SEASON_YEAR"],
             stat_cols=PLAYER_SEASON_STATS, prefix="player",
         )
-    df = _add_minutes_and_role_trend(df)
+    else:
+        # Fallback when SEASON_YEAR is absent: career expanding mean as season proxy.
+        df = _add_season_to_date(
+            df, group_cols=["PLAYER_ID"],
+            stat_cols=PLAYER_SEASON_STATS, prefix="player",
+        )
+
+    df = _add_rpm_quantile_features(df)
     df = _build_team_context(df)
 
-    # Guarantee declared model columns exist for gold / ml alignment.
     for col in RPM_FEATURES:
         if col not in df.columns:
             df[col] = np.nan
@@ -189,8 +130,66 @@ def build_rpm_dataset(
     return df
 
 
+def validate_rpm_dataset(
+    df: pd.DataFrame,
+    *,
+    key_cols: tuple[str, ...] = ("GAME_ID", "PLAYER_ID"),
+    require_season: bool = True,
+) -> dict[str, object]:
+    """Assert an engineered RPM frame is training-ready.
+
+    Checks required columns, no duplicate ``(GAME_ID, PLAYER_ID)`` rows, and
+    finite target values.
+    """
+    if df.empty:
+        raise ValueError("RPM dataset is empty")
+
+    required = list(key_cols) + [TARGET, "MIN", "GAME_DATE", *RPM_FEATURES]
+    if require_season:
+        required.append("SEASON")
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise KeyError(
+            f"RPM dataset missing {len(missing)} column(s): {missing[:20]}"
+            + ("..." if len(missing) > 20 else "")
+        )
+
+    dup_mask = df.duplicated(subset=list(key_cols), keep=False)
+    n_dup_rows = int(dup_mask.sum())
+    if n_dup_rows:
+        n_keys = int(df.loc[dup_mask, list(key_cols)].drop_duplicates().shape[0])
+        sample = (
+            df.loc[dup_mask, list(key_cols)]
+            .drop_duplicates()
+            .head(5)
+            .to_dict(orient="records")
+        )
+        raise ValueError(
+            f"RPM dataset has {n_dup_rows:,} duplicate rows across {n_keys:,} "
+            f"{key_cols} keys. Sample: {sample}"
+        )
+
+    y = pd.to_numeric(df[TARGET], errors="coerce")
+    n_bad_target = int((y.isna() | ~np.isfinite(y)).sum())
+    if n_bad_target:
+        raise ValueError(
+            f"RPM dataset has {n_bad_target:,} non-finite {TARGET} values"
+        )
+
+    summary: dict[str, object] = {
+        "rows": len(df),
+        "cols": df.shape[1],
+        "features": len(RPM_FEATURES),
+        "duplicate_keys": 0,
+        "bad_target": 0,
+    }
+    if "SEASON" in df.columns:
+        summary["seasons"] = df["SEASON"].value_counts().sort_index().to_dict()
+    return summary
+
+
 def feature_cols_from_df(df: pd.DataFrame) -> list[str]:
-    """The fixed top-22 feature columns present on an engineered frame."""
+    """The fixed top-14 feature columns present on an engineered frame."""
     return [c for c in RPM_FEATURES if c in df.columns]
 
 
@@ -260,37 +259,84 @@ def _add_season_to_date(df, group_cols, stat_cols, prefix):
     return df
 
 
-def _add_rest_and_schedule(df):
-    df = df.sort_values(["PLAYER_ID", "GAME_DATE"])
-    df["GAME_DATE"] = pd.to_datetime(df["GAME_DATE"])
-    df["DAYS_REST"] = df.groupby("PLAYER_ID")["GAME_DATE"].diff().dt.days
-    median_rest = df["DAYS_REST"].median()
-    if pd.isna(median_rest):
-        median_rest = 3
-    df["DAYS_REST"] = df["DAYS_REST"].fillna(median_rest)
-    df["IS_BACK_TO_BACK"] = (df["DAYS_REST"] <= 1).astype(int)
-    return df
+def _rolling_slope(series: pd.Series, window: int = 10, min_periods: int = 5) -> pd.Series:
+    """Leakage-safe linear slope over the prior ``window`` observations."""
+
+    def _slope(y: np.ndarray) -> float:
+        mask = np.isfinite(y)
+        n = int(mask.sum())
+        if n < min_periods:
+            return np.nan
+        x = np.arange(len(y), dtype=float)
+        return float(np.polyfit(x[mask], y[mask], 1)[0])
+
+    return series.shift(1).rolling(window, min_periods=min_periods).apply(_slope, raw=True)
 
 
-def _add_starting_rate(df):
+def _add_rpm_quantile_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Build the new named RPM features (leakage-safe)."""
     df = df.sort_values(["PLAYER_ID", "GAME_DATE"])
-    g = df.groupby("PLAYER_ID", sort=False)
-    shifted = g["STARTING"].shift(1)
-    shifted_grouped = shifted.groupby(df["PLAYER_ID"])
-    df["STARTING_rate_last10"] = shifted_grouped.transform(
-        lambda s: s.rolling(10, min_periods=1).mean()
+    g_rpm = df.groupby("PLAYER_ID", sort=False)[TARGET]
+    shifted = g_rpm.shift(1)
+    shifted_g = shifted.groupby(df["PLAYER_ID"])
+
+    # Season-to-date mean / std of REB_PER_MIN
+    if "SEASON_YEAR" in df.columns:
+        g_season = df.groupby(["PLAYER_ID", "SEASON_YEAR"], sort=False)[TARGET]
+        season_shifted = g_season.shift(1)
+        season_shifted_g = season_shifted.groupby([df["PLAYER_ID"], df["SEASON_YEAR"]])
+        df["REB_PER_MIN_season_avg"] = season_shifted_g.transform(
+            lambda s: s.expanding(min_periods=1).mean()
+        )
+        df["RPM_SEASON_STD"] = season_shifted_g.transform(
+            lambda s: s.expanding(min_periods=2).std()
+        )
+    else:
+        df["REB_PER_MIN_season_avg"] = shifted_g.transform(
+            lambda s: s.expanding(min_periods=1).mean()
+        )
+        df["RPM_SEASON_STD"] = shifted_g.transform(
+            lambda s: s.expanding(min_periods=2).std()
+        )
+
+    df["REB_PER_MIN_10_ewm"] = shifted_g.transform(
+        lambda s: s.ewm(span=10, min_periods=1).mean()
     )
-    return df
+    df["REB_PER_MIN_P10_L10"] = shifted_g.transform(
+        lambda s: s.rolling(10, min_periods=5).quantile(0.1)
+    )
+    df["REB_PER_MIN_P90_L10"] = shifted_g.transform(
+        lambda s: s.rolling(10, min_periods=5).quantile(0.9)
+    )
+    df["REB_ROLL10_SLOPE"] = df.groupby("PLAYER_ID", sort=False)[TARGET].transform(
+        _rolling_slope
+    )
 
+    # OREB / DREB ratio — lagged season average (pregame-safe)
+    if {"OREB", "DREB"}.issubset(df.columns):
+        ratio = df["OREB"] / df["DREB"].replace(0, np.nan)
+        if "SEASON_YEAR" in df.columns:
+            ratio_shifted = ratio.groupby([df["PLAYER_ID"], df["SEASON_YEAR"]], sort=False).shift(1)
+            df["OREB_DREB_RATIO"] = ratio_shifted.groupby(
+                [df["PLAYER_ID"], df["SEASON_YEAR"]], sort=False
+            ).transform(lambda s: s.expanding(min_periods=1).mean())
+        else:
+            ratio_shifted = ratio.groupby(df["PLAYER_ID"], sort=False).shift(1)
+            df["OREB_DREB_RATIO"] = ratio_shifted.groupby(
+                df["PLAYER_ID"], sort=False
+            ).transform(lambda s: s.expanding(min_periods=1).mean())
+    else:
+        df["OREB_DREB_RATIO"] = np.nan
 
-def _add_minutes_and_role_trend(df):
-    pairs = [
-        ("player_RBC_roll5_mean", "player_RBC_roll20_mean", "RBC_TREND_5v20"),
-        ("player_DRBC_roll5_mean", "player_DRBC_roll20_mean", "DRBC_TREND_5v20"),
-    ]
-    for c5, c20, out in pairs:
-        if c5 in df.columns and c20 in df.columns:
-            df[out] = df[c5] - df[c20]
+    # RBC per minute EWM
+    if "RBC_PER_MIN" in df.columns:
+        rbc_shifted = df.groupby("PLAYER_ID", sort=False)["RBC_PER_MIN"].shift(1)
+        df["RBC_PER_MIN_10_ewm"] = rbc_shifted.groupby(df["PLAYER_ID"], sort=False).transform(
+            lambda s: s.ewm(span=10, min_periods=1).mean()
+        )
+    else:
+        df["RBC_PER_MIN_10_ewm"] = np.nan
+
     return df
 
 
@@ -313,15 +359,6 @@ def _build_team_context(df):
         windows=TEAM_ROLLING_WINDOWS, prefix="team",
     )
 
-    own_feat_cols = [
-        c for c in team_df.columns
-        if c.startswith("team_") and any(s in c for s in TEAM_STATS_TO_ROLL)
-    ]
-    own_merge = team_df[["TEAM_ID", "GAME_ID"] + own_feat_cols].rename(
-        columns={c: f"own_{c}" for c in own_feat_cols}
-    )
-    df = df.merge(own_merge, on=["TEAM_ID", "GAME_ID"], how="left")
-
     opp_feat_cols = [
         c for c in team_df.columns
         if c.startswith("team_") and any(s in c for s in OPP_REBOUNDING_STATS_TO_ROLL)
@@ -336,9 +373,12 @@ def _build_team_context(df):
 
 def _encode_categoricals(df):
     pos_col = "POS" if "POS" in df.columns else "pos" if "pos" in df.columns else None
-    if pos_col is not None and "POSITION_ENCODED" not in df.columns:
+    if pos_col is not None and "POSITION_ENC" not in df.columns:
         le = LabelEncoder()
-        df["POSITION_ENCODED"] = le.fit_transform(df[pos_col].astype(str))
+        df["POSITION_ENC"] = le.fit_transform(df[pos_col].astype(str))
+    # Back-compat alias if older frames still expose POSITION_ENCODED only.
+    if "POSITION_ENC" not in df.columns and "POSITION_ENCODED" in df.columns:
+        df["POSITION_ENC"] = df["POSITION_ENCODED"]
     return df
 
 

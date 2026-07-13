@@ -5,10 +5,9 @@ tracking frames, drops ranks / duplicate / redundant columns, and upserts into
 ``silver.nba_player_gamelogs`` or ``silver.wnba_player_gamelogs``.
 
 Also enriches each row with:
-* ``pos``          — canonical position (G / F / C / PG / SG / SF / PF).
-                     Derived first from the ``start_position`` tracking field;
-                     falls back to ``data/raw/player_positions/`` CSVs when
-                     tracking data has no position for a player.
+* ``pos``          — PG / SG / SF / PF / C from the season positions CSV;
+                     tracking ``start_position`` is only used when it is
+                     already one of those five (coarse G/F are ignored).
 * ``game_total``   — Rotowire game over/under (NBA only).
 * ``team_spread``  — Rotowire home-team spread (NBA only).
 
@@ -22,9 +21,10 @@ When the CSV is absent and ``auto_scrape_rotowire=True`` is passed to
 ``build_silver`` (or ``auto_scrape=True`` to ``load_rotowire``), the scraper
 is invoked automatically via ``src.scrapers.rotowire_scraper.run_scrape``.
 
-Player-position CSVs live in ``data/raw/player_positions/``.  Season-specific
-files (``nba_{end_year}_players.csv``) take priority; the aggregate
-``player_positions.csv`` is used as a fallback.
+Player-position CSVs live in ``data/raw/player_positions/``.  The season
+string selects the file by end year (``\"2025-26\"`` → ``nba_2026_players.csv``);
+``player_positions.csv`` is the fallback when that file is missing.  Matching
+uses ``name_s26`` when present, plus accent-stripped ``name``.
 
 Examples::
 
@@ -39,12 +39,13 @@ Examples::
 
 from __future__ import annotations
 
+import unicodedata
 from pathlib import Path
 from typing import Literal
 
 import pandas as pd
 
-from src.utils.db import read_df, upsert_df
+from src.utils.db import _normalize_col, read_df, upsert_df
 from src.pipeline.fetch import LEAGUES, LeagueKey
 
 # ---------------------------------------------------------------------------
@@ -69,7 +70,9 @@ _RW_ABBREV_MAP: dict[str, str] = {
 }
 
 # Maps values that may appear in the tracking ``position`` field to a concise
-# canonical form used in the ``pos`` silver column.
+# canonical form. Only the five standard slots are kept on silver ``pos``;
+# coarse tracking labels (G / F / hybrids) are ignored in favor of the CSV.
+_FINE_POS: frozenset[str] = frozenset({"PG", "SG", "SF", "PF", "C"})
 _START_POS_CANONICAL: dict[str, str] = {
     "Point Guard": "PG",
     "Shooting Guard": "SG",
@@ -220,7 +223,11 @@ def enrich_rotowire(df: pd.DataFrame, rw: pd.DataFrame) -> pd.DataFrame:
     if rw.empty or df.empty:
         return df
 
-    out = df.copy()
+    out = _snake_columns(df)
+    if "game_date" not in out.columns or "matchup" not in out.columns:
+        print("  ⚠ missing game_date/matchup — skipping Rotowire enrichment")
+        return df
+
     # Both sides as normalized datetime64 so merge dtypes always agree.
     out["_rw_date"] = pd.to_datetime(out["game_date"], errors="coerce").dt.normalize()
     rw = rw.copy()
@@ -252,6 +259,20 @@ def enrich_rotowire(df: pd.DataFrame, rw: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
+def _nba_season_end_year(season: str) -> str:
+    """``'2025-26'`` → ``'2026'`` (season-file suffix in ``nba_{end}_players.csv``)."""
+    start_year = _nba_season_to_rotowire_year(season)
+    return str(int(start_year) + 1)
+
+
+def _norm_player_name(name: object) -> str:
+    """Lowercase + strip accents so CSV ``name`` matches NBA API ``player_name``."""
+    if not isinstance(name, str):
+        return ""
+    n = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+    return " ".join(n.lower().strip().split())
+
+
 def load_player_positions(
     season: str | None = None,
     *,
@@ -259,8 +280,15 @@ def load_player_positions(
 ) -> pd.DataFrame:
     """Load player→position lookup from the ``data/raw/player_positions/`` CSVs.
 
-    Tries a season-specific file first (e.g. ``nba_2026_players.csv`` for the
-    2025-26 season), then falls back to the combined ``player_positions.csv``.
+    Picks the season file from the chosen season string:
+
+    * ``\"2025-26\"`` → ``nba_2026_players.csv``
+    * ``\"2024-25\"`` → ``nba_2025_players.csv``
+
+    Falls back to ``player_positions.csv`` when the season file is missing.
+
+    Match keys prefer ASCII ``name_s26`` (when present), then accent-stripped
+    ``name``, so API names like ``Luka Doncic`` hit CSV rows like ``Luka Dončić``.
 
     Returns a DataFrame with columns ``_name_lower`` and ``pos_csv``, or an
     empty DataFrame when no CSV is found.
@@ -270,15 +298,15 @@ def load_player_positions(
 
     path: Path | None = None
     if season:
-        start_year = _nba_season_to_rotowire_year(season)
-        end_year = str(int(start_year) + 1)
-        for candidate in (
-            _PLAYER_POSITIONS_DIR / f"nba_{end_year}_players.csv",
-            _PLAYER_POSITIONS_DIR / f"nba_{start_year}_players.csv",
-        ):
-            if candidate.exists():
-                path = candidate
-                break
+        end_year = _nba_season_end_year(season)
+        candidate = _PLAYER_POSITIONS_DIR / f"nba_{end_year}_players.csv"
+        if candidate.exists():
+            path = candidate
+        else:
+            print(
+                f"  ⚠ season positions file not found: {candidate.name} "
+                "— trying player_positions.csv"
+            )
 
     if path is None:
         fallback = _PLAYER_POSITIONS_DIR / "player_positions.csv"
@@ -290,82 +318,111 @@ def load_player_positions(
         return pd.DataFrame()
 
     df = pd.read_csv(path, encoding="utf-8-sig")
-    if "name" not in df.columns or "pos" not in df.columns:
-        print(f"  ⚠ {path.name} missing 'name'/'pos' columns — skipping")
+    if "pos" not in df.columns:
+        print(f"  ⚠ {path.name} missing 'pos' column — skipping")
         return pd.DataFrame()
 
-    df = df[["name", "pos"]].dropna(subset=["name", "pos"]).copy()
-    df["_name_lower"] = df["name"].str.strip().str.lower()
-    lookup = (
-        df.drop_duplicates(subset="_name_lower")
-        [["_name_lower", "pos"]]
-        .rename(columns={"pos": "pos_csv"})
+    # Prefer name_s26 (ASCII / API-aligned) when the season CSV has it.
+    name_cols = [c for c in ("name_s26", "name") if c in df.columns]
+    if not name_cols:
+        print(f"  ⚠ {path.name} missing 'name'/'name_s26' — skipping")
+        return pd.DataFrame()
+
+    parts: list[pd.DataFrame] = []
+    pos = df["pos"].astype(str).str.strip()
+    valid_pos = pos.ne("") & df["pos"].notna()
+    for col in name_cols:
+        keys = df.loc[valid_pos, col].map(_norm_player_name)
+        part = pd.DataFrame({"_name_lower": keys, "pos_csv": pos[valid_pos]})
+        part = part[part["_name_lower"].ne("")]
+        parts.append(part)
+
+    if not parts:
+        print(f"  ⚠ {path.name} produced no usable name/pos rows — skipping")
+        return pd.DataFrame()
+
+    lookup = pd.concat(parts, ignore_index=True).drop_duplicates(
+        subset="_name_lower", keep="first"
     )
-    print(f"  loaded {len(lookup):,} player-position entries from {path.name}")
+    print(
+        f"  loaded {len(lookup):,} player-position entries from {path.name} "
+        f"(season={season or 'fallback'})"
+    )
     return lookup
+
+
+def _to_fine_pos(value: object) -> str | None:
+    """Map a raw position label to PG/SG/SF/PF/C, else ``None``."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    raw = str(value).strip()
+    if not raw:
+        return None
+    canon = _START_POS_CANONICAL.get(raw, raw.upper())
+    return canon if canon in _FINE_POS else None
 
 
 def enrich_pos(
     df: pd.DataFrame,
     player_positions: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
-    """Add a ``pos`` column to the silver frame.
+    """Add a ``pos`` column (PG / SG / SF / PF / C only).
 
     Priority:
-    1. Canonical position from the ``start_position`` tracking field.
-    2. Position from the ``player_positions`` CSV lookup (joined on
-       lowercased ``player_name``).
+    1. Season ``nba_{end_year}_players.csv`` lookup (accent-normalized name).
+    2. Tracking ``start_position`` only when it is already a fine slot
+       (PG/SG/SF/PF/C). Coarse tracking labels like G/F are ignored.
 
-    Falls back to ``None`` when neither source has a value.
-
-    Parameters
-    ----------
-    player_positions:
-        Optional lookup DataFrame returned by :func:`load_player_positions`
-        (columns: ``_name_lower``, ``pos_csv``).  When omitted only tracking
-        data is used.
+    Falls back to ``None`` when neither source has a fine position.
     """
     out = df.copy()
-    if "start_position" in out.columns:
-        out["pos"] = (
-            out["start_position"]
-            .apply(
-                lambda x: _START_POS_CANONICAL.get(str(x).strip(), str(x).strip())
-                if pd.notna(x) and str(x).strip()
-                else None
-            )
-        )
-    else:
-        out["pos"] = None
+    out["pos"] = None
 
     if (
         player_positions is not None
         and not player_positions.empty
         and "player_name" in out.columns
     ):
+        pos_map = (
+            player_positions.drop_duplicates(subset="_name_lower")
+            .assign(pos_csv=lambda d: d["pos_csv"].map(_to_fine_pos))
+            .dropna(subset=["pos_csv"])
+            .set_index("_name_lower")["pos_csv"]
+        )
+        name_key = out["player_name"].map(_norm_player_name)
+        out["pos"] = name_key.map(pos_map)
+        matched = int(out["pos"].notna().sum())
+        print(f"  pos CSV: matched {matched:,} / {len(out):,} rows")
+
+    if "start_position" in out.columns:
+        from_track = out["start_position"].map(_to_fine_pos)
         missing_before = int(out["pos"].isna().sum())
         if missing_before:
-            # map() keeps row alignment; merge + boolean .loc breaks when the
-            # frame index is non-unique (common after silver merges).
-            pos_map = (
-                player_positions.drop_duplicates(subset="_name_lower")
-                .set_index("_name_lower")["pos_csv"]
-            )
-            name_key = out["player_name"].str.strip().str.lower()
-            out["pos"] = out["pos"].fillna(name_key.map(pos_map))
+            out["pos"] = out["pos"].fillna(from_track)
             filled = missing_before - int(out["pos"].isna().sum())
-            print(
-                f"  pos CSV fallback: filled {filled:,} / {missing_before:,} "
-                "missing positions"
-            )
+            if filled:
+                print(
+                    f"  pos tracking fallback: filled {filled:,} / {missing_before:,} "
+                    "missing with PG/SG/SF/PF/C"
+                )
 
     return out
 
 
-def _drop_fetched_at(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "fetched_at" not in df.columns:
+def _snake_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize API / DB column names to snake_case (``GAME_DATE`` → ``game_date``)."""
+    if df is None or df.empty:
         return df
-    return df.drop(columns=["fetched_at"])
+    out = df.copy()
+    out.columns = [_normalize_col(str(c)) for c in out.columns]
+    return out
+
+
+def _drop_fetched_at(df: pd.DataFrame) -> pd.DataFrame:
+    out = _snake_columns(df)
+    if out.empty or "fetched_at" not in out.columns:
+        return out
+    return out.drop(columns=["fetched_at"])
 
 
 def _prepare_tracking(df: pd.DataFrame) -> pd.DataFrame:

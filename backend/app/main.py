@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import accuracy, features, games, health, matchups, players, predictions, props, slates
+from app.api.routes import accuracy, features, games, health, live_props, matchups, players, predictions, props, slates
 from app.core.config import CORS_ORIGINS
 
 app = FastAPI(
@@ -28,6 +28,7 @@ app.include_router(players.router, prefix="/api")
 app.include_router(games.router, prefix="/api")
 
 # ── Additional DB-backed routes ────────────────────────────────────────────
+app.include_router(live_props.router, prefix="/api")
 app.include_router(accuracy.router, prefix="/api")
 app.include_router(props.router, prefix="/api")
 app.include_router(features.router, prefix="/api")

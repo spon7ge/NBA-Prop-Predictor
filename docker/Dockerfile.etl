@@ -1,4 +1,4 @@
-# Ingestion + transforms + ML prediction pipeline
+# Ingestion + silver clean pipeline
 FROM python:3.12-slim
 
 RUN apt-get update \
@@ -13,14 +13,14 @@ RUN pip install --no-cache-dir -r requirements-etl.txt \
 
 COPY scripts/ scripts/
 COPY src/ src/
-COPY dbt/ dbt/
 COPY docker/etl-entrypoint.sh /usr/local/bin/etl-entrypoint.sh
 RUN chmod +x /usr/local/bin/etl-entrypoint.sh
 
 ENV PYTHONPATH=/app \
     HOOPVISTA_NBA_SEASON=2025-26 \
+    HOOPVISTA_WNBA_SEASON=2025 \
     HOOPVISTA_SEASON_TYPE="Regular Season" \
-    HOOPVISTA_ROTOWIRE_SEASON=2025
+    HOOPVISTA_PROPFINDER_LEAGUE=wnba
 
 ENTRYPOINT ["etl-entrypoint.sh"]
 CMD ["full"]

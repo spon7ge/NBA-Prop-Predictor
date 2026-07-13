@@ -1,27 +1,3 @@
-"""PPM quantile model feature engineering — TOP-16 feature subset (SHAP/perm/ablation-validated, round 2).
-
-Trimmed further after a second empirical validation pass: SHAP importance,
-permutation importance (with p-value), and leave-one-out ablation delta all
-had to agree a feature earns its place (see `keep` column of the validation
-run this was built from).
-
-Round 1 (30 -> 21) dropped `player_PTS_PER_MIN_ewma`, IS_HOME, IS_BACK_TO_BACK,
-TS_PCT level features, and USG_TREND/FGA_TREND.
-
-Round 2 (21 -> 16) dropped:
-- `player_USG_PCT_roll10_mean` — ranked #1 on raw SHAP, but negative ablation
-  delta (removing it improved held-out error). The season-level usage mean
-  was carrying the real signal; the short-window version was overfitting.
-- `player_USG_PCT_roll5_mean` — same pattern, negative ablation delta.
-- `player_FTA_roll10_mean`, `player_FGA_roll10_mean` — negative ablation deltas.
-- `player_PTS_PER_MIN_season_mean` — negative ablation delta; the roll5/roll10/
-  expanding versions of the same stat already cover it.
-
-Leakage-safe: same-game box-score columns are only used as lagged rolling /
-expanding averages. Exposes the gold / ml API (`PPM_FEATURES`, `ppm_features`,
-`prepare_season_df`, `build_ppm_dataset`) plus `build_features` for notebook tests.
-"""
-
 from __future__ import annotations
 
 import numpy as np
@@ -31,15 +7,15 @@ TARGET = "PTS_PER_MIN"
 
 DEFAULT_SEASON_MAP = {0: "S22", 1: "S23", 2: "S24", 3: "S25", 4: "S26"}
 
-# Windows: 5/10 for feature means, 20 kept only as the "slow" side of the
+# Spans: 5/10 for feature means, 20 kept only as the "slow" side of the
 # MIN and TS_PCT 5-vs-20 role-trend deltas (the only two trends that survived).
-ROLLING_WINDOWS = [5, 10, 20]
-TEAM_ROLLING_WINDOWS = [10]
+EWM_SPANS = [5, 10, 20]
+TEAM_EWM_SPANS = [10]
 
-# Stats needing rolling/ewma/expanding windows (roll5/roll10/roll20/expanding).
+# Stats needing ewm/expanding windows (5/10/20 ewm + expanding).
 # USG_PCT and FT_PCT dropped out of this list in round 2 — only their
 # season-to-date means survived, not any short-window version.
-PLAYER_ROLL_STATS = [
+PLAYER_EWM_STATS = [
     "PTS_PER_MIN",
     "FGA",
     "FG3_PCT",
@@ -48,7 +24,7 @@ PLAYER_ROLL_STATS = [
     "TS_PCT",   # level dropped, but needed for TS_TREND_5v20
 ]
 
-# Stats needing only a season-to-date expanding mean (no short-window roll).
+# Stats needing only a season-to-date expanding mean (no short-window ewm).
 PLAYER_SEASON_STATS = [
     "USG_PCT",
     "FGA",
@@ -57,8 +33,8 @@ PLAYER_SEASON_STATS = [
 ]
 
 # No "own team" features survived validation — only opponent defensive rating.
-TEAM_STATS_TO_ROLL: list[str] = []
-OPP_DEFENSE_STATS_TO_ROLL = ["TEAM_DEF_RATING"]
+TEAM_STATS_TO_EWM: list[str] = []
+OPP_DEFENSE_STATS_TO_EWM = ["TEAM_DEF_RATING"]
 
 # IS_HOME and IS_BACK_TO_BACK both failed validation (near-zero / negative
 # ablation impact) and were dropped in round 1.
@@ -73,26 +49,26 @@ _STATIC_FEATURES = [
 PPM_FEATURES = [
     # Recent scoring rate (3) — season_mean dropped in round 2
     "player_PTS_PER_MIN_expanding_mean",
-    "player_PTS_PER_MIN_roll5_mean",
-    "player_PTS_PER_MIN_roll10_mean",
+    "player_PTS_PER_MIN_5_ewm",
+    "player_PTS_PER_MIN_10_ewm",
     # Usage (1) — both short-window versions dropped in round 2
     "player_USG_PCT_season_mean",
-    # Shot volume (2) — roll10 dropped in round 2
+    # Shot volume (2) — 10_ewm dropped in round 2
     "player_FGA_season_mean",
-    "player_FGA_roll5_mean",
-    # Free throws (1) — roll10 dropped in round 2, only season_mean survives
+    "player_FGA_5_ewm",
+    # Free throws (1) — 10_ewm dropped in round 2, only season_mean survives
     "player_FT_PCT_season_mean",
     # Efficiency (2)
-    "player_FG3_PCT_roll10_mean",
-    "player_EFG_PCT_roll10_mean",
+    "player_FG3_PCT_10_ewm",
+    "player_EFG_PCT_10_ewm",
     # Minutes (2)
     "player_MIN_season_mean",
-    "player_MIN_roll10_mean",
-    # Role trend (2)
+    "player_MIN_10_ewm",
+    # Role trend (2) — ewm5 − ewm20
     "MIN_TREND_5v20",
     "TS_TREND_5v20",
     # Context (3)
-    "opp_team_TEAM_DEF_RATING_roll10_mean",
+    "opp_team_TEAM_DEF_RATING_10_ewm",
     "DAYS_REST",
     "STARTING_rate_last10",
 ]
@@ -100,13 +76,11 @@ PPM_FEATURES = [
 assert len(PPM_FEATURES) == 16, f"expected 16 features, got {len(PPM_FEATURES)}"
 
 
-def _rolling_feature_names(stat_cols: list[str], windows: list[int], prefix: str) -> list[str]:
+def _ewm_feature_names(stat_cols: list[str], spans: list[int], prefix: str) -> list[str]:
     names: list[str] = []
     for col in stat_cols:
-        for w in windows:
-            names.append(f"{prefix}_{col}_roll{w}_mean")
-            names.append(f"{prefix}_{col}_roll{w}_std")
-        names.append(f"{prefix}_{col}_ewma")
+        for span in spans:
+            names.append(f"{prefix}_{col}_{span}_ewm")
         names.append(f"{prefix}_{col}_expanding_mean")
     return names
 
@@ -127,9 +101,9 @@ def ppm_features(df: pd.DataFrame) -> pd.DataFrame:
     if "STARTING" in df.columns:
         df = _add_starting_rate(df)
 
-    df = _add_rolling_and_expanding(
-        df, group_col="PLAYER_ID", stat_cols=PLAYER_ROLL_STATS,
-        windows=ROLLING_WINDOWS, prefix="player",
+    df = _add_ewm_and_expanding(
+        df, group_col="PLAYER_ID", stat_cols=PLAYER_EWM_STATS,
+        spans=EWM_SPANS, prefix="player",
     )
     if "SEASON_YEAR" in df.columns:
         df = _add_season_to_date(
@@ -172,6 +146,71 @@ def build_ppm_dataset(
     return df
 
 
+def validate_ppm_dataset(
+    df: pd.DataFrame,
+    *,
+    key_cols: tuple[str, ...] = ("GAME_ID", "PLAYER_ID"),
+    require_season: bool = True,
+) -> dict[str, object]:
+    """Assert an engineered PPM frame is training-ready.
+
+    Checks:
+    * required id / target / feature columns exist
+    * no duplicate ``(GAME_ID, PLAYER_ID)`` rows
+    * target is finite where present
+    * optional ``SEASON`` column present
+
+    Returns a small summary dict. Raises ``ValueError`` / ``KeyError`` on failure.
+    """
+    if df.empty:
+        raise ValueError("PPM dataset is empty")
+
+    required = list(key_cols) + [TARGET, "MIN", "GAME_DATE", *PPM_FEATURES]
+    if require_season:
+        required.append("SEASON")
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise KeyError(
+            f"PPM dataset missing {len(missing)} column(s): {missing[:20]}"
+            + ("..." if len(missing) > 20 else "")
+        )
+
+    dup_mask = df.duplicated(subset=list(key_cols), keep=False)
+    n_dup_rows = int(dup_mask.sum())
+    if n_dup_rows:
+        n_keys = int(df.loc[dup_mask, list(key_cols)].drop_duplicates().shape[0])
+        sample = (
+            df.loc[dup_mask, list(key_cols)]
+            .drop_duplicates()
+            .head(5)
+            .to_dict(orient="records")
+        )
+        raise ValueError(
+            f"PPM dataset has {n_dup_rows:,} duplicate rows across {n_keys:,} "
+            f"{key_cols} keys. Sample: {sample}"
+        )
+
+    y = pd.to_numeric(df[TARGET], errors="coerce")
+    n_bad_target = int((y.isna() | ~np.isfinite(y)).sum())
+    if n_bad_target:
+        raise ValueError(
+            f"PPM dataset has {n_bad_target:,} non-finite {TARGET} values"
+        )
+
+    summary: dict[str, object] = {
+        "rows": len(df),
+        "cols": df.shape[1],
+        "features": len(PPM_FEATURES),
+        "duplicate_keys": 0,
+        "bad_target": 0,
+    }
+    if "SEASON" in df.columns:
+        summary["seasons"] = (
+            df["SEASON"].value_counts().sort_index().to_dict()
+        )
+    return summary
+
+
 def feature_cols_from_df(df: pd.DataFrame) -> list[str]:
     """The fixed top-16 feature columns present on an engineered frame."""
     return [c for c in PPM_FEATURES if c in df.columns]
@@ -201,7 +240,7 @@ def build_features(df: pd.DataFrame, drop_first_n_games: int = 0):
 
 # ── Internal helpers ───────────────────────────────────────────────────────────
 
-def _add_rolling_and_expanding(df, group_col, stat_cols, windows, prefix):
+def _add_ewm_and_expanding(df, group_col, stat_cols, spans, prefix):
     df = df.sort_values([group_col, "GAME_DATE"])
     g = df.groupby(group_col, sort=False)
 
@@ -211,17 +250,11 @@ def _add_rolling_and_expanding(df, group_col, stat_cols, windows, prefix):
         shifted = g[col].shift(1)
         shifted_grouped = shifted.groupby(df[group_col])
 
-        for w in windows:
-            df[f"{prefix}_{col}_roll{w}_mean"] = shifted_grouped.transform(
-                lambda s, w=w: s.rolling(w, min_periods=1).mean()
-            )
-            df[f"{prefix}_{col}_roll{w}_std"] = shifted_grouped.transform(
-                lambda s, w=w: s.rolling(w, min_periods=2).std()
+        for span in spans:
+            df[f"{prefix}_{col}_{span}_ewm"] = shifted_grouped.transform(
+                lambda s, span=span: s.ewm(span=span, min_periods=1).mean()
             )
 
-        df[f"{prefix}_{col}_ewma"] = shifted_grouped.transform(
-            lambda s: s.ewm(span=max(windows), min_periods=1).mean()
-        )
         df[f"{prefix}_{col}_expanding_mean"] = shifted_grouped.transform(
             lambda s: s.expanding(min_periods=1).mean()
         )
@@ -268,8 +301,8 @@ def _add_starting_rate(df):
 
 def _add_role_trend(df):
     pairs = [
-        ("player_MIN_roll5_mean", "player_MIN_roll20_mean", "MIN_TREND_5v20"),
-        ("player_TS_PCT_roll5_mean", "player_TS_PCT_roll20_mean", "TS_TREND_5v20"),
+        ("player_MIN_5_ewm", "player_MIN_20_ewm", "MIN_TREND_5v20"),
+        ("player_TS_PCT_5_ewm", "player_TS_PCT_20_ewm", "TS_TREND_5v20"),
     ]
     for c5, c20, out in pairs:
         if c5 in df.columns and c20 in df.columns:
@@ -281,7 +314,7 @@ def _build_team_context(df):
     if not {"TEAM_ID", "GAME_ID", "GAME_DATE", "OPP_TEAM_ID"}.issubset(df.columns):
         return df
 
-    stat_pool = list(dict.fromkeys(TEAM_STATS_TO_ROLL + OPP_DEFENSE_STATS_TO_ROLL))
+    stat_pool = list(dict.fromkeys(TEAM_STATS_TO_EWM + OPP_DEFENSE_STATS_TO_EWM))
     team_cols = ["TEAM_ID", "GAME_ID", "GAME_DATE"] + [c for c in stat_pool if c in df.columns]
     if len(team_cols) <= 3:
         return df
@@ -291,14 +324,14 @@ def _build_team_context(df):
     if not stat_union:
         return df
 
-    team_df = _add_rolling_and_expanding(
+    team_df = _add_ewm_and_expanding(
         team_df, group_col="TEAM_ID", stat_cols=stat_union,
-        windows=TEAM_ROLLING_WINDOWS, prefix="team",
+        spans=TEAM_EWM_SPANS, prefix="team",
     )
 
     opp_feat_cols = [
         c for c in team_df.columns
-        if c.startswith("team_") and any(s in c for s in OPP_DEFENSE_STATS_TO_ROLL)
+        if c.startswith("team_") and any(s in c for s in OPP_DEFENSE_STATS_TO_EWM)
     ]
     opp_merge = team_df[["TEAM_ID", "GAME_ID"] + opp_feat_cols].rename(
         columns={"TEAM_ID": "OPP_TEAM_ID", **{c: f"opp_{c}" for c in opp_feat_cols}}

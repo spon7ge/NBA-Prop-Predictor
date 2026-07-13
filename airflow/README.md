@@ -1,21 +1,18 @@
 # HoopVista Airflow Scheduler
 
-Apache Airflow orchestrates the Supabase + dbt + ML pipeline:
+Apache Airflow orchestrates the daily ingest → silver pipeline:
 
 | Step | DAG task | Command |
 |------|----------|---------|
-| 1. Ingest APIs | `ingest_apis.*` | NBA stats, odds/props, Rotowire |
-| 2. Load raw tables | `load_raw_tables` | `scripts/upload_silver.py` → `silver.player_gamelogs` |
-| 3. dbt run | `dbt_run` | `scripts/run_dbt.py run` |
-| 4. Generate predictions | `generate_predictions` | `scripts/generate_predictions.py` |
+| 1. Ingest APIs | `ingest_apis.*` | NBA + WNBA `fetch_raw.py --raw-only`, `PropFinder.py` |
+| 2. Build silver | `build_silver.*` | NBA + WNBA `fetch_raw.py --silver-only` |
 
-A separate weekly DAG (`hoopvista_train_models`) retrains quantile models.
+Gold feature tables and model retraining are **manual** (not scheduled).
 
 ## Prerequisites
 
 1. Repo-root `.env` with at least `SUPABASE_DB_URL` and `API_KEY` (see `airflow/.env.example`).
-2. Supabase migrations applied (`db/migrations/001`–`008`).
-3. Saved model bundles in `src/models/saved_models/` (run `train_model.py` once, or wait for the weekly DAG).
+2. Supabase migrations applied (`db/migrations/`).
 
 ## Quick start (Docker)
 
@@ -29,7 +26,7 @@ docker compose up -d
 ```
 
 - UI: http://localhost:8080 (default login `airflow` / `airflow`)
-- DAGs: `hoopvista_daily_pipeline`, `hoopvista_train_models`
+- DAG: `hoopvista_daily_pipeline`
 
 The repo is mounted at `/opt/airflow/hoopvista` inside the container.
 
@@ -56,19 +53,16 @@ Each step can be run outside Airflow via `scripts/run_pipeline_step.sh`:
 
 ```bash
 # 1. Ingest
-bash scripts/run_pipeline_step.sh python src/utils/nbaPlayerLogs.py --season 2025-26 --season-type "Regular Season" --db-upsert
-bash scripts/run_pipeline_step.sh python scripts/PropFinder.py
-bash scripts/run_pipeline_step.sh python src/scrapers/rotowire_scraper.py --season 2025
+bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league nba --season 2025-26 --season-type "Regular Season" --raw-only --sequential
+bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league wnba --season 2025 --season-type "Regular Season" --raw-only --sequential
+bash scripts/run_pipeline_step.sh python scripts/PropFinder.py --league wnba
 
-# 2. Load silver from raw
-bash scripts/run_pipeline_step.sh python scripts/upload_silver.py --season 2025-26
-
-# 3. dbt
-bash scripts/run_pipeline_step.sh python scripts/run_dbt.py run
-
-# 4. Predictions
-bash scripts/run_pipeline_step.sh python scripts/generate_predictions.py --prop all --game-date 2026-05-12
+# 2. Silver
+bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league nba --season 2025-26 --season-type "Regular Season" --silver-only
+bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league wnba --season 2025 --season-type "Regular Season" --silver-only
 ```
+
+When NBA is in season, use `--league nba` or `--league all` for PropFinder.
 
 ## Configuration
 
@@ -78,34 +72,30 @@ Environment variables (docker-compose or `.env`):
 |----------|---------|---------|
 | `HOOPVISTA_REPO_ROOT` | `/opt/airflow/hoopvista` | Repo mount path in container |
 | `HOOPVISTA_NBA_SEASON` | `2025-26` | NBA API season |
+| `HOOPVISTA_WNBA_SEASON` | `2025` | WNBA API season |
 | `HOOPVISTA_SEASON_TYPE` | `Regular Season` | Regular Season / Playoffs |
-| `HOOPVISTA_ROTOWIRE_SEASON` | `2025` | Rotowire archive year |
+| `HOOPVISTA_PROPFINDER_LEAGUE` | `wnba` | PropFinder `--league` (`nba` / `wnba` / `all`) |
 
-Optional Airflow Variables (override env): `hoopvista_repo_root`, `hoopvista_nba_season`, `hoopvista_season_type`, `hoopvista_rotowire_season`.
-
-## Schedules
+## Schedule
 
 - **`hoopvista_daily_pipeline`**: `0 6,14,22 * * *` (3× daily — adjust timezone in Airflow config)
-- **`hoopvista_train_models`**: `0 8 * * 1` (Mondays)
 
 ## DAG structure
 
 ```
 start
   └─ ingest_apis (parallel)
-       ├─ nba_stats
-       ├─ odds_props
-       └─ rotowire
-  └─ load_raw_tables
-  └─ dbt_run
-  └─ dbt_test (ml tests)
-  └─ generate_predictions
+       ├─ nba_stats   (--raw-only)
+       ├─ wnba_stats  (--raw-only)
+       └─ odds_props  (PropFinder)
+  └─ build_silver (parallel)
+       ├─ nba         (--silver-only)
+       └─ wnba        (--silver-only)
 end
 ```
 
 ## Notes
 
-- **Rotowire** requires Playwright + Chromium (included in the Docker image).
-- **PropFinder** upserts directly to `raw.props_us` / `raw.props_dfs`.
-- **Silver upload** must run after raw ingest; dbt silver models read `silver.player_gamelogs`.
-- Predictions use `{{ ds }}` (Airflow logical date) as `--game-date`.
+- **PropFinder** upserts to `raw.nba_props_*` / `raw.wnba_props_*` depending on `--league`.
+- **Silver** must run after raw ingest (`fetch_raw.py --silver-only`).
+- Gold + train stay out of Airflow — rebuild features and retrain models when you choose.

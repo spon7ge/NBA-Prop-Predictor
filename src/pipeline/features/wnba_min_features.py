@@ -11,6 +11,8 @@ import pandas as pd
 
 from src.pipeline.features._common import days_rest, fatigue_features
 
+TARGET = "MIN"
+
 # Order must match training / saved WNBA quantile bundle `feature_names`.
 WNBA_MIN_FEATURES = [
     "MIN_10_ewm",
@@ -81,6 +83,62 @@ def build_wnba_min_dataset(
     df = pd.concat(res, ignore_index=True)
     df.drop(columns=["Unnamed: 0"], inplace=True, errors="ignore")
     return df
+
+
+def validate_wnba_min_dataset(
+    df: pd.DataFrame,
+    *,
+    feature_cols: list[str] | None = None,
+    key_cols: tuple[str, ...] = ("GAME_ID", "PLAYER_ID"),
+    require_season: bool = True,
+) -> dict[str, object]:
+    """Assert an engineered WNBA MIN frame is training-ready."""
+    features = list(feature_cols) if feature_cols is not None else list(WNBA_MIN_FEATURES)
+    if df.empty:
+        raise ValueError("WNBA MIN dataset is empty")
+
+    required = list(key_cols) + [TARGET, "GAME_DATE", *features]
+    if require_season:
+        required.append("SEASON")
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise KeyError(
+            f"WNBA MIN dataset missing {len(missing)} column(s): {missing[:20]}"
+            + ("..." if len(missing) > 20 else "")
+        )
+
+    dup_mask = df.duplicated(subset=list(key_cols), keep=False)
+    n_dup_rows = int(dup_mask.sum())
+    if n_dup_rows:
+        n_keys = int(df.loc[dup_mask, list(key_cols)].drop_duplicates().shape[0])
+        sample = (
+            df.loc[dup_mask, list(key_cols)]
+            .drop_duplicates()
+            .head(5)
+            .to_dict(orient="records")
+        )
+        raise ValueError(
+            f"WNBA MIN dataset has {n_dup_rows:,} duplicate rows across {n_keys:,} "
+            f"{key_cols} keys. Sample: {sample}"
+        )
+
+    y = pd.to_numeric(df[TARGET], errors="coerce")
+    n_bad_target = int((y.isna() | ~np.isfinite(y)).sum())
+    if n_bad_target:
+        raise ValueError(
+            f"WNBA MIN dataset has {n_bad_target:,} non-finite {TARGET} values"
+        )
+
+    summary: dict[str, object] = {
+        "rows": len(df),
+        "cols": df.shape[1],
+        "features": len(features),
+        "duplicate_keys": 0,
+        "bad_target": 0,
+    }
+    if "SEASON" in df.columns:
+        summary["seasons"] = df["SEASON"].value_counts().sort_index().to_dict()
+    return summary
 
 
 def _rolling_player(df: pd.DataFrame) -> pd.DataFrame:
