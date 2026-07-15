@@ -96,6 +96,11 @@ class FeatureEngineer:
         """Leakage-safe EWM, season avg, and lag-1 for player_base per-min rates."""
         print("\nCreating player base features...")
         df = player_base_df.copy()
+        if 'min' in df.columns:
+            if not pd.api.types.is_numeric_dtype(df['min']):
+                df['min'] = self._parse_minutes(df['min'])
+            # Same-game minutes label kept in the merged training frame (before *_per_min).
+            df['minutes'] = df['min']
         df = self._add_per_min_stats(df, PLAYER_BASE_PER_MIN_STATS)
         return self._add_player_features(
             df, stat_cols=PLAYER_BASE_STATS, prefix='base',
@@ -440,7 +445,9 @@ class FeatureEngineer:
         """Columns produced by feature helpers (EWM / season / lag / per-min / opp / starting)."""
         out = []
         for c in df.columns:
-            if c in ("starting", "opp_team_id", "games_played") or c.endswith("games_played"):
+            if c in ("starting", "opp_team_id", "games_played", "minutes") or c.endswith(
+                "games_played"
+            ):
                 out.append(c)
             elif any(
                 tok in c
@@ -472,7 +479,7 @@ class FeatureEngineer:
                 how="left",
             )
 
-        track_feat = self._engineered_cols(tracking)
+        track_feat = [c for c in self._engineered_cols(tracking) if c != "minutes"]
         if track_feat:
             df = df.merge(
                 tracking[["game_id", "player_id", *track_feat]],
@@ -497,7 +504,16 @@ class FeatureEngineer:
                 suffixes=("", "_team_adv"),
             )
 
-        ordered = id_cols + [c for c in df.columns if c not in id_cols]
+        # Keep minutes immediately before same-game *_per_min rate columns.
+        rest = [c for c in df.columns if c not in id_cols]
+        if "minutes" in rest:
+            rest = [c for c in rest if c != "minutes"]
+            insert_at = next(
+                (i for i, c in enumerate(rest) if c.endswith("_per_min")),
+                len([c for c in ("game_date", "season_year", "matchup") if c in rest]),
+            )
+            rest.insert(insert_at, "minutes")
+        ordered = id_cols + rest
         return df[ordered]
 
     def run(self) -> pd.DataFrame | None:

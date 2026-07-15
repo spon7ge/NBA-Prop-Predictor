@@ -7,11 +7,63 @@ Operates on the merged player-game training frame (snake_case columns from
 from __future__ import annotations
 
 import os
+import unicodedata
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from src.pipeline.features.build_features import FeatureEngineer
+
+_PLAYER_POSITIONS_DIR = (
+    Path(__file__).resolve().parents[3] / "data" / "raw" / "player_positions"
+)
+_FINE_POS: frozenset[str] = frozenset({"PG", "SG", "SF", "PF", "C"})
+
+
+def _norm_player_name(name: object) -> str:
+    """Lowercase + strip accents so CSV names match NBA API ``player_name``."""
+    if not isinstance(name, str):
+        return ""
+    n = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+    return " ".join(n.lower().strip().split())
+
+
+def _season_end_year(season: str) -> str:
+    """``'2024-25'`` → ``'2025'`` (suffix in ``nba_{end}_players.csv``)."""
+    return str(int(str(season).split("-")[0]) + 1)
+
+
+def _load_positions_lookup(season: str) -> pd.DataFrame:
+    """Load ``_name_lower`` → ``pos`` for one season from raw player_positions CSVs."""
+    candidate = _PLAYER_POSITIONS_DIR / f"nba_{_season_end_year(season)}_players.csv"
+    path = candidate if candidate.exists() else _PLAYER_POSITIONS_DIR / "player_positions.csv"
+    if not path.exists():
+        print(f"  ⚠ no positions CSV for season={season}")
+        return pd.DataFrame(columns=["_name_lower", "pos"])
+
+    raw = pd.read_csv(path, encoding="utf-8-sig")
+    if "pos" not in raw.columns:
+        print(f"  ⚠ {path.name} missing 'pos' — skipping")
+        return pd.DataFrame(columns=["_name_lower", "pos"])
+
+    name_cols = [c for c in ("name_s26", "name") if c in raw.columns]
+    if not name_cols:
+        print(f"  ⚠ {path.name} missing name columns — skipping")
+        return pd.DataFrame(columns=["_name_lower", "pos"])
+
+    pos = raw["pos"].astype(str).str.strip().str.upper()
+    valid = raw["pos"].notna() & pos.ne("") & pos.isin(_FINE_POS)
+    parts = []
+    for col in name_cols:
+        keys = raw.loc[valid, col].map(_norm_player_name)
+        part = pd.DataFrame({"_name_lower": keys, "pos": pos[valid]})
+        parts.append(part[part["_name_lower"].ne("")])
+    lookup = pd.concat(parts, ignore_index=True).drop_duplicates(
+        subset="_name_lower", keep="first"
+    )
+    print(f"  loaded {len(lookup):,} positions from {path.name} (season={season})")
+    return lookup
 
 # (short_ewm_col, long_ewm_col, output_col)
 DEFAULT_TREND_5V20: list[tuple[str, str, str]] = [
@@ -23,18 +75,114 @@ DEFAULT_TREND_5V20: list[tuple[str, str, str]] = [
     ),
     ("adv_ts_pct_ewm_hl5", "adv_ts_pct_ewm_hl20", "adv_ts_pct_trend_5v20"),
     ("adv_usg_pct_ewm_hl5", "adv_usg_pct_ewm_hl20", "adv_usg_pct_trend_5v20"),
+    ("base_ast_per_min_ewm_hl5", "base_ast_per_min_ewm_hl20", "base_ast_per_min_trend_5v20"),
+    ("base_oreb_per_min_ewm_hl5", "base_oreb_per_min_ewm_hl20", "base_oreb_per_min_trend_5v20"),
+    ("base_dreb_per_min_ewm_hl5", "base_dreb_per_min_ewm_hl20", "base_dreb_per_min_trend_5v20"),
 ]
 
 # (value_col already leakage-safe, output rank col)
 DEFAULT_TEAM_RANKS: list[tuple[str, str]] = [
     ("base_pts_per_min_ewm_hl10", "team_pts_per_min_rank_l10"),
+    ("base_ast_per_min_ewm_hl10", "team_ast_per_min_rank_l10"),
+    ("base_oreb_per_min_ewm_hl10", "team_oreb_per_min_rank_l10"),
+    ("base_dreb_per_min_ewm_hl10", "team_dreb_per_min_rank_l10"),
+    ("adv_ts_pct_ewm_hl10", "team_ts_pct_rank_l10"),
     ("adv_usg_pct_ewm_hl10", "team_usg_pct_rank_l10"),
     ("base_min_ewm_hl10", "team_min_rank_l10"),
 ]
 
+def _resolve_col(df: pd.DataFrame, aliases: list[str]) -> str | None:
+    for col in aliases:
+        if col in df.columns:
+            return col
+    return None
+
+
+def _starter_features(
+    df: pd.DataFrame,
+    *,
+    window: int = 10,
+    min_periods: int = 3,
+    starting_col: str = "starting",
+    out_col: str | None = None,
+) -> pd.DataFrame:
+    """Leakage-safe rolling start rate: mean of prior ``starting`` flags.
+
+    ``starter_roll{window}_pct`` = share of the previous ``window`` games in
+    which the player started (shift(1) then rolling mean).
+    """
+    df = df.copy()
+    if "player_id" not in df.columns:
+        raise ValueError("_starter_features requires player_id")
+    if starting_col not in df.columns:
+        raise ValueError(f"_starter_features: missing {starting_col}")
+    if "game_date" not in df.columns:
+        raise ValueError("_starter_features requires game_date")
+
+    out_col = out_col or f"starter_roll{window}_pct"
+    df["game_date"] = pd.to_datetime(df["game_date"])
+    df = df.sort_values(["player_id", "game_date"]).reset_index(drop=True)
+
+    shifted = df.groupby("player_id", sort=False)[starting_col].shift(1)
+    df[out_col] = (
+        shifted.groupby(df["player_id"], sort=False)
+        .rolling(window, min_periods=min_periods)
+        .mean()
+        .reset_index(level=0, drop=True)
+        .round(2)
+    )
+    return df
+
 
 class ContextFeatureEngineer(FeatureEngineer):
-    """FeatureEngineer + rest/B2B, 5v20 trends, team ranks, games-played-to-date."""
+    """FeatureEngineer + rest/B2B, trends, ranks, fatigue, starter flags."""
+
+    def add_player_positions(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Merge PG/SG/SF/PF/C ``pos`` from ``data/raw/player_positions``.
+
+        Picks ``nba_{end_year}_players.csv`` per row ``season_year``
+        (e.g. ``2024-25`` → ``nba_2025_players.csv``). Falls back to
+        ``self.season`` when ``season_year`` is absent. Matching uses
+        accent-stripped ``player_name`` against CSV ``name_s26`` / ``name``.
+        """
+        print("\nMerging player positions...")
+        if "player_name" not in df.columns:
+            print("  ⚠ skip: missing player_name")
+            return df
+
+        df = df.copy()
+        season_col = _resolve_col(df, ["season_year", "season"])
+        if season_col is None:
+            seasons = [self.season]
+            print(f"  no season_year — using engineer season={self.season}")
+        else:
+            seasons = [
+                s for s in df[season_col].dropna().unique().tolist() if s
+            ] or [self.season]
+
+        name_key = df["player_name"].map(_norm_player_name)
+        pos = pd.Series(np.nan, index=df.index, dtype=object)
+        for season in seasons:
+            mask = (
+                df[season_col] == season
+                if season_col is not None
+                else pd.Series(True, index=df.index)
+            )
+            if not mask.any():
+                continue
+            lookup = _load_positions_lookup(str(season))
+            if lookup.empty:
+                continue
+            pos_map = lookup.set_index("_name_lower")["pos"]
+            pos.loc[mask] = name_key.loc[mask].map(pos_map).to_numpy()
+
+        df["pos"] = pos
+        n_pos = int(df["pos"].notna().sum())
+        print(
+            f"  pos filled on {n_pos:,} / {len(df):,} rows "
+            f"({len(seasons)} season file(s))"
+        )
+        return df
 
     def add_rest_and_b2b(
         self,
@@ -236,11 +384,30 @@ class ContextFeatureEngineer(FeatureEngineer):
             print("  games_played (no season_year — season counter skipped)")
         return df
 
+    def add_starter_features(
+        self,
+        df: pd.DataFrame,
+        *,
+        window: int = 10,
+        min_periods: int = 3,
+    ) -> pd.DataFrame:
+        """Rolling prior-game start rate (``starter_roll{window}_pct``)."""
+        print(f"\nAdding starter roll{window} features...")
+        if "starting" not in df.columns:
+            print("  ⚠ skip: missing starting column")
+            return df
+        out = _starter_features(df, window=window, min_periods=min_periods)
+        col = f"starter_roll{window}_pct"
+        n_ok = int(out[col].notna().sum())
+        print(f"  {col} defined on {n_ok:,} / {len(out):,} rows")
+        return out
+
     def enrich(self, df: pd.DataFrame) -> pd.DataFrame:
         """Apply all context features to a merged training frame."""
         print("\n" + "=" * 60)
-        print("Context features (rest, trends, ranks, games played)")
+        print("Context features (pos, rest, trends, ranks, games played)")
         print("=" * 60)
+        df = self.add_player_positions(df)
         df = self.add_games_played_to_date(df)
         df = self.add_rest_and_b2b(df)
         df = self.add_fatigue_features(df)
@@ -261,6 +428,7 @@ class ContextFeatureEngineer(FeatureEngineer):
                 window=10,
                 out_col="team_pts_per_min_rank_roll10",
             )
+        df = self.add_starter_features(df)
         return df
 
     def run(self) -> pd.DataFrame | None:
