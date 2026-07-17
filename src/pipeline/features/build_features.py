@@ -1,16 +1,20 @@
 """
-Feature Engineering for NBA Betting Model
+Feature Engineering for NBA / WNBA Betting Models
 
-This script processes the raw synthetic NBA data and engineers features for the predictive models.
+Reads ``raw.{nba,wnba}_*`` tables from Supabase and engineers leakage-safe
+player + team features for training.
 """
 
+from __future__ import annotations
+
 import os
+from typing import Literal
 
 import numpy as np
 import pandas as pd
 
 from src.pipeline.clean import read_raw_tables
-from src.pipeline.fetch import LEAGUES
+from src.pipeline.fetch import LEAGUES, LeagueKey
 
 HALFLIVES = [5, 10, 20]
 # Require a few prior games before EWM is defined (avoids 1-game "averages").
@@ -51,7 +55,7 @@ PLAYER_TRACK_STATS = PLAYER_TRACK_LEVEL_STATS + [
 ]
 
 class FeatureEngineer:
-    """Creates features for the NBA betting model"""
+    """Creates features for NBA or WNBA player-game training frames."""
 
     def __init__(
         self,
@@ -59,19 +63,29 @@ class FeatureEngineer:
         processed_data_dir='../../data/processed',
         season: str | None = None,
         season_type: str = 'Regular Season',
+        league: LeagueKey | Literal['nba', 'wnba'] = 'nba',
     ):
+        if league not in LEAGUES:
+            raise ValueError(f"Unknown league: {league!r}")
         self.raw_data_dir = raw_data_dir
         self.processed_data_dir = processed_data_dir
-        self.season = season or LEAGUES['nba'].default_season
+        self.league: LeagueKey = league  # type: ignore[assignment]
+        self.season = season or LEAGUES[self.league].default_season
         self.season_type = season_type
         os.makedirs(processed_data_dir, exist_ok=True)
 
     def load_data(self):
-        """Load all five raw NBA tables from Supabase (raw.nba_*)."""
-        print(f"Loading raw data from Supabase ({self.season} {self.season_type})...")
+        """Load all five raw tables from Supabase (``raw.nba_*`` or ``raw.wnba_*``)."""
+        label = LEAGUES[self.league].label
+        print(
+            f"Loading raw {label} data from Supabase "
+            f"({self.season} {self.season_type})..."
+        )
 
         try:
-            frames = read_raw_tables(self.season, self.season_type, league='nba')
+            frames = read_raw_tables(
+                self.season, self.season_type, league=self.league,
+            )
             player_base_df = frames['player_base']
             player_adv_df = frames['player_adv']
             team_base_df = frames['team_base']
@@ -540,16 +554,20 @@ class FeatureEngineer:
             player_base_df, player_adv_df, tracking_df, team_base_df, team_adv_df,
         )
 
-        season_type_slug = self.season_type.replace(' ', '_')
-        output_path = os.path.join(
-            self.processed_data_dir,
-            f"{self.season}_{season_type_slug}_training_data.parquet",
-        )
+        output_path = self.training_parquet_path()
         training_df.to_parquet(output_path, index=False)
         print(
             f"\nSaved {len(training_df):,} rows × {training_df.shape[1]} cols → {output_path}"
         )
         return training_df
+
+    def training_parquet_path(self) -> str:
+        """Path where ``run()`` writes this season's parquet."""
+        season_type_slug = self.season_type.replace(' ', '_')
+        name = f"{self.season}_{season_type_slug}_training_data.parquet"
+        if self.league != 'nba':
+            name = f"{self.league}_{name}"
+        return os.path.join(self.processed_data_dir, name)
 
 
 def main():
