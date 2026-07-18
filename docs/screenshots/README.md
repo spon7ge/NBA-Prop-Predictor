@@ -1,14 +1,15 @@
 # Screenshot assets for README
 
-Add PNG captures here, then reference them from the root `README.md`.
+Add PNG captures here, then reference them from the root `README.md`. SVG placeholders are checked in until you replace them.
 
 | File | What to capture |
 |------|-----------------|
-| `airflow-dag-success.png` | Airflow UI → `hoopvista_daily_pipeline` → Graph or Grid view with all tasks green |
-| `dbt-lineage.png` | dbt docs → lineage graph for `ml.features` or `gold_prop_history` (run `dbt docs generate && dbt docs serve`) |
-| `dashboard-all-players.png` | Frontend → All Players view with model/sharp/consensus columns |
-| `dashboard-top-legs.png` | Frontend → Top Legs parlay cards |
-| `api-docs.png` | FastAPI Swagger at `http://localhost:8000/docs` |
+| `architecture-pipeline.svg` | Static pipeline diagram (already in repo; optional redraw in Excalidraw/draw.io) |
+| `airflow-dag-success.png` | Airflow UI → `hoopvista_daily_pipeline` → Graph with `live_ml.live_props` + `live_ml.live_slates` green |
+| `dbt-lineage.png` | dbt docs → lineage for `ml.features` or `gold_prop_history` |
+| `dashboard-all-players.png` | Frontend → All Players (league filter + model/form columns) |
+| `dashboard-top-legs.png` | Frontend → Top Legs (Book / League / Legs dropdowns + parlay cards) |
+| `api-docs.png` | FastAPI Swagger at `http://localhost:8000/docs` showing `/live-props` and `/live-slates` |
 
 ## How to generate
 
@@ -22,14 +23,17 @@ cd dbt && dbt docs serve --port 8081
 **Airflow**
 ```bash
 cd airflow && docker compose up -d
-# Open http://localhost:8080 → trigger hoopvista_daily_pipeline
+# http://localhost:8080 (airflow / airflow)
+# Unpause hoopvista_daily_pipeline → Trigger → wait for success
 ```
 
 **Dashboard**
 ```bash
 docker compose --profile local-db up -d postgres api
+python scripts/run_live_props.py --league wnba
+python scripts/run_live_slates.py --league wnba
 cd frontend && npm run dev
-# Open http://localhost:5173
+# http://localhost:5173 — capture All Players and Top Legs
 ```
 
-Export at ~1400px wide for readable README rendering.
+Export at ~1400px wide for readable README rendering. Prefer PNG over SVG for real UI screenshots.

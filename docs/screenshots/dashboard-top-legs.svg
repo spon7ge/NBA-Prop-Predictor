@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-label="Top Legs dashboard placeholder">
+  <rect width="960" height="360" fill="#0b0b0b"/>
+  <text x="32" y="40" fill="#e8e8e4" font-family="system-ui,sans-serif" font-size="20" font-weight="600">Top Legs</text>
+  <text x="32" y="64" fill="#8e8e86" font-family="system-ui,sans-serif" font-size="12">Placeholder  replace with PNG of EV-ranked parlays (Book · League · Legs dropdowns)</text>
+
+  <rect x="32" y="96" width="896" height="100" rx="12" fill="#000" stroke="#2e2e2c"/>
+  <text x="52" y="130" fill="#9a9a92" font-family="system-ui,sans-serif" font-size="13">#1 pick</text>
+  <text x="140" y="130" fill="#7ec8a3" font-family="system-ui,sans-serif" font-size="13">EV +40%</text>
+  <text x="52" y="158" fill="#e8e8e4" font-family="system-ui,sans-serif" font-size="14">Player A · PTS OVER · Player B · REB UNDER</text>
+  <text x="52" y="180" fill="#8e8e86" font-family="system-ui,sans-serif" font-size="12">Hit rate L10 · model projection · from GET /api/live-slates</text>
+
+  <rect x="32" y="216" width="896" height="100" rx="12" fill="#000" stroke="#2e2e2c"/>
+  <text x="52" y="250" fill="#9a9a92" font-family="system-ui,sans-serif" font-size="13">#2 pick</text>
+  <text x="140" y="250" fill="#7ec8a3" font-family="system-ui,sans-serif" font-size="13">EV +28%</text>
+  <text x="52" y="278" fill="#e8e8e4" font-family="system-ui,sans-serif" font-size="14">2-/3-/5-/6-leg greedy parlays by PrizePicks · Underdog · DK · Betr</text>
+  <text x="52" y="300" fill="#8e8e86" font-family="system-ui,sans-serif" font-size="12">League filter: WNBA · NBA · All</text>
+</svg>

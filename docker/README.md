@@ -1,6 +1,6 @@
 # Docker
 
-Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline** (ingest → silver).
+Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline** (ingest → silver). Live props/slates are run via CLI or Airflow after silver.
 
 ## Architecture
 
@@ -14,13 +14,17 @@ Containerized HoopVista stack: **Postgres**, **FastAPI API**, and **ETL pipeline
        └────────────────────┴──────────────────────────┘
                     SUPABASE_DB_URL
               (local Postgres or Supabase)
+
+After silver (CLI or Airflow live_ml):
+  run_live_props.py  → ml.*_live_prop_predictions  → GET /api/live-props
+  run_live_slates.py → ml.*_live_slates            → GET /api/live-slates
 ```
 
 | Service | Image | Port | Purpose |
 |---------|-------|------|---------|
-| `postgres` | `postgres:15-alpine` | 5432 | Local dev DB; auto-runs `db/migrations/*.sql` |
-| `api` | `docker/Dockerfile.api` | 8000 | Read-only FastAPI (`/api/health`, predictions, props) |
-| `etl` | `docker/Dockerfile.etl` | — | Fetch NBA/WNBA raw + PropFinder, then clean → silver |
+| `postgres` | `postgres:15-alpine` | 5433 (host) | Local dev DB; auto-runs `db/migrations/*.sql` |
+| `api` | `docker/Dockerfile.api` | 8000 | Read-only FastAPI (`/live-props`, `/live-slates`, …) |
+| `etl` | `docker/Dockerfile.etl` | — | Fetch NBA/WNBA raw + PropFinder, then silver |
 
 ## Quick start (local Postgres)
 

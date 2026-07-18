@@ -15,9 +15,10 @@ x-airflow-common: &airflow-common
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     HOOPVISTA_REPO_ROOT: /opt/airflow/hoopvista
     HOOPVISTA_NBA_SEASON: '2025-26'
-    HOOPVISTA_WNBA_SEASON: '2025'
+    HOOPVISTA_WNBA_SEASON: '2026'
     HOOPVISTA_SEASON_TYPE: 'Regular Season'
     HOOPVISTA_PROPFINDER_LEAGUE: 'wnba'
+    HOOPVISTA_LIVE_LEAGUES: 'nba,wnba'
     PYTHONPATH: /opt/airflow/hoopvista
   volumes:
     - ../:/opt/airflow/hoopvista
@@ -31,7 +32,7 @@ x-airflow-common: &airflow-common
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:16
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
