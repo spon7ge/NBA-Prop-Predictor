@@ -74,6 +74,8 @@ export interface EnrichedPick {
   player_id?: number;
   player?: string;
   display_name?: string;
+  /** Set when loaded from live-props (``nba`` / ``wnba``). */
+  league?: "nba" | "wnba";
   team_abbr?: string;
   opponent_abbr?: string;
   is_home?: boolean;
@@ -100,6 +102,8 @@ export interface EnrichedPick {
     game_total?: number;
     opp_def_rating_rank?: number;
     opp_pace_rank?: number;
+    /** Raw pace from live-props (not a rank). */
+    opp_pace?: number;
   };
   form?: {
     over_l5?: number;

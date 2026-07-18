@@ -97,6 +97,9 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     # live prop predictions (per-league tables)
     "nba_live_prop_predictions":  ["run_at", "game_date", "player_name", "market", "bookmaker"],
     "wnba_live_prop_predictions": ["run_at", "game_date", "player_name", "market", "bookmaker"],
+    # live multi-leg parlays (per-league tables)
+    "nba_live_slates":  ["run_at", "game_date", "bookmaker", "n_legs"],
+    "wnba_live_slates": ["run_at", "game_date", "bookmaker", "n_legs"],
 }
 
 
@@ -115,6 +118,13 @@ def _normalize_col(name: str) -> str:
 
 def _clean_val(v):
     """Convert pandas NA / numpy sentinels to JSON-safe Python values."""
+    # Preserve psycopg2 Json wrappers for JSONB columns (e.g. live_slates.parlays).
+    try:
+        from psycopg2.extras import Json as _PgJson
+        if isinstance(v, _PgJson):
+            return v
+    except ImportError:
+        pass
     if v is pd.NaT or v is pd.NA:
         return None
     if v is None:
@@ -492,6 +502,44 @@ def upsert_live_prop_predictions(
         upload,
         schema="ml",
         conflict_cols=["run_at", "game_date", "player_name", "market", "bookmaker"],
+        batch_size=batch_size,
+        lineage_col=None,
+    )
+
+
+def upsert_live_slates(
+    df: pd.DataFrame,
+    *,
+    league: str,
+    batch_size: int = 100,
+) -> None:
+    """Upsert greedy multi-leg parlays into ``ml.{league}_live_slates``.
+
+    Run ``db/migrations/017_ml_live_slates.sql`` before the first call.
+    Conflict key: (run_at, game_date, bookmaker, n_legs).
+
+    ``parlays`` must be a list/dict column; values are wrapped with
+    ``psycopg2.extras.Json`` for JSONB insert.
+    """
+    from psycopg2.extras import Json
+
+    if league not in ("nba", "wnba"):
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+    if df.empty:
+        return
+
+    table = f"{league}_live_slates"
+    upload = df.copy()
+    if "parlays" in upload.columns:
+        upload["parlays"] = upload["parlays"].map(
+            lambda v: v if isinstance(v, Json) else Json(v if v is not None else [])
+        )
+    upload = _align_df_to_table(upload, schema="ml", table=table)
+    upsert_df(
+        table,
+        upload,
+        schema="ml",
+        conflict_cols=["run_at", "game_date", "bookmaker", "n_legs"],
         batch_size=batch_size,
         lineage_col=None,
     )

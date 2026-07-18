@@ -21,13 +21,22 @@ if project_root_str not in sys.path:
 
 today = datetime.today().strftime('%Y-%m-%d')
 
-league_df = leaguedashteamstats.LeagueDashTeamStats(
-    league_id_nullable='00',
-    per_mode_detailed='PerGame',
-    measure_type_detailed_defense='Advanced'
-).get_data_frames()[0]
-if 'TEAM_ID' in league_df.columns:
-    league_df = league_df.set_index('TEAM_ID')
+# Lazy NBA advanced team stats (avoid network I/O on import).
+_league_df = None
+
+
+def _get_league_df():
+    global _league_df
+    if _league_df is None:
+        df = leaguedashteamstats.LeagueDashTeamStats(
+            league_id_nullable="00",
+            per_mode_detailed="PerGame",
+            measure_type_detailed_defense="Advanced",
+        ).get_data_frames()[0]
+        if "TEAM_ID" in df.columns:
+            df = df.set_index("TEAM_ID")
+        _league_df = df
+    return _league_df
 
 def round_to_2(val):
     """Round non-binary numeric values to 2 decimal places."""
@@ -80,42 +89,92 @@ def get_volatility_or_calculate(player_df, volatility_col, stat_col=None, window
 
 _gameCache = {}
 
-def getUpcomingGamesCached(date):
-    if date not in _gameCache:
-        schedule = scheduleleaguev2.ScheduleLeagueV2().get_data_frames()[0]
-        schedule['gameDate'] = pd.to_datetime(schedule['gameDate']).dt.strftime('%Y-%m-%d')
-        _gameCache[date] = schedule
-    return _gameCache[date]
+_LEAGUE_ID = {
+    "nba": "00",
+    "wnba": "10",
+}
 
 
-def findOpp(playerName, players_df, gameDate, max_days_ahead=3):
-    name_col = 'PLAYER_NAME' if 'PLAYER_NAME' in players_df.columns else 'player_name'
-    abbr_col = 'TEAM_ABBREVIATION' if 'TEAM_ABBREVIATION' in players_df.columns else 'team_abbreviation'
-    player_team = players_df.loc[
-        players_df[name_col] == playerName, abbr_col
-    ].iloc[-1]
-    
-    base_date = datetime.strptime(gameDate, '%Y-%m-%d')
-    dates_to_check = [(base_date + timedelta(days=i)).strftime('%Y-%m-%d') 
-                      for i in range(max_days_ahead + 1)]
-    
+def _infer_schedule_season(league: str, game_date: str) -> str:
+    """NBA ``YYYY-YY`` vs WNBA calendar year for ScheduleLeagueV2."""
+    d = datetime.strptime(game_date, "%Y-%m-%d")
+    if league == "wnba":
+        return str(d.year)
+    start_year = d.year if d.month >= 10 else d.year - 1
+    return f"{start_year}-{str(start_year + 1)[-2:]}"
+
+
+def getUpcomingGamesCached(date, league: str = "nba", season: str | None = None):
+    """Fetch (and cache) the full season schedule for ``league``.
+
+    ``date`` is only used to infer season when ``season`` is omitted.
+    Cache key is ``(league, season)`` — one schedule covers all game dates.
+    """
+    league = league.lower()
+    if league not in _LEAGUE_ID:
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+
+    season = season or _infer_schedule_season(league, date)
+    cache_key = (league, season)
+    if cache_key not in _gameCache:
+        schedule = scheduleleaguev2.ScheduleLeagueV2(
+            league_id=_LEAGUE_ID[league],
+            season=season,
+        ).get_data_frames()[0]
+        schedule = schedule.copy()
+        schedule["gameDate"] = pd.to_datetime(schedule["gameDate"]).dt.strftime("%Y-%m-%d")
+        _gameCache[cache_key] = schedule
+    return _gameCache[cache_key]
+
+
+def findOpp(
+    playerName,
+    players_df,
+    gameDate,
+    max_days_ahead=3,
+    league: str = "nba",
+    season: str | None = None,
+):
+    """Return ``(opp_tricode, home_flag)`` for the player's next game.
+
+    Works for NBA (``league='nba'``) and WNBA (``league='wnba'``) via
+    ScheduleLeagueV2 ``LeagueID`` 00 / 10.
+    """
+    league = league.lower()
+    name_col = "PLAYER_NAME" if "PLAYER_NAME" in players_df.columns else "player_name"
+    abbr_col = (
+        "TEAM_ABBREVIATION"
+        if "TEAM_ABBREVIATION" in players_df.columns
+        else "team_abbreviation"
+    )
+    player_rows = players_df.loc[players_df[name_col] == playerName, abbr_col]
+    if player_rows.empty:
+        print(f"No rows for player {playerName!r}")
+        return None, None
+    player_team = player_rows.iloc[-1]
+
+    base_date = datetime.strptime(gameDate, "%Y-%m-%d")
+    dates_to_check = [
+        (base_date + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(max_days_ahead + 1)
+    ]
+
+    schedule = getUpcomingGamesCached(gameDate, league=league, season=season)
+
     for check_date in dates_to_check:
-        schedule = getUpcomingGamesCached(check_date)
-        schedule_filtered = schedule[schedule['gameDate'] == check_date]
-        homeTeams = schedule_filtered['homeTeam_teamTricode'].unique().tolist()
-        awayTeams = schedule_filtered['awayTeam_teamTricode'].unique().tolist()
-        
-        home = 0
-        if player_team in homeTeams:
-            opp_team = awayTeams[homeTeams.index(player_team)]
-            home = 1
-            return opp_team, home
-        elif player_team in awayTeams:
-            opp_team = homeTeams[awayTeams.index(player_team)]
-            home = 0
-            return opp_team, home
-    
-    print(f"No game found for {player_team} within {max_days_ahead} days from {gameDate}")
+        day = schedule[schedule["gameDate"] == check_date]
+        for _, row in day.iterrows():
+            home_tri = row["homeTeam_teamTricode"]
+            away_tri = row["awayTeam_teamTricode"]
+            if player_team == home_tri:
+                return away_tri, 1
+            if player_team == away_tri:
+                return home_tri, 0
+
+    print(
+        f"No game found for {player_team} within {max_days_ahead} days "
+        f"from {gameDate} (league={league})"
+    )
     return None, None
 
 def convert_min_to_float(min_str):

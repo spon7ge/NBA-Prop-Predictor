@@ -1,50 +1,59 @@
 import { useEffect, useState, type ReactNode } from "react";
-import type { Book, FlatParlayRow, LegCount } from "@/types/slate";
+import type { ApiLeagueFilter } from "@/types/api";
+import type { Book, LegCount } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
-import { hasAnySlates, loadAllSlates, mapRowN, slateJsonFilename } from "@/lib/slate";
+import { hasAnySlates, mapRowN, slateJsonFilename } from "@/lib/slate";
+import { useLiveSlates } from "@/lib/queries";
 import { Dropdown } from "@/components/Dropdown";
 import { LoadingMessage } from "@/components/LoadingSkeleton";
 import { ParlayCard } from "@/components/ParlayCard";
 
-type SlatesState = Record<LegCount, Record<Book, FlatParlayRow[]>>;
+const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "wnba", label: "WNBA" },
+  { value: "nba", label: "NBA" },
+];
+
+function getInitialLeague(): ApiLeagueFilter {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const league = q.get("league");
+    if (league === "nba" || league === "wnba" || league === "all") return league;
+  } catch {
+    /* ignore */
+  }
+  return "wnba";
+}
 
 export function TopLegsView() {
-  const [slates, setSlates] = useState<SlatesState | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [league, setLeague] = useState<ApiLeagueFilter>(getInitialLeague);
+  const { data, isLoading, isError, error } = useLiveSlates(league);
   const [activeBook, setActiveBook] = useState<Book>("prizepicks");
   const [activeLegs, setActiveLegs] = useState<LegCount>(2);
 
   useEffect(() => {
-    let cancelled = false;
-    loadAllSlates()
-      .then((data) => {
-        if (cancelled) return;
-        if (!hasAnySlates(data)) {
-          setError("Could not load slate JSON.");
-        } else {
-          setSlates(data);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setError("Failed to load slates.");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    const url = new URL(window.location.href);
+    url.searchParams.set("league", league);
+    window.history.replaceState(null, "", url);
+  }, [league]);
 
   const bookOptions = BOOKS.map((book) => ({ value: book, label: BOOK_LABELS[book] }));
   const legOptions = SLATE_LEG_COUNTS.map((legs) => ({ value: legs, label: LEG_LABELS[legs] }));
 
+  const slates = data?.slates ?? null;
+  const source = data?.source;
+
   let content: ReactNode;
-  if (error) {
+  if (isError) {
     content = (
       <p className="load-msg load-err">
-        {error} Serve the site over HTTP and place slate files under{" "}
-        <code>data/props/ev_analysis/</code>.
+        {error instanceof Error ? error.message : "Failed to load slates."}{" "}
+        Serve the site over HTTP and place slate files under{" "}
+        <code>data/props/ev_analysis/</code>, or run{" "}
+        <code>scripts/run_live_slates.py</code>.
       </p>
     );
-  } else if (!slates) {
+  } else if (isLoading || !slates) {
     content = (
       <>
         <LoadingMessage>Loading slates…</LoadingMessage>
@@ -56,6 +65,13 @@ export function TopLegsView() {
           ))}
         </div>
       </>
+    );
+  } else if (!hasAnySlates(slates)) {
+    content = (
+      <p className="load-msg load-err">
+        No parlays available yet. Run <code>scripts/run_live_slates.py</code> or
+        place slate JSON under <code>data/props/ev_analysis/</code>.
+      </p>
     );
   } else if (SLATE_LEG_COUNTS.indexOf(activeLegs) === -1) {
     content = (
@@ -69,9 +85,15 @@ export function TopLegsView() {
     if (!sorted.length) {
       content = (
         <p className="load-msg">
-          No parlays in the {BOOK_LABELS[activeBook]} slate. Export{" "}
-          <code>{slateJsonFilename(activeBook, activeLegs)}</code> into{" "}
-          <code>data/props/ev_analysis/</code>.
+          No parlays in the {BOOK_LABELS[activeBook]} slate
+          {source === "static" ? (
+            <>
+              . Export <code>{slateJsonFilename(activeBook, activeLegs)}</code> into{" "}
+              <code>data/props/ev_analysis/</code>.
+            </>
+          ) : (
+            <> for this run.</>
+          )}
         </p>
       );
     } else {
@@ -96,6 +118,14 @@ export function TopLegsView() {
           options={bookOptions}
           onChange={setActiveBook}
           classPrefix="book"
+        />
+        <Dropdown
+          id="leagueDropdown"
+          label="League"
+          value={league}
+          options={LEAGUE_OPTIONS}
+          onChange={setLeague}
+          classPrefix="league"
         />
         <Dropdown
           id="legsDropdown"

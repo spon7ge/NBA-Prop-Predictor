@@ -48,7 +48,7 @@ from src.pipeline.predict import (
     load_opp_def_ratings,
     predict_rate,
 )
-from src.utils.db import upsert_live_prop_predictions
+from src.utils.db import read_df, upsert_live_prop_predictions
 from src.utils.distributions import run_count_simulation, run_pts_simulation
 
 # ── constants ─────────────────────────────────────────────────────────────────
@@ -97,9 +97,11 @@ def _latest_bundle(models_dir: Path, prop: str, league: str):
 
 
 def _load_bundles(models_dir: Path, league: str) -> dict:
+    """Load quantile bundles. Minutes always uses the shared NBA min model."""
     print(f"\nLoading models for {league.upper()}…")
+    print("  [MIN] shared NBA minutes model for both leagues")
     return {
-        "min": _latest_bundle(models_dir, "min", league),
+        "min": _latest_bundle(models_dir, "min", "nba"),
         "ppm": _latest_bundle(models_dir, "ppm", league),
         "apm": _latest_bundle(models_dir, "apm", league),
         "rpm": _latest_bundle(models_dir, "rpm", league),
@@ -115,6 +117,36 @@ _RATE_BUNDLE_KEY = {
 
 # ── enrichment helpers ────────────────────────────────────────────────────────
 
+def _opp_from_matchup(matchup: object, team_abbr: object) -> str | None:
+    """Parse opponent tricode from silver ``matchup`` (e.g. ``PHX vs. LAS`` / ``PHX @ GSV``)."""
+    if matchup is None or (isinstance(matchup, float) and pd.isna(matchup)):
+        return None
+    m = str(matchup).strip().upper()
+    team = str(team_abbr).strip().upper() if team_abbr is not None else ""
+    if " VS." in m or " VS " in m:
+        parts = m.replace(" VS.", " VS ").split(" VS ")
+        if len(parts) != 2:
+            return None
+        a, b = parts[0].strip(), parts[1].strip()
+        if team and a == team:
+            return b
+        if team and b == team:
+            return a
+        return b  # default: right side is visitor/opponent label
+    if " @ " in m:
+        parts = m.split(" @ ")
+        if len(parts) != 2:
+            return None
+        a, b = parts[0].strip(), parts[1].strip()
+        # "PHX @ GSV" → team PHX, opp GSV
+        if team and a == team:
+            return b
+        if team and b == team:
+            return a
+        return b
+    return None
+
+
 def _vs_opp_stats(
     silver: pd.DataFrame,
     player_name: str,
@@ -124,23 +156,45 @@ def _vs_opp_stats(
 ) -> dict:
     """Compute vs-opponent history for one player × stat."""
     empty = {"vs_opp_n_games": None, "vs_opp_avg_stat": None, "vs_opp_over_rate": None}
-    if opp_abbr is None or not opp_abbr:
+    if opp_abbr is None or (isinstance(opp_abbr, float) and pd.isna(opp_abbr)) or not opp_abbr:
         return empty
 
-    pdf = silver[silver["player_name"] == player_name]
+    pdf = silver[silver["player_name"] == player_name].copy()
     if pdf.empty or stat_col not in pdf.columns:
         return empty
 
-    # silver uses team_abbreviation for the player's own team; the opponent
-    # column is opp_abbreviation when available, else fall back to game_id pattern.
+    want = str(opp_abbr).strip().upper()
+
+    # Prefer dedicated opp abbr column when populated
     opp_col = next(
-        (c for c in ("opp_abbreviation", "opp_abbr", "matchup_abbreviation") if c in pdf.columns),
+        (
+            c
+            for c in (
+                "opp_team_abbreviation",
+                "opp_abbreviation",
+                "opp_abbr",
+            )
+            if c in pdf.columns and pdf[c].notna().any()
+        ),
         None,
     )
-    if opp_col is None:
+    if opp_col is not None:
+        opp_series = pdf[opp_col].astype(str).str.strip().str.upper()
+        vs = pdf[opp_series == want]
+    elif "matchup" in pdf.columns:
+        team_col = "team_abbreviation" if "team_abbreviation" in pdf.columns else None
+        parsed = [
+            _opp_from_matchup(
+                row["matchup"],
+                row[team_col] if team_col else None,
+            )
+            for _, row in pdf.iterrows()
+        ]
+        pdf = pdf.assign(_parsed_opp=parsed)
+        vs = pdf[pdf["_parsed_opp"].astype(str).str.upper() == want]
+    else:
         return empty
 
-    vs = pdf[pdf[opp_col].str.upper() == opp_abbr.upper()]
     if vs.empty:
         return empty
 
@@ -150,6 +204,80 @@ def _vs_opp_stats(
         float((vs[stat_col] > line).mean()) if line is not None else None
     )
     return {"vs_opp_n_games": n, "vs_opp_avg_stat": round(avg, 2), "vs_opp_over_rate": over_rate}
+
+
+def _def_rating_ranks(def_ratings: dict) -> dict[int, int]:
+    """TEAM_ID → rank (1 = lowest / stingiest DEF_RATING)."""
+    if not def_ratings:
+        return {}
+    ordered = sorted(
+        (
+            (tid, float(info["DEF_RATING"]))
+            for tid, info in def_ratings.items()
+            if info and info.get("DEF_RATING") is not None
+        ),
+        key=lambda x: x[1],
+    )
+    return {tid: rank for rank, (tid, _) in enumerate(ordered, start=1)}
+
+
+def _load_silver_history(league: str, seasons_back: int = 4) -> pd.DataFrame:
+    """Multi-season silver for vs-opp history (current-season slice is too thin)."""
+    table = f"{league}_player_gamelogs"
+    today = date.today()
+    if league == "wnba":
+        min_season = str(today.year - seasons_back)
+    else:
+        start = today.year if today.month >= 10 else today.year - 1
+        min_start = start - seasons_back
+        min_season = f"{min_start}-{str(min_start + 1)[-2:]}"
+
+    df = read_df(
+        table,
+        schema="silver",
+        where="season_year >= %(min_season)s",
+        params={"min_season": min_season},
+    )
+    print(
+        f"  silver.{table} history: {len(df):,} rows "
+        f"(season_year >= {min_season})"
+    )
+    return df
+
+
+def _pred_context_by_player(preds: pd.DataFrame) -> dict[str, dict]:
+    """Index predict_rate context columns by player (lost in line_probs_for_market)."""
+    out: dict[str, dict] = {}
+    if preds.empty:
+        return out
+    for _, r in preds.iterrows():
+        name = str(r.get("PLAYER_NAME", "")).strip()
+        if not name:
+            continue
+        out[name] = {
+            "PLAYER_TEAM":  r.get("PLAYER_TEAM"),
+            "OPP_TEAM":     r.get("OPP_TEAM"),
+            "HOME":         r.get("HOME"),
+            "OPP_DEF_RATING": r.get("OPP_DEF_RATING"),
+            "OPP_PACE":     r.get("OPP_PACE"),
+        }
+    return out
+    """Index predict_rate context columns by player (lost in line_probs_for_market)."""
+    out: dict[str, dict] = {}
+    if preds.empty:
+        return out
+    for _, r in preds.iterrows():
+        name = str(r.get("PLAYER_NAME", "")).strip()
+        if not name:
+            continue
+        out[name] = {
+            "PLAYER_TEAM":  r.get("PLAYER_TEAM"),
+            "OPP_TEAM":     r.get("OPP_TEAM"),
+            "HOME":         r.get("HOME"),
+            "OPP_DEF_RATING": r.get("OPP_DEF_RATING"),
+            "OPP_PACE":     r.get("OPP_PACE"),
+        }
+    return out
 
 
 def _form_stats(
@@ -192,7 +320,8 @@ def run_pipeline(
     print(f"\nFetching defensive ratings ({season_type})…")
     try:
         def_ratings, league_avg_def_rtg, league_avg_pace = load_opp_def_ratings(
-            season_type=season_type
+            season_type=season_type,
+            league=league,
         )
     except Exception as exc:
         print(f"  WARNING: could not load def ratings ({exc}); context will be NaN")
@@ -201,10 +330,10 @@ def run_pipeline(
     # ── 2. load quantile models ──────────────────────────────────────────────
     bundles = _load_bundles(models_dir, league)
 
-    # ── 3. pre-load silver (predict_rate loads it internally too, but we need
-    #        it here for form / vs-opp enrichment) ───────────────────────────
+    # ── 3. pre-load silver (predict_rate loads current season; history for vs-opp)
     print("\nPre-loading silver gamelogs for enrichment…")
     silver = _load_silver(league)
+    silver_hist = _load_silver_history(league)
 
     all_frames: list[pd.DataFrame] = []
 
@@ -242,6 +371,18 @@ def run_pipeline(
             continue
         print(f"  {len(preds)} players predicted")
 
+        # Context lives on preds; line_probs_for_market drops those columns.
+        pred_ctx = _pred_context_by_player(preds)
+        def_ranks = _def_rating_ranks(def_ratings)
+        abbr_to_id: dict[str, int] = {}
+        if {"team_abbreviation", "team_id"}.issubset(silver.columns):
+            for _, sr in (
+                silver.dropna(subset=["team_abbreviation", "team_id"])
+                .drop_duplicates("team_abbreviation")
+                .iterrows()
+            ):
+                abbr_to_id[str(sr["team_abbreviation"]).strip().upper()] = int(sr["team_id"])
+
         # ── 3c. probability scoring per bookmaker ────────────────────────────
         for book, book_lines in all_lines.groupby("BOOKMAKER"):
             results = line_probs_for_market(preds, book_lines, sim_fn)
@@ -252,21 +393,35 @@ def run_pipeline(
             # ── 3d. form + vs-opp enrichment ────────────────────────────────
             enriched_rows: list[dict] = []
             for _, row in results.iterrows():
-                opp  = row.get("OPP_TEAM")
+                name = str(row["PLAYER_NAME"]).strip()
+                ctx  = pred_ctx.get(name, {})
+                opp  = ctx.get("OPP_TEAM")
                 line = row.get("LINE")
                 # line may come from results (STAT column) vs book_lines
                 if pd.isna(line) if isinstance(line, float) else line is None:
                     # try to get it from book_lines directly
                     matched = book_lines[
-                        book_lines["NAME"].str.strip() == str(row["PLAYER_NAME"]).strip()
+                        book_lines["NAME"].str.strip() == name
                     ]
                     line = float(matched["LINE"].iloc[0]) if not matched.empty else None
 
-                vs_opp = _vs_opp_stats(silver, row["PLAYER_NAME"], opp, stat_col, line)
-                form   = _form_stats(silver, row["PLAYER_NAME"], stat_col, line)
+                vs_opp = _vs_opp_stats(silver_hist, name, opp, stat_col, line)
+                form   = _form_stats(silver, name, stat_col, line)
+
+                opp_rank = None
+                if opp is not None and not (isinstance(opp, float) and pd.isna(opp)):
+                    tid = abbr_to_id.get(str(opp).strip().upper())
+                    if tid is not None:
+                        opp_rank = def_ranks.get(tid)
 
                 enriched_rows.append({
                     **row.to_dict(),
+                    "PLAYER_TEAM":    ctx.get("PLAYER_TEAM"),
+                    "OPP_TEAM":       opp,
+                    "HOME":           ctx.get("HOME"),
+                    "OPP_DEF_RATING": ctx.get("OPP_DEF_RATING"),
+                    "OPP_PACE":       ctx.get("OPP_PACE"),
+                    "opp_def_rating_rank": opp_rank,
                     **vs_opp,
                     **form,
                     "run_at":    run_at,
@@ -305,6 +460,13 @@ def run_pipeline(
         "LEAGUE_AVG_PACE":       "league_avg_pace",
     }
     combined = combined.rename(columns=_rename)
+
+    # findOpp returns 0/1; DB column is boolean
+    if "is_home" in combined.columns:
+        combined["is_home"] = combined["is_home"].map(
+            lambda v: None if v is None or (isinstance(v, float) and pd.isna(v))
+            else bool(int(v))
+        )
 
     # drop the league column — it's now encoded in the table name
     combined = combined.drop(columns=["league"], errors="ignore")

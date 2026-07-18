@@ -28,16 +28,25 @@ from datetime import date
 import numpy as np
 import pandas as pd
 
-from src.live_pipeline.apm_pipeline import apm_pipeline
 from src.live_pipeline.min_pipeline import min_pipeline
-from src.live_pipeline.ppm_pipeline import ppm_pipeline
-from src.live_pipeline.rpm_pipeline import rpm_pipeline
+from src.live_pipeline.nba.apm_pipeline import apm_pipeline as nba_apm_pipeline
+from src.live_pipeline.nba.ppm_pipeline import ppm_pipeline as nba_ppm_pipeline
+from src.live_pipeline.nba.rpm_pipeline import rpm_pipeline as nba_rpm_pipeline
+from src.live_pipeline.wnba.apm_pipeline import apm_pipeline as wnba_apm_pipeline
+from src.live_pipeline.wnba.ppm_pipeline import ppm_pipeline as wnba_ppm_pipeline
+from src.live_pipeline.wnba.rpm_pipeline import rpm_pipeline as wnba_rpm_pipeline
 from src.utils.context import coerce_nonneg_monotone_quantiles
 from src.utils.db import read_df
 from src.utils.helper_functions import findOpp
 
+_LEAGUE_ID = {"nba": "00", "wnba": "10"}
 
-def load_opp_def_ratings(season_type: str = "Regular Season") -> tuple[dict, float, float]:
+
+def load_opp_def_ratings(
+    season_type: str = "Regular Season",
+    *,
+    league: str = "nba",
+) -> tuple[dict, float, float]:
     """Fetch per-team DEF_RATING and PACE from nba_api for the current season_type.
 
     Returns
@@ -47,10 +56,13 @@ def load_opp_def_ratings(season_type: str = "Regular Season") -> tuple[dict, flo
     league_avg_pace   : float
     """
     from nba_api.stats.endpoints import leaguedashteamstats
-    import pandas as _pd
+
+    league = league.lower()
+    if league not in _LEAGUE_ID:
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
 
     df = leaguedashteamstats.LeagueDashTeamStats(
-        league_id_nullable="00",
+        league_id_nullable=_LEAGUE_ID[league],
         per_mode_detailed="PerGame",
         measure_type_detailed_defense="Advanced",
         season_type_all_star=season_type,
@@ -66,34 +78,41 @@ def load_opp_def_ratings(season_type: str = "Regular Season") -> tuple[dict, flo
     league_avg_def_rtg = float(df["DEF_RATING"].mean())
     league_avg_pace    = float(df["PACE"].mean())
     print(
-        f"  Loaded def ratings for {len(ratings)} teams"
+        f"  Loaded {league.upper()} def ratings for {len(ratings)} teams"
         f"  |  avg DEF_RTG={league_avg_def_rtg:.1f}"
         f"  |  avg PACE={league_avg_pace:.1f}"
     )
     return ratings, league_avg_def_rtg, league_avg_pace
 
 
-# NBA team abbreviation -> numeric team ID (matches nba_api TEAM_ID).
-# Inlined here to avoid importing src.utils.helpers which pulls heavy / broken deps.
-_TEAM_ABV_TO_ID: dict[str, int] = {
-    "ATL": 1610612737, "BKN": 1610612751, "BOS": 1610612738, "CHA": 1610612766,
-    "CHI": 1610612741, "CLE": 1610612739, "DAL": 1610612742, "DEN": 1610612743,
-    "DET": 1610612765, "GSW": 1610612744, "HOU": 1610612745, "IND": 1610612754,
-    "LAC": 1610612746, "LAL": 1610612747, "MEM": 1610612763, "MIA": 1610612748,
-    "MIL": 1610612749, "MIN": 1610612750, "NOP": 1610612740, "NYK": 1610612752,
-    "OKC": 1610612760, "ORL": 1610612753, "PHI": 1610612755, "PHX": 1610612756,
-    "POR": 1610612757, "SAC": 1610612758, "SAS": 1610612759, "TOR": 1610612761,
-    "UTA": 1610612762, "WAS": 1610612764,
-}
+def _abbr_to_team_id(silver: pd.DataFrame) -> dict[str, int]:
+    """Build team abbreviation → team_id from silver (works for NBA and WNBA)."""
+    if not {"team_abbreviation", "team_id"}.issubset(silver.columns):
+        return {}
+    pairs = (
+        silver.dropna(subset=["team_abbreviation", "team_id"])
+        .drop_duplicates(subset=["team_abbreviation"])
+    )
+    return {
+        str(row["team_abbreviation"]): int(row["team_id"])
+        for _, row in pairs.iterrows()
+    }
 
 # ── quantile key aliases ──────────────────────────────────────────────────────
 _Q10, _Q50, _Q90 = "q_0.10", "q_0.50", "q_0.90"
 
 # ── odds-API prop category → pipeline / market label / rate column ────────────
-_PROP_PIPELINE: dict[str, object] = {
-    "player_points":   ppm_pipeline,
-    "player_assists":  apm_pipeline,
-    "player_rebounds": rpm_pipeline,
+_PROP_PIPELINE: dict[str, dict[str, object]] = {
+    "nba": {
+        "player_points":   nba_ppm_pipeline,
+        "player_assists":  nba_apm_pipeline,
+        "player_rebounds": nba_rpm_pipeline,
+    },
+    "wnba": {
+        "player_points":   wnba_ppm_pipeline,
+        "player_assists":  wnba_apm_pipeline,
+        "player_rebounds": wnba_rpm_pipeline,
+    },
 }
 _PROP_MARKET: dict[str, str] = {
     "player_points":   "PTS",
@@ -282,30 +301,46 @@ def predict_rate(
         OPP_DEF_RATING, OPP_PACE,
         LEAGUE_AVG_DEF_RATING, LEAGUE_AVG_PACE
     """
-    if prop not in _PROP_PIPELINE:
+    league = league.lower()
+    if league not in _PROP_PIPELINE:
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+    if prop not in _PROP_PIPELINE[league]:
         raise ValueError(
-            f"Unknown prop {prop!r}; expected one of {sorted(_PROP_PIPELINE)}"
+            f"Unknown prop {prop!r}; expected one of {sorted(_PROP_PIPELINE[league])}"
         )
 
-    rate_pipeline = _PROP_PIPELINE[prop]
+    rate_pipeline = _PROP_PIPELINE[league][prop]
     market        = _PROP_MARKET[prop]
     rate_col      = _PROP_RATE_COL[prop]
 
     min_models  = min_bundle["quantile_models"]
     rate_models = rate_bundle["quantile_models"]
+    min_feat_names  = list(min_bundle.get("feature_names") or [])
+    rate_feat_names = list(rate_bundle.get("feature_names") or [])
 
     df = _load_silver(league)
+    abbr_to_id = _abbr_to_team_id(df)
 
     records: list[dict] = []
     for name in names:
         try:
-            min_feats  = min_pipeline(df, name, current_date)
+            min_feats  = min_pipeline(df, name, current_date, league=league)
             if min_feats is None:
                 raise ValueError("min_pipeline: need ≥ 10 games")
+            if min_feat_names and len(min_feats) != len(min_feat_names):
+                raise ValueError(
+                    f"min features len {len(min_feats)} != "
+                    f"bundle {len(min_feat_names)}"
+                )
 
-            rate_feats = rate_pipeline(df, name, current_date)
+            rate_feats = rate_pipeline(df, name, current_date, league=league)
             if rate_feats is None:
                 raise ValueError("rate_pipeline: need ≥ 10 games")
+            if rate_feat_names and len(rate_feats) != len(rate_feat_names):
+                raise ValueError(
+                    f"rate features len {len(rate_feats)} != "
+                    f"bundle {len(rate_feat_names)}"
+                )
 
             min_arr  = np.asarray(min_feats,  dtype=float).reshape(1, -1)
             rate_arr = np.asarray(rate_feats, dtype=float).reshape(1, -1)
@@ -322,19 +357,29 @@ def predict_rate(
             r10, r50, r90 = coerce_nonneg_monotone_quantiles(r10, r50, r90)
 
             pdf = df[df["player_name"] == name].sort_values("game_date")
+            # Derive per-min rate history when silver lacks the engineered col
             if rate_col not in pdf.columns:
-                raise KeyError(f"'{rate_col}' missing from silver data")
+                base = rate_col.replace("_per_min", "")
+                if base in pdf.columns and "min" in pdf.columns:
+                    min_s = pdf["min"].replace(0, np.nan).astype(float)
+                    rate_series = pdf[base].astype(float) / min_s
+                else:
+                    raise KeyError(f"'{rate_col}' missing from silver data")
+            else:
+                rate_series = pdf[rate_col]
 
             min_history  = pdf["min"].dropna().tail(n_games).tolist()
-            rate_history = pdf[rate_col].dropna().tail(n_games).tolist()
+            rate_history = rate_series.dropna().tail(n_games).tolist()
 
             # ── opponent / home context ────────────────────────────────────────
-            opp_abv, home = findOpp(name, df, current_date)
+            opp_abv, home = findOpp(
+                name, df, current_date, league=league
+            )
             player_team = (
                 pdf["team_abbreviation"].iloc[-1] if not pdf.empty else np.nan
             )
 
-            opp_team_id = _TEAM_ABV_TO_ID.get(opp_abv) if opp_abv else None
+            opp_team_id = abbr_to_id.get(opp_abv) if opp_abv else None
             opp_info    = (
                 def_ratings.get(opp_team_id)
                 if def_ratings and opp_team_id

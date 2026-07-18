@@ -31,15 +31,28 @@ export function ParlayCard({ parlay, rank, nLegs }: ParlayCardProps) {
           <LegCard key={`${leg.name}-${leg.market}-${i}`} leg={leg} />
         ))}
       </div>
-      <div className={footerClass}>
-        {parlay.legs.map((leg, i) => (
-          <div key={`footer-${i}`}>
-            Game total {fmtNumOrDash(leg.total)}
-            <br />
-            Spread {spreadFmt(leg.spread)}
-          </div>
-        ))}
-      </div>
+      {parlay.legs.some(
+        (leg) =>
+          (leg.total != null && !Number.isNaN(Number(leg.total))) ||
+          (leg.spread != null && !Number.isNaN(Number(leg.spread))),
+      ) ? (
+        <div className={footerClass}>
+          {parlay.legs.map((leg, i) => {
+            const hasTotal = leg.total != null && !Number.isNaN(Number(leg.total));
+            const hasSpread = leg.spread != null && !Number.isNaN(Number(leg.spread));
+            if (!hasTotal && !hasSpread) {
+              return <div key={`footer-${i}`} />;
+            }
+            return (
+              <div key={`footer-${i}`}>
+                {hasTotal ? <>Game total {fmtNumOrDash(leg.total)}</> : null}
+                {hasTotal && hasSpread ? <br /> : null}
+                {hasSpread ? <>Spread {spreadFmt(leg.spread)}</> : null}
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </article>
   );
 }

@@ -15,19 +15,6 @@ import {
   fmtOverRatePct,
 } from "@/lib/format";
 
-function TierPill({ tier }: { tier: string | undefined }) {
-  let cls = "tier-nomodel";
-  let label = "No Model";
-  if (tier === "sharp_verified") {
-    cls = "tier-sharp";
-    label = "Verified";
-  } else if (tier === "conflict") {
-    cls = "tier-conflict";
-    label = "Conflict";
-  }
-  return <span className={`tier-pill ${cls}`}>{label}</span>;
-}
-
 function LeanPill({ lean }: { lean?: string }) {
   if (!lean) return <>—</>;
   const s = lean.toUpperCase();
@@ -113,8 +100,6 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
               <SortTh sortKey="line" label="Line" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
               <th className="num">Edge</th>
               <SortTh sortKey="modelProb" label="Model" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
-              <SortTh sortKey="sharpProb" label="Sharp" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
-              <SortTh sortKey="consensusProb" label="Cons" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="statProj" label="Proj" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="minProj" label="Min" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="l5" label="L5" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
@@ -122,14 +107,11 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
               <SortTh sortKey="l15" label="L15" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="vsOppAvg" label="vs Opp" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="oppDefRank" label="Def Rnk" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
-              <th>Tier</th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((r, i) => {
               const model = r.model || {};
-              const sharp = r.sharp || {};
-              const consensus = r.consensus || {};
               const gc = r.game_context || {};
               const form = r.form || {};
               const vsOpp = r.vs_opp || {};
@@ -152,25 +134,6 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
                       "—"
                     )}
                   </td>
-                  <td className="enriched-lean">
-                    {sharp.lean ? (
-                      <>
-                        <LeanPill lean={sharp.lean} /> {fmtOverRatePct(sharp.no_vig_over)}
-                      </>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                  <td className="col-secondary">
-                    {consensus.mean_no_vig_over_same_line != null ? (
-                      <>
-                        {fmtOverRatePct(consensus.mean_no_vig_over_same_line)}{" "}
-                        <span className="enriched-dim">({consensus.n_books_same_line || 0} bk)</span>
-                      </>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
                   <td className="num col-secondary">{fmtNumOrDash(model.stat_q50)}</td>
                   <td className="num col-secondary">{fmtNumOrDash(model.min_q50)}</td>
                   <td className="num">{fmtOverRatePct(form.over_l5)}</td>
@@ -187,9 +150,6 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
                     )}
                   </td>
                   <td className="num col-secondary">{fmtOrdinalRank(gc.opp_def_rating_rank)}</td>
-                  <td>
-                    <TierPill tier={r.tier} />
-                  </td>
                 </tr>
               );
             })}
@@ -207,7 +167,6 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
                 <span className="props-cards-prop-line">{fmt1(p.dfs_line)}</span>
                 <BestSidePill pick={p} />
                 <BookPill book={p.platform} />
-                <TierPill tier={p.tier} />
               </div>
               <div className="props-cards-prop-meta">
                 <span>
@@ -248,7 +207,6 @@ export function PlayerBlock({
   const totalProps = p.picks.length;
   const nMarkets = Object.keys(p.markets).length;
   const nPlatforms = Object.keys(p.platforms).length;
-  const t = p.tiers;
   const matchupLabel = p.opp ? `${p.is_home ? "vs " : "@ "}${p.opp}` : "no opp";
 
   let edgeHtml: ReactNode;
@@ -288,20 +246,6 @@ export function PlayerBlock({
             <span className="dim">
               {nMarkets} mkt · {nPlatforms} bk
             </span>
-          </span>
-          <span
-            className="tier-mix"
-            title={`${t.sharp_verified} verified · ${t.conflict} conflict · ${t.no_model} no model`}
-          >
-            {t.sharp_verified > 0 && (
-              <span className="tier-mix-seg tier-mix-sharp" style={{ flex: t.sharp_verified }} />
-            )}
-            {t.conflict > 0 && (
-              <span className="tier-mix-seg tier-mix-conflict" style={{ flex: t.conflict }} />
-            )}
-            {t.no_model > 0 && (
-              <span className="tier-mix-seg tier-mix-nomodel" style={{ flex: t.no_model }} />
-            )}
           </span>
           <span className="player-row-best">
             {edgeHtml} {sideHtml}

@@ -91,6 +91,19 @@ DEFAULT_TEAM_RANKS: list[tuple[str, str]] = [
     ("base_min_ewm_hl10", "team_min_rank_l10"),
 ]
 
+# Same-game raw cols → leakage-safe rolling std/var (shift then window).
+DEFAULT_STD_WINDOWS: tuple[int, ...] = (5, 10, 15)
+DEFAULT_STD_STATS: list[str] = [
+    "minutes",
+    "pts_per_min",
+    "ast_per_min",
+    "oreb_per_min",
+    "dreb_per_min",
+    "reb_per_min",
+    "ts_pct",
+    "usg_pct",
+]
+
 def _resolve_col(df: pd.DataFrame, aliases: list[str]) -> str | None:
     for col in aliases:
         if col in df.columns:
@@ -135,7 +148,7 @@ def _starter_features(
 
 
 class ContextFeatureEngineer(FeatureEngineer):
-    """FeatureEngineer + rest/B2B, trends, ranks, fatigue, starter flags."""
+    """FeatureEngineer + rest/B2B, trends, ranks, std/var, fatigue, starter flags."""
 
     def add_player_positions(self, df: pd.DataFrame) -> pd.DataFrame:
         """Merge PG/SG/SF/PF/C ``pos`` from ``data/raw/player_positions``.
@@ -402,10 +415,88 @@ class ContextFeatureEngineer(FeatureEngineer):
         print(f"  {col} defined on {n_ok:,} / {len(out):,} rows")
         return out
 
+    def add_rolling_std_var(
+        self,
+        df: pd.DataFrame,
+        stat_cols: list[str] | None = None,
+        windows: tuple[int, ...] | list[int] | None = None,
+        *,
+        min_periods: int | None = None,
+        include_std: bool = True,
+        include_var: bool = True,
+    ) -> pd.DataFrame:
+        """Leakage-safe rolling std / variance over prior games only.
+
+        For each ``stat`` and ``window`` in ``windows`` (default 5/10/15), adds:
+          - ``{stat}_roll{window}_std``
+          - ``{stat}_roll{window}_var``
+
+        Uses ``shift(1)`` then ``rolling`` so the current game is excluded.
+        ``min`` falls back to ``minutes`` when only the latter is present.
+        """
+        if not include_std and not include_var:
+            raise ValueError("add_rolling_std_var: enable include_std and/or include_var")
+        if "player_id" not in df.columns or "game_date" not in df.columns:
+            raise ValueError("add_rolling_std_var requires player_id and game_date")
+
+        stat_cols = list(stat_cols or DEFAULT_STD_STATS)
+        windows = tuple(windows or DEFAULT_STD_WINDOWS)
+
+        print(f"\nAdding rolling std/var (windows={list(windows)})...")
+        df = df.copy()
+        df["game_date"] = pd.to_datetime(df["game_date"])
+        df = df.sort_values(["player_id", "game_date"]).reset_index(drop=True)
+
+        # Allow minutes alias for the default "min" slot.
+        resolved: list[str] = []
+        for col in stat_cols:
+            if col in df.columns:
+                resolved.append(col)
+            elif col == "min" and "minutes" in df.columns:
+                resolved.append("minutes")
+                print("  using minutes in place of min")
+            else:
+                print(f"  ⚠ skip missing col: {col}")
+
+        if not resolved:
+            print("  ⚠ no stats available — skipping")
+            return df
+
+        added: list[str] = []
+        for stat in resolved:
+            shifted = df.groupby("player_id", sort=False)[stat].shift(1)
+            grouped = shifted.groupby(df["player_id"], sort=False)
+            for window in windows:
+                mp = (
+                    min_periods
+                    if min_periods is not None
+                    else max(2, window // 2)
+                )
+                roller = grouped.rolling(window, min_periods=mp)
+                if include_std:
+                    out_std = f"{stat}_roll{window}_std"
+                    df[out_std] = (
+                        roller.std()
+                        .reset_index(level=0, drop=True)
+                        .round(4)
+                    )
+                    added.append(out_std)
+                if include_var:
+                    out_var = f"{stat}_roll{window}_var"
+                    df[out_var] = (
+                        roller.var()
+                        .reset_index(level=0, drop=True)
+                        .round(4)
+                    )
+                    added.append(out_var)
+
+        print(f"  added {len(added)} cols on {len(resolved)} stats")
+        return df
+
     def enrich(self, df: pd.DataFrame) -> pd.DataFrame:
         """Apply all context features to a merged training frame."""
         print("\n" + "=" * 60)
-        print("Context features (pos, rest, trends, ranks, games played)")
+        print("Context features (pos, rest, trends, ranks, std/var, games played)")
         print("=" * 60)
         df = self.add_player_positions(df)
         df = self.add_games_played_to_date(df)
@@ -428,6 +519,7 @@ class ContextFeatureEngineer(FeatureEngineer):
                 window=10,
                 out_col="team_pts_per_min_rank_roll10",
             )
+        df = self.add_rolling_std_var(df)
         df = self.add_starter_features(df)
         return df
 

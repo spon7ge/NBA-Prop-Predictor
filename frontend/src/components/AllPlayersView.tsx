@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import type { ApiLeagueFilter } from "@/types/api";
 import type { EnrichedPick, PlayersGroupSort } from "@/types/slate";
 import type { PlayersSortKey } from "@/lib/constants";
 import {
   aggregateEnrichedByPlayer,
   filterByPlatform,
-  filterByTier,
   filterPlayerRows,
   filterPlayerRowsByStat,
   sortPlayerGroups,
@@ -57,8 +57,58 @@ function FilterPills<T extends string>({
   );
 }
 
+function LeaguePills({
+  active,
+  onSelect,
+}: {
+  active: ApiLeagueFilter;
+  onSelect: (value: ApiLeagueFilter) => void;
+}) {
+  const items: { value: ApiLeagueFilter; label: string }[] = [
+    { value: "all", label: "All" },
+    { value: "wnba", label: "WNBA" },
+    { value: "nba", label: "NBA" },
+  ];
+  return (
+    <div className="stat-filter" role="group" aria-label="Filter by league">
+      {items.map((item) => {
+        const on = active === item.value;
+        return (
+          <button
+            key={item.value}
+            type="button"
+            className={`stat-pill${on ? " active" : ""}`}
+            aria-pressed={on}
+            onClick={() => onSelect(item.value)}
+          >
+            {item.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function getInitialLeague(): ApiLeagueFilter {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const league = q.get("league");
+    if (league === "nba" || league === "wnba" || league === "all") return league;
+  } catch {
+    /* ignore */
+  }
+  return "all";
+}
+
+function leagueBadgeLabel(league: ApiLeagueFilter): string {
+  if (league === "all") return "NBA + WNBA";
+  return league.toUpperCase();
+}
+
 export function AllPlayersView() {
-  const { data, isLoading, isError, error, refetch, isFetching } = useEnrichedPicks();
+  const [league, setLeague] = useState<ApiLeagueFilter>(getInitialLeague);
+  const { data, isLoading, isError, error, refetch, isFetching } =
+    useEnrichedPicks(league);
   const allEnriched = data?.picks ?? [];
   const dataSource = data?.source;
   const gameDate = data?.gameDate;
@@ -66,11 +116,16 @@ export function AllPlayersView() {
   const [search, setSearch] = useState("");
   const [activeStat, setActiveStat] = useState<string | null>(null);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
-  const [activeTier, setActiveTier] = useState<string | null>(null);
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
   const [groupSort, setGroupSort] = useState<PlayersGroupSort>("edge_desc");
   const [sortKey, setSortKey] = useState<PlayersSortKey | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("league", league);
+    window.history.replaceState(null, "", url);
+  }, [league]);
 
   function handleSort(key: PlayersSortKey) {
     if (sortKey === key) {
@@ -106,8 +161,11 @@ export function AllPlayersView() {
     );
   } else {
     let picks: EnrichedPick[] = allEnriched.slice();
+    // Only show books that actually priced the prop
+    picks = picks.filter(
+      (p) => p.dfs_line != null && Number.isFinite(Number(p.dfs_line)),
+    );
     picks = filterByPlatform(picks, activePlatform);
-    picks = filterByTier(picks, activeTier);
     picks = filterPlayerRowsByStat(picks, activeStat);
     picks = filterPlayerRows(picks, search);
     const players = sortPlayerGroups(aggregateEnrichedByPlayer(picks), groupSort);
@@ -124,6 +182,7 @@ export function AllPlayersView() {
               {dataSource && (
                 <span className={`data-source-badge data-source-badge--${dataSource}`}>
                   {dataSource === "api" ? "Live API" : "Static JSON"}
+                  {` · ${leagueBadgeLabel(league)}`}
                   {gameDate ? ` · ${gameDate}` : ""}
                 </span>
               )}
@@ -137,7 +196,6 @@ export function AllPlayersView() {
                 [
                   ["edge_desc", "Best edge"],
                   ["props_desc", "Most props"],
-                  ["verified_desc", "Most verified"],
                   ["name_asc", "Name"],
                 ] as const
               ).map(([key, label]) => (
@@ -155,7 +213,7 @@ export function AllPlayersView() {
           </div>
           {players.map((p) => (
             <PlayerBlock
-              key={p.player}
+              key={`${p.playerId ?? p.player}`}
               player={p}
               expanded={expandedPlayer === p.player}
               onToggle={() =>
@@ -196,6 +254,8 @@ export function AllPlayersView() {
           />
         </div>
         <div className="stat-filter-divider" aria-hidden="true" />
+        <LeaguePills active={league} onSelect={setLeague} />
+        <div className="stat-filter-divider" aria-hidden="true" />
         <FilterPills
           ariaLabel="Filter by stat"
           active={activeStat}
@@ -219,28 +279,6 @@ export function AllPlayersView() {
             { value: "Underdog", label: "Underdog" },
             { value: "DraftKings Pick6", label: "DraftKings" },
             { value: "Betr DFS", label: "Betr" },
-          ]}
-        />
-        <div className="stat-filter-divider" aria-hidden="true" />
-        <FilterPills
-          id="tierFilter"
-          ariaLabel="Filter by tier"
-          active={activeTier}
-          onSelect={setActiveTier}
-          getClassName={(v) =>
-            v === "sharp_verified"
-              ? "stat-pill--tier-sharp"
-              : v === "conflict"
-                ? "stat-pill--tier-conflict"
-                : v === "no_model"
-                  ? "stat-pill--tier-nomodel"
-                  : ""
-          }
-          items={[
-            { value: "ALL", label: "All Tiers" },
-            { value: "sharp_verified", label: "Verified" },
-            { value: "conflict", label: "Conflict" },
-            { value: "no_model", label: "No Model" },
           ]}
         />
       </div>

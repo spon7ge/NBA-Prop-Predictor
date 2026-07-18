@@ -1,6 +1,9 @@
 import type {
   ApiGameSlate,
   ApiHealth,
+  ApiLeague,
+  ApiLivePropsResponse,
+  ApiLiveSlatesResponse,
   ApiPlayerProfile,
 } from "@/types/api";
 
@@ -42,6 +45,24 @@ export async function fetchHealth(): Promise<ApiHealth> {
 export async function fetchGameSlate(date?: string): Promise<ApiGameSlate> {
   const d = date ?? todayIso();
   return apiFetch<ApiGameSlate>(`/games/${d}/slate`);
+}
+
+export async function fetchLiveProps(
+  league: ApiLeague,
+  date?: string,
+): Promise<ApiLivePropsResponse> {
+  const d = date ?? todayIso();
+  const qs = new URLSearchParams({ league, date: d });
+  return apiFetch<ApiLivePropsResponse>(`/live-props?${qs.toString()}`);
+}
+
+export async function fetchLiveSlates(
+  league: ApiLeague,
+  date?: string,
+): Promise<ApiLiveSlatesResponse> {
+  const d = date ?? todayIso();
+  const qs = new URLSearchParams({ league, date: d });
+  return apiFetch<ApiLiveSlatesResponse>(`/live-slates?${qs.toString()}`);
 }
 
 export async function fetchPlayerProfile(

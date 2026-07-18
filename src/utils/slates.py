@@ -2,8 +2,9 @@
 slates.py — leg preparation and slate building for DFS platforms.
 
 Public API:
-  line_probs_for_market        – model predictions + book lines → P_OVER/P_UNDER per player
-  build_dfs_slates_from_aligned – 2-, 3-, 5-, and 6-leg slates from dfs_sharp_aligned JSON
+  line_probs_for_market         – model predictions + book lines → P_OVER/P_UNDER per player
+  build_dfs_slate_records       – in-memory 2-/3-/5-/6-leg parlays from aligned picks
+  build_dfs_slates_from_aligned – same parlays written to JSON files
 
 Internal helpers:
   _line_lookup_from_lines_df
@@ -284,6 +285,57 @@ def _write_slate_json(records: list[dict], out_path: Path) -> None:
 # PUBLIC: BUILD SLATES
 # ─────────────────────────────────────────────────────────────────────────────
 
+def build_dfs_slate_records(
+    all_picks: list[dict],
+    platform: str,
+    *,
+    stake_dollars: float = 10.0,
+    top_n: int = 10,
+    kelly_fraction: float = 0.5,
+    verbose: bool = True,
+) -> dict[int, list[dict]]:
+    """
+    Build greedy 2-/3-/5-/6-leg parlays in memory for one DFS platform.
+
+    ``all_picks`` is the ``picks`` list from dfs_sharp_aligned JSON (or the
+    equivalent list of enriched dicts from ``enrich_dfs_picks``).
+
+    Returns ``{leg_count: [parlay_row, ...]}`` (JSON-ready dicts). Missing or
+    empty leg counts map to ``[]``.
+    """
+    result: dict[int, list[dict]] = {n: [] for n in SLATE_LEG_COUNTS}
+
+    legs = _prep_legs_dfs(all_picks, platform)
+    if len(legs) < 2:
+        if verbose:
+            print(f"  [{platform}] ≥2 legs needed after filtering (have {len(legs)}) — skipping")
+        return result
+
+    hi_total = _high_total_threshold(legs)
+
+    for n_leg in SLATE_LEG_COUNTS:
+        if len(legs) < n_leg:
+            if verbose:
+                print(f"  [{platform}] {n_leg}-leg: need ≥{n_leg} legs (have {len(legs)}) — skipping")
+            continue
+
+        net_mult = _net_mult_for(platform, n_leg)
+        candidates = _generate_candidates_dfs_nleg(
+            legs, n_leg, stake_dollars, kelly_fraction, hi_total, net_mult
+        )
+        slate = _greedy_slates(candidates, top_n)
+        if not slate:
+            if verbose:
+                print(f"  [{platform}] {n_leg}-leg: no slates after filtering")
+            continue
+
+        result[n_leg] = _ud_json_ready(slate)
+        if verbose:
+            print(f"  {platform} {n_leg}-leg: {len(slate)} parlays")
+
+    return result
+
+
 def build_dfs_slates_from_aligned(
     aligned_path: str | Path,
     platform: str,
@@ -321,33 +373,20 @@ def build_dfs_slates_from_aligned(
         return result
 
     _, all_picks = load_sharp_aligned(path)
-    legs = _prep_legs_dfs(all_picks, platform)
-    if len(legs) < 2:
-        if verbose:
-            print(f"  [{platform}] ≥2 legs needed after filtering (have {len(legs)}) — skipping")
-        return result
-
-    hi_total = _high_total_threshold(legs)
+    records = build_dfs_slate_records(
+        all_picks,
+        platform,
+        stake_dollars=stake_dollars,
+        top_n=top_n,
+        kelly_fraction=kelly_fraction,
+        verbose=verbose,
+    )
 
     for n_leg in SLATE_LEG_COUNTS:
         out = paths.get(n_leg)
-        if out is None:
+        slate = records.get(n_leg) or []
+        if out is None or not slate:
             continue
-        if len(legs) < n_leg:
-            if verbose:
-                print(f"  [{platform}] {n_leg}-leg: need ≥{n_leg} legs (have {len(legs)}) — skipping")
-            continue
-
-        net_mult = _net_mult_for(platform, n_leg)
-        candidates = _generate_candidates_dfs_nleg(
-            legs, n_leg, stake_dollars, kelly_fraction, hi_total, net_mult
-        )
-        slate = _greedy_slates(candidates, top_n)
-        if not slate:
-            if verbose:
-                print(f"  [{platform}] {n_leg}-leg: no slates after filtering")
-            continue
-
         out_path = Path(out)
         _write_slate_json(slate, out_path)
         result[n_leg] = str(out_path)

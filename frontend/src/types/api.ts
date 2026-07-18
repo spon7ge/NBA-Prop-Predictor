@@ -1,3 +1,5 @@
+import type { FlatParlayRow } from "@/types/slate";
+
 export interface ApiGame {
   game_date: string;
   game_id?: string;
@@ -109,3 +111,79 @@ export interface ApiHealth {
   status: string;
   db?: string;
 }
+
+export type ApiLeague = "nba" | "wnba";
+/** All Players league filter — ``all`` merges both live-props feeds. */
+export type ApiLeagueFilter = ApiLeague | "all";
+
+export interface ApiLivePropModel {
+  p_over?: number | null;
+  p_under?: number | null;
+  lean?: string | null;
+  min_q10?: number | null;
+  min_q50?: number | null;
+  min_q90?: number | null;
+  stat_q10?: number | null;
+  stat_q50?: number | null;
+  stat_q90?: number | null;
+}
+
+export interface ApiLivePropGameContext {
+  opp_def_rating?: number | null;
+  opp_def_rating_rank?: number | null;
+  opp_pace?: number | null;
+  team_def_rating?: number | null;
+  team_pace?: number | null;
+  game_total?: number | null;
+  team_spread?: number | null;
+}
+
+export interface ApiLivePropForm {
+  over_l5?: number | null;
+  over_l10?: number | null;
+  over_l15?: number | null;
+}
+
+export interface ApiLivePropVsOpp {
+  n_games?: number | null;
+  avg_stat?: number | null;
+  over_rate_at_line?: number | null;
+}
+
+export interface ApiLivePropPick {
+  platform: string;
+  player: string;
+  team_abbr?: string | null;
+  opponent_abbr?: string | null;
+  is_home?: boolean | null;
+  market: string;
+  line?: number | null;
+  game_date?: string | null;
+  league?: string | null;
+  run_at?: string | null;
+  model: ApiLivePropModel;
+  game_context: ApiLivePropGameContext;
+  form: ApiLivePropForm;
+  vs_opp: ApiLivePropVsOpp;
+}
+
+export interface ApiLivePropsResponse {
+  generated_at: string;
+  league: string;
+  game_date: string;
+  n_picks: number;
+  picks: ApiLivePropPick[];
+}
+
+/** Nested Top Legs parlays: leg count → book → FlatParlayRow[]. */
+export type ApiLiveSlatesNested = Record<string, Record<string, FlatParlayRow[]>>;
+
+export interface ApiLiveSlatesResponse {
+  generated_at: string;
+  league: string;
+  game_date: string;
+  run_at?: string | null;
+  count: number;
+  slates: ApiLiveSlatesNested;
+}
+

@@ -18,5 +18,8 @@ export const queryKeys = {
   health: ["health"] as const,
   slate: (date: string) => ["slate", date] as const,
   player: (playerId: number) => ["player", playerId] as const,
-  enrichedPicks: (date: string) => ["enrichedPicks", date] as const,
+  enrichedPicks: (league: string, date: string) =>
+    ["enrichedPicks", league, date] as const,
+  liveSlates: (league: string, date: string) =>
+    ["liveSlates", league, date] as const,
 };

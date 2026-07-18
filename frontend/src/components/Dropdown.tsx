@@ -11,7 +11,7 @@ interface DropdownProps<T extends string | number> {
   value: T;
   options: DropdownOption<T>[];
   onChange: (value: T) => void;
-  classPrefix: "book" | "legs";
+  classPrefix: "book" | "legs" | "league";
 }
 
 export function Dropdown<T extends string | number>({
