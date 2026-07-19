@@ -1,0 +1,1439 @@
+{
+  "generated_at": "2026-07-18T22:10:12.021561Z",
+  "current_date": "2026-07-18",
+  "n_dfs_picks": 29,
+  "n_enriched": 29,
+  "n_sharp_aligned": 15,
+  "picks": [
+    {
+      "platform": "Betr DFS",
+      "player": "Breanna Stewart",
+      "display_name": "Breanna Stewart",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 20.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.481,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 27.67,
+        "min_q50": 33.87,
+        "min_q90": 38.24,
+        "stat_q10": 10.94,
+        "stat_q50": 21.01,
+        "stat_q90": 35.62
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 20.5,
+        "no_vig_over": 0.4939310568053083,
+        "no_vig_under": 0.5060689431946916,
+        "american_over": -112.0,
+        "american_under": -118.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4979406093468004,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4979406093468004,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 20.5,
+            "no_vig_over": 0.4939310568053083,
+            "no_vig_under": 0.5060689431946916,
+            "american_over": -112.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 20.5,
+            "no_vig_over": 0.49179655455291227,
+            "no_vig_under": 0.5082034454470877,
+            "american_over": -110.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 20.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.3,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
+      "player": "Kelsey Mitchell",
+      "display_name": "Kelsey Mitchell",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 22.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.679,
+        "p_under": 0.321,
+        "lean": "OVER",
+        "min_q10": 26.68,
+        "min_q50": 33.73,
+        "min_q90": 38.12,
+        "stat_q10": 10.1,
+        "stat_q50": 22.89,
+        "stat_q90": 36.53
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 23.5,
+        "no_vig_over": 0.4860039189027072,
+        "no_vig_under": 0.5139960810972928,
+        "american_over": -109.0,
+        "american_under": -123.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.48772834914836627,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4871535390664799,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 23.5,
+            "no_vig_over": 0.4860039189027072,
+            "no_vig_under": 0.5139960810972928,
+            "american_over": -109.0,
+            "american_under": -123.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 22.5,
+            "no_vig_over": 0.4693877551020409,
+            "no_vig_under": 0.5306122448979592,
+            "american_over": 100.0,
+            "american_under": -130.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 22.5,
+            "no_vig_over": 0.5060689431946916,
+            "no_vig_under": 0.4939310568053083,
+            "american_over": -118.0,
+            "american_under": -112.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.8,
+        "over_l10": 0.7,
+        "over_l15": 0.6
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
+      "player": "Marine Johannes",
+      "display_name": "Marine Johannes",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 7.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.414,
+        "p_under": 0.586,
+        "lean": "UNDER",
+        "min_q10": 14.24,
+        "min_q50": 20.69,
+        "min_q90": 28.12,
+        "stat_q10": 1.81,
+        "stat_q50": 7.3,
+        "stat_q90": 17.83
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 7.5,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5,
+        "american_over": -114.0,
+        "american_under": -114.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.5065397617514489,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.5065397617514489,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 7.5,
+            "no_vig_over": 0.5,
+            "no_vig_under": 0.5,
+            "american_over": -114.0,
+            "american_under": -114.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 7.5,
+            "no_vig_over": 0.5130795235028978,
+            "no_vig_under": 0.4869204764971024,
+            "american_over": -122.0,
+            "american_under": -109.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.2,
+        "over_l10": 0.2,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
+      "player": "Pauline Astier",
+      "display_name": "Pauline Astier",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 9.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.453,
+        "p_under": 0.547,
+        "lean": "UNDER",
+        "min_q10": 19.88,
+        "min_q50": 27.07,
+        "min_q90": 34.67,
+        "stat_q10": 2.87,
+        "stat_q50": 9.89,
+        "stat_q90": 21.46
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 9.5,
+        "no_vig_over": 0.47852760736196315,
+        "no_vig_under": 0.5214723926380368,
+        "american_over": -104.0,
+        "american_under": -125.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.4968139365633203,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.4968139365633203,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 9.5,
+            "no_vig_over": 0.47852760736196315,
+            "no_vig_under": 0.5214723926380368,
+            "american_over": -104.0,
+            "american_under": -125.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 9.5,
+            "no_vig_over": 0.5151002657646775,
+            "no_vig_under": 0.4848997342353226,
+            "american_over": -123.0,
+            "american_under": -108.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.3,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
+      "player": "Sabrina Ionescu",
+      "display_name": "Sabrina Ionescu",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 17.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.392,
+        "p_under": 0.609,
+        "lean": "UNDER",
+        "min_q10": 24.55,
+        "min_q50": 31.87,
+        "min_q90": 37.21,
+        "stat_q10": 5.59,
+        "stat_q50": 15.03,
+        "stat_q90": 28.07
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 16.5,
+        "no_vig_over": 0.5080942166821806,
+        "no_vig_under": 0.4919057833178194,
+        "american_over": -119.0,
+        "american_under": -111.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 1,
+        "mean_no_vig_over_same_line": 0.4808467741935484,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.49699686373455504,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 16.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 16.5,
+            "no_vig_over": 0.502049600327936,
+            "no_vig_under": 0.49795039967206395,
+            "american_over": -115.0,
+            "american_under": -113.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 17.5,
+            "no_vig_over": 0.4808467741935484,
+            "no_vig_under": 0.5191532258064516,
+            "american_over": -106.0,
+            "american_under": -125.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.2,
+        "over_l15": 0.16666666666666666
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
+      "player": "Breanna Stewart",
+      "display_name": "Breanna Stewart",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 20.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.481,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 27.67,
+        "min_q50": 33.87,
+        "min_q90": 38.24,
+        "stat_q10": 10.94,
+        "stat_q50": 21.01,
+        "stat_q90": 35.62
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 20.5,
+        "no_vig_over": 0.4939310568053083,
+        "no_vig_under": 0.5060689431946916,
+        "american_over": -112.0,
+        "american_under": -118.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4979406093468004,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4979406093468004,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 20.5,
+            "no_vig_over": 0.4939310568053083,
+            "no_vig_under": 0.5060689431946916,
+            "american_over": -112.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 20.5,
+            "no_vig_over": 0.49179655455291227,
+            "no_vig_under": 0.5082034454470877,
+            "american_over": -110.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 20.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.3,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
+      "player": "Kelsey Mitchell",
+      "display_name": "Kelsey Mitchell",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 22.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.679,
+        "p_under": 0.321,
+        "lean": "OVER",
+        "min_q10": 26.68,
+        "min_q50": 33.73,
+        "min_q90": 38.12,
+        "stat_q10": 10.1,
+        "stat_q50": 22.89,
+        "stat_q90": 36.53
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 23.5,
+        "no_vig_over": 0.4860039189027072,
+        "no_vig_under": 0.5139960810972928,
+        "american_over": -109.0,
+        "american_under": -123.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.48772834914836627,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4871535390664799,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 23.5,
+            "no_vig_over": 0.4860039189027072,
+            "no_vig_under": 0.5139960810972928,
+            "american_over": -109.0,
+            "american_under": -123.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 22.5,
+            "no_vig_over": 0.4693877551020409,
+            "no_vig_under": 0.5306122448979592,
+            "american_over": 100.0,
+            "american_under": -130.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 22.5,
+            "no_vig_over": 0.5060689431946916,
+            "no_vig_under": 0.4939310568053083,
+            "american_over": -118.0,
+            "american_under": -112.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.8,
+        "over_l10": 0.7,
+        "over_l15": 0.6
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
+      "player": "Pauline Astier",
+      "display_name": "Pauline Astier",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 9.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.453,
+        "p_under": 0.547,
+        "lean": "UNDER",
+        "min_q10": 19.88,
+        "min_q50": 27.07,
+        "min_q90": 34.67,
+        "stat_q10": 2.87,
+        "stat_q50": 9.89,
+        "stat_q90": 21.46
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 9.5,
+        "no_vig_over": 0.47852760736196315,
+        "no_vig_under": 0.5214723926380368,
+        "american_over": -104.0,
+        "american_under": -125.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.4968139365633203,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.4968139365633203,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 9.5,
+            "no_vig_over": 0.47852760736196315,
+            "no_vig_under": 0.5214723926380368,
+            "american_over": -104.0,
+            "american_under": -125.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 9.5,
+            "no_vig_over": 0.5151002657646775,
+            "no_vig_under": 0.4848997342353226,
+            "american_over": -123.0,
+            "american_under": -108.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.3,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
+      "player": "Sabrina Ionescu",
+      "display_name": "Sabrina Ionescu",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 17.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.392,
+        "p_under": 0.609,
+        "lean": "UNDER",
+        "min_q10": 24.55,
+        "min_q50": 31.87,
+        "min_q90": 37.21,
+        "stat_q10": 5.59,
+        "stat_q50": 15.03,
+        "stat_q90": 28.07
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 16.5,
+        "no_vig_over": 0.5080942166821806,
+        "no_vig_under": 0.4919057833178194,
+        "american_over": -119.0,
+        "american_under": -111.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 1,
+        "mean_no_vig_over_same_line": 0.4808467741935484,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.49699686373455504,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 16.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 16.5,
+            "no_vig_over": 0.502049600327936,
+            "no_vig_under": 0.49795039967206395,
+            "american_over": -115.0,
+            "american_under": -113.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 17.5,
+            "no_vig_over": 0.4808467741935484,
+            "no_vig_under": 0.5191532258064516,
+            "american_over": -106.0,
+            "american_under": -125.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.2,
+        "over_l15": 0.16666666666666666
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
+      "player": "Breanna Stewart",
+      "display_name": "Breanna Stewart",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 20.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.481,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 27.67,
+        "min_q50": 33.87,
+        "min_q90": 38.24,
+        "stat_q10": 10.94,
+        "stat_q50": 21.01,
+        "stat_q90": 35.62
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 20.5,
+        "no_vig_over": 0.4939310568053083,
+        "no_vig_under": 0.5060689431946916,
+        "american_over": -112.0,
+        "american_under": -118.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4979406093468004,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4979406093468004,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 20.5,
+            "no_vig_over": 0.4939310568053083,
+            "no_vig_under": 0.5060689431946916,
+            "american_over": -112.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 20.5,
+            "no_vig_over": 0.49179655455291227,
+            "no_vig_under": 0.5082034454470877,
+            "american_over": -110.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 20.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.3,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
+      "player": "Jonquel Jones",
+      "display_name": "Jonquel Jones",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 14.0,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.629,
+        "p_under": 0.37,
+        "lean": "OVER",
+        "min_q10": 23.73,
+        "min_q50": 31.08,
+        "min_q90": 36.26,
+        "stat_q10": 6.15,
+        "stat_q50": 14.8,
+        "stat_q90": 26.67
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 14.5,
+        "no_vig_over": 0.4738819463977177,
+        "no_vig_under": 0.5261180536022823,
+        "american_over": -103.0,
+        "american_under": -129.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 0,
+        "mean_no_vig_over_same_line": null,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4865147829924565,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 14.5,
+            "no_vig_over": 0.4738819463977177,
+            "no_vig_under": 0.5261180536022823,
+            "american_over": -103.0,
+            "american_under": -129.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 14.5,
+            "no_vig_over": 0.4876847290640395,
+            "no_vig_under": 0.5123152709359606,
+            "american_over": -108.0,
+            "american_under": -120.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 14.5,
+            "no_vig_over": 0.49797767351561234,
+            "no_vig_under": 0.5020223264843877,
+            "american_over": -114.0,
+            "american_under": -116.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.6,
+        "over_l15": 0.6
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
+      "player": "Kelsey Mitchell",
+      "display_name": "Kelsey Mitchell",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 22.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.679,
+        "p_under": 0.321,
+        "lean": "OVER",
+        "min_q10": 26.68,
+        "min_q50": 33.73,
+        "min_q90": 38.12,
+        "stat_q10": 10.1,
+        "stat_q50": 22.89,
+        "stat_q90": 36.53
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 23.5,
+        "no_vig_over": 0.4860039189027072,
+        "no_vig_under": 0.5139960810972928,
+        "american_over": -109.0,
+        "american_under": -123.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.48772834914836627,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4871535390664799,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 23.5,
+            "no_vig_over": 0.4860039189027072,
+            "no_vig_under": 0.5139960810972928,
+            "american_over": -109.0,
+            "american_under": -123.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 22.5,
+            "no_vig_over": 0.4693877551020409,
+            "no_vig_under": 0.5306122448979592,
+            "american_over": 100.0,
+            "american_under": -130.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 22.5,
+            "no_vig_over": 0.5060689431946916,
+            "no_vig_under": 0.4939310568053083,
+            "american_over": -118.0,
+            "american_under": -112.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.8,
+        "over_l10": 0.7,
+        "over_l15": 0.6
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
+      "player": "Marine Johannes",
+      "display_name": "Marine Johannes",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 7.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.414,
+        "p_under": 0.586,
+        "lean": "UNDER",
+        "min_q10": 14.24,
+        "min_q50": 20.69,
+        "min_q90": 28.12,
+        "stat_q10": 1.81,
+        "stat_q50": 7.3,
+        "stat_q90": 17.83
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 7.5,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5,
+        "american_over": -114.0,
+        "american_under": -114.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.5065397617514489,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.5065397617514489,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 7.5,
+            "no_vig_over": 0.5,
+            "no_vig_under": 0.5,
+            "american_over": -114.0,
+            "american_under": -114.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 7.5,
+            "no_vig_over": 0.5130795235028978,
+            "no_vig_under": 0.4869204764971024,
+            "american_over": -122.0,
+            "american_under": -109.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.2,
+        "over_l10": 0.2,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
+      "player": "Pauline Astier",
+      "display_name": "Pauline Astier",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 9.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.453,
+        "p_under": 0.547,
+        "lean": "UNDER",
+        "min_q10": 19.88,
+        "min_q50": 27.07,
+        "min_q90": 34.67,
+        "stat_q10": 2.87,
+        "stat_q50": 9.89,
+        "stat_q90": 21.46
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 9.5,
+        "no_vig_over": 0.47852760736196315,
+        "no_vig_under": 0.5214723926380368,
+        "american_over": -104.0,
+        "american_under": -125.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 2,
+        "mean_no_vig_over_same_line": 0.4968139365633203,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.4968139365633203,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 9.5,
+            "no_vig_over": 0.47852760736196315,
+            "no_vig_under": 0.5214723926380368,
+            "american_over": -104.0,
+            "american_under": -125.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 9.5,
+            "no_vig_over": 0.5151002657646775,
+            "no_vig_under": 0.4848997342353226,
+            "american_over": -123.0,
+            "american_under": -108.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.3,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Underdog",
+      "player": "Breanna Stewart",
+      "display_name": "Breanna Stewart",
+      "team_abbr": "NYL",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "PTS",
+      "dfs_line": 20.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.481,
+        "p_under": 0.519,
+        "lean": "UNDER",
+        "min_q10": 27.67,
+        "min_q50": 33.87,
+        "min_q90": 38.24,
+        "stat_q10": 10.94,
+        "stat_q50": 21.01,
+        "stat_q90": 35.62
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 20.5,
+        "no_vig_over": 0.4939310568053083,
+        "no_vig_under": 0.5060689431946916,
+        "american_over": -112.0,
+        "american_under": -118.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4979406093468004,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4979406093468004,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 20.5,
+            "no_vig_over": 0.4939310568053083,
+            "no_vig_under": 0.5060689431946916,
+            "american_over": -112.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 20.5,
+            "no_vig_over": 0.49179655455291227,
+            "no_vig_under": 0.5082034454470877,
+            "american_over": -110.0,
+            "american_under": -118.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 20.5,
+            "no_vig_over": 0.5080942166821806,
+            "no_vig_under": 0.4919057833178194,
+            "american_over": -119.0,
+            "american_under": -111.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.3,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    }
+  ]
+}

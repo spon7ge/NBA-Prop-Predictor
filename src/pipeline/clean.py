@@ -35,6 +35,11 @@ Examples::
 
     # One shot: fetch endpoints → merge → pos + Rotowire → silver upsert
     fetch_and_build_silver("2025-26", "Regular Season", league="nba")
+
+CLI::
+
+    python -m src.pipeline.clean --league nba --season 2025-26
+    python -m src.pipeline.clean --league wnba --season 2026 --auto-scrape-rotowire
 """
 
 from __future__ import annotations
@@ -744,3 +749,71 @@ def fetch_and_build_silver(
         raw_frames=logs.data,
         auto_scrape_rotowire=auto_scrape_rotowire,
     )
+
+
+def _parse_cli_args(argv: list[str] | None = None):
+    import argparse
+
+    p = argparse.ArgumentParser(
+        description="Merge raw.* → silver.* (NBA/WNBA)",
+    )
+    p.add_argument("--league", choices=("nba", "wnba"), default="nba")
+    p.add_argument("--season", default=None)
+    p.add_argument(
+        "--season-type",
+        default="Regular Season",
+        help='e.g. "Regular Season" or "Playoffs"',
+    )
+    p.add_argument("--no-db-upsert", action="store_true")
+    p.add_argument(
+        "--auto-scrape-rotowire",
+        action="store_true",
+        help="If Rotowire CSV is missing, scrape it (NBA only)",
+    )
+    p.add_argument(
+        "--fetch",
+        action="store_true",
+        help="Also fetch raw endpoints before building silver (one-shot)",
+    )
+    p.add_argument("--sequential", action="store_true", help="With --fetch: sequential API calls")
+    p.add_argument("--checkpoint", default=None, help="With --fetch: start_positions checkpoint")
+    p.add_argument("--batch-size", type=int, default=100)
+    p.add_argument("--start-position-delay", type=float, default=0.3)
+    p.add_argument("--start-position-workers", type=int, default=8)
+    p.add_argument("--one-batch", action="store_true")
+    return p.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI: ``python -m src.pipeline.clean --league nba --season 2025-26``."""
+    args = _parse_cli_args(argv)
+    season = args.season or LEAGUES[args.league].default_season
+    db_upsert = not args.no_db_upsert
+
+    if args.fetch:
+        fetch_and_build_silver(
+            season,
+            args.season_type,
+            league=args.league,
+            db_upsert=db_upsert,
+            auto_scrape_rotowire=args.auto_scrape_rotowire,
+            parallel=not args.sequential,
+            checkpoint_path=args.checkpoint,
+            batch_size=args.batch_size,
+            start_position_delay=args.start_position_delay,
+            start_position_workers=args.start_position_workers,
+            run_all_batches=not args.one_batch,
+        )
+    else:
+        build_silver(
+            season,
+            args.season_type,
+            league=args.league,
+            db_upsert=db_upsert,
+            auto_scrape_rotowire=args.auto_scrape_rotowire,
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

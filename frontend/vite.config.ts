@@ -19,7 +19,8 @@ export default defineConfig({
       allow: [repoRoot],
     },
     proxy: {
-      "/api": "http://localhost:8000",
+      // Prefer IPv4 so we don't hit Docker's IPv6 :8000 when local uvicorn is also running.
+      "/api": "http://127.0.0.1:8000",
     },
   },
 });

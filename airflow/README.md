@@ -1,13 +1,11 @@
 # HoopVista Airflow Scheduler
 
-Apache Airflow orchestrates the daily ingest → silver → live ML pipeline:
+Two DAGs (timezone ``HOOPVISTA_TZ``, default **America/Los_Angeles**):
 
-| Step | DAG task | Command |
-|------|----------|---------|
-| 1. Ingest APIs | `ingest_apis.*` | NBA + WNBA `fetch_raw.py --raw-only`, `PropFinder.py` |
-| 2. Build silver | `build_silver.*` | NBA + WNBA `fetch_raw.py --silver-only` |
-| 3. Live props | `live_ml.live_props.*` | `run_live_props.py` → `ml.*_live_prop_predictions` |
-| 4. Live slates | `live_ml.live_slates.*` | `run_live_slates.py` → `ml.*_live_slates` (Top Legs) |
+| DAG | Schedule | What runs |
+|-----|----------|-----------|
+| **`hoopvista_daily_stats`** | `0 0 * * *` (midnight) | `fetch` → `clean` (NBA + WNBA game logs → silver) |
+| **`hoopvista_live_odds`** | `0 8,12,15 * * *` (8am, 12pm, 3pm) | PropFinder ∥ starters → live props → live slates |
 
 Gold feature tables and model retraining are **manual** (not scheduled).
 
@@ -29,7 +27,8 @@ docker compose up -d
 ```
 
 - UI: http://localhost:8080 (default login `airflow` / `airflow`)
-- DAG: `hoopvista_daily_pipeline`
+- Unpause **`hoopvista_daily_stats`** and **`hoopvista_live_odds`**
+- Pause/delete the old `hoopvista_daily_pipeline` if it still appears
 
 The repo is mounted at `/opt/airflow/hoopvista` inside the container.
 
@@ -43,41 +42,32 @@ export AIRFLOW_HOME=$PWD/airflow/runtime
 export HOOPVISTA_REPO_ROOT=$PWD/..
 airflow db init
 
-# Point dags folder at this repo's dags/
 export AIRFLOW__CORE__DAGS_FOLDER=$PWD/dags
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
+export AIRFLOW__CORE__DEFAULT_TIMEZONE=America/Los_Angeles
 
 airflow standalone
 ```
 
 ## Pipeline commands (manual)
 
-Each step can be run outside Airflow via `scripts/run_pipeline_step.sh`:
-
 ```bash
-# 1. Ingest
-bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league nba --season 2025-26 --season-type "Regular Season" --raw-only --sequential
-bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league wnba --season 2026 --season-type "Regular Season" --raw-only --sequential
+# Midnight path — stats
+bash scripts/run_pipeline_step.sh python -m src.pipeline.fetch --league nba --season 2025-26 --season-type "Regular Season" --sequential
+bash scripts/run_pipeline_step.sh python -m src.pipeline.fetch --league wnba --season 2026 --season-type "Regular Season" --sequential
+bash scripts/run_pipeline_step.sh python -m src.pipeline.clean --league nba --season 2025-26 --season-type "Regular Season"
+bash scripts/run_pipeline_step.sh python -m src.pipeline.clean --league wnba --season 2026 --season-type "Regular Season"
+
+# Daytime path — odds + starters + live ML
 bash scripts/run_pipeline_step.sh python scripts/PropFinder.py --league wnba
-
-# 2. Silver
-bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league nba --season 2025-26 --season-type "Regular Season" --silver-only
-bash scripts/run_pipeline_step.sh python scripts/fetch_raw.py --league wnba --season 2026 --season-type "Regular Season" --silver-only
-
-# 3. Live props (All Players)
+bash scripts/run_pipeline_step.sh python -m src.scrapers.rotowire_starters_scraper --league wnba --update
 bash scripts/run_pipeline_step.sh python scripts/run_live_props.py --league wnba
-bash scripts/run_pipeline_step.sh python scripts/run_live_props.py --league nba
-
-# 4. Live slates (Top Legs)
 bash scripts/run_pipeline_step.sh python scripts/run_live_slates.py --league wnba
-bash scripts/run_pipeline_step.sh python scripts/run_live_slates.py --league nba
 ```
 
 When NBA is in season, use `--league nba` or `--league all` for PropFinder.
 
 ## Configuration
-
-Environment variables (docker-compose or `.env`):
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
@@ -86,35 +76,48 @@ Environment variables (docker-compose or `.env`):
 | `HOOPVISTA_WNBA_SEASON` | `2026` | WNBA API season |
 | `HOOPVISTA_SEASON_TYPE` | `Regular Season` | Regular Season / Playoffs |
 | `HOOPVISTA_PROPFINDER_LEAGUE` | `wnba` | PropFinder `--league` (`nba` / `wnba` / `all`) |
-| `HOOPVISTA_LIVE_LEAGUES` | `nba,wnba` | Comma-separated leagues for live props + slates |
-
-## Schedule
-
-- **`hoopvista_daily_pipeline`**: `0 6,14,22 * * *` (3× daily — adjust timezone in Airflow config)
+| `HOOPVISTA_LIVE_LEAGUES` | `nba,wnba` | Leagues for live props + slates |
+| `HOOPVISTA_TZ` | `America/Los_Angeles` | Cron timezone for both DAGs |
 
 ## DAG structure
 
+**Midnight — `hoopvista_daily_stats`**
+
 ```
 start
-  └─ ingest_apis (parallel)
-       ├─ nba_stats   (--raw-only)
-       ├─ wnba_stats  (--raw-only)
-       └─ odds_props  (PropFinder)
-  └─ build_silver (parallel)
-       ├─ nba         (--silver-only)
-       └─ wnba        (--silver-only)
-  └─ live_ml
-       ├─ live_props (parallel per league)
-       │    ├─ nba / wnba  → ml.*_live_prop_predictions
-       └─ live_slates (parallel per league; after live_props)
-            ├─ nba / wnba  → ml.*_live_slates
+  └─ fetch_raw (parallel)     python -m src.pipeline.fetch
+  └─ build_silver (parallel)  python -m src.pipeline.clean
 end
 ```
 
+**8am / 12pm / 3pm — `hoopvista_live_odds`**
+
+```
+start
+  ├─ odds_props               PropFinder.py
+  └─ scrape_starters          rotowire_starters_scraper --update → team_info.py
+  └─ live_ml
+       ├─ live_props → ml.*_live_prop_predictions
+       └─ live_slates → ml.*_live_slates
+end
+```
+
+## Writes by step
+
+| Step | Script | Writes |
+|------|--------|--------|
+| Fetch | `python -m src.pipeline.fetch` | `raw.*` gamelogs / teams |
+| Silver | `python -m src.pipeline.clean` | `silver.*_player_gamelogs` |
+| Odds | `scripts/PropFinder.py` | `raw.*_props_us` / `raw.*_props_dfs` |
+| Starters | `python -m src.scrapers.rotowire_starters_scraper --update` | `src/utils/team_info.py` projected starters |
+| Live props | `scripts/run_live_props.py` | `ml.{nba,wnba}_live_prop_predictions` |
+| Live slates | `scripts/run_live_slates.py` | `ml.{nba,wnba}_live_slates` |
+
 ## Notes
 
-- **PropFinder** upserts to `raw.nba_props_*` / `raw.wnba_props_*` depending on `--league`.
-- **Silver** must run after raw ingest (`fetch_raw.py --silver-only`).
-- **Live props** powers All Players (`GET /api/live-props`).
-- **Live slates** powers Top Legs (`GET /api/live-slates`); runs after live props.
-- Gold + train stay out of Airflow — rebuild features and retrain models when you choose.
+- **PropFinder** upserts to `raw.nba_props_*` / `raw.wnba_props_*`.
+- **Starters** refresh RotoWire projected lineups into `team_info.py` before live minutes features run (league from `HOOPVISTA_LIVE_LEAGUES`).
+- **Silver** updates once nightly; daytime live ML uses that silver + fresh odds.
+- **Live props** → All Players (`GET /api/live-props`).
+- **Live slates** → Top Legs (`GET /api/live-slates`).
+- Gold + train stay out of Airflow (batch: dbt gold → `ml.features_*` → train → `ml.predictions`).

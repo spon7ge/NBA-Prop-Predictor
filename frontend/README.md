@@ -2,8 +2,6 @@
 
 React + TypeScript dashboard for HoopVista, built with [Vite](https://vite.dev/).
 
-This replaces the legacy static dashboard in `docs/index.html` + `docs/slate.js` with a component-based React app while keeping the same UI and data sources.
-
 ## Setup
 
 ```bash
@@ -37,7 +35,7 @@ frontend/
   src/
     components/   # React UI (Top Legs, All Players, etc.)
     lib/          # Data fetching, formatting, business logic
-    styles/       # slate.css (ported from docs/)
+    styles/       # slate.css
     types/        # TypeScript types
   public/         # Static assets + blog/contact/faq pages
 ```

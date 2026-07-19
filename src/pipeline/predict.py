@@ -154,6 +154,10 @@ def load_latest_odds(
 ) -> pd.DataFrame:
     """Load the most recently pulled prop lines from Supabase.
 
+    Latest is resolved **per category**, not as a single global pull.
+    A thin later scrape (e.g. points-only after credit exhaustion) will not
+    wipe assists/rebounds from an earlier same-day pull of those markets.
+
     Parameters
     ----------
     league:
@@ -164,7 +168,7 @@ def load_latest_odds(
         ``'both'``— concatenation of dfs + us tables.
     prop:
         Optional odds-API category filter, e.g. ``'player_points'``.
-        When omitted all categories are returned.
+        When omitted, every category is included at *its* latest pull.
 
     Returns
     -------
@@ -177,35 +181,45 @@ def load_latest_odds(
         raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
     if region not in ("dfs", "us", "both"):
         raise ValueError(f"Unknown region {region!r}; expected 'dfs', 'us', or 'both'")
+    if prop is not None and not prop.replace("_", "").isalnum():
+        raise ValueError(f"Invalid prop category {prop!r}")
 
     regions = ("dfs", "us") if region == "both" else (region,)
     frames: list[pd.DataFrame] = []
 
     for rgn in regions:
         table = f"{league}_props_{rgn}"
-        # subquery keeps only the latest pull without loading the full history
-        where = f"data_pulled_at = (SELECT MAX(data_pulled_at) FROM raw.{table})"
+        # Per-category MAX(data_pulled_at) so incomplete later pulls don't
+        # blank out markets that were present in an earlier scrape.
+        if prop is not None:
+            where = (
+                f"category = '{prop}' AND data_pulled_at = ("
+                f"SELECT MAX(data_pulled_at) FROM raw.{table} "
+                f"WHERE category = '{prop}')"
+            )
+        else:
+            where = (
+                f"(category, data_pulled_at) IN ("
+                f"SELECT category, MAX(data_pulled_at) "
+                f"FROM raw.{table} GROUP BY category)"
+            )
         df = read_df(table, schema="raw", where=where)
         if df.empty:
             print(f"  ⚠ raw.{table}: no rows found")
             continue
         df = df.rename(columns={k: v for k, v in _ODDS_COL_RENAME.items() if k in df.columns})
-        print(
-            f"  raw.{table}: {len(df):,} rows"
-            f"  (pulled {df['DATA_PULLED_AT'].max() if 'DATA_PULLED_AT' in df.columns else '?'})"
-        )
+        if "DATA_PULLED_AT" in df.columns and not df.empty:
+            pulls = sorted({str(v) for v in df["DATA_PULLED_AT"].dropna().unique()})
+            pull_note = pulls[0] if len(pulls) == 1 else f"{len(pulls)} pulls ({min(pulls)} … {max(pulls)})"
+        else:
+            pull_note = "?"
+        print(f"  raw.{table}: {len(df):,} rows  (pulled {pull_note})")
         frames.append(df)
 
     if not frames:
         return pd.DataFrame(columns=list(_ODDS_COL_RENAME.values()))
 
-    out = pd.concat(frames, ignore_index=True)
-
-    if prop is not None:
-        if "CATEGORY" in out.columns:
-            out = out[out["CATEGORY"] == prop].reset_index(drop=True)
-
-    return out
+    return pd.concat(frames, ignore_index=True)
 
 
 # ── internal helpers ──────────────────────────────────────────────────────────

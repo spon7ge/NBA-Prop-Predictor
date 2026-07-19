@@ -7,11 +7,13 @@ interface DropdownOption<T extends string | number> {
 
 interface DropdownProps<T extends string | number> {
   id: string;
-  label: string;
+  label?: string;
   value: T;
   options: DropdownOption<T>[];
   onChange: (value: T) => void;
   classPrefix: "book" | "legs" | "league";
+  /** Accessible name when `label` is omitted */
+  ariaLabel?: string;
 }
 
 export function Dropdown<T extends string | number>({
@@ -21,10 +23,12 @@ export function Dropdown<T extends string | number>({
   options,
   onChange,
   classPrefix,
+  ariaLabel,
 }: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const selected = options.find((o) => o.value === value);
+  const accessibleName = label ?? ariaLabel ?? classPrefix;
 
   useEffect(() => {
     function onDocClick() {
@@ -43,12 +47,15 @@ export function Dropdown<T extends string | number>({
 
   const triggerId = `${id}Trigger`;
   const menuId = `${id}Menu`;
+  const labelId = `${id}Label`;
 
   return (
     <div className={`${classPrefix}-filter`}>
-      <label className={`${classPrefix}-filter-label`} id={`${id}Label`} htmlFor={triggerId}>
-        {label}
-      </label>
+      {label ? (
+        <label className={`${classPrefix}-filter-label`} id={labelId} htmlFor={triggerId}>
+          {label}
+        </label>
+      ) : null}
       <div className={`${classPrefix}-dropdown`} id={id} ref={rootRef} onClick={(e) => e.stopPropagation()}>
         <button
           type="button"
@@ -57,6 +64,7 @@ export function Dropdown<T extends string | number>({
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={menuId}
+          aria-label={accessibleName}
           onClick={() => setOpen((v) => !v)}
         >
           <span className={`${classPrefix}-dropdown-value`}>{selected?.label ?? ""}</span>
@@ -67,7 +75,8 @@ export function Dropdown<T extends string | number>({
           id={menuId}
           role="listbox"
           hidden={!open}
-          aria-labelledby={`${id}Label`}
+          aria-labelledby={label ? labelId : undefined}
+          aria-label={label ? undefined : accessibleName}
         >
           {options.map((opt) => {
             const current = opt.value === value;

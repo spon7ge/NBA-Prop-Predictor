@@ -67,7 +67,7 @@ The ETL container entrypoint (`docker/etl-entrypoint.sh`):
 | Command | Steps |
 |---------|-------|
 | `ingest` | NBA + WNBA stats → `raw.*`, odds → `raw.*_props_*` via PropFinder |
-| `silver` | NBA + WNBA `fetch_raw.py --silver-only` → `silver.*` |
+| `silver` | NBA + WNBA `python -m src.pipeline.clean` → `silver.*` |
 | `full` | ingest → silver (default) |
 | `shell` | Interactive bash inside container |
 

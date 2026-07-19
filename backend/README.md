@@ -21,7 +21,24 @@ uvicorn app.main:app --reload --port 8000
 - API docs: http://localhost:8000/docs
 - Health: http://localhost:8000/api/health
 
-## Endpoints (Phase 9)
+## Dashboard read path
+
+FastAPI serves the React app from Postgres only (no live NBA/odds calls at request time):
+
+| UI | Endpoint | Table |
+|----|----------|-------|
+| All Players | `GET /api/live-props` | `ml.*_live_prop_predictions` |
+| Top Legs | `GET /api/live-slates` | `ml.*_live_slates` |
+| Research / historical | `GET /api/games/{date}/slate` | games + gold props + `ml.predictions` |
+
+## Endpoints
+
+### Live dashboard
+
+| Route | Source table | Description |
+|-------|--------------|-------------|
+| `GET /api/live-props` | `ml.*_live_prop_predictions` | All Players — model lean + form |
+| `GET /api/live-slates` | `ml.*_live_slates` | Top Legs — greedy parlays by book |
 
 ### Core
 

@@ -8,39 +8,35 @@ cd /app
 # .env here — unquoted values like "Regular Season" break bash.
 
 NBA_SEASON="${HOOPVISTA_NBA_SEASON:-2025-26}"
-WNBA_SEASON="${HOOPVISTA_WNBA_SEASON:-2025}"
+WNBA_SEASON="${HOOPVISTA_WNBA_SEASON:-2026}"
 SEASON_TYPE="${HOOPVISTA_SEASON_TYPE:-Regular Season}"
 PROPFINDER_LEAGUE="${HOOPVISTA_PROPFINDER_LEAGUE:-wnba}"
 
 run_ingest() {
   echo "── 1/2 Ingest APIs ──"
-  python scripts/fetch_raw.py \
+  python -m src.pipeline.fetch \
     --league nba \
     --season "$NBA_SEASON" \
     --season-type "$SEASON_TYPE" \
-    --raw-only \
     --sequential
-  python scripts/fetch_raw.py \
+  python -m src.pipeline.fetch \
     --league wnba \
     --season "$WNBA_SEASON" \
     --season-type "$SEASON_TYPE" \
-    --raw-only \
     --sequential
   python scripts/PropFinder.py --league "$PROPFINDER_LEAGUE"
 }
 
 run_silver() {
   echo "── 2/2 Merge raw → silver ──"
-  python scripts/fetch_raw.py \
+  python -m src.pipeline.clean \
     --league nba \
     --season "$NBA_SEASON" \
-    --season-type "$SEASON_TYPE" \
-    --silver-only
-  python scripts/fetch_raw.py \
+    --season-type "$SEASON_TYPE"
+  python -m src.pipeline.clean \
     --league wnba \
     --season "$WNBA_SEASON" \
-    --season-type "$SEASON_TYPE" \
-    --silver-only
+    --season-type "$SEASON_TYPE"
 }
 
 run_full() {

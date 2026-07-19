@@ -19,6 +19,8 @@ x-airflow-common: &airflow-common
     HOOPVISTA_SEASON_TYPE: 'Regular Season'
     HOOPVISTA_PROPFINDER_LEAGUE: 'wnba'
     HOOPVISTA_LIVE_LEAGUES: 'nba,wnba'
+    HOOPVISTA_TZ: 'America/Los_Angeles'
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: 'America/Los_Angeles'
     PYTHONPATH: /opt/airflow/hoopvista
   volumes:
     - ../:/opt/airflow/hoopvista

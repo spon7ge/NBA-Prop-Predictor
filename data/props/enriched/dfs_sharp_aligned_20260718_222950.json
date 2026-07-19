@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-19T00:00:04.279071Z",
+  "generated_at": "2026-07-18T22:29:50.898602Z",
   "current_date": "2026-07-18",
-  "n_dfs_picks": 622,
-  "n_enriched": 622,
-  "n_sharp_aligned": 71,
+  "n_dfs_picks": 601,
+  "n_enriched": 601,
+  "n_sharp_aligned": 75,
   "picks": [
     {
       "platform": "Betr DFS",
@@ -23,8 +23,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.405,
-        "p_under": 0.595,
+        "p_over": 0.407,
+        "p_under": 0.593,
         "lean": "UNDER",
         "min_q10": 21.68,
         "min_q50": 28.45,
@@ -105,8 +105,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.385,
-        "p_under": 0.615,
+        "p_over": 0.402,
+        "p_under": 0.598,
         "lean": "UNDER",
         "min_q10": 22.88,
         "min_q50": 29.98,
@@ -179,88 +179,6 @@
     },
     {
       "platform": "Betr DFS",
-      "player": "Emily Engstler",
-      "display_name": "Emily Engstler",
-      "team_abbr": "PDX",
-      "team": null,
-      "opponent_abbr": null,
-      "opponent": null,
-      "is_home": null,
-      "market": "AST",
-      "dfs_line": 2.5,
-      "dfs_odds": {
-        "american_over": -137.0,
-        "american_under": null,
-        "no_vig_over": null,
-        "no_vig_under": null
-      },
-      "model": {
-        "p_over": 0.495,
-        "p_under": 0.505,
-        "lean": "UNDER",
-        "min_q10": 18.35,
-        "min_q50": 25.71,
-        "min_q90": 32.82,
-        "stat_q10": 0.06,
-        "stat_q50": 2.23,
-        "stat_q90": 5.93
-      },
-      "sharp": {
-        "source": "DraftKings",
-        "is_fallback": false,
-        "line": 2.5,
-        "no_vig_over": 0.4645669291338583,
-        "no_vig_under": 0.5354330708661418,
-        "american_over": 100.0,
-        "american_under": -136.0,
-        "lean": "UNDER"
-      },
-      "consensus": {
-        "n_books_same_line": 1,
-        "mean_no_vig_over_same_line": 0.4645669291338583,
-        "n_books_any_line": 1,
-        "mean_no_vig_over_any_line": 0.4645669291338583,
-        "offerings": [
-          {
-            "book": "DraftKings",
-            "line": 2.5,
-            "no_vig_over": 0.4645669291338583,
-            "no_vig_under": 0.5354330708661418,
-            "american_over": 100.0,
-            "american_under": -136.0
-          }
-        ]
-      },
-      "game_context": {
-        "book_used": null,
-        "game_total": null,
-        "spread": null,
-        "team_total_implied": null,
-        "team_pace": null,
-        "team_pace_rank": null,
-        "team_def_rating": null,
-        "team_def_rating_rank": null,
-        "opp_pace": null,
-        "opp_pace_rank": null,
-        "opp_def_rating": null,
-        "opp_def_rating_rank": null
-      },
-      "form": {
-        "over_l5": 0.6,
-        "over_l10": 0.6,
-        "over_l15": 0.4
-      },
-      "vs_opp": {
-        "n_games": 0,
-        "avg_stat": null,
-        "over_rate_at_line": null
-      },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
-    },
-    {
-      "platform": "Betr DFS",
       "player": "Jessica Shepard",
       "display_name": "Jessica Shepard",
       "team_abbr": "DAL",
@@ -278,7 +196,7 @@
       },
       "model": {
         "p_over": 0.394,
-        "p_under": 0.606,
+        "p_under": 0.607,
         "lean": "UNDER",
         "min_q10": 25.84,
         "min_q50": 33.58,
@@ -367,8 +285,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.451,
-        "p_under": 0.549,
+        "p_over": 0.448,
+        "p_under": 0.552,
         "lean": "UNDER",
         "min_q10": 20.71,
         "min_q50": 27.88,
@@ -441,6 +359,88 @@
     },
     {
       "platform": "Betr DFS",
+      "player": "Natasha Howard",
+      "display_name": "Natasha Howard",
+      "team_abbr": "MIN",
+      "team": "Minnesota Timberwolves",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "AST",
+      "dfs_line": 2.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.588,
+        "p_under": 0.412,
+        "lean": "OVER",
+        "min_q10": 24.42,
+        "min_q50": 31.88,
+        "min_q90": 37.31,
+        "stat_q10": 0.32,
+        "stat_q50": 3.09,
+        "stat_q90": 7.0
+      },
+      "sharp": {
+        "source": "DraftKings",
+        "is_fallback": false,
+        "line": 2.5,
+        "no_vig_over": 0.528604118993135,
+        "no_vig_under": 0.471395881006865,
+        "american_over": -132.0,
+        "american_under": -103.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 1,
+        "mean_no_vig_over_same_line": 0.528604118993135,
+        "n_books_any_line": 1,
+        "mean_no_vig_over_any_line": 0.528604118993135,
+        "offerings": [
+          {
+            "book": "DraftKings",
+            "line": 2.5,
+            "no_vig_over": 0.528604118993135,
+            "no_vig_under": 0.471395881006865,
+            "american_over": -132.0,
+            "american_under": -103.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": 100.83,
+        "team_pace_rank": 1.0,
+        "team_def_rating": 113.1,
+        "team_def_rating_rank": 10.0,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.5,
+        "over_l15": 0.4
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
       "player": "Rhyne Howard",
       "display_name": "Rhyne Howard",
       "team_abbr": "ATL",
@@ -457,8 +457,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.464,
-        "p_under": 0.536,
+        "p_over": 0.458,
+        "p_under": 0.542,
         "lean": "UNDER",
         "min_q10": 26.68,
         "min_q50": 34.57,
@@ -547,8 +547,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.487,
+        "p_under": 0.513,
         "lean": "UNDER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -645,8 +645,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.678,
-        "p_under": 0.322,
+        "p_over": 0.675,
+        "p_under": 0.325,
         "lean": "OVER",
         "min_q10": 26.68,
         "min_q50": 33.73,
@@ -743,15 +743,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.453,
-        "p_under": 0.547,
+        "p_over": 0.413,
+        "p_under": 0.587,
         "lean": "UNDER",
-        "min_q10": 19.41,
-        "min_q50": 27.21,
-        "min_q90": 34.93,
-        "stat_q10": 2.46,
-        "stat_q50": 9.61,
-        "stat_q90": 22.15
+        "min_q10": 14.24,
+        "min_q50": 20.69,
+        "min_q90": 28.12,
+        "stat_q10": 1.81,
+        "stat_q50": 7.3,
+        "stat_q90": 17.83
       },
       "sharp": {
         "source": "FanDuel",
@@ -833,8 +833,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.458,
-        "p_under": 0.542,
+        "p_over": 0.444,
+        "p_under": 0.556,
         "lean": "UNDER",
         "min_q10": 19.88,
         "min_q50": 27.07,
@@ -923,8 +923,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.378,
-        "p_under": 0.622,
+        "p_over": 0.375,
+        "p_under": 0.625,
         "lean": "UNDER",
         "min_q10": 24.55,
         "min_q50": 31.87,
@@ -1005,6 +1005,104 @@
     },
     {
       "platform": "Betr DFS",
+      "player": "Aliyah Boston",
+      "display_name": "Aliyah Boston",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 8.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.489,
+        "p_under": 0.511,
+        "lean": "UNDER",
+        "min_q10": 18.0,
+        "min_q50": 25.06,
+        "min_q90": 31.7,
+        "stat_q10": 2.86,
+        "stat_q50": 7.04,
+        "stat_q90": 13.66
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 8.5,
+        "no_vig_over": 0.4848997342353226,
+        "no_vig_under": 0.5151002657646775,
+        "american_over": -108.0,
+        "american_under": -123.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4763188517464266,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.4763188517464266,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 8.5,
+            "no_vig_over": 0.4848997342353226,
+            "no_vig_under": 0.5151002657646775,
+            "american_over": -108.0,
+            "american_under": -123.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 8.5,
+            "no_vig_over": 0.4718423169750604,
+            "no_vig_under": 0.5281576830249397,
+            "american_over": -102.0,
+            "american_under": -130.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 8.5,
+            "no_vig_over": 0.47221450402889686,
+            "no_vig_under": 0.527785495971103,
+            "american_over": -103.0,
+            "american_under": -131.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.6,
+        "over_l10": 0.7,
+        "over_l15": 0.7333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
       "player": "Angel Reese",
       "display_name": "Angel Reese",
       "team_abbr": "ATL",
@@ -1021,8 +1119,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.471,
+        "p_under": 0.529,
         "lean": "UNDER",
         "min_q10": 25.32,
         "min_q50": 32.41,
@@ -1111,8 +1209,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.533,
-        "p_under": 0.467,
+        "p_over": 0.525,
+        "p_under": 0.475,
         "lean": "OVER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -1209,8 +1307,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.491,
-        "p_under": 0.41,
+        "p_over": 0.485,
+        "p_under": 0.417,
         "lean": "OVER",
         "min_q10": 26.41,
         "min_q50": 33.21,
@@ -1307,8 +1405,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.496,
-        "p_under": 0.504,
+        "p_over": 0.486,
+        "p_under": 0.514,
         "lean": "UNDER",
         "min_q10": 22.88,
         "min_q50": 29.98,
@@ -1397,8 +1495,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.414,
-        "p_under": 0.486,
+        "p_over": 0.419,
+        "p_under": 0.476,
         "lean": "UNDER",
         "min_q10": 18.35,
         "min_q50": 25.71,
@@ -1479,6 +1577,96 @@
     },
     {
       "platform": "Betr DFS",
+      "player": "Jessica Shepard",
+      "display_name": "Jessica Shepard",
+      "team_abbr": "DAL",
+      "team": "Dallas Mavericks",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 12.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": null,
+        "no_vig_over": null,
+        "no_vig_under": null
+      },
+      "model": {
+        "p_over": 0.5,
+        "p_under": 0.5,
+        "lean": "UNDER",
+        "min_q10": 25.84,
+        "min_q50": 33.58,
+        "min_q90": 39.05,
+        "stat_q10": 4.16,
+        "stat_q50": 10.34,
+        "stat_q90": 18.66
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 11.5,
+        "no_vig_over": 0.532258064516129,
+        "no_vig_under": 0.4677419354838709,
+        "american_over": -132.0,
+        "american_under": 100.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 0,
+        "mean_no_vig_over_same_line": null,
+        "n_books_any_line": 2,
+        "mean_no_vig_over_any_line": 0.5294300490469035,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 11.5,
+            "no_vig_over": 0.532258064516129,
+            "no_vig_under": 0.4677419354838709,
+            "american_over": -132.0,
+            "american_under": 100.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 11.5,
+            "no_vig_over": 0.526602033577678,
+            "no_vig_under": 0.47339796642232207,
+            "american_over": -131.0,
+            "american_under": -104.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.4,
+        "over_l15": 0.4666666666666667
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
       "player": "Jonquel Jones",
       "display_name": "Jonquel Jones",
       "team_abbr": "NYL",
@@ -1495,8 +1683,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.515,
-        "p_under": 0.407,
+        "p_over": 0.516,
+        "p_under": 0.397,
         "lean": "OVER",
         "min_q10": 23.73,
         "min_q50": 31.08,
@@ -1593,8 +1781,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.504,
+        "p_under": 0.496,
         "lean": "OVER",
         "min_q10": 24.5,
         "min_q50": 32.73,
@@ -1667,96 +1855,6 @@
     },
     {
       "platform": "Betr DFS",
-      "player": "Kamilla Cardoso",
-      "display_name": "Kamilla Cardoso",
-      "team_abbr": "CHI",
-      "team": "Chicago Bulls",
-      "opponent_abbr": null,
-      "opponent": null,
-      "is_home": null,
-      "market": "REB",
-      "dfs_line": 8.5,
-      "dfs_odds": {
-        "american_over": -137.0,
-        "american_under": null,
-        "no_vig_over": null,
-        "no_vig_under": null
-      },
-      "model": {
-        "p_over": 0.465,
-        "p_under": 0.535,
-        "lean": "UNDER",
-        "min_q10": 20.71,
-        "min_q50": 27.88,
-        "min_q90": 34.67,
-        "stat_q10": 3.11,
-        "stat_q50": 7.61,
-        "stat_q90": 14.58
-      },
-      "sharp": {
-        "source": "FanDuel",
-        "is_fallback": false,
-        "line": 8.5,
-        "no_vig_over": 0.4329742261011864,
-        "no_vig_under": 0.5670257738988136,
-        "american_over": 116.0,
-        "american_under": -154.0,
-        "lean": "UNDER"
-      },
-      "consensus": {
-        "n_books_same_line": 1,
-        "mean_no_vig_over_same_line": 0.4329742261011864,
-        "n_books_any_line": 2,
-        "mean_no_vig_over_any_line": 0.49272055796399733,
-        "offerings": [
-          {
-            "book": "FanDuel",
-            "line": 8.5,
-            "no_vig_over": 0.4329742261011864,
-            "no_vig_under": 0.5670257738988136,
-            "american_over": 116.0,
-            "american_under": -154.0
-          },
-          {
-            "book": "DraftKings",
-            "line": 7.5,
-            "no_vig_over": 0.5524668898268082,
-            "no_vig_under": 0.44753311017319164,
-            "american_over": -146.0,
-            "american_under": 108.0
-          }
-        ]
-      },
-      "game_context": {
-        "book_used": null,
-        "game_total": null,
-        "spread": null,
-        "team_total_implied": null,
-        "team_pace": null,
-        "team_pace_rank": null,
-        "team_def_rating": null,
-        "team_def_rating_rank": null,
-        "opp_pace": null,
-        "opp_pace_rank": null,
-        "opp_def_rating": null,
-        "opp_def_rating_rank": null
-      },
-      "form": {
-        "over_l5": 0.6,
-        "over_l10": 0.5,
-        "over_l15": 0.3333333333333333
-      },
-      "vs_opp": {
-        "n_games": 0,
-        "avg_stat": null,
-        "over_rate_at_line": null
-      },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
-    },
-    {
-      "platform": "Betr DFS",
       "player": "Kiki Iriafen",
       "display_name": "Kiki Iriafen",
       "team_abbr": "WAS",
@@ -1773,8 +1871,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.441,
+        "p_under": 0.559,
         "lean": "UNDER",
         "min_q10": 23.52,
         "min_q50": 29.75,
@@ -1866,13 +1964,13 @@
       "dfs_line": 3.5,
       "dfs_odds": {
         "american_over": -137.0,
-        "american_under": null,
-        "no_vig_over": null,
-        "no_vig_under": null
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.399,
-        "p_under": 0.601,
+        "p_over": 0.402,
+        "p_under": 0.598,
         "lean": "UNDER",
         "min_q10": 23.0,
         "min_q50": 30.7,
@@ -1961,8 +2059,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.356,
-        "p_under": 0.644,
+        "p_over": 0.359,
+        "p_under": 0.641,
         "lean": "UNDER",
         "min_q10": 19.45,
         "min_q50": 26.68,
@@ -2051,8 +2149,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.384,
-        "p_under": 0.616,
+        "p_over": 0.397,
+        "p_under": 0.603,
         "lean": "UNDER",
         "min_q10": 18.6,
         "min_q50": 24.43,
@@ -2141,8 +2239,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.465,
-        "p_under": 0.372,
+        "p_over": 0.452,
+        "p_under": 0.387,
         "lean": "OVER",
         "min_q10": 25.06,
         "min_q50": 31.03,
@@ -2240,7 +2338,7 @@
       },
       "model": {
         "p_over": 0.417,
-        "p_under": 0.449,
+        "p_under": 0.453,
         "lean": "UNDER",
         "min_q10": 19.39,
         "min_q50": 27.73,
@@ -2337,8 +2435,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.519,
-        "p_under": 0.48,
+        "p_over": 0.514,
+        "p_under": 0.486,
         "lean": "OVER",
         "min_q10": 25.36,
         "min_q50": 31.97,
@@ -2435,15 +2533,15 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.451,
-        "p_under": 0.549,
+        "p_over": 0.424,
+        "p_under": 0.576,
         "lean": "UNDER",
-        "min_q10": 23.14,
-        "min_q50": 29.86,
-        "min_q90": 36.17,
-        "stat_q10": 0.26,
-        "stat_q50": 2.54,
-        "stat_q90": 6.37
+        "min_q10": 18.0,
+        "min_q50": 25.06,
+        "min_q90": 31.7,
+        "stat_q10": 0.2,
+        "stat_q50": 2.13,
+        "stat_q90": 5.59
       },
       "sharp": {
         "source": "FanDuel",
@@ -2509,6 +2607,104 @@
     },
     {
       "platform": "DraftKings Pick6",
+      "player": "Caitlin Clark",
+      "display_name": "Caitlin Clark",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "AST",
+      "dfs_line": 8.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": null,
+        "no_vig_over": null,
+        "no_vig_under": null
+      },
+      "model": {
+        "p_over": 0.342,
+        "p_under": 0.658,
+        "lean": "UNDER",
+        "min_q10": 18.73,
+        "min_q50": 25.71,
+        "min_q90": 32.47,
+        "stat_q10": 2.44,
+        "stat_q50": 6.08,
+        "stat_q90": 12.6
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 8.5,
+        "no_vig_over": 0.43347549465147167,
+        "no_vig_under": 0.5665245053485283,
+        "american_over": 119.0,
+        "american_under": -148.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.43688593477328014,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.43688593477328014,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 8.5,
+            "no_vig_over": 0.43347549465147167,
+            "no_vig_under": 0.5665245053485283,
+            "american_over": 119.0,
+            "american_under": -148.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 8.5,
+            "no_vig_over": 0.43652993348115304,
+            "no_vig_under": 0.563470066518847,
+            "american_over": 114.0,
+            "american_under": -152.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 8.5,
+            "no_vig_over": 0.44065237618721587,
+            "no_vig_under": 0.5593476238127842,
+            "american_over": 111.0,
+            "american_under": -151.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.2,
+        "over_l10": 0.3,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
       "player": "Carla Leite",
       "display_name": "Carla Leite",
       "team_abbr": "PDX",
@@ -2525,8 +2721,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.486,
-        "p_under": 0.514,
+        "p_over": 0.478,
+        "p_under": 0.522,
         "lean": "UNDER",
         "min_q10": 20.82,
         "min_q50": 28.38,
@@ -2607,15 +2803,15 @@
     },
     {
       "platform": "DraftKings Pick6",
-      "player": "Emily Engstler",
-      "display_name": "Emily Engstler",
-      "team_abbr": "PDX",
+      "player": "Sabrina Ionescu",
+      "display_name": "Sabrina Ionescu",
+      "team_abbr": "NYL",
       "team": null,
       "opponent_abbr": null,
       "opponent": null,
       "is_home": null,
       "market": "AST",
-      "dfs_line": 2.5,
+      "dfs_line": 5.5,
       "dfs_odds": {
         "american_over": -137.0,
         "american_under": null,
@@ -2623,39 +2819,55 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.495,
-        "p_under": 0.505,
+        "p_over": 0.383,
+        "p_under": 0.617,
         "lean": "UNDER",
-        "min_q10": 18.35,
-        "min_q50": 25.71,
-        "min_q90": 32.82,
-        "stat_q10": 0.06,
-        "stat_q50": 2.23,
-        "stat_q90": 5.93
+        "min_q10": 24.55,
+        "min_q50": 31.87,
+        "min_q90": 37.21,
+        "stat_q10": 1.22,
+        "stat_q50": 4.24,
+        "stat_q90": 8.44
       },
       "sharp": {
-        "source": "DraftKings",
+        "source": "Pinnacle",
         "is_fallback": false,
-        "line": 2.5,
-        "no_vig_over": 0.4645669291338583,
-        "no_vig_under": 0.5354330708661418,
-        "american_over": 100.0,
-        "american_under": -136.0,
+        "line": 5.5,
+        "no_vig_over": 0.4347452530286107,
+        "no_vig_under": 0.5652547469713892,
+        "american_over": 115.0,
+        "american_under": -153.0,
         "lean": "UNDER"
       },
       "consensus": {
-        "n_books_same_line": 1,
-        "mean_no_vig_over_same_line": 0.4645669291338583,
-        "n_books_any_line": 1,
-        "mean_no_vig_over_any_line": 0.4645669291338583,
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.43141853792348356,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.43141853792348356,
         "offerings": [
           {
+            "book": "Pinnacle",
+            "line": 5.5,
+            "no_vig_over": 0.4347452530286107,
+            "no_vig_under": 0.5652547469713892,
+            "american_over": 115.0,
+            "american_under": -153.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 5.5,
+            "no_vig_over": 0.4170324846356453,
+            "no_vig_under": 0.5829675153643546,
+            "american_over": 124.0,
+            "american_under": -166.0
+          },
+          {
             "book": "DraftKings",
-            "line": 2.5,
-            "no_vig_over": 0.4645669291338583,
-            "no_vig_under": 0.5354330708661418,
-            "american_over": 100.0,
-            "american_under": -136.0
+            "line": 5.5,
+            "no_vig_over": 0.4424778761061947,
+            "no_vig_under": 0.5575221238938053,
+            "american_over": 110.0,
+            "american_under": -150.0
           }
         ]
       },
@@ -2674,9 +2886,9 @@
         "opp_def_rating_rank": null
       },
       "form": {
-        "over_l5": 0.6,
-        "over_l10": 0.6,
-        "over_l15": 0.4
+        "over_l5": 0.4,
+        "over_l10": 0.2,
+        "over_l15": 0.25
       },
       "vs_opp": {
         "n_games": 0,
@@ -2705,8 +2917,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.487,
+        "p_under": 0.513,
         "lean": "UNDER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -2803,8 +3015,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.678,
-        "p_under": 0.322,
+        "p_over": 0.675,
+        "p_under": 0.325,
         "lean": "OVER",
         "min_q10": 26.68,
         "min_q50": 33.73,
@@ -2901,8 +3113,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.458,
-        "p_under": 0.542,
+        "p_over": 0.444,
+        "p_under": 0.556,
         "lean": "UNDER",
         "min_q10": 19.88,
         "min_q50": 27.07,
@@ -2991,8 +3203,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.378,
-        "p_under": 0.622,
+        "p_over": 0.375,
+        "p_under": 0.625,
         "lean": "UNDER",
         "min_q10": 24.55,
         "min_q50": 31.87,
@@ -3089,8 +3301,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.533,
-        "p_under": 0.467,
+        "p_over": 0.525,
+        "p_under": 0.475,
         "lean": "OVER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -3187,8 +3399,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.487,
-        "p_under": 0.513,
+        "p_over": 0.491,
+        "p_under": 0.509,
         "lean": "UNDER",
         "min_q10": 26.41,
         "min_q50": 33.21,
@@ -3269,6 +3481,104 @@
     },
     {
       "platform": "DraftKings Pick6",
+      "player": "Emily Engstler",
+      "display_name": "Emily Engstler",
+      "team_abbr": "PDX",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 5.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.525,
+        "p_under": 0.475,
+        "lean": "OVER",
+        "min_q10": 18.35,
+        "min_q50": 25.71,
+        "min_q90": 32.82,
+        "stat_q10": 2.03,
+        "stat_q50": 5.66,
+        "stat_q90": 12.49
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 5.5,
+        "no_vig_over": 0.5585303332383936,
+        "no_vig_under": 0.44146966676160637,
+        "american_over": -148.0,
+        "american_under": 112.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.5475248770354663,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.5475248770354663,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 5.5,
+            "no_vig_over": 0.5585303332383936,
+            "no_vig_under": 0.44146966676160637,
+            "american_over": -148.0,
+            "american_under": 112.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 5.5,
+            "no_vig_over": 0.5418848167539267,
+            "no_vig_under": 0.4581151832460733,
+            "american_over": -138.0,
+            "american_under": 104.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 5.5,
+            "no_vig_over": 0.5421594811140786,
+            "no_vig_under": 0.4578405188859214,
+            "american_over": -140.0,
+            "american_under": 103.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.8,
+        "over_l10": 0.6,
+        "over_l15": 0.6666666666666666
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
       "player": "Kiki Iriafen",
       "display_name": "Kiki Iriafen",
       "team_abbr": "WAS",
@@ -3285,8 +3595,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.441,
+        "p_under": 0.559,
         "lean": "UNDER",
         "min_q10": 23.52,
         "min_q50": 29.75,
@@ -3366,6 +3676,104 @@
       "tier": "sharp_verified"
     },
     {
+      "platform": "DraftKings Pick6",
+      "player": "Sarah Ashlee Barker",
+      "display_name": "Sarah Ashlee Barker",
+      "team_abbr": "PDX",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 4.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.546,
+        "p_under": 0.454,
+        "lean": "OVER",
+        "min_q10": 19.39,
+        "min_q50": 27.73,
+        "min_q90": 34.62,
+        "stat_q10": 1.35,
+        "stat_q50": 4.96,
+        "stat_q90": 11.32
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 4.5,
+        "no_vig_over": 0.5615296147211041,
+        "no_vig_under": 0.4384703852788959,
+        "american_over": -144.0,
+        "american_under": 117.0,
+        "lean": "OVER"
+      },
+      "consensus": {
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.5492577624499116,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.5492577624499116,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 4.5,
+            "no_vig_over": 0.5615296147211041,
+            "no_vig_under": 0.4384703852788959,
+            "american_over": -144.0,
+            "american_under": 117.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 4.5,
+            "no_vig_over": 0.5548317046688382,
+            "no_vig_under": 0.4451682953311618,
+            "american_over": -146.0,
+            "american_under": 110.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 4.5,
+            "no_vig_over": 0.5314119679597926,
+            "no_vig_under": 0.4685880320402073,
+            "american_over": -134.0,
+            "american_under": -102.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 1.0,
+        "over_l10": 0.8,
+        "over_l15": 0.6666666666666666
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
       "platform": "PrizePicks",
       "player": "Breanna Stewart",
       "display_name": "Breanna Stewart",
@@ -3383,8 +3791,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.35,
-        "p_under": 0.494,
+        "p_over": 0.345,
+        "p_under": 0.5,
         "lean": "UNDER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -3473,8 +3881,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.481,
-        "p_under": 0.39,
+        "p_over": 0.479,
+        "p_under": 0.396,
         "lean": "OVER",
         "min_q10": 20.82,
         "min_q50": 28.38,
@@ -3555,15 +3963,15 @@
     },
     {
       "platform": "PrizePicks",
-      "player": "Jordin Canada",
-      "display_name": "Jordin Canada",
-      "team_abbr": "ATL",
-      "team": "Atlanta Hawks",
+      "player": "Natasha Howard",
+      "display_name": "Natasha Howard",
+      "team_abbr": "MIN",
+      "team": "Minnesota Timberwolves",
       "opponent_abbr": null,
       "opponent": null,
       "is_home": null,
       "market": "AST",
-      "dfs_line": 8.0,
+      "dfs_line": 2.5,
       "dfs_odds": {
         "american_over": -137.0,
         "american_under": -137.0,
@@ -3571,47 +3979,39 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.547,
-        "p_under": 0.367,
+        "p_over": 0.588,
+        "p_under": 0.412,
         "lean": "OVER",
-        "min_q10": 24.5,
-        "min_q50": 32.73,
-        "min_q90": 37.71,
-        "stat_q10": 2.92,
-        "stat_q50": 7.36,
-        "stat_q90": 12.89
+        "min_q10": 24.42,
+        "min_q50": 31.88,
+        "min_q90": 37.31,
+        "stat_q10": 0.32,
+        "stat_q50": 3.09,
+        "stat_q90": 7.0
       },
       "sharp": {
-        "source": "FanDuel",
+        "source": "DraftKings",
         "is_fallback": false,
-        "line": 8.5,
-        "no_vig_over": 0.43652993348115304,
-        "no_vig_under": 0.563470066518847,
-        "american_over": 114.0,
-        "american_under": -152.0,
+        "line": 2.5,
+        "no_vig_over": 0.528604118993135,
+        "no_vig_under": 0.471395881006865,
+        "american_over": -132.0,
+        "american_under": -103.0,
         "lean": "OVER"
       },
       "consensus": {
-        "n_books_same_line": 0,
-        "mean_no_vig_over_same_line": null,
-        "n_books_any_line": 2,
-        "mean_no_vig_over_any_line": 0.4404237433505585,
+        "n_books_same_line": 1,
+        "mean_no_vig_over_same_line": 0.528604118993135,
+        "n_books_any_line": 1,
+        "mean_no_vig_over_any_line": 0.528604118993135,
         "offerings": [
           {
-            "book": "FanDuel",
-            "line": 8.5,
-            "no_vig_over": 0.43652993348115304,
-            "no_vig_under": 0.563470066518847,
-            "american_over": 114.0,
-            "american_under": -152.0
-          },
-          {
             "book": "DraftKings",
-            "line": 8.5,
-            "no_vig_over": 0.44431755321996397,
-            "no_vig_under": 0.5556824467800361,
-            "american_over": 109.0,
-            "american_under": -149.0
+            "line": 2.5,
+            "no_vig_over": 0.528604118993135,
+            "no_vig_under": 0.471395881006865,
+            "american_over": -132.0,
+            "american_under": -103.0
           }
         ]
       },
@@ -3620,10 +4020,10 @@
         "game_total": null,
         "spread": null,
         "team_total_implied": null,
-        "team_pace": 96.67,
-        "team_pace_rank": 7.0,
-        "team_def_rating": 121.9,
-        "team_def_rating_rank": 15.0,
+        "team_pace": 100.83,
+        "team_pace_rank": 1.0,
+        "team_def_rating": 113.1,
+        "team_def_rating_rank": 10.0,
         "opp_pace": null,
         "opp_pace_rank": null,
         "opp_def_rating": null,
@@ -3632,7 +4032,7 @@
       "form": {
         "over_l5": 0.6,
         "over_l10": 0.5,
-        "over_l15": 0.4666666666666667
+        "over_l15": 0.4
       },
       "vs_opp": {
         "n_games": 0,
@@ -3662,7 +4062,7 @@
       },
       "model": {
         "p_over": 0.355,
-        "p_under": 0.52,
+        "p_under": 0.516,
         "lean": "UNDER",
         "min_q10": 25.06,
         "min_q50": 31.03,
@@ -3759,8 +4159,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.386,
-        "p_under": 0.485,
+        "p_over": 0.396,
+        "p_under": 0.483,
         "lean": "UNDER",
         "min_q10": 21.87,
         "min_q50": 29.99,
@@ -3857,8 +4257,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.487,
+        "p_under": 0.513,
         "lean": "UNDER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -3955,8 +4355,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.624,
-        "p_under": 0.376,
+        "p_over": 0.625,
+        "p_under": 0.374,
         "lean": "OVER",
         "min_q10": 23.73,
         "min_q50": 31.08,
@@ -4053,8 +4453,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.678,
-        "p_under": 0.322,
+        "p_over": 0.675,
+        "p_under": 0.325,
         "lean": "OVER",
         "min_q10": 26.68,
         "min_q50": 33.73,
@@ -4151,15 +4551,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.453,
-        "p_under": 0.547,
+        "p_over": 0.413,
+        "p_under": 0.587,
         "lean": "UNDER",
-        "min_q10": 19.41,
-        "min_q50": 27.21,
-        "min_q90": 34.93,
-        "stat_q10": 2.46,
-        "stat_q50": 9.61,
-        "stat_q90": 22.15
+        "min_q10": 14.24,
+        "min_q50": 20.69,
+        "min_q90": 28.12,
+        "stat_q10": 1.81,
+        "stat_q50": 7.3,
+        "stat_q90": 17.83
       },
       "sharp": {
         "source": "FanDuel",
@@ -4241,8 +4641,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.458,
-        "p_under": 0.542,
+        "p_over": 0.444,
+        "p_under": 0.556,
         "lean": "UNDER",
         "min_q10": 19.88,
         "min_q50": 27.07,
@@ -4323,7 +4723,7 @@
       "opponent": null,
       "is_home": null,
       "market": "REB",
-      "dfs_line": 7.5,
+      "dfs_line": 8.5,
       "dfs_odds": {
         "american_over": -137.0,
         "american_under": -137.0,
@@ -4331,15 +4731,15 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.628,
-        "p_under": 0.372,
-        "lean": "OVER",
-        "min_q10": 23.14,
-        "min_q50": 29.86,
-        "min_q90": 36.17,
-        "stat_q10": 3.68,
-        "stat_q50": 8.39,
-        "stat_q90": 15.59
+        "p_over": 0.489,
+        "p_under": 0.511,
+        "lean": "UNDER",
+        "min_q10": 18.0,
+        "min_q50": 25.06,
+        "min_q90": 31.7,
+        "stat_q10": 2.86,
+        "stat_q50": 7.04,
+        "stat_q90": 13.66
       },
       "sharp": {
         "source": "Pinnacle",
@@ -4349,11 +4749,11 @@
         "no_vig_under": 0.5151002657646775,
         "american_over": -108.0,
         "american_under": -123.0,
-        "lean": "OVER"
+        "lean": "UNDER"
       },
       "consensus": {
-        "n_books_same_line": 0,
-        "mean_no_vig_over_same_line": null,
+        "n_books_same_line": 3,
+        "mean_no_vig_over_same_line": 0.4763188517464266,
         "n_books_any_line": 3,
         "mean_no_vig_over_any_line": 0.4763188517464266,
         "offerings": [
@@ -4399,8 +4799,8 @@
       },
       "form": {
         "over_l5": 0.6,
-        "over_l10": 0.8,
-        "over_l15": 0.8
+        "over_l10": 0.7,
+        "over_l15": 0.7333333333333333
       },
       "vs_opp": {
         "n_games": 0,
@@ -4429,8 +4829,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.471,
+        "p_under": 0.529,
         "lean": "UNDER",
         "min_q10": 25.32,
         "min_q50": 32.41,
@@ -4519,8 +4919,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.533,
-        "p_under": 0.467,
+        "p_over": 0.525,
+        "p_under": 0.475,
         "lean": "OVER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -4601,6 +5001,104 @@
     },
     {
       "platform": "PrizePicks",
+      "player": "Caitlin Clark",
+      "display_name": "Caitlin Clark",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 4.0,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.319,
+        "p_under": 0.561,
+        "lean": "UNDER",
+        "min_q10": 18.73,
+        "min_q50": 25.71,
+        "min_q90": 32.47,
+        "stat_q10": 0.8,
+        "stat_q50": 3.31,
+        "stat_q90": 7.16
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 3.5,
+        "no_vig_over": 0.563470066518847,
+        "no_vig_under": 0.43652993348115304,
+        "american_over": -152.0,
+        "american_under": 114.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 0,
+        "mean_no_vig_over_same_line": null,
+        "n_books_any_line": 3,
+        "mean_no_vig_over_any_line": 0.5453060704845383,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 3.5,
+            "no_vig_over": 0.563470066518847,
+            "no_vig_under": 0.43652993348115304,
+            "american_over": -152.0,
+            "american_under": 114.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 3.5,
+            "no_vig_over": 0.532258064516129,
+            "no_vig_under": 0.4677419354838709,
+            "american_over": -132.0,
+            "american_under": 100.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 3.5,
+            "no_vig_over": 0.5401900804186387,
+            "no_vig_under": 0.45980991958136136,
+            "american_over": -139.0,
+            "american_under": 102.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.2,
+        "over_l10": 0.2,
+        "over_l15": 0.3333333333333333
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
       "player": "Courtney Williams",
       "display_name": "Courtney Williams",
       "team_abbr": "MIN",
@@ -4617,8 +5115,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.491,
-        "p_under": 0.41,
+        "p_over": 0.485,
+        "p_under": 0.417,
         "lean": "OVER",
         "min_q10": 26.41,
         "min_q50": 33.21,
@@ -4699,96 +5197,6 @@
     },
     {
       "platform": "PrizePicks",
-      "player": "Dearica Hamby",
-      "display_name": "Dearica Hamby",
-      "team_abbr": "LAS",
-      "team": null,
-      "opponent_abbr": null,
-      "opponent": null,
-      "is_home": null,
-      "market": "REB",
-      "dfs_line": 7.0,
-      "dfs_odds": {
-        "american_over": -137.0,
-        "american_under": -137.0,
-        "no_vig_over": 0.5,
-        "no_vig_under": 0.5
-      },
-      "model": {
-        "p_over": 0.49,
-        "p_under": 0.405,
-        "lean": "OVER",
-        "min_q10": 22.88,
-        "min_q50": 29.98,
-        "min_q90": 35.74,
-        "stat_q10": 2.83,
-        "stat_q50": 6.93,
-        "stat_q90": 13.55
-      },
-      "sharp": {
-        "source": "FanDuel",
-        "is_fallback": false,
-        "line": 7.5,
-        "no_vig_over": 0.4451682953311618,
-        "no_vig_under": 0.5548317046688382,
-        "american_over": 110.0,
-        "american_under": -146.0,
-        "lean": "OVER"
-      },
-      "consensus": {
-        "n_books_same_line": 0,
-        "mean_no_vig_over_same_line": null,
-        "n_books_any_line": 2,
-        "mean_no_vig_over_any_line": 0.44382308571867823,
-        "offerings": [
-          {
-            "book": "FanDuel",
-            "line": 7.5,
-            "no_vig_over": 0.4451682953311618,
-            "no_vig_under": 0.5548317046688382,
-            "american_over": 110.0,
-            "american_under": -146.0
-          },
-          {
-            "book": "DraftKings",
-            "line": 7.5,
-            "no_vig_over": 0.4424778761061947,
-            "no_vig_under": 0.5575221238938053,
-            "american_over": 110.0,
-            "american_under": -150.0
-          }
-        ]
-      },
-      "game_context": {
-        "book_used": null,
-        "game_total": null,
-        "spread": null,
-        "team_total_implied": null,
-        "team_pace": null,
-        "team_pace_rank": null,
-        "team_def_rating": null,
-        "team_def_rating_rank": null,
-        "opp_pace": null,
-        "opp_pace_rank": null,
-        "opp_def_rating": null,
-        "opp_def_rating_rank": null
-      },
-      "form": {
-        "over_l5": 0.4,
-        "over_l10": 0.5,
-        "over_l15": 0.5333333333333333
-      },
-      "vs_opp": {
-        "n_games": 0,
-        "avg_stat": null,
-        "over_rate_at_line": null
-      },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
-    },
-    {
-      "platform": "PrizePicks",
       "player": "Emily Engstler",
       "display_name": "Emily Engstler",
       "team_abbr": "PDX",
@@ -4805,8 +5213,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.414,
-        "p_under": 0.486,
+        "p_over": 0.419,
+        "p_under": 0.476,
         "lean": "UNDER",
         "min_q10": 18.35,
         "min_q50": 25.71,
@@ -4903,8 +5311,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.586,
-        "p_under": 0.414,
+        "p_over": 0.585,
+        "p_under": 0.415,
         "lean": "OVER",
         "min_q10": 25.84,
         "min_q50": 33.58,
@@ -4993,8 +5401,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.515,
-        "p_under": 0.407,
+        "p_over": 0.516,
+        "p_under": 0.397,
         "lean": "OVER",
         "min_q10": 23.73,
         "min_q50": 31.08,
@@ -5091,8 +5499,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.504,
+        "p_under": 0.496,
         "lean": "OVER",
         "min_q10": 24.5,
         "min_q50": 32.73,
@@ -5165,15 +5573,15 @@
     },
     {
       "platform": "PrizePicks",
-      "player": "Kamilla Cardoso",
-      "display_name": "Kamilla Cardoso",
-      "team_abbr": "CHI",
-      "team": "Chicago Bulls",
+      "player": "Kahleah Copper",
+      "display_name": "Kahleah Copper",
+      "team_abbr": "PHX",
+      "team": "Phoenix Suns",
       "opponent_abbr": null,
       "opponent": null,
       "is_home": null,
       "market": "REB",
-      "dfs_line": 8.0,
+      "dfs_line": 3.5,
       "dfs_odds": {
         "american_over": -137.0,
         "american_under": -137.0,
@@ -5181,46 +5589,38 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.458,
-        "p_under": 0.45,
+        "p_over": 0.595,
+        "p_under": 0.405,
         "lean": "OVER",
-        "min_q10": 20.71,
-        "min_q50": 27.88,
-        "min_q90": 34.67,
-        "stat_q10": 3.11,
-        "stat_q50": 7.61,
-        "stat_q90": 14.58
+        "min_q10": 27.54,
+        "min_q50": 34.15,
+        "min_q90": 37.81,
+        "stat_q10": 0.96,
+        "stat_q50": 3.84,
+        "stat_q90": 8.13
       },
       "sharp": {
         "source": "FanDuel",
         "is_fallback": false,
-        "line": 8.5,
-        "no_vig_over": 0.4329742261011864,
-        "no_vig_under": 0.5670257738988136,
-        "american_over": 116.0,
-        "american_under": -154.0,
+        "line": 3.5,
+        "no_vig_over": 0.5510744774801295,
+        "no_vig_under": 0.44892552251987045,
+        "american_over": -144.0,
+        "american_under": 108.0,
         "lean": "OVER"
       },
       "consensus": {
-        "n_books_same_line": 0,
-        "mean_no_vig_over_same_line": null,
-        "n_books_any_line": 2,
-        "mean_no_vig_over_any_line": 0.49272055796399733,
+        "n_books_same_line": 1,
+        "mean_no_vig_over_same_line": 0.5510744774801295,
+        "n_books_any_line": 1,
+        "mean_no_vig_over_any_line": 0.5510744774801295,
         "offerings": [
           {
             "book": "FanDuel",
-            "line": 8.5,
-            "no_vig_over": 0.4329742261011864,
-            "no_vig_under": 0.5670257738988136,
-            "american_over": 116.0,
-            "american_under": -154.0
-          },
-          {
-            "book": "DraftKings",
-            "line": 7.5,
-            "no_vig_over": 0.5524668898268082,
-            "no_vig_under": 0.44753311017319164,
-            "american_over": -146.0,
+            "line": 3.5,
+            "no_vig_over": 0.5510744774801295,
+            "no_vig_under": 0.44892552251987045,
+            "american_over": -144.0,
             "american_under": 108.0
           }
         ]
@@ -5230,10 +5630,10 @@
         "game_total": null,
         "spread": null,
         "team_total_implied": null,
-        "team_pace": null,
-        "team_pace_rank": null,
-        "team_def_rating": null,
-        "team_def_rating_rank": null,
+        "team_pace": 96.5,
+        "team_pace_rank": 8.0,
+        "team_def_rating": 127.2,
+        "team_def_rating_rank": 16.0,
         "opp_pace": null,
         "opp_pace_rank": null,
         "opp_def_rating": null,
@@ -5241,8 +5641,8 @@
       },
       "form": {
         "over_l5": 0.6,
-        "over_l10": 0.5,
-        "over_l15": 0.3333333333333333
+        "over_l10": 0.6,
+        "over_l15": 0.6666666666666666
       },
       "vs_opp": {
         "n_games": 0,
@@ -5271,8 +5671,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.441,
+        "p_under": 0.559,
         "lean": "UNDER",
         "min_q10": 23.52,
         "min_q50": 29.75,
@@ -5353,6 +5753,88 @@
     },
     {
       "platform": "PrizePicks",
+      "player": "Monique Billings",
+      "display_name": "Monique Billings",
+      "team_abbr": "IND",
+      "team": "Indiana Pacers",
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "REB",
+      "dfs_line": 6.0,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": -137.0,
+        "no_vig_over": 0.5,
+        "no_vig_under": 0.5
+      },
+      "model": {
+        "p_over": 0.366,
+        "p_under": 0.537,
+        "lean": "UNDER",
+        "min_q10": 17.04,
+        "min_q50": 25.78,
+        "min_q90": 32.72,
+        "stat_q10": 1.78,
+        "stat_q50": 6.0,
+        "stat_q90": 12.34
+      },
+      "sharp": {
+        "source": "FanDuel",
+        "is_fallback": false,
+        "line": 5.5,
+        "no_vig_over": 0.5670257738988136,
+        "no_vig_under": 0.4329742261011864,
+        "american_over": -154.0,
+        "american_under": 116.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 0,
+        "mean_no_vig_over_same_line": null,
+        "n_books_any_line": 1,
+        "mean_no_vig_over_any_line": 0.5670257738988136,
+        "offerings": [
+          {
+            "book": "FanDuel",
+            "line": 5.5,
+            "no_vig_over": 0.5670257738988136,
+            "no_vig_under": 0.4329742261011864,
+            "american_over": -154.0,
+            "american_under": 116.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.2,
+        "over_l10": 0.2,
+        "over_l15": 0.26666666666666666
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "PrizePicks",
       "player": "Natasha Cloud",
       "display_name": "Natasha Cloud",
       "team_abbr": "CHI",
@@ -5369,8 +5851,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.399,
-        "p_under": 0.601,
+        "p_over": 0.402,
+        "p_under": 0.598,
         "lean": "UNDER",
         "min_q10": 23.0,
         "min_q50": 30.7,
@@ -5459,8 +5941,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.45,
-        "p_under": 0.467,
+        "p_over": 0.452,
+        "p_under": 0.466,
         "lean": "UNDER",
         "min_q10": 24.42,
         "min_q50": 31.88,
@@ -5557,8 +6039,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.356,
-        "p_under": 0.644,
+        "p_over": 0.359,
+        "p_under": 0.641,
         "lean": "UNDER",
         "min_q10": 19.45,
         "min_q50": 26.68,
@@ -5647,8 +6129,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.465,
-        "p_under": 0.372,
+        "p_over": 0.452,
+        "p_under": 0.387,
         "lean": "OVER",
         "min_q10": 25.06,
         "min_q50": 31.03,
@@ -5745,8 +6227,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.386,
-        "p_under": 0.486,
+        "p_over": 0.394,
+        "p_under": 0.482,
         "lean": "UNDER",
         "min_q10": 24.55,
         "min_q50": 31.87,
@@ -5844,7 +6326,7 @@
       },
       "model": {
         "p_over": 0.417,
-        "p_under": 0.449,
+        "p_under": 0.453,
         "lean": "UNDER",
         "min_q10": 19.39,
         "min_q50": 27.73,
@@ -5941,8 +6423,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.415,
-        "p_under": 0.489,
+        "p_over": 0.431,
+        "p_under": 0.475,
         "lean": "UNDER",
         "min_q10": 25.36,
         "min_q50": 31.97,
@@ -6039,8 +6521,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.483,
-        "p_under": 0.517,
+        "p_over": 0.487,
+        "p_under": 0.513,
         "lean": "UNDER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -6121,104 +6603,6 @@
     },
     {
       "platform": "Underdog",
-      "player": "Aliyah Boston",
-      "display_name": "Aliyah Boston",
-      "team_abbr": "IND",
-      "team": "Indiana Pacers",
-      "opponent_abbr": null,
-      "opponent": null,
-      "is_home": null,
-      "market": "REB",
-      "dfs_line": 7.5,
-      "dfs_odds": {
-        "american_over": -137.0,
-        "american_under": -137.0,
-        "no_vig_over": 0.5,
-        "no_vig_under": 0.5
-      },
-      "model": {
-        "p_over": 0.628,
-        "p_under": 0.372,
-        "lean": "OVER",
-        "min_q10": 23.14,
-        "min_q50": 29.86,
-        "min_q90": 36.17,
-        "stat_q10": 3.68,
-        "stat_q50": 8.39,
-        "stat_q90": 15.59
-      },
-      "sharp": {
-        "source": "Pinnacle",
-        "is_fallback": false,
-        "line": 8.5,
-        "no_vig_over": 0.4848997342353226,
-        "no_vig_under": 0.5151002657646775,
-        "american_over": -108.0,
-        "american_under": -123.0,
-        "lean": "OVER"
-      },
-      "consensus": {
-        "n_books_same_line": 0,
-        "mean_no_vig_over_same_line": null,
-        "n_books_any_line": 3,
-        "mean_no_vig_over_any_line": 0.4763188517464266,
-        "offerings": [
-          {
-            "book": "Pinnacle",
-            "line": 8.5,
-            "no_vig_over": 0.4848997342353226,
-            "no_vig_under": 0.5151002657646775,
-            "american_over": -108.0,
-            "american_under": -123.0
-          },
-          {
-            "book": "FanDuel",
-            "line": 8.5,
-            "no_vig_over": 0.4718423169750604,
-            "no_vig_under": 0.5281576830249397,
-            "american_over": -102.0,
-            "american_under": -130.0
-          },
-          {
-            "book": "DraftKings",
-            "line": 8.5,
-            "no_vig_over": 0.47221450402889686,
-            "no_vig_under": 0.527785495971103,
-            "american_over": -103.0,
-            "american_under": -131.0
-          }
-        ]
-      },
-      "game_context": {
-        "book_used": null,
-        "game_total": null,
-        "spread": null,
-        "team_total_implied": null,
-        "team_pace": null,
-        "team_pace_rank": null,
-        "team_def_rating": null,
-        "team_def_rating_rank": null,
-        "opp_pace": null,
-        "opp_pace_rank": null,
-        "opp_def_rating": null,
-        "opp_def_rating_rank": null
-      },
-      "form": {
-        "over_l5": 0.6,
-        "over_l10": 0.8,
-        "over_l15": 0.8
-      },
-      "vs_opp": {
-        "n_games": 0,
-        "avg_stat": null,
-        "over_rate_at_line": null
-      },
-      "is_conflict": false,
-      "sharp_aligned": true,
-      "tier": "sharp_verified"
-    },
-    {
-      "platform": "Underdog",
       "player": "Angel Reese",
       "display_name": "Angel Reese",
       "team_abbr": "ATL",
@@ -6235,8 +6619,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.471,
+        "p_under": 0.529,
         "lean": "UNDER",
         "min_q10": 25.32,
         "min_q50": 32.41,
@@ -6325,8 +6709,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.533,
-        "p_under": 0.467,
+        "p_over": 0.525,
+        "p_under": 0.475,
         "lean": "OVER",
         "min_q10": 27.67,
         "min_q50": 33.87,
@@ -6423,8 +6807,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.504,
+        "p_under": 0.496,
         "lean": "OVER",
         "min_q10": 24.5,
         "min_q50": 32.73,
@@ -6513,8 +6897,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.399,
-        "p_under": 0.601,
+        "p_over": 0.402,
+        "p_under": 0.598,
         "lean": "UNDER",
         "min_q10": 23.0,
         "min_q50": 30.7,
@@ -6603,8 +6987,8 @@
         "no_vig_under": 0.5
       },
       "model": {
-        "p_over": 0.356,
-        "p_under": 0.644,
+        "p_over": 0.359,
+        "p_under": 0.641,
         "lean": "UNDER",
         "min_q10": 19.45,
         "min_q50": 26.68,

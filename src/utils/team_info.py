@@ -68,3 +68,81 @@ team3StarsPerTeam = {
 questionablePlayers = {
 }
 
+# WNBA projected starters (separate from NBA — abbrs like MIN/ATL collide)
+projectedStartingFiveWnba = {
+    "GSV": ["Kayla Thornton", "Gabby Williams", "Veronica Burton", "Cecilia Zandalasini", "Kiah Stokes"],
+    "IND": ["Caitlin Clark", "Kelsey Mitchell", "Aliyah Boston", "Lexie Hull", "Monique Billings"],
+    "MIN": ["Courtney Williams", "Natasha Howard", "Olivia Miles", "Kayla McBride", "Nia Coffey"],
+    "NYL": ["Jonquel Jones", "Breanna Stewart", "Marine Johannes", "Pauline Astier", "Sabrina Ionescu"],
+    "POR": ["Emily Engstler", "Carla Leite", "Sarah Ashlee Barker", "Serah Williams", "Bridget Carleton"],
+    "WAS": ["Michaela Onyenwere", "Georgia Amoore", "Kiki Iriafen", "Shakira Austin", "Sonia Citron"],
+}
+
+questionablePlayersWnba = {
+}
+
+def _norm_player_name(name: str) -> str:
+    """Casefold + strip accents for lineup membership checks."""
+    import unicodedata
+
+    s = unicodedata.normalize("NFKD", str(name))
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return s.casefold().strip()
+
+
+def is_projected_starter(
+    player_name: str,
+    team_abbr: str | None = None,
+    *,
+    league: str = "nba",
+) -> bool | None:
+    """Whether ``player_name`` appears in the league's projected starting five.
+
+    Parameters
+    ----------
+    player_name:
+        Live / silver player name.
+    team_abbr:
+        Optional team abbreviation (e.g. ``\"NYK\"`` / ``\"NYL\"``). When provided
+        and that team has a non-empty projected five, only that list is checked.
+        When omitted, searches all teams for the league.
+    league:
+        ``\"nba\"`` → ``projectedStartingFive``;
+        ``\"wnba\"`` → ``projectedStartingFiveWnba``.
+
+    Returns
+    -------
+    True
+        Name is in the projected starting five.
+    False
+        Lineup data exists for the scope and name is not in it.
+    None
+        No usable projected lineup (caller should fall back to history).
+    """
+    league = (league or "nba").strip().lower()
+    table = (
+        projectedStartingFiveWnba if league == "wnba" else projectedStartingFive
+    )
+
+    target = _norm_player_name(player_name)
+    if not target:
+        return None
+
+    if team_abbr:
+        key = str(team_abbr).strip().upper()
+        starters = table.get(key) or []
+        if not starters:
+            return None
+        return any(_norm_player_name(p) == target for p in starters)
+
+    any_lineup = False
+    for starters in table.values():
+        if not starters:
+            continue
+        any_lineup = True
+        if any(_norm_player_name(p) == target for p in starters):
+            return True
+    if not any_lineup:
+        return None
+    return False
+

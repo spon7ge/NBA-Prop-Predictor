@@ -10,12 +10,28 @@ import {
   sortPlayerGroups,
 } from "@/lib/players";
 import { useEnrichedPicks } from "@/lib/queries";
+import { Dropdown } from "@/components/Dropdown";
 import { PlayerBlock } from "@/components/PlayerBlock";
 import {
   ErrorPanel,
   LoadingMessage,
   PlayersListSkeleton,
 } from "@/components/LoadingSkeleton";
+
+const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
+  { value: "wnba", label: "WNBA" },
+  { value: "nba", label: "NBA" },
+];
+
+type PlatformFilter = "ALL" | "PrizePicks" | "Underdog" | "DraftKings Pick6" | "Betr DFS";
+
+const PLATFORM_OPTIONS: { value: PlatformFilter; label: string }[] = [
+  { value: "ALL", label: "All Platforms" },
+  { value: "PrizePicks", label: "PrizePicks" },
+  { value: "Underdog", label: "Underdog" },
+  { value: "DraftKings Pick6", label: "DraftKings" },
+  { value: "Betr DFS", label: "Betr" },
+];
 
 function FilterPills<T extends string>({
   items,
@@ -57,51 +73,18 @@ function FilterPills<T extends string>({
   );
 }
 
-function LeaguePills({
-  active,
-  onSelect,
-}: {
-  active: ApiLeagueFilter;
-  onSelect: (value: ApiLeagueFilter) => void;
-}) {
-  const items: { value: ApiLeagueFilter; label: string }[] = [
-    { value: "all", label: "All" },
-    { value: "wnba", label: "WNBA" },
-    { value: "nba", label: "NBA" },
-  ];
-  return (
-    <div className="stat-filter" role="group" aria-label="Filter by league">
-      {items.map((item) => {
-        const on = active === item.value;
-        return (
-          <button
-            key={item.value}
-            type="button"
-            className={`stat-pill${on ? " active" : ""}`}
-            aria-pressed={on}
-            onClick={() => onSelect(item.value)}
-          >
-            {item.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 function getInitialLeague(): ApiLeagueFilter {
   try {
     const q = new URLSearchParams(window.location.search);
     const league = q.get("league");
-    if (league === "nba" || league === "wnba" || league === "all") return league;
+    if (league === "nba" || league === "wnba") return league;
   } catch {
     /* ignore */
   }
-  return "all";
+  return "wnba";
 }
 
 function leagueBadgeLabel(league: ApiLeagueFilter): string {
-  if (league === "all") return "NBA + WNBA";
   return league.toUpperCase();
 }
 
@@ -115,7 +98,7 @@ export function AllPlayersView() {
 
   const [search, setSearch] = useState("");
   const [activeStat, setActiveStat] = useState<string | null>(null);
-  const [activePlatform, setActivePlatform] = useState<string | null>(null);
+  const [activePlatform, setActivePlatform] = useState<PlatformFilter>("ALL");
   const [expandedPlayer, setExpandedPlayer] = useState<string | null>(null);
   const [groupSort, setGroupSort] = useState<PlayersGroupSort>("edge_desc");
   const [sortKey, setSortKey] = useState<PlayersSortKey | null>(null);
@@ -136,6 +119,23 @@ export function AllPlayersView() {
     }
   }
 
+  let filteredPicks: EnrichedPick[] = [];
+  if (allEnriched.length) {
+    filteredPicks = allEnriched.filter(
+      (p) => p.dfs_line != null && Number.isFinite(Number(p.dfs_line)),
+    );
+    filteredPicks = filterByPlatform(
+      filteredPicks,
+      activePlatform === "ALL" ? null : activePlatform,
+    );
+    filteredPicks = filterPlayerRowsByStat(filteredPicks, activeStat);
+    filteredPicks = filterPlayerRows(filteredPicks, search);
+  }
+  const players = allEnriched.length
+    ? sortPlayerGroups(aggregateEnrichedByPlayer(filteredPicks), groupSort)
+    : [];
+  const uniquePlayerCount = players.length;
+
   let panel: ReactNode;
   if (isLoading) {
     panel = (
@@ -153,80 +153,66 @@ export function AllPlayersView() {
     );
   } else if (!allEnriched.length) {
     panel = (
-      <p className="load-msg load-err">
-        No player data found. Start the backend API or ensure{" "}
-        <code>dfs_enriched_YYYYMMDD.json</code> exists under{" "}
-        <code>data/props/enriched/</code>.
+      <p className="load-msg">
+        No player props for this slate yet. Check back when games are posted, or try another
+        league.
       </p>
     );
+  } else if (!players.length) {
+    panel = <div className="players-empty-state">No players match your filters.</div>;
   } else {
-    let picks: EnrichedPick[] = allEnriched.slice();
-    // Only show books that actually priced the prop
-    picks = picks.filter(
-      (p) => p.dfs_line != null && Number.isFinite(Number(p.dfs_line)),
-    );
-    picks = filterByPlatform(picks, activePlatform);
-    picks = filterPlayerRowsByStat(picks, activeStat);
-    picks = filterPlayerRows(picks, search);
-    const players = sortPlayerGroups(aggregateEnrichedByPlayer(picks), groupSort);
-
-    if (!players.length) {
-      panel = <div className="players-empty-state">No players match your filters.</div>;
-    } else {
-      panel = (
-        <div className="players-grouped">
-          <div className="players-grouped-header">
-            <div className="players-grouped-count">
-              <b>{players.length}</b> {players.length === 1 ? "player" : "players"} ·{" "}
-              <span className="dim">{picks.length} props</span>
-              {dataSource && (
-                <span className={`data-source-badge data-source-badge--${dataSource}`}>
-                  {dataSource === "api" ? "Live API" : "Static JSON"}
-                  {` · ${leagueBadgeLabel(league)}`}
-                  {gameDate ? ` · ${gameDate}` : ""}
-                </span>
-              )}
-              {isFetching && !isLoading && (
-                <span className="data-source-badge data-source-badge--refreshing">Updating…</span>
-              )}
-            </div>
-            <div className="players-sort-bar" role="group" aria-label="Sort players">
-              <span>Sort</span>
-              {(
-                [
-                  ["edge_desc", "Best edge"],
-                  ["props_desc", "Most props"],
-                  ["name_asc", "Name"],
-                ] as const
-              ).map(([key, label]) => (
-                <button
-                  key={key}
-                  type="button"
-                  data-grp-sort={key}
-                  aria-pressed={groupSort === key}
-                  onClick={() => setGroupSort(key)}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+    panel = (
+      <div className="players-grouped">
+        <div className="players-grouped-header">
+          <div className="players-grouped-count">
+            <span className="dim">{filteredPicks.length} props</span>
+            {dataSource && (
+              <span className={`data-source-badge data-source-badge--${dataSource}`}>
+                {dataSource === "api" ? "Live API" : "Static JSON"}
+                {` · ${leagueBadgeLabel(league)}`}
+                {gameDate ? ` · ${gameDate}` : ""}
+              </span>
+            )}
+            {isFetching && !isLoading && (
+              <span className="data-source-badge data-source-badge--refreshing">Updating…</span>
+            )}
           </div>
-          {players.map((p) => (
-            <PlayerBlock
-              key={`${p.playerId ?? p.player}`}
-              player={p}
-              expanded={expandedPlayer === p.player}
-              onToggle={() =>
-                setExpandedPlayer((cur) => (cur === p.player ? null : p.player))
-              }
-              sortKey={sortKey}
-              sortDir={sortDir}
-              onSort={handleSort}
-            />
-          ))}
+          <div className="players-sort-bar" role="group" aria-label="Sort players">
+            <span>Sort</span>
+            {(
+              [
+                ["edge_desc", "Best edge"],
+                ["props_desc", "Most props"],
+                ["name_asc", "Name"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                data-grp-sort={key}
+                aria-pressed={groupSort === key}
+                onClick={() => setGroupSort(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      );
-    }
+        {players.map((p) => (
+          <PlayerBlock
+            key={`${p.playerId ?? p.player}`}
+            player={p}
+            expanded={expandedPlayer === p.player}
+            onToggle={() =>
+              setExpandedPlayer((cur) => (cur === p.player ? null : p.player))
+            }
+            sortKey={sortKey}
+            sortDir={sortDir}
+            onSort={handleSort}
+          />
+        ))}
+      </div>
+    );
   }
 
   return (
@@ -237,50 +223,56 @@ export function AllPlayersView() {
         </h2>
       </header>
       <div className="players-toolbar">
-        <div className="players-search-group">
-          <label className="player-search-label" htmlFor="playerSearch">
-            Search player
-          </label>
-          <input
-            type="search"
-            id="playerSearch"
-            className="player-search"
-            placeholder="Search by player name…"
-            autoComplete="off"
-            spellCheck={false}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            disabled={isLoading}
+        <div className="players-toolbar-row players-toolbar-row--filters">
+          <Dropdown
+            id="playersLeagueDropdown"
+            value={league}
+            options={LEAGUE_OPTIONS}
+            onChange={setLeague}
+            classPrefix="league"
+          />
+          <FilterPills
+            ariaLabel="Filter by stat"
+            active={activeStat}
+            onSelect={setActiveStat}
+            items={[
+              { value: "ALL", label: "All" },
+              { value: "PTS", label: "Pts" },
+              { value: "AST", label: "Ast" },
+              { value: "REB", label: "Reb" },
+            ]}
           />
         </div>
-        <div className="stat-filter-divider" aria-hidden="true" />
-        <LeaguePills active={league} onSelect={setLeague} />
-        <div className="stat-filter-divider" aria-hidden="true" />
-        <FilterPills
-          ariaLabel="Filter by stat"
-          active={activeStat}
-          onSelect={setActiveStat}
-          items={[
-            { value: "ALL", label: "All" },
-            { value: "PTS", label: "Pts" },
-            { value: "AST", label: "Ast" },
-            { value: "REB", label: "Reb" },
-          ]}
-        />
-        <div className="stat-filter-divider" aria-hidden="true" />
-        <FilterPills
-          id="platformFilter"
-          ariaLabel="Filter by platform"
-          active={activePlatform}
-          onSelect={setActivePlatform}
-          items={[
-            { value: "ALL", label: "All Platforms" },
-            { value: "PrizePicks", label: "PrizePicks" },
-            { value: "Underdog", label: "Underdog" },
-            { value: "DraftKings Pick6", label: "DraftKings" },
-            { value: "Betr DFS", label: "Betr" },
-          ]}
-        />
+        <div className="players-toolbar-row players-toolbar-row--search">
+          <div className="players-search-group">
+            <label className="player-search-label" htmlFor="playerSearch">
+              Search player
+            </label>
+            <input
+              type="search"
+              id="playerSearch"
+              className="player-search"
+              placeholder="Search by player name…"
+              autoComplete="off"
+              spellCheck={false}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+          <Dropdown
+            id="playersBookDropdown"
+            value={activePlatform}
+            options={PLATFORM_OPTIONS}
+            onChange={setActivePlatform}
+            classPrefix="book"
+            ariaLabel="Book"
+          />
+          <p className="players-count" aria-live="polite">
+            Count:{" "}
+            <b>{isLoading ? "—" : uniquePlayerCount}</b>
+          </p>
+        </div>
       </div>
       <div id="playersPanel">{panel}</div>
     </section>

@@ -2,14 +2,13 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { ApiLeagueFilter } from "@/types/api";
 import type { Book, LegCount } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
-import { hasAnySlates, mapRowN, slateJsonFilename } from "@/lib/slate";
+import { hasAnySlates, mapRowN } from "@/lib/slate";
 import { useLiveSlates } from "@/lib/queries";
 import { Dropdown } from "@/components/Dropdown";
 import { LoadingMessage } from "@/components/LoadingSkeleton";
 import { ParlayCard } from "@/components/ParlayCard";
 
 const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
-  { value: "all", label: "All" },
   { value: "wnba", label: "WNBA" },
   { value: "nba", label: "NBA" },
 ];
@@ -18,7 +17,7 @@ function getInitialLeague(): ApiLeagueFilter {
   try {
     const q = new URLSearchParams(window.location.search);
     const league = q.get("league");
-    if (league === "nba" || league === "wnba" || league === "all") return league;
+    if (league === "nba" || league === "wnba") return league;
   } catch {
     /* ignore */
   }
@@ -41,16 +40,18 @@ export function TopLegsView() {
   const legOptions = SLATE_LEG_COUNTS.map((legs) => ({ value: legs, label: LEG_LABELS[legs] }));
 
   const slates = data?.slates ?? null;
-  const source = data?.source;
+
+  const emptyHint = (
+    <p className="load-msg">
+      No parlays for this slate yet. Try another book, league, or leg count.
+    </p>
+  );
 
   let content: ReactNode;
   if (isError) {
     content = (
       <p className="load-msg load-err">
-        {error instanceof Error ? error.message : "Failed to load slates."}{" "}
-        Serve the site over HTTP and place slate files under{" "}
-        <code>data/props/ev_analysis/</code>, or run{" "}
-        <code>scripts/run_live_slates.py</code>.
+        {error instanceof Error ? error.message : "Couldn't load parlays. Try again later."}
       </p>
     );
   } else if (isLoading || !slates) {
@@ -67,35 +68,13 @@ export function TopLegsView() {
       </>
     );
   } else if (!hasAnySlates(slates)) {
-    content = (
-      <p className="load-msg load-err">
-        No parlays available yet. Run <code>scripts/run_live_slates.py</code> or
-        place slate JSON under <code>data/props/ev_analysis/</code>.
-      </p>
-    );
+    content = emptyHint;
   } else if (SLATE_LEG_COUNTS.indexOf(activeLegs) === -1) {
-    content = (
-      <p className="load-msg">
-        No {LEG_LABELS[activeLegs]} slate is available yet. Export JSON for this leg count into{" "}
-        <code>data/props/ev_analysis/</code>.
-      </p>
-    );
+    content = emptyHint;
   } else {
     const sorted = slates[activeLegs][activeBook] ?? [];
     if (!sorted.length) {
-      content = (
-        <p className="load-msg">
-          No parlays in the {BOOK_LABELS[activeBook]} slate
-          {source === "static" ? (
-            <>
-              . Export <code>{slateJsonFilename(activeBook, activeLegs)}</code> into{" "}
-              <code>data/props/ev_analysis/</code>.
-            </>
-          ) : (
-            <> for this run.</>
-          )}
-        </p>
-      );
+      content = emptyHint;
     } else {
       content = sorted.map((row, i) => (
         <ParlayCard key={i} parlay={mapRowN(row, activeLegs)} rank={i + 1} nLegs={activeLegs} />

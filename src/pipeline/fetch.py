@@ -9,6 +9,11 @@ Examples::
     from src.pipeline.fetch import GameLogs
     GameLogs("2025-26", season_type="Regular Season", league="nba").fetch()
     GameLogs("2025", season_type="Playoffs", league="wnba").fetch()
+
+CLI::
+
+    python -m src.pipeline.fetch --league nba --season 2025-26
+    python -m src.pipeline.fetch --league wnba --season 2026 --sequential
 """
 
 from __future__ import annotations
@@ -461,3 +466,57 @@ class NBAGameLogs(GameLogs):
 class WNBAGameLogs(GameLogs):
     def __init__(self, season: str, season_type: str = 'Regular Season'):
         super().__init__(season, season_type, league='wnba')
+
+
+def _parse_cli_args(argv: list[str] | None = None):
+    import argparse
+
+    p = argparse.ArgumentParser(
+        description="Fetch game-log endpoints → raw.* (NBA/WNBA)",
+    )
+    p.add_argument("--league", choices=("nba", "wnba"), default="nba")
+    p.add_argument("--season", default=None)
+    p.add_argument(
+        "--season-type",
+        default="Regular Season",
+        help='e.g. "Regular Season" or "Playoffs"',
+    )
+    p.add_argument(
+        "--datasets",
+        nargs="+",
+        choices=list(RAW_DATASETS),
+        default=None,
+        help="Endpoints to fetch (default: all five)",
+    )
+    p.add_argument("--sequential", action="store_true")
+    p.add_argument("--no-db-upsert", action="store_true")
+    p.add_argument("--checkpoint", default=None)
+    p.add_argument("--batch-size", type=int, default=100)
+    p.add_argument("--start-position-delay", type=float, default=0.3)
+    p.add_argument("--start-position-workers", type=int, default=8)
+    p.add_argument("--one-batch", action="store_true")
+    return p.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI: ``python -m src.pipeline.fetch --league nba --season 2025-26``."""
+    args = _parse_cli_args(argv)
+    season = args.season or LEAGUES[args.league].default_season
+    logs = GameLogs(season=season, season_type=args.season_type, league=args.league)
+    logs.fetch(
+        datasets=args.datasets,
+        parallel=not args.sequential,
+        db_upsert=not args.no_db_upsert,
+        checkpoint_path=args.checkpoint,
+        batch_size=args.batch_size,
+        start_position_delay=args.start_position_delay,
+        start_position_workers=args.start_position_workers,
+        run_all_batches=not args.one_batch,
+    )
+    for name, df in logs.data.items():
+        print(f"  {name}: {df.shape}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

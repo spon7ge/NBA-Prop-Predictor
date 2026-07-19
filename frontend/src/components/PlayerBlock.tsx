@@ -96,7 +96,7 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
           <thead>
             <tr>
               <SortTh sortKey="platform" label="Book" activeKey={sortKey} sortDir={sortDir} onSort={onSort} />
-              <SortTh sortKey="mkt" label="Mkt" activeKey={sortKey} sortDir={sortDir} onSort={onSort} />
+              <SortTh sortKey="mkt" label="Market" activeKey={sortKey} sortDir={sortDir} onSort={onSort} />
               <SortTh sortKey="line" label="Line" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
               <th className="num">Edge</th>
               <SortTh sortKey="modelProb" label="Model" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
@@ -244,7 +244,8 @@ export function PlayerBlock({
           <span className="player-row-stat">
             <b>{totalProps}</b> {totalProps === 1 ? "prop" : "props"} ·{" "}
             <span className="dim">
-              {nMarkets} mkt · {nPlatforms} bk
+              {nMarkets} {nMarkets === 1 ? "market" : "markets"} ·{" "}
+              {nPlatforms} {nPlatforms === 1 ? "book" : "books"}
             </span>
           </span>
           <span className="player-row-best">

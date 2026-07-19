@@ -926,12 +926,41 @@ body.faq-page-body .slate-header {
 
 .players-toolbar {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.players-toolbar-row {
+  display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px 14px;
 }
+.players-toolbar-row--filters {
+  align-items: center;
+}
+.players-toolbar-row--search {
+  align-items: center;
+}
+.players-toolbar-row--search .book-filter {
+  flex: 0 1 auto;
+}
+.players-toolbar-row--search .book-dropdown {
+  min-width: 160px;
+}
+.players-count {
+  margin: 0 0 0 auto;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  color: #8e8e86;
+  white-space: nowrap;
+  align-self: center;
+}
+.players-count b {
+  color: #e8e8e4;
+  font-weight: 600;
+}
 .players-search-group {
-  flex: 1 1 auto;
+  flex: 1 1 200px;
   min-width: 0;
   max-width: 320px;
 }
@@ -1705,6 +1734,7 @@ button,
   .players-search-group {
     max-width: none;
     width: 100%;
+    flex: 1 1 100%;
   }
   .player-search {
     max-width: none;
@@ -1716,9 +1746,16 @@ button,
     padding: 10px 14px;
     font-size: 15px;
   }
-  .players-toolbar {
+  .players-toolbar-row {
     flex-direction: column;
     align-items: stretch;
+  }
+  .players-toolbar-row--filters .league-filter {
+    width: 100%;
+  }
+  .players-toolbar-row--search .players-count {
+    margin-left: 0;
+    align-self: flex-end;
   }
   .stat-filter {
     width: 100%;

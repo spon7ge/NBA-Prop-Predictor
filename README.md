@@ -49,7 +49,7 @@ flowchart TB
   end
 
   subgraph ingest [1 — Ingest Airflow]
-    FR[fetch_raw.py]
+    FR[src.pipeline.fetch]
     PF[PropFinder.py]
   end
 
@@ -59,7 +59,7 @@ flowchart TB
   end
 
   subgraph silver_py [3 — Silver]
-    SIL[fetch_raw --silver-only]
+    SIL[src.pipeline.clean]
     SGL[silver.*_player_gamelogs]
   end
 
@@ -101,13 +101,13 @@ flowchart TB
   API --> FE
 ```
 
-**Daily Airflow path (automated):** ingest → silver → live props → live slates.
+**Airflow (automated):** midnight `fetch` → `clean`; daytime (8am / 12pm / 3pm PT) PropFinder ∥ starters → live props → live slates.
 
 **Batch path (manual):** dbt gold/features → train → `ml.predictions` (historical / research slate).
 
-![Pipeline overview](docs/screenshots/architecture-pipeline.svg)
+![Pipeline overview](assets/screenshots/architecture-pipeline.svg)
 
-> Static diagram above (also editable as SVG). Optional: redraw in [Excalidraw](https://excalidraw.com/) or draw.io and export PNG into `docs/screenshots/architecture-pipeline.png`.
+> Static diagram above (also editable as SVG). Optional: redraw in [Excalidraw](https://excalidraw.com/) or draw.io and export PNG into `assets/screenshots/architecture-pipeline.png`.
 
 ### Medallion layers
 
@@ -191,11 +191,11 @@ Local Docker Postgres uses the **same schemas and migrations** as Supabase — s
 
 | Choice | Rationale |
 |--------|-----------|
-| **Airflow** | Explicit DAG: ingest → silver → live props → live slates; retries, 3× daily schedule, task logs |
+| **Airflow** | Two DAGs: midnight stats (`fetch`/`clean`); daytime odds + live ML (PropFinder → props → slates) |
 | **Not cron alone** | Dependencies, partial failures, and mixed runtimes (Playwright PropFinder, nba-api, XGBoost) need stateful orchestration |
 | **Not Prefect / Dagster** | Airflow remains the industry default on data-eng resumes; DAG mirrors CLI scripts 1:1 |
 
-See [`airflow/README.md`](airflow/README.md) — DAG id `hoopvista_daily_pipeline`.
+See [`airflow/README.md`](airflow/README.md) — `hoopvista_daily_stats` + `hoopvista_live_odds`.
 
 ### dbt medallion layering
 
@@ -245,16 +245,16 @@ dbt **unions** DFS + US in bronze props; live ML reads the latest Odds pull via 
 
 ## Screenshots
 
-> Capture PNGs under [`docs/screenshots/`](docs/screenshots/) — see that folder's README for steps. SVG placeholders ship until you replace them.
+> Capture PNGs under [`assets/screenshots/`](assets/screenshots/) — see that folder's README for steps. SVG placeholders ship until you replace them.
 
 | Pipeline | Dashboard |
 |----------|-----------|
-| ![Airflow DAG](docs/screenshots/airflow-dag-success.svg) | ![All Players](docs/screenshots/dashboard-all-players.svg) |
+| ![Airflow DAG](assets/screenshots/airflow-dag-success.svg) | ![All Players](assets/screenshots/dashboard-all-players.svg) |
 | *Airflow: ingest → silver → live_props → live_slates* | *All Players — model lean + form* |
 
 | Top Legs | dbt / API |
 |----------|-----------|
-| ![Top Legs](docs/screenshots/dashboard-top-legs.svg) | ![dbt lineage](docs/screenshots/dbt-lineage.svg) |
+| ![Top Legs](assets/screenshots/dashboard-top-legs.svg) | ![dbt lineage](assets/screenshots/dbt-lineage.svg) |
 | *Greedy parlays by book × legs × league* | *Lineage for gold / ml.features* |
 
 ---
@@ -352,8 +352,8 @@ docker compose up -d
 ```
 
 - UI: **http://localhost:8080** — login `airflow` / `airflow`
-- Unpause `hoopvista_daily_pipeline`
-- Tasks: `ingest_apis` → `build_silver` → `live_ml.live_props` → `live_ml.live_slates`
+- Unpause `hoopvista_daily_stats` (midnight fetch/clean) and `hoopvista_live_odds` (8am/12pm/3pm odds + starters + live ML)
+- Pause/delete legacy `hoopvista_daily_pipeline` if it still shows in the UI
 
 ---
 
@@ -368,14 +368,16 @@ NBA-Prop-Predictor/
 ├── docker/                  # API / ETL Dockerfiles
 ├── db/migrations/           # Postgres schemas (incl. 016 live props, 017 live slates)
 ├── scripts/
-│   ├── fetch_raw.py         # NBA/WNBA raw + silver
 │   ├── PropFinder.py        # Odds → raw.*_props_*
 │   ├── run_live_props.py    # → ml.*_live_prop_predictions
 │   ├── run_live_slates.py   # → ml.*_live_slates
 │   └── train_model.py / generate_predictions.py
 ├── src/
-│   ├── live_pipeline/       # League-split min / ppm / rpm / apm
-│   ├── pipeline/            # predict.py, build_slates.py, features
+│   ├── pipeline/
+│   │   ├── fetch.py         # raw.* game logs (CLI: python -m src.pipeline.fetch)
+│   │   ├── clean.py         # silver.* merge (CLI: python -m src.pipeline.clean)
+│   │   ├── predict.py / build_slates.py / features
+│   ├── live_pipeline/       # common + nba/ + wnba/ (apm/ppm/rpm; min in common)
 │   ├── scrapers/            # Odds + site scrapers
 │   └── models/saved_models/ # .joblib quantile bundles
 └── docker-compose.yml       # postgres + api + etl profiles
@@ -387,13 +389,12 @@ NBA-Prop-Predictor/
 
 | Doc | Contents |
 |-----|----------|
-| [docs/workflow.md](docs/workflow.md) | Daily write/read paths |
 | [docker/README.md](docker/README.md) | Compose profiles, ETL commands |
-| [airflow/README.md](airflow/README.md) | DAG structure, env vars, live ML tasks |
+| [airflow/README.md](airflow/README.md) | DAG schedules, writes, env vars |
 | [dbt/README.md](dbt/README.md) | Model catalog |
-| [backend/README.md](backend/README.md) | API endpoint reference |
+| [backend/README.md](backend/README.md) | API read path + endpoint reference |
 | [frontend/README.md](frontend/README.md) | Dashboard setup |
-| [docs/screenshots/README.md](docs/screenshots/README.md) | How to capture README images |
+| [assets/screenshots/README.md](assets/screenshots/README.md) | How to capture README images |
 
 ---
 
