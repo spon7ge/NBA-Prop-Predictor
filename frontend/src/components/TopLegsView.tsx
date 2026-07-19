@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { ApiLeagueFilter } from "@/types/api";
 import type { Book, LegCount } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
@@ -13,33 +13,33 @@ const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
   { value: "nba", label: "NBA" },
 ];
 
-function getInitialLeague(): ApiLeagueFilter {
-  try {
-    const q = new URLSearchParams(window.location.search);
-    const league = q.get("league");
-    if (league === "nba" || league === "wnba") return league;
-  } catch {
-    /* ignore */
-  }
-  return "wnba";
+/** Format pipeline `run_at`, e.g. "Jul 18, 3:15 PM". */
+function formatFetchAt(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
-export function TopLegsView() {
-  const [league, setLeague] = useState<ApiLeagueFilter>(getInitialLeague);
+interface TopLegsViewProps {
+  league: ApiLeagueFilter;
+  onLeagueChange: (league: ApiLeagueFilter) => void;
+}
+
+export function TopLegsView({ league, onLeagueChange }: TopLegsViewProps) {
   const { data, isLoading, isError, error } = useLiveSlates(league);
   const [activeBook, setActiveBook] = useState<Book>("prizepicks");
   const [activeLegs, setActiveLegs] = useState<LegCount>(2);
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("league", league);
-    window.history.replaceState(null, "", url);
-  }, [league]);
 
   const bookOptions = BOOKS.map((book) => ({ value: book, label: BOOK_LABELS[book] }));
   const legOptions = SLATE_LEG_COUNTS.map((legs) => ({ value: legs, label: LEG_LABELS[legs] }));
 
   const slates = data?.slates ?? null;
+  const runAt = data?.runAt ?? null;
 
   const emptyHint = (
     <p className="load-msg">
@@ -87,6 +87,16 @@ export function TopLegsView() {
       <header className="view-section-head view-section-head--pairs">
         <h2 className="view-section-title" id="headingPairs">
           Top Legs
+          {runAt && (
+            <time
+              className="view-section-fetched"
+              dateTime={runAt}
+              title="When this slate was last built"
+            >
+              {" "}
+              – {formatFetchAt(runAt)}
+            </time>
+          )}
         </h2>
       </header>
       <div className="toolbar book-toolbar">
@@ -103,7 +113,7 @@ export function TopLegsView() {
           label="League"
           value={league}
           options={LEAGUE_OPTIONS}
-          onChange={setLeague}
+          onChange={onLeagueChange}
           classPrefix="league"
         />
         <Dropdown

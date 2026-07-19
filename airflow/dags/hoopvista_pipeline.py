@@ -2,7 +2,7 @@
 HoopVista Airflow DAGs.
 
 1. ``hoopvista_daily_stats`` — midnight local
-   NBA/WNBA ``fetch`` → ``clean`` (raw + silver for finished games)
+   NBA/WNBA ``fetch`` → ``clean`` → ``grade_live_props`` (raw + silver + grades)
 
 2. ``hoopvista_live_odds`` — 8:00, 12:00, 15:00 local
    PropFinder ∥ RotoWire starters → live props → live slates
@@ -69,12 +69,12 @@ def _cmd(*parts: str) -> str:
 
 with DAG(
     dag_id="hoopvista_daily_stats",
-    description="Midnight fetch + silver (NBA/WNBA finished games)",
+    description="Midnight fetch + silver + grade live props (NBA/WNBA)",
     schedule="0 0 * * *",
     start_date=START,
     catchup=False,
     max_active_runs=1,
-    tags=["hoopvista", "nba", "wnba", "fetch", "silver"],
+    tags=["hoopvista", "nba", "wnba", "fetch", "silver", "grades"],
     default_args=default_args,
 ) as daily_stats:
     start = EmptyOperator(task_id="start")
@@ -134,7 +134,24 @@ with DAG(
             ),
         )
 
-    start >> fetch_raw >> build_silver >> end
+    with TaskGroup(
+        group_id="grade_live_props",
+        tooltip="Score last night's live props vs silver box scores",
+    ) as grade_live_props:
+        for league in LIVE_LEAGUES:
+            BashOperator(
+                task_id=league,
+                bash_command=_cmd(
+                    "python",
+                    "scripts/grade_live_props.py",
+                    "--league",
+                    league,
+                    "--lookback-days",
+                    "3",
+                ),
+            )
+
+    start >> fetch_raw >> build_silver >> grade_live_props >> end
 
 
 # ── Daytime: odds → live predictions ─────────────────────────────────────────

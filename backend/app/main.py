@@ -9,6 +9,7 @@ from app.api.routes import (
     live_props,
     live_slates,
     matchups,
+    performance,
     players,
     predictions,
     props,
@@ -42,6 +43,7 @@ app.include_router(games.router, prefix="/api")
 # ── Additional DB-backed routes ────────────────────────────────────────────
 app.include_router(live_props.router, prefix="/api")
 app.include_router(live_slates.router, prefix="/api")
+app.include_router(performance.router, prefix="/api")
 app.include_router(accuracy.router, prefix="/api")
 app.include_router(props.router, prefix="/api")
 app.include_router(features.router, prefix="/api")

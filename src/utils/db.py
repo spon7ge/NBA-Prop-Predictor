@@ -100,6 +100,9 @@ _RAW_CONFLICT_COLS: dict[str, list[str]] = {
     # live multi-leg parlays (per-league tables)
     "nba_live_slates":  ["run_at", "game_date", "bookmaker", "n_legs"],
     "wnba_live_slates": ["run_at", "game_date", "bookmaker", "n_legs"],
+    # graded live props (per-league tables)
+    "nba_live_prop_grades":  ["run_at", "game_date", "player_name", "market", "bookmaker"],
+    "wnba_live_prop_grades": ["run_at", "game_date", "player_name", "market", "bookmaker"],
 }
 
 
@@ -496,6 +499,33 @@ def upsert_live_prop_predictions(
     if league not in ("nba", "wnba"):
         raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
     table = f"{league}_live_prop_predictions"
+    upload = _align_df_to_table(df, schema="ml", table=table)
+    upsert_df(
+        table,
+        upload,
+        schema="ml",
+        conflict_cols=["run_at", "game_date", "player_name", "market", "bookmaker"],
+        batch_size=batch_size,
+        lineage_col=None,
+    )
+
+
+def upsert_live_prop_grades(
+    df: pd.DataFrame,
+    *,
+    league: str,
+    batch_size: int = 500,
+) -> None:
+    """Upsert graded live props into ``ml.{league}_live_prop_grades``.
+
+    Run ``db/migrations/018_ml_live_prop_grades.sql`` before the first call.
+    Conflict key: (run_at, game_date, player_name, market, bookmaker).
+    """
+    if league not in ("nba", "wnba"):
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+    if df.empty:
+        return
+    table = f"{league}_live_prop_grades"
     upload = _align_df_to_table(df, schema="ml", table=table)
     upsert_df(
         table,

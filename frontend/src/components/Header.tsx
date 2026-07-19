@@ -27,6 +27,14 @@ export function Header({ activeView, onViewChange }: HeaderProps) {
           <button
             type="button"
             className="header-link"
+            aria-current={activeView === "results" ? "page" : undefined}
+            onClick={() => onViewChange("results")}
+          >
+            Results
+          </button>
+          <button
+            type="button"
+            className="header-link"
             aria-current={activeView === "pairs" ? "page" : undefined}
             onClick={() => onViewChange("pairs")}
           >

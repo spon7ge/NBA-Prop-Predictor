@@ -1,6 +1,6 @@
 export type Book = "prizepicks" | "underdog" | "draftkings" | "betr";
 export type LegCount = 2 | 3 | 5 | 6;
-export type View = "pairs" | "players";
+export type View = "pairs" | "players" | "results";
 export type Tier = "sharp_verified" | "conflict" | "no_model" | string;
 export type PlayersGroupSort = "edge_desc" | "props_desc" | "verified_desc" | "name_asc";
 

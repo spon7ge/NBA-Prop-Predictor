@@ -22,4 +22,6 @@ export const queryKeys = {
     ["enrichedPicks", league, date] as const,
   liveSlates: (league: string, date: string) =>
     ["liveSlates", league, date] as const,
+  performance: (league: string, days: number, book: string, legs: string) =>
+    ["performance", league, days, book, legs] as const,
 };

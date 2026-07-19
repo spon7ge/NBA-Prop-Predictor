@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { ApiLeagueFilter } from "@/types/api";
 import type { EnrichedPick, PlayersGroupSort } from "@/types/slate";
 import type { PlayersSortKey } from "@/lib/constants";
@@ -73,23 +73,16 @@ function FilterPills<T extends string>({
   );
 }
 
-function getInitialLeague(): ApiLeagueFilter {
-  try {
-    const q = new URLSearchParams(window.location.search);
-    const league = q.get("league");
-    if (league === "nba" || league === "wnba") return league;
-  } catch {
-    /* ignore */
-  }
-  return "wnba";
-}
-
 function leagueBadgeLabel(league: ApiLeagueFilter): string {
   return league.toUpperCase();
 }
 
-export function AllPlayersView() {
-  const [league, setLeague] = useState<ApiLeagueFilter>(getInitialLeague);
+interface AllPlayersViewProps {
+  league: ApiLeagueFilter;
+  onLeagueChange: (league: ApiLeagueFilter) => void;
+}
+
+export function AllPlayersView({ league, onLeagueChange }: AllPlayersViewProps) {
   const { data, isLoading, isError, error, refetch, isFetching } =
     useEnrichedPicks(league);
   const allEnriched = data?.picks ?? [];
@@ -103,12 +96,6 @@ export function AllPlayersView() {
   const [groupSort, setGroupSort] = useState<PlayersGroupSort>("edge_desc");
   const [sortKey, setSortKey] = useState<PlayersSortKey | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("league", league);
-    window.history.replaceState(null, "", url);
-  }, [league]);
 
   function handleSort(key: PlayersSortKey) {
     if (sortKey === key) {
@@ -228,7 +215,7 @@ export function AllPlayersView() {
             id="playersLeagueDropdown"
             value={league}
             options={LEAGUE_OPTIONS}
-            onChange={setLeague}
+            onChange={onLeagueChange}
             classPrefix="league"
           />
           <FilterPills

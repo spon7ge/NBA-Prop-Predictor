@@ -3,6 +3,7 @@ import { fetchEnrichedPicks as fetchStaticEnrichedPicks } from "@/lib/api";
 import {
   fetchLiveProps,
   fetchLiveSlates,
+  fetchPerformance,
   fetchPlayerProfile,
   isApiAvailable,
   todayIso,
@@ -38,6 +39,8 @@ interface LiveSlatesResult {
   gameDate: string | null;
   league: ApiLeagueFilter;
   count: number;
+  /** Pipeline write time for this slate run (ISO), if from API. */
+  runAt: string | null;
 }
 
 function emptySlatesState(): SlatesState {
@@ -144,6 +147,7 @@ async function loadLiveSlatesForLeague(
     gameDate: live.game_date,
     league,
     count: live.count,
+    runAt: live.run_at ?? null,
   };
 }
 
@@ -177,12 +181,20 @@ async function loadLiveSlates(
           for (let i = 1; i < parts.length; i += 1) {
             slates = mergeSlatesState(slates, parts[i].slates);
           }
+          const runAts = parts
+            .map((p) => p.runAt)
+            .filter((t): t is string => Boolean(t));
+          const runAt =
+            runAts.length > 0
+              ? runAts.reduce((a, b) => (a > b ? a : b))
+              : null;
           return {
             slates,
             source: "api",
             gameDate: parts[0].gameDate,
             league: "all",
             count: parts.reduce((s, p) => s + p.count, 0),
+            runAt,
           };
         }
       } else {
@@ -201,6 +213,7 @@ async function loadLiveSlates(
     gameDate: null,
     league,
     count: 0,
+    runAt: null,
   };
 }
 
@@ -228,5 +241,30 @@ export function usePlayerProfile(playerId: number | undefined, enabled: boolean)
     queryKey: queryKeys.player(playerId ?? 0),
     queryFn: () => fetchPlayerProfile(playerId!, 10),
     enabled: enabled && playerId != null && playerId > 0,
+  });
+}
+
+export type ResultsLegsFilter = "all" | "singles" | "2" | "3" | "5" | "6";
+
+export function usePerformance(
+  league: ApiLeagueFilter = "wnba",
+  days = 7,
+  book: string | "all" = "all",
+  legs: ResultsLegsFilter = "all",
+) {
+  const bookKey = book === "all" ? "all" : book;
+  return useQuery({
+    queryKey: queryKeys.performance(league, days, bookKey, legs),
+    queryFn: async () => {
+      const apiUp = await isApiAvailable();
+      if (!apiUp) throw new Error("API unavailable");
+      const lg: ApiLeague = league === "nba" ? "nba" : "wnba";
+      return fetchPerformance(
+        lg,
+        days,
+        book === "all" ? null : book,
+        legs === "all" ? null : legs,
+      );
+    },
   });
 }

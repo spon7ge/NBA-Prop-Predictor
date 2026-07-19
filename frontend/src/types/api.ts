@@ -116,6 +116,86 @@ export type ApiLeague = "nba" | "wnba";
 /** All Players league filter — ``all`` merges both live-props feeds. */
 export type ApiLeagueFilter = ApiLeague | "all";
 
+export interface ApiHitRateBucket {
+  key: string;
+  hits: number;
+  n: number;
+  hit_rate: number | null;
+  dnps: number;
+}
+
+export interface ApiDailyHitRate {
+  game_date: string;
+  hits: number;
+  n: number;
+  hit_rate: number | null;
+}
+
+export interface ApiGradedPick {
+  game_date: string;
+  player_name: string;
+  team_abbr?: string | null;
+  market: string;
+  bookmaker: string;
+  line?: number | null;
+  side: string;
+  stat_q50?: number | null;
+  p_over?: number | null;
+  actual_stat?: number | null;
+  hit: boolean;
+  miss_reason: string;
+  abs_error?: number | null;
+}
+
+export interface ApiGradedLeg {
+  player_name: string;
+  team_abbr?: string | null;
+  market: string;
+  line?: number | null;
+  side: string;
+  actual_stat?: number | null;
+  hit: boolean | null;
+  miss_reason?: string | null;
+}
+
+export interface ApiGradedParlay {
+  game_date: string;
+  bookmaker: string;
+  n_legs: number;
+  legs_hit: number;
+  legs_scored: number;
+  legs_pending: number;
+  cashed: boolean | null;
+  parlay_prob?: number | null;
+  ev?: number | null;
+  legs: ApiGradedLeg[];
+}
+
+export interface ApiParlaySummary {
+  cashed: number;
+  decided: number;
+  cash_rate: number | null;
+  legs_hit: number;
+  legs_scored: number;
+  leg_hit_rate: number | null;
+}
+
+export interface ApiPerformanceResponse {
+  generated_at: string;
+  league: string;
+  days: number;
+  last_night: ApiHitRateBucket;
+  last_n_days: ApiHitRateBucket;
+  by_market: ApiHitRateBucket[];
+  by_book: ApiHitRateBucket[];
+  by_side: ApiHitRateBucket[];
+  trend: ApiDailyHitRate[];
+  brier_score: number | null;
+  recent_picks: ApiGradedPick[];
+  parlay_summary: ApiParlaySummary;
+  graded_parlays: ApiGradedParlay[];
+}
+
 export interface ApiLivePropModel {
   p_over?: number | null;
   p_under?: number | null;

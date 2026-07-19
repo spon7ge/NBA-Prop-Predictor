@@ -4,6 +4,7 @@ import type {
   ApiLeague,
   ApiLivePropsResponse,
   ApiLiveSlatesResponse,
+  ApiPerformanceResponse,
   ApiPlayerProfile,
 } from "@/types/api";
 
@@ -63,6 +64,18 @@ export async function fetchLiveSlates(
   const d = date ?? todayIso();
   const qs = new URLSearchParams({ league, date: d });
   return apiFetch<ApiLiveSlatesResponse>(`/live-slates?${qs.toString()}`);
+}
+
+export async function fetchPerformance(
+  league: ApiLeague,
+  days = 7,
+  book?: string | null,
+  legs?: string | null,
+): Promise<ApiPerformanceResponse> {
+  const qs = new URLSearchParams({ league, days: String(days) });
+  if (book) qs.set("book", book);
+  if (legs && legs !== "all") qs.set("legs", legs);
+  return apiFetch<ApiPerformanceResponse>(`/performance?${qs.toString()}`);
 }
 
 export async function fetchPlayerProfile(
