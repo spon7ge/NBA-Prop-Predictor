@@ -7,9 +7,17 @@ import type {
 } from "@/types/api";
 import type { Book } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
+import {
+  buildBankrollSeries,
+  computeLegsRoi,
+  formatRoiPct,
+  formatUsd,
+} from "@/lib/legsRoi";
 import { usePerformance, type ResultsLegsFilter } from "@/lib/queries";
+import { BankrollCurve } from "@/components/BankrollCurve";
 import { Dropdown } from "@/components/Dropdown";
 import { LoadingMessage } from "@/components/LoadingSkeleton";
+import { TicketStripList } from "@/components/TicketStrip";
 
 const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
   { value: "wnba", label: "WNBA" },
@@ -120,6 +128,8 @@ interface ResultsViewProps {
 export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
   const [activeBook, setActiveBook] = useState<Book | "all">("all");
   const [activeLegs, setActiveLegs] = useState<ResultsLegsFilter>("all");
+  const [bankroll, setBankroll] = useState(1000);
+  const [stakePerTicket, setStakePerTicket] = useState(10);
   const { data, isLoading, isError, error } = usePerformance(
     league,
     7,
@@ -135,6 +145,7 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
   const showParlays = activeLegs !== "singles";
   const showSingles = activeLegs === "all" || activeLegs === "singles";
   const isParlayMode = ["2", "3", "5", "6"].includes(activeLegs);
+  const showRoi = showParlays;
 
   let content: ReactNode;
   if (isError) {
@@ -165,11 +176,18 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
       ["PTS", "REB", "AST"].includes(m.key),
     );
     const picks = data.recent_picks.slice(0, 24);
-    const parlays = (data.graded_parlays ?? []).slice(0, 16);
+    const allParlays = data.graded_parlays ?? [];
+    const parlays = allParlays.slice(0, 16);
     const bookTitle =
       activeBook === "all" ? "All Books" : BOOK_LABELS[activeBook];
     const legsTitle = legsFilterLabel(activeLegs);
     const legsLine = showParlays ? parlayHeadline(data.parlay_summary) : null;
+    const roi = showRoi
+      ? computeLegsRoi(allParlays, bankroll, stakePerTicket)
+      : null;
+    const bankrollPoints = showRoi
+      ? buildBankrollSeries(allParlays, bankroll, stakePerTicket)
+      : [];
 
     content = (
       <>
@@ -203,6 +221,96 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
         </p>
         {legsLine && <p className="results-subhead">{legsLine}</p>}
 
+        {showRoi && roi && (
+          <div className="results-roi" aria-label="Legs ROI calculator">
+            <div className="results-roi-inputs">
+              <label className="results-roi-field">
+                <span className="results-roi-label">Bankroll</span>
+                <span className="results-roi-input-wrap">
+                  <span className="results-roi-prefix" aria-hidden="true">
+                    $
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={10}
+                    inputMode="decimal"
+                    className="results-roi-input"
+                    value={Number.isFinite(bankroll) ? bankroll : 0}
+                    onChange={(e) => setBankroll(Number(e.target.value) || 0)}
+                  />
+                </span>
+              </label>
+              <label className="results-roi-field">
+                <span className="results-roi-label">Stake / ticket</span>
+                <span className="results-roi-input-wrap">
+                  <span className="results-roi-prefix" aria-hidden="true">
+                    $
+                  </span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    inputMode="decimal"
+                    className="results-roi-input"
+                    value={Number.isFinite(stakePerTicket) ? stakePerTicket : 0}
+                    onChange={(e) =>
+                      setStakePerTicket(Number(e.target.value) || 0)
+                    }
+                  />
+                </span>
+              </label>
+            </div>
+            <div className="results-roi-stats">
+              <div className="results-roi-stat">
+                <span className="results-roi-stat-label">ROI</span>
+                <span
+                  className={`results-roi-stat-value${
+                    roi.roi != null && roi.roi > 0
+                      ? " results-roi-stat-value--pos"
+                      : roi.roi != null && roi.roi < 0
+                        ? " results-roi-stat-value--neg"
+                        : ""
+                  }`}
+                >
+                  {formatRoiPct(roi.roi)}
+                </span>
+              </div>
+              <div className="results-roi-stat">
+                <span className="results-roi-stat-label">P/L</span>
+                <span
+                  className={`results-roi-stat-value${
+                    roi.profit > 0
+                      ? " results-roi-stat-value--pos"
+                      : roi.profit < 0
+                        ? " results-roi-stat-value--neg"
+                        : ""
+                  }`}
+                >
+                  {formatUsd(roi.profit)}
+                </span>
+              </div>
+              <div className="results-roi-stat">
+                <span className="results-roi-stat-label">Ending</span>
+                <span className="results-roi-stat-value">
+                  {formatUsd(roi.endingBankroll)}
+                </span>
+              </div>
+              <div className="results-roi-stat">
+                <span className="results-roi-stat-label">Tickets</span>
+                <span className="results-roi-stat-value">
+                  {roi.cashed}/{roi.decided}
+                </span>
+              </div>
+            </div>
+            <BankrollCurve points={bankrollPoints} startBankroll={bankroll} />
+            <p className="results-roi-note">
+              Flat ${stakePerTicket} per decided ticket · platform net payouts
+              (2-leg ~3× return, etc.) · OPEN tickets excluded
+            </p>
+          </div>
+        )}
+
         {markets.length > 0 && (
           <div className="results-markets" role="list" aria-label="Hit rate by market">
             {markets.map((m) => (
@@ -217,14 +325,21 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
           </div>
         )}
 
-        {data.brier_score != null && !isParlayMode && (
-          <p className="results-brier">
-            Brier (p_over): {data.brier_score.toFixed(3)}
-          </p>
-        )}
-
         {showParlays && (
           <>
+            <h3 className="results-list-title">
+              Ticket strips
+              <span className="results-list-title-book">
+                {" "}
+                · {bookTitle} · {legsTitle}
+              </span>
+            </h3>
+            <TicketStripList
+              parlays={allParlays}
+              stakePerTicket={stakePerTicket}
+              bookLabel={bookLabel}
+            />
+
             <h3 className="results-list-title">
               Top Legs results
               <span className="results-list-title-book">

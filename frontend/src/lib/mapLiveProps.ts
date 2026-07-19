@@ -41,6 +41,7 @@ export function mapLivePropsToEnrichedPicks(
       stat_q50: num(p.model?.stat_q50),
       min_q50: num(p.model?.min_q50),
       p_over: num(p.model?.p_over),
+      p_under: num(p.model?.p_under),
     },
     game_context: {
       spread: num(p.game_context?.team_spread),

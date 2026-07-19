@@ -5,9 +5,10 @@ tracking frames, drops ranks / duplicate / redundant columns, and upserts into
 ``silver.nba_player_gamelogs`` or ``silver.wnba_player_gamelogs``.
 
 Also enriches each row with:
-* ``pos``          — PG / SG / SF / PF / C from the season positions CSV;
-                     tracking ``start_position`` is only used when it is
-                     already one of those five (coarse G/F are ignored).
+* ``pos``          — from the season positions CSV (then tracking fallback):
+                     NBA keeps fine slots only (PG / SG / SF / PF / C);
+                     WNBA keeps Basketball-Reference labels (G / F / C and
+                     hybrids like G-F / F-C).
 * ``game_total``   — Rotowire game over/under (NBA only).
 * ``team_spread``  — Rotowire home-team spread (NBA only).
 
@@ -21,10 +22,14 @@ When the CSV is absent and ``auto_scrape_rotowire=True`` is passed to
 ``build_silver`` (or ``auto_scrape=True`` to ``load_rotowire``), the scraper
 is invoked automatically via ``src.scrapers.rotowire_scraper.run_scrape``.
 
-Player-position CSVs live in ``data/raw/player_positions/``.  The season
-string selects the file by end year (``\"2025-26\"`` → ``nba_2026_players.csv``);
-``player_positions.csv`` is the fallback when that file is missing.  Matching
-uses ``name_s26`` when present, plus accent-stripped ``name``.
+Player-position CSVs live in ``data/raw/player_positions/``.  Season selects
+the file:
+
+* NBA  — end year (``\"2025-26\"`` → ``nba_2026_players.csv``);
+         ``player_positions.csv`` is the fallback when that file is missing.
+* WNBA — calendar year (``\"2018\"`` → ``wnba_2018_players.csv``).
+
+Matching uses ``name_s26`` when present, plus accent-stripped ``name``.
 
 Examples::
 
@@ -75,9 +80,12 @@ _RW_ABBREV_MAP: dict[str, str] = {
 }
 
 # Maps values that may appear in the tracking ``position`` field to a concise
-# canonical form. Only the five standard slots are kept on silver ``pos``;
-# coarse tracking labels (G / F / hybrids) are ignored in favor of the CSV.
+# canonical form. NBA silver ``pos`` keeps only the five fine slots; WNBA
+# keeps the coarser Basketball-Reference labels the scraper writes.
 _FINE_POS: frozenset[str] = frozenset({"PG", "SG", "SF", "PF", "C"})
+_WNBA_POS: frozenset[str] = frozenset(
+    {"G", "F", "C", "G-F", "F-G", "F-C", "C-F"}
+) | _FINE_POS
 _START_POS_CANONICAL: dict[str, str] = {
     "Point Guard": "PG",
     "Shooting Guard": "SG",
@@ -270,6 +278,14 @@ def _nba_season_end_year(season: str) -> str:
     return str(int(start_year) + 1)
 
 
+def _wnba_season_year(season: str) -> str:
+    """``'2018'`` / ``'2026'`` → calendar year for ``wnba_{year}_players.csv``."""
+    s = str(season).strip()
+    if len(s) >= 4 and s[:4].isdigit():
+        return s[:4]
+    return s
+
+
 def _norm_player_name(name: object) -> str:
     """Lowercase + strip accents so CSV ``name`` matches NBA API ``player_name``."""
     if not isinstance(name, str):
@@ -287,10 +303,10 @@ def load_player_positions(
 
     Picks the season file from the chosen season string:
 
-    * ``\"2025-26\"`` → ``nba_2026_players.csv``
-    * ``\"2024-25\"`` → ``nba_2025_players.csv``
+    * NBA  ``\"2025-26\"`` → ``nba_2026_players.csv``
+    * WNBA ``\"2018\"``    → ``wnba_2018_players.csv``
 
-    Falls back to ``player_positions.csv`` when the season file is missing.
+    For NBA, falls back to ``player_positions.csv`` when the season file is missing.
 
     Match keys prefer ASCII ``name_s26`` (when present), then accent-stripped
     ``name``, so API names like ``Luka Doncic`` hit CSV rows like ``Luka Dončić``.
@@ -298,22 +314,24 @@ def load_player_positions(
     Returns a DataFrame with columns ``_name_lower`` and ``pos_csv``, or an
     empty DataFrame when no CSV is found.
     """
-    if league != "nba":
-        return pd.DataFrame()
-
     path: Path | None = None
     if season:
-        end_year = _nba_season_end_year(season)
-        candidate = _PLAYER_POSITIONS_DIR / f"nba_{end_year}_players.csv"
+        if league == "wnba":
+            year = _wnba_season_year(season)
+            candidate = _PLAYER_POSITIONS_DIR / f"wnba_{year}_players.csv"
+        else:
+            end_year = _nba_season_end_year(season)
+            candidate = _PLAYER_POSITIONS_DIR / f"nba_{end_year}_players.csv"
+
         if candidate.exists():
             path = candidate
         else:
-            print(
-                f"  ⚠ season positions file not found: {candidate.name} "
-                "— trying player_positions.csv"
-            )
+            msg = f"  ⚠ season positions file not found: {candidate.name}"
+            if league == "nba":
+                msg += " — trying player_positions.csv"
+            print(msg)
 
-    if path is None:
+    if path is None and league == "nba":
         fallback = _PLAYER_POSITIONS_DIR / "player_positions.csv"
         if fallback.exists():
             path = fallback
@@ -356,32 +374,39 @@ def load_player_positions(
     return lookup
 
 
-def _to_fine_pos(value: object) -> str | None:
-    """Map a raw position label to PG/SG/SF/PF/C, else ``None``."""
+def _to_pos(value: object, *, allowed: frozenset[str]) -> str | None:
+    """Canonicalize a raw position label; return it only if in ``allowed``."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return None
     raw = str(value).strip()
     if not raw:
         return None
     canon = _START_POS_CANONICAL.get(raw, raw.upper())
-    return canon if canon in _FINE_POS else None
+    return canon if canon in allowed else None
 
 
 def enrich_pos(
     df: pd.DataFrame,
     player_positions: pd.DataFrame | None = None,
+    *,
+    league: LeagueKey = "nba",
 ) -> pd.DataFrame:
-    """Add a ``pos`` column (PG / SG / SF / PF / C only).
+    """Add a ``pos`` column from the season positions CSV, then tracking.
 
     Priority:
-    1. Season ``nba_{end_year}_players.csv`` lookup (accent-normalized name).
-    2. Tracking ``start_position`` only when it is already a fine slot
-       (PG/SG/SF/PF/C). Coarse tracking labels like G/F are ignored.
+    1. Season player-positions CSV lookup (accent-normalized name).
+    2. Tracking ``start_position`` for rows still missing.
 
-    Falls back to ``None`` when neither source has a fine position.
+    Allowed labels:
+    * NBA  — fine slots only (PG / SG / SF / PF / C); coarse G/F ignored.
+    * WNBA — Basketball-Reference labels (G / F / C and G-F / F-C hybrids),
+      plus fine slots if tracking ever provides them.
+
+    Falls back to ``None`` when neither source has an allowed position.
     """
     out = df.copy()
     out["pos"] = None
+    allowed = _WNBA_POS if league == "wnba" else _FINE_POS
 
     if (
         player_positions is not None
@@ -390,7 +415,11 @@ def enrich_pos(
     ):
         pos_map = (
             player_positions.drop_duplicates(subset="_name_lower")
-            .assign(pos_csv=lambda d: d["pos_csv"].map(_to_fine_pos))
+            .assign(
+                pos_csv=lambda d: d["pos_csv"].map(
+                    lambda v: _to_pos(v, allowed=allowed)
+                )
+            )
             .dropna(subset=["pos_csv"])
             .set_index("_name_lower")["pos_csv"]
         )
@@ -400,15 +429,22 @@ def enrich_pos(
         print(f"  pos CSV: matched {matched:,} / {len(out):,} rows")
 
     if "start_position" in out.columns:
-        from_track = out["start_position"].map(_to_fine_pos)
+        from_track = out["start_position"].map(
+            lambda v: _to_pos(v, allowed=allowed)
+        )
         missing_before = int(out["pos"].isna().sum())
         if missing_before:
             out["pos"] = out["pos"].fillna(from_track)
             filled = missing_before - int(out["pos"].isna().sum())
             if filled:
+                label = (
+                    "G/F/C (+ hybrids)"
+                    if league == "wnba"
+                    else "PG/SG/SF/PF/C"
+                )
                 print(
                     f"  pos tracking fallback: filled {filled:,} / {missing_before:,} "
-                    "missing with PG/SG/SF/PF/C"
+                    f"missing with {label}"
                 )
 
     return out
@@ -692,7 +728,7 @@ def build_silver(
     print(f"  merged — {df.shape}")
 
     positions = load_player_positions(season, league=league)
-    df = enrich_pos(df, positions)
+    df = enrich_pos(df, positions, league=league)
 
     rw = load_rotowire(
         season,

@@ -15,13 +15,6 @@ import {
   fmtOverRatePct,
 } from "@/lib/format";
 
-function LeanPill({ lean }: { lean?: string }) {
-  if (!lean) return <>—</>;
-  const s = lean.toUpperCase();
-  const cls = s === "OVER" ? "side-over" : "side-under";
-  return <span className={`side-pill ${cls}`}>{s}</span>;
-}
-
 function BookPill({ book }: { book?: string }) {
   const label = String(book || "").trim() || "—";
   return <span className={`book-pill ${bookPillClass(book)}`}>{label}</span>;
@@ -44,6 +37,31 @@ function BestSidePill({ pick }: { pick: EnrichedPick }) {
   if (!e) return null;
   const cls = e.side === "OVER" ? "side-over" : "side-under";
   return <span className={`side-pill ${cls}`}>{e.side}</span>;
+}
+
+function ModelHitProbs({
+  pOver,
+  pUnder,
+}: {
+  pOver?: number | null;
+  pUnder?: number | null;
+}) {
+  if (pOver == null && pUnder == null) return <>—</>;
+  const under =
+    pUnder != null && !Number.isNaN(Number(pUnder))
+      ? Number(pUnder)
+      : pOver != null && !Number.isNaN(Number(pOver))
+        ? 1 - Number(pOver)
+        : null;
+  return (
+    <span className="model-hit-probs">
+      <span className="model-hit-probs__over">Over {fmtOverRatePct(pOver)}</span>
+      <span className="model-hit-probs__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="model-hit-probs__under">Under {fmtOverRatePct(under)}</span>
+    </span>
+  );
 }
 
 interface SortThProps {
@@ -99,7 +117,7 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
               <SortTh sortKey="mkt" label="Market" activeKey={sortKey} sortDir={sortDir} onSort={onSort} />
               <SortTh sortKey="line" label="Line" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
               <th className="num">Edge</th>
-              <SortTh sortKey="modelProb" label="Model" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
+              <SortTh sortKey="modelProb" label="Over / Under" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="col-over-under" />
               <SortTh sortKey="statProj" label="Proj" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="minProj" label="Min" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num col-secondary" />
               <SortTh sortKey="l5" label="L5" activeKey={sortKey} sortDir={sortDir} onSort={onSort} className="num" />
@@ -125,14 +143,8 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
                   <td className="num">
                     <EdgeCell pick={r} />
                   </td>
-                  <td className="enriched-lean">
-                    {model.lean ? (
-                      <>
-                        <LeanPill lean={model.lean} /> {fmtOverRatePct(model.p_over)}
-                      </>
-                    ) : (
-                      "—"
-                    )}
+                  <td className="enriched-lean col-over-under">
+                    <ModelHitProbs pOver={model.p_over} pUnder={model.p_under} />
                   </td>
                   <td className="num col-secondary">{fmtNumOrDash(model.stat_q50)}</td>
                   <td className="num col-secondary">{fmtNumOrDash(model.min_q50)}</td>
@@ -173,7 +185,7 @@ function PlayerExpandedBody({ picks, sortKey, sortDir, onSort }: PlayerExpandedB
                   Edge <EdgeCell pick={p} />
                 </span>
                 <span>
-                  Model {m.lean || "—"} {fmtOverRatePct(m.p_over)}
+                  <ModelHitProbs pOver={m.p_over} pUnder={m.p_under} />
                 </span>
                 <span>
                   L5/10: {fmtOverRatePct(f.over_l5)} · {fmtOverRatePct(f.over_l10)}

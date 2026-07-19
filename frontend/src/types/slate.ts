@@ -88,6 +88,7 @@ export interface EnrichedPick {
     stat_q50?: number;
     min_q50?: number;
     p_over?: number;
+    p_under?: number;
   };
   sharp?: {
     lean?: string;

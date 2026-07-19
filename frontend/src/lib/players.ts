@@ -8,7 +8,8 @@ export function pickEdge(pick: EnrichedPick): PickEdge | null {
   if (!m) return null;
   const pOver = Number(m.p_over);
   if (Number.isNaN(pOver)) return null;
-  const pUnder = 1 - pOver;
+  const rawUnder = Number(m.p_under);
+  const pUnder = Number.isNaN(rawUnder) ? 1 - pOver : rawUnder;
   if (pOver >= pUnder) {
     return { side: "OVER", prob: pOver, edge: pOver - DFS_BREAK_EVEN };
   }

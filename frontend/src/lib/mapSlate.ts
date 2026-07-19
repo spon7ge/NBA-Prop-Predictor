@@ -146,6 +146,7 @@ function buildModelFields(
     stat_q50: statQ50,
     min_q50: minQ50,
     p_over: pOver,
+    p_under: 1 - pOver,
   };
 }
 

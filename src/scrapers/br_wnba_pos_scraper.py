@@ -1,58 +1,96 @@
-from curl_cffi import requests  # mimics real browser TLS — bypasses fingerprint blocks
-from bs4 import BeautifulSoup
+"""Scrape WNBA player name / position from Basketball-Reference per-game tables."""
+
+from __future__ import annotations
+
 import csv
 import sys
 import time
+from pathlib import Path
+
+from bs4 import BeautifulSoup, Comment
+from curl_cffi import requests
 
 BASE_URL = "https://www.basketball-reference.com/wnba/years/{year}_per_game.html"
+OUT_DIR = (
+    Path(__file__).resolve().parents[2] / "data" / "raw" / "player_positions"
+)
+
+# WNBA pages use ``per_game``; NBA-style pages use ``per_game_stats``.
+_TABLE_IDS = ("per_game", "per_game_stats")
 
 
-def scrape_players(year):
+def find_table(soup: BeautifulSoup, table_ids: tuple[str, ...] = _TABLE_IDS):
+    for table_id in table_ids:
+        table = soup.find("table", {"id": table_id})
+        if table:
+            return table
+
+    # BR sometimes wraps secondary tables in HTML comments.
+    comments = soup.find_all(string=lambda text: isinstance(text, Comment))
+    for comment in comments:
+        for table_id in table_ids:
+            if table_id not in comment:
+                continue
+            comment_soup = BeautifulSoup(comment, "html.parser")
+            table = comment_soup.find("table", {"id": table_id})
+            if table:
+                return table
+    return None
+
+
+def _cell_text(row, data_stat: str) -> str | None:
+    cell = row.find(["td", "th"], attrs={"data-stat": data_stat})
+    if not cell:
+        return None
+    link = cell.find("a")
+    if link is not None:
+        return link.get_text(strip=True) or None
+    return cell.get_text(strip=True) or None
+
+
+def scrape_players(year: str | int) -> list[dict[str, str]]:
     url = BASE_URL.format(year=year)
     print(f"Fetching {url} ...")
-    time.sleep(2)  # Be polite — avoid hammering the server
+    time.sleep(2)
 
-    # impersonate="chrome" replicates Chrome's TLS fingerprint
-    response = requests.get(url, impersonate="chrome", timeout=15)
+    response = requests.get(url, impersonate="chrome", timeout=20)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "html.parser")
-    table = soup.find("table", {"id": "per_game_stats"})
-
+    table = find_table(soup)
     if not table:
-        raise RuntimeError("Could not find the stats table. The page structure may have changed.")
+        raise RuntimeError(
+            "Could not find the WNBA per-game stats table "
+            f"(tried ids: {', '.join(_TABLE_IDS)})."
+        )
 
-    players = []
-    seen = set()  # Deduplicate multi-team rows (TOT row per player traded mid-season)
+    players: list[dict[str, str]] = []
+    seen: set[str] = set()
 
     for row in table.find("tbody").find_all("tr"):
-        # Skip divider / header rows injected mid-table
-        if row.get("class") and "thead" in row.get("class"):
+        classes = row.get("class") or []
+        if "thead" in classes:
             continue
 
-        name_cell = row.find("td", {"data-stat": "name_display"})
-        pos_cell  = row.find("td", {"data-stat": "pos"})
-        age_cell  = row.find("td", {"data-stat": "age"})
-
-        if not name_cell:
+        # Prefer the player link text — the th dumps the whole row when flattened.
+        name = _cell_text(row, "player") or _cell_text(row, "name_display")
+        if not name:
             continue
 
-        name = name_cell.get_text(strip=True)
-        pos  = pos_cell.get_text(strip=True)  if pos_cell  else "N/A"
-        age  = age_cell.get_text(strip=True)  if age_cell  else "N/A"
+        pos = _cell_text(row, "pos") or "N/A"
+        age = _cell_text(row, "age") or "N/A"
 
-        # Keep only the first occurrence (TOT row comes first for traded players)
         if name in seen:
             continue
         seen.add(name)
-
         players.append({"name": name, "pos": pos, "age": age})
 
     return players
 
 
-def save_csv(players, path):
-    with open(path, "w", newline="", encoding="utf-8") as f:
+def save_csv(players: list[dict[str, str]], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["name", "pos", "age"])
         writer.writeheader()
         writer.writerows(players)
@@ -60,17 +98,14 @@ def save_csv(players, path):
 
 
 if __name__ == "__main__":
-    # Usage: python scrape_wnba.py [year]
-    # Defaults to 2024 if no year is passed
     year = sys.argv[1] if len(sys.argv) > 1 else "2024"
 
     players = scrape_players(year)
 
-    # Print a preview
     print(f"\n{'NAME':<30} {'POS':<6} {'AGE'}")
     print("-" * 45)
     for p in players[:20]:
         print(f"{p['name']:<30} {p['pos']:<6} {p['age']}")
     print(f"\n... {len(players)} total players found.")
 
-    save_csv(players, path=f"wnba_{year}_players.csv")
+    save_csv(players, OUT_DIR / f"wnba_{year}_players.csv")
