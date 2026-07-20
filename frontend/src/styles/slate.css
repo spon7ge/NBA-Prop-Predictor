@@ -1659,48 +1659,77 @@ body.faq-page-body .slate-header {
   font-size: 13px;
   color: #7a7a74;
 }
-.results-bankroll-curve {
-  margin-top: 2px;
+.results-hitrate-chart {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.results-bankroll-curve-head {
+.results-hitrate-chart-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 10px;
-  margin-bottom: 6px;
 }
-.results-bankroll-curve-end {
-  font-size: 13px;
+.results-hitrate-chart-hint {
+  font-size: 11px;
   font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7a7a74;
 }
-.results-bankroll-svg {
+.results-hitrate-svg {
   width: 100%;
   height: auto;
   display: block;
   overflow: visible;
 }
-.results-bankroll-line--up {
-  stroke: #6fd48a;
+.results-hitrate-grid {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
 }
-.results-bankroll-line--down {
-  stroke: #e08080;
+.results-hitrate-axis {
+  fill: #6a6a64;
+  font-size: 8px;
+  font-weight: 600;
 }
-.results-bankroll-line {
-  stroke-dasharray: 360;
-  stroke-dashoffset: 360;
+.results-hitrate-line {
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
   animation: results-draw-line 0.9s ease forwards;
 }
-.results-bankroll-area {
+.results-hitrate-dot {
   opacity: 0;
-  animation: results-fade-in 0.55s ease 0.25s forwards;
-}
-.results-bankroll-dot {
-  opacity: 0;
-  transform-origin: center;
   animation: results-pop-dot 0.35s ease forwards;
 }
-.results-bankroll-dot--hit { fill: #6fd48a; }
-.results-bankroll-dot--miss { fill: #e08080; }
+.results-hitrate-legend {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.results-hitrate-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #b0b0a8;
+}
+.results-hitrate-legend-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.results-hitrate-legend-label {
+  font-weight: 600;
+}
 @keyframes results-draw-line {
   to { stroke-dashoffset: 0; }
 }

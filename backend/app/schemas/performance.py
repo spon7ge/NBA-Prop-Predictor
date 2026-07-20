@@ -23,6 +23,13 @@ class DailyHitRate(BaseModel):
     hit_rate: float | None = None
 
 
+class BookDailyTrend(BaseModel):
+    """Daily hit-rate series for one bookmaker."""
+
+    bookmaker: str
+    points: list[DailyHitRate] = Field(default_factory=list)
+
+
 class GradedPick(BaseModel):
     """One graded prop for the Results feed."""
 
@@ -101,6 +108,10 @@ class PerformanceResponse(BaseModel):
     by_book: list[HitRateBucket]
     by_side: list[HitRateBucket]
     trend: list[DailyHitRate]
+    trend_by_book: list[BookDailyTrend] = Field(
+        default_factory=list,
+        description="Per-bookmaker daily hit-rate series for the chart.",
+    )
     brier_score: float | None = Field(
         default=None,
         description="Mean squared error of p_over vs over/under outcome (excl. DNP).",

@@ -131,6 +131,11 @@ export interface ApiDailyHitRate {
   hit_rate: number | null;
 }
 
+export interface ApiBookDailyTrend {
+  bookmaker: string;
+  points: ApiDailyHitRate[];
+}
+
 export interface ApiGradedPick {
   game_date: string;
   player_name: string;
@@ -190,6 +195,7 @@ export interface ApiPerformanceResponse {
   by_book: ApiHitRateBucket[];
   by_side: ApiHitRateBucket[];
   trend: ApiDailyHitRate[];
+  trend_by_book?: ApiBookDailyTrend[];
   brier_score: number | null;
   recent_picks: ApiGradedPick[];
   parlay_summary: ApiParlaySummary;

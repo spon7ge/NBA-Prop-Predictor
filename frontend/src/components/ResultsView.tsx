@@ -8,13 +8,12 @@ import type {
 import type { Book } from "@/types/slate";
 import { BOOK_LABELS, BOOKS, LEG_LABELS, SLATE_LEG_COUNTS } from "@/lib/constants";
 import {
-  buildBankrollSeries,
   computeLegsRoi,
   formatRoiPct,
   formatUsd,
 } from "@/lib/legsRoi";
 import { usePerformance, type ResultsLegsFilter } from "@/lib/queries";
-import { BankrollCurve } from "@/components/BankrollCurve";
+import { HitRateByBookChart } from "@/components/HitRateByBookChart";
 import { Dropdown } from "@/components/Dropdown";
 import { LoadingMessage } from "@/components/LoadingSkeleton";
 import { TicketStripList } from "@/components/TicketStrip";
@@ -26,7 +25,6 @@ const LEAGUE_OPTIONS: { value: ApiLeagueFilter; label: string }[] = [
 
 const LEGS_OPTIONS: { value: ResultsLegsFilter; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "singles", label: "Singles" },
   ...SLATE_LEG_COUNTS.map((n) => ({
     value: String(n) as ResultsLegsFilter,
     label: LEG_LABELS[n],
@@ -116,7 +114,6 @@ function parlayHeadline(summary: ApiParlaySummary | undefined): string | null {
 
 function legsFilterLabel(legs: ResultsLegsFilter): string {
   if (legs === "all") return "All";
-  if (legs === "singles") return "Singles";
   return LEG_LABELS[Number(legs) as 2 | 3 | 5 | 6] ?? legs;
 }
 
@@ -142,10 +139,9 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
     ...BOOKS.map((book) => ({ value: book, label: BOOK_LABELS[book] })),
   ];
 
-  const showParlays = activeLegs !== "singles";
-  const showSingles = activeLegs === "all" || activeLegs === "singles";
+  const showSingles = activeLegs === "all";
   const isParlayMode = ["2", "3", "5", "6"].includes(activeLegs);
-  const showRoi = showParlays;
+  const showRoi = true;
 
   let content: ReactNode;
   if (isError) {
@@ -181,13 +177,12 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
     const bookTitle =
       activeBook === "all" ? "All Books" : BOOK_LABELS[activeBook];
     const legsTitle = legsFilterLabel(activeLegs);
-    const legsLine = showParlays ? parlayHeadline(data.parlay_summary) : null;
+    const legsLine = parlayHeadline(data.parlay_summary);
     const roi = showRoi
       ? computeLegsRoi(allParlays, bankroll, stakePerTicket)
       : null;
-    const bankrollPoints = showRoi
-      ? buildBankrollSeries(allParlays, bankroll, stakePerTicket)
-      : [];
+    const hitRateSeries = data.trend_by_book ?? [];
+    const hitRateMetric = isParlayMode ? "Cash rate" : "Hit rate";
 
     content = (
       <>
@@ -220,6 +215,13 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
           )}
         </p>
         {legsLine && <p className="results-subhead">{legsLine}</p>}
+
+        {hitRateSeries.length > 0 && (
+          <HitRateByBookChart
+            series={hitRateSeries}
+            metricLabel={hitRateMetric}
+          />
+        )}
 
         {showRoi && roi && (
           <div className="results-roi" aria-label="Legs ROI calculator">
@@ -303,7 +305,6 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
                 </span>
               </div>
             </div>
-            <BankrollCurve points={bankrollPoints} startBankroll={bankroll} />
             <p className="results-roi-note">
               Flat ${stakePerTicket} per decided ticket · platform net payouts
               (2-leg ~3× return, etc.) · OPEN tickets excluded
@@ -325,8 +326,7 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
           </div>
         )}
 
-        {showParlays && (
-          <>
+        <>
             <h3 className="results-list-title">
               Ticket strips
               <span className="results-list-title-book">
@@ -427,16 +427,10 @@ export function ResultsView({ league, onLeagueChange }: ResultsViewProps) {
               </ul>
             )}
           </>
-        )}
 
         {showSingles && (
           <>
-            <h3 className="results-list-title">
-              Graded picks
-              {activeLegs === "singles" && (
-                <span className="results-list-title-book"> · Singles</span>
-              )}
-            </h3>
+            <h3 className="results-list-title">Graded picks</h3>
             {picks.length === 0 ? (
               <p className="load-msg">No scored picks in this window.</p>
             ) : (

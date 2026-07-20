@@ -8,6 +8,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.core import db
 from app.schemas.performance import (
+    BookDailyTrend,
     DailyHitRate,
     GradedLeg,
     GradedParlay,
@@ -41,6 +42,33 @@ def _rate(hits: int, n: int) -> float | None:
 
 def _bucket(key: str, hits: int, n: int, dnps: int = 0) -> HitRateBucket:
     return HitRateBucket(key=key, hits=hits, n=n, hit_rate=_rate(hits, n), dnps=dnps)
+
+
+def _trend_from_day_map(
+    by_day: dict[datetime.date, list[bool]],
+) -> list[DailyHitRate]:
+    return [
+        DailyHitRate(
+            game_date=d,
+            hits=sum(1 for v in vals if v),
+            n=len(vals),
+            hit_rate=_rate(sum(1 for v in vals if v), len(vals)),
+        )
+        for d, vals in sorted(by_day.items())
+    ]
+
+
+def _trend_by_book_from_bools(
+    by_book_day: dict[str, dict[datetime.date, list[bool]]],
+) -> list[BookDailyTrend]:
+    """Build per-book daily series, largest sample first."""
+    series: list[BookDailyTrend] = []
+    for book, by_day in sorted(
+        by_book_day.items(),
+        key=lambda kv: (-sum(len(v) for v in kv[1].values()), kv[0]),
+    ):
+        series.append(BookDailyTrend(bookmaker=book, points=_trend_from_day_map(by_day)))
+    return series
 
 
 def _norm_book(raw: str | None) -> str:
@@ -396,10 +424,14 @@ def _aggregate_parlay_mode(
     by_book: dict[str, list[bool]] = defaultdict(list)
     by_side: dict[str, list[bool]] = defaultdict(list)
     by_day: dict[datetime.date, list[bool]] = defaultdict(list)
+    by_book_day: dict[str, dict[datetime.date, list[bool]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
 
     for p in decided:
         by_book[p.bookmaker].append(bool(p.cashed))
         by_day[p.game_date].append(bool(p.cashed))
+        by_book_day[p.bookmaker][p.game_date].append(bool(p.cashed))
 
     for p in parlays:
         for leg in p.legs:
@@ -436,15 +468,8 @@ def _aggregate_parlay_mode(
         if key in by_side:
             side_buckets.append(bucket_bools(key, by_side[key]))
 
-    trend = [
-        DailyHitRate(
-            game_date=d,
-            hits=sum(1 for v in vals if v),
-            n=len(vals),
-            hit_rate=_rate(sum(1 for v in vals if v), len(vals)),
-        )
-        for d, vals in sorted(by_day.items())
-    ]
+    trend = _trend_from_day_map(by_day)
+    trend_by_book = _trend_by_book_from_bools(by_book_day)
 
     # Flatten scored legs from settled tickets into recent_picks
     recent: list[GradedPick] = []
@@ -492,6 +517,7 @@ def _aggregate_parlay_mode(
         by_book=book_buckets,
         by_side=side_buckets,
         trend=trend,
+        trend_by_book=trend_by_book,
         brier_score=None,
         recent_picks=recent,
         parlay_summary=summary,
@@ -531,12 +557,17 @@ def _aggregate(
     by_book: dict[str, list[dict]] = defaultdict(list)
     by_side: dict[str, list[dict]] = defaultdict(list)
     by_day: dict[datetime.date, list[dict]] = defaultdict(list)
+    by_book_day: dict[str, dict[datetime.date, list[dict]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
 
     for r in rows:
+        book = str(r.get("bookmaker") or "?")
         by_market[str(r.get("market") or "?")].append(r)
-        by_book[str(r.get("bookmaker") or "?")].append(r)
+        by_book[book].append(r)
         by_side[str(r.get("side") or "?").lower()].append(r)
         by_day[r["game_date"]].append(r)
+        by_book_day[book][r["game_date"]].append(r)
 
     market_buckets = []
     for key in ("PTS", "REB", "AST"):
@@ -564,6 +595,17 @@ def _aggregate(
     for d in sorted(by_day.keys()):
         h, n, _ = tally(by_day[d])
         trend.append(DailyHitRate(game_date=d, hits=h, n=n, hit_rate=_rate(h, n)))
+
+    trend_by_book: list[BookDailyTrend] = []
+    for book, day_map in sorted(
+        by_book_day.items(),
+        key=lambda kv: (-sum(len(scored(rs)) for rs in kv[1].values()), kv[0]),
+    ):
+        points: list[DailyHitRate] = []
+        for d in sorted(day_map.keys()):
+            h, n, _ = tally(day_map[d])
+            points.append(DailyHitRate(game_date=d, hits=h, n=n, hit_rate=_rate(h, n)))
+        trend_by_book.append(BookDailyTrend(bookmaker=book, points=points))
 
     brier: float | None = None
     sq_err = 0.0
@@ -623,6 +665,7 @@ def _aggregate(
         by_book=book_buckets,
         by_side=side_buckets,
         trend=trend,
+        trend_by_book=trend_by_book,
         brier_score=brier,
         recent_picks=recent,
         parlay_summary=parlay_summary or ParlaySummary(),
