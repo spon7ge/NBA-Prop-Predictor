@@ -86,8 +86,21 @@ class NBAPropFinder():
                         'DATA_PULLED_AT': pull_timestamp_str
                     })
 
-        # Turn it into a DataFrame and return
-        return pd.DataFrame(odds_records)
+        df = pd.DataFrame(odds_records)
+        # DFS books price Over/Under symmetrically; keep one row per line.
+        if self.region == "us_dfs" and not df.empty:
+            ou_rank = df["OVER/UNDER"].map({"Over": 0, "Under": 1}).fillna(2)
+            df = (
+                df.assign(_ou_rank=ou_rank)
+                .sort_values("_ou_rank")
+                .drop_duplicates(
+                    subset=["BOOKMAKER", "CATEGORY", "NAME", "LINE", "COMMENCE_TIME"],
+                    keep="first",
+                )
+                .drop(columns=["_ou_rank"])
+                .reset_index(drop=True)
+            )
+        return df
     
     def save_data(self):
         # Get project root by navigating up from this file's location
