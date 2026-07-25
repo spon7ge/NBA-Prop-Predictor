@@ -142,8 +142,10 @@ def test_apm_preserves_features_and_naive():
     assert 'NAIVE_PRIMARY = "base_ast_per_min_season_avg"' in src
     assert 'NAIVE_SECONDARY = "base_ast_per_min_lag1"' in src
     assert 'ARTIFACT_STEM = "apm_nba_model"' in src
-    assert "1553" in src  # preserved n_estimators
-    assert "minutes" in src and ">= 10" in src
+    assert "n_estimators=1553" in src
+    assert "learning_rate=0.016209908567987385" in src
+    assert 'df["minutes"] >= 10' in src
+    assert "APM_TIERS" in src and "MIN_TIERS" not in src
 
 
 def test_rpm_preserves_features_and_naive():
@@ -158,8 +160,13 @@ def test_rpm_preserves_features_and_naive():
         assert feat in src
     assert 'TARGET_COL = "reb_per_min"' in src
     assert 'NAIVE_PRIMARY = "base_reb_per_min_season_avg"' in src
-    assert "ARTIFACT_STEM = \"rpm_nba_model\"" in src
+    assert 'NAIVE_SECONDARY = "base_reb_per_min_lag1"' in src
+    assert 'ARTIFACT_STEM = "rpm_nba_model"' in src
+    assert "n_estimators=1655" in src
+    assert 'df["minutes"] >= 10' in src
+    assert "RPM_TIERS" in src and "MIN_TIERS" not in src
     assert "reb_per_min_roll10_vs_season_z" not in src  # unused z-score dropped
+    assert "_season_std" not in src
 
 
 def test_ppm_preserves_features_and_naive():
@@ -167,8 +174,13 @@ def test_ppm_preserves_features_and_naive():
     assert "ts_pct_x_usg_pct" in src
     assert 'TARGET_COL = "pts_per_min"' in src
     assert 'NAIVE_PRIMARY = "base_pts_per_min_season_avg"' in src
-    assert "ARTIFACT_STEM = \"ppm_nba_model\"" in src
-    assert "FeatureEngineer" not in src  # dead rebuild scaffolding gone
+    assert 'NAIVE_SECONDARY = "base_pts_per_min_lag1"' in src
+    assert 'ARTIFACT_STEM = "ppm_nba_model"' in src
+    assert "n_estimators=1300" in src
+    assert 'df["minutes"] >= 5' in src
+    assert "PPM_TIERS" in src
+    assert "position_encoded" not in src  # not a PPM feature
+    assert "from src.pipeline.features.build_features import" not in src  # dead rebuild scaffolding gone
     assert "list(set(" not in src
 ```
 
@@ -217,39 +229,44 @@ ROOT = Path("/Users/alexgonzalez/Documents/NBA-Prop-Predictor")
 min_nb = json.loads((ROOT / "models/nba/min_nba_model.ipynb").read_text())
 
 
+def src_lines(text: str) -> list[str]:
+    """nbformat stores source as a list of lines, each keeping its newline."""
+    if not text.endswith("\n"):
+        text += "\n"
+    return text.splitlines(keepends=True)
+
+
 def code_cell(source: str) -> dict:
     return {
         "cell_type": "code",
         "execution_count": None,
         "metadata": {},
         "outputs": [],
-        "source": [line + "\n" for line in source.split("\n")[:-1]]
-        + ([source.split("\n")[-1] + "\n"] if source.split("\n")[-1] != "" else [])
-        if source.endswith("\n") or True
-        else [source],
+        "source": src_lines(source),
     }
 
 
 def md_cell(source: str) -> dict:
-    return {"cell_type": "markdown", "metadata": {}, "source": [source if source.endswith("\n") else source + "\n"]}
+    return {"cell_type": "markdown", "metadata": {}, "source": src_lines(source)}
 
 
-def clear_nb(nb: dict) -> dict:
-    out = copy.deepcopy(nb)
-    for c in out["cells"]:
-        if c.get("cell_type") == "code":
-            c["outputs"] = []
-            c["execution_count"] = None
+def cleared_cell(cell: dict) -> dict:
+    """Copy a MIN template cell with any stored run state removed."""
+    out = copy.deepcopy(cell)
+    if out.get("cell_type") == "code":
+        out["outputs"] = []
+        out["execution_count"] = None
     return out
-```
 
-Prefer writing sources as lists of lines ending in `\n` (nbformat style), e.g.:
 
-```python
-def src_lines(text: str) -> list[str]:
-    if not text.endswith("\n"):
-        text += "\n"
-    return text.splitlines(keepends=True)
+def retarget(cell: dict, replacements: dict[str, str]) -> dict:
+    """Copy a MIN cell, substituting prop-specific names and units."""
+    out = cleared_cell(cell)
+    text = "".join(out["source"])
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    out["source"] = src_lines(text)
+    return out
 ```
 
 - [ ] **Step 2: Write APM-specific cells (exact content)**
