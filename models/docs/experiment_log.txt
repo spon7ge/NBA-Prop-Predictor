@@ -8,8 +8,9 @@ How to add an entry
 -------------------
 1. State what you believed would improve (one sentence).
 2. Note split + whether holdout was still untouched.
-3. Primary metric + at least one counter.
-4. Decision: ship / reject / needs redo — with why.
+3. Record data size (post-filter train / holdout rows + feature count).
+4. Primary metric + at least one counter.
+5. Decision: ship / reject / needs redo — with why.
 
 Copy the blank template below for each new experiment.
 
@@ -23,6 +24,7 @@ League / prop:
 Hypothesis / change:
                   
 Split:            
+Data:             train — · holdout — rows · — features
 Model:            
 MAE (model):      
 MAE (naive):      
@@ -39,6 +41,7 @@ League / prop:    WNBA MIN
 Hypothesis / change:
                   Rolling vs EWM feature family
 Split:            2026 holdout
+Data:             train 12,400 · holdout 3,052 rows · 7 features
 Model:            XGB q
 MAE (model):      EWM 4.12 · roll 4.08
 MAE (naive):      5.01 (season avg)
@@ -57,6 +60,7 @@ Hypothesis / change:
                   Optuna hyperparam tune (100 trials, TSCV MAE, q50)
                   would beat hand-set XGB_PARAMS
 Split:            S26 holdout (blind at decision)
+Data:             train — · holdout — rows · 7 features
 Model:            XGB q
 MAE (model):      3.554 → 3.578 (tuned)
 MAE (naive):      4.36 (season avg) · 5.08 (lag1)
@@ -77,6 +81,7 @@ Hypothesis / change:
                   (impute+scale+QuantileRegressor Q10/50/90) → XGB q
                   on the same features / WF masks / S26 holdout
 Split:            S26 holdout (already seen for XGB H0; linear report-only)
+Data:             train — · holdout — rows · 7 features
 Model:            linear q vs XGB q
 MAE (model):      holdout linear 4.288 · XGB 4.194 (ΔX−L −0.094)
 MAE (naive):      holdout 4.625 (season avg)
@@ -86,3 +91,54 @@ Decision:         ship XGB — beats linear on holdout; keep linear as
                   report-only complexity bar (most lift is linear≻naive)
 Notes:            Linear not saved to joblib. Future heavier models must
                   clear XGB by more than ~0.09 MAE, not just beat naive.
+
+----------------------------------------------------------------------
+E02
+----------------------------------------------------------------------
+ID:               E02
+Date:             2026-07-24
+League / prop:    WNBA (MINUTES)
+Hypothesis / change:
+                  Add base_min_season_avg, adv_usg_pct_ewm_hl10,
+                  adv_poss_ewm_hl10 to MIN_FEATURES (was 7 → 10)
+Split:            S26 holdout (already seen in E00/E01; report-only)
+Data:             train 27,375 · holdout 3,052 rows · 10 features
+Model:            XGB q (pre-tune params)
+MAE (model):      holdout XGB 3.573 · linear 3.721 · WF mean 3.893 (gap −0.319)
+MAE (naive):      holdout 4.353 (season avg)
+Coverage / other: cov80 84.5%; R² 0.587; q10/50/90 cov 9.0/54.5/93.6%;
+                  <12.8 min cov 2.4% (n=83); mean Q10→Q90 width 12.86.
+                  Holdout Wilcoxon: linear≻naive Δ−0.663 p≈1e-21;
+                  XGB≻linear Δ−0.148 p≈2e-12 (both REJECT H0)
+Decision:         reject feature add — holdout MAE +0.019 vs E00 (3.554);
+                  no lift. Ordering XGB≻linear≻naive still holds.
+Notes:            New feats: season avg + usg/poss EWM hl10. SHAP ranks
+                  season_avg high but poss↔track_min↔season_avg |ρ|>0.98;
+                  keep prior 7-feature set unless a cleaner add is tested.
+
+----------------------------------------------------------------------
+E03
+----------------------------------------------------------------------
+ID:               E03
+Date:             2026-07-24
+League / prop:    NBA (MINUTES)
+Hypothesis / change:
+                  First NBA MIN run on shared pipeline (7-feature set,
+                  complexity ladder naive→linear→XGB). H1: model beats
+                  frozen naive on S25-26 holdout.
+Split:            S25-26 holdout (blind at decision)
+Data:             train 95,459 · holdout 20,095 rows · 7 features
+Model:            XGB q vs linear q vs naive
+MAE (model):      holdout XGB 3.754 · linear 3.914 · WF mean 3.782 (gap −0.028)
+MAE (naive):      holdout 5.150 (season avg)
+Coverage / other: XGB cov80 80.3% R² 0.493; linear cov80 80.8% R² 0.457;
+                  q10/50/90 cov 10.6/51.9/90.9%; mean Q10→Q90 width 12.16.
+                  Holdout Wilcoxon: linear≻naive Δ−1.254 p≈1e-298;
+                  XGB≻linear Δ−0.160 p≈3e-75 (both REJECT H0)
+Decision:         ship — REJECT H0. XGB beats naive by 1.40 MAE and
+                  linear by 0.16 on blind holdout; ordering XGB≻linear≻naive.
+Notes:            7 features (no season_avg/usg/poss add — mirrors WNBA
+                  E02 reject). Most lift is linear≻naive; XGB adds ~0.16.
+                  Calibration tight; WF≈holdout. Bench cov 78.6%; 15-24 min
+                  cov 75.2% weakest tier. filtered out games where players
+                  recorded under 14 minutes.

@@ -30,7 +30,7 @@ Secondary naive predictors are reported for context; they do **not** redefine H0
 | **Target** | `minutes` |
 | **Holdout** | NBA `2025-26` · WNBA `2026` |
 | **Frozen on** | 2026-07-22 |
-| **Decided on** | — |
+| **Decided on** | NBA 2026-07-24 — **REJECT H0** (E03: XGB 3.754 vs naive 5.150, Wilcoxon p≈1e-298 via linear ladder; XGB≻linear≻naive) · WNBA — pending |
 
 ---
 
