@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-22T19:45:58.753504Z",
+  "generated_at": "2026-07-22T19:41:14.128439Z",
   "current_date": "2026-07-22",
   "n_dfs_picks": 851,
   "n_enriched": 837,
-  "n_sharp_aligned": 157,
+  "n_sharp_aligned": 159,
   "picks": [
     {
       "platform": "Betr DFS",
@@ -23,8 +23,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.337,
-        "p_under": 0.663,
+        "p_over": 0.338,
+        "p_under": 0.662,
         "lean": "UNDER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -129,8 +129,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.483,
+        "p_under": 0.517,
         "lean": "UNDER",
         "min_q10": 21.48,
         "min_q50": 29.11,
@@ -219,8 +219,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.447,
-        "p_under": 0.426,
+        "p_over": 0.444,
+        "p_under": 0.425,
         "lean": "OVER",
         "min_q10": 18.85,
         "min_q50": 26.5,
@@ -301,6 +301,112 @@
     },
     {
       "platform": "Betr DFS",
+      "player": "Jackie Young",
+      "display_name": "Jackie Young",
+      "team_abbr": "LVA",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "AST",
+      "dfs_line": 6.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": null,
+        "no_vig_over": null,
+        "no_vig_under": null
+      },
+      "model": {
+        "p_over": 0.5,
+        "p_under": 0.5,
+        "lean": "UNDER",
+        "min_q10": 26.32,
+        "min_q50": 32.73,
+        "min_q90": 37.45,
+        "stat_q10": 2.56,
+        "stat_q50": 6.25,
+        "stat_q90": 10.91
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 6.5,
+        "no_vig_over": 0.4534678056674068,
+        "no_vig_under": 0.5465321943325933,
+        "american_over": 106.0,
+        "american_under": -141.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 4,
+        "mean_no_vig_over_same_line": 0.44744278508585944,
+        "n_books_any_line": 4,
+        "mean_no_vig_over_any_line": 0.44744278508585944,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 6.5,
+            "no_vig_over": 0.4534678056674068,
+            "no_vig_under": 0.5465321943325933,
+            "american_over": 106.0,
+            "american_under": -141.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 6.5,
+            "no_vig_over": 0.4329742261011864,
+            "no_vig_under": 0.5670257738988136,
+            "american_over": 116.0,
+            "american_under": -154.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 6.5,
+            "no_vig_over": 0.45980991958136136,
+            "no_vig_under": 0.5401900804186387,
+            "american_over": 102.0,
+            "american_under": -139.0
+          },
+          {
+            "book": "BetOnline.ag",
+            "line": 6.5,
+            "no_vig_over": 0.44351918899348297,
+            "no_vig_under": 0.5564808110065169,
+            "american_over": 112.0,
+            "american_under": -145.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.4,
+        "over_l15": 0.4666666666666667
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "Betr DFS",
       "player": "Jessica Shepard",
       "display_name": "Jessica Shepard",
       "team_abbr": "DAL",
@@ -317,8 +423,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.4,
-        "p_under": 0.6,
+        "p_over": 0.402,
+        "p_under": 0.599,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -423,8 +529,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.497,
-        "p_under": 0.503,
+        "p_over": 0.489,
+        "p_under": 0.511,
         "lean": "UNDER",
         "min_q10": 25.94,
         "min_q50": 33.29,
@@ -521,8 +627,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.289,
-        "p_under": 0.609,
+        "p_over": 0.279,
+        "p_under": 0.614,
         "lean": "UNDER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -619,8 +725,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.423,
-        "p_under": 0.577,
+        "p_over": 0.429,
+        "p_under": 0.571,
         "lean": "UNDER",
         "min_q10": 16.65,
         "min_q50": 25.61,
@@ -701,8 +807,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.479,
-        "p_under": 0.521,
+        "p_over": 0.47,
+        "p_under": 0.53,
         "lean": "UNDER",
         "min_q10": 26.98,
         "min_q50": 34.26,
@@ -807,8 +913,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.541,
+        "p_under": 0.459,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -913,8 +1019,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.82,
-        "p_under": 0.18,
+        "p_over": 0.817,
+        "p_under": 0.183,
         "lean": "OVER",
         "min_q10": 20.49,
         "min_q50": 28.67,
@@ -1019,8 +1125,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.547,
+        "p_under": 0.453,
         "lean": "OVER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -1125,8 +1231,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.393,
-        "p_under": 0.607,
+        "p_over": 0.392,
+        "p_under": 0.608,
         "lean": "UNDER",
         "min_q10": 25.6,
         "min_q50": 34.11,
@@ -1231,7 +1337,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
+        "p_over": 0.647,
         "p_under": 0.352,
         "lean": "OVER",
         "min_q10": 27.82,
@@ -1337,8 +1443,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.585,
-        "p_under": 0.415,
+        "p_over": 0.588,
+        "p_under": 0.412,
         "lean": "OVER",
         "min_q10": 22.93,
         "min_q50": 30.07,
@@ -1443,8 +1549,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.868,
-        "p_under": 0.132,
+        "p_over": 0.867,
+        "p_under": 0.133,
         "lean": "OVER",
         "min_q10": 26.53,
         "min_q50": 33.28,
@@ -1533,8 +1639,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.755,
-        "p_under": 0.245,
+        "p_over": 0.766,
+        "p_under": 0.234,
         "lean": "OVER",
         "min_q10": 22.23,
         "min_q50": 28.97,
@@ -1623,8 +1729,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.61,
-        "p_under": 0.39,
+        "p_over": 0.605,
+        "p_under": 0.395,
         "lean": "OVER",
         "min_q10": 16.47,
         "min_q50": 24.05,
@@ -1721,8 +1827,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.443,
+        "p_under": 0.557,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -1827,8 +1933,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.52,
-        "p_under": 0.48,
+        "p_over": 0.513,
+        "p_under": 0.486,
         "lean": "OVER",
         "min_q10": 15.93,
         "min_q50": 23.19,
@@ -1933,8 +2039,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.619,
-        "p_under": 0.381,
+        "p_over": 0.61,
+        "p_under": 0.391,
         "lean": "OVER",
         "min_q10": 26.0,
         "min_q50": 33.48,
@@ -2023,8 +2129,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.474,
-        "p_under": 0.526,
+        "p_over": 0.488,
+        "p_under": 0.512,
         "lean": "UNDER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -2129,8 +2235,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.555,
-        "p_under": 0.445,
+        "p_over": 0.559,
+        "p_under": 0.441,
         "lean": "OVER",
         "min_q10": 12.0,
         "min_q50": 18.98,
@@ -2227,8 +2333,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.55,
+        "p_under": 0.45,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -2325,8 +2431,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.504,
-        "p_under": 0.496,
+        "p_over": 0.505,
+        "p_under": 0.495,
         "lean": "OVER",
         "min_q10": 18.48,
         "min_q50": 27.2,
@@ -2415,8 +2521,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.437,
-        "p_under": 0.563,
+        "p_over": 0.448,
+        "p_under": 0.552,
         "lean": "UNDER",
         "min_q10": 14.29,
         "min_q50": 21.59,
@@ -2513,8 +2619,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.508,
+        "p_under": 0.492,
         "lean": "OVER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -2619,8 +2725,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.229,
-        "p_under": 0.771,
+        "p_over": 0.236,
+        "p_under": 0.764,
         "lean": "UNDER",
         "min_q10": 22.5,
         "min_q50": 30.55,
@@ -2709,8 +2815,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.575,
-        "p_under": 0.425,
+        "p_over": 0.579,
+        "p_under": 0.421,
         "lean": "OVER",
         "min_q10": 25.94,
         "min_q50": 32.34,
@@ -2799,8 +2905,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.783,
-        "p_under": 0.217,
+        "p_over": 0.782,
+        "p_under": 0.218,
         "lean": "OVER",
         "min_q10": 25.15,
         "min_q50": 32.16,
@@ -2987,8 +3093,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.48,
-        "p_under": 0.52,
+        "p_over": 0.49,
+        "p_under": 0.51,
         "lean": "UNDER",
         "min_q10": 26.07,
         "min_q50": 33.3,
@@ -3093,8 +3199,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.633,
-        "p_under": 0.367,
+        "p_over": 0.635,
+        "p_under": 0.365,
         "lean": "OVER",
         "min_q10": 24.24,
         "min_q50": 31.26,
@@ -3199,8 +3305,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.527,
-        "p_under": 0.473,
+        "p_over": 0.537,
+        "p_under": 0.463,
         "lean": "OVER",
         "min_q10": 26.18,
         "min_q50": 33.65,
@@ -3305,8 +3411,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.519,
-        "p_under": 0.481,
+        "p_over": 0.523,
+        "p_under": 0.476,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -3411,8 +3517,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.581,
-        "p_under": 0.419,
+        "p_over": 0.587,
+        "p_under": 0.413,
         "lean": "OVER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -3501,7 +3607,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.505,
+        "p_over": 0.501,
         "p_under": 0.399,
         "lean": "OVER",
         "min_q10": 21.48,
@@ -3607,8 +3713,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.416,
-        "p_under": 0.584,
+        "p_over": 0.404,
+        "p_under": 0.596,
         "lean": "UNDER",
         "min_q10": 24.59,
         "min_q50": 32.73,
@@ -3713,8 +3819,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.313,
-        "p_under": 0.687,
+        "p_over": 0.314,
+        "p_under": 0.686,
         "lean": "UNDER",
         "min_q10": 22.35,
         "min_q50": 30.04,
@@ -3803,8 +3909,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.368,
-        "p_under": 0.503,
+        "p_over": 0.353,
+        "p_under": 0.519,
         "lean": "UNDER",
         "min_q10": 26.32,
         "min_q50": 32.73,
@@ -3909,8 +4015,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
+        "p_over": 0.506,
+        "p_under": 0.493,
         "lean": "OVER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -4015,8 +4121,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.526,
-        "p_under": 0.388,
+        "p_over": 0.517,
+        "p_under": 0.397,
         "lean": "OVER",
         "min_q10": 23.97,
         "min_q50": 31.01,
@@ -4121,8 +4227,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.491,
+        "p_over": 0.516,
+        "p_under": 0.484,
         "lean": "OVER",
         "min_q10": 18.53,
         "min_q50": 26.21,
@@ -4227,8 +4333,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.473,
-        "p_under": 0.456,
+        "p_over": 0.466,
+        "p_under": 0.461,
         "lean": "OVER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -4333,8 +4439,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.556,
+        "p_under": 0.444,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -4423,8 +4529,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.428,
-        "p_under": 0.572,
+        "p_over": 0.431,
+        "p_under": 0.569,
         "lean": "UNDER",
         "min_q10": 15.77,
         "min_q50": 23.14,
@@ -4529,8 +4635,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.566,
+        "p_under": 0.434,
         "lean": "OVER",
         "min_q10": 16.65,
         "min_q50": 25.61,
@@ -4635,8 +4741,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.434,
-        "p_under": 0.566,
+        "p_over": 0.438,
+        "p_under": 0.562,
         "lean": "UNDER",
         "min_q10": 17.51,
         "min_q50": 25.4,
@@ -4725,8 +4831,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.337,
-        "p_under": 0.663,
+        "p_over": 0.338,
+        "p_under": 0.662,
         "lean": "UNDER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -4831,8 +4937,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.488,
-        "p_under": 0.512,
+        "p_over": 0.483,
+        "p_under": 0.517,
         "lean": "UNDER",
         "min_q10": 21.48,
         "min_q50": 29.11,
@@ -4905,6 +5011,112 @@
     },
     {
       "platform": "DraftKings Pick6",
+      "player": "Jackie Young",
+      "display_name": "Jackie Young",
+      "team_abbr": "LVA",
+      "team": null,
+      "opponent_abbr": null,
+      "opponent": null,
+      "is_home": null,
+      "market": "AST",
+      "dfs_line": 6.5,
+      "dfs_odds": {
+        "american_over": -137.0,
+        "american_under": null,
+        "no_vig_over": null,
+        "no_vig_under": null
+      },
+      "model": {
+        "p_over": 0.5,
+        "p_under": 0.5,
+        "lean": "UNDER",
+        "min_q10": 26.32,
+        "min_q50": 32.73,
+        "min_q90": 37.45,
+        "stat_q10": 2.56,
+        "stat_q50": 6.25,
+        "stat_q90": 10.91
+      },
+      "sharp": {
+        "source": "Pinnacle",
+        "is_fallback": false,
+        "line": 6.5,
+        "no_vig_over": 0.4534678056674068,
+        "no_vig_under": 0.5465321943325933,
+        "american_over": 106.0,
+        "american_under": -141.0,
+        "lean": "UNDER"
+      },
+      "consensus": {
+        "n_books_same_line": 4,
+        "mean_no_vig_over_same_line": 0.44744278508585944,
+        "n_books_any_line": 4,
+        "mean_no_vig_over_any_line": 0.44744278508585944,
+        "offerings": [
+          {
+            "book": "Pinnacle",
+            "line": 6.5,
+            "no_vig_over": 0.4534678056674068,
+            "no_vig_under": 0.5465321943325933,
+            "american_over": 106.0,
+            "american_under": -141.0
+          },
+          {
+            "book": "FanDuel",
+            "line": 6.5,
+            "no_vig_over": 0.4329742261011864,
+            "no_vig_under": 0.5670257738988136,
+            "american_over": 116.0,
+            "american_under": -154.0
+          },
+          {
+            "book": "DraftKings",
+            "line": 6.5,
+            "no_vig_over": 0.45980991958136136,
+            "no_vig_under": 0.5401900804186387,
+            "american_over": 102.0,
+            "american_under": -139.0
+          },
+          {
+            "book": "BetOnline.ag",
+            "line": 6.5,
+            "no_vig_over": 0.44351918899348297,
+            "no_vig_under": 0.5564808110065169,
+            "american_over": 112.0,
+            "american_under": -145.0
+          }
+        ]
+      },
+      "game_context": {
+        "book_used": null,
+        "game_total": null,
+        "spread": null,
+        "team_total_implied": null,
+        "team_pace": null,
+        "team_pace_rank": null,
+        "team_def_rating": null,
+        "team_def_rating_rank": null,
+        "opp_pace": null,
+        "opp_pace_rank": null,
+        "opp_def_rating": null,
+        "opp_def_rating_rank": null
+      },
+      "form": {
+        "over_l5": 0.4,
+        "over_l10": 0.4,
+        "over_l15": 0.4666666666666667
+      },
+      "vs_opp": {
+        "n_games": 0,
+        "avg_stat": null,
+        "over_rate_at_line": null
+      },
+      "is_conflict": false,
+      "sharp_aligned": true,
+      "tier": "sharp_verified"
+    },
+    {
+      "platform": "DraftKings Pick6",
       "player": "Jessica Shepard",
       "display_name": "Jessica Shepard",
       "team_abbr": "DAL",
@@ -4921,8 +5133,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.4,
-        "p_under": 0.6,
+        "p_over": 0.402,
+        "p_under": 0.599,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -5027,8 +5239,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.497,
-        "p_under": 0.503,
+        "p_over": 0.489,
+        "p_under": 0.511,
         "lean": "UNDER",
         "min_q10": 25.94,
         "min_q50": 33.29,
@@ -5125,8 +5337,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.479,
-        "p_under": 0.521,
+        "p_over": 0.47,
+        "p_under": 0.53,
         "lean": "UNDER",
         "min_q10": 26.98,
         "min_q50": 34.26,
@@ -5231,8 +5443,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.541,
+        "p_under": 0.459,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -5337,8 +5549,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.82,
-        "p_under": 0.18,
+        "p_over": 0.817,
+        "p_under": 0.183,
         "lean": "OVER",
         "min_q10": 20.49,
         "min_q50": 28.67,
@@ -5443,8 +5655,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.792,
-        "p_under": 0.208,
+        "p_over": 0.798,
+        "p_under": 0.202,
         "lean": "OVER",
         "min_q10": 20.24,
         "min_q50": 28.35,
@@ -5533,8 +5745,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.547,
+        "p_under": 0.453,
         "lean": "OVER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -5639,8 +5851,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.393,
-        "p_under": 0.607,
+        "p_over": 0.392,
+        "p_under": 0.608,
         "lean": "UNDER",
         "min_q10": 25.6,
         "min_q50": 34.11,
@@ -5745,7 +5957,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
+        "p_over": 0.647,
         "p_under": 0.352,
         "lean": "OVER",
         "min_q10": 27.82,
@@ -5851,7 +6063,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
+        "p_over": 0.647,
         "p_under": 0.352,
         "lean": "OVER",
         "min_q10": 27.82,
@@ -5957,8 +6169,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.635,
-        "p_under": 0.365,
+        "p_over": 0.638,
+        "p_under": 0.362,
         "lean": "OVER",
         "min_q10": 24.59,
         "min_q50": 32.73,
@@ -6063,8 +6275,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.226,
-        "p_under": 0.774,
+        "p_over": 0.227,
+        "p_under": 0.773,
         "lean": "UNDER",
         "min_q10": 20.06,
         "min_q50": 28.12,
@@ -6153,8 +6365,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.755,
-        "p_under": 0.245,
+        "p_over": 0.766,
+        "p_under": 0.234,
         "lean": "OVER",
         "min_q10": 22.23,
         "min_q50": 28.97,
@@ -6243,8 +6455,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.61,
-        "p_under": 0.39,
+        "p_over": 0.605,
+        "p_under": 0.395,
         "lean": "OVER",
         "min_q10": 16.47,
         "min_q50": 24.05,
@@ -6341,8 +6553,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.427,
-        "p_under": 0.573,
+        "p_over": 0.411,
+        "p_under": 0.589,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -6447,8 +6659,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.52,
-        "p_under": 0.48,
+        "p_over": 0.513,
+        "p_under": 0.486,
         "lean": "OVER",
         "min_q10": 15.93,
         "min_q50": 23.19,
@@ -6553,8 +6765,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.67,
-        "p_under": 0.33,
+        "p_over": 0.665,
+        "p_under": 0.335,
         "lean": "OVER",
         "min_q10": 26.0,
         "min_q50": 33.48,
@@ -6643,8 +6855,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.474,
-        "p_under": 0.526,
+        "p_over": 0.488,
+        "p_under": 0.512,
         "lean": "UNDER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -6749,8 +6961,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.555,
-        "p_under": 0.445,
+        "p_over": 0.559,
+        "p_under": 0.441,
         "lean": "OVER",
         "min_q10": 12.0,
         "min_q50": 18.98,
@@ -6847,8 +7059,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.55,
+        "p_under": 0.45,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -6945,8 +7157,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.504,
-        "p_under": 0.496,
+        "p_over": 0.505,
+        "p_under": 0.495,
         "lean": "OVER",
         "min_q10": 18.48,
         "min_q50": 27.2,
@@ -7035,8 +7247,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.437,
-        "p_under": 0.563,
+        "p_over": 0.448,
+        "p_under": 0.552,
         "lean": "UNDER",
         "min_q10": 14.29,
         "min_q50": 21.59,
@@ -7133,8 +7345,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.508,
+        "p_under": 0.492,
         "lean": "OVER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -7239,8 +7451,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.404,
-        "p_under": 0.596,
+        "p_over": 0.391,
+        "p_under": 0.609,
         "lean": "UNDER",
         "min_q10": 22.38,
         "min_q50": 29.91,
@@ -7329,8 +7541,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.707,
-        "p_under": 0.293,
+        "p_over": 0.702,
+        "p_under": 0.298,
         "lean": "OVER",
         "min_q10": 25.94,
         "min_q50": 32.34,
@@ -7419,8 +7631,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.783,
-        "p_under": 0.217,
+        "p_over": 0.782,
+        "p_under": 0.218,
         "lean": "OVER",
         "min_q10": 25.15,
         "min_q50": 32.16,
@@ -7607,8 +7819,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.48,
-        "p_under": 0.52,
+        "p_over": 0.49,
+        "p_under": 0.51,
         "lean": "UNDER",
         "min_q10": 26.07,
         "min_q50": 33.3,
@@ -7713,8 +7925,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.633,
-        "p_under": 0.367,
+        "p_over": 0.635,
+        "p_under": 0.365,
         "lean": "OVER",
         "min_q10": 24.24,
         "min_q50": 31.26,
@@ -7819,8 +8031,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.527,
-        "p_under": 0.473,
+        "p_over": 0.537,
+        "p_under": 0.463,
         "lean": "OVER",
         "min_q10": 26.18,
         "min_q50": 33.65,
@@ -7925,8 +8137,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.519,
-        "p_under": 0.481,
+        "p_over": 0.523,
+        "p_under": 0.476,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -8031,8 +8243,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.485,
-        "p_under": 0.514,
+        "p_over": 0.484,
+        "p_under": 0.516,
         "lean": "UNDER",
         "min_q10": 22.88,
         "min_q50": 30.51,
@@ -8121,8 +8333,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.385,
-        "p_under": 0.615,
+        "p_over": 0.388,
+        "p_under": 0.612,
         "lean": "UNDER",
         "min_q10": 26.53,
         "min_q50": 33.28,
@@ -8211,8 +8423,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.65,
-        "p_under": 0.35,
+        "p_over": 0.651,
+        "p_under": 0.349,
         "lean": "OVER",
         "min_q10": 20.12,
         "min_q50": 28.24,
@@ -8301,8 +8513,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.313,
-        "p_under": 0.687,
+        "p_over": 0.314,
+        "p_under": 0.686,
         "lean": "UNDER",
         "min_q10": 22.35,
         "min_q50": 30.04,
@@ -8391,8 +8603,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
+        "p_over": 0.506,
+        "p_under": 0.493,
         "lean": "OVER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -8497,8 +8709,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.474,
+        "p_under": 0.526,
         "lean": "UNDER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -8603,8 +8815,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.428,
-        "p_under": 0.572,
+        "p_over": 0.431,
+        "p_under": 0.569,
         "lean": "UNDER",
         "min_q10": 15.77,
         "min_q50": 23.14,
@@ -8709,8 +8921,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.434,
-        "p_under": 0.566,
+        "p_over": 0.438,
+        "p_under": 0.562,
         "lean": "UNDER",
         "min_q10": 17.51,
         "min_q50": 25.4,
@@ -8799,8 +9011,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.396,
-        "p_under": 0.604,
+        "p_over": 0.402,
+        "p_under": 0.598,
         "lean": "UNDER",
         "min_q10": 14.94,
         "min_q50": 22.19,
@@ -8889,8 +9101,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.466,
-        "p_under": 0.394,
+        "p_over": 0.462,
+        "p_under": 0.399,
         "lean": "OVER",
         "min_q10": 27.82,
         "min_q50": 34.85,
@@ -8995,8 +9207,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.447,
-        "p_under": 0.426,
+        "p_over": 0.444,
+        "p_under": 0.425,
         "lean": "OVER",
         "min_q10": 18.85,
         "min_q50": 26.5,
@@ -9093,8 +9305,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.624,
-        "p_under": 0.376,
+        "p_over": 0.634,
+        "p_under": 0.366,
         "lean": "OVER",
         "min_q10": 22.23,
         "min_q50": 28.97,
@@ -9183,8 +9395,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.5,
-        "p_under": 0.404,
+        "p_over": 0.509,
+        "p_under": 0.396,
         "lean": "OVER",
         "min_q10": 26.32,
         "min_q50": 32.73,
@@ -9289,8 +9501,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.289,
-        "p_under": 0.609,
+        "p_over": 0.279,
+        "p_under": 0.614,
         "lean": "UNDER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -9387,8 +9599,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.479,
-        "p_under": 0.521,
+        "p_over": 0.47,
+        "p_under": 0.53,
         "lean": "UNDER",
         "min_q10": 26.98,
         "min_q50": 34.26,
@@ -9493,8 +9705,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.82,
-        "p_under": 0.18,
+        "p_over": 0.817,
+        "p_under": 0.183,
         "lean": "OVER",
         "min_q10": 20.49,
         "min_q50": 28.67,
@@ -9599,8 +9811,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.792,
-        "p_under": 0.208,
+        "p_over": 0.798,
+        "p_under": 0.202,
         "lean": "OVER",
         "min_q10": 20.24,
         "min_q50": 28.35,
@@ -9689,8 +9901,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.393,
-        "p_under": 0.607,
+        "p_over": 0.392,
+        "p_under": 0.608,
         "lean": "UNDER",
         "min_q10": 25.6,
         "min_q50": 34.11,
@@ -9795,8 +10007,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.548,
-        "p_under": 0.452,
+        "p_over": 0.55,
+        "p_under": 0.45,
         "lean": "OVER",
         "min_q10": 22.93,
         "min_q50": 30.07,
@@ -9901,8 +10113,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.631,
-        "p_under": 0.369,
+        "p_over": 0.656,
+        "p_under": 0.344,
         "lean": "OVER",
         "min_q10": 20.7,
         "min_q50": 29.1,
@@ -10007,8 +10219,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.642,
-        "p_under": 0.358,
+        "p_over": 0.639,
+        "p_under": 0.361,
         "lean": "OVER",
         "min_q10": 21.36,
         "min_q50": 28.83,
@@ -10113,8 +10325,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.605,
-        "p_under": 0.395,
+        "p_over": 0.614,
+        "p_under": 0.387,
         "lean": "OVER",
         "min_q10": 24.59,
         "min_q50": 32.73,
@@ -10219,8 +10431,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.633,
-        "p_under": 0.367,
+        "p_over": 0.628,
+        "p_under": 0.372,
         "lean": "OVER",
         "min_q10": 20.12,
         "min_q50": 28.24,
@@ -10309,8 +10521,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.694,
-        "p_under": 0.306,
+        "p_over": 0.698,
+        "p_under": 0.302,
         "lean": "OVER",
         "min_q10": 18.48,
         "min_q50": 25.7,
@@ -10415,8 +10627,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.755,
-        "p_under": 0.245,
+        "p_over": 0.766,
+        "p_under": 0.234,
         "lean": "OVER",
         "min_q10": 22.23,
         "min_q50": 28.97,
@@ -10505,8 +10717,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.61,
-        "p_under": 0.39,
+        "p_over": 0.605,
+        "p_under": 0.395,
         "lean": "OVER",
         "min_q10": 16.47,
         "min_q50": 24.05,
@@ -10603,8 +10815,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.443,
+        "p_under": 0.557,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -10709,8 +10921,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.52,
-        "p_under": 0.48,
+        "p_over": 0.513,
+        "p_under": 0.486,
         "lean": "OVER",
         "min_q10": 15.93,
         "min_q50": 23.19,
@@ -10815,8 +11027,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.67,
-        "p_under": 0.33,
+        "p_over": 0.665,
+        "p_under": 0.335,
         "lean": "OVER",
         "min_q10": 26.0,
         "min_q50": 33.48,
@@ -10905,8 +11117,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.503,
-        "p_under": 0.497,
+        "p_over": 0.512,
+        "p_under": 0.488,
         "lean": "OVER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -11011,8 +11223,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.555,
-        "p_under": 0.445,
+        "p_over": 0.559,
+        "p_under": 0.441,
         "lean": "OVER",
         "min_q10": 12.0,
         "min_q50": 18.98,
@@ -11109,8 +11321,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
-        "p_under": 0.352,
+        "p_over": 0.641,
+        "p_under": 0.359,
         "lean": "OVER",
         "min_q10": 19.9,
         "min_q50": 29.48,
@@ -11191,8 +11403,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.55,
+        "p_under": 0.45,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -11289,8 +11501,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.504,
-        "p_under": 0.496,
+        "p_over": 0.505,
+        "p_under": 0.495,
         "lean": "OVER",
         "min_q10": 18.48,
         "min_q50": 27.2,
@@ -11379,8 +11591,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.437,
-        "p_under": 0.563,
+        "p_over": 0.448,
+        "p_under": 0.552,
         "lean": "UNDER",
         "min_q10": 14.29,
         "min_q50": 21.59,
@@ -11477,8 +11689,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.594,
-        "p_under": 0.406,
+        "p_over": 0.592,
+        "p_under": 0.408,
         "lean": "OVER",
         "min_q10": 15.77,
         "min_q50": 23.14,
@@ -11583,8 +11795,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.508,
+        "p_under": 0.492,
         "lean": "OVER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -11689,8 +11901,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.229,
-        "p_under": 0.771,
+        "p_over": 0.236,
+        "p_under": 0.764,
         "lean": "UNDER",
         "min_q10": 22.5,
         "min_q50": 30.55,
@@ -11779,8 +11991,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.575,
-        "p_under": 0.425,
+        "p_over": 0.579,
+        "p_under": 0.421,
         "lean": "OVER",
         "min_q10": 25.94,
         "min_q50": 32.34,
@@ -11869,8 +12081,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.844,
-        "p_under": 0.156,
+        "p_over": 0.842,
+        "p_under": 0.158,
         "lean": "OVER",
         "min_q10": 25.15,
         "min_q50": 32.16,
@@ -11959,8 +12171,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.596,
-        "p_under": 0.404,
+        "p_over": 0.602,
+        "p_under": 0.398,
         "lean": "OVER",
         "min_q10": 16.65,
         "min_q50": 25.61,
@@ -12065,8 +12277,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.467,
-        "p_under": 0.533,
+        "p_over": 0.472,
+        "p_under": 0.528,
         "lean": "UNDER",
         "min_q10": 17.51,
         "min_q50": 25.4,
@@ -12163,8 +12375,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.633,
-        "p_under": 0.367,
+        "p_over": 0.635,
+        "p_under": 0.365,
         "lean": "OVER",
         "min_q10": 24.24,
         "min_q50": 31.26,
@@ -12269,8 +12481,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.527,
-        "p_under": 0.473,
+        "p_over": 0.537,
+        "p_under": 0.463,
         "lean": "OVER",
         "min_q10": 26.18,
         "min_q50": 33.65,
@@ -12375,8 +12587,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.593,
-        "p_under": 0.407,
+        "p_over": 0.591,
+        "p_under": 0.409,
         "lean": "OVER",
         "min_q10": 17.58,
         "min_q50": 26.09,
@@ -12473,8 +12685,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.519,
-        "p_under": 0.481,
+        "p_over": 0.523,
+        "p_under": 0.476,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -12579,8 +12791,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.657,
-        "p_under": 0.244,
+        "p_over": 0.66,
+        "p_under": 0.242,
         "lean": "OVER",
         "min_q10": 20.49,
         "min_q50": 28.67,
@@ -12685,7 +12897,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.505,
+        "p_over": 0.501,
         "p_under": 0.399,
         "lean": "OVER",
         "min_q10": 21.48,
@@ -12791,8 +13003,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.385,
-        "p_under": 0.615,
+        "p_over": 0.388,
+        "p_under": 0.612,
         "lean": "UNDER",
         "min_q10": 26.53,
         "min_q50": 33.28,
@@ -12881,8 +13093,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.313,
-        "p_under": 0.687,
+        "p_over": 0.314,
+        "p_under": 0.686,
         "lean": "UNDER",
         "min_q10": 22.35,
         "min_q50": 30.04,
@@ -12971,8 +13183,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.25,
-        "p_under": 0.75,
+        "p_over": 0.242,
+        "p_under": 0.757,
         "lean": "UNDER",
         "min_q10": 20.06,
         "min_q50": 28.12,
@@ -13061,8 +13273,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.368,
-        "p_under": 0.503,
+        "p_over": 0.353,
+        "p_under": 0.519,
         "lean": "UNDER",
         "min_q10": 26.32,
         "min_q50": 32.73,
@@ -13167,8 +13379,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
+        "p_over": 0.506,
+        "p_under": 0.493,
         "lean": "OVER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -13273,8 +13485,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.526,
-        "p_under": 0.388,
+        "p_over": 0.517,
+        "p_under": 0.397,
         "lean": "OVER",
         "min_q10": 23.97,
         "min_q50": 31.01,
@@ -13379,8 +13591,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.493,
+        "p_over": 0.441,
+        "p_under": 0.483,
         "lean": "UNDER",
         "min_q10": 18.53,
         "min_q50": 26.21,
@@ -13485,8 +13697,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.474,
+        "p_under": 0.526,
         "lean": "UNDER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -13591,7 +13803,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
+        "p_over": 0.507,
         "p_under": 0.369,
         "lean": "OVER",
         "min_q10": 19.9,
@@ -13673,8 +13885,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.556,
+        "p_under": 0.444,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -13763,8 +13975,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.566,
+        "p_under": 0.434,
         "lean": "OVER",
         "min_q10": 16.65,
         "min_q50": 25.61,
@@ -13869,8 +14081,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.523,
-        "p_under": 0.343,
+        "p_over": 0.516,
+        "p_under": 0.353,
         "lean": "OVER",
         "min_q10": 26.98,
         "min_q50": 34.26,
@@ -13975,8 +14187,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.398,
-        "p_under": 0.481,
+        "p_over": 0.39,
+        "p_under": 0.487,
         "lean": "UNDER",
         "min_q10": 26.07,
         "min_q50": 33.3,
@@ -14081,8 +14293,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.459,
-        "p_under": 0.402,
+        "p_over": 0.446,
+        "p_under": 0.418,
         "lean": "OVER",
         "min_q10": 26.18,
         "min_q50": 33.65,
@@ -14187,8 +14399,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.497,
-        "p_under": 0.503,
+        "p_over": 0.489,
+        "p_under": 0.511,
         "lean": "UNDER",
         "min_q10": 25.94,
         "min_q50": 33.29,
@@ -14285,8 +14497,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.541,
+        "p_under": 0.459,
         "lean": "OVER",
         "min_q10": 24.29,
         "min_q50": 31.51,
@@ -14391,8 +14603,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.82,
-        "p_under": 0.18,
+        "p_over": 0.817,
+        "p_under": 0.183,
         "lean": "OVER",
         "min_q10": 20.49,
         "min_q50": 28.67,
@@ -14497,8 +14709,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.547,
+        "p_under": 0.453,
         "lean": "OVER",
         "min_q10": 24.4,
         "min_q50": 31.48,
@@ -14603,7 +14815,7 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.648,
+        "p_over": 0.647,
         "p_under": 0.352,
         "lean": "OVER",
         "min_q10": 27.82,
@@ -14709,8 +14921,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.433,
-        "p_under": 0.567,
+        "p_over": 0.443,
+        "p_under": 0.557,
         "lean": "UNDER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -14815,8 +15027,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.52,
-        "p_under": 0.48,
+        "p_over": 0.513,
+        "p_under": 0.486,
         "lean": "OVER",
         "min_q10": 15.93,
         "min_q50": 23.19,
@@ -14921,8 +15133,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.549,
-        "p_under": 0.451,
+        "p_over": 0.55,
+        "p_under": 0.45,
         "lean": "OVER",
         "min_q10": 20.54,
         "min_q50": 28.17,
@@ -15019,8 +15231,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.437,
-        "p_under": 0.563,
+        "p_over": 0.448,
+        "p_under": 0.552,
         "lean": "UNDER",
         "min_q10": 14.29,
         "min_q50": 21.59,
@@ -15117,8 +15329,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.514,
-        "p_under": 0.486,
+        "p_over": 0.508,
+        "p_under": 0.492,
         "lean": "OVER",
         "min_q10": 21.56,
         "min_q50": 28.53,
@@ -15223,8 +15435,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.633,
-        "p_under": 0.367,
+        "p_over": 0.635,
+        "p_under": 0.365,
         "lean": "OVER",
         "min_q10": 24.24,
         "min_q50": 31.26,
@@ -15329,8 +15541,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.527,
-        "p_under": 0.473,
+        "p_over": 0.537,
+        "p_under": 0.463,
         "lean": "OVER",
         "min_q10": 26.18,
         "min_q50": 33.65,
@@ -15435,8 +15647,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.508,
-        "p_under": 0.492,
+        "p_over": 0.506,
+        "p_under": 0.493,
         "lean": "OVER",
         "min_q10": 26.74,
         "min_q50": 35.07,
@@ -15541,8 +15753,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.469,
-        "p_under": 0.531,
+        "p_over": 0.474,
+        "p_under": 0.526,
         "lean": "UNDER",
         "min_q10": 23.83,
         "min_q50": 30.61,
@@ -15647,8 +15859,8 @@
         "no_vig_under": null
       },
       "model": {
-        "p_over": 0.557,
-        "p_under": 0.443,
+        "p_over": 0.566,
+        "p_under": 0.434,
         "lean": "OVER",
         "min_q10": 16.65,
         "min_q50": 25.61,

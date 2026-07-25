@@ -30,7 +30,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import joblib
 import pandas as pd
 
 from src.pipeline.build_slates import build_live_slates, silver_to_base_df
@@ -39,6 +38,7 @@ from src.pipeline.predict import (
     line_probs_for_market,
     load_latest_odds,
     load_opp_def_ratings,
+    load_quantile_bundles,
     predict_rate,
 )
 from src.utils.db import upsert_live_slates
@@ -63,32 +63,6 @@ _RATE_BUNDLE_KEY = {
     "player_assists": "apm",
     "player_rebounds": "rpm",
 }
-
-
-def _latest_bundle(models_dir: Path, prop: str, league: str):
-    for pattern in (
-        f"{prop}_{league}_model_*.joblib",
-        f"{prop}_quantile_xgb_*.joblib",
-    ):
-        files = sorted(models_dir.glob(pattern))
-        if files:
-            chosen = files[-1]
-            print(f"  [{prop.upper()}] {chosen.name}")
-            return joblib.load(chosen)
-    raise FileNotFoundError(
-        f"No model bundle found for prop='{prop}' league='{league}' in {models_dir}"
-    )
-
-
-def _load_bundles(models_dir: Path, league: str) -> dict:
-    print(f"\nLoading models for {league.upper()}…")
-    print("  [MIN] shared NBA minutes model for both leagues")
-    return {
-        "min": _latest_bundle(models_dir, "min", "nba"),
-        "ppm": _latest_bundle(models_dir, "ppm", league),
-        "apm": _latest_bundle(models_dir, "apm", league),
-        "rpm": _latest_bundle(models_dir, "rpm", league),
-    }
 
 
 def _team_odds_source() -> str | None:
@@ -190,7 +164,7 @@ def run_pipeline(
     kelly_fraction: float = 0.5,
 ) -> pd.DataFrame:
     run_at = datetime.now(timezone.utc)
-    bundles = _load_bundles(models_dir, league)
+    bundles = load_quantile_bundles(league, models_dir=models_dir)
 
     print("\nPre-loading silver gamelogs for enrich base_df…")
     silver = _load_silver(league)
@@ -268,7 +242,7 @@ def _parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--models-dir",
-        default=str(PROJECT_ROOT / "src" / "models" / "saved_models"),
+        default=str(PROJECT_ROOT / "models" / "saved_models"),
         help="Directory containing .joblib model bundles",
     )
     p.add_argument("--top-n", type=int, default=10, help="Parlays per book×leg (default 10)")

@@ -389,6 +389,7 @@ NBA-Prop-Predictor/
 
 | Doc | Contents |
 |-----|----------|
+| [models/README.md](models/README.md) | Prop ML methodology — hypotheses, splits, experiment log |
 | [docker/README.md](docker/README.md) | Compose profiles, ETL commands |
 | [airflow/README.md](airflow/README.md) | DAG schedules, writes, env vars |
 | [dbt/README.md](dbt/README.md) | Model catalog |

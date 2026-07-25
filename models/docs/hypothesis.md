@@ -1,0 +1,81 @@
+# Hypotheses (per model)
+
+Each prop has its **own** pre-registered test. Results for MIN do not imply
+anything about PPM/APM/RPM.
+
+## Decision rule (all models)
+
+On the **same player-games** (holdout is authoritative):
+
+1. Compute MAE(model p50) and MAE(naive).
+2. Paired one-sided Wilcoxon signed-rank on absolute errors:
+   \(H_1\): model \(|e|\) stochastically smaller than naive.
+3. **Reject H0** only if MAE(model) < MAE(naive) **and** \(p < 0.05\).
+
+Walk-forward last-fold tests are **diagnostic**. S26 / locked-season holdout
+is the decision.
+
+Secondary naive predictors are reported for context; they do **not** redefine H0.
+
+---
+
+## MIN (minutes)
+
+| | |
+|--|--|
+| **H0** | The minutes model does not predict significantly better than the frozen naive. |
+| **H1** | The minutes model predicts significantly better than the frozen naive. |
+| **Primary naive** | `base_min_season_avg` — season-to-date expanding mean (shift → expanding). |
+| **Secondary** | `base_min_lag1` — last-game minutes. |
+| **Target** | `minutes` |
+| **Holdout** | NBA `2025-26` · WNBA `2026` |
+| **Frozen on** | 2026-07-22 |
+| **Decided on** | — |
+
+---
+
+## PPM (points per minute)
+
+| | |
+|--|--|
+| **H0** | The PPM model does not predict significantly better than the frozen naive. |
+| **H1** | The PPM model predicts significantly better than the frozen naive. |
+| **Primary naive** | `base_pts_per_min` rolling-5 **or** season avg — **freeze before first holdout look** (TBD: prefer `base_pts_per_min_season_avg` if present). |
+| **Secondary** | Rolling-5 / lag-1 rate (report only). |
+| **Target** | `pts_per_min` |
+| **Status** | ⬜ not wired |
+| **Frozen on** | — |
+| **Decided on** | — |
+
+---
+
+## APM (assists per minute)
+
+| | |
+|--|--|
+| **H0 / H1** | Same structure as PPM. |
+| **Primary naive** | Season-avg AST/min (freeze name before eval). |
+| **Target** | `ast_per_min` |
+| **Status** | ⬜ not wired |
+| **Frozen on** | — |
+| **Decided on** | — |
+
+---
+
+## RPM (rebounds per minute)
+
+| | |
+|--|--|
+| **H0 / H1** | Same structure as PPM. |
+| **Primary naive** | Season-avg REB/min (freeze name before eval). |
+| **Target** | `reb_per_min` |
+| **Status** | ⬜ not wired |
+| **Frozen on** | — |
+| **Decided on** | — |
+
+---
+
+## What we are not claiming (yet)
+
+- Minutes-first cascade vs direct PTS/REB/AST regression (optional later experiment).
+- “Beats the market” as the H0 test (market Brier is a counter-metric).

@@ -1,0 +1,88 @@
+EXPERIMENT LOG
+==============
+
+Fill a block when you change data, split, features, or model family.
+Holdout numbers only count if the holdout was still blind at decision time.
+
+How to add an entry
+-------------------
+1. State what you believed would improve (one sentence).
+2. Note split + whether holdout was still untouched.
+3. Primary metric + at least one counter.
+4. Decision: ship / reject / needs redo — with why.
+
+Copy the blank template below for each new experiment.
+
+
+----------------------------------------------------------------------
+TEMPLATE (copy for new entries)
+----------------------------------------------------------------------
+ID:               E_
+Date:             
+League / prop:    
+Hypothesis / change:
+                  
+Split:            
+Model:            
+MAE (model):      
+MAE (naive):      
+Coverage / other: 
+Decision:         
+Notes:    
+
+----------------------------------------------------------------------
+EXAMPLE
+----------------------------------------------------------------------
+ID:               E7
+Date:             2026-07-22
+League / prop:    WNBA MIN
+Hypothesis / change:
+                  Rolling vs EWM feature family
+Split:            2026 holdout
+Model:            XGB q
+MAE (model):      EWM 4.12 · roll 4.08
+MAE (naive):      5.01 (season avg)
+Coverage / other: cov 79% → 78%
+Decision:         reject H1 — ΔMAE < noise / not worth feature churn
+Notes:            Keep EWM; document as complexity judgment
+
+
+----------------------------------------------------------------------
+E00
+----------------------------------------------------------------------
+ID:               E00
+Date:             2026-07-24
+League / prop:    WNBA (MINUTES)
+Hypothesis / change:
+                  Optuna hyperparam tune (100 trials, TSCV MAE, q50)
+                  would beat hand-set XGB_PARAMS
+Split:            S26 holdout (blind at decision)
+Model:            XGB q
+MAE (model):      3.554 → 3.578 (tuned)
+MAE (naive):      4.36 (season avg) · 5.08 (lag1)
+Coverage / other: Wilcoxon p ≪ 0.05 vs both naives either way
+Decision:         reject — tuned params worse on holdout (+0.024 MAE);
+                  overfit to TSCV
+Notes:            Keep pre-tune XGB_PARAMS; don't re-search same space,
+                  change features/data next
+
+----------------------------------------------------------------------
+E01
+----------------------------------------------------------------------
+ID:               E01
+Date:             2026-07-24
+League / prop:    WNBA (MINUTES)
+Hypothesis / change:
+                  Complexity ladder: frozen naive → linear quantile
+                  (impute+scale+QuantileRegressor Q10/50/90) → XGB q
+                  on the same features / WF masks / S26 holdout
+Split:            S26 holdout (already seen for XGB H0; linear report-only)
+Model:            linear q vs XGB q
+MAE (model):      holdout linear 4.288 · XGB 4.194 (ΔX−L −0.094)
+MAE (naive):      holdout 4.625 (season avg)
+Coverage / other: linear cov80 83.6%; Wilcoxon holdout linear≻naive
+                  p≪0.05; XGB≻linear p=0.0018 (WF last fold p=0.034)
+Decision:         ship XGB — beats linear on holdout; keep linear as
+                  report-only complexity bar (most lift is linear≻naive)
+Notes:            Linear not saved to joblib. Future heavier models must
+                  clear XGB by more than ~0.09 MAE, not just beat naive.

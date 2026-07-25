@@ -1,9 +1,9 @@
-"""Shared minutes live feature builder (NBA + WNBA).
+"""NBA minutes live feature builder → ``min_nba_model_*.joblib``.
 
 Matches ``min_nba_model_*.joblib`` ``feature_names``.
 
 ``starting`` prefers RotoWire projected starters in ``team_info``
-(``projectedStartingFive`` / ``projectedStartingFiveWnba``), updated by
+(``projectedStartingFive``), updated by
 ``src.scrapers.rotowire_starters_scraper`` (Airflow ``scrape_starters``).
 Falls back to the last completed-game start flag when no projected lineup applies.
 """

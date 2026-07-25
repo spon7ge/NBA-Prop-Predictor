@@ -209,6 +209,21 @@ def _leg_side(leg: dict) -> str:
     return str(raw or "over").strip().lower()
 
 
+def _hit_for_bet_side(
+    actual_stat: float | None,
+    line: float | None,
+    side: str,
+) -> bool | None:
+    """Did the bet cash? Grades store model-lean hit; parlays must use bet side."""
+    if actual_stat is None or line is None:
+        return None
+    actual = float(actual_stat)
+    line_f = float(line)
+    if side == "over":
+        return actual > line_f
+    return actual < line_f
+
+
 def _grade_parlays(
     slate_rows: list[dict],
     grade_idx: dict[tuple, dict],
@@ -281,6 +296,11 @@ def _grade_parlays(
                     continue
 
                 reason = g.get("miss_reason") or ""
+                line_val = (
+                    g.get("line")
+                    if g.get("line") is not None
+                    else (float(line) if line is not None else None)
+                )
                 # DNP kills the ticket — count as a miss, not "pending".
                 if reason == "dnp":
                     any_miss = True
@@ -290,9 +310,7 @@ def _grade_parlays(
                             player_name=str(player),
                             team_abbr=g.get("team_abbr") or team,
                             market=market,
-                            line=g.get("line") if g.get("line") is not None else (
-                                float(line) if line is not None else None
-                            ),
+                            line=line_val,
                             side=side,
                             actual_stat=None,
                             hit=False,
@@ -301,24 +319,44 @@ def _grade_parlays(
                     )
                     continue
 
-                hit = bool(g.get("hit"))
+                actual_stat = g.get("actual_stat")
+                # Always score the ticket side vs actual — do not reuse grade.hit
+                # (that flag is model-lean, which can disagree with the bet side).
+                hit_resolved = _hit_for_bet_side(actual_stat, line_val, side)
+                if hit_resolved is None:
+                    legs_pending += 1
+                    out_legs.append(
+                        GradedLeg(
+                            player_name=str(player),
+                            team_abbr=g.get("team_abbr") or team,
+                            market=market,
+                            line=line_val,
+                            side=side,
+                            actual_stat=actual_stat,
+                            hit=None,
+                            miss_reason="ungraded",
+                        )
+                    )
+                    continue
+
+                hit = hit_resolved
                 legs_scored += 1
                 if hit:
                     legs_hit += 1
+                    reason = "clean_hit"
                 else:
                     any_miss = True
+                    reason = "miss"
                 out_legs.append(
                     GradedLeg(
                         player_name=str(player),
                         team_abbr=g.get("team_abbr") or team,
                         market=market,
-                        line=g.get("line") if g.get("line") is not None else (
-                            float(line) if line is not None else None
-                        ),
+                        line=line_val,
                         side=side,
-                        actual_stat=g.get("actual_stat"),
+                        actual_stat=actual_stat,
                         hit=hit,
-                        miss_reason=reason or None,
+                        miss_reason=reason,
                     )
                 )
 

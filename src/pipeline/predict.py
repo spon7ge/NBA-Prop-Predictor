@@ -6,6 +6,10 @@ Public API
 load_latest_odds(league, region, prop)
     Pulls the most recent prop lines from raw Supabase tables.
 
+load_quantile_bundles(league, *, models_dir)
+    Loads league-specific minutes + rate model joblibs
+    (``min_{league}_model_*.joblib``, ``ppm_*``, ``apm_*``, ``rpm_*``).
+
 predict_rate(names, current_date, prop, *, league, min_bundle, rate_bundle)
     Loads the most recent silver season, selects the correct rate pipeline
     from ``prop``, and returns quantile predictions:
@@ -24,15 +28,18 @@ line_probs_for_market(preds_df, lines_df, sim_fn, n_sims=10_000)
 from __future__ import annotations
 
 from datetime import date
+from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 
-from src.live_pipeline.min_pipeline import min_pipeline
 from src.live_pipeline.nba.apm_pipeline import apm_pipeline as nba_apm_pipeline
+from src.live_pipeline.nba.min_pipeline import min_pipeline as nba_min_pipeline
 from src.live_pipeline.nba.ppm_pipeline import ppm_pipeline as nba_ppm_pipeline
 from src.live_pipeline.nba.rpm_pipeline import rpm_pipeline as nba_rpm_pipeline
 from src.live_pipeline.wnba.apm_pipeline import apm_pipeline as wnba_apm_pipeline
+from src.live_pipeline.wnba.min_pipeline import min_pipeline as wnba_min_pipeline
 from src.live_pipeline.wnba.ppm_pipeline import ppm_pipeline as wnba_ppm_pipeline
 from src.live_pipeline.wnba.rpm_pipeline import rpm_pipeline as wnba_rpm_pipeline
 from src.utils.context import coerce_nonneg_monotone_quantiles
@@ -41,6 +48,7 @@ from src.utils.helper_functions import findOpp
 
 _LEAGUE_ID = {"nba": "00", "wnba": "10"}
 
+_DEFAULT_MODELS_DIR = Path(__file__).resolve().parents[2] / "models" / "saved_models"
 
 def load_opp_def_ratings(
     season_type: str = "Regular Season",
@@ -114,6 +122,11 @@ _PROP_PIPELINE: dict[str, dict[str, object]] = {
         "player_rebounds": wnba_rpm_pipeline,
     },
 }
+
+_MIN_PIPELINE: dict[str, object] = {
+    "nba": nba_min_pipeline,
+    "wnba": wnba_min_pipeline,
+}
 _PROP_MARKET: dict[str, str] = {
     "player_points":   "PTS",
     "player_assists":  "AST",
@@ -142,6 +155,56 @@ _ODDS_COL_RENAME: dict[str, str] = {
     "last_update":   "LAST_UPDATE",
     "data_pulled_at":"DATA_PULLED_AT",
 }
+
+
+# ── model loading ─────────────────────────────────────────────────────────────
+
+def _latest_bundle(models_dir: Path, prop: str, league: str) -> dict:
+    """Load the newest joblib for a prop × league pair.
+
+    Prefers ``{prop}_{league}_model_*.joblib``, then falls back to the older
+    ``{prop}_quantile_xgb_*.joblib`` naming.
+    """
+    for pattern in (
+        f"{prop}_{league}_model_*.joblib",
+        f"{prop}_quantile_xgb_*.joblib",
+    ):
+        files = sorted(models_dir.glob(pattern))
+        if files:
+            chosen = files[-1]
+            print(f"  [{prop.upper()}] {chosen.name}")
+            return joblib.load(chosen)
+    raise FileNotFoundError(
+        f"No model bundle found for prop={prop!r} league={league!r} in {models_dir}"
+    )
+
+
+def load_quantile_bundles(
+    league: str,
+    *,
+    models_dir: str | Path | None = None,
+) -> dict[str, dict]:
+    """Load minutes + rate quantile bundles for *league*.
+
+    Minutes models are league-specific (``min_nba_model_*.joblib`` vs
+    ``min_wnba_model_*.joblib``), same as ppm / apm / rpm.
+
+    Returns
+    -------
+    dict with keys ``'min'``, ``'ppm'``, ``'apm'``, ``'rpm'``.
+    """
+    league = league.lower()
+    if league not in ("nba", "wnba"):
+        raise ValueError(f"Unknown league {league!r}; expected 'nba' or 'wnba'")
+
+    root = Path(models_dir) if models_dir is not None else _DEFAULT_MODELS_DIR
+    print(f"\nLoading models for {league.upper()} from {root}…")
+    return {
+        "min": _latest_bundle(root, "min", league),
+        "ppm": _latest_bundle(root, "ppm", league),
+        "apm": _latest_bundle(root, "apm", league),
+        "rpm": _latest_bundle(root, "rpm", league),
+    }
 
 
 # ── public API ────────────────────────────────────────────────────────────────
@@ -290,10 +353,12 @@ def predict_rate(
     league:
         ``'nba'`` or ``'wnba'``.
     min_bundle:
-        Joblib bundle for the minutes model
-        (keys: ``quantile_models``, ``feature_names``).
+        Joblib bundle for the *league* minutes model
+        (``min_nba_model_*.joblib`` or ``min_wnba_model_*.joblib``;
+        keys: ``quantile_models``, ``feature_names``).
+        Prefer ``load_quantile_bundles(league)['min']``.
     rate_bundle:
-        Joblib bundle for the rate model matching *prop*.
+        Joblib bundle for the rate model matching *prop* and *league*.
     def_ratings:
         Optional dict keyed by TEAM_ID → ``{"DEF_RATING": float, "PACE": float}``.
         Load once via ``load_opp_def_ratings()`` and pass in.  When omitted
@@ -324,6 +389,7 @@ def predict_rate(
         )
 
     rate_pipeline = _PROP_PIPELINE[league][prop]
+    min_pipeline = _MIN_PIPELINE[league]
     market        = _PROP_MARKET[prop]
     rate_col      = _PROP_RATE_COL[prop]
 

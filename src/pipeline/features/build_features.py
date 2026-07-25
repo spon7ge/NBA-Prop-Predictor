@@ -17,11 +17,14 @@ from src.pipeline.clean import read_raw_tables
 from src.pipeline.fetch import LEAGUES, LeagueKey
 
 HALFLIVES = [5, 10, 20]
-# Require a few prior games before EWM is defined (avoids 1-game "averages").
+# Rolling windows mirror EWM halflives so roll{w} and ewm_hl{w} are paired.
+ROLL_WINDOWS = HALFLIVES
+# Require a few prior games before EWM / roll is defined (avoids 1-game "averages").
 EWM_MIN_PERIODS = 3
+ROLL_MIN_PERIODS = EWM_MIN_PERIODS
 
-# Leakage convention (player + team): shift(1) THEN ewm/expanding.
-# Never ewm().shift(1) — same numbers here, but mixed order invites leaks on edits.
+# Leakage convention (player + team): shift(1) THEN ewm/rolling/expanding.
+# Never ewm()/rolling().shift(1) — same numbers here, but mixed order invites leaks on edits.
 
 # Counting stats → divided by MIN before rolling (produces ``{stat}_per_min``).
 PLAYER_BASE_PER_MIN_STATS = [
@@ -107,7 +110,7 @@ class FeatureEngineer:
     # ── Player features ───────────────────────────────────────────────────────
 
     def create_player_base_features(self, player_base_df):
-        """Leakage-safe EWM, season avg, and lag-1 for player_base per-min rates."""
+        """Leakage-safe EWM, rolling mean, season avg, and lag-1 for player_base."""
         print("\nCreating player base features...")
         df = player_base_df.copy()
         if 'min' in df.columns:
@@ -121,7 +124,7 @@ class FeatureEngineer:
         )
 
     def create_player_adv_features(self, player_adv_df):
-        """Leakage-safe EWM, season avg, and lag-1 for player_adv stats."""
+        """Leakage-safe EWM, rolling mean, season avg, and lag-1 for player_adv."""
         print("\nCreating player adv features...")
         return self._add_player_features(
             player_adv_df, stat_cols=PLAYER_ADV_STATS, prefix='adv',
@@ -132,7 +135,7 @@ class FeatureEngineer:
         tracking_df,
         player_base_df: pd.DataFrame | None = None,
     ):
-        """Leakage-safe EWM, season avg, and lag-1 for tracking per-min rates.
+        """Leakage-safe EWM, rolling mean, season avg, and lag-1 for tracking.
 
         Tracking rows often lack ``game_date`` / ``season_year`` — pass
         ``player_base_df`` so those can be merged on ``game_id`` + ``player_id``.
@@ -271,13 +274,14 @@ class FeatureEngineer:
         df: pd.DataFrame,
         stat_cols: list[str],
         prefix: str,
-        halflives: list[int] | None = None,
+        windows: list[int] | None = None,
     ) -> pd.DataFrame:
-        """Add ``{prefix}_{stat}_ewm_hl{h}``, ``_season_avg``, and ``_lag1`` cols.
+        """Add ``{prefix}_{stat}_ewm_hl{w}``, ``_roll{w}``, ``_season_avg``, ``_lag1``.
 
-        Leakage convention: ``shift(1)`` then ``ewm`` / ``expanding`` (see module note).
+        Leakage convention: ``shift(1)`` then ``ewm`` / ``rolling`` / ``expanding``
+        (see module note). Rolling windows match EWM halflives by default.
         """
-        halflives = halflives or HALFLIVES
+        windows = list(windows or ROLL_WINDOWS)
         df = df.copy()
         df['game_date'] = pd.to_datetime(df['game_date'])
         df = df.sort_values(['player_id', 'game_date']).reset_index(drop=True)
@@ -301,14 +305,18 @@ class FeatureEngineer:
         for stat in present:
             # shift first, then window — do not reverse this order.
             shifted = g[stat].shift(1)
+            shifted_by_player = shifted.groupby(df['player_id'], sort=False)
 
-            for hl in halflives:
-                ewm = (
-                    shifted.groupby(df['player_id'], sort=False)
-                    .ewm(halflife=hl, min_periods=EWM_MIN_PERIODS)
-                    .mean()
-                )
-                df[f'{prefix}_{stat}_ewm_hl{hl}'] = ewm.reset_index(level=0, drop=True)
+            for w in windows:
+                ewm = shifted_by_player.ewm(
+                    halflife=w, min_periods=EWM_MIN_PERIODS,
+                ).mean()
+                df[f'{prefix}_{stat}_ewm_hl{w}'] = ewm.reset_index(level=0, drop=True)
+
+                roll = shifted_by_player.rolling(
+                    window=w, min_periods=ROLL_MIN_PERIODS,
+                ).mean()
+                df[f'{prefix}_{stat}_roll{w}'] = roll.reset_index(level=0, drop=True)
 
             df[f'{prefix}_{stat}_lag1'] = shifted
 
@@ -330,16 +338,17 @@ class FeatureEngineer:
 
         print(
             f"  {prefix}: {len(present)} stats × "
-            f"({len(halflives)} ewm + season_avg + lag1) on {len(df):,} rows"
+            f"({len(windows)} ewm + {len(windows)} roll + season_avg + lag1) "
+            f"on {len(df):,} rows"
         )
         return df
 
     # ── Team features ─────────────────────────────────────────────────────────
 
     def create_team_base_features(self, team_base_df):
-        """Create exponential weighted averages and other team-level features.
+        """Create team-level EWM + rolling means (same windows as player path).
 
-        Leakage convention: shift(1) then ewm (same as player path).
+        Leakage convention: shift(1) then ewm / rolling.
         """
         print("\nCreating team features...")
 
@@ -357,13 +366,18 @@ class FeatureEngineer:
         ]
         for stat in stats_to_roll:
             shifted = g[stat].shift(1)
-            for hl in HALFLIVES:
-                ewm = (
-                    shifted.groupby(team_base_df['team_id'], sort=False)
-                    .ewm(halflife=hl, min_periods=EWM_MIN_PERIODS)
-                    .mean()
+            shifted_by_team = shifted.groupby(team_base_df['team_id'], sort=False)
+            for w in ROLL_WINDOWS:
+                ewm = shifted_by_team.ewm(
+                    halflife=w, min_periods=EWM_MIN_PERIODS,
+                ).mean()
+                team_base_df[f'team_{stat}_ewm_hl{w}'] = ewm.reset_index(
+                    level=0, drop=True,
                 )
-                team_base_df[f'team_{stat}_ewm_hl{hl}'] = ewm.reset_index(
+                roll = shifted_by_team.rolling(
+                    window=w, min_periods=ROLL_MIN_PERIODS,
+                ).mean()
+                team_base_df[f'team_{stat}_roll{w}'] = roll.reset_index(
                     level=0, drop=True,
                 )
 
@@ -371,9 +385,9 @@ class FeatureEngineer:
         return team_base_df
 
     def create_team_adv_features(self, team_adv_df):
-        """Create exponential weighted averages and other team-level features.
+        """Create team-adv EWM + rolling means (same windows as player path).
 
-        Leakage convention: shift(1) then ewm (same as player path).
+        Leakage convention: shift(1) then ewm / rolling.
         """
         print("\nCreating team adv features...")
 
@@ -391,13 +405,18 @@ class FeatureEngineer:
         ]
         for stat in stats_to_roll:
             shifted = g[stat].shift(1)
-            for hl in HALFLIVES:
-                ewm = (
-                    shifted.groupby(team_adv_df['team_id'], sort=False)
-                    .ewm(halflife=hl, min_periods=EWM_MIN_PERIODS)
-                    .mean()
+            shifted_by_team = shifted.groupby(team_adv_df['team_id'], sort=False)
+            for w in ROLL_WINDOWS:
+                ewm = shifted_by_team.ewm(
+                    halflife=w, min_periods=EWM_MIN_PERIODS,
+                ).mean()
+                team_adv_df[f'team_{stat}_ewm_hl{w}'] = ewm.reset_index(
+                    level=0, drop=True,
                 )
-                team_adv_df[f'team_{stat}_ewm_hl{hl}'] = ewm.reset_index(
+                roll = shifted_by_team.rolling(
+                    window=w, min_periods=ROLL_MIN_PERIODS,
+                ).mean()
+                team_adv_df[f'team_{stat}_roll{w}'] = roll.reset_index(
                     level=0, drop=True,
                 )
 
@@ -405,26 +424,31 @@ class FeatureEngineer:
         return team_adv_df
 
     def create_matchup_team_base_features(self, team_base_df):
-        """Attach opponent team_base EWM features via same-game partner team_id.
+        """Attach opponent team_base window features via same-game partner team_id.
 
-        Expects ``create_team_base_features`` output (``team_*_ewm_hl*`` cols).
-        Adds ``opp_team_id`` and ``opp_*_ewm_hl*`` columns for the other team
-        in each ``game_id``.
+        Expects ``create_team_base_features`` output (``team_*_ewm_hl*`` /
+        ``team_*_roll*`` cols). Adds ``opp_team_id`` and matching ``opp_*`` cols.
         """
         print("\nCreating matchup team base features...")
-        return self._attach_opp_ewm_features(team_base_df)
+        return self._attach_opp_window_features(team_base_df)
 
     def create_matchup_team_adv_features(self, team_adv_df):
-        """Attach opponent team_adv EWM features via same-game partner team_id.
+        """Attach opponent team_adv window features via same-game partner team_id.
 
-        Expects ``create_team_adv_features`` output (``team_*_ewm_hl*`` cols).
+        Expects ``create_team_adv_features`` output (``team_*_ewm_hl*`` /
+        ``team_*_roll*`` cols).
         """
         print("\nCreating matchup team adv features...")
-        return self._attach_opp_ewm_features(team_adv_df)
+        return self._attach_opp_window_features(team_adv_df)
+
+    # Back-compat alias for older call sites / notebooks.
+    @classmethod
+    def _attach_opp_ewm_features(cls, team_df: pd.DataFrame) -> pd.DataFrame:
+        return cls._attach_opp_window_features(team_df)
 
     @staticmethod
-    def _attach_opp_ewm_features(team_df: pd.DataFrame) -> pd.DataFrame:
-        """Find the other team in each game and merge their EWM columns as opp_*."""
+    def _attach_opp_window_features(team_df: pd.DataFrame) -> pd.DataFrame:
+        """Find the other team in each game and merge their EWM/roll cols as opp_*."""
         df = team_df.copy()
         df['game_date'] = pd.to_datetime(df['game_date'])
         df = df.sort_values(['team_id', 'game_date']).reset_index(drop=True)
@@ -434,29 +458,41 @@ class FeatureEngineer:
         df = df.merge(partners, on='game_id', how='left')
         df = df.loc[df['team_id'] != df['opp_team_id']].copy()
 
-        # Own-team cols are team_*_ewm_hl*; map → opp_*_ewm_hl* (drop team_ prefix).
-        ewm_cols = [
+        # Own-team window cols → opp_* (drop team_ prefix). Skip roll std/var if present.
+        window_cols = [
             c for c in df.columns
-            if c.startswith('team_') and '_ewm_hl' in c
+            if c.startswith('team_')
+            and (
+                '_ewm_hl' in c
+                or (
+                    '_roll' in c
+                    and not c.endswith(('_std', '_var'))
+                )
+            )
         ]
-        if not ewm_cols:
-            print("  ⚠ no team_*_ewm_hl* columns found — run create_team_*_features first")
+        if not window_cols:
+            print(
+                "  ⚠ no team_*_ewm_hl* / team_*_roll* columns found — "
+                "run create_team_*_features first"
+            )
             return df
 
-        opp_rename = {c: f'opp_{c[len("team_"):]}' for c in ewm_cols}
+        opp_rename = {c: f'opp_{c[len("team_"):]}' for c in window_cols}
         opp = (
-            df[['game_id', 'team_id', *ewm_cols]]
+            df[['game_id', 'team_id', *window_cols]]
             .rename(columns={'team_id': 'opp_team_id', **opp_rename})
         )
         # opp frame is keyed by (game_id, opp_team_id) = that opponent's own row.
         df = df.merge(opp, on=['game_id', 'opp_team_id'], how='left')
 
-        print(f"  Attached {len(ewm_cols)} opp EWM cols → {len(df):,} team-game rows")
+        print(
+            f"  Attached {len(window_cols)} opp window cols → {len(df):,} team-game rows"
+        )
         return df
 
     @staticmethod
     def _engineered_cols(df: pd.DataFrame) -> list[str]:
-        """Columns produced by feature helpers (EWM / season / lag / per-min / opp / starting)."""
+        """Columns produced by feature helpers (EWM / roll / season / lag / per-min / opp)."""
         out = []
         for c in df.columns:
             if c in ("starting", "opp_team_id", "games_played", "minutes") or c.endswith(
@@ -465,7 +501,7 @@ class FeatureEngineer:
                 out.append(c)
             elif any(
                 tok in c
-                for tok in ("_ewm_hl", "_season_avg", "_lag1", "_per_min")
+                for tok in ("_ewm_hl", "_roll", "_season_avg", "_lag1", "_per_min")
             ) or c.startswith("opp_"):
                 out.append(c)
         return out

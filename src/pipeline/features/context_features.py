@@ -14,11 +14,16 @@ import numpy as np
 import pandas as pd
 
 from src.pipeline.features.build_features import FeatureEngineer
+from src.pipeline.fetch import LeagueKey
 
 _PLAYER_POSITIONS_DIR = (
     Path(__file__).resolve().parents[3] / "data" / "raw" / "player_positions"
 )
 _FINE_POS: frozenset[str] = frozenset({"PG", "SG", "SF", "PF", "C"})
+# Basketball-Reference labels used by ``wnba_*_players.csv``.
+_WNBA_POS: frozenset[str] = frozenset(
+    {"G", "F", "C", "G-F", "F-G", "F-C", "C-F"}
+) | _FINE_POS
 
 
 def _norm_player_name(name: object) -> str:
@@ -29,17 +34,48 @@ def _norm_player_name(name: object) -> str:
     return " ".join(n.lower().strip().split())
 
 
-def _season_end_year(season: str) -> str:
+def _nba_season_end_year(season: str) -> str:
     """``'2024-25'`` → ``'2025'`` (suffix in ``nba_{end}_players.csv``)."""
     return str(int(str(season).split("-")[0]) + 1)
 
 
-def _load_positions_lookup(season: str) -> pd.DataFrame:
-    """Load ``_name_lower`` → ``pos`` for one season from raw player_positions CSVs."""
-    candidate = _PLAYER_POSITIONS_DIR / f"nba_{_season_end_year(season)}_players.csv"
-    path = candidate if candidate.exists() else _PLAYER_POSITIONS_DIR / "player_positions.csv"
-    if not path.exists():
-        print(f"  ⚠ no positions CSV for season={season}")
+def _wnba_season_year(season: str) -> str:
+    """``'2018'`` / ``2018`` → calendar year for ``wnba_{year}_players.csv``."""
+    s = str(season).strip()
+    if len(s) >= 4 and s[:4].isdigit():
+        return s[:4]
+    return s
+
+
+def _load_positions_lookup(
+    season: str,
+    *,
+    league: LeagueKey = "nba",
+) -> pd.DataFrame:
+    """Load ``_name_lower`` → ``pos`` for one season from raw player_positions CSVs.
+
+    * NBA  — ``nba_{end_year}_players.csv``, else ``player_positions.csv``
+    * WNBA — ``wnba_{year}_players.csv`` (no NBA fallback)
+    """
+    if league == "wnba":
+        year = _wnba_season_year(season)
+        candidate = _PLAYER_POSITIONS_DIR / f"wnba_{year}_players.csv"
+        path = candidate if candidate.exists() else None
+        allowed = _WNBA_POS
+    else:
+        candidate = (
+            _PLAYER_POSITIONS_DIR / f"nba_{_nba_season_end_year(season)}_players.csv"
+        )
+        path = (
+            candidate
+            if candidate.exists()
+            else _PLAYER_POSITIONS_DIR / "player_positions.csv"
+        )
+        allowed = _FINE_POS
+
+    if path is None or not path.exists():
+        missing = candidate.name if league == "wnba" else f"season={season}"
+        print(f"  ⚠ no positions CSV for {missing}")
         return pd.DataFrame(columns=["_name_lower", "pos"])
 
     raw = pd.read_csv(path, encoding="utf-8-sig")
@@ -52,8 +88,9 @@ def _load_positions_lookup(season: str) -> pd.DataFrame:
         print(f"  ⚠ {path.name} missing name columns — skipping")
         return pd.DataFrame(columns=["_name_lower", "pos"])
 
+    # Keep hybrid labels like G-F intact (upper only letters/hyphen tokens).
     pos = raw["pos"].astype(str).str.strip().str.upper()
-    valid = raw["pos"].notna() & pos.ne("") & pos.isin(_FINE_POS)
+    valid = raw["pos"].notna() & pos.ne("") & pos.isin(allowed)
     parts = []
     for col in name_cols:
         keys = raw.loc[valid, col].map(_norm_player_name)
@@ -151,12 +188,15 @@ class ContextFeatureEngineer(FeatureEngineer):
     """FeatureEngineer + rest/B2B, trends, ranks, std/var, fatigue, starter flags."""
 
     def add_player_positions(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Merge PG/SG/SF/PF/C ``pos`` from ``data/raw/player_positions``.
+        """Merge ``pos`` from ``data/raw/player_positions`` using ``self.league``.
 
-        Picks ``nba_{end_year}_players.csv`` per row ``season_year``
-        (e.g. ``2024-25`` → ``nba_2025_players.csv``). Falls back to
-        ``self.season`` when ``season_year`` is absent. Matching uses
-        accent-stripped ``player_name`` against CSV ``name_s26`` / ``name``.
+        * NBA  — ``nba_{end_year}_players.csv`` (PG/SG/SF/PF/C);
+                 falls back to ``player_positions.csv``.
+        * WNBA — ``wnba_{year}_players.csv`` (G/F/C + hybrids).
+
+        Uses row ``season_year`` / ``season`` when present, else ``self.season``.
+        Matching uses accent-stripped ``player_name`` against CSV
+        ``name_s26`` / ``name``.
         """
         print("\nMerging player positions...")
         if "player_name" not in df.columns:
@@ -183,7 +223,7 @@ class ContextFeatureEngineer(FeatureEngineer):
             )
             if not mask.any():
                 continue
-            lookup = _load_positions_lookup(str(season))
+            lookup = _load_positions_lookup(str(season), league=self.league)
             if lookup.empty:
                 continue
             pos_map = lookup.set_index("_name_lower")["pos"]
