@@ -39,6 +39,7 @@ models/
 | PPM | `pts_per_min` | `nba/ppm_*`, `wnba/ppm_*` |
 | APM | `ast_per_min` | `nba/apm_*`, `wnba/apm_*` |
 | RPM | `reb_per_min` | `nba/rpm_*`, `wnba/rpm_*` |
+| Discovery | scoring drivers (`pts`, `pts_per_min`, `minutes`) | `nba/pts_scoring_discovery.ipynb` |
 
 ---
 
