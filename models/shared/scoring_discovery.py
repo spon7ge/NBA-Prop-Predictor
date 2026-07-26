@@ -18,7 +18,12 @@ CONTEXT_COLS = {
     "games_played_last_7_days", "games_played_last_14_days", "min_sum_last_7_days",
     "starter_roll10_pct",
 }
-MARKET_TOKENS = ("over_under", "ou_", "implied", "spread", "line", "total")
+SCOPE_BY_CATEGORY_PREFIX = {
+    "Player": "player",
+    "Tracking": "player",
+    "Team": "team",
+    "Opponent": "opponent",
+}
 
 # concept → exact or substring matchers for available / proxy columns
 WISHLIST_ITEMS: list[dict] = [
@@ -32,7 +37,7 @@ WISHLIST_ITEMS: list[dict] = [
     {"category": "Player advanced", "concept": "Offensive Rating", "column_matchers": ["off_rating", "adv_off"], "proxy_matchers": []},
     {"category": "Player advanced", "concept": "Assist %", "column_matchers": ["ast_pct", "adv_ast_pct"], "proxy_matchers": []},
     {"category": "Player advanced", "concept": "Turnover % / TOV", "column_matchers": ["tov_pct", "tov_per_min", "adv_tov"], "proxy_matchers": []},
-    {"category": "Player advanced", "concept": "Pace / possessions", "column_matchers": ["pace", "poss", "adv_pace", "adv_poss"], "proxy_matchers": []},
+    {"category": "Player advanced", "concept": "Pace / possessions", "column_matchers": ["adv_pace", "adv_poss"], "proxy_matchers": []},
     {"category": "Tracking", "concept": "Touches", "column_matchers": ["tchs", "track_tchs"], "proxy_matchers": []},
     {"category": "Tracking", "concept": "Time of possession", "column_matchers": [], "proxy_matchers": ["tchs", "pass_per_min"]},
     {"category": "Tracking", "concept": "Contested / uncontested FGA", "column_matchers": ["cfga", "ufga", "dfga"], "proxy_matchers": []},
@@ -56,22 +61,79 @@ WISHLIST_ITEMS: list[dict] = [
 ]
 
 
-def _matches(columns: set[str], matchers: Sequence[str]) -> list[str]:
+def _scope_for_category(category: str) -> str | None:
+    for prefix, scope in SCOPE_BY_CATEGORY_PREFIX.items():
+        if category.startswith(prefix):
+            return scope
+    return None
+
+
+def _token_boundary_match(col: str, matcher: str) -> bool:
+    c = col.lower()
+    m = matcher.lower()
+    if c == m:
+        return True
+    start = 0
+    while True:
+        idx = c.find(m, start)
+        if idx < 0:
+            return False
+        before = c[idx - 1] if idx > 0 else "_"
+        after_idx = idx + len(m)
+        after = c[after_idx] if after_idx < len(c) else "_"
+        if before in ("_", "") and after in ("_", ""):
+            return True
+        start = idx + 1
+
+
+def _column_in_scope(col: str, scope: str | None) -> bool:
+    c = col.lower()
+    if scope == "player":
+        return not (c.startswith("opp_") or c.startswith("team_"))
+    if scope == "team":
+        return c.startswith("team_")
+    if scope == "opponent":
+        return c.startswith("opp_")
+    return True
+
+
+def _matches(
+    columns: set[str],
+    matchers: Sequence[str],
+    *,
+    scope: str | None = None,
+) -> list[str]:
     hits: list[str] = []
     for m in matchers:
-        m_low = m.lower()
         for c in columns:
-            if m_low in c.lower() and c not in hits:
+            if c in hits:
+                continue
+            if not _column_in_scope(c, scope):
+                continue
+            if _token_boundary_match(c, m):
                 hits.append(c)
     return hits
+
+
+def _is_market_col(col: str) -> bool:
+    c = col.lower()
+    if c.startswith("ou_") or "over_under" in c:
+        return True
+    for tok in ("implied", "spread"):
+        if _token_boundary_match(c, tok):
+            return True
+    if _token_boundary_match(c, "total"):
+        return True
+    return "_line" in c
 
 
 def build_coverage_map(columns: Iterable[str]) -> pd.DataFrame:
     colset = set(columns)
     rows = []
     for item in WISHLIST_ITEMS:
-        exact = _matches(colset, item["column_matchers"])
-        proxy = _matches(colset, item["proxy_matchers"]) if not exact else []
+        scope = _scope_for_category(item["category"])
+        exact = _matches(colset, item["column_matchers"], scope=scope)
+        proxy = _matches(colset, item["proxy_matchers"], scope=scope) if not exact else []
         if exact:
             status = "available"
             matched = exact
@@ -104,7 +166,7 @@ def lineage_for(col: str) -> str:
     c = col.lower()
     if col in ID_META or c in ID_META:
         return "excluded"
-    if any(tok in c for tok in MARKET_TOKENS):
+    if _is_market_col(c):
         return "market"
     if col in CONTEXT_COLS or c in CONTEXT_COLS or c.startswith("starter_"):
         return "context"
@@ -214,8 +276,8 @@ def season_rank_stability(
         base["stability"] = np.nan
         return base.head(top_n)
     mat = pd.concat(rank_maps, axis=1)
-    # pairwise Spearman of rank vectors across seasons, then mean per feature via leave-one?
-    # Use feature-wise std of ranks as inverse stability; also overall pairwise.
+    # Pairwise Spearman of MI rank vectors across seasons (global mean in season_rank_corr_mean).
+    # Per-feature stability: inverse of rank std across seasons (lower variance → higher score).
     pair_cors = []
     cols = list(mat.columns)
     for i in range(len(cols)):

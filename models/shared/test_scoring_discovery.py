@@ -53,9 +53,24 @@ def test_split_feature_pools_keeps_prior_out_of_same_game():
     assert "fga_per_min" not in pools["predictive"]
     assert "pts" in pools["excluded"]
     assert "player_id" in pools["excluded"]
+    assert set(pools["same_game"]).isdisjoint(pools["predictive"])
 
 
-def test_lineage_for_prefixes():
+def test_build_coverage_map_player_pace_ignores_opp_pace():
+    cols = ["adv_pace_season_avg", "opp_pace_ewm_hl10", "team_pace_ewm_hl10"]
+    cov = sd.build_coverage_map(cols)
+    player_pace = cov.loc[cov["concept"].str.contains("Pace / possessions", case=False)].iloc[0]
+    team_pace = cov.loc[cov["concept"].str.contains("Team pace", case=False)].iloc[0]
+    assert player_pace["status"] == "available"
+    assert "adv_pace_season_avg" in player_pace["matched_columns"]
+    assert "opp_pace" not in player_pace["matched_columns"]
+    assert team_pace["status"] == "available"
+    assert "team_pace_ewm_hl10" in team_pace["matched_columns"]
+
+
+def test_lineage_for_does_not_flag_baseline_as_market():
+    assert sd.lineage_for("base_fga_per_min_ewm_hl10") == "prior_player"
+    assert sd.lineage_for("baseline_min_season_avg") == "prior_player"
     assert sd.lineage_for("base_pts_per_min_ewm_hl5") == "prior_player"
     assert sd.lineage_for("opp_def_rating_ewm_hl10") == "opponent"
     assert sd.lineage_for("team_pace_ewm_hl10") == "team"
