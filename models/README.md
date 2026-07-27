@@ -36,7 +36,8 @@ models/
 | Prop | Target | Notebooks |
 |------|--------|-----------|
 | MIN | `minutes` | `nba/min_nba_model.ipynb`, `wnba/min_wnba_model.ipynb` |
-| PPM | `pts_per_min` | `nba/ppm_*`, `wnba/ppm_*` |
+| PPM | `pts_per_min` | `nba/points/model.ipynb`, `wnba/ppm_*` |
+| PPM research | `pts_per_min` | `nba/points/researcher.ipynb` |
 | APM | `ast_per_min` | `nba/apm_*`, `wnba/apm_*` |
 | RPM | `reb_per_min` | `nba/rpm_*`, `wnba/rpm_*` |
 | Discovery | scoring drivers (`pts`, `pts_per_min`, `minutes`) | `nba/pts_scoring_discovery.ipynb` |
