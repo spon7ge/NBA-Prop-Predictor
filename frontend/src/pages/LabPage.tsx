@@ -29,7 +29,7 @@ export function LabPage() {
           Tailwind v4, shadcn, Query, Recharts, and D3 — ready for product UI.
         </p>
         <Link
-          to="/"
+          to="/slate"
           className="inline-flex items-center gap-1 text-sm font-medium hover:underline"
         >
           Open dashboard

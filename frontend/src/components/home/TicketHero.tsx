@@ -1,23 +1,28 @@
 import { Link } from "react-router-dom";
 import {
   ArrowDown,
-  CircleDot,
-  Dribbble,
+  Flame,
+  Goal,
+  Medal,
+  SportShoe,
+  Target,
   Ticket,
   Trophy,
+  Volleyball,
+  Zap,
 } from "lucide-react";
 
 const ringIcons = [
-  { Icon: Dribbble, color: "text-orange-400", angle: 0 },
+  { Icon: Volleyball, color: "text-orange-400", angle: 0 },
   { Icon: Trophy, color: "text-amber-300", angle: 36 },
-  { Icon: CircleDot, color: "text-sky-400", angle: 72 },
-  { Icon: Dribbble, color: "text-rose-400", angle: 108 },
-  { Icon: Trophy, color: "text-emerald-400", angle: 144 },
-  { Icon: CircleDot, color: "text-violet-400", angle: 180 },
-  { Icon: Dribbble, color: "text-cyan-400", angle: 216 },
-  { Icon: Trophy, color: "text-yellow-400", angle: 252 },
-  { Icon: CircleDot, color: "text-pink-400", angle: 288 },
-  { Icon: Dribbble, color: "text-lime-400", angle: 324 },
+  { Icon: Goal, color: "text-sky-400", angle: 72 },
+  { Icon: Medal, color: "text-rose-400", angle: 108 },
+  { Icon: Target, color: "text-emerald-400", angle: 144 },
+  { Icon: Flame, color: "text-violet-400", angle: 180 },
+  { Icon: SportShoe, color: "text-cyan-400", angle: 216 },
+  { Icon: Zap, color: "text-yellow-400", angle: 252 },
+  { Icon: Volleyball, color: "text-pink-400", angle: 288 },
+  { Icon: Trophy, color: "text-lime-400", angle: 324 },
 ] as const;
 
 export function TicketHero() {
