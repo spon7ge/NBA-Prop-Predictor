@@ -36,6 +36,14 @@ npm run dev
 
 Open http://localhost:5173/ for the home landing.
 
+## Tests
+
+```bash
+npm test
+```
+
+Vitest + Testing Library cover routing and LIVE NOW empty/filled states.
+
 ## Production build
 
 ```bash
@@ -43,15 +51,19 @@ npm run build
 npm run preview
 ```
 
-Build output goes to `frontend/dist/`.
+Build output goes to `frontend/dist/` (gitignored; regenerate as needed).
 
 ## Project structure
 
 ```
 frontend/
   src/
-    components/home/  # Nav, ticker, hero, LIVE NOW
+    components/home/  # Nav, ticker, hero, LIVE NOW (+ format helpers/tests)
     pages/            # Home, NotFound
-    index.css         # Tailwind + theme tokens
-  public/             # Static assets (favicon, etc.)
+    AppRouter.tsx     # `/` + `*`
+    main.tsx
+    index.css         # Tailwind + theme tokens used by the landing
+  public/             # Favicon and static assets
 ```
+
+Coding standards for this app follow repo `claude.md` (typing, small focused modules, input guards, tests with changes).

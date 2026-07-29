@@ -1,4 +1,9 @@
 import type { HomeLeague, LiveGame } from "./types";
+import {
+  LIVE_NOW_SKELETON_COUNT,
+  formatGamesInProgress,
+  normalizeLiveGames,
+} from "./format";
 
 type LiveNowSectionProps = {
   games?: LiveGame[];
@@ -72,8 +77,9 @@ function LiveGameCard({ game }: { game: LiveGame }) {
   );
 }
 
-export function LiveNowSection({ games = [] }: LiveNowSectionProps) {
-  const count = games.length;
+export function LiveNowSection({ games }: LiveNowSectionProps) {
+  const list = normalizeLiveGames(games);
+  const count = list.length;
 
   return (
     <section id="live-now" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
@@ -81,15 +87,15 @@ export function LiveNowSection({ games = [] }: LiveNowSectionProps) {
         <h2 className="text-sm font-bold tracking-[0.15em] text-white uppercase">
           Live Now
         </h2>
-        <p className="text-sm text-white/40">
-          {count} {count === 1 ? "game" : "games"} in progress
-        </p>
+        <p className="text-sm text-white/40">{formatGamesInProgress(count)}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {count === 0
-          ? [0, 1, 2].map((i) => <SkeletonGameCard key={i} />)
-          : games.map((game) => <LiveGameCard key={game.id} game={game} />)}
+          ? Array.from({ length: LIVE_NOW_SKELETON_COUNT }, (_, i) => (
+              <SkeletonGameCard key={i} />
+            ))
+          : list.map((game) => <LiveGameCard key={game.id} game={game} />)}
       </div>
     </section>
   );

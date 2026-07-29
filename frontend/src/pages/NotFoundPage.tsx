@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export function NotFoundPage() {
   return (
-    <main className="mx-auto flex min-h-svh max-w-lg flex-col justify-center gap-4 px-6">
+    <main className="mx-auto flex min-h-svh max-w-lg flex-col justify-center gap-4 bg-background px-6 text-foreground">
       <h1 className="text-2xl font-bold tracking-tight">Page not found</h1>
       <p className="text-muted-foreground">That route does not exist.</p>
       <Link
