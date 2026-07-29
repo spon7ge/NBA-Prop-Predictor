@@ -36,6 +36,28 @@ Stand up the agreed frontend stack inside the existing Vite app so future produc
 
 Helpers for shadcn: `class-variance-authority`, `clsx`, `tailwind-merge`, `src/lib/utils.ts` (`cn()`).
 
+## Visual language (locked)
+
+New UI (`/lab` and all future Tailwind/shadcn surfaces) follows these patterns. Theme tokens in `src/index.css` and Lab layout should express them; the legacy dashboard is unchanged until a later migration.
+
+| Pattern | Usage |
+|---------|--------|
+| Borders | Subtle dark borders separate sections without being heavy |
+| Spacing | Generous vertical spacing creates breathing room |
+| Typography | Bold headings, regular body text, muted secondary text |
+| Color accents | League badges provide the only color (besides white/gray) |
+| Cards / containers | Subtle boxes with rounded corners group related information |
+| External links / CTAs | Consistent arrow icons (lucide) for CTAs |
+
+Implications for this foundation pass:
+
+- **Palette:** Neutral gray/white base via shadcn `neutral`; no purple gradients, no decorative glow. Chart series on Lab use muted grays (and at most one demo “badge” accent color to show the league-badge pattern).
+- **Borders:** Prefer `border` + soft neutral border color over heavy dividers or shadows.
+- **Spacing:** Lab sections use generous vertical rhythm (e.g. `space-y-8` / `gap-8` scale), not tight dashboard packing.
+- **Type:** Headings `font-semibold`/`bold`; body default; secondary labels `text-muted-foreground`.
+- **Cards:** shadcn `Card` with rounded corners and light border; avoid multi-layer shadows.
+- **CTAs:** Primary text links/buttons that navigate or act pair with a small lucide arrow (`ArrowUpRight` / `ArrowRight`) for consistency.
+
 ## Architecture
 
 ```text
@@ -76,14 +98,16 @@ Existing `App.tsx` becomes the element rendered at `/` (no product rewrite).
 
 ## Lab showcase (`/lab`)
 
-Single page that proves the stack is ready:
+Single page that proves the stack is ready **and** demonstrates the visual language:
 
-1. Geist typography + lucide icon
-2. shadcn `Button` + `Card` section shells
-3. TanStack Query demo (`useQuery` with a trivial static/local fetcher)
-4. Recharts sample chart
-5. Small D3 SVG sample
-6. Link back to `/`
+1. Bold page heading + muted subtitle (Geist)
+2. shadcn `Card` sections with subtle borders and rounded corners; generous vertical spacing between sections
+3. Demo “league badge” accent (small colored chip) — only chromatic element aside from neutrals
+4. shadcn `Button` + CTA with lucide arrow icon
+5. TanStack Query demo (`useQuery` with a trivial static/local fetcher)
+6. Recharts sample chart (muted palette)
+7. Small D3 SVG sample
+8. Link back to `/` with arrow icon
 
 Lab must not break or restyle the dashboard.
 
@@ -116,6 +140,7 @@ Lab must not break or restyle the dashboard.
 
 - Listed packages installed and importable
 - Tailwind + Geist theme live for new UI
+- Visual language patterns encoded in theme + Lab (borders, spacing, type hierarchy, badge accent, cards, arrow CTAs)
 - shadcn Button usable via `@/components/ui/button`
 - Router wired with `/`, `/lab`, and 404
 - Recharts + D3 demo components present for copy-paste into future features
@@ -123,7 +148,8 @@ Lab must not break or restyle the dashboard.
 
 ## Implementation notes (for planning)
 
-1. Prefer official shadcn + Tailwind v4 init paths (`npx shadcn@latest init`, then `add button`).
+1. Prefer official shadcn + Tailwind v4 init paths (`npx shadcn@latest init`, then `add button` + `card`).
 2. Ensure `@tailwindcss/vite` is registered in `vite.config.ts` ahead of or alongside React plugin per current Tailwind v4 docs.
 3. Import `src/index.css` from `main.tsx`; keep `slate.css` imported only where the dashboard needs it (today: App or existing entry path).
-4. Update `frontend/README.md` in the same change set: stack list, `/lab` route, and note that `slate.css` remains for the dashboard.
+4. Map visual-language tokens in `src/index.css` (border, muted foreground, radius, spacing defaults) so Lab and future pages share one look.
+5. Update `frontend/README.md` in the same change set: stack list, `/lab` route, visual-language summary, and note that `slate.css` remains for the dashboard.
