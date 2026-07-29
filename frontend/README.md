@@ -43,7 +43,7 @@ npm run build
 npm run preview
 ```
 
-Build output goes to `frontend/dist/`. Static blog pages in `public/` are copied into the build automatically.
+Build output goes to `frontend/dist/`.
 
 ## Project structure
 
@@ -53,5 +53,5 @@ frontend/
     components/home/  # Nav, ticker, hero, LIVE NOW
     pages/            # Home, NotFound
     index.css         # Tailwind + theme tokens
-  public/             # Static assets + blog/contact/faq pages
+  public/             # Static assets (favicon, etc.)
 ```
