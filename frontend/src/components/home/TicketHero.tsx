@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   ArrowDown,
   Flame,
@@ -64,12 +63,6 @@ export function TicketHero() {
                 See what&apos;s inside
                 <ArrowDown className="size-4" aria-hidden />
               </a>
-              <Link
-                to="/slate"
-                className="inline-flex items-center rounded-full border border-white/25 bg-transparent px-5 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-white/5"
-              >
-                Learn the games
-              </Link>
             </div>
           </div>
 

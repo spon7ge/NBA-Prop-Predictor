@@ -10,7 +10,7 @@ export function NotFoundPage() {
         to="/"
         className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:underline"
       >
-        Back to dashboard
+        Back to home
         <ArrowRight className="size-4" />
       </Link>
     </main>

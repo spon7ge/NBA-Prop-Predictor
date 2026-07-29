@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { BarChart3, Settings } from "lucide-react";
 
 const leagues = [
@@ -9,10 +10,10 @@ export function HomeNav() {
   return (
     <header className="border-b border-white/10 bg-black">
       <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="/" className="flex items-center gap-2 text-white no-underline">
+        <Link to="/" className="flex items-center gap-2 text-white no-underline">
           <BarChart3 className="size-4 shrink-0" aria-hidden />
           <span className="text-sm font-semibold tracking-tight">hoopvista</span>
-        </a>
+        </Link>
 
         <nav
           className="hidden items-center gap-5 sm:flex"
@@ -33,21 +34,13 @@ export function HomeNav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <a
-            href="#"
-            className="text-xs font-medium text-white/70 no-underline hover:text-white"
-          >
-            About
-          </a>
-          <button
-            type="button"
-            aria-label="Settings"
-            className="rounded-md p-1.5 text-white/70 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            <Settings className="size-4" />
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label="Settings"
+          className="rounded-md p-1.5 text-white/70 transition-colors hover:bg-white/5 hover:text-white"
+        >
+          <Settings className="size-4" />
+        </button>
       </div>
     </header>
   );
