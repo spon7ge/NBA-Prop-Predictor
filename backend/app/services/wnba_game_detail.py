@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -27,6 +28,9 @@ FALLBACK_HOME_COLOR = "#EA580C"
 
 _cache: dict[str, dict] = {}
 
+_EVENT_ID_PATTERN = re.compile(r"^\d{6,12}$")
+_NOT_FOUND_CACHE_TTL_SECONDS = 45
+
 _ESPN_NON_RESULT_LABELS = {
     "STATUS_POSTPONED": "Postponed",
     "STATUS_CANCELED": "Canceled",
@@ -38,6 +42,17 @@ _ESPN_NON_RESULT_LABELS = {
 
 def clear_game_detail_cache() -> None:
     _cache.clear()
+
+
+def is_valid_espn_event_id(espn_event_id: str) -> bool:
+    return bool(_EVENT_ID_PATTERN.match(espn_event_id))
+
+
+def _cache_not_found(espn_event_id: str, *, now: float) -> None:
+    _cache[espn_event_id] = {
+        "not_found": True,
+        "expires_at": now + _NOT_FOUND_CACHE_TTL_SECONDS,
+    }
 
 
 def cache_ttl_seconds(detail: WnbaGameDetail) -> int:
@@ -89,22 +104,34 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
     now = time.time()
     cached = _cache.get(espn_event_id)
     if cached and cached["expires_at"] > now:
+        if cached.get("not_found"):
+            raise LookupError(espn_event_id)
         return cached["response"]
+
+    # A stale positive cache entry is still usable as a stale-while-error
+    # fallback below; a stale/expired negative entry is not.
+    stale_fallback = cached if cached and not cached.get("not_found") else None
+
+    if not is_valid_espn_event_id(espn_event_id):
+        _cache_not_found(espn_event_id, now=now)
+        raise LookupError(espn_event_id)
 
     try:
         payload = await fetch_espn_summary(espn_event_id)
     except httpx.HTTPStatusError as exc:
         if exc.response.status_code in (400, 404):
+            _cache_not_found(espn_event_id, now=now)
             raise LookupError(espn_event_id) from exc
-        if cached:
-            return cached["response"]
+        if stale_fallback:
+            return stale_fallback["response"]
         raise
     except Exception:
-        if cached:
-            return cached["response"]
+        if stale_fallback:
+            return stale_fallback["response"]
         raise
 
     if _is_not_found_payload(payload):
+        _cache_not_found(espn_event_id, now=now)
         raise LookupError(espn_event_id)
 
     try:
@@ -114,8 +141,8 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
             fetched_at=datetime.now(ET).isoformat(),
         )
     except Exception:
-        if cached:
-            return cached["response"]
+        if stale_fallback:
+            return stale_fallback["response"]
         raise
 
     _cache[espn_event_id] = {
@@ -201,8 +228,13 @@ def normalize_espn_summary(
             shooting=shooting,
         )
         plays.append(play)
-        if shooting:
-            coord = p.get("coordinate") or {}
+
+        is_free_throw = "free throw" in text.lower()
+        coord = p.get("coordinate")
+        has_real_coordinate = (
+            isinstance(coord, dict) and "x" in coord and "y" in coord
+        )
+        if shooting and not is_free_throw and has_real_coordinate:
             shots.append(
                 GameDetailShot(
                     id=play.id,

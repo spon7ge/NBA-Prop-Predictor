@@ -97,3 +97,29 @@ def test_game_detail_502_when_never_cached():
         svc.clear_game_detail_cache()
         res = client.get("/api/wnba/games/401857098")
     assert res.status_code == 502
+
+
+def test_game_detail_404_for_malformed_id_without_calling_espn():
+    async def fake_fetch(espn_event_id: str):
+        raise AssertionError("ESPN should not be called for a malformed id")
+
+    with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch) as fetch:
+        svc.clear_game_detail_cache()
+        res = client.get("/api/wnba/games/not-an-id")
+    assert res.status_code == 404
+    assert res.headers.get("Cache-Control") == "no-store"
+    fetch.assert_not_called()
+
+
+def test_game_detail_negative_cache_avoids_repeat_espn_calls():
+    async def fake_fetch(espn_event_id: str):
+        return {"code": 404, "message": "Not found"}
+
+    with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch) as fetch:
+        svc.clear_game_detail_cache()
+        first = client.get("/api/wnba/games/401999999")
+        second = client.get("/api/wnba/games/401999999")
+
+    assert first.status_code == 404
+    assert second.status_code == 404
+    fetch.assert_called_once_with("401999999")
