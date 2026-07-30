@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { TickerGame } from "./types";
 
 type LiveTickerProps = {
@@ -16,8 +17,8 @@ function isScheduledFormat(game: TickerGame): boolean {
 function TickerItem({ game }: { game: TickerGame }) {
   const scheduled = isScheduledFormat(game);
 
-  return (
-    <li className="flex items-center gap-2 border-l border-white/10 px-5 font-mono text-xs text-white/70 first:border-l-0">
+  const content = (
+    <>
       <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
       {scheduled ? (
         <>
@@ -37,8 +38,23 @@ function TickerItem({ game }: { game: TickerGame }) {
         </>
       )}
       <span className="text-white/40">{game.statusLabel}</span>
-    </li>
+    </>
   );
+
+  const itemClassName =
+    "flex items-center gap-2 border-l border-white/10 px-5 font-mono text-xs text-white/70 first:border-l-0";
+
+  if (game.espnEventId) {
+    return (
+      <li className={itemClassName}>
+        <Link to={`/games/${game.espnEventId}`} className="flex items-center gap-2">
+          {content}
+        </Link>
+      </li>
+    );
+  }
+
+  return <li className={itemClassName}>{content}</li>;
 }
 
 function TickerGameList({

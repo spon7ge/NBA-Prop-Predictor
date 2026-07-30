@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { LiveTicker } from "./LiveTicker";
 import type { TickerGame } from "./types";
 
@@ -12,6 +13,11 @@ const liveGame: TickerGame = {
   status: "live",
   awayScore: 36,
   homeScore: 44,
+};
+
+const linkedLiveGame: TickerGame = {
+  ...liveGame,
+  espnEventId: "401857098",
 };
 
 const scheduledGame: TickerGame = {
@@ -67,5 +73,17 @@ describe("LiveTicker", () => {
     const duplicate = container.querySelector(".ticker-marquee-duplicate");
     expect(duplicate?.getAttribute("aria-hidden")).toBe("true");
     expect(duplicate?.textContent).toContain("ATL");
+  });
+
+  it("links to game detail when espnEventId is present", () => {
+    render(
+      <MemoryRouter>
+        <LiveTicker games={[linkedLiveGame]} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /ATL/i })).toHaveAttribute(
+      "href",
+      "/games/401857098",
+    );
   });
 });

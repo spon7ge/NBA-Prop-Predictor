@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { LiveNowSection } from "./LiveNowSection";
 import type { LiveGame } from "./types";
 
@@ -10,6 +11,11 @@ const liveGame: LiveGame = {
   statusLabel: "Q3 7:13",
   away: { abbrev: "ATL", name: "Atlanta Dream", score: 36 },
   home: { abbrev: "DAL", name: "Dallas Wings", score: 44 },
+};
+
+const linkedLiveGame: LiveGame = {
+  ...liveGame,
+  espnEventId: "401857098",
 };
 
 const finalGame: LiveGame = {
@@ -57,5 +63,17 @@ describe("LiveNowSection", () => {
     const { container } = render(<LiveNowSection isError isLoading games={[]} />);
     expect(screen.queryByText("Unable to load scoreboard")).not.toBeInTheDocument();
     expect(container.querySelectorAll("article[aria-hidden]")).toHaveLength(3);
+  });
+
+  it("links to game detail when espnEventId is present", () => {
+    render(
+      <MemoryRouter>
+        <LiveNowSection games={[linkedLiveGame]} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /Atlanta Dream/i })).toHaveAttribute(
+      "href",
+      "/games/401857098",
+    );
   });
 });

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { HomeLeague, LiveGame } from "./types";
 import {
   LIVE_NOW_SKELETON_COUNT,
@@ -48,8 +49,8 @@ function SkeletonGameCard() {
 function LiveGameCard({ game }: { game: LiveGame }) {
   const inProgress = game.status === "live" || game.status === "halftime";
 
-  return (
-    <article className="rounded-xl border border-white/10 bg-[#141414] p-4">
+  const card = (
+    <>
       <div className="mb-4 flex items-center justify-between">
         <span
           className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${leaguePill[game.league]}`}
@@ -85,8 +86,21 @@ function LiveGameCard({ game }: { game: LiveGame }) {
           </div>
         ))}
       </div>
-    </article>
+    </>
   );
+
+  const cardClassName =
+    "block rounded-xl border border-white/10 bg-[#141414] p-4 hover:border-white/20";
+
+  if (game.espnEventId) {
+    return (
+      <Link to={`/games/${game.espnEventId}`} className={cardClassName}>
+        {card}
+      </Link>
+    );
+  }
+
+  return <article className={cardClassName}>{card}</article>;
 }
 
 export function LiveNowSection({
