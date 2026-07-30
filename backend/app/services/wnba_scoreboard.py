@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from typing import overload
 
 from app.schemas.wnba_scoreboard import GameStatus, WnbaGame, WnbaTeam
 
@@ -125,8 +126,50 @@ def _match_key(game: WnbaGame) -> tuple[str, str]:
     return (game.away.abbrev.upper(), game.home.abbrev.upper())
 
 
-def _score_richness(label: str) -> int:
-    return len(label or "")
+_STATUS_RANK: dict[GameStatus, int] = {
+    "scheduled": 0,
+    "live": 1,
+    "halftime": 1,
+    "final": 2,
+}
+
+
+@overload
+def prefer_complete(a: str, b: str) -> str: ...
+
+
+@overload
+def prefer_complete(a: int | None, b: int | None) -> int | None: ...
+
+
+def prefer_complete(a: str | int | None, b: str | int | None) -> str | int | None:
+    """Return the more complete field value; ties prefer ``b`` (stats source)."""
+    if isinstance(a, str) or isinstance(b, str):
+        left = str(a or "")
+        right = str(b or "")
+        if not left:
+            return right
+        if not right:
+            return left
+        return right if len(right) >= len(left) else left
+    if a is None:
+        return b
+    if b is None:
+        return a
+    return b
+
+
+def _prefer_status_and_label(a: WnbaGame, b: WnbaGame) -> tuple[GameStatus, str]:
+    rank_a = _STATUS_RANK[a.status]
+    rank_b = _STATUS_RANK[b.status]
+    if rank_b > rank_a:
+        return b.status, b.status_label
+    if rank_a > rank_b:
+        return a.status, a.status_label
+    if a.status != b.status:
+        return b.status, b.status_label
+    label = prefer_complete(a.status_label, b.status_label)
+    return a.status, str(label)
 
 
 def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
@@ -139,40 +182,25 @@ def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
             by_key[key] = g
             continue
         a = by_key[key]
-        # Prefer stats id when present and not espn-prefixed
         game_id = g.id if not g.id.startswith("espn-") else a.id
         if a.id.startswith("espn-") and not g.id.startswith("espn-"):
             game_id = g.id
-        status = g.status if g.status != "scheduled" or a.status == "scheduled" else a.status
-        # Prefer richer status_label
-        status_label = (
-            g.status_label
-            if _score_richness(g.status_label) >= _score_richness(a.status_label)
-            else a.status_label
-        )
-
-        def pick_score(x: int | None, y: int | None) -> int | None:
-            if x is None:
-                return y
-            if y is None:
-                return x
-            return y  # prefer stats when both present
-
+        status, status_label = _prefer_status_and_label(a, g)
         by_key[key] = WnbaGame(
             id=game_id,
-            status=status if status in ("scheduled", "live", "halftime", "final") else a.status,
+            status=status,
             status_label=status_label,
             away=WnbaTeam(
-                abbrev=g.away.abbrev or a.away.abbrev,
-                name=g.away.name if len(g.away.name) >= len(a.away.name) else a.away.name,
-                score=pick_score(a.away.score, g.away.score),
+                abbrev=str(prefer_complete(a.away.abbrev, g.away.abbrev)),
+                name=str(prefer_complete(a.away.name, g.away.name)),
+                score=prefer_complete(a.away.score, g.away.score),
             ),
             home=WnbaTeam(
-                abbrev=g.home.abbrev or a.home.abbrev,
-                name=g.home.name if len(g.home.name) >= len(a.home.name) else a.home.name,
-                score=pick_score(a.home.score, g.home.score),
+                abbrev=str(prefer_complete(a.home.abbrev, g.home.abbrev)),
+                name=str(prefer_complete(a.home.name, g.home.name)),
+                score=prefer_complete(a.home.score, g.home.score),
             ),
-            start_time_et=g.start_time_et or a.start_time_et,
+            start_time_et=str(prefer_complete(a.start_time_et, g.start_time_et)),
         )
     return sorted(by_key.values(), key=lambda g: g.start_time_et or g.id)
 
