@@ -15,6 +15,7 @@ describe("LiveNowSection", () => {
       id: "g1",
       league: "nba",
       statusLabel: "Q2 4:12",
+      status: "live",
       away: { abbrev: "BOS", name: "Boston Celtics", score: 55 },
       home: { abbrev: "NYK", name: "New York Knicks", score: 52 },
     };
