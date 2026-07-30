@@ -22,6 +22,16 @@ function buildDenseTimeline(count: number): GameDetailWinProbabilityPoint[] {
 }
 
 describe("WinProbabilityPanel", () => {
+  it("renders a larger chart-first win probability module", () => {
+    render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
+
+    expect(screen.getByText("Win probability")).toBeInTheDocument();
+    expect(screen.getByLabelText("Win probability chart")).toBeInTheDocument();
+    expect(screen.getByText("GS")).toBeInTheDocument();
+    expect(screen.getByText("PHX")).toBeInTheDocument();
+    expect(screen.getByText("Field goal %")).toBeInTheDocument();
+  });
+
   it("renders the latest win probability point and team stats by default", () => {
     render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
 
@@ -177,5 +187,33 @@ describe("WinProbabilityPanel", () => {
     expect(
       screen.getByText("Win probability unavailable for this game yet."),
     ).toBeInTheDocument();
+  });
+
+  it("keeps timeline-only and stats-only states renderable", () => {
+    const { rerender } = render(
+      <WinProbabilityPanel
+        detail={buildGameDetailFixture({
+          winProbability: {
+            ...buildGameDetailFixture().winProbability!,
+            teamStats: [],
+          },
+        })}
+      />,
+    );
+
+    expect(screen.getByLabelText("Win probability chart")).toBeInTheDocument();
+
+    rerender(
+      <WinProbabilityPanel
+        detail={buildGameDetailFixture({
+          winProbability: {
+            ...buildGameDetailFixture().winProbability!,
+            timeline: [],
+          },
+        })}
+      />,
+    );
+
+    expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
 });
