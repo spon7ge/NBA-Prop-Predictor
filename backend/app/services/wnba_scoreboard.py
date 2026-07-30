@@ -23,31 +23,92 @@ ET = ZoneInfo("America/New_York")
 ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
 STATS_URL = "https://stats.wnba.com/stats/scoreboardv3"
 
+# ESPN is the primary source, so it gets the longer budget. stats.wnba.com is
+# supplementary and occasionally hangs, so it is cut off early rather than
+# holding the whole response back.
+ESPN_TIMEOUT_SECONDS = 8.0
+STATS_TIMEOUT_SECONDS = 4.0
+
 _cache: dict = {}  # keys: response, expires_at, date
 
-_STATUS_MAP = {1: "scheduled", 2: "live", 3: "final"}
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
+
+# ESPN uses shorter tricodes than stats.wnba.com for several teams. Canonical
+# form is the stats.wnba.com spelling so both sources key identically in merges.
+_ABBREV_ALIASES = {
+    "GS": "GSV",
+    "LA": "LAS",
+    "LV": "LVA",
+    "NY": "NYL",
+    "PHX": "PHO",
+    "WSH": "WAS",
+}
+
+# States that look "post" to ESPN's generic state field but are not results.
+_ESPN_NON_RESULT_LABELS = {
+    "STATUS_POSTPONED": "Postponed",
+    "STATUS_CANCELED": "Canceled",
+    "STATUS_CANCELLED": "Canceled",
+    "STATUS_SUSPENDED": "Suspended",
+    "STATUS_DELAYED": "Delayed",
+}
+
+# Tip times this close on the same ET day are treated as the same game when
+# tricodes alone fail to match.
+TIP_MATCH_WINDOW_SECONDS = 15 * 60
 
 
-def _espn_status(status_block: dict) -> tuple[GameStatus, str]:
+def canonical_abbrev(abbrev: str) -> str:
+    """Map a team tricode to its canonical (stats.wnba.com) spelling."""
+    upper = str(abbrev or "").strip().upper()
+    return _ABBREV_ALIASES.get(upper, upper)
+
+
+def _parse_start(start: str) -> datetime | None:
+    raw = str(start or "").strip()
+    if not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=ET)
+    return parsed
+
+
+def format_tip_label(start: str) -> str | None:
+    """Render a scheduled tip time as an ET wall-clock label, e.g. ``7:00 PM ET``."""
+    parsed = _parse_start(start)
+    if parsed is None:
+        return None
+    local = parsed.astimezone(ET)
+    return f"{local.strftime('%I:%M %p').lstrip('0')} ET"
+
+
+def _espn_status(status_block: dict, start: str) -> tuple[GameStatus, str]:
     typ = status_block.get("type") or {}
-    name = str(typ.get("name") or "")
+    name = str(typ.get("name") or "").upper()
     state = str(typ.get("state") or "")
     short = str(typ.get("shortDetail") or typ.get("detail") or "")
     period = status_block.get("period")
     clock = str(status_block.get("displayClock") or "").strip()
 
+    # Checked before the generic post/completed branch: a postponed game has no
+    # result and must never be labelled "Final".
+    if name in _ESPN_NON_RESULT_LABELS:
+        return "scheduled", _ESPN_NON_RESULT_LABELS[name]
     if typ.get("completed") or name == "STATUS_FINAL" or state == "post":
         return "final", "Final"
-    if "HALFTIME" in name.upper() or short.lower() == "halftime":
+    if "HALFTIME" in name or short.lower() == "halftime":
         return "halftime", "Halftime"
     if state == "in" or name == "STATUS_IN_PROGRESS":
         # Prefer compact Qn clock when period + clock present
         if isinstance(period, int) and period > 0 and clock:
             return "live", f"Q{period} {clock}"
         return "live", short or "Live"
-    # scheduled
-    label = short or "Scheduled"
-    return "scheduled", label
+    return "scheduled", format_tip_label(start) or short or "Scheduled"
 
 
 def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
@@ -56,8 +117,8 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
         comps = (event.get("competitions") or [{}])[0]
         teams = {c.get("homeAway"): c for c in (comps.get("competitors") or [])}
         away_c, home_c = teams.get("away") or {}, teams.get("home") or {}
-        status, label = _espn_status(event.get("status") or {})
         start = str(event.get("date") or "")
+        status, label = _espn_status(event.get("status") or {}, start)
 
         def team(c: dict) -> WnbaTeam:
             t = c.get("team") or {}
@@ -107,7 +168,8 @@ def _stats_status(game: dict) -> tuple[GameStatus, str]:
         if isinstance(period, int) and period > 0 and clock:
             return "live", f"Q{period} {clock}"
         return "live", text or "Live"
-    return "scheduled", text or "Scheduled"
+    tip = format_tip_label(str(game.get("gameTimeUTC") or ""))
+    return "scheduled", tip or text or "Scheduled"
 
 
 def normalize_stats_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
@@ -142,8 +204,50 @@ def normalize_stats_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]
     return games
 
 
-def _match_key(game: WnbaGame) -> tuple[str, str]:
-    return (game.away.abbrev.upper(), game.home.abbrev.upper())
+MatchKey = tuple[str, ...]
+
+
+def _match_key(game: WnbaGame) -> MatchKey:
+    return (canonical_abbrev(game.away.abbrev), canonical_abbrev(game.home.abbrev))
+
+
+def _canonical_teams(game: WnbaGame) -> set[str]:
+    return {canonical_abbrev(game.away.abbrev), canonical_abbrev(game.home.abbrev)}
+
+
+def _tip_time_match(
+    game: WnbaGame, candidates: dict[MatchKey, WnbaGame]
+) -> MatchKey | None:
+    """Find an unclaimed ESPN game tipping within the window on the same ET day.
+
+    Fallback for when tricodes disagree in a way the alias map does not cover.
+    A candidate sharing a team tricode always wins; a window match with no
+    shared tricode is only trusted when it is unambiguous.
+    """
+    target = _parse_start(game.start_time_et)
+    if target is None:
+        return None
+    target_day = target.astimezone(ET).date()
+    teams = _canonical_teams(game)
+
+    ranked: list[tuple[int, float, MatchKey]] = []
+    for key, candidate in candidates.items():
+        other = _parse_start(candidate.start_time_et)
+        if other is None or other.astimezone(ET).date() != target_day:
+            continue
+        delta = abs((other - target).total_seconds())
+        if delta > TIP_MATCH_WINDOW_SECONDS:
+            continue
+        shared = len(teams & _canonical_teams(candidate))
+        ranked.append((-shared, delta, key))
+
+    if not ranked:
+        return None
+    ranked.sort()
+    best_shared, _, best_key = ranked[0]
+    if best_shared == 0 and len(ranked) > 1:
+        return None
+    return best_key
 
 
 _STATUS_RANK: dict[GameStatus, int] = {
@@ -193,20 +297,34 @@ def _prefer_status_and_label(a: WnbaGame, b: WnbaGame) -> tuple[GameStatus, str]
 
 
 def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
-    by_key: dict[tuple[str, str], WnbaGame] = {}
+    by_key: dict[MatchKey, WnbaGame] = {}
     for g in espn:
         by_key[_match_key(g)] = g
+    # ESPN games not yet claimed by a stats game, so each pairs at most once.
+    unclaimed = dict(by_key)
+
     for g in stats:
         key = _match_key(g)
-        if key not in by_key:
-            by_key[key] = g
+        match = key if key in unclaimed else _tip_time_match(g, unclaimed)
+        if match is None:
+            if espn:
+                logger.warning(
+                    "No ESPN counterpart for stats game %s (%s@%s, tip %s)",
+                    g.id,
+                    g.away.abbrev,
+                    g.home.abbrev,
+                    g.start_time_et,
+                )
+            # Widen the key on collision so a second stats game with the same
+            # tricode pair cannot silently evict an already-merged game.
+            by_key[key if key not in by_key else (*key, g.id)] = g
             continue
-        a = by_key[key]
+        a = unclaimed.pop(match)
         game_id = g.id if not g.id.startswith("espn-") else a.id
         if a.id.startswith("espn-") and not g.id.startswith("espn-"):
             game_id = g.id
         status, status_label = _prefer_status_and_label(a, g)
-        by_key[key] = WnbaGame(
+        by_key[match] = WnbaGame(
             id=game_id,
             status=status,
             status_label=status_label,
@@ -237,7 +355,7 @@ def today_et_date() -> str:
 
 async def fetch_espn_scoreboard(date_et: str) -> dict:
     dates = date_et.replace("-", "")
-    async with httpx.AsyncClient(timeout=8.0) as client:
+    async with httpx.AsyncClient(timeout=ESPN_TIMEOUT_SECONDS) as client:
         r = await client.get(ESPN_URL, params={"dates": dates})
         r.raise_for_status()
         return r.json()
@@ -253,7 +371,9 @@ async def fetch_stats_scoreboard(date_et: str) -> dict:
         "Origin": "https://www.wnba.com",
         "Accept": "application/json",
     }
-    async with httpx.AsyncClient(timeout=8.0, headers=headers) as client:
+    async with httpx.AsyncClient(
+        timeout=STATS_TIMEOUT_SECONDS, headers=headers
+    ) as client:
         r = await client.get(
             STATS_URL,
             params={"GameDate": game_date, "LeagueID": "10"},
@@ -271,12 +391,48 @@ def _cache_valid_for_today() -> WnbaScoreboardResponse | None:
     return cached
 
 
+def _fresh_cached_response() -> WnbaScoreboardResponse | None:
+    cached = _cache_valid_for_today()
+    if cached is None:
+        return None
+    if time.time() >= float(_cache.get("expires_at") or 0):
+        return None
+    return cached
+
+
+def _refresh_lock_for_loop() -> asyncio.Lock:
+    """Serializes upstream refreshes so concurrent cache misses share one fetch.
+
+    Created lazily because an ``asyncio.Lock`` binds to the loop that first
+    waits on it; re-created if called from a different loop (test clients spin
+    up a fresh loop per request).
+    """
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
 async def get_today_scoreboard() -> WnbaScoreboardResponse:
+    fresh = _fresh_cached_response()
+    if fresh is not None:
+        return fresh
+    # Single-flight: concurrent misses queue here and reuse the winner's refresh
+    # instead of each firing their own pair of upstream requests.
+    async with _refresh_lock_for_loop():
+        fresh = _fresh_cached_response()
+        if fresh is not None:
+            return fresh
+        return await _refresh_today_scoreboard()
+
+
+async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
     now = time.time()
     date_et = today_et_date()
     cached = _cache_valid_for_today()
-    if cached is not None and now < float(_cache.get("expires_at") or 0):
-        return cached
+
     espn_payload, stats_payload = None, None
     results = await asyncio.gather(
         fetch_espn_scoreboard(date_et),
@@ -292,21 +448,32 @@ async def get_today_scoreboard() -> WnbaScoreboardResponse:
     else:
         stats_payload = results[1]
 
-    if espn_payload is None and stats_payload is None:
+    # Normalizing is fallible too (bad score strings, unexpected payload
+    # shapes), so a malformed source degrades to "unusable" exactly like a
+    # failed fetch rather than bubbling a 500 without cache headers.
+    espn_games: list[WnbaGame] = []
+    stats_games: list[WnbaGame] = []
+    espn_usable = False
+    stats_usable = False
+
+    if espn_payload is not None:
+        try:
+            espn_games = normalize_espn_scoreboard(espn_payload, date_et=date_et)
+            espn_usable = True
+        except Exception as exc:
+            logger.warning("ESPN scoreboard payload unusable: %s", exc)
+    if stats_payload is not None:
+        try:
+            stats_games = normalize_stats_scoreboard(stats_payload, date_et=date_et)
+            stats_usable = True
+        except Exception as exc:
+            logger.warning("stats.wnba scoreboard payload unusable: %s", exc)
+
+    if not espn_usable and not stats_usable:
         if cached is not None:
             return cached  # stale-while-error (same ET date only)
-        raise RuntimeError("Both WNBA scoreboard upstreams failed")
+        raise RuntimeError("No usable WNBA scoreboard source")
 
-    espn_games = (
-        normalize_espn_scoreboard(espn_payload, date_et=date_et)
-        if espn_payload is not None
-        else []
-    )
-    stats_games = (
-        normalize_stats_scoreboard(stats_payload, date_et=date_et)
-        if stats_payload is not None
-        else []
-    )
     games = merge_games(espn_games, stats_games)
     response = WnbaScoreboardResponse(
         date=date_et,
