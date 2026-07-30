@@ -115,8 +115,8 @@ Response always includes `Cache-Control: no-store`.
 | Case | Behavior |
 | --- | --- |
 | One upstream fails | `200` with games from the healthy source |
-| Both fail + usable cache | `200` from cache |
-| Both fail + no cache | `502`; FE keeps last successful query data; muted error only if never loaded |
+| Both fail + prior success | `200` from stale cache (ignore TTL) |
+| Both fail + never cached | `502`; FE keeps last successful query data; muted error only if never loaded |
 | Timeout / bad JSON | Treat as source failure; route must not crash |
 
 ## Testing
