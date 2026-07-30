@@ -50,15 +50,34 @@ describe("HomeNav", () => {
     );
   });
 
-  it("points league links at /#live-now", () => {
+  it("points league links at matchups hubs", () => {
     renderNav("/about");
     expect(screen.getByRole("link", { name: "NBA" })).toHaveAttribute(
       "href",
-      "/#live-now",
+      "/nba/matchups",
     );
     expect(screen.getByRole("link", { name: "WNBA" })).toHaveAttribute(
       "href",
-      "/#live-now",
+      "/wnba/matchups",
+    );
+  });
+
+  it("marks WNBA current on /wnba/matchups", () => {
+    renderNav("/wnba/matchups");
+    expect(screen.getByRole("link", { name: "WNBA" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "NBA" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
+  it("marks NBA current on /nba/matchups", () => {
+    renderNav("/nba/matchups");
+    expect(screen.getByRole("link", { name: "NBA" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
   });
 });

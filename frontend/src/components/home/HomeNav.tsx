@@ -25,21 +25,35 @@ export function HomeNav() {
         <div className="flex items-center gap-4">
           <nav className="flex items-center gap-3" aria-label="Primary">
             <div className="hidden items-center gap-3 sm:flex">
-              {leagues.map((league) => (
-                <a
-                  key={league.id}
-                  href="/#live-now"
-                  className="flex items-center gap-2 text-[14px] font-medium text-white/80 no-underline transition-colors hover:text-white"
-                >
-                  <img
-                    src={league.icon}
-                    alt=""
-                    aria-hidden
-                    className="size-4 shrink-0 object-contain"
-                  />
-                  {league.label}
-                </a>
-              ))}
+              {leagues.map((league) => {
+                const active =
+                  league.id === "wnba"
+                    ? pathname.startsWith("/wnba")
+                    : pathname.startsWith("/nba");
+
+                return (
+                  <Link
+                    key={league.id}
+                    to={`/${league.id}/matchups`}
+                    aria-current={active ? "page" : undefined}
+                    className={
+                      active
+                        ? league.id === "wnba"
+                          ? "flex items-center gap-2 rounded-full bg-violet-600 px-3 py-1 text-[14px] font-medium text-white no-underline"
+                          : "flex items-center gap-2 rounded-full bg-sky-600 px-3 py-1 text-[14px] font-medium text-white no-underline"
+                        : "flex items-center gap-2 text-[14px] font-medium text-white/80 no-underline transition-colors hover:text-white"
+                    }
+                  >
+                    <img
+                      src={league.icon}
+                      alt=""
+                      aria-hidden
+                      className="size-4 shrink-0 object-contain"
+                    />
+                    {league.label}
+                  </Link>
+                );
+              })}
             </div>
             <Link
               to="/about"
