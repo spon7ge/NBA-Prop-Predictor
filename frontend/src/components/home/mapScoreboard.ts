@@ -4,6 +4,7 @@ import type { LiveGame, TickerGame } from "./types";
 export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
   return games.map((g) => ({
     id: g.id,
+    espnEventId: g.espn_event_id,
     league: g.league,
     awayAbbrev: g.away.abbrev,
     homeAbbrev: g.home.abbrev,
@@ -17,6 +18,7 @@ export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
 export function mapToLiveGames(games: ApiWnbaGame[]): LiveGame[] {
   return games.map((g) => ({
     id: g.id,
+    espnEventId: g.espn_event_id,
     league: g.league,
     statusLabel: g.status_label,
     status: g.status,

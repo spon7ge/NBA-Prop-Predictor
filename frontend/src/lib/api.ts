@@ -8,12 +8,68 @@ export type ApiWnbaTeam = {
 
 export type ApiWnbaGame = {
   id: string;
+  espn_event_id: string | null;
   league: "wnba";
   status: ApiGameStatus;
   status_label: string;
   away: ApiWnbaTeam;
   home: ApiWnbaTeam;
   start_time_et: string;
+};
+
+export type ApiGameDetailTeam = {
+  id: string;
+  abbrev: string;
+  name: string;
+  score: number | null;
+  color: string;
+};
+
+export type ApiGameDetailShot = {
+  id: string;
+  team_id: string;
+  player_name: string;
+  made: boolean;
+  x: number;
+  y: number;
+  period: number;
+  clock: string;
+};
+
+export type ApiGameDetailPlay = {
+  id: string;
+  team_id: string | null;
+  period: number;
+  clock: string;
+  text: string;
+  scoring: boolean;
+  away_score: number;
+  home_score: number;
+  shooting: boolean;
+};
+
+export type ApiGameDetailLatestPlay = {
+  id: string;
+  clock: string;
+  period: number;
+  text: string;
+  team_id: string | null;
+};
+
+export type ApiWnbaGameDetail = {
+  espn_event_id: string;
+  league: "wnba";
+  status: ApiGameStatus;
+  status_label: string;
+  venue: string | null;
+  away: ApiGameDetailTeam;
+  home: ApiGameDetailTeam;
+  fg_made: number;
+  fg_attempted: number;
+  latest_play: ApiGameDetailLatestPlay | null;
+  shots: ApiGameDetailShot[];
+  plays: ApiGameDetailPlay[];
+  fetched_at: string;
 };
 
 export type WnbaScoreboardResponse = {
@@ -38,6 +94,19 @@ export async function fetchWnbaScoreboard(): Promise<WnbaScoreboardResponse> {
   });
   if (!res.ok) {
     throw new Error(`Scoreboard request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function fetchGameDetail(
+  espnEventId: string,
+): Promise<ApiWnbaGameDetail> {
+  const res = await fetch(`${API_BASE}/api/wnba/games/${espnEventId}`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Game detail request failed: ${res.status}`);
   }
   return res.json();
 }

@@ -55,3 +55,29 @@ describe("fetchWnbaScoreboard", () => {
     );
   });
 });
+
+describe("fetchGameDetail", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("hits /api/wnba/games/:id", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ espn_event_id: "401857098", league: "wnba" }),
+    });
+    const { fetchGameDetail } = await import("./api");
+    await fetchGameDetail("401857098");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/wnba/games/401857098",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+});
