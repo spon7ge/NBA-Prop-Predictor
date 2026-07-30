@@ -1,26 +1,47 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppRouter } from "@/AppRouter";
 
-describe("AppRouter", () => {
-  it("renders home at /", () => {
-    render(
-      <MemoryRouter initialEntries={["/"]}>
+function renderWithProviders(initialEntries: string[]) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={initialEntries}>
         <AppRouter />
-      </MemoryRouter>,
-    );
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+}
+
+describe("AppRouter", () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    fetchMock.mockReset();
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("renders home at /", () => {
+    renderWithProviders(["/"]);
     expect(
       screen.getByRole("heading", { name: /hoopvista/i }),
     ).toBeInTheDocument();
   });
 
   it("renders about at /about", () => {
-    render(
-      <MemoryRouter initialEntries={["/about"]}>
-        <AppRouter />
-      </MemoryRouter>,
-    );
+    renderWithProviders(["/about"]);
     expect(
       screen.getByRole("heading", { name: /about hoopvista/i }),
     ).toBeInTheDocument();
@@ -29,11 +50,7 @@ describe("AppRouter", () => {
   });
 
   it("renders not found for unknown paths", () => {
-    render(
-      <MemoryRouter initialEntries={["/slate"]}>
-        <AppRouter />
-      </MemoryRouter>,
-    );
+    renderWithProviders(["/slate"]);
     expect(
       screen.getByRole("heading", { name: /page not found/i }),
     ).toBeInTheDocument();

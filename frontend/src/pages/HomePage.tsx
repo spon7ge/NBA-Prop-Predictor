@@ -3,12 +3,14 @@ import { LiveNowSection } from "@/components/home/LiveNowSection";
 import { StoriesSection } from "@/components/home/StoriesSection";
 import { ExploreSection } from "@/components/home/ExploreSection";
 import { LearnTheGameSection } from "@/components/home/LearnTheGameSection";
+import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function HomePage() {
+  const { liveGames, isLoading } = useWnbaScoreboard();
   return (
     <>
       <TicketHero />
-      <LiveNowSection />
+      <LiveNowSection games={liveGames} isLoading={isLoading} />
       <StoriesSection />
       <ExploreSection />
       <LearnTheGameSection />
