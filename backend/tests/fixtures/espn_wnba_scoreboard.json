@@ -5,10 +5,15 @@
       "date": "2026-07-29T23:00Z",
       "competitions": [
         {
+          "venue": {
+            "fullName": "College Park Center",
+            "address": { "city": "Arlington" }
+          },
           "competitors": [
             {
               "homeAway": "home",
               "score": "44",
+              "records": [{ "type": "total", "summary": "18-10" }],
               "team": {
                 "abbreviation": "DAL",
                 "displayName": "Dallas Wings"
@@ -17,6 +22,7 @@
             {
               "homeAway": "away",
               "score": "36",
+              "records": [{ "type": "total", "summary": "17-10" }],
               "team": {
                 "abbreviation": "ATL",
                 "displayName": "Atlanta Dream"

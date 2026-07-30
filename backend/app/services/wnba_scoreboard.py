@@ -111,6 +111,35 @@ def _espn_status(status_block: dict, start: str) -> tuple[GameStatus, str]:
     return "scheduled", format_tip_label(start) or short or "Scheduled"
 
 
+def _espn_team_record(competitor: dict) -> str | None:
+    for rec in competitor.get("records") or []:
+        if not isinstance(rec, dict):
+            continue
+        if rec.get("type") == "total" or str(rec.get("name") or "").lower() in {
+            "total",
+            "overall",
+            "ytd",
+        }:
+            summary = rec.get("summary")
+            if summary:
+                return str(summary)
+    for rec in competitor.get("records") or []:
+        if isinstance(rec, dict) and rec.get("summary"):
+            return str(rec["summary"])
+    return None
+
+
+def _espn_venue(comps: dict) -> tuple[str | None, str | None]:
+    venue = comps.get("venue") or {}
+    if not isinstance(venue, dict):
+        return None, None
+    name = venue.get("fullName") or venue.get("name")
+    city = (venue.get("address") or {}).get("city") if isinstance(
+        venue.get("address"), dict
+    ) else None
+    return (str(name) if name else None, str(city) if city else None)
+
+
 def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
     games: list[WnbaGame] = []
     for event in payload.get("events") or []:
@@ -119,6 +148,7 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
         away_c, home_c = teams.get("away") or {}, teams.get("home") or {}
         start = str(event.get("date") or "")
         status, label = _espn_status(event.get("status") or {}, start)
+        venue, venue_city = _espn_venue(comps)
 
         def team(c: dict) -> WnbaTeam:
             t = c.get("team") or {}
@@ -128,6 +158,7 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
                 abbrev=str(t.get("abbreviation") or ""),
                 name=str(t.get("displayName") or ""),
                 score=score if status != "scheduled" else None,
+                record=_espn_team_record(c),
             )
 
         raw_id = str(event.get("id") or "").strip()
@@ -140,6 +171,8 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
                 away=team(away_c),
                 home=team(home_c),
                 start_time_et=start,
+                venue=venue,
+                venue_city=venue_city,
             )
         )
     return games
@@ -335,13 +368,17 @@ def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
                 abbrev=str(prefer_complete(a.away.abbrev, g.away.abbrev)),
                 name=str(prefer_complete(a.away.name, g.away.name)),
                 score=prefer_complete(a.away.score, g.away.score),
+                record=prefer_complete(a.away.record, g.away.record) or None,
             ),
             home=WnbaTeam(
                 abbrev=str(prefer_complete(a.home.abbrev, g.home.abbrev)),
                 name=str(prefer_complete(a.home.name, g.home.name)),
                 score=prefer_complete(a.home.score, g.home.score),
+                record=prefer_complete(a.home.record, g.home.record) or None,
             ),
             start_time_et=str(prefer_complete(a.start_time_et, g.start_time_et)),
+            venue=prefer_complete(a.venue, g.venue) or None,
+            venue_city=prefer_complete(a.venue_city, g.venue_city) or None,
         )
     return sorted(by_key.values(), key=lambda g: g.start_time_et or g.id)
 

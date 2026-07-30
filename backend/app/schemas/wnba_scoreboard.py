@@ -11,6 +11,7 @@ class WnbaTeam(BaseModel):
     abbrev: str
     name: str
     score: int | None = None
+    record: str | None = None
 
 
 class WnbaGame(BaseModel):
@@ -22,6 +23,8 @@ class WnbaGame(BaseModel):
     away: WnbaTeam
     home: WnbaTeam
     start_time_et: str
+    venue: str | None = None
+    venue_city: str | None = None
 
 
 class WnbaScoreboardResponse(BaseModel):

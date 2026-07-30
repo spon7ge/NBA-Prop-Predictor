@@ -69,6 +69,52 @@ def espn_event(
     }
 
 
+def test_normalize_espn_sets_venue_and_records():
+    payload = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
+    g = normalize_espn_scoreboard(payload, date_et="2026-07-29")[0]
+    assert g.venue == "College Park Center"
+    assert g.venue_city == "Arlington"
+    assert g.away.record == "17-10"
+    assert g.home.record == "18-10"
+
+
+def test_merge_preserves_venue_and_records_when_stats_id_wins():
+    espn = [
+        WnbaGame(
+            id="espn-401749001",
+            espn_event_id="401749001",
+            status="live",
+            status_label="Q3 7:13",
+            away=WnbaTeam(
+                abbrev="ATL", name="Atlanta Dream", score=36, record="17-10"
+            ),
+            home=WnbaTeam(
+                abbrev="DAL", name="Dallas Wings", score=44, record="18-10"
+            ),
+            start_time_et="2026-07-29T23:00:00Z",
+            venue="College Park Center",
+            venue_city="Arlington",
+        )
+    ]
+    stats = [
+        WnbaGame(
+            id="1022600123",
+            espn_event_id=None,
+            status="live",
+            status_label="Q3 7:13",
+            away=WnbaTeam(abbrev="ATL", name="Atlanta Dream", score=36),
+            home=WnbaTeam(abbrev="DAL", name="Dallas Wings", score=44),
+            start_time_et="2026-07-29T23:00:00Z",
+        )
+    ]
+    merged = merge_games(espn, stats)
+    assert merged[0].id == "1022600123"
+    assert merged[0].venue == "College Park Center"
+    assert merged[0].venue_city == "Arlington"
+    assert merged[0].away.record == "17-10"
+    assert merged[0].home.record == "18-10"
+
+
 def test_normalize_espn_sets_espn_event_id():
     payload = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
     g = normalize_espn_scoreboard(payload, date_et="2026-07-29")[0]
