@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ApiWnbaGame } from "@/lib/api";
 import {
   mapToLiveGames,
+  mapToMatchupGames,
   mapToTickerGames,
   shouldPollScoreboard,
 } from "./mapScoreboard";
@@ -62,41 +63,101 @@ describe("scoreboard mappers", () => {
     ]);
   });
 
-  it("maps null scores for scheduled ticker games", () => {
+  it("includes only live and halftime games for the ticker", () => {
     const scheduled = apiGame({
+      id: "sched",
       status: "scheduled",
       status_label: "7:00 PM ET",
       away: { abbrev: "NYL", name: "New York Liberty", score: null },
       home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
     });
-    expect(mapToTickerGames([scheduled])[0]).toMatchObject({
-      awayScore: null,
-      homeScore: null,
-      status: "scheduled",
+    const finalGame = apiGame({
+      id: "final",
+      status: "final",
+      status_label: "Final",
     });
+    const halftime = apiGame({
+      id: "ht",
+      status: "halftime",
+      status_label: "Halftime",
+    });
+    expect(mapToTickerGames([scheduled, finalGame, apiGame(), halftime])).toEqual([
+      expect.objectContaining({ id: "g1", status: "live" }),
+      expect.objectContaining({ id: "ht", status: "halftime" }),
+    ]);
   });
 
-  it("maps API games to live games and preserves null scores", () => {
+  it("includes only live and halftime games for LIVE NOW", () => {
     const scheduled = apiGame({
+      id: "sched",
       status: "scheduled",
       status_label: "7:00 PM ET",
       away: { abbrev: "NYL", name: "New York Liberty", score: null },
       home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
     });
-    expect(mapToLiveGames([scheduled])[0]).toEqual({
-      id: "g1",
-      espnEventId: null,
-      league: "wnba",
-      statusLabel: "7:00 PM ET",
-      status: "scheduled",
-      away: { abbrev: "NYL", name: "New York Liberty", score: null },
-      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
+    const finalGame = apiGame({
+      id: "final",
+      status: "final",
+      status_label: "Final",
     });
+    expect(mapToLiveGames([scheduled, finalGame, apiGame()])).toEqual([
+      expect.objectContaining({ id: "g1", status: "live" }),
+    ]);
   });
 
   it("maps espn_event_id to espnEventId on ticker and live games", () => {
     const game = apiGame({ espn_event_id: "401857098" });
     expect(mapToTickerGames([game])[0].espnEventId).toBe("401857098");
     expect(mapToLiveGames([game])[0].espnEventId).toBe("401857098");
+  });
+
+  it("mapToMatchupGames maps all games with venue and records", () => {
+    const games: ApiWnbaGame[] = [
+      {
+        id: "1",
+        espn_event_id: "401",
+        league: "wnba",
+        status: "final",
+        status_label: "Final",
+        away: {
+          abbrev: "ATL",
+          name: "Atlanta Dream",
+          score: 82,
+          record: "17-10",
+        },
+        home: {
+          abbrev: "DAL",
+          name: "Dallas Wings",
+          score: 81,
+          record: "18-10",
+        },
+        start_time_et: "2026-07-29T23:00:00Z",
+        venue: "College Park Center",
+        venue_city: "Arlington",
+      },
+    ];
+    expect(mapToMatchupGames(games)).toEqual([
+      {
+        id: "1",
+        espnEventId: "401",
+        league: "wnba",
+        status: "final",
+        statusLabel: "Final",
+        venue: "College Park Center",
+        venueCity: "Arlington",
+        away: {
+          abbrev: "ATL",
+          name: "Atlanta Dream",
+          score: 82,
+          record: "17-10",
+        },
+        home: {
+          abbrev: "DAL",
+          name: "Dallas Wings",
+          score: 81,
+          record: "18-10",
+        },
+      },
+    ]);
   });
 });

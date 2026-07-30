@@ -4,6 +4,7 @@ export type ApiWnbaTeam = {
   abbrev: string;
   name: string;
   score: number | null;
+  record?: string | null;
 };
 
 export type ApiWnbaGame = {
@@ -15,6 +16,8 @@ export type ApiWnbaGame = {
   away: ApiWnbaTeam;
   home: ApiWnbaTeam;
   start_time_et: string;
+  venue?: string | null;
+  venue_city?: string | null;
 };
 
 export type ApiGameDetailTeam = {
