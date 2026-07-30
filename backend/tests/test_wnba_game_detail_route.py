@@ -34,7 +34,7 @@ def test_game_detail_404_when_espn_says_not_found():
 
     with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch):
         svc.clear_game_detail_cache()
-        res = client.get("/api/wnba/games/999")
+        res = client.get("/api/wnba/games/401999999")
     assert res.status_code == 404
     assert res.headers.get("Cache-Control") == "no-store"
 
@@ -45,7 +45,7 @@ def test_game_detail_404_when_espn_payload_is_empty():
 
     with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch):
         svc.clear_game_detail_cache()
-        res = client.get("/api/wnba/games/999")
+        res = client.get("/api/wnba/games/401999999")
     assert res.status_code == 404
     assert res.headers.get("Cache-Control") == "no-store"
 
@@ -63,7 +63,7 @@ def test_game_detail_404_when_espn_http_status_is_not_found():
 
     with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch):
         svc.clear_game_detail_cache()
-        res = client.get("/api/wnba/games/999")
+        res = client.get("/api/wnba/games/401999999")
     assert res.status_code == 404
     assert res.headers.get("Cache-Control") == "no-store"
 
@@ -105,9 +105,10 @@ def test_game_detail_404_for_malformed_id_without_calling_espn():
 
     with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch) as fetch:
         svc.clear_game_detail_cache()
-        res = client.get("/api/wnba/games/not-an-id")
-    assert res.status_code == 404
-    assert res.headers.get("Cache-Control") == "no-store"
+        for bad_id in ("999", "abc", "not-an-id"):
+            res = client.get(f"/api/wnba/games/{bad_id}")
+            assert res.status_code == 404
+            assert res.headers.get("Cache-Control") == "no-store"
     fetch.assert_not_called()
 
 

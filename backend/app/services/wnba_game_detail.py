@@ -159,6 +159,24 @@ def _hex_color(raw: str | None, fallback: str) -> str:
     return fallback
 
 
+def _is_numeric_coordinate(value: object) -> bool:
+    if value is None:
+        return False
+    try:
+        float(value)
+    except (TypeError, ValueError):
+        return False
+    return True
+
+
+def _has_real_coordinate(coord: object) -> bool:
+    return (
+        isinstance(coord, dict)
+        and _is_numeric_coordinate(coord.get("x"))
+        and _is_numeric_coordinate(coord.get("y"))
+    )
+
+
 def _player_name_from_text(text: str) -> str:
     for verb in (" makes ", " misses ", " shooting ", " defensive ", " offensive "):
         if verb in text:
@@ -231,18 +249,15 @@ def normalize_espn_summary(
 
         is_free_throw = "free throw" in text.lower()
         coord = p.get("coordinate")
-        has_real_coordinate = (
-            isinstance(coord, dict) and "x" in coord and "y" in coord
-        )
-        if shooting and not is_free_throw and has_real_coordinate:
+        if shooting and not is_free_throw and _has_real_coordinate(coord):
             shots.append(
                 GameDetailShot(
                     id=play.id,
                     team_id=team_id or "",
                     player_name=_player_name_from_text(text),
                     made=scoring,
-                    x=float(coord.get("x") or 0),
-                    y=float(coord.get("y") or 0),
+                    x=float(coord["x"]),
+                    y=float(coord["y"]),
                     period=period,
                     clock=clock,
                 )
