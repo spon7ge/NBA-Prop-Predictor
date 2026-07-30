@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+import time
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+import httpx
+
 from app.schemas.wnba_game_detail import (
     GameDetailLatestPlay,
     GameDetailPlay,
@@ -9,8 +15,17 @@ from app.schemas.wnba_game_detail import (
 )
 from app.schemas.wnba_scoreboard import GameStatus
 
+ET = ZoneInfo("America/New_York")
+
+ESPN_SUMMARY_URL = (
+    "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/summary"
+)
+ESPN_TIMEOUT_SECONDS = 8.0
+
 FALLBACK_AWAY_COLOR = "#7C3AED"
 FALLBACK_HOME_COLOR = "#EA580C"
+
+_cache: dict[str, dict] = {}
 
 _ESPN_NON_RESULT_LABELS = {
     "STATUS_POSTPONED": "Postponed",
@@ -19,6 +34,63 @@ _ESPN_NON_RESULT_LABELS = {
     "STATUS_SUSPENDED": "Suspended",
     "STATUS_DELAYED": "Delayed",
 }
+
+
+def clear_game_detail_cache() -> None:
+    _cache.clear()
+
+
+def cache_ttl_seconds(detail: WnbaGameDetail) -> int:
+    if detail.status in ("live", "halftime"):
+        return 15
+    return 60
+
+
+async def fetch_espn_summary(espn_event_id: str) -> dict:
+    async with httpx.AsyncClient(timeout=ESPN_TIMEOUT_SECONDS) as client:
+        response = await client.get(
+            ESPN_SUMMARY_URL, params={"event": espn_event_id}
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+def _is_not_found_payload(payload: dict) -> bool:
+    return "header" not in payload and payload.get("code") in (404, 400)
+
+
+async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
+    now = time.time()
+    cached = _cache.get(espn_event_id)
+    if cached and cached["expires_at"] > now:
+        return cached["response"]
+
+    try:
+        payload = await fetch_espn_summary(espn_event_id)
+    except Exception:
+        if cached:
+            return cached["response"]
+        raise
+
+    if _is_not_found_payload(payload):
+        raise LookupError(espn_event_id)
+
+    try:
+        detail = normalize_espn_summary(
+            payload,
+            espn_event_id=espn_event_id,
+            fetched_at=datetime.now(ET).isoformat(),
+        )
+    except Exception:
+        if cached:
+            return cached["response"]
+        raise
+
+    _cache[espn_event_id] = {
+        "response": detail,
+        "expires_at": now + cache_ttl_seconds(detail),
+    }
+    return detail
 
 
 def _hex_color(raw: str | None, fallback: str) -> str:

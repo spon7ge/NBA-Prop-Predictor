@@ -14,6 +14,7 @@ from app.api.routes import (
     predictions,
     props,
     slates,
+    wnba_game_detail,
     wnba_scoreboard,
 )
 from app.core.config import CORS_ORIGINS
@@ -24,8 +25,8 @@ app = FastAPI(
     description=(
         "NBA prop prediction backend. Most endpoints read from Supabase "
         "(silver / gold / ml schemas) and make no NBA or Odds API calls. "
-        "The exception is /api/wnba/scoreboard/today, which calls ESPN and "
-        "stats.wnba.com directly for live WNBA scores."
+        "The exceptions are /api/wnba/scoreboard/today and WNBA game detail "
+        "routes, which call ESPN and stats.wnba.com directly for live WNBA data."
     ),
 )
 
@@ -55,3 +56,4 @@ app.include_router(slates.router, prefix="/api")
 
 # ── Direct upstream (non-DB) routes ────────────────────────────────────────
 app.include_router(wnba_scoreboard.router, prefix="/api")
+app.include_router(wnba_game_detail.router, prefix="/api")
