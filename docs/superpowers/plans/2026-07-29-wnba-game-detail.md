@@ -349,11 +349,6 @@ def _hex_color(raw: str | None, fallback: str) -> str:
 
 def _player_name_from_text(text: str) -> str:
     # ESPN texts start with the athlete name before the verb.
-    for sep in (" makes ", " misses ", " makes", " misses"):
-        if sep.strip() in text or sep in text:
-            idx = text.find(sep.strip()) if sep.strip() in text else text.find(sep)
-            # Prefer explicit splits:
-            break
     for verb in (" makes ", " misses ", " shooting ", " defensive ", " offensive "):
         if verb in text:
             return text.split(verb, 1)[0].strip()
@@ -361,17 +356,91 @@ def _player_name_from_text(text: str) -> str:
 
 
 def normalize_espn_summary(payload: dict, *, espn_event_id: str, fetched_at: str) -> WnbaGameDetail:
-    # header → competition → competitors / status
-    # gameInfo.venue.fullName
-    # Reuse status mapping logic equivalent to scoreboard (_espn_status): prefer shortDetail
-    # plays: map each play; shots = shootingPlay True with coordinate
-    # made = scoringPlay True for shooting plays (misses have scoringPlay False)
-    # latest_play = last play in ESPN order (ESPN lists chronological; use plays[-1])
-    # Return plays in API order newest-first for the UI (reversed)
-    ...
+    header = payload.get("header") or {}
+    comp = (header.get("competitions") or [{}])[0]
+    status_block = comp.get("status") or {}
+    teams = {c.get("homeAway"): c for c in (comp.get("competitors") or [])}
+    away_c, home_c = teams.get("away") or {}, teams.get("home") or {}
+    venue = ((payload.get("gameInfo") or {}).get("venue") or {}).get("fullName")
+    status, status_label = _detail_status(status_block)  # prefer shortDetail for label
+
+    def team(c: dict, fallback_color: str) -> GameDetailTeam:
+        t = c.get("team") or {}
+        raw = c.get("score")
+        score = int(raw) if raw not in (None, "") else None
+        return GameDetailTeam(
+            id=str(t.get("id") or ""),
+            abbrev=str(t.get("abbreviation") or ""),
+            name=str(t.get("displayName") or ""),
+            score=score if status != "scheduled" else None,
+            color=_hex_color(t.get("color"), fallback_color),
+        )
+
+    raw_plays = payload.get("plays") or []
+    plays: list[GameDetailPlay] = []
+    shots: list[GameDetailShot] = []
+    for p in raw_plays:
+        period = int((p.get("period") or {}).get("number") or 0)
+        clock = str((p.get("clock") or {}).get("displayValue") or "")
+        team_id = str((p.get("team") or {}).get("id") or "") or None
+        text = str(p.get("text") or "")
+        shooting = bool(p.get("shootingPlay"))
+        scoring = bool(p.get("scoringPlay"))
+        play = GameDetailPlay(
+            id=str(p.get("id") or ""),
+            team_id=team_id,
+            period=period,
+            clock=clock,
+            text=text,
+            scoring=scoring,
+            away_score=int(p.get("awayScore") or 0),
+            home_score=int(p.get("homeScore") or 0),
+            shooting=shooting,
+        )
+        plays.append(play)
+        if shooting:
+            coord = p.get("coordinate") or {}
+            shots.append(
+                GameDetailShot(
+                    id=play.id,
+                    team_id=team_id or "",
+                    player_name=_player_name_from_text(text),
+                    made=scoring,
+                    x=float(coord.get("x") or 0),
+                    y=float(coord.get("y") or 0),
+                    period=period,
+                    clock=clock,
+                )
+            )
+
+    latest_src = raw_plays[-1] if raw_plays else None
+    latest = None
+    if latest_src is not None:
+        latest = GameDetailLatestPlay(
+            id=str(latest_src.get("id") or ""),
+            clock=str((latest_src.get("clock") or {}).get("displayValue") or ""),
+            period=int((latest_src.get("period") or {}).get("number") or 0),
+            text=str(latest_src.get("text") or ""),
+            team_id=str((latest_src.get("team") or {}).get("id") or "") or None,
+        )
+
+    return WnbaGameDetail(
+        espn_event_id=espn_event_id,
+        status=status,
+        status_label=status_label,
+        venue=str(venue) if venue else None,
+        away=team(away_c, FALLBACK_AWAY_COLOR),
+        home=team(home_c, FALLBACK_HOME_COLOR),
+        fg_made=sum(1 for s in shots if s.made),
+        fg_attempted=len(shots),
+        latest_play=latest,
+        shots=shots,
+        plays=list(reversed(plays)),  # newest-first for UI
+        fetched_at=fetched_at,
+    )
 ```
 
-Status label: prefer `status.type.shortDetail` (e.g. `"4:13 - 1st"`) to match the mockup; map machine `status` with the same rules as scoreboard (`in` → live, `post`+completed → final, halftime, else scheduled).
+Status label: prefer `status.type.shortDetail` (e.g. `"4:13 - 1st"`) to match the mockup; map machine `status` with the same rules as scoreboard (`in` → live, `post`+completed → final, halftime, else scheduled). Implement `_detail_status` accordingly (can mirror scoreboard `_espn_status` but keep shortDetail as the live label).
 
 Colors: `#` + team `color` (uppercase), else fallbacks above.
 
@@ -516,12 +585,40 @@ def _is_not_found_payload(payload: dict) -> bool:
 
 
 async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
-    # Serve fresh cache if unexpired
-    # Else fetch → if not-found payload raise LookupError
-    # On success normalize + store
-    # On fetch failure: return stale if present else raise
-    ...
+    now = time.time()
+    cached = _cache.get(espn_event_id)
+    if cached and cached["expires_at"] > now:
+        return cached["response"]
+
+    try:
+        payload = await fetch_espn_summary(espn_event_id)
+    except Exception:
+        if cached:
+            return cached["response"]
+        raise
+
+    if _is_not_found_payload(payload):
+        raise LookupError(espn_event_id)
+
+    try:
+        detail = normalize_espn_summary(
+            payload,
+            espn_event_id=espn_event_id,
+            fetched_at=datetime.now(ET).isoformat(),
+        )
+    except Exception:
+        if cached:
+            return cached["response"]
+        raise
+
+    _cache[espn_event_id] = {
+        "response": detail,
+        "expires_at": now + cache_ttl_seconds(detail),
+    }
+    return detail
 ```
+
+Import `time`, `datetime`, and `ET` (`ZoneInfo("America/New_York")`) at module top.
 
 Route:
 
@@ -735,7 +832,29 @@ it("enables polling for live games", async () => {
   expect(result.current.shouldPoll).toBe(true);
 });
 
-it("disables polling for final games", async () => { /* status final → shouldPoll false */ });
+it("disables polling for final games", async () => {
+  fetchMock.mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      espn_event_id: "1",
+      league: "wnba",
+      status: "final",
+      status_label: "Final",
+      venue: null,
+      away: { id: "a", abbrev: "GS", name: "GS", score: 80, color: "#553987" },
+      home: { id: "b", abbrev: "PHX", name: "PHX", score: 75, color: "#E56020" },
+      fg_made: 0,
+      fg_attempted: 0,
+      latest_play: null,
+      shots: [],
+      plays: [],
+      fetched_at: "",
+    }),
+  });
+  const { result } = renderHook(() => useGameDetail("1"), { wrapper });
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(result.current.shouldPoll).toBe(false);
+});
 
 it("flags hasNeverLoaded on first failure", async () => {
   fetchMock.mockResolvedValue({ ok: false, status: 502 });
