@@ -60,6 +60,10 @@ function buildApiDetail(
       },
     ],
     win_probability: null,
+    matchup_prediction: null,
+    projected_starters: null,
+    season_leaders: null,
+    injuries: null,
     fetched_at: "2026-07-29T00:00:00Z",
     ...overrides,
   };
@@ -122,6 +126,10 @@ describe("mapGameDetail", () => {
         },
       ],
       winProbability: null,
+      matchupPrediction: null,
+      projectedStarters: null,
+      seasonLeaders: null,
+      injuries: null,
     });
   });
 
@@ -183,5 +191,55 @@ describe("mapGameDetail", () => {
       awayValue: 41,
       homeValue: 49,
     });
+  });
+
+  it("maps matchup preview fields", () => {
+    const mapped = mapGameDetail({
+      ...buildApiDetail(),
+      matchup_prediction: {
+        away_win_pct: 67,
+        home_win_pct: 33,
+        source_label: "ESPN game projection",
+      },
+      projected_starters: {
+        note: "from each team's last game",
+        away: [{ jersey: "1", name: "Natasha Howard", position: "F" }],
+        home: [{ jersey: "10", name: "Maria Conde", position: "F" }],
+      },
+      season_leaders: {
+        away: [
+          {
+            stat: "points",
+            label: "Points",
+            name: "Olivia Miles",
+            value: "19.5",
+          },
+        ],
+        home: [],
+      },
+      injuries: {
+        away: [],
+        home: [
+          {
+            name: "Nyara Sabally",
+            position: "F",
+            status: "Out",
+            detail: "Ribs",
+          },
+        ],
+      },
+    });
+    expect(mapped.matchupPrediction?.awayWinPct).toBe(67);
+    expect(mapped.projectedStarters?.away[0].name).toBe("Natasha Howard");
+    expect(mapped.seasonLeaders?.away[0].stat).toBe("points");
+    expect(mapped.injuries?.home[0].detail).toBe("Ribs");
+  });
+
+  it("maps null preview fields", () => {
+    const mapped = mapGameDetail(buildApiDetail());
+    expect(mapped.matchupPrediction).toBeNull();
+    expect(mapped.projectedStarters).toBeNull();
+    expect(mapped.seasonLeaders).toBeNull();
+    expect(mapped.injuries).toBeNull();
   });
 });

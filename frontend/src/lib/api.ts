@@ -83,6 +83,48 @@ export type ApiGameDetailWinProbability = {
   team_stats: ApiGameDetailTeamStat[];
 };
 
+export type ApiGameDetailMatchupPrediction = {
+  away_win_pct: number;
+  home_win_pct: number;
+  source_label: string;
+};
+
+export type ApiGameDetailStarter = {
+  jersey: string | null;
+  name: string;
+  position: string | null;
+};
+
+export type ApiGameDetailProjectedStarters = {
+  note: string;
+  away: ApiGameDetailStarter[];
+  home: ApiGameDetailStarter[];
+};
+
+export type ApiGameDetailSeasonLeader = {
+  stat: "points" | "assists" | "rebounds";
+  label: string;
+  name: string;
+  value: string;
+};
+
+export type ApiGameDetailSeasonLeaders = {
+  away: ApiGameDetailSeasonLeader[];
+  home: ApiGameDetailSeasonLeader[];
+};
+
+export type ApiGameDetailInjury = {
+  name: string;
+  position: string | null;
+  status: string;
+  detail: string | null;
+};
+
+export type ApiGameDetailInjuries = {
+  away: ApiGameDetailInjury[];
+  home: ApiGameDetailInjury[];
+};
+
 export type ApiWnbaGameDetail = {
   espn_event_id: string;
   league: "wnba";
@@ -97,6 +139,10 @@ export type ApiWnbaGameDetail = {
   shots: ApiGameDetailShot[];
   plays: ApiGameDetailPlay[];
   win_probability: ApiGameDetailWinProbability | null;
+  matchup_prediction: ApiGameDetailMatchupPrediction | null;
+  projected_starters: ApiGameDetailProjectedStarters | null;
+  season_leaders: ApiGameDetailSeasonLeaders | null;
+  injuries: ApiGameDetailInjuries | null;
   fetched_at: string;
 };
 

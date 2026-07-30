@@ -75,5 +75,59 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
           })),
         }
       : null,
+    matchupPrediction: detail.matchup_prediction
+      ? {
+          awayWinPct: detail.matchup_prediction.away_win_pct,
+          homeWinPct: detail.matchup_prediction.home_win_pct,
+          sourceLabel: detail.matchup_prediction.source_label,
+        }
+      : null,
+    projectedStarters: detail.projected_starters
+      ? {
+          note: detail.projected_starters.note,
+          away: detail.projected_starters.away.map((starter) => ({
+            jersey: starter.jersey,
+            name: starter.name,
+            position: starter.position,
+          })),
+          home: detail.projected_starters.home.map((starter) => ({
+            jersey: starter.jersey,
+            name: starter.name,
+            position: starter.position,
+          })),
+        }
+      : null,
+    seasonLeaders: detail.season_leaders
+      ? {
+          away: detail.season_leaders.away.map((leader) => ({
+            stat: leader.stat,
+            label: leader.label,
+            name: leader.name,
+            value: leader.value,
+          })),
+          home: detail.season_leaders.home.map((leader) => ({
+            stat: leader.stat,
+            label: leader.label,
+            name: leader.name,
+            value: leader.value,
+          })),
+        }
+      : null,
+    injuries: detail.injuries
+      ? {
+          away: detail.injuries.away.map((injury) => ({
+            name: injury.name,
+            position: injury.position,
+            status: injury.status,
+            detail: injury.detail,
+          })),
+          home: detail.injuries.home.map((injury) => ({
+            name: injury.name,
+            position: injury.position,
+            status: injury.status,
+            detail: injury.detail,
+          })),
+        }
+      : null,
   };
 }

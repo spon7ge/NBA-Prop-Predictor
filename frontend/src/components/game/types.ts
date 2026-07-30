@@ -63,6 +63,48 @@ export type GameDetailWinProbability = {
   teamStats: GameDetailTeamStat[];
 };
 
+export type GameDetailMatchupPrediction = {
+  awayWinPct: number;
+  homeWinPct: number;
+  sourceLabel: string;
+};
+
+export type GameDetailStarter = {
+  jersey: string | null;
+  name: string;
+  position: string | null;
+};
+
+export type GameDetailProjectedStarters = {
+  note: string;
+  away: GameDetailStarter[];
+  home: GameDetailStarter[];
+};
+
+export type GameDetailSeasonLeader = {
+  stat: "points" | "assists" | "rebounds";
+  label: string;
+  name: string;
+  value: string;
+};
+
+export type GameDetailSeasonLeaders = {
+  away: GameDetailSeasonLeader[];
+  home: GameDetailSeasonLeader[];
+};
+
+export type GameDetailInjury = {
+  name: string;
+  position: string | null;
+  status: string;
+  detail: string | null;
+};
+
+export type GameDetailInjuries = {
+  away: GameDetailInjury[];
+  home: GameDetailInjury[];
+};
+
 export type GameDetail = {
   espnEventId: string;
   league: "wnba";
@@ -77,4 +119,8 @@ export type GameDetail = {
   shots: GameDetailShot[];
   plays: GameDetailPlay[];
   winProbability: GameDetailWinProbability | null;
+  matchupPrediction: GameDetailMatchupPrediction | null;
+  projectedStarters: GameDetailProjectedStarters | null;
+  seasonLeaders: GameDetailSeasonLeaders | null;
+  injuries: GameDetailInjuries | null;
 };

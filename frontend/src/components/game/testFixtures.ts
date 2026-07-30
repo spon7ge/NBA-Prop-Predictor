@@ -122,6 +122,10 @@ export const detail: GameDetail = {
     },
   ],
   winProbability: null,
+  matchupPrediction: null,
+  projectedStarters: null,
+  seasonLeaders: null,
+  injuries: null,
 };
 
 export function buildGameDetailFixture(
