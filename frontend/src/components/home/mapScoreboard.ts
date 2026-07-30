@@ -1,13 +1,9 @@
 import type { ApiWnbaGame } from "@/lib/api";
 import type { MatchupGame } from "@/components/league/types";
-import type { GameStatus, LiveGame, TickerGame } from "./types";
-
-export function isInProgressStatus(status: GameStatus): boolean {
-  return status === "live" || status === "halftime";
-}
+import type { LiveGame, TickerGame } from "./types";
 
 export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
-  return games.filter((g) => isInProgressStatus(g.status)).map((g) => ({
+  return games.map((g) => ({
     id: g.id,
     espnEventId: g.espn_event_id,
     league: g.league,
@@ -21,7 +17,7 @@ export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
 }
 
 export function mapToLiveGames(games: ApiWnbaGame[]): LiveGame[] {
-  return games.filter((g) => isInProgressStatus(g.status)).map((g) => ({
+  return games.map((g) => ({
     id: g.id,
     espnEventId: g.espn_event_id,
     league: g.league,

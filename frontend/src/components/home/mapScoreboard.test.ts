@@ -63,46 +63,36 @@ describe("scoreboard mappers", () => {
     ]);
   });
 
-  it("includes only live and halftime games for the ticker", () => {
+  it("maps null scores for scheduled ticker games", () => {
     const scheduled = apiGame({
-      id: "sched",
       status: "scheduled",
       status_label: "7:00 PM ET",
       away: { abbrev: "NYL", name: "New York Liberty", score: null },
       home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
     });
-    const finalGame = apiGame({
-      id: "final",
-      status: "final",
-      status_label: "Final",
+    expect(mapToTickerGames([scheduled])[0]).toMatchObject({
+      awayScore: null,
+      homeScore: null,
+      status: "scheduled",
     });
-    const halftime = apiGame({
-      id: "ht",
-      status: "halftime",
-      status_label: "Halftime",
-    });
-    expect(mapToTickerGames([scheduled, finalGame, apiGame(), halftime])).toEqual([
-      expect.objectContaining({ id: "g1", status: "live" }),
-      expect.objectContaining({ id: "ht", status: "halftime" }),
-    ]);
   });
 
-  it("includes only live and halftime games for LIVE NOW", () => {
+  it("maps API games to live games and preserves null scores", () => {
     const scheduled = apiGame({
-      id: "sched",
       status: "scheduled",
       status_label: "7:00 PM ET",
       away: { abbrev: "NYL", name: "New York Liberty", score: null },
       home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
     });
-    const finalGame = apiGame({
-      id: "final",
-      status: "final",
-      status_label: "Final",
+    expect(mapToLiveGames([scheduled])[0]).toEqual({
+      id: "g1",
+      espnEventId: null,
+      league: "wnba",
+      statusLabel: "7:00 PM ET",
+      status: "scheduled",
+      away: { abbrev: "NYL", name: "New York Liberty", score: null },
+      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
     });
-    expect(mapToLiveGames([scheduled, finalGame, apiGame()])).toEqual([
-      expect.objectContaining({ id: "g1", status: "live" }),
-    ]);
   });
 
   it("maps espn_event_id to espnEventId on ticker and live games", () => {
