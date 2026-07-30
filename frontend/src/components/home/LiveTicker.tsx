@@ -17,7 +17,7 @@ function TickerItem({ game }: { game: TickerGame }) {
   const scheduled = isScheduledFormat(game);
 
   return (
-    <li className="flex items-center gap-2 font-mono text-xs text-white/70">
+    <li className="flex items-center gap-2 border-l border-white/10 px-5 font-mono text-xs text-white/70 first:border-l-0">
       <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
       {scheduled ? (
         <>
@@ -41,10 +41,26 @@ function TickerItem({ game }: { game: TickerGame }) {
   );
 }
 
+function TickerGameList({
+  games,
+  keyPrefix,
+}: {
+  games: TickerGame[];
+  keyPrefix: string;
+}) {
+  return (
+    <ul className="flex shrink-0 items-center whitespace-nowrap">
+      {games.map((game) => (
+        <TickerItem key={`${keyPrefix}-${game.id}`} game={game} />
+      ))}
+    </ul>
+  );
+}
+
 export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
   return (
-    <div className="border-b border-white/10 bg-[#0a0a0a]">
-      <div className="mx-auto flex max-w-6xl items-center gap-4 overflow-hidden px-4 py-2 sm:px-6">
+    <div className="ticker-marquee border-b border-white/10 bg-[#0a0a0a]">
+      <div className="flex items-center gap-4 overflow-hidden px-4 py-2 sm:px-6">
         <div className="flex shrink-0 items-center gap-2">
           <span
             className="size-1.5 animate-pulse rounded-full bg-red-500"
@@ -60,11 +76,14 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
             {isError ? "Scoreboard unavailable" : "No live games"}
           </p>
         ) : (
-          <ul className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto whitespace-nowrap">
-            {games.map((game) => (
-              <TickerItem key={game.id} game={game} />
-            ))}
-          </ul>
+          <div className="ticker-marquee-viewport min-w-0 flex-1 overflow-hidden">
+            <div className="ticker-marquee-track flex w-max items-center">
+              <TickerGameList games={games} keyPrefix="a" />
+              <div className="ticker-marquee-duplicate" aria-hidden="true">
+                <TickerGameList games={games} keyPrefix="b" />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

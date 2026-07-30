@@ -39,21 +39,33 @@ describe("LiveTicker", () => {
   it("renders games instead of the error copy when data is present", () => {
     render(<LiveTicker games={[liveGame]} isError />);
     expect(screen.queryByText("Scoreboard unavailable")).not.toBeInTheDocument();
-    expect(screen.getByText("ATL")).toBeInTheDocument();
-    expect(screen.getByText("Q3 7:13")).toBeInTheDocument();
+    expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Q3 7:13").length).toBeGreaterThanOrEqual(1);
   });
 
   it("formats live games with scores and an em dash", () => {
     render(<LiveTicker games={[liveGame]} />);
-    expect(screen.getByText("36")).toBeInTheDocument();
-    expect(screen.getByText("44")).toBeInTheDocument();
-    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getAllByText("36").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("44").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("—").length).toBeGreaterThanOrEqual(1);
     expect(screen.queryByText("@")).not.toBeInTheDocument();
   });
 
   it("formats scheduled games with @ and no scores", () => {
     render(<LiveTicker games={[scheduledGame]} />);
-    expect(screen.getByText("@")).toBeInTheDocument();
+    expect(screen.getAllByText("@").length).toBeGreaterThanOrEqual(1);
     expect(screen.queryByText("—")).not.toBeInTheDocument();
+  });
+
+  it("duplicates the game list for the marquee track", () => {
+    render(<LiveTicker games={[liveGame]} />);
+    expect(screen.getAllByText("ATL")).toHaveLength(2);
+  });
+
+  it("marks the duplicate track as aria-hidden", () => {
+    const { container } = render(<LiveTicker games={[liveGame]} />);
+    const duplicate = container.querySelector(".ticker-marquee-duplicate");
+    expect(duplicate?.getAttribute("aria-hidden")).toBe("true");
+    expect(duplicate?.textContent).toContain("ATL");
   });
 });

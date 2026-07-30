@@ -33,7 +33,7 @@ describe("HomeChromeLayout", () => {
         </Routes>
       </MemoryRouter>,
     );
-    expect(screen.getByText("ATL")).toBeInTheDocument();
-    expect(screen.getByText("DAL")).toBeInTheDocument();
+    expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("DAL").length).toBeGreaterThanOrEqual(1);
   });
 });

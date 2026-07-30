@@ -48,3 +48,34 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 }
+
+@keyframes ticker-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-marquee-track {
+  animation: ticker-marquee 40s linear infinite;
+}
+
+.ticker-marquee:hover .ticker-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-marquee-track {
+    animation: none;
+  }
+
+  .ticker-marquee-duplicate {
+    display: none;
+  }
+
+  .ticker-marquee-viewport {
+    overflow-x: auto;
+  }
+}
