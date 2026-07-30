@@ -11,7 +11,10 @@ type MatchupsPanelProps = {
 
 function MatchupSkeletons() {
   return (
-    <div className="space-y-3" aria-label="Loading matchups">
+    <div
+      className="grid grid-cols-1 gap-3 md:grid-cols-2"
+      aria-label="Loading matchups"
+    >
       {Array.from({ length: 3 }, (_, index) => (
         <div
           key={index}
@@ -34,7 +37,7 @@ function Section({
       <h3 className="text-xs font-semibold tracking-wider text-white/50">
         {label}
       </h3>
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {games.map((game) => (
           <MatchupGameCard key={game.id} game={game} />
         ))}

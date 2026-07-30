@@ -40,11 +40,11 @@ describe("LiveNowSection", () => {
     expect(container.querySelectorAll("article[aria-hidden]")).toHaveLength(0);
   });
 
-  it("counts only in-progress games in the subtitle", () => {
+  it("shows only in-progress games and counts them in the subtitle", () => {
     render(<LiveNowSection games={[liveGame, finalGame]} />);
     expect(screen.getByText("1 game in progress")).toBeInTheDocument();
     expect(screen.getByText("ATL")).toBeInTheDocument();
-    expect(screen.getByText("NYL")).toBeInTheDocument();
+    expect(screen.queryByText("NYL")).not.toBeInTheDocument();
   });
 
   it("shows a muted error when the scoreboard never loaded", () => {

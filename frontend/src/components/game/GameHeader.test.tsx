@@ -26,14 +26,15 @@ describe("GameHeader", () => {
     expect(screen.getByText("9")).toBeInTheDocument();
   });
 
-  it("renders the venue", () => {
+  it("renders status and venue inside the header card", () => {
     renderHeader();
+    expect(screen.getAllByText("4:13 - 1st").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Mortgage Matchup Center")).toBeInTheDocument();
   });
 
-  it("renders the status label", () => {
+  it("renders the status label in the top bar", () => {
     renderHeader();
-    expect(screen.getByText("4:13 - 1st")).toBeInTheDocument();
+    expect(screen.getAllByText("4:13 - 1st").length).toBeGreaterThanOrEqual(1);
   });
 
   it("links Back to the home page", () => {
@@ -52,8 +53,9 @@ describe("GameHeader", () => {
     expect(screen.getAllByText("–")).toHaveLength(2);
   });
 
-  it("shows fallback copy when venue is unknown", () => {
+  it("omits the venue separator when venue is unknown", () => {
     renderHeader({ venue: null });
-    expect(screen.getByText(/venue/i)).toBeInTheDocument();
+    expect(screen.queryByText("Mortgage Matchup Center")).not.toBeInTheDocument();
+    expect(screen.getAllByText("4:13 - 1st").length).toBeGreaterThanOrEqual(1);
   });
 });

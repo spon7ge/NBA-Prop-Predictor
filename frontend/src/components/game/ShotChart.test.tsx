@@ -16,11 +16,12 @@ describe("ShotChart", () => {
     expect(screen.getByText("Data: ESPN")).toBeInTheDocument();
   });
 
-  it("shows the latest play text", () => {
+  it("shows the latest play text with period and clock", () => {
     render(<ShotChart detail={detail} />);
     expect(
       screen.getByText("Laeticia Amihere makes two point shot"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Q1 4:29")).toBeInTheDocument();
   });
 
   it("shows tip-off pending copy when there is no latest play", () => {
@@ -53,5 +54,68 @@ describe("ShotChart", () => {
     await user.click(screen.getByRole("button", { name: "Both" }));
     expect(screen.getByRole("img", { name: /A\. Player/ })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /B\. Player/ })).toBeInTheDocument();
+  });
+
+  it("filters shots by period under the chart", async () => {
+    const user = userEvent.setup();
+    const withPeriods = {
+      ...detail,
+      shots: [
+        {
+          id: "s1",
+          teamId: detail.away.id,
+          playerName: "A. Player",
+          made: true,
+          x: 25,
+          y: 5,
+          period: 1,
+          clock: "8:00",
+        },
+        {
+          id: "s2",
+          teamId: detail.home.id,
+          playerName: "B. Player",
+          made: false,
+          x: 20,
+          y: 10,
+          period: 2,
+          clock: "7:00",
+        },
+        {
+          id: "s3",
+          teamId: detail.away.id,
+          playerName: "C. Player",
+          made: true,
+          x: 30,
+          y: 12,
+          period: 3,
+          clock: "6:00",
+        },
+      ],
+      fgMade: 2,
+      fgAttempted: 3,
+    };
+    render(<ShotChart detail={withPeriods} />);
+
+    expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Q1" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Q2" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Q3" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Q1" }));
+    expect(screen.getByRole("img", { name: /A\. Player/ })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: /B\. Player/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: /C\. Player/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("1/1 FG")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "All" }));
+    expect(screen.getByRole("img", { name: /A\. Player/ })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /B\. Player/ })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /C\. Player/ })).toBeInTheDocument();
+    expect(screen.getByText("2/3 FG")).toBeInTheDocument();
   });
 });

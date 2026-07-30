@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
 import type { MatchupGame, MatchupTeam } from "./types";
 
-function TeamRow({ team }: { team: MatchupTeam }) {
+function TeamRow({
+  team,
+  showScore,
+}: {
+  team: MatchupTeam;
+  showScore: boolean;
+}) {
   return (
     <div className="flex items-center gap-2.5">
       <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-bold text-white/70">
@@ -18,15 +24,18 @@ function TeamRow({ team }: { team: MatchupTeam }) {
           <span className="block text-[11px] text-white/45">{team.record}</span>
         ) : null}
       </span>
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-black font-mono text-sm font-bold text-amber-300">
-        {team.score ?? "–"}
-      </span>
+      {showScore ? (
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-black font-mono text-sm font-bold text-amber-300">
+          {team.score ?? "–"}
+        </span>
+      ) : null}
     </div>
   );
 }
 
 export function MatchupGameCard({ game }: { game: MatchupGame }) {
   const isLive = isInProgressStatus(game.status);
+  const showScores = game.status !== "scheduled";
   const venueLabel = game.venue
     ? [game.venue, game.venueCity].filter(Boolean).join(" · ")
     : null;
@@ -61,8 +70,8 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
           ) : null}
         </div>
         <div className="space-y-3">
-          <TeamRow team={game.away} />
-          <TeamRow team={game.home} />
+          <TeamRow team={game.away} showScore={showScores} />
+          <TeamRow team={game.home} showScore={showScores} />
         </div>
       </div>
       <ChevronRight

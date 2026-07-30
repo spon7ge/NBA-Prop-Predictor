@@ -105,4 +105,25 @@ describe("PlayByPlay", () => {
     render(<PlayByPlay detail={{ ...detail, plays: [] }} />);
     expect(screen.getByText(/tip-off pending/i)).toBeInTheDocument();
   });
+
+  it("shows only the 10 newest plays for the active period", () => {
+    const manyPlays = Array.from({ length: 12 }, (_, i) => ({
+      id: `p${i}`,
+      teamId: detail.away.id,
+      period: 2,
+      clock: `${9 - Math.floor(i / 2)}:${(50 - i).toString().padStart(2, "0")}`,
+      text: `Play number ${i}`,
+      scoring: false,
+      awayScore: 0,
+      homeScore: 0,
+      shooting: false,
+    }));
+    render(<PlayByPlay detail={{ ...detail, plays: manyPlays }} />);
+    const items = screen.getAllByRole("listitem");
+    expect(items).toHaveLength(10);
+    expect(items[0]).toHaveTextContent("Play number 0");
+    expect(items[9]).toHaveTextContent("Play number 9");
+    expect(screen.queryByText("Play number 10")).not.toBeInTheDocument();
+    expect(screen.queryByText("Play number 11")).not.toBeInTheDocument();
+  });
 });

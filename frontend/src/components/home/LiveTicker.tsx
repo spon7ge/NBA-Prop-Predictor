@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { isInProgressStatus } from "./mapScoreboard";
 import type { TickerGame } from "./types";
 
 type LiveTickerProps = {
@@ -7,13 +8,6 @@ type LiveTickerProps = {
   isError?: boolean;
 };
 
-function isScheduledFormat(game: TickerGame): boolean {
-  return (
-    game.status === "scheduled" ||
-    (game.awayScore === null && game.homeScore === null)
-  );
-}
-
 function TickerItem({
   game,
   interactive = true,
@@ -21,28 +15,17 @@ function TickerItem({
   game: TickerGame;
   interactive?: boolean;
 }) {
-  const scheduled = isScheduledFormat(game);
-
   const content = (
     <>
       <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
-      {scheduled ? (
-        <>
-          <span className="text-white/30">@</span>
-          <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
-        </>
-      ) : (
-        <>
-          {game.awayScore !== null ? (
-            <span className="text-white/80">{game.awayScore}</span>
-          ) : null}
-          <span className="text-white/30">—</span>
-          <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
-          {game.homeScore !== null ? (
-            <span className="text-white/80">{game.homeScore}</span>
-          ) : null}
-        </>
-      )}
+      {game.awayScore !== null ? (
+        <span className="text-white/80">{game.awayScore}</span>
+      ) : null}
+      <span className="text-white/30">—</span>
+      <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
+      {game.homeScore !== null ? (
+        <span className="text-white/80">{game.homeScore}</span>
+      ) : null}
       <span className="text-white/40">{game.statusLabel}</span>
     </>
   );
@@ -86,6 +69,8 @@ function TickerGameList({
 }
 
 export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
+  const liveGames = games.filter((g) => isInProgressStatus(g.status));
+
   return (
     <div className="ticker-marquee border-b border-white/10 bg-[#0a0a0a]">
       <div className="mx-auto flex max-w-6xl items-center gap-4 overflow-hidden px-4 py-2 sm:px-6">
@@ -99,16 +84,20 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
           </span>
         </div>
 
-        {games.length === 0 ? (
+        {liveGames.length === 0 ? (
           <p className="truncate text-xs text-white/40">
             {isError ? "Scoreboard unavailable" : "No live games"}
           </p>
         ) : (
           <div className="ticker-marquee-viewport min-w-0 flex-1 overflow-hidden">
             <div className="ticker-marquee-track flex w-max items-center">
-              <TickerGameList games={games} keyPrefix="a" />
+              <TickerGameList games={liveGames} keyPrefix="a" />
               <div className="ticker-marquee-duplicate" aria-hidden="true">
-                <TickerGameList games={games} keyPrefix="b" interactive={false} />
+                <TickerGameList
+                  games={liveGames}
+                  keyPrefix="b"
+                  interactive={false}
+                />
               </div>
             </div>
           </div>

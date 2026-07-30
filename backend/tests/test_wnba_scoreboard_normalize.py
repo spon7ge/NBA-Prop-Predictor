@@ -6,15 +6,23 @@ from pathlib import Path
 import pytest
 
 from app.schemas.wnba_scoreboard import WnbaGame, WnbaTeam
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from app.services.wnba_scoreboard import (
     cache_ttl_seconds,
     canonical_abbrev,
+    combine_with_overnight_carryover,
     format_tip_label,
     merge_games,
     normalize_espn_scoreboard,
     normalize_stats_scoreboard,
     prefer_complete,
+    previous_et_date,
+    slate_et_date,
 )
+
+ET = ZoneInfo("America/New_York")
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -669,3 +677,85 @@ def test_merge_espn_game_pairs_with_only_one_stats_game():
     assert len(merged) == 2
     ids = {g.id for g in merged}
     assert ids == {"1022600001", "1022600002"}
+
+
+def test_previous_et_date():
+    assert previous_et_date("2026-07-30") == "2026-07-29"
+    assert previous_et_date("2026-01-01") == "2025-12-31"
+
+
+def test_slate_et_date_holds_yesterday_before_3am_et():
+    # 11:41 PM PT / 2:41 AM ET should still serve the Jul 29 slate.
+    early = datetime(2026, 7, 30, 1, 41, tzinfo=ET)
+    assert slate_et_date(now=early) == "2026-07-29"
+
+
+def test_slate_et_date_rolls_at_3am_et():
+    morning = datetime(2026, 7, 30, 3, 0, tzinfo=ET)
+    assert slate_et_date(now=morning) == "2026-07-30"
+    midday = datetime(2026, 7, 30, 12, 0, tzinfo=ET)
+    assert slate_et_date(now=midday) == "2026-07-30"
+
+
+def test_combine_with_overnight_carryover_keeps_live_from_yesterday():
+    today = [
+        WnbaGame(
+            id="tonight",
+            espn_event_id="401857099",
+            status="scheduled",
+            status_label="8:00 PM ET",
+            away=WnbaTeam(abbrev="MIN", name="Minnesota Lynx", score=None),
+            home=WnbaTeam(abbrev="TOR", name="Toronto Tempo", score=None),
+            start_time_et="2026-07-31T00:00:00Z",
+        )
+    ]
+    yesterday = [
+        WnbaGame(
+            id="final",
+            espn_event_id="401857097",
+            status="final",
+            status_label="Final",
+            away=WnbaTeam(abbrev="ATL", name="Atlanta Dream", score=82),
+            home=WnbaTeam(abbrev="DAL", name="Dallas Wings", score=81),
+            start_time_et="2026-07-30T00:00:00Z",
+        ),
+        WnbaGame(
+            id="still-live",
+            espn_event_id="401857098",
+            status="live",
+            status_label="Q4 2:09",
+            away=WnbaTeam(abbrev="GSV", name="Golden State Valkyries", score=77),
+            home=WnbaTeam(abbrev="PHO", name="Phoenix Mercury", score=80),
+            start_time_et="2026-07-30T02:00:00Z",
+        ),
+    ]
+    combined = combine_with_overnight_carryover(today, yesterday)
+    assert [g.id for g in combined] == ["still-live", "tonight"]
+
+
+def test_combine_with_overnight_carryover_dedupes_same_matchup():
+    today = [
+        WnbaGame(
+            id="today-copy",
+            espn_event_id="401857098",
+            status="live",
+            status_label="Q4 1:00",
+            away=WnbaTeam(abbrev="GSV", name="Golden State Valkyries", score=78),
+            home=WnbaTeam(abbrev="PHO", name="Phoenix Mercury", score=80),
+            start_time_et="2026-07-30T02:00:00Z",
+        )
+    ]
+    yesterday = [
+        WnbaGame(
+            id="yesterday-copy",
+            espn_event_id="401857098",
+            status="live",
+            status_label="Q4 2:09",
+            away=WnbaTeam(abbrev="GS", name="Golden State Valkyries", score=77),
+            home=WnbaTeam(abbrev="PHX", name="Phoenix Mercury", score=80),
+            start_time_et="2026-07-30T02:00:00Z",
+        )
+    ]
+    combined = combine_with_overnight_carryover(today, yesterday)
+    assert len(combined) == 1
+    assert combined[0].id == "today-copy"

@@ -10,29 +10,33 @@ type LeagueMatchupsPageProps = {
 };
 
 export function LeagueMatchupsPage({ league }: LeagueMatchupsPageProps) {
+  if (league === "wnba") {
+    return <WnbaMatchupsPage />;
+  }
+
   return (
     <div className="space-y-6 py-6">
-      <LeagueHero league={league} />
-      <LeagueSubnav league={league} />
-      {league === "wnba" ? (
-        <WnbaMatchupsBody />
-      ) : (
-        <p className="mx-auto max-w-6xl px-4 text-sm text-white/50 sm:px-6">
-          NBA matchups coming soon.
-        </p>
-      )}
+      <LeagueHero league="nba" />
+      <LeagueSubnav league="nba" />
+      <p className="mx-auto max-w-6xl px-4 text-sm text-white/50 sm:px-6">
+        NBA matchups coming soon.
+      </p>
     </div>
   );
 }
 
-function WnbaMatchupsBody() {
-  const { games, isLoading, hasNeverLoaded } = useWnbaScoreboard();
+function WnbaMatchupsPage() {
+  const { games, isLoading, hasNeverLoaded, data } = useWnbaScoreboard();
 
   return (
-    <MatchupsPanel
-      games={mapToMatchupGames(games)}
-      isLoading={isLoading}
-      isError={hasNeverLoaded}
-    />
+    <div className="space-y-6 py-6">
+      <LeagueHero league="wnba" dateEt={data?.date} />
+      <LeagueSubnav league="wnba" />
+      <MatchupsPanel
+        games={mapToMatchupGames(games)}
+        isLoading={isLoading}
+        isError={hasNeverLoaded}
+      />
+    </div>
   );
 }

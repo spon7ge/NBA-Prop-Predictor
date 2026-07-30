@@ -25,14 +25,15 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
   }
 
   // `detail.plays` is already newest-first (matches the API response order).
-  const playsForPeriod = detail.plays.filter(
-    (play) => play.period === activePeriod,
-  );
+  // Cap the list at 10 so the panel stays scannable during long quarters.
+  const playsForPeriod = detail.plays
+    .filter((play) => play.period === activePeriod)
+    .slice(0, 10);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+    <div>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-white">Play-by-play</h2>
+        <h2 className="text-[14px] font-semibold text-white">Play-by-play</h2>
         <div className="flex items-center gap-1">
           {periods.map((period) => (
             <button
@@ -40,7 +41,7 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
               type="button"
               onClick={() => setSelectedPeriod(period)}
               aria-pressed={activePeriod === period}
-              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-2.5 py-1 text-[14px] font-medium transition-colors ${
                 activePeriod === period
                   ? "bg-white/15 text-white"
                   : "text-white/50 hover:text-white/80"
@@ -53,25 +54,39 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
       </div>
 
       {playsForPeriod.length === 0 ? (
-        <p className="text-xs text-white/40">Tip-off pending</p>
+        <p className="text-[14px] text-white/40">Tip-off pending</p>
       ) : (
-        <ul className="space-y-1.5">
+        <ul className="space-y-1.5 text-[14px]">
           {playsForPeriod.map((play, index) => (
             <li
               key={play.id}
-              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs ${
+              className={`flex items-center gap-2 rounded-md px-2 py-1.5 ${
                 play.scoring ? "bg-white/5" : ""
-              } ${index === 0 ? "ring-1 ring-white/20" : ""}`}
+              } ${
+                index === 0
+                  ? "bg-white/10 font-semibold text-white ring-1 ring-white/25"
+                  : ""
+              }`}
             >
               <span
                 className="size-2 shrink-0 rounded-full"
                 style={{ backgroundColor: teamColor(play.teamId) }}
                 aria-hidden
               />
-              <span className="w-10 shrink-0 font-mono text-white/40">
+              <span
+                className={`w-10 shrink-0 font-mono ${
+                  index === 0 ? "text-white/60" : "text-white/40"
+                }`}
+              >
                 {play.clock}
               </span>
-              <span className="min-w-0 flex-1 text-white/80">{play.text}</span>
+              <span
+                className={`min-w-0 flex-1 ${
+                  index === 0 ? "text-white" : "text-white/80"
+                }`}
+              >
+                {play.text}
+              </span>
               {play.scoring ? (
                 <span className="shrink-0 font-mono font-semibold text-amber-300">
                   {play.awayScore}-{play.homeScore}

@@ -57,10 +57,16 @@ describe("LiveTicker", () => {
     expect(screen.queryByText("@")).not.toBeInTheDocument();
   });
 
-  it("formats scheduled games with @ and no scores", () => {
+  it("hides scheduled and final games", () => {
+    render(<LiveTicker games={[scheduledGame, liveGame]} />);
+    expect(screen.queryByText("NYL")).not.toBeInTheDocument();
+    expect(screen.queryByText("@")).not.toBeInTheDocument();
+    expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("shows empty copy when only non-live games are provided", () => {
     render(<LiveTicker games={[scheduledGame]} />);
-    expect(screen.getAllByText("@").length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText("—")).not.toBeInTheDocument();
+    expect(screen.getByText("No live games")).toBeInTheDocument();
   });
 
   it("duplicates the game list for the marquee track", () => {

@@ -5,6 +5,7 @@ import {
   formatGamesInProgress,
   normalizeLiveGames,
 } from "./format";
+import { isInProgressStatus } from "./mapScoreboard";
 import { SectionHeading } from "./SectionHeading";
 
 type LiveNowSectionProps = {
@@ -47,8 +48,6 @@ function SkeletonGameCard() {
 }
 
 function LiveGameCard({ game }: { game: LiveGame }) {
-  const inProgress = game.status === "live" || game.status === "halftime";
-
   const card = (
     <>
       <div className="mb-4 flex items-center justify-between">
@@ -57,14 +56,8 @@ function LiveGameCard({ game }: { game: LiveGame }) {
         >
           {game.league}
         </span>
-        <span
-          className={`flex items-center gap-2 text-xs ${
-            inProgress ? "text-red-400" : "text-white/55"
-          }`}
-        >
-          {inProgress ? (
-            <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
-          ) : null}
+        <span className="flex items-center gap-2 text-xs text-red-400">
+          <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
           {game.statusLabel}
         </span>
       </div>
@@ -110,10 +103,10 @@ export function LiveNowSection({
   isLoading = false,
   isError = false,
 }: LiveNowSectionProps) {
-  const list = normalizeLiveGames(games);
-  const inProgressCount = list.filter(
-    (g) => g.status === "live" || g.status === "halftime",
-  ).length;
+  const list = normalizeLiveGames(games).filter((g) =>
+    isInProgressStatus(g.status),
+  );
+  const inProgressCount = list.length;
   const showSkeletons = isLoading && list.length === 0;
   const showError = isError && !isLoading && list.length === 0;
 

@@ -53,9 +53,28 @@ export function GameHeader({ detail }: { detail: GameDetail }) {
       </div>
 
       <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
-        <p className="mb-3 text-xs tracking-wide text-white/45 uppercase">
-          <span className="normal-case">
-            {detail.venue ?? "Venue unavailable"}
+        <p className="mb-3 flex items-center gap-2 text-[14px] text-white/55">
+          {inProgress ? (
+            <span
+              className="size-1.5 shrink-0 rounded-full bg-violet-500"
+              aria-hidden
+            />
+          ) : (
+            <span
+              className="size-1.5 shrink-0 rounded-full bg-white/25"
+              aria-hidden
+            />
+          )}
+          <span>
+            <span className="text-white/80">{detail.statusLabel}</span>
+            {detail.venue ? (
+              <>
+                <span className="mx-1.5 text-white/30" aria-hidden>
+                  ·
+                </span>
+                <span>{detail.venue}</span>
+              </>
+            ) : null}
           </span>
         </p>
         <div className="space-y-3">

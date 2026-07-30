@@ -107,15 +107,15 @@ def test_scoreboard_cache_misses_on_different_et_date():
     svc._cache["expires_at"] = time.time() + 3600
 
     async def fake_fetch_espn(date_et: str):
-        assert date_et == today
+        assert date_et in (today, yesterday)
         return espn
 
     async def fake_fetch_stats(date_et: str):
-        assert date_et == today
+        assert date_et in (today, yesterday)
         return stats
 
     with (
-        patch.object(svc, "today_et_date", return_value=today),
+        patch.object(svc, "slate_et_date", return_value=today),
         patch.object(svc, "fetch_espn_scoreboard", side_effect=fake_fetch_espn),
         patch.object(svc, "fetch_stats_scoreboard", side_effect=fake_fetch_stats),
     ):
@@ -273,7 +273,8 @@ def test_concurrent_cache_misses_share_one_upstream_refresh():
             )
 
     responses = asyncio.run(run())
-    assert calls == {"espn": 1, "stats": 1}
+    # One shared refresh fetches today + yesterday (overnight carryover).
+    assert calls == {"espn": 2, "stats": 2}
     assert all(len(r.games) == 1 for r in responses)
 
 
@@ -304,7 +305,7 @@ def test_scoreboard_stale_while_error_refuses_yesterday_slate():
         raise RuntimeError("upstream down")
 
     with (
-        patch.object(svc, "today_et_date", return_value=today),
+        patch.object(svc, "slate_et_date", return_value=today),
         patch.object(svc, "fetch_espn_scoreboard", side_effect=boom),
         patch.object(svc, "fetch_stats_scoreboard", side_effect=boom),
     ):
@@ -312,3 +313,110 @@ def test_scoreboard_stale_while_error_refuses_yesterday_slate():
         res = client.get("/api/wnba/scoreboard/today")
     assert res.status_code == 502
     assert res.headers.get("cache-control") == "no-store"
+
+
+def test_scoreboard_includes_overnight_live_from_previous_et_day():
+    today = "2026-07-30"
+    yesterday = "2026-07-29"
+
+    tonight = {
+        "events": [
+            {
+                "id": "401857099",
+                "date": "2026-07-31T00:00Z",
+                "competitions": [
+                    {
+                        "competitors": [
+                            {
+                                "homeAway": "home",
+                                "score": None,
+                                "team": {
+                                    "abbreviation": "TOR",
+                                    "displayName": "Toronto Tempo",
+                                },
+                            },
+                            {
+                                "homeAway": "away",
+                                "score": None,
+                                "team": {
+                                    "abbreviation": "MIN",
+                                    "displayName": "Minnesota Lynx",
+                                },
+                            },
+                        ]
+                    }
+                ],
+                "status": {
+                    "type": {
+                        "state": "pre",
+                        "completed": False,
+                        "name": "STATUS_SCHEDULED",
+                        "shortDetail": "8:00 PM ET",
+                    },
+                    "period": 0,
+                    "displayClock": "0.0",
+                },
+            }
+        ]
+    }
+    still_live = {
+        "events": [
+            {
+                "id": "401857098",
+                "date": "2026-07-30T02:00Z",
+                "competitions": [
+                    {
+                        "competitors": [
+                            {
+                                "homeAway": "home",
+                                "score": "80",
+                                "team": {
+                                    "abbreviation": "PHX",
+                                    "displayName": "Phoenix Mercury",
+                                },
+                            },
+                            {
+                                "homeAway": "away",
+                                "score": "77",
+                                "team": {
+                                    "abbreviation": "GS",
+                                    "displayName": "Golden State Valkyries",
+                                },
+                            },
+                        ]
+                    }
+                ],
+                "status": {
+                    "type": {
+                        "state": "in",
+                        "completed": False,
+                        "name": "STATUS_IN_PROGRESS",
+                        "shortDetail": "2:09 - 4th",
+                    },
+                    "period": 4,
+                    "displayClock": "2:09",
+                },
+            }
+        ]
+    }
+
+    async def fake_fetch_espn(date_et: str):
+        return tonight if date_et == today else still_live
+
+    async def fake_fetch_stats(date_et: str):
+        return {"scoreboard": {"games": []}}
+
+    with (
+        patch.object(svc, "slate_et_date", return_value=today),
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=fake_fetch_espn),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=fake_fetch_stats),
+    ):
+        client = TestClient(app)
+        res = client.get("/api/wnba/scoreboard/today")
+
+    assert res.status_code == 200
+    body = res.json()
+    assert body["date"] == today
+    statuses = {g["away"]["abbrev"]: g["status"] for g in body["games"]}
+    assert statuses["GS"] == "live"
+    assert statuses["MIN"] == "scheduled"

@@ -4,7 +4,7 @@ import asyncio
 import logging
 import re
 import time
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from typing import overload
 from zoneinfo import ZoneInfo
 
@@ -393,6 +393,48 @@ def today_et_date() -> str:
     return datetime.now(ET).date().isoformat()
 
 
+# The slate should flip at midnight Pacific, not midnight Eastern. That keeps
+# late-evening West Coast users on the same slate until their local day ends.
+SLATE_ROLLOVER_HOUR_ET = 3
+
+
+def slate_et_date(*, now: datetime | None = None) -> str:
+    """ET calendar date used for ``/scoreboard/today`` (lags until 3:00 AM ET)."""
+    current = now.astimezone(ET) if now is not None else datetime.now(ET)
+    if current.hour < SLATE_ROLLOVER_HOUR_ET:
+        return (current.date() - timedelta(days=1)).isoformat()
+    return current.date().isoformat()
+
+
+def previous_et_date(date_et: str) -> str:
+    return (date.fromisoformat(date_et) - timedelta(days=1)).isoformat()
+
+
+def combine_with_overnight_carryover(
+    today_games: list[WnbaGame],
+    yesterday_games: list[WnbaGame],
+) -> list[WnbaGame]:
+    """Keep yesterday's still-in-progress games after the ET date rolls over.
+
+    Late West Coast tips often finish after midnight ET. Without carryover they
+    vanish from ``/scoreboard/today`` the moment the calendar flips.
+    """
+    today_keys = {_match_key(g) for g in today_games}
+    today_espn_ids = {g.espn_event_id for g in today_games if g.espn_event_id}
+    carryover: list[WnbaGame] = []
+    for game in yesterday_games:
+        if game.status not in ("live", "halftime"):
+            continue
+        if _match_key(game) in today_keys:
+            continue
+        if game.espn_event_id and game.espn_event_id in today_espn_ids:
+            continue
+        carryover.append(game)
+    return sorted(
+        carryover + today_games, key=lambda g: g.start_time_et or g.id
+    )
+
+
 async def fetch_espn_scoreboard(date_et: str) -> dict:
     dates = date_et.replace("-", "")
     async with httpx.AsyncClient(timeout=ESPN_TIMEOUT_SECONDS) as client:
@@ -426,7 +468,7 @@ def _cache_valid_for_today() -> WnbaScoreboardResponse | None:
     cached = _cache.get("response")
     if cached is None:
         return None
-    if _cache.get("date") != today_et_date():
+    if _cache.get("date") != slate_et_date():
         return None
     return cached
 
@@ -468,11 +510,8 @@ async def get_today_scoreboard() -> WnbaScoreboardResponse:
         return await _refresh_today_scoreboard()
 
 
-async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
-    now = time.time()
-    date_et = today_et_date()
-    cached = _cache_valid_for_today()
-
+async def _merged_games_for_date(date_et: str) -> tuple[list[WnbaGame], bool]:
+    """Fetch + normalize + merge one ET date. Returns (games, any_source_usable)."""
     espn_payload, stats_payload = None, None
     results = await asyncio.gather(
         fetch_espn_scoreboard(date_et),
@@ -480,17 +519,16 @@ async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
         return_exceptions=True,
     )
     if isinstance(results[0], Exception):
-        logger.warning("ESPN scoreboard fetch failed: %s", results[0])
+        logger.warning("ESPN scoreboard fetch failed (%s): %s", date_et, results[0])
     else:
         espn_payload = results[0]
     if isinstance(results[1], Exception):
-        logger.warning("stats.wnba scoreboard fetch failed: %s", results[1])
+        logger.warning(
+            "stats.wnba scoreboard fetch failed (%s): %s", date_et, results[1]
+        )
     else:
         stats_payload = results[1]
 
-    # Normalizing is fallible too (bad score strings, unexpected payload
-    # shapes), so a malformed source degrades to "unusable" exactly like a
-    # failed fetch rather than bubbling a 500 without cache headers.
     espn_games: list[WnbaGame] = []
     stats_games: list[WnbaGame] = []
     espn_usable = False
@@ -501,20 +539,45 @@ async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
             espn_games = normalize_espn_scoreboard(espn_payload, date_et=date_et)
             espn_usable = True
         except Exception as exc:
-            logger.warning("ESPN scoreboard payload unusable: %s", exc)
+            logger.warning(
+                "ESPN scoreboard payload unusable (%s): %s", date_et, exc
+            )
     if stats_payload is not None:
         try:
             stats_games = normalize_stats_scoreboard(stats_payload, date_et=date_et)
             stats_usable = True
         except Exception as exc:
-            logger.warning("stats.wnba scoreboard payload unusable: %s", exc)
+            logger.warning(
+                "stats.wnba scoreboard payload unusable (%s): %s", date_et, exc
+            )
 
     if not espn_usable and not stats_usable:
+        return [], False
+    return merge_games(espn_games, stats_games), True
+
+
+async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
+    now = time.time()
+    date_et = slate_et_date()
+    yesterday = previous_et_date(date_et)
+    cached = _cache_valid_for_today()
+
+    today_result, yesterday_result = await asyncio.gather(
+        _merged_games_for_date(date_et),
+        _merged_games_for_date(yesterday),
+    )
+    today_games, today_usable = today_result
+    yesterday_games, yesterday_usable = yesterday_result
+
+    if not today_usable:
         if cached is not None:
             return cached  # stale-while-error (same ET date only)
         raise RuntimeError("No usable WNBA scoreboard source")
 
-    games = merge_games(espn_games, stats_games)
+    games = combine_with_overnight_carryover(
+        today_games,
+        yesterday_games if yesterday_usable else [],
+    )
     response = WnbaScoreboardResponse(
         date=date_et,
         games=games,

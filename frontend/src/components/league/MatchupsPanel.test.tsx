@@ -48,6 +48,14 @@ describe("MatchupsPanel", () => {
     const next = screen.getByRole("button", { name: /next day/i });
     expect(prev).toBeDisabled();
     expect(next).toBeDisabled();
+    expect(screen.getByText("LIVE NOW").nextElementSibling).toHaveClass(
+      "grid",
+      "md:grid-cols-2",
+    );
+    expect(screen.getByText("REST OF THE SLATE").nextElementSibling).toHaveClass(
+      "grid",
+      "md:grid-cols-2",
+    );
   });
 
   it("hides LIVE NOW when no in-progress games", () => {

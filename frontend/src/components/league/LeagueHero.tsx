@@ -4,6 +4,8 @@ import type { LeagueSlug } from "./types";
 
 type LeagueHeroProps = {
   league: LeagueSlug;
+  /** YYYY-MM-DD slate date from the scoreboard (ET). Falls back to ET "now". */
+  dateEt?: string | null;
 };
 
 const leagueContent = {
@@ -25,18 +27,25 @@ const leagueContent = {
   },
 } as const;
 
-function formatToday() {
+/** Format a YYYY-MM-DD (or Date) as `WED, JUL 29` in America/New_York. */
+export function formatSlateDateLabel(dateEt?: string | null): string {
+  const date =
+    dateEt && /^\d{4}-\d{2}-\d{2}$/.test(dateEt)
+      ? new Date(`${dateEt}T12:00:00-04:00`)
+      : new Date();
   return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
     weekday: "short",
     month: "short",
     day: "numeric",
   })
-    .format(new Date())
+    .format(date)
     .toUpperCase();
 }
 
-export function LeagueHero({ league }: LeagueHeroProps) {
+export function LeagueHero({ league, dateEt }: LeagueHeroProps) {
   const content = leagueContent[league];
+  const dateLabel = formatSlateDateLabel(dateEt);
 
   return (
     <section className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-10">
@@ -48,8 +57,11 @@ export function LeagueHero({ league }: LeagueHeroProps) {
             >
               {content.label}
             </span>
-            <time className="text-xs font-medium tracking-[0.16em] text-white/45">
-              {formatToday()}
+            <time
+              dateTime={dateEt ?? undefined}
+              className="text-xs font-medium tracking-[0.16em] text-white/45"
+            >
+              {dateLabel}
             </time>
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">

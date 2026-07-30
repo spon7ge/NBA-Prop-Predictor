@@ -67,4 +67,19 @@ describe("MatchupGameCard", () => {
     expect(screen.queryByText("19-8")).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
+
+  it("hides score badges for scheduled games only", () => {
+    renderCard({
+      ...liveGame,
+      status: "scheduled",
+      statusLabel: "8:00 PM ET",
+      away: { ...liveGame.away, score: null },
+      home: { ...liveGame.home, score: null },
+    });
+
+    expect(screen.queryByText("77")).not.toBeInTheDocument();
+    expect(screen.queryByText("78")).not.toBeInTheDocument();
+    expect(screen.queryByText("Golden State Valkyries")).toBeInTheDocument();
+    expect(screen.queryByText("Phoenix Mercury")).toBeInTheDocument();
+  });
 });
