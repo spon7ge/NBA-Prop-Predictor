@@ -14,4 +14,8 @@ async def wnba_scoreboard_today(response: Response) -> WnbaScoreboardResponse:
     try:
         return await get_today_scoreboard()
     except RuntimeError as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=502,
+            detail=str(exc),
+            headers={"Cache-Control": "no-store"},
+        ) from exc

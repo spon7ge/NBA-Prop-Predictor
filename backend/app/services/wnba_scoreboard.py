@@ -23,7 +23,7 @@ ET = ZoneInfo("America/New_York")
 ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
 STATS_URL = "https://stats.wnba.com/stats/scoreboardv3"
 
-_cache: dict = {}  # keys: response, expires_at
+_cache: dict = {}  # keys: response, expires_at, date
 
 _STATUS_MAP = {1: "scheduled", 2: "live", 3: "final"}
 
@@ -262,13 +262,21 @@ async def fetch_stats_scoreboard(date_et: str) -> dict:
         return r.json()
 
 
+def _cache_valid_for_today() -> WnbaScoreboardResponse | None:
+    cached = _cache.get("response")
+    if cached is None:
+        return None
+    if _cache.get("date") != today_et_date():
+        return None
+    return cached
+
+
 async def get_today_scoreboard() -> WnbaScoreboardResponse:
     now = time.time()
-    cached = _cache.get("response")
+    date_et = today_et_date()
+    cached = _cache_valid_for_today()
     if cached is not None and now < float(_cache.get("expires_at") or 0):
         return cached
-
-    date_et = today_et_date()
     espn_payload, stats_payload = None, None
     results = await asyncio.gather(
         fetch_espn_scoreboard(date_et),
@@ -286,7 +294,7 @@ async def get_today_scoreboard() -> WnbaScoreboardResponse:
 
     if espn_payload is None and stats_payload is None:
         if cached is not None:
-            return cached  # stale-while-error
+            return cached  # stale-while-error (same ET date only)
         raise RuntimeError("Both WNBA scoreboard upstreams failed")
 
     espn_games = (
@@ -307,4 +315,5 @@ async def get_today_scoreboard() -> WnbaScoreboardResponse:
     )
     _cache["response"] = response
     _cache["expires_at"] = now + cache_ttl_seconds(games)
+    _cache["date"] = date_et
     return response
