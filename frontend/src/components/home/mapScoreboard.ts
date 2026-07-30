@@ -1,6 +1,10 @@
 import type { ApiWnbaGame } from "@/lib/api";
 import type { MatchupGame } from "@/components/league/types";
-import type { LiveGame, TickerGame } from "./types";
+import type { GameStatus, LiveGame, TickerGame } from "./types";
+
+export function isInProgressStatus(status: GameStatus): boolean {
+  return status === "live" || status === "halftime";
+}
 
 export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
   return games.map((g) => ({
