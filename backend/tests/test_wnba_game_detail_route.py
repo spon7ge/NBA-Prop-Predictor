@@ -12,6 +12,10 @@ FIXTURES = Path(__file__).parent / "fixtures"
 client = TestClient(app)
 
 
+def load_fixture(name: str) -> dict:
+    return json.loads((FIXTURES / name).read_text())
+
+
 def test_game_detail_200_no_store():
     payload = json.loads((FIXTURES / "espn_wnba_summary.json").read_text())
 
@@ -26,6 +30,38 @@ def test_game_detail_200_no_store():
     body = res.json()
     assert body["espn_event_id"] == "401857098"
     assert body["away"]["abbrev"] == "GS"
+
+
+def test_game_detail_route_includes_win_probability():
+    payload = load_fixture("espn_wnba_summary.json")
+    payload.update(load_fixture("espn_wnba_summary_with_predictor.json"))
+
+    async def fake_fetch(espn_event_id: str):
+        return payload
+
+    with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch):
+        svc.clear_game_detail_cache()
+        response = client.get("/api/wnba/games/401857098")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["win_probability"]["summary"] == "Above the midline favors PHX"
+    assert body["win_probability"]["timeline"][-1]["home_win_pct"] == 54
+    assert body["win_probability"]["team_stats"][0]["label"] == "Field goal %"
+
+
+def test_game_detail_route_allows_null_win_probability():
+    payload = load_fixture("espn_wnba_summary.json")
+
+    async def fake_fetch(espn_event_id: str):
+        return payload
+
+    with patch.object(svc, "fetch_espn_summary", side_effect=fake_fetch):
+        svc.clear_game_detail_cache()
+        response = client.get("/api/wnba/games/401857098")
+
+    assert response.status_code == 200
+    assert response.json()["win_probability"] is None
 
 
 def test_game_detail_404_when_espn_says_not_found():
