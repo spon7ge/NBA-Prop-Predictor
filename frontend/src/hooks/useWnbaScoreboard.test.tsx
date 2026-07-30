@@ -71,4 +71,28 @@ describe("useWnbaScoreboard", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.shouldPoll).toBe(true);
   });
+
+  it("flags hasNeverLoaded when the first request fails", async () => {
+    fetchMock.mockResolvedValue({ ok: false, status: 502 });
+
+    const { result } = renderHook(() => useWnbaScoreboard(), { wrapper });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.hasNeverLoaded).toBe(true);
+    expect(result.current.liveGames).toEqual([]);
+  });
+
+  it("clears hasNeverLoaded once data has loaded successfully", async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        date: "2026-07-29",
+        fetched_at: "2026-07-29T12:00:00-04:00",
+        games: [],
+      }),
+    });
+
+    const { result } = renderHook(() => useWnbaScoreboard(), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.hasNeverLoaded).toBe(false);
+  });
 });

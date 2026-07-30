@@ -36,6 +36,21 @@ npm run dev
 
 Open http://localhost:5173/ for the home landing.
 
+## API base URL
+
+The live WNBA scoreboard calls `/api/wnba/scoreboard/today`. In dev, Vite proxies
+`/api` to `http://127.0.0.1:8000`, so no configuration is needed.
+
+Static hosts (GitHub Pages and friends) have no proxy, so those builds must set
+`VITE_API_BASE_URL` to the deployed API origin:
+
+```bash
+VITE_API_BASE_URL=https://api.example.com npm run build
+```
+
+Leaving it unset keeps the relative path, which only resolves when the API is
+served from the same origin as the app.
+
 ## Tests
 
 ```bash

@@ -40,4 +40,22 @@ describe("LiveNowSection", () => {
     expect(screen.getByText("ATL")).toBeInTheDocument();
     expect(screen.getByText("NYL")).toBeInTheDocument();
   });
+
+  it("shows a muted error when the scoreboard never loaded", () => {
+    const { container } = render(<LiveNowSection isError games={[]} />);
+    expect(screen.getByText("Unable to load scoreboard")).toBeInTheDocument();
+    expect(container.querySelectorAll("article")).toHaveLength(0);
+  });
+
+  it("keeps showing games when an error follows a successful load", () => {
+    render(<LiveNowSection isError={false} games={[liveGame]} />);
+    expect(screen.queryByText("Unable to load scoreboard")).not.toBeInTheDocument();
+    expect(screen.getByText("ATL")).toBeInTheDocument();
+  });
+
+  it("prefers skeletons over the error message while still loading", () => {
+    const { container } = render(<LiveNowSection isError isLoading games={[]} />);
+    expect(screen.queryByText("Unable to load scoreboard")).not.toBeInTheDocument();
+    expect(container.querySelectorAll("article[aria-hidden]")).toHaveLength(3);
+  });
 });

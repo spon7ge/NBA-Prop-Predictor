@@ -9,6 +9,8 @@ import { SectionHeading } from "./SectionHeading";
 type LiveNowSectionProps = {
   games?: LiveGame[];
   isLoading?: boolean;
+  /** Set only when the scoreboard has never loaded, so good data is never replaced. */
+  isError?: boolean;
 };
 
 const leaguePill: Record<HomeLeague, string> = {
@@ -90,12 +92,14 @@ function LiveGameCard({ game }: { game: LiveGame }) {
 export function LiveNowSection({
   games,
   isLoading = false,
+  isError = false,
 }: LiveNowSectionProps) {
   const list = normalizeLiveGames(games);
   const inProgressCount = list.filter(
     (g) => g.status === "live" || g.status === "halftime",
   ).length;
   const showSkeletons = isLoading && list.length === 0;
+  const showError = isError && !isLoading && list.length === 0;
 
   return (
     <section id="live-now" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
@@ -104,13 +108,19 @@ export function LiveNowSection({
         subtitle={formatGamesInProgress(inProgressCount)}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {showSkeletons
-          ? Array.from({ length: LIVE_NOW_SKELETON_COUNT }, (_, i) => (
-              <SkeletonGameCard key={i} />
-            ))
-          : list.map((game) => <LiveGameCard key={game.id} game={game} />)}
-      </div>
+      {showError ? (
+        <p role="status" className="text-sm text-white/40">
+          Unable to load scoreboard
+        </p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {showSkeletons
+            ? Array.from({ length: LIVE_NOW_SKELETON_COUNT }, (_, i) => (
+                <SkeletonGameCard key={i} />
+              ))
+            : list.map((game) => <LiveGameCard key={game.id} game={game} />)}
+        </div>
+      )}
     </section>
   );
 }

@@ -31,6 +31,10 @@ jobs:
           node-version: "22"
 
       - name: Install and build React frontend
+        # Pages serves static files with no /api proxy, so the live scoreboard
+        # needs VITE_API_BASE_URL pointing at the deployed API origin, e.g.:
+        #   env:
+        #     VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
         run: |
           cd frontend
           npm install

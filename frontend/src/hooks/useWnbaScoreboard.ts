@@ -23,5 +23,8 @@ export function useWnbaScoreboard() {
     tickerGames: mapToTickerGames(games),
     liveGames: mapToLiveGames(games),
     shouldPoll: shouldPollScoreboard(query.data?.games),
+    // Errors after a successful load keep showing the last good scoreboard, so
+    // only a never-loaded query surfaces an error state to the UI.
+    hasNeverLoaded: query.isError && query.data === undefined,
   };
 }

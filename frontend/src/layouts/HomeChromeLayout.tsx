@@ -4,11 +4,11 @@ import { LiveTicker } from "@/components/home/LiveTicker";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function HomeChromeLayout() {
-  const { tickerGames } = useWnbaScoreboard();
+  const { tickerGames, hasNeverLoaded } = useWnbaScoreboard();
   return (
     <div className="min-h-screen bg-black text-white">
       <HomeNav />
-      <LiveTicker games={tickerGames} />
+      <LiveTicker games={tickerGames} isError={hasNeverLoaded} />
       <main>
         <Outlet />
       </main>

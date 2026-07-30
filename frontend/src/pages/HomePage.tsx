@@ -6,11 +6,15 @@ import { LearnTheGameSection } from "@/components/home/LearnTheGameSection";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function HomePage() {
-  const { liveGames, isLoading } = useWnbaScoreboard();
+  const { liveGames, isLoading, hasNeverLoaded } = useWnbaScoreboard();
   return (
     <>
       <TicketHero />
-      <LiveNowSection games={liveGames} isLoading={isLoading} />
+      <LiveNowSection
+        games={liveGames}
+        isLoading={isLoading}
+        isError={hasNeverLoaded}
+      />
       <StoriesSection />
       <ExploreSection />
       <LearnTheGameSection />
