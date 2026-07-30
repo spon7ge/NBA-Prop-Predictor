@@ -1,9 +1,94 @@
 import json
 from pathlib import Path
 
+from app.schemas.wnba_game_detail import GameDetailTeamStat
 from app.services.wnba_game_detail import normalize_espn_summary
 
 FIXTURES = Path(__file__).parent / "fixtures"
+
+
+def load_fixture(name: str) -> dict:
+    return json.loads((FIXTURES / name).read_text())
+
+
+def test_normalize_includes_win_probability_and_team_stats():
+    payload = load_fixture("espn_wnba_summary_with_predictor.json")
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.win_probability is not None
+    assert detail.win_probability.summary == "Above the midline favors PHX"
+    assert detail.win_probability.timeline[-1].home_win_pct == 54
+    assert detail.win_probability.timeline[-1].away_score == 10
+    assert detail.win_probability.team_stats == [
+        GameDetailTeamStat(
+            key="field_goal_pct",
+            label="Field goal %",
+            away_value=41,
+            home_value=49,
+        ),
+        GameDetailTeamStat(
+            key="three_point_pct",
+            label="Three point %",
+            away_value=36,
+            home_value=31,
+        ),
+        GameDetailTeamStat(
+            key="free_throw_pct",
+            label="Free throw %",
+            away_value=79,
+            home_value=74,
+        ),
+        GameDetailTeamStat(
+            key="rebounds",
+            label="Rebounds",
+            away_value=33,
+            home_value=34,
+        ),
+        GameDetailTeamStat(
+            key="offensive_rebounds",
+            label="Offensive rebounds",
+            away_value=13,
+            home_value=6,
+        ),
+        GameDetailTeamStat(
+            key="assists",
+            label="Assists",
+            away_value=24,
+            home_value=19,
+        ),
+    ]
+
+
+def test_normalize_win_probability_allows_partial_sections():
+    payload = load_fixture("espn_wnba_summary_with_predictor.json")
+    payload["predictor"]["teamStatsMap"] = {}
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.win_probability is not None
+    assert len(detail.win_probability.timeline) > 0
+    assert detail.win_probability.team_stats == []
+
+
+def test_normalize_win_probability_returns_none_when_missing_everything():
+    payload = load_fixture("espn_wnba_summary.json")
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.win_probability is None
 
 
 def test_normalize_espn_summary_header_shots_plays():

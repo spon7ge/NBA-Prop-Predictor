@@ -11,6 +11,9 @@ __all__ = [
     "GameDetailPlay",
     "GameDetailShot",
     "GameDetailTeam",
+    "GameDetailTeamStat",
+    "GameDetailWinProbability",
+    "GameDetailWinProbabilityPoint",
     "GameStatus",
     "WnbaGameDetail",
 ]
@@ -55,6 +58,30 @@ class GameDetailLatestPlay(BaseModel):
     team_id: str | None
 
 
+class GameDetailWinProbabilityPoint(BaseModel):
+    id: str
+    period: int
+    clock: str
+    away_score: int
+    home_score: int
+    away_win_pct: int
+    home_win_pct: int
+    team_id: str | None
+
+
+class GameDetailTeamStat(BaseModel):
+    key: str
+    label: str
+    away_value: int
+    home_value: int
+
+
+class GameDetailWinProbability(BaseModel):
+    summary: str | None
+    timeline: list[GameDetailWinProbabilityPoint]
+    team_stats: list[GameDetailTeamStat]
+
+
 class WnbaGameDetail(BaseModel):
     espn_event_id: str
     league: Literal["wnba"] = "wnba"
@@ -68,4 +95,5 @@ class WnbaGameDetail(BaseModel):
     latest_play: GameDetailLatestPlay | None
     shots: list[GameDetailShot]
     plays: list[GameDetailPlay]
+    win_probability: GameDetailWinProbability | None
     fetched_at: str

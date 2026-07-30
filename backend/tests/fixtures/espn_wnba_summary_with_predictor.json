@@ -1,0 +1,43 @@
+{
+  "predictor": {
+    "summary": "Above the midline favors PHX",
+    "gameFlow": [
+      {
+        "id": "401857098-wp-1",
+        "period": 1,
+        "clock": "4:13",
+        "awayScore": 10,
+        "homeScore": 9,
+        "awayWinPct": 46.4,
+        "homeWinPct": 53.6,
+        "teamId": "21"
+      }
+    ],
+    "teamStatsMap": {
+      "field_goal_pct": {
+        "away": 41,
+        "home": 49
+      },
+      "three_point_pct": {
+        "away": 36,
+        "home": 31
+      },
+      "free_throw_pct": {
+        "away": 79,
+        "home": 74
+      },
+      "rebounds": {
+        "away": 33,
+        "home": 34
+      },
+      "offensive_rebounds": {
+        "away": 13,
+        "home": 6
+      },
+      "assists": {
+        "away": 24,
+        "home": 19
+      }
+    }
+  }
+}

@@ -12,6 +12,9 @@ from app.schemas.wnba_game_detail import (
     GameDetailPlay,
     GameDetailShot,
     GameDetailTeam,
+    GameDetailTeamStat,
+    GameDetailWinProbability,
+    GameDetailWinProbabilityPoint,
     WnbaGameDetail,
 )
 from app.schemas.wnba_scoreboard import GameStatus
@@ -201,6 +204,59 @@ def _detail_status(status_block: dict) -> tuple[GameStatus, str]:
     return "scheduled", short or "Scheduled"
 
 
+def _normalize_win_probability(payload: dict) -> GameDetailWinProbability | None:
+    predictor = payload.get("predictor") or {}
+    graph = (
+        predictor.get("gameFlow")
+        or predictor.get("homeTeamGameProjection")
+        or []
+    )
+
+    timeline = [
+        GameDetailWinProbabilityPoint(
+            id=str(point.get("id") or f"wp-{index}"),
+            period=int(point.get("period") or 0),
+            clock=str(point.get("clock") or ""),
+            away_score=int(point.get("awayScore") or 0),
+            home_score=int(point.get("homeScore") or 0),
+            away_win_pct=int(round(float(point.get("awayWinPct") or 0))),
+            home_win_pct=int(round(float(point.get("homeWinPct") or 0))),
+            team_id=str(point.get("teamId") or "") or None,
+        )
+        for index, point in enumerate(graph)
+        if point.get("awayWinPct") is not None
+        or point.get("homeWinPct") is not None
+    ]
+
+    allowed_stats = {
+        "field_goal_pct": "Field goal %",
+        "three_point_pct": "Three point %",
+        "free_throw_pct": "Free throw %",
+        "rebounds": "Rebounds",
+        "offensive_rebounds": "Offensive rebounds",
+        "assists": "Assists",
+    }
+    team_stats = [
+        GameDetailTeamStat(
+            key=key,
+            label=label,
+            away_value=int(raw["away"]),
+            home_value=int(raw["home"]),
+        )
+        for key, label in allowed_stats.items()
+        if (raw := predictor.get("teamStatsMap", {}).get(key))
+    ]
+
+    if not timeline and not team_stats:
+        return None
+
+    return GameDetailWinProbability(
+        summary=str(predictor.get("summary") or "") or None,
+        timeline=timeline,
+        team_stats=team_stats,
+    )
+
+
 def normalize_espn_summary(
     payload: dict, *, espn_event_id: str, fetched_at: str
 ) -> WnbaGameDetail:
@@ -285,6 +341,8 @@ def normalize_espn_summary(
             team_id=str((latest_src.get("team") or {}).get("id") or "") or None,
         )
 
+    win_probability = _normalize_win_probability(payload)
+
     return WnbaGameDetail(
         espn_event_id=espn_event_id,
         status=status,
@@ -297,5 +355,6 @@ def normalize_espn_summary(
         latest_play=latest,
         shots=shots,
         plays=list(reversed(plays)),
+        win_probability=win_probability,
         fetched_at=fetched_at,
     )
