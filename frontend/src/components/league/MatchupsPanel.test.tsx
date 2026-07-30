@@ -37,7 +37,9 @@ describe("MatchupsPanel", () => {
     renderPanel([live, finalGame]);
     expect(screen.getByRole("heading", { name: "Matchups" })).toBeInTheDocument();
     expect(
-      screen.getByText(/2 games · open a card for box score/i),
+      screen.getByText(
+        "2 games · open a card for box score, play-by-play & win probability",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText("LIVE NOW")).toBeInTheDocument();
     expect(screen.getByText("REST OF THE SLATE")).toBeInTheDocument();
@@ -57,5 +59,12 @@ describe("MatchupsPanel", () => {
   it("shows muted empty copy when no games and not loading", () => {
     renderPanel([]);
     expect(screen.getByText(/no games/i)).toBeInTheDocument();
+  });
+
+  it("announces an error when matchups cannot load", () => {
+    renderPanel([], { isError: true });
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Unable to load matchups",
+    );
   });
 });

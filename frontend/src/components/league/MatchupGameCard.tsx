@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { isInProgressStatus } from "@/components/home/mapScoreboard";
 import type { MatchupGame, MatchupTeam } from "./types";
 
 function TeamRow({ team }: { team: MatchupTeam }) {
@@ -25,7 +26,7 @@ function TeamRow({ team }: { team: MatchupTeam }) {
 }
 
 export function MatchupGameCard({ game }: { game: MatchupGame }) {
-  const isLive = game.status === "live" || game.status === "halftime";
+  const isLive = isInProgressStatus(game.status);
   const venueLabel = game.venue
     ? [game.venue, game.venueCity].filter(Boolean).join(" · ")
     : null;

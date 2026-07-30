@@ -53,7 +53,7 @@ export function MatchupsPanel({
   const gameLabel = games.length === 1 ? "game" : "games";
 
   return (
-    <section className="space-y-5">
+    <section className="mx-auto max-w-6xl space-y-5 px-4 sm:px-6">
       <header>
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xl font-semibold text-white">Matchups</h2>
@@ -80,7 +80,8 @@ export function MatchupsPanel({
           </div>
         </div>
         <p className="mt-1 text-sm text-white/45">
-          {games.length} {gameLabel} · open a card for box score
+          {games.length} {gameLabel} · open a card for box score, play-by-play
+          &amp; win probability
         </p>
       </header>
 
@@ -88,7 +89,10 @@ export function MatchupsPanel({
         isLoading ? (
           <MatchupSkeletons />
         ) : (
-          <p className="py-8 text-center text-sm text-white/45">
+          <p
+            role={isError ? "status" : undefined}
+            className="py-8 text-center text-sm text-white/45"
+          >
             {isError
               ? "Unable to load matchups"
               : "No games on today's slate"}

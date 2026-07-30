@@ -1,6 +1,6 @@
 import type { GameStatus, HomeLeague } from "@/components/home/types";
 
-export type LeagueSlug = "nba" | "wnba";
+export type LeagueSlug = HomeLeague;
 
 export type MatchupTeam = {
   abbrev: string;

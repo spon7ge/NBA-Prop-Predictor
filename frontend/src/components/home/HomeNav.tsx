@@ -26,10 +26,7 @@ export function HomeNav() {
           <nav className="flex items-center gap-3" aria-label="Primary">
             <div className="hidden items-center gap-3 sm:flex">
               {leagues.map((league) => {
-                const active =
-                  league.id === "wnba"
-                    ? pathname.startsWith("/wnba")
-                    : pathname.startsWith("/nba");
+                const active = pathname.startsWith(`/${league.id}`);
 
                 return (
                   <Link

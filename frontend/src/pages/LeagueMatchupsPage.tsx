@@ -11,13 +11,15 @@ type LeagueMatchupsPageProps = {
 
 export function LeagueMatchupsPage({ league }: LeagueMatchupsPageProps) {
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
+    <div className="space-y-6 py-6">
       <LeagueHero league={league} />
       <LeagueSubnav league={league} />
       {league === "wnba" ? (
         <WnbaMatchupsBody />
       ) : (
-        <p className="text-sm text-white/50">NBA matchups coming soon.</p>
+        <p className="mx-auto max-w-6xl px-4 text-sm text-white/50 sm:px-6">
+          NBA matchups coming soon.
+        </p>
       )}
     </div>
   );
