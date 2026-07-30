@@ -9,6 +9,8 @@ export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
     homeAbbrev: g.home.abbrev,
     statusLabel: g.status_label,
     status: g.status,
+    awayScore: g.away.score,
+    homeScore: g.home.score,
   }));
 }
 

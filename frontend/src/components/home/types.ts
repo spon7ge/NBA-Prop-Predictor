@@ -9,6 +9,8 @@ export type TickerGame = {
   homeAbbrev: string;
   statusLabel: string;
   status: GameStatus;
+  awayScore: number | null;
+  homeScore: number | null;
 };
 
 export type LiveGameTeam = {

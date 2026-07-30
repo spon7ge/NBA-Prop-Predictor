@@ -54,8 +54,24 @@ describe("scoreboard mappers", () => {
         homeAbbrev: "DAL",
         statusLabel: "Q3 7:13",
         status: "live",
+        awayScore: 36,
+        homeScore: 44,
       },
     ]);
+  });
+
+  it("maps null scores for scheduled ticker games", () => {
+    const scheduled = apiGame({
+      status: "scheduled",
+      status_label: "7:00 PM ET",
+      away: { abbrev: "NYL", name: "New York Liberty", score: null },
+      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
+    });
+    expect(mapToTickerGames([scheduled])[0]).toMatchObject({
+      awayScore: null,
+      homeScore: null,
+      status: "scheduled",
+    });
   });
 
   it("maps API games to live games and preserves null scores", () => {

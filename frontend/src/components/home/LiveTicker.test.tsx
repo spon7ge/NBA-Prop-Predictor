@@ -10,6 +10,8 @@ const game: TickerGame = {
   homeAbbrev: "DAL",
   statusLabel: "Q3 7:13",
   status: "live",
+  awayScore: 36,
+  homeScore: 44,
 };
 
 describe("LiveTicker", () => {
