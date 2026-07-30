@@ -8,11 +8,12 @@ import { SectionHeading } from "./SectionHeading";
 
 type LiveNowSectionProps = {
   games?: LiveGame[];
+  isLoading?: boolean;
 };
 
 const leaguePill: Record<HomeLeague, string> = {
-  nba: "bg-orange-600/90 text-white",
-  wnba: "bg-orange-500/90 text-white",
+  nba: "bg-sky-600/90 text-white",
+  wnba: "bg-violet-600/90 text-white",
 };
 
 function SkeletonGameCard() {
@@ -45,6 +46,8 @@ function SkeletonGameCard() {
 }
 
 function LiveGameCard({ game }: { game: LiveGame }) {
+  const inProgress = game.status === "live" || game.status === "halftime";
+
   return (
     <article className="rounded-xl border border-white/10 bg-[#141414] p-4">
       <div className="mb-4 flex items-center justify-between">
@@ -53,8 +56,14 @@ function LiveGameCard({ game }: { game: LiveGame }) {
         >
           {game.league}
         </span>
-        <span className="flex items-center gap-2 text-xs text-white/55">
-          <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
+        <span
+          className={`flex items-center gap-2 text-xs ${
+            inProgress ? "text-red-400" : "text-white/55"
+          }`}
+        >
+          {inProgress ? (
+            <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
+          ) : null}
           {game.statusLabel}
         </span>
       </div>
@@ -78,16 +87,25 @@ function LiveGameCard({ game }: { game: LiveGame }) {
   );
 }
 
-export function LiveNowSection({ games }: LiveNowSectionProps) {
+export function LiveNowSection({
+  games,
+  isLoading = false,
+}: LiveNowSectionProps) {
   const list = normalizeLiveGames(games);
-  const count = list.length;
+  const inProgressCount = list.filter(
+    (g) => g.status === "live" || g.status === "halftime",
+  ).length;
+  const showSkeletons = isLoading && list.length === 0;
 
   return (
     <section id="live-now" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
-      <SectionHeading title="Live Now" subtitle={formatGamesInProgress(count)} />
+      <SectionHeading
+        title="Live Now"
+        subtitle={formatGamesInProgress(inProgressCount)}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {count === 0
+        {showSkeletons
           ? Array.from({ length: LIVE_NOW_SKELETON_COUNT }, (_, i) => (
               <SkeletonGameCard key={i} />
             ))
