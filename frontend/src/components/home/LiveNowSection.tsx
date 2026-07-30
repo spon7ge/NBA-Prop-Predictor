@@ -4,6 +4,7 @@ import {
   formatGamesInProgress,
   normalizeLiveGames,
 } from "./format";
+import { SectionHeading } from "./SectionHeading";
 
 type LiveNowSectionProps = {
   games?: LiveGame[];
@@ -82,13 +83,8 @@ export function LiveNowSection({ games }: LiveNowSectionProps) {
   const count = list.length;
 
   return (
-    <section id="live-now" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-      <div className="mb-5 flex flex-wrap items-baseline gap-3">
-        <h2 className="text-sm font-bold tracking-[0.15em] text-white uppercase">
-          Live Now
-        </h2>
-        <p className="text-sm text-white/40">{formatGamesInProgress(count)}</p>
-      </div>
+    <section id="live-now" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+      <SectionHeading title="Live Now" subtitle={formatGamesInProgress(count)} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {count === 0

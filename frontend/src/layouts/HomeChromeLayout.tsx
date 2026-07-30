@@ -7,7 +7,9 @@ export function HomeChromeLayout() {
     <div className="min-h-screen bg-black text-white">
       <HomeNav />
       <LiveTicker />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }

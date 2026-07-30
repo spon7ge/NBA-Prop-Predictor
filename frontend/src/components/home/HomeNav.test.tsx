@@ -12,6 +12,21 @@ function renderNav(path: string) {
 }
 
 describe("HomeNav", () => {
+  it("labels the primary nav and hides only league links on mobile", () => {
+    renderNav("/");
+
+    expect(
+      screen.getByRole("navigation", { name: "Primary" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "NBA" }).parentElement).toHaveClass(
+      "hidden",
+      "sm:flex",
+    );
+    expect(screen.getByRole("link", { name: "About" }).parentElement).not.toHaveClass(
+      "hidden",
+    );
+  });
+
   it("links About to /about", () => {
     renderNav("/");
     expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(

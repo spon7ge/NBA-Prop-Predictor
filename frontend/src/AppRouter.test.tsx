@@ -24,6 +24,7 @@ describe("AppRouter", () => {
     expect(
       screen.getByRole("heading", { name: /about hoopvista/i }),
     ).toBeInTheDocument();
+    expect(screen.getAllByRole("main")).toHaveLength(1);
     expect(screen.getByText("No live games")).toBeInTheDocument();
   });
 

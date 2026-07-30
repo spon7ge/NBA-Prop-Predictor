@@ -6,6 +6,7 @@ describe("AboutContent", () => {
   it("renders badge, headline, league pills, and body copy", () => {
     render(<AboutContent />);
 
+    expect(screen.queryByRole("main")).not.toBeInTheDocument();
     expect(screen.getByText(/sports analytics/i)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: /about hoopvista/i }),

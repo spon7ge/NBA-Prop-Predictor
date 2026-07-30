@@ -164,7 +164,7 @@ function ExploreCard({
             ) : null}
           </div>
           <h3
-            className={`font-heading font-semibold leading-snug text-white ${
+            className={`font-semibold leading-snug text-white ${
               featured
                 ? "text-2xl sm:text-3xl"
                 : "text-base sm:text-lg"

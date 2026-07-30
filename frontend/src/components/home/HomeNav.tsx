@@ -17,28 +17,30 @@ export function HomeNav() {
       <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 text-white no-underline">
           <BarChart3 className="size-4 shrink-0" aria-hidden />
-          <span className="font-heading text-[18px] font-semibold tracking-tight">
+          <span className="text-[18px] font-semibold tracking-tight">
             HoopVista
           </span>
         </Link>
 
         <div className="flex items-center gap-4">
-          <nav className="flex items-center gap-3" aria-label="Leagues">
-            {leagues.map((league) => (
-              <a
-                key={league.id}
-                href="/#live-now"
-                className="flex items-center gap-2 text-[14px] font-medium text-white/80 no-underline transition-colors hover:text-white"
-              >
-                <img
-                  src={league.icon}
-                  alt=""
-                  aria-hidden
-                  className="size-4 shrink-0 object-contain"
-                />
-                {league.label}
-              </a>
-            ))}
+          <nav className="flex items-center gap-3" aria-label="Primary">
+            <div className="hidden items-center gap-3 sm:flex">
+              {leagues.map((league) => (
+                <a
+                  key={league.id}
+                  href="/#live-now"
+                  className="flex items-center gap-2 text-[14px] font-medium text-white/80 no-underline transition-colors hover:text-white"
+                >
+                  <img
+                    src={league.icon}
+                    alt=""
+                    aria-hidden
+                    className="size-4 shrink-0 object-contain"
+                  />
+                  {league.label}
+                </a>
+              ))}
+            </div>
             <Link
               to="/about"
               aria-current={aboutActive ? "page" : undefined}

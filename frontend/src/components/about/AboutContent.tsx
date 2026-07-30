@@ -13,12 +13,12 @@ const LEAGUES = [
 
 export function AboutContent() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <p className="inline-flex rounded-full border border-white/20 px-3 py-1 text-[11px] font-medium tracking-wide text-white/50 uppercase">
         Sports Analytics · Beta
       </p>
 
-      <h1 className="mt-6 font-heading text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+      <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
         About HoopVista.
       </h1>
 
@@ -49,6 +49,6 @@ export function AboutContent() {
           what is already here.
         </p>
       </div>
-    </main>
+    </div>
   );
 }
