@@ -1,4 +1,4 @@
-import type { GameDetail, GameDetailStarter } from "./types";
+import type { GameDetail } from "./types";
 
 type MatchupPredictionProps = {
   detail: GameDetail;

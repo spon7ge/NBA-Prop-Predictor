@@ -112,6 +112,10 @@ describe("AppRouter", () => {
             shots: [],
             plays: [],
             win_probability: null,
+            matchup_prediction: null,
+            projected_starters: null,
+            season_leaders: null,
+            injuries: null,
             fetched_at: "",
           }),
         };
@@ -181,6 +185,10 @@ describe("AppRouter", () => {
                 },
               ],
             },
+            matchup_prediction: null,
+            projected_starters: null,
+            season_leaders: null,
+            injuries: null,
             fetched_at: "",
           }),
         };

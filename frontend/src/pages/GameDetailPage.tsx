@@ -2,6 +2,10 @@ import { Link, useParams } from "react-router-dom";
 import { useGameDetail } from "@/hooks/useGameDetail";
 import { mapGameDetail } from "@/components/game/mapGameDetail";
 import { GameHeader } from "@/components/game/GameHeader";
+import { InjuryReport } from "@/components/game/InjuryReport";
+import { MatchupPrediction } from "@/components/game/MatchupPrediction";
+import { ProjectedStarters } from "@/components/game/ProjectedStarters";
+import { SeasonLeaders } from "@/components/game/SeasonLeaders";
 import { ShotChart } from "@/components/game/ShotChart";
 import { PlayByPlay } from "@/components/game/PlayByPlay";
 import { WinProbabilityPanel } from "@/components/game/WinProbabilityPanel";
@@ -65,15 +69,27 @@ export function GameDetailPage() {
   }
 
   const detail = mapGameDetail(data);
+  const isScheduled = detail.status === "scheduled";
 
   return (
     <div className="mx-auto max-w-6xl space-y-4 px-4 py-6 sm:px-6">
       <GameHeader detail={detail} />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ShotChart detail={detail} />
-        <PlayByPlay detail={detail} />
-      </div>
-      <WinProbabilityPanel detail={detail} />
+      {isScheduled ? (
+        <>
+          <MatchupPrediction detail={detail} />
+          <ProjectedStarters detail={detail} />
+          <SeasonLeaders detail={detail} />
+          <InjuryReport detail={detail} />
+        </>
+      ) : (
+        <>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <ShotChart detail={detail} />
+            <PlayByPlay detail={detail} />
+          </div>
+          <WinProbabilityPanel detail={detail} />
+        </>
+      )}
     </div>
   );
 }
