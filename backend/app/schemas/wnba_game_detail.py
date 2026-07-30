@@ -7,9 +7,16 @@ from pydantic import BaseModel
 from app.schemas.wnba_scoreboard import GameStatus
 
 __all__ = [
+    "GameDetailInjuries",
+    "GameDetailInjury",
     "GameDetailLatestPlay",
+    "GameDetailMatchupPrediction",
     "GameDetailPlay",
+    "GameDetailProjectedStarters",
+    "GameDetailSeasonLeader",
+    "GameDetailSeasonLeaders",
     "GameDetailShot",
+    "GameDetailStarter",
     "GameDetailTeam",
     "GameDetailTeamStat",
     "GameDetailWinProbability",
@@ -82,6 +89,48 @@ class GameDetailWinProbability(BaseModel):
     team_stats: list[GameDetailTeamStat]
 
 
+class GameDetailMatchupPrediction(BaseModel):
+    away_win_pct: int
+    home_win_pct: int
+    source_label: str
+
+
+class GameDetailStarter(BaseModel):
+    jersey: str | None
+    name: str
+    position: str | None
+
+
+class GameDetailProjectedStarters(BaseModel):
+    note: str
+    away: list[GameDetailStarter]
+    home: list[GameDetailStarter]
+
+
+class GameDetailSeasonLeader(BaseModel):
+    stat: Literal["points", "assists", "rebounds"]
+    label: str
+    name: str
+    value: str
+
+
+class GameDetailSeasonLeaders(BaseModel):
+    away: list[GameDetailSeasonLeader]
+    home: list[GameDetailSeasonLeader]
+
+
+class GameDetailInjury(BaseModel):
+    name: str
+    position: str | None
+    status: str
+    detail: str | None
+
+
+class GameDetailInjuries(BaseModel):
+    away: list[GameDetailInjury]
+    home: list[GameDetailInjury]
+
+
 class WnbaGameDetail(BaseModel):
     espn_event_id: str
     league: Literal["wnba"] = "wnba"
@@ -96,4 +145,8 @@ class WnbaGameDetail(BaseModel):
     shots: list[GameDetailShot]
     plays: list[GameDetailPlay]
     win_probability: GameDetailWinProbability | None
+    matchup_prediction: GameDetailMatchupPrediction | None
+    projected_starters: GameDetailProjectedStarters | None
+    season_leaders: GameDetailSeasonLeaders | None
+    injuries: GameDetailInjuries | None
     fetched_at: str

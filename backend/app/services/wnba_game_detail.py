@@ -8,8 +8,13 @@ from zoneinfo import ZoneInfo
 import httpx
 
 from app.schemas.wnba_game_detail import (
+    GameDetailInjuries,
+    GameDetailInjury,
     GameDetailLatestPlay,
+    GameDetailMatchupPrediction,
     GameDetailPlay,
+    GameDetailSeasonLeader,
+    GameDetailSeasonLeaders,
     GameDetailShot,
     GameDetailTeam,
     GameDetailTeamStat,
@@ -339,6 +344,100 @@ def _normalize_win_probability(payload: dict) -> GameDetailWinProbability | None
     )
 
 
+_LEADER_STAT_MAP = {
+    "pointsPerGame": ("points", "Points"),
+    "assistsPerGame": ("assists", "Assists"),
+    "reboundsPerGame": ("rebounds", "Rebounds"),
+}
+
+
+def _normalize_matchup_prediction(payload: dict) -> GameDetailMatchupPrediction | None:
+    predictor = payload.get("predictor")
+    if not isinstance(predictor, dict):
+        return None
+    try:
+        away = float((predictor.get("awayTeam") or {}).get("gameProjection"))
+        home = float((predictor.get("homeTeam") or {}).get("gameProjection"))
+    except (TypeError, ValueError):
+        return None
+    return GameDetailMatchupPrediction(
+        away_win_pct=round(away),
+        home_win_pct=round(home),
+        source_label="ESPN game projection",
+    )
+
+
+def _leaders_for_team(blocks: list, team_id: str) -> list[GameDetailSeasonLeader]:
+    rows: list[GameDetailSeasonLeader] = []
+    for block in blocks:
+        if str((block.get("team") or {}).get("id") or "") != team_id:
+            continue
+        for cat in block.get("leaders") or []:
+            mapped = _LEADER_STAT_MAP.get(str(cat.get("name") or ""))
+            if not mapped:
+                continue
+            stat, label = mapped
+            entry = (cat.get("leaders") or [None])[0] or {}
+            athlete = entry.get("athlete") or {}
+            name = str(athlete.get("displayName") or "").strip()
+            value = str(entry.get("displayValue") or "").strip()
+            if not name or not value:
+                continue
+            rows.append(
+                GameDetailSeasonLeader(stat=stat, label=label, name=name, value=value)
+            )
+    return rows
+
+
+def _normalize_season_leaders(
+    payload: dict, *, away_id: str, home_id: str
+) -> GameDetailSeasonLeaders | None:
+    blocks = payload.get("leaders")
+    if not isinstance(blocks, list) or not blocks:
+        return None
+    away = _leaders_for_team(blocks, away_id)
+    home = _leaders_for_team(blocks, home_id)
+    if not away and not home:
+        return None
+    return GameDetailSeasonLeaders(away=away, home=home)
+
+
+def _injuries_for_team(blocks: list, team_id: str) -> list[GameDetailInjury]:
+    rows: list[GameDetailInjury] = []
+    for block in blocks:
+        if str((block.get("team") or {}).get("id") or "") != team_id:
+            continue
+        for item in block.get("injuries") or []:
+            athlete = item.get("athlete") or {}
+            name = str(athlete.get("displayName") or "").strip()
+            if not name:
+                continue
+            pos = athlete.get("position") or {}
+            position = str(pos.get("abbreviation") or "").strip() or None
+            details = item.get("details") or {}
+            detail = str(details.get("type") or "").strip() or None
+            status = str(item.get("status") or "").strip() or "Unknown"
+            rows.append(
+                GameDetailInjury(
+                    name=name, position=position, status=status, detail=detail
+                )
+            )
+    return rows
+
+
+def _normalize_injuries(
+    payload: dict, *, away_id: str, home_id: str
+) -> GameDetailInjuries | None:
+    blocks = payload.get("injuries")
+    if not isinstance(blocks, list):
+        return None
+    away = _injuries_for_team(blocks, away_id)
+    home = _injuries_for_team(blocks, home_id)
+    if not away and not home:
+        return None
+    return GameDetailInjuries(away=away, home=home)
+
+
 def normalize_espn_summary(
     payload: dict, *, espn_event_id: str, fetched_at: str
 ) -> WnbaGameDetail:
@@ -425,6 +524,14 @@ def normalize_espn_summary(
 
     win_probability = _normalize_win_probability(payload)
 
+    away_id = str((away_c.get("team") or {}).get("id") or "")
+    home_id = str((home_c.get("team") or {}).get("id") or "")
+    matchup_prediction = _normalize_matchup_prediction(payload)
+    season_leaders = _normalize_season_leaders(
+        payload, away_id=away_id, home_id=home_id
+    )
+    injuries = _normalize_injuries(payload, away_id=away_id, home_id=home_id)
+
     return WnbaGameDetail(
         espn_event_id=espn_event_id,
         status=status,
@@ -438,5 +545,9 @@ def normalize_espn_summary(
         shots=shots,
         plays=list(reversed(plays)),
         win_probability=win_probability,
+        matchup_prediction=matchup_prediction,
+        projected_starters=None,
+        season_leaders=season_leaders,
+        injuries=injuries,
         fetched_at=fetched_at,
     )

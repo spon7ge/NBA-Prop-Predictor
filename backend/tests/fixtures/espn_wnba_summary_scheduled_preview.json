@@ -1,0 +1,112 @@
+{
+  "header": {
+    "id": "401857099",
+    "competitions": [
+      {
+        "status": {
+          "period": 0,
+          "displayClock": "0.0",
+          "type": {
+            "state": "pre",
+            "completed": false,
+            "name": "STATUS_SCHEDULED",
+            "shortDetail": "Sun, July 30",
+            "detail": "Sun, July 30 at 7:00 PM EDT"
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "0",
+            "team": {
+              "id": "home1",
+              "abbreviation": "TOR",
+              "displayName": "Toronto Tempo",
+              "color": "ce1141",
+              "alternateColor": "000000"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "0",
+            "team": {
+              "id": "away1",
+              "abbreviation": "MIN",
+              "displayName": "Minnesota Lynx",
+              "color": "266092",
+              "alternateColor": "78be20"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "gameInfo": {
+    "venue": { "fullName": "Scotiabank Arena" }
+  },
+  "predictor": {
+    "header": "Matchup Predictor",
+    "homeTeam": { "id": "home1", "gameProjection": "32.8" },
+    "awayTeam": { "id": "away1", "gameProjection": "67.2" }
+  },
+  "leaders": [
+    {
+      "team": { "id": "away1", "abbreviation": "MIN" },
+      "leaders": [
+        {
+          "name": "pointsPerGame",
+          "displayName": "Points",
+          "leaders": [{ "displayValue": "19.5", "athlete": { "displayName": "Olivia Miles" } }]
+        },
+        {
+          "name": "assistsPerGame",
+          "displayName": "Assists",
+          "leaders": [{ "displayValue": "6.0", "athlete": { "displayName": "Olivia Miles" } }]
+        },
+        {
+          "name": "reboundsPerGame",
+          "displayName": "Rebounds",
+          "leaders": [{ "displayValue": "7.9", "athlete": { "displayName": "Natasha Howard" } }]
+        }
+      ]
+    },
+    {
+      "team": { "id": "home1", "abbreviation": "TOR" },
+      "leaders": [
+        {
+          "name": "pointsPerGame",
+          "displayName": "Points",
+          "leaders": [{ "displayValue": "21.1", "athlete": { "displayName": "Marina Mabrey" } }]
+        },
+        {
+          "name": "assistsPerGame",
+          "displayName": "Assists",
+          "leaders": [{ "displayValue": "5.5", "athlete": { "displayName": "Julie Allemand" } }]
+        },
+        {
+          "name": "reboundsPerGame",
+          "displayName": "Rebounds",
+          "leaders": [{ "displayValue": "4.8", "athlete": { "displayName": "Maria Conde" } }]
+        }
+      ]
+    }
+  ],
+  "injuries": [
+    {
+      "team": { "id": "home1" },
+      "injuries": [
+        {
+          "status": "Out",
+          "athlete": {
+            "displayName": "Nyara Sabally",
+            "position": { "abbreviation": "F" }
+          },
+          "details": { "type": "Ribs" }
+        }
+      ]
+    },
+    { "team": { "id": "away1" }, "injuries": [] }
+  ],
+  "plays": [],
+  "boxscore": { "teams": [] }
+}

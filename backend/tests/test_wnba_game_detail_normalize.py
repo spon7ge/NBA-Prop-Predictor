@@ -176,6 +176,63 @@ def test_normalize_excludes_free_throws_and_missing_coordinates_from_shots():
     assert detail.fg_attempted == 2
 
 
+def test_normalize_includes_matchup_prediction_leaders_injuries():
+    payload = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857099",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+    assert detail.status == "scheduled"
+    assert detail.matchup_prediction is not None
+    assert detail.matchup_prediction.away_win_pct == 67
+    assert detail.matchup_prediction.home_win_pct == 33
+    assert detail.matchup_prediction.source_label == "ESPN game projection"
+    assert detail.season_leaders is not None
+    assert [r.stat for r in detail.season_leaders.away] == [
+        "points",
+        "assists",
+        "rebounds",
+    ]
+    assert detail.season_leaders.away[0].name == "Olivia Miles"
+    assert detail.season_leaders.away[0].value == "19.5"
+    assert detail.season_leaders.home[0].name == "Marina Mabrey"
+    assert detail.injuries is not None
+    assert detail.injuries.away == []
+    assert detail.injuries.home[0].name == "Nyara Sabally"
+    assert detail.injuries.home[0].status == "Out"
+    assert detail.injuries.home[0].detail == "Ribs"
+    assert detail.injuries.home[0].position == "F"
+    assert detail.projected_starters is None
+
+
+def test_normalize_injuries_null_when_both_sides_empty():
+    payload = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    payload["injuries"] = [
+        {"team": {"id": "away1"}, "injuries": []},
+        {"team": {"id": "home1"}, "injuries": []},
+    ]
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857099",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+    assert detail.injuries is None
+
+
+def test_normalize_preview_fields_null_when_missing():
+    payload = load_fixture("espn_wnba_summary.json")
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401749001",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+    assert detail.matchup_prediction is None
+    assert detail.season_leaders is None
+    assert detail.injuries is None
+    assert detail.projected_starters is None
+
+
 def test_normalize_excludes_null_coordinates_from_shots():
     payload = json.loads((FIXTURES / "espn_wnba_summary.json").read_text())
     payload["plays"].append(
