@@ -1,3 +1,6 @@
+import { TechStackSection } from "./TechStackSection";
+import { DataSourcesSection } from "./DataSourcesSection";
+
 const LEAGUES = [
   {
     id: "nba",
@@ -13,7 +16,7 @@ const LEAGUES = [
 
 export function AboutContent() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
       <p className="inline-flex rounded-full border border-white/20 px-3 py-1 text-[11px] font-medium tracking-wide text-white/50 uppercase">
         Sports Analytics · Beta
       </p>
@@ -49,6 +52,9 @@ export function AboutContent() {
           what is already here.
         </p>
       </div>
+
+      <TechStackSection />
+      <DataSourcesSection />
     </div>
   );
 }
