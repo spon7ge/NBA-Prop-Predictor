@@ -1,15 +1,17 @@
-import { HomeNav } from "@/components/home/HomeNav";
-import { LiveTicker } from "@/components/home/LiveTicker";
 import { TicketHero } from "@/components/home/TicketHero";
 import { LiveNowSection } from "@/components/home/LiveNowSection";
+import { StoriesSection } from "@/components/home/StoriesSection";
+import { ExploreSection } from "@/components/home/ExploreSection";
+import { LearnTheGameSection } from "@/components/home/LearnTheGameSection";
 
 export function HomePage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <HomeNav />
-      <LiveTicker />
+    <>
       <TicketHero />
       <LiveNowSection />
-    </div>
+      <StoriesSection />
+      <ExploreSection />
+      <LearnTheGameSection />
+    </>
   );
 }

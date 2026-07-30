@@ -15,6 +15,18 @@ describe("AppRouter", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders about at /about", () => {
+    render(
+      <MemoryRouter initialEntries={["/about"]}>
+        <AppRouter />
+      </MemoryRouter>,
+    );
+    expect(
+      screen.getByRole("heading", { name: /about hoopvista/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("No live games")).toBeInTheDocument();
+  });
+
   it("renders not found for unknown paths", () => {
     render(
       <MemoryRouter initialEntries={["/slate"]}>
