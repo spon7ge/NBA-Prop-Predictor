@@ -1,0 +1,27 @@
+{
+  "scoreboard": {
+    "gameDate": "2026-07-29",
+    "games": [
+      {
+        "gameId": "1022600123",
+        "gameStatus": 2,
+        "gameStatusText": "Q3 7:10",
+        "period": 3,
+        "gameClock": "PT7M10.00S",
+        "gameTimeUTC": "2026-07-29T23:00:00Z",
+        "homeTeam": {
+          "teamTricode": "DAL",
+          "teamName": "Wings",
+          "teamCity": "Dallas",
+          "score": 45
+        },
+        "awayTeam": {
+          "teamTricode": "ATL",
+          "teamName": "Dream",
+          "teamCity": "Atlanta",
+          "score": 36
+        }
+      }
+    ]
+  }
+}
