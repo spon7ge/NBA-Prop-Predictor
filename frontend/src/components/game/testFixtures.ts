@@ -137,3 +137,38 @@ export function buildGameDetailFixture(
     ...overrides,
   };
 }
+
+export function buildScheduledDetail(
+  overrides: Partial<GameDetail> = {},
+): GameDetail {
+  return buildGameDetailFixture({
+    status: "scheduled",
+    statusLabel: "Sun, July 30 at 7:00 PM EDT",
+    venue: "Scotiabank Arena",
+    away: {
+      id: "away1",
+      abbrev: "MIN",
+      name: "Minnesota Lynx",
+      score: null,
+      color: "#266092",
+    },
+    home: {
+      id: "home1",
+      abbrev: "TOR",
+      name: "Toronto Tempo",
+      score: null,
+      color: "#CE1141",
+    },
+    fgMade: 0,
+    fgAttempted: 0,
+    latestPlay: null,
+    shots: [],
+    plays: [],
+    winProbability: null,
+    matchupPrediction: null,
+    projectedStarters: null,
+    seasonLeaders: null,
+    injuries: null,
+    ...overrides,
+  });
+}
