@@ -130,9 +130,11 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
                 score=score if status != "scheduled" else None,
             )
 
+        raw_id = str(event.get("id") or "").strip()
         games.append(
             WnbaGame(
-                id=f"espn-{event.get('id')}",
+                id=f"espn-{raw_id}" if raw_id else "espn-unknown",
+                espn_event_id=raw_id or None,
                 status=status,
                 status_label=label,
                 away=team(away_c),
@@ -326,6 +328,7 @@ def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
         status, status_label = _prefer_status_and_label(a, g)
         by_key[match] = WnbaGame(
             id=game_id,
+            espn_event_id=a.espn_event_id or g.espn_event_id,
             status=status,
             status_label=status_label,
             away=WnbaTeam(

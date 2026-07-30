@@ -15,6 +15,7 @@ class WnbaTeam(BaseModel):
 
 class WnbaGame(BaseModel):
     id: str
+    espn_event_id: str | None = None
     league: Literal["wnba"] = "wnba"
     status: GameStatus
     status_label: str

@@ -69,6 +69,41 @@ def espn_event(
     }
 
 
+def test_normalize_espn_sets_espn_event_id():
+    payload = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
+    g = normalize_espn_scoreboard(payload, date_et="2026-07-29")[0]
+    assert g.espn_event_id == "401749001"
+
+
+def test_merge_preserves_espn_event_id_when_stats_id_wins():
+    espn = [
+        WnbaGame(
+            id="espn-401749001",
+            espn_event_id="401749001",
+            status="live",
+            status_label="Q3 7:13",
+            away=WnbaTeam(abbrev="ATL", name="Atlanta Dream", score=36),
+            home=WnbaTeam(abbrev="DAL", name="Dallas Wings", score=44),
+            start_time_et="2026-07-29T23:00:00Z",
+        )
+    ]
+    stats = [
+        WnbaGame(
+            id="1022600123",
+            espn_event_id=None,
+            status="live",
+            status_label="Q3 7:13",
+            away=WnbaTeam(abbrev="ATL", name="Atlanta Dream", score=36),
+            home=WnbaTeam(abbrev="DAL", name="Dallas Wings", score=44),
+            start_time_et="2026-07-29T23:00:00Z",
+        )
+    ]
+    merged = merge_games(espn, stats)
+    assert len(merged) == 1
+    assert merged[0].id == "1022600123"
+    assert merged[0].espn_event_id == "401749001"
+
+
 def test_normalize_espn_live_game():
     payload = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
     games = normalize_espn_scoreboard(payload, date_et="2026-07-29")
