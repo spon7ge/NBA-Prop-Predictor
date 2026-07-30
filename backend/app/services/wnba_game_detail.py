@@ -204,54 +204,136 @@ def _detail_status(status_block: dict) -> tuple[GameStatus, str]:
     return "scheduled", short or "Scheduled"
 
 
+_TEAM_STAT_BY_NAME = {
+    "fieldgoalpct": ("field_goal_pct", "Field goal %"),
+    "threepointfieldgoalpct": ("three_point_pct", "Three point %"),
+    "freethrowpct": ("free_throw_pct", "Free throw %"),
+    "totalrebounds": ("rebounds", "Rebounds"),
+    "offensiverebounds": ("offensive_rebounds", "Offensive rebounds"),
+    "assists": ("assists", "Assists"),
+}
+
+_TEAM_STAT_BY_LABEL = {
+    "field goal %": ("field_goal_pct", "Field goal %"),
+    "three point %": ("three_point_pct", "Three point %"),
+    "free throw %": ("free_throw_pct", "Free throw %"),
+    "rebounds": ("rebounds", "Rebounds"),
+    "offensive rebounds": ("offensive_rebounds", "Offensive rebounds"),
+    "assists": ("assists", "Assists"),
+}
+
+
+def _clamp_pct(value: int) -> int:
+    return max(0, min(100, value))
+
+
+def _parse_stat_int(raw: object) -> int | None:
+    if raw is None or raw == "":
+        return None
+    try:
+        return int(round(float(str(raw).replace("%", "").strip())))
+    except (TypeError, ValueError):
+        return None
+
+
+def _resolve_team_stat_key(stat: dict) -> tuple[str, str] | None:
+    name_key = str(stat.get("name") or "").replace("-", "").replace("_", "").lower()
+    if name_key in _TEAM_STAT_BY_NAME:
+        return _TEAM_STAT_BY_NAME[name_key]
+    label_key = str(stat.get("label") or "").strip().lower()
+    return _TEAM_STAT_BY_LABEL.get(label_key)
+
+
+def _normalize_team_stats(payload: dict) -> list[GameDetailTeamStat]:
+    teams = ((payload.get("boxscore") or {}).get("teams") or [])
+    by_side: dict[str, dict[str, int]] = {"away": {}, "home": {}}
+    for team in teams:
+        side = str(team.get("homeAway") or "").lower()
+        if side not in by_side:
+            continue
+        for stat in team.get("statistics") or []:
+            resolved = _resolve_team_stat_key(stat if isinstance(stat, dict) else {})
+            if not resolved:
+                continue
+            key, _label = resolved
+            value = _parse_stat_int(stat.get("displayValue"))
+            if value is None:
+                value = _parse_stat_int(stat.get("value"))
+            if value is None:
+                continue
+            by_side[side][key] = value
+
+    ordered: list[GameDetailTeamStat] = []
+    for key, label in (
+        ("field_goal_pct", "Field goal %"),
+        ("three_point_pct", "Three point %"),
+        ("free_throw_pct", "Free throw %"),
+        ("rebounds", "Rebounds"),
+        ("offensive_rebounds", "Offensive rebounds"),
+        ("assists", "Assists"),
+    ):
+        if key not in by_side["away"] or key not in by_side["home"]:
+            continue
+        away_value = by_side["away"][key]
+        home_value = by_side["home"][key]
+        if key.endswith("_pct"):
+            away_value = _clamp_pct(away_value)
+            home_value = _clamp_pct(home_value)
+        ordered.append(
+            GameDetailTeamStat(
+                key=key,
+                label=label,
+                away_value=away_value,
+                home_value=home_value,
+            )
+        )
+    return ordered
+
+
 def _normalize_win_probability(payload: dict) -> GameDetailWinProbability | None:
-    predictor = payload.get("predictor") or {}
-    graph = (
-        predictor.get("gameFlow")
-        or predictor.get("homeTeamGameProjection")
-        or []
-    )
-
-    timeline = [
-        GameDetailWinProbabilityPoint(
-            id=str(point.get("id") or f"wp-{index}"),
-            period=int(point.get("period") or 0),
-            clock=str(point.get("clock") or ""),
-            away_score=int(point.get("awayScore") or 0),
-            home_score=int(point.get("homeScore") or 0),
-            away_win_pct=int(round(float(point.get("awayWinPct") or 0))),
-            home_win_pct=int(round(float(point.get("homeWinPct") or 0))),
-            team_id=str(point.get("teamId") or "") or None,
-        )
-        for index, point in enumerate(graph)
-        if point.get("awayWinPct") is not None
-        or point.get("homeWinPct") is not None
-    ]
-
-    allowed_stats = {
-        "field_goal_pct": "Field goal %",
-        "three_point_pct": "Three point %",
-        "free_throw_pct": "Free throw %",
-        "rebounds": "Rebounds",
-        "offensive_rebounds": "Offensive rebounds",
-        "assists": "Assists",
+    plays_by_id = {
+        str(play.get("id")): play
+        for play in (payload.get("plays") or [])
+        if play.get("id") is not None
     }
-    team_stats = [
-        GameDetailTeamStat(
-            key=key,
-            label=label,
-            away_value=int(raw["away"]),
-            home_value=int(raw["home"]),
+
+    timeline: list[GameDetailWinProbabilityPoint] = []
+    for index, point in enumerate(payload.get("winprobability") or []):
+        if not isinstance(point, dict):
+            continue
+        if point.get("homeWinPercentage") is None:
+            continue
+        play_id = str(point.get("playId") or "")
+        play = plays_by_id.get(play_id)
+        if play is None:
+            continue
+
+        home_win_pct = _clamp_pct(
+            int(round(float(point["homeWinPercentage"]) * 100))
         )
-        for key, label in allowed_stats.items()
-        if (raw := predictor.get("teamStatsMap", {}).get(key))
-    ]
+        period = play.get("period") or {}
+        clock = play.get("clock") or {}
+        team = play.get("team") or {}
+        timeline.append(
+            GameDetailWinProbabilityPoint(
+                id=play_id or f"wp-{index}",
+                period=int(period.get("number") or 0),
+                clock=str(clock.get("displayValue") or ""),
+                away_score=int(play.get("awayScore") or 0),
+                home_score=int(play.get("homeScore") or 0),
+                home_win_pct=home_win_pct,
+                away_win_pct=_clamp_pct(100 - home_win_pct),
+                team_id=str(team.get("id") or "") or None,
+            )
+        )
+
+    team_stats = _normalize_team_stats(payload)
 
     if not timeline and not team_stats:
         return None
 
     return GameDetailWinProbability(
-        summary=str(predictor.get("summary") or "") or None,
+        summary=None,
         timeline=timeline,
         team_stats=team_stats,
     )

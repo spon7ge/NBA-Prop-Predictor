@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ApiWnbaGameDetail } from "@/lib/api";
 import { mapGameDetail } from "./mapGameDetail";
 
-function apiDetail(
+function buildApiDetail(
   overrides: Partial<ApiWnbaGameDetail> = {},
 ): ApiWnbaGameDetail {
   return {
@@ -59,6 +59,7 @@ function apiDetail(
         shooting: true,
       },
     ],
+    win_probability: null,
     fetched_at: "2026-07-29T00:00:00Z",
     ...overrides,
   };
@@ -66,7 +67,7 @@ function apiDetail(
 
 describe("mapGameDetail", () => {
   it("maps snake_case API fields to camelCase UI fields", () => {
-    expect(mapGameDetail(apiDetail())).toEqual({
+    expect(mapGameDetail(buildApiDetail())).toEqual({
       espnEventId: "401749001",
       league: "wnba",
       status: "live",
@@ -120,14 +121,67 @@ describe("mapGameDetail", () => {
           shooting: true,
         },
       ],
+      winProbability: null,
     });
   });
 
   it("maps a null latest_play to null", () => {
-    expect(mapGameDetail(apiDetail({ latest_play: null })).latestPlay).toBeNull();
+    expect(
+      mapGameDetail(buildApiDetail({ latest_play: null })).latestPlay,
+    ).toBeNull();
   });
 
   it("maps a null venue through unchanged", () => {
-    expect(mapGameDetail(apiDetail({ venue: null })).venue).toBeNull();
+    expect(mapGameDetail(buildApiDetail({ venue: null })).venue).toBeNull();
+  });
+
+  it("maps win probability into camelCase detail data", () => {
+    const mapped = mapGameDetail(
+      buildApiDetail({
+        win_probability: {
+          summary: "Above the midline favors PHX",
+          timeline: [
+            {
+              id: "p-1",
+              period: 1,
+              clock: "4:29",
+              away_score: 10,
+              home_score: 8,
+              away_win_pct: 46,
+              home_win_pct: 54,
+              team_id: "129153",
+            },
+          ],
+          team_stats: [
+            {
+              key: "field_goal_pct",
+              label: "Field goal %",
+              away_value: 41,
+              home_value: 49,
+            },
+          ],
+        },
+      }),
+    );
+
+    expect(mapped.winProbability?.summary).toBe(
+      "Above the midline favors PHX",
+    );
+    expect(mapped.winProbability?.timeline[0]).toEqual({
+      id: "p-1",
+      period: 1,
+      clock: "4:29",
+      awayScore: 10,
+      homeScore: 8,
+      awayWinPct: 46,
+      homeWinPct: 54,
+      teamId: "129153",
+    });
+    expect(mapped.winProbability?.teamStats[0]).toEqual({
+      key: "field_goal_pct",
+      label: "Field goal %",
+      awayValue: 41,
+      homeValue: 49,
+    });
   });
 });

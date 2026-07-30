@@ -56,6 +56,30 @@ export type ApiGameDetailLatestPlay = {
   team_id: string | null;
 };
 
+export type ApiGameDetailWinProbabilityPoint = {
+  id: string;
+  period: number;
+  clock: string;
+  away_score: number;
+  home_score: number;
+  away_win_pct: number;
+  home_win_pct: number;
+  team_id: string | null;
+};
+
+export type ApiGameDetailTeamStat = {
+  key: string;
+  label: string;
+  away_value: number;
+  home_value: number;
+};
+
+export type ApiGameDetailWinProbability = {
+  summary: string | null;
+  timeline: ApiGameDetailWinProbabilityPoint[];
+  team_stats: ApiGameDetailTeamStat[];
+};
+
 export type ApiWnbaGameDetail = {
   espn_event_id: string;
   league: "wnba";
@@ -69,6 +93,7 @@ export type ApiWnbaGameDetail = {
   latest_play: ApiGameDetailLatestPlay | null;
   shots: ApiGameDetailShot[];
   plays: ApiGameDetailPlay[];
+  win_probability: ApiGameDetailWinProbability | null;
   fetched_at: string;
 };
 

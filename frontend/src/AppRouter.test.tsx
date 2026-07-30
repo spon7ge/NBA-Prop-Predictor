@@ -86,6 +86,7 @@ describe("AppRouter", () => {
             latest_play: null,
             shots: [],
             plays: [],
+            win_probability: null,
             fetched_at: "",
           }),
         };
@@ -100,5 +101,76 @@ describe("AppRouter", () => {
       await screen.findByText(/Golden State Valkyries/i),
     ).toBeInTheDocument();
     expect(screen.getByText("No live games")).toBeInTheDocument(); // chrome ticker still present
+  });
+
+  it("renders win probability beneath shot chart and play-by-play", async () => {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (String(url).includes("/api/wnba/games/")) {
+        return {
+          ok: true,
+          json: async () => ({
+            espn_event_id: "401857098",
+            league: "wnba",
+            status: "live",
+            status_label: "4:13 - 1st",
+            venue: "Mortgage Matchup Center",
+            away: {
+              id: "129153",
+              abbrev: "GS",
+              name: "Golden State Valkyries",
+              score: 10,
+              color: "#553987",
+            },
+            home: {
+              id: "21",
+              abbrev: "PHX",
+              name: "Phoenix Mercury",
+              score: 9,
+              color: "#E56020",
+            },
+            fg_made: 1,
+            fg_attempted: 2,
+            latest_play: null,
+            shots: [],
+            plays: [],
+            win_probability: {
+              summary: "Above the midline favors PHX",
+              timeline: [
+                {
+                  id: "wp-1",
+                  period: 1,
+                  clock: "4:29",
+                  away_score: 10,
+                  home_score: 8,
+                  away_win_pct: 46,
+                  home_win_pct: 54,
+                  team_id: "21",
+                },
+              ],
+              team_stats: [
+                {
+                  key: "field_goal_pct",
+                  label: "Field goal %",
+                  away_value: 41,
+                  home_value: 49,
+                },
+              ],
+            },
+            fetched_at: "",
+          }),
+        };
+      }
+      return {
+        ok: true,
+        json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
+      };
+    });
+
+    renderWithProviders(["/games/401857098"]);
+
+    expect(await screen.findByText("Shot chart")).toBeInTheDocument();
+    expect(await screen.findByText("Play-by-play")).toBeInTheDocument();
+    expect(await screen.findByText("Win probability")).toBeInTheDocument();
+    expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
 });

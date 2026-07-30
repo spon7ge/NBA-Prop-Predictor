@@ -39,6 +39,30 @@ export type GameDetailLatestPlay = {
   teamId: string | null;
 };
 
+export type GameDetailWinProbabilityPoint = {
+  id: string;
+  period: number;
+  clock: string;
+  awayScore: number;
+  homeScore: number;
+  awayWinPct: number;
+  homeWinPct: number;
+  teamId: string | null;
+};
+
+export type GameDetailTeamStat = {
+  key: string;
+  label: string;
+  awayValue: number;
+  homeValue: number;
+};
+
+export type GameDetailWinProbability = {
+  summary: string | null;
+  timeline: GameDetailWinProbabilityPoint[];
+  teamStats: GameDetailTeamStat[];
+};
+
 export type GameDetail = {
   espnEventId: string;
   league: "wnba";
@@ -52,4 +76,5 @@ export type GameDetail = {
   latestPlay: GameDetailLatestPlay | null;
   shots: GameDetailShot[];
   plays: GameDetailPlay[];
+  winProbability: GameDetailWinProbability | null;
 };

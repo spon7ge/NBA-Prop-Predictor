@@ -1,0 +1,116 @@
+{
+  "winprobability": [
+    {
+      "homeWinPercentage": 0.464,
+      "tiePercentage": 0.0,
+      "playId": "40185709810"
+    },
+    {
+      "homeWinPercentage": 0.536,
+      "tiePercentage": 0.0,
+      "playId": "40185709811"
+    }
+  ],
+  "plays": [
+    {
+      "id": "40185709810",
+      "text": "Laeticia Amihere makes two point shot",
+      "awayScore": 10,
+      "homeScore": 8,
+      "scoringPlay": true,
+      "shootingPlay": true,
+      "scoreValue": 2,
+      "period": { "number": 1 },
+      "clock": { "displayValue": "4:29" },
+      "team": { "id": "129153" }
+    },
+    {
+      "id": "40185709811",
+      "text": "Veronica Burton shooting foul",
+      "awayScore": 10,
+      "homeScore": 9,
+      "scoringPlay": false,
+      "shootingPlay": false,
+      "scoreValue": 0,
+      "period": { "number": 1 },
+      "clock": { "displayValue": "4:13" },
+      "team": { "id": "129153" }
+    }
+  ],
+  "boxscore": {
+    "teams": [
+      {
+        "homeAway": "away",
+        "team": { "id": "129153" },
+        "statistics": [
+          {
+            "name": "fieldGoalPct",
+            "label": "Field Goal %",
+            "displayValue": "41"
+          },
+          {
+            "name": "threePointFieldGoalPct",
+            "label": "Three Point %",
+            "displayValue": "36"
+          },
+          {
+            "name": "freeThrowPct",
+            "label": "Free Throw %",
+            "displayValue": "79"
+          },
+          {
+            "name": "totalRebounds",
+            "label": "Rebounds",
+            "displayValue": "33"
+          },
+          {
+            "name": "offensiveRebounds",
+            "label": "Offensive Rebounds",
+            "displayValue": "13"
+          },
+          {
+            "name": "assists",
+            "label": "Assists",
+            "displayValue": "24"
+          }
+        ]
+      },
+      {
+        "homeAway": "home",
+        "team": { "id": "21" },
+        "statistics": [
+          {
+            "name": "fieldGoalPct",
+            "label": "Field Goal %",
+            "displayValue": "49"
+          },
+          {
+            "name": "threePointFieldGoalPct",
+            "label": "Three Point %",
+            "displayValue": "31"
+          },
+          {
+            "name": "freeThrowPct",
+            "label": "Free Throw %",
+            "displayValue": "74"
+          },
+          {
+            "name": "totalRebounds",
+            "label": "Rebounds",
+            "displayValue": "34"
+          },
+          {
+            "name": "offensiveRebounds",
+            "label": "Offensive Rebounds",
+            "displayValue": "6"
+          },
+          {
+            "name": "assists",
+            "label": "Assists",
+            "displayValue": "19"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -12,7 +12,7 @@ def load_fixture(name: str) -> dict:
 
 
 def test_normalize_includes_win_probability_and_team_stats():
-    payload = load_fixture("espn_wnba_summary_with_predictor.json")
+    payload = load_fixture("espn_wnba_summary_with_winprobability.json")
 
     detail = normalize_espn_summary(
         payload,
@@ -21,9 +21,26 @@ def test_normalize_includes_win_probability_and_team_stats():
     )
 
     assert detail.win_probability is not None
-    assert detail.win_probability.summary == "Above the midline favors PHX"
-    assert detail.win_probability.timeline[-1].home_win_pct == 54
-    assert detail.win_probability.timeline[-1].away_score == 10
+    assert detail.win_probability.summary is None
+    assert len(detail.win_probability.timeline) == 2
+
+    first = detail.win_probability.timeline[0]
+    assert first.id == "40185709810"
+    assert first.period == 1
+    assert first.clock == "4:29"
+    assert first.away_score == 10
+    assert first.home_score == 8
+    assert first.home_win_pct == 46
+    assert first.away_win_pct == 54
+    assert first.team_id == "129153"
+
+    last = detail.win_probability.timeline[-1]
+    assert last.id == "40185709811"
+    assert last.home_win_pct == 54
+    assert last.away_win_pct == 46
+    assert last.away_score == 10
+    assert last.home_score == 9
+
     assert detail.win_probability.team_stats == [
         GameDetailTeamStat(
             key="field_goal_pct",
@@ -64,9 +81,9 @@ def test_normalize_includes_win_probability_and_team_stats():
     ]
 
 
-def test_normalize_win_probability_allows_partial_sections():
-    payload = load_fixture("espn_wnba_summary_with_predictor.json")
-    payload["predictor"]["teamStatsMap"] = {}
+def test_normalize_win_probability_allows_timeline_only():
+    payload = load_fixture("espn_wnba_summary_with_winprobability.json")
+    del payload["boxscore"]
 
     detail = normalize_espn_summary(
         payload,
@@ -75,8 +92,24 @@ def test_normalize_win_probability_allows_partial_sections():
     )
 
     assert detail.win_probability is not None
-    assert len(detail.win_probability.timeline) > 0
+    assert len(detail.win_probability.timeline) == 2
     assert detail.win_probability.team_stats == []
+
+
+def test_normalize_win_probability_allows_team_stats_only():
+    payload = load_fixture("espn_wnba_summary_with_winprobability.json")
+    del payload["winprobability"]
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.win_probability is not None
+    assert detail.win_probability.timeline == []
+    assert len(detail.win_probability.team_stats) == 6
+    assert detail.win_probability.team_stats[0].label == "Field goal %"
 
 
 def test_normalize_win_probability_returns_none_when_missing_everything():

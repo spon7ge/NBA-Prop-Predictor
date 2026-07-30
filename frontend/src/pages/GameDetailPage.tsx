@@ -4,6 +4,7 @@ import { mapGameDetail } from "@/components/game/mapGameDetail";
 import { GameHeader } from "@/components/game/GameHeader";
 import { ShotChart } from "@/components/game/ShotChart";
 import { PlayByPlay } from "@/components/game/PlayByPlay";
+import { WinProbabilityPanel } from "@/components/game/WinProbabilityPanel";
 
 function GameDetailSkeleton() {
   return (
@@ -26,8 +27,8 @@ function GameDetailSkeleton() {
         </div>
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
-        <span className="h-80 animate-pulse rounded-xl border border-white/10 bg-[#141414]" />
-        <span className="h-80 animate-pulse rounded-xl border border-white/10 bg-[#141414]" />
+        <span className="h-80 animate-pulse rounded bg-white/5" />
+        <span className="h-80 animate-pulse rounded bg-white/5" />
       </div>
     </div>
   );
@@ -72,6 +73,7 @@ export function GameDetailPage() {
         <ShotChart detail={detail} />
         <PlayByPlay detail={detail} />
       </div>
+      <WinProbabilityPanel detail={detail} />
     </div>
   );
 }

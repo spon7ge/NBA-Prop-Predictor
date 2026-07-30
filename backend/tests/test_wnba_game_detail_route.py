@@ -34,7 +34,7 @@ def test_game_detail_200_no_store():
 
 def test_game_detail_route_includes_win_probability():
     payload = load_fixture("espn_wnba_summary.json")
-    payload.update(load_fixture("espn_wnba_summary_with_predictor.json"))
+    payload.update(load_fixture("espn_wnba_summary_with_winprobability.json"))
 
     async def fake_fetch(espn_event_id: str):
         return payload
@@ -45,8 +45,10 @@ def test_game_detail_route_includes_win_probability():
 
     assert response.status_code == 200
     body = response.json()
-    assert body["win_probability"]["summary"] == "Above the midline favors PHX"
+    assert body["win_probability"]["summary"] is None
     assert body["win_probability"]["timeline"][-1]["home_win_pct"] == 54
+    assert body["win_probability"]["timeline"][-1]["away_win_pct"] == 46
+    assert body["win_probability"]["timeline"][-1]["id"] == "40185709811"
     assert body["win_probability"]["team_stats"][0]["label"] == "Field goal %"
 
 

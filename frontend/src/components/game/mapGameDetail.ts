@@ -54,5 +54,26 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
       homeScore: play.home_score,
       shooting: play.shooting,
     })),
+    winProbability: detail.win_probability
+      ? {
+          summary: detail.win_probability.summary,
+          timeline: detail.win_probability.timeline.map((point) => ({
+            id: point.id,
+            period: point.period,
+            clock: point.clock,
+            awayScore: point.away_score,
+            homeScore: point.home_score,
+            awayWinPct: point.away_win_pct,
+            homeWinPct: point.home_win_pct,
+            teamId: point.team_id,
+          })),
+          teamStats: detail.win_probability.team_stats.map((stat) => ({
+            key: stat.key,
+            label: stat.label,
+            awayValue: stat.away_value,
+            homeValue: stat.home_value,
+          })),
+        }
+      : null,
   };
 }

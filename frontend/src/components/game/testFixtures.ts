@@ -1,4 +1,38 @@
-import type { GameDetail } from "./types";
+import type { GameDetail, GameDetailWinProbability } from "./types";
+
+const winProbabilityFixture: GameDetailWinProbability = {
+  summary: "Above the midline favors PHX",
+  timeline: [
+    {
+      id: "wp-1",
+      period: 1,
+      clock: "8:00",
+      awayScore: 2,
+      homeScore: 0,
+      awayWinPct: 56,
+      homeWinPct: 44,
+      teamId: "away1",
+    },
+    {
+      id: "wp-2",
+      period: 1,
+      clock: "4:29",
+      awayScore: 10,
+      homeScore: 8,
+      awayWinPct: 46,
+      homeWinPct: 54,
+      teamId: "home1",
+    },
+  ],
+  teamStats: [
+    {
+      key: "field_goal_pct",
+      label: "Field goal %",
+      awayValue: 41,
+      homeValue: 49,
+    },
+  ],
+};
 
 export const detail: GameDetail = {
   espnEventId: "401749001",
@@ -87,4 +121,15 @@ export const detail: GameDetail = {
       shooting: false,
     },
   ],
+  winProbability: null,
 };
+
+export function buildGameDetailFixture(
+  overrides: Partial<GameDetail> = {},
+): GameDetail {
+  return {
+    ...detail,
+    winProbability: winProbabilityFixture,
+    ...overrides,
+  };
+}
