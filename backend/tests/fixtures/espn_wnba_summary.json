@@ -1,0 +1,91 @@
+{
+  "header": {
+    "id": "401857098",
+    "competitions": [
+      {
+        "status": {
+          "period": 1,
+          "displayClock": "4:13",
+          "type": {
+            "state": "in",
+            "completed": false,
+            "name": "STATUS_IN_PROGRESS",
+            "shortDetail": "4:13 - 1st",
+            "detail": "4:13 - 1st Quarter"
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "9",
+            "team": {
+              "id": "21",
+              "abbreviation": "PHX",
+              "displayName": "Phoenix Mercury",
+              "color": "e56020",
+              "alternateColor": "1c105e"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "10",
+            "team": {
+              "id": "129153",
+              "abbreviation": "GS",
+              "displayName": "Golden State Valkyries",
+              "color": "553987",
+              "alternateColor": "ffc72c"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "gameInfo": {
+    "venue": { "fullName": "Mortgage Matchup Center" }
+  },
+  "plays": [
+    {
+      "id": "40185709810",
+      "text": "Laeticia Amihere makes two point shot",
+      "awayScore": 10,
+      "homeScore": 8,
+      "scoringPlay": true,
+      "shootingPlay": true,
+      "scoreValue": 2,
+      "period": { "number": 1 },
+      "clock": { "displayValue": "4:29" },
+      "coordinate": { "x": 25, "y": 5 },
+      "team": { "id": "129153" },
+      "participants": [{ "athlete": { "id": "1" } }]
+    },
+    {
+      "id": "40185709811",
+      "text": "Veronica Burton shooting foul",
+      "awayScore": 10,
+      "homeScore": 9,
+      "scoringPlay": false,
+      "shootingPlay": false,
+      "scoreValue": 0,
+      "period": { "number": 1 },
+      "clock": { "displayValue": "4:13" },
+      "coordinate": { "x": 0, "y": 0 },
+      "team": { "id": "129153" },
+      "participants": []
+    },
+    {
+      "id": "40185709809",
+      "text": "Alyssa Thomas misses 12-foot jumper",
+      "awayScore": 8,
+      "homeScore": 8,
+      "scoringPlay": false,
+      "shootingPlay": true,
+      "scoreValue": 0,
+      "period": { "number": 1 },
+      "clock": { "displayValue": "4:40" },
+      "coordinate": { "x": 37, "y": 12 },
+      "team": { "id": "21" },
+      "participants": [{ "athlete": { "id": "2" } }]
+    }
+  ]
+}
