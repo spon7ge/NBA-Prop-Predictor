@@ -53,9 +53,7 @@ export function GameHeader({ detail }: { detail: GameDetail }) {
       </div>
 
       <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
-        <p className="mb-3 flex items-center gap-2 text-xs tracking-wide text-white/45 uppercase">
-          <span className={statusAccent[detail.status]}>{detail.status}</span>
-          <span aria-hidden>·</span>
+        <p className="mb-3 text-xs tracking-wide text-white/45 uppercase">
           <span className="normal-case">
             {detail.venue ?? "Venue unavailable"}
           </span>

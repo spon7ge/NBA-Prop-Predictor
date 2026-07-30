@@ -75,6 +75,17 @@ describe("LiveTicker", () => {
     expect(duplicate?.textContent).toContain("ATL");
   });
 
+  it("does not render focusable links inside the aria-hidden duplicate track", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <LiveTicker games={[linkedLiveGame]} />
+      </MemoryRouter>,
+    );
+    const duplicate = container.querySelector(".ticker-marquee-duplicate");
+    expect(duplicate?.querySelector("a")).toBeNull();
+    expect(duplicate?.textContent).toContain("ATL");
+  });
+
   it("links to game detail when espnEventId is present", () => {
     render(
       <MemoryRouter>

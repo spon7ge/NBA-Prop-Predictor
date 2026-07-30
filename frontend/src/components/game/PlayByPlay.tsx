@@ -24,10 +24,10 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
     return "#9ca3af";
   }
 
-  const playsForPeriod = detail.plays
-    .filter((play) => play.period === activePeriod)
-    .slice()
-    .reverse();
+  // `detail.plays` is already newest-first (matches the API response order).
+  const playsForPeriod = detail.plays.filter(
+    (play) => play.period === activePeriod,
+  );
 
   return (
     <div className="rounded-xl border border-white/10 bg-[#141414] p-4">

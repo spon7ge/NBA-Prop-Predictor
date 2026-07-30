@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ApiWnbaGameDetail } from "@/lib/api";
 import { PlayByPlay } from "./PlayByPlay";
+import { mapGameDetail } from "./mapGameDetail";
 import { detail } from "./testFixtures";
 
 describe("PlayByPlay", () => {
@@ -26,6 +28,65 @@ describe("PlayByPlay", () => {
     expect(
       screen.queryByText("B. Player makes three point shot"),
     ).not.toBeInTheDocument();
+  });
+
+  it("renders the newest play first for a period, matching API order", async () => {
+    const user = userEvent.setup();
+    render(<PlayByPlay detail={detail} />);
+
+    await user.click(screen.getByRole("button", { name: "1st" }));
+    const items = screen.getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("A. Player makes two point shot");
+    expect(items[0]).toHaveTextContent("8:00");
+    expect(items[1]).toHaveTextContent("Tip off won by Golden State");
+    expect(items[1]).toHaveTextContent("10:00");
+  });
+
+  it("shows the newest play first when built from an API-shaped payload", () => {
+    const apiDetail: ApiWnbaGameDetail = {
+      espn_event_id: "401857098",
+      league: "wnba",
+      status: "live",
+      status_label: "4:13 - 1st",
+      venue: "Mortgage Matchup Center",
+      away: { id: "away1", abbrev: "GS", name: "GS", score: 10, color: "#553987" },
+      home: { id: "home1", abbrev: "PHX", name: "PHX", score: 9, color: "#E56020" },
+      fg_made: 1,
+      fg_attempted: 1,
+      latest_play: null,
+      shots: [],
+      // API returns plays newest-first: the most recent play (smallest clock) comes first.
+      plays: [
+        {
+          id: "pl2",
+          team_id: "away1",
+          period: 1,
+          clock: "4:13",
+          text: "Veronica Burton shooting foul",
+          scoring: false,
+          away_score: 10,
+          home_score: 9,
+          shooting: false,
+        },
+        {
+          id: "pl1",
+          team_id: "away1",
+          period: 1,
+          clock: "4:29",
+          text: "Laeticia Amihere makes two point shot",
+          scoring: true,
+          away_score: 10,
+          home_score: 8,
+          shooting: true,
+        },
+      ],
+      fetched_at: "2026-07-29T19:00:00-04:00",
+    };
+
+    render(<PlayByPlay detail={mapGameDetail(apiDetail)} />);
+    const items = screen.getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("Veronica Burton shooting foul");
+    expect(items[1]).toHaveTextContent("Laeticia Amihere makes two point shot");
   });
 
   it("shows the running score on scoring plays", () => {

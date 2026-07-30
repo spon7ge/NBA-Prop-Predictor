@@ -33,22 +33,26 @@ function GameDetailSkeleton() {
   );
 }
 
+function UnableToLoadGame() {
+  return (
+    <div className="mx-auto max-w-6xl space-y-3 px-4 py-10 text-center sm:px-6">
+      <p className="text-sm text-white/60">Unable to load game</p>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-1 text-sm font-medium text-white/70 no-underline transition-colors hover:text-white"
+      >
+        ← Back
+      </Link>
+    </div>
+  );
+}
+
 export function GameDetailPage() {
   const { espnEventId } = useParams<{ espnEventId: string }>();
   const { data, isLoading, hasNeverLoaded } = useGameDetail(espnEventId);
 
   if (hasNeverLoaded) {
-    return (
-      <div className="mx-auto max-w-6xl space-y-3 px-4 py-10 text-center sm:px-6">
-        <p className="text-sm text-white/60">Unable to load game</p>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1 text-sm font-medium text-white/70 no-underline transition-colors hover:text-white"
-        >
-          ← Back
-        </Link>
-      </div>
-    );
+    return <UnableToLoadGame />;
   }
 
   if (isLoading && !data) {
@@ -56,7 +60,7 @@ export function GameDetailPage() {
   }
 
   if (!data) {
-    return null;
+    return <UnableToLoadGame />;
   }
 
   const detail = mapGameDetail(data);

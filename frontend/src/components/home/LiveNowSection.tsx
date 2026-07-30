@@ -89,18 +89,20 @@ function LiveGameCard({ game }: { game: LiveGame }) {
     </>
   );
 
-  const cardClassName =
-    "block rounded-xl border border-white/10 bg-[#141414] p-4 hover:border-white/20";
+  const baseCardClassName = "rounded-xl border border-white/10 bg-[#141414] p-4";
 
   if (game.espnEventId) {
     return (
-      <Link to={`/games/${game.espnEventId}`} className={cardClassName}>
+      <Link
+        to={`/games/${game.espnEventId}`}
+        className={`block ${baseCardClassName} hover:border-white/20`}
+      >
         {card}
       </Link>
     );
   }
 
-  return <article className={cardClassName}>{card}</article>;
+  return <article className={baseCardClassName}>{card}</article>;
 }
 
 export function LiveNowSection({

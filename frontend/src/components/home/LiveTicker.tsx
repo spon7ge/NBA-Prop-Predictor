@@ -14,7 +14,13 @@ function isScheduledFormat(game: TickerGame): boolean {
   );
 }
 
-function TickerItem({ game }: { game: TickerGame }) {
+function TickerItem({
+  game,
+  interactive = true,
+}: {
+  game: TickerGame;
+  interactive?: boolean;
+}) {
   const scheduled = isScheduledFormat(game);
 
   const content = (
@@ -44,7 +50,7 @@ function TickerItem({ game }: { game: TickerGame }) {
   const itemClassName =
     "flex items-center gap-2 border-l border-white/10 px-5 font-mono text-xs text-white/70 first:border-l-0";
 
-  if (game.espnEventId) {
+  if (game.espnEventId && interactive) {
     return (
       <li className={itemClassName}>
         <Link to={`/games/${game.espnEventId}`} className="flex items-center gap-2">
@@ -60,14 +66,20 @@ function TickerItem({ game }: { game: TickerGame }) {
 function TickerGameList({
   games,
   keyPrefix,
+  interactive = true,
 }: {
   games: TickerGame[];
   keyPrefix: string;
+  interactive?: boolean;
 }) {
   return (
     <ul className="flex shrink-0 items-center whitespace-nowrap">
       {games.map((game) => (
-        <TickerItem key={`${keyPrefix}-${game.id}`} game={game} />
+        <TickerItem
+          key={`${keyPrefix}-${game.id}`}
+          game={game}
+          interactive={interactive}
+        />
       ))}
     </ul>
   );
@@ -96,7 +108,7 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
             <div className="ticker-marquee-track flex w-max items-center">
               <TickerGameList games={games} keyPrefix="a" />
               <div className="ticker-marquee-duplicate" aria-hidden="true">
-                <TickerGameList games={games} keyPrefix="b" />
+                <TickerGameList games={games} keyPrefix="b" interactive={false} />
               </div>
             </div>
           </div>
