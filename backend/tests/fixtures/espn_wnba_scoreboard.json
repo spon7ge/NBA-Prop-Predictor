@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "id": "401749001",
+      "date": "2026-07-29T23:00Z",
+      "competitions": [
+        {
+          "competitors": [
+            {
+              "homeAway": "home",
+              "score": "44",
+              "team": {
+                "abbreviation": "DAL",
+                "displayName": "Dallas Wings"
+              }
+            },
+            {
+              "homeAway": "away",
+              "score": "36",
+              "team": {
+                "abbreviation": "ATL",
+                "displayName": "Atlanta Dream"
+              }
+            }
+          ]
+        }
+      ],
+      "status": {
+        "type": {
+          "state": "in",
+          "completed": false,
+          "name": "STATUS_IN_PROGRESS",
+          "shortDetail": "7:13 - 3rd",
+          "detail": "7:13 - 3rd Quarter"
+        },
+        "period": 3,
+        "displayClock": "7:13"
+      }
+    }
+  ]
+}
