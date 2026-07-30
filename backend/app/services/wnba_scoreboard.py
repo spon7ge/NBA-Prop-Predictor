@@ -1,9 +1,29 @@
 from __future__ import annotations
 
+import asyncio
+import logging
 import re
+import time
+from datetime import datetime
 from typing import overload
+from zoneinfo import ZoneInfo
 
-from app.schemas.wnba_scoreboard import GameStatus, WnbaGame, WnbaTeam
+import httpx
+
+from app.schemas.wnba_scoreboard import (
+    GameStatus,
+    WnbaGame,
+    WnbaScoreboardResponse,
+    WnbaTeam,
+)
+
+logger = logging.getLogger(__name__)
+ET = ZoneInfo("America/New_York")
+
+ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard"
+STATS_URL = "https://stats.wnba.com/stats/scoreboardv3"
+
+_cache: dict = {}  # keys: response, expires_at
 
 _STATUS_MAP = {1: "scheduled", 2: "live", 3: "final"}
 
@@ -209,3 +229,82 @@ def cache_ttl_seconds(games: list[WnbaGame]) -> int:
     if any(g.status in ("live", "halftime") for g in games):
         return 30
     return 60
+
+
+def today_et_date() -> str:
+    return datetime.now(ET).date().isoformat()
+
+
+async def fetch_espn_scoreboard(date_et: str) -> dict:
+    dates = date_et.replace("-", "")
+    async with httpx.AsyncClient(timeout=8.0) as client:
+        r = await client.get(ESPN_URL, params={"dates": dates})
+        r.raise_for_status()
+        return r.json()
+
+
+async def fetch_stats_scoreboard(date_et: str) -> dict:
+    # MM/DD/YYYY for stats.wnba.com
+    y, m, d = date_et.split("-")
+    game_date = f"{m}/{d}/{y}"
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://www.wnba.com/",
+        "Origin": "https://www.wnba.com",
+        "Accept": "application/json",
+    }
+    async with httpx.AsyncClient(timeout=8.0, headers=headers) as client:
+        r = await client.get(
+            STATS_URL,
+            params={"GameDate": game_date, "LeagueID": "10"},
+        )
+        r.raise_for_status()
+        return r.json()
+
+
+async def get_today_scoreboard() -> WnbaScoreboardResponse:
+    now = time.time()
+    cached = _cache.get("response")
+    if cached is not None and now < float(_cache.get("expires_at") or 0):
+        return cached
+
+    date_et = today_et_date()
+    espn_payload, stats_payload = None, None
+    results = await asyncio.gather(
+        fetch_espn_scoreboard(date_et),
+        fetch_stats_scoreboard(date_et),
+        return_exceptions=True,
+    )
+    if isinstance(results[0], Exception):
+        logger.warning("ESPN scoreboard fetch failed: %s", results[0])
+    else:
+        espn_payload = results[0]
+    if isinstance(results[1], Exception):
+        logger.warning("stats.wnba scoreboard fetch failed: %s", results[1])
+    else:
+        stats_payload = results[1]
+
+    if espn_payload is None and stats_payload is None:
+        if cached is not None:
+            return cached  # stale-while-error
+        raise RuntimeError("Both WNBA scoreboard upstreams failed")
+
+    espn_games = (
+        normalize_espn_scoreboard(espn_payload, date_et=date_et)
+        if espn_payload is not None
+        else []
+    )
+    stats_games = (
+        normalize_stats_scoreboard(stats_payload, date_et=date_et)
+        if stats_payload is not None
+        else []
+    )
+    games = merge_games(espn_games, stats_games)
+    response = WnbaScoreboardResponse(
+        date=date_et,
+        games=games,
+        fetched_at=datetime.now(tz=ET).isoformat(),
+    )
+    _cache["response"] = response
+    _cache["expires_at"] = now + cache_ttl_seconds(games)
+    return response

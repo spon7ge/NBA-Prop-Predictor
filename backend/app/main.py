@@ -14,6 +14,7 @@ from app.api.routes import (
     predictions,
     props,
     slates,
+    wnba_scoreboard,
 )
 from app.core.config import CORS_ORIGINS
 
@@ -21,8 +22,10 @@ app = FastAPI(
     title="HoopVista API",
     version="0.3.0",
     description=(
-        "NBA prop prediction backend. All endpoints read from Supabase "
-        "(silver / gold / ml schemas). No NBA or Odds API calls are made here."
+        "NBA prop prediction backend. Most endpoints read from Supabase "
+        "(silver / gold / ml schemas) and make no NBA or Odds API calls. "
+        "The exception is /api/wnba/scoreboard/today, which calls ESPN and "
+        "stats.wnba.com directly for live WNBA scores."
     ),
 )
 
@@ -49,3 +52,6 @@ app.include_router(props.router, prefix="/api")
 app.include_router(features.router, prefix="/api")
 app.include_router(matchups.router, prefix="/api")
 app.include_router(slates.router, prefix="/api")
+
+# ── Direct upstream (non-DB) routes ────────────────────────────────────────
+app.include_router(wnba_scoreboard.router, prefix="/api")
