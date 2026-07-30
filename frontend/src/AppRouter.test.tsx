@@ -56,6 +56,31 @@ describe("AppRouter", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders WNBA matchups hub at /wnba/matchups", async () => {
+    renderWithProviders(["/wnba/matchups"]);
+    expect(
+      await screen.findByRole("heading", { name: /women.?s basketball/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Matchups" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders NBA coming-soon hub at /nba/matchups", async () => {
+    renderWithProviders(["/nba/matchups"]);
+    expect(
+      await screen.findByRole("heading", { name: /men.?s basketball/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/coming soon/i)).toBeInTheDocument();
+  });
+
+  it("renders not found for unknown league matchups", () => {
+    renderWithProviders(["/mlb/matchups"]);
+    expect(
+      screen.getByRole("heading", { name: /page not found/i }),
+    ).toBeInTheDocument();
+  });
+
   it("renders game detail at /games/:espnEventId", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/api/wnba/games/")) {
