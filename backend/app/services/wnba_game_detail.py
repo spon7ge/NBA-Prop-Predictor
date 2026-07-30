@@ -56,7 +56,33 @@ async def fetch_espn_summary(espn_event_id: str) -> dict:
 
 
 def _is_not_found_payload(payload: dict) -> bool:
-    return "header" not in payload and payload.get("code") in (404, 400)
+    header = payload.get("header")
+    if not isinstance(header, dict):
+        return True
+
+    competitions = header.get("competitions")
+    if not isinstance(competitions, list) or not competitions:
+        return True
+
+    competition = competitions[0]
+    competitors = (
+        competition.get("competitors") if isinstance(competition, dict) else None
+    )
+    if not isinstance(competitors, list):
+        return True
+
+    teams = {
+        competitor.get("homeAway"): competitor
+        for competitor in competitors
+        if isinstance(competitor, dict)
+    }
+    for side in ("away", "home"):
+        team = (teams.get(side) or {}).get("team")
+        if not isinstance(team, dict) or not any(
+            team.get(field) for field in ("id", "abbreviation", "displayName")
+        ):
+            return True
+    return False
 
 
 async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
@@ -67,6 +93,12 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
 
     try:
         payload = await fetch_espn_summary(espn_event_id)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code in (400, 404):
+            raise LookupError(espn_event_id) from exc
+        if cached:
+            return cached["response"]
+        raise
     except Exception:
         if cached:
             return cached["response"]
