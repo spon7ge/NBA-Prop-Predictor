@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import re
 import time
 from datetime import datetime
@@ -13,9 +14,11 @@ from app.schemas.wnba_game_detail import (
     GameDetailLatestPlay,
     GameDetailMatchupPrediction,
     GameDetailPlay,
+    GameDetailProjectedStarters,
     GameDetailSeasonLeader,
     GameDetailSeasonLeaders,
     GameDetailShot,
+    GameDetailStarter,
     GameDetailTeam,
     GameDetailTeamStat,
     GameDetailWinProbability,
@@ -142,11 +145,24 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
         _cache_not_found(espn_event_id, now=now)
         raise LookupError(espn_event_id)
 
+    status_block = (
+        ((payload.get("header") or {}).get("competitions") or [{}])[0].get("status")
+        or {}
+    )
+    status, _ = _detail_status(status_block)
+    away_id, home_id = _competitor_team_ids(payload)
+    prior_game_summaries: dict[str, dict] | None = None
+    if status == "scheduled" and away_id and home_id:
+        prior_game_summaries = await _fetch_prior_game_summaries(
+            payload, away_id=away_id, home_id=home_id
+        )
+
     try:
         detail = normalize_espn_summary(
             payload,
             espn_event_id=espn_event_id,
             fetched_at=datetime.now(ET).isoformat(),
+            prior_game_summaries=prior_game_summaries,
         )
     except Exception:
         if stale_fallback:
@@ -438,8 +454,112 @@ def _normalize_injuries(
     return GameDetailInjuries(away=away, home=home)
 
 
+def _competitor_team_ids(payload: dict) -> tuple[str, str]:
+    comp = ((payload.get("header") or {}).get("competitions") or [{}])[0]
+    teams = {c.get("homeAway"): c for c in (comp.get("competitors") or [])}
+    away_c, home_c = teams.get("away") or {}, teams.get("home") or {}
+    away_id = str((away_c.get("team") or {}).get("id") or "")
+    home_id = str((home_c.get("team") or {}).get("id") or "")
+    return away_id, home_id
+
+
+def _prior_event_ids_by_team(payload: dict) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    for block in payload.get("lastFiveGames") or []:
+        team_id = str((block.get("team") or {}).get("id") or "")
+        events = block.get("events") or []
+        if not team_id or not events:
+            continue
+        event_id = str(events[0].get("id") or "").strip()
+        if event_id:
+            mapping[team_id] = event_id
+    return mapping
+
+
+async def _fetch_prior_game_summaries(
+    payload: dict, *, away_id: str, home_id: str
+) -> dict[str, dict] | None:
+    prior_ids = _prior_event_ids_by_team(payload)
+    away_event = prior_ids.get(away_id)
+    home_event = prior_ids.get(home_id)
+    if not away_event or not home_event:
+        return None
+    try:
+        away_summary, home_summary = await asyncio.gather(
+            fetch_espn_summary(away_event),
+            fetch_espn_summary(home_event),
+        )
+    except Exception:
+        return None
+    return {away_id: away_summary, home_id: home_summary}
+
+
+def _starters_from_summary(summary: dict, *, team_id: str) -> list[GameDetailStarter] | None:
+    players = (summary.get("boxscore") or {}).get("players")
+    if not isinstance(players, list):
+        return None
+    for block in players:
+        if str((block.get("team") or {}).get("id") or "") != team_id:
+            continue
+        stats = block.get("statistics") or []
+        if not stats:
+            return None
+        athletes = stats[0].get("athletes") or []
+        starters: list[GameDetailStarter] = []
+        for row in athletes:
+            if not row.get("starter"):
+                continue
+            athlete = row.get("athlete") or {}
+            name = str(athlete.get("displayName") or "").strip()
+            if not name:
+                continue
+            jersey = athlete.get("jersey")
+            jersey_s = (
+                str(jersey).strip()
+                if jersey is not None and str(jersey).strip()
+                else None
+            )
+            pos = athlete.get("position") or {}
+            position = str(pos.get("abbreviation") or "").strip() or None
+            starters.append(
+                GameDetailStarter(jersey=jersey_s, name=name, position=position)
+            )
+            if len(starters) == 5:
+                break
+        return starters if len(starters) == 5 else None
+    return None
+
+
+def _normalize_projected_starters(
+    *,
+    status: GameStatus,
+    away_id: str,
+    home_id: str,
+    prior_game_summaries: dict[str, dict] | None,
+) -> GameDetailProjectedStarters | None:
+    if status != "scheduled" or not prior_game_summaries:
+        return None
+    away_summary = prior_game_summaries.get(away_id)
+    home_summary = prior_game_summaries.get(home_id)
+    if not away_summary or not home_summary:
+        return None
+    away = _starters_from_summary(away_summary, team_id=away_id)
+    home = _starters_from_summary(home_summary, team_id=home_id)
+    if away is None or home is None:
+        return None
+    return GameDetailProjectedStarters(
+        note="from each team's last game",
+        away=away,
+        home=home,
+    )
+
+
 def normalize_espn_summary(
-    payload: dict, *, espn_event_id: str, fetched_at: str
+    payload: dict,
+    *,
+    espn_event_id: str,
+    fetched_at: str,
+    prior_game_summaries: dict[str, dict] | None = None,
 ) -> WnbaGameDetail:
     header = payload.get("header") or {}
     comp = (header.get("competitions") or [{}])[0]
@@ -531,6 +651,12 @@ def normalize_espn_summary(
         payload, away_id=away_id, home_id=home_id
     )
     injuries = _normalize_injuries(payload, away_id=away_id, home_id=home_id)
+    projected_starters = _normalize_projected_starters(
+        status=status,
+        away_id=away_id,
+        home_id=home_id,
+        prior_game_summaries=prior_game_summaries,
+    )
 
     return WnbaGameDetail(
         espn_event_id=espn_event_id,
@@ -546,7 +672,7 @@ def normalize_espn_summary(
         plays=list(reversed(plays)),
         win_probability=win_probability,
         matchup_prediction=matchup_prediction,
-        projected_starters=None,
+        projected_starters=projected_starters,
         season_leaders=season_leaders,
         injuries=injuries,
         fetched_at=fetched_at,

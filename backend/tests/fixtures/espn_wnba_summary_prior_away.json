@@ -1,0 +1,63 @@
+{
+  "boxscore": {
+    "players": [
+      {
+        "team": { "id": "away1", "abbreviation": "MIN" },
+        "statistics": [
+          {
+            "athletes": [
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Natasha Howard",
+                  "jersey": "1",
+                  "position": { "abbreviation": "F" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Napheesa Collier",
+                  "jersey": "24",
+                  "position": { "abbreviation": "F" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Kayla McBride",
+                  "jersey": "21",
+                  "position": { "abbreviation": "G" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Courtney Williams",
+                  "jersey": "10",
+                  "position": { "abbreviation": "G" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Olivia Miles",
+                  "jersey": "5",
+                  "position": { "abbreviation": "G" }
+                }
+              },
+              {
+                "starter": false,
+                "athlete": {
+                  "displayName": "Bench Player",
+                  "jersey": "99",
+                  "position": { "abbreviation": "G" }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

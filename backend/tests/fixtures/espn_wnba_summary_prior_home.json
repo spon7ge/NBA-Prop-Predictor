@@ -1,0 +1,63 @@
+{
+  "boxscore": {
+    "players": [
+      {
+        "team": { "id": "home1", "abbreviation": "TOR" },
+        "statistics": [
+          {
+            "athletes": [
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Maria Conde",
+                  "jersey": "12",
+                  "position": { "abbreviation": "F" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Giedre Juskaite",
+                  "jersey": "7",
+                  "position": { "abbreviation": "C" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Imani-Tatiana Fagbenle",
+                  "jersey": "44",
+                  "position": { "abbreviation": "F" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Marina Mabrey",
+                  "jersey": "4",
+                  "position": { "abbreviation": "G" }
+                }
+              },
+              {
+                "starter": true,
+                "athlete": {
+                  "displayName": "Julie Allemand",
+                  "jersey": "9",
+                  "position": { "abbreviation": "G" }
+                }
+              },
+              {
+                "starter": false,
+                "athlete": {
+                  "displayName": "Bench Player",
+                  "jersey": "99",
+                  "position": { "abbreviation": "G" }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

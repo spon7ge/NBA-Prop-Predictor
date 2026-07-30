@@ -1,3 +1,4 @@
+import asyncio
 import json
 from pathlib import Path
 from unittest.mock import patch
@@ -162,3 +163,22 @@ def test_game_detail_negative_cache_avoids_repeat_espn_calls():
     assert first.status_code == 404
     assert second.status_code == 404
     fetch.assert_called_once_with("401999999")
+
+
+def test_get_game_detail_fetches_prior_games_for_starters(monkeypatch):
+    svc.clear_game_detail_cache()
+    scheduled = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    prior_away = load_fixture("espn_wnba_summary_prior_away.json")
+    prior_home = load_fixture("espn_wnba_summary_prior_home.json")
+
+    async def fake_fetch(event_id: str) -> dict:
+        return {
+            "401857099": scheduled,
+            "401857069": prior_away,
+            "401857060": prior_home,
+        }[event_id]
+
+    monkeypatch.setattr(svc, "fetch_espn_summary", fake_fetch)
+    detail = asyncio.run(svc.get_game_detail("401857099"))
+    assert detail.projected_starters is not None
+    assert len(detail.projected_starters.away) == 5

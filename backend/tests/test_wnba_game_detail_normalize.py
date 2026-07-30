@@ -233,6 +233,55 @@ def test_normalize_preview_fields_null_when_missing():
     assert detail.projected_starters is None
 
 
+def test_normalize_projected_starters_from_prior_summaries():
+    payload = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    priors = {
+        "away1": load_fixture("espn_wnba_summary_prior_away.json"),
+        "home1": load_fixture("espn_wnba_summary_prior_home.json"),
+    }
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857099",
+        fetched_at="2026-07-30T00:00:00-04:00",
+        prior_game_summaries=priors,
+    )
+    assert detail.projected_starters is not None
+    assert detail.projected_starters.note == "from each team's last game"
+    assert len(detail.projected_starters.away) == 5
+    assert detail.projected_starters.away[0].name == "Natasha Howard"
+    assert detail.projected_starters.away[0].jersey == "1"
+    assert detail.projected_starters.away[0].position == "F"
+    assert len(detail.projected_starters.home) == 5
+
+
+def test_normalize_projected_starters_null_if_either_side_missing():
+    payload = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    priors = {"away1": load_fixture("espn_wnba_summary_prior_away.json")}
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857099",
+        fetched_at="2026-07-30T00:00:00-04:00",
+        prior_game_summaries=priors,
+    )
+    assert detail.projected_starters is None
+
+
+def test_normalize_ignores_priors_when_not_scheduled():
+    payload = load_fixture("espn_wnba_summary.json")
+    priors = {
+        "away1": load_fixture("espn_wnba_summary_prior_away.json"),
+        "home1": load_fixture("espn_wnba_summary_prior_home.json"),
+    }
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401749001",
+        fetched_at="2026-07-30T00:00:00-04:00",
+        prior_game_summaries=priors,
+    )
+    assert detail.status != "scheduled"
+    assert detail.projected_starters is None
+
+
 def test_normalize_excludes_null_coordinates_from_shots():
     payload = json.loads((FIXTURES / "espn_wnba_summary.json").read_text())
     payload["plays"].append(

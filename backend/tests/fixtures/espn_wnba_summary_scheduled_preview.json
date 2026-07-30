@@ -108,5 +108,15 @@
     { "team": { "id": "away1" }, "injuries": [] }
   ],
   "plays": [],
-  "boxscore": { "teams": [] }
+  "boxscore": { "teams": [] },
+  "lastFiveGames": [
+    {
+      "team": { "id": "home1", "abbreviation": "TOR" },
+      "events": [{ "id": "401857060" }]
+    },
+    {
+      "team": { "id": "away1", "abbreviation": "MIN" },
+      "events": [{ "id": "401857069" }]
+    }
+  ]
 }
