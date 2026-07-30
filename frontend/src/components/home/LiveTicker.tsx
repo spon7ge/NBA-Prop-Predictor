@@ -6,6 +6,41 @@ type LiveTickerProps = {
   isError?: boolean;
 };
 
+function isScheduledFormat(game: TickerGame): boolean {
+  return (
+    game.status === "scheduled" ||
+    (game.awayScore === null && game.homeScore === null)
+  );
+}
+
+function TickerItem({ game }: { game: TickerGame }) {
+  const scheduled = isScheduledFormat(game);
+
+  return (
+    <li className="flex items-center gap-2 font-mono text-xs text-white/70">
+      <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
+      {scheduled ? (
+        <>
+          <span className="text-white/30">@</span>
+          <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
+        </>
+      ) : (
+        <>
+          {game.awayScore !== null ? (
+            <span className="text-white/80">{game.awayScore}</span>
+          ) : null}
+          <span className="text-white/30">—</span>
+          <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
+          {game.homeScore !== null ? (
+            <span className="text-white/80">{game.homeScore}</span>
+          ) : null}
+        </>
+      )}
+      <span className="text-white/40">{game.statusLabel}</span>
+    </li>
+  );
+}
+
 export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
   return (
     <div className="border-b border-white/10 bg-[#0a0a0a]">
@@ -25,14 +60,9 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
             {isError ? "Scoreboard unavailable" : "No live games"}
           </p>
         ) : (
-          <ul className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto text-xs whitespace-nowrap">
+          <ul className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto whitespace-nowrap">
             {games.map((game) => (
-              <li key={game.id} className="flex items-center gap-2 text-white/70">
-                <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
-                <span className="text-white/30">@</span>
-                <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
-                <span className="text-white/40">{game.statusLabel}</span>
-              </li>
+              <TickerItem key={game.id} game={game} />
             ))}
           </ul>
         )}
