@@ -108,7 +108,6 @@ Today’s merge prefers stats.wnba.com ids, which cannot call ESPN summary. Exte
 ```
 
 `latest_play`, `venue`, and team `score` values may be `null` when unavailable (e.g. pre-tip).
-```
 
 ### Nested types
 
