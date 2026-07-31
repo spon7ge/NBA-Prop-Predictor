@@ -39,4 +39,25 @@ describe("LeagueSubnav", () => {
       "/nba/matchups",
     );
   });
+
+  it("places Explore and Learn labels inline with a divider before Learn", () => {
+    render(
+      <MemoryRouter initialEntries={["/wnba/matchups"]}>
+        <LeagueSubnav league="wnba" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByText("Explore")).toBeInTheDocument();
+    expect(screen.getByText("Learn")).toBeInTheDocument();
+    const learnGroup = screen.getByText("Learn").closest("div");
+    expect(learnGroup?.className).toMatch(/border-l/);
+    // Labels are siblings of the pill row inside the same flex group
+    expect(learnGroup?.className).toMatch(/items-center/);
+    const exploreGroup = screen.getByText("Explore").closest("div");
+    expect(exploreGroup?.className).toMatch(/items-center/);
+    // Smoke: nav still works
+    expect(screen.getByRole("link", { name: "Matchups" })).toHaveAttribute(
+      "href",
+      "/wnba/matchups",
+    );
+  });
 });

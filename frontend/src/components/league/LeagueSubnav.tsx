@@ -77,14 +77,14 @@ export function LeagueSubnav({ league }: LeagueSubnavProps) {
       className="mx-auto max-w-6xl px-4 py-5 sm:px-6"
     >
       <div className="flex gap-6 overflow-x-auto rounded-2xl border border-white/10 bg-[#121212] px-4 py-3">
-        <div className="shrink-0">
-          <p className="mb-2 px-1 text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">
+        <div className="flex shrink-0 items-center gap-2">
+          <p className="px-1 text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">
             Explore
           </p>
           <div className="flex gap-2">{exploreItems.map(renderItem)}</div>
         </div>
-        <div className="shrink-0">
-          <p className="mb-2 px-1 text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">
+        <div className="flex shrink-0 items-center gap-2 border-l border-white/10 pl-6">
+          <p className="px-1 text-[10px] font-semibold tracking-[0.18em] text-white/35 uppercase">
             Learn
           </p>
           <div className="flex gap-2">{learnItems.map(renderItem)}</div>
