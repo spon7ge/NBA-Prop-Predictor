@@ -28,6 +28,8 @@ from app.schemas.wnba_game_detail import (
     WnbaGameDetail,
 )
 from app.schemas.wnba_scoreboard import GameStatus
+from app.services.wnba_espn_roster import enrich_starters, get_roster_index
+from app.services.wnba_rotowire_lineups import get_rotowire_starters_for_matchup
 
 ET = ZoneInfo("America/New_York")
 
@@ -154,10 +156,15 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
     status, _ = _detail_status(status_block)
     away_id, home_id = _competitor_team_ids(payload)
     prior_game_summaries: dict[str, dict] | None = None
+    projected_starters: GameDetailProjectedStarters | None = None
     if status == "scheduled" and away_id and home_id:
-        prior_game_summaries = await _fetch_prior_game_summaries(
+        projected_starters = await _projected_starters_from_rotowire(
             payload, away_id=away_id, home_id=home_id
         )
+        if projected_starters is None:
+            prior_game_summaries = await _fetch_prior_game_summaries(
+                payload, away_id=away_id, home_id=home_id
+            )
 
     try:
         detail = normalize_espn_summary(
@@ -165,6 +172,7 @@ async def get_game_detail(espn_event_id: str) -> WnbaGameDetail:
             espn_event_id=espn_event_id,
             fetched_at=datetime.now(ET).isoformat(),
             prior_game_summaries=prior_game_summaries,
+            projected_starters=projected_starters,
         )
     except Exception:
         if stale_fallback:
@@ -542,6 +550,47 @@ async def _fetch_prior_game_summaries(
     return {away_id: away_summary, home_id: home_summary}
 
 
+def _competitor_abbrevs(payload: dict) -> tuple[str, str]:
+    comp = ((payload.get("header") or {}).get("competitions") or [{}])[0]
+    teams = {c.get("homeAway"): c for c in (comp.get("competitors") or [])}
+    away_c, home_c = teams.get("away") or {}, teams.get("home") or {}
+    away_abbr = str((away_c.get("team") or {}).get("abbreviation") or "")
+    home_abbr = str((home_c.get("team") or {}).get("abbreviation") or "")
+    return away_abbr, home_abbr
+
+
+async def _safe_roster_index(team_id: str) -> dict[str, dict[str, str | None]]:
+    try:
+        return await get_roster_index(team_id)
+    except Exception:
+        return {}
+
+
+async def _projected_starters_from_rotowire(
+    payload: dict, *, away_id: str, home_id: str
+) -> GameDetailProjectedStarters | None:
+    away_abbr, home_abbr = _competitor_abbrevs(payload)
+    if not away_abbr or not home_abbr:
+        return None
+    try:
+        rw = await get_rotowire_starters_for_matchup(
+            away_abbr=away_abbr, home_abbr=home_abbr
+        )
+    except Exception:
+        return None
+    if rw is None:
+        return None
+    away_idx, home_idx = await asyncio.gather(
+        _safe_roster_index(away_id),
+        _safe_roster_index(home_id),
+    )
+    return GameDetailProjectedStarters(
+        note="RotoWire expected lineup",
+        away=enrich_starters(rw["away"], away_idx),
+        home=enrich_starters(rw["home"], home_idx),
+    )
+
+
 def _starters_from_summary(summary: dict, *, team_id: str) -> list[GameDetailStarter] | None:
     players = (summary.get("boxscore") or {}).get("players")
     if not isinstance(players, list):
@@ -691,6 +740,7 @@ def normalize_espn_summary(
     espn_event_id: str,
     fetched_at: str,
     prior_game_summaries: dict[str, dict] | None = None,
+    projected_starters: GameDetailProjectedStarters | None = None,
 ) -> WnbaGameDetail:
     header = payload.get("header") or {}
     comp = (header.get("competitions") or [{}])[0]
@@ -783,12 +833,15 @@ def normalize_espn_summary(
         payload, away_id=away_id, home_id=home_id
     )
     injuries = _normalize_injuries(payload, away_id=away_id, home_id=home_id)
-    projected_starters = _normalize_projected_starters(
-        status=status,
-        away_id=away_id,
-        home_id=home_id,
-        prior_game_summaries=prior_game_summaries,
-    )
+    if projected_starters is not None:
+        resolved_projected_starters = projected_starters
+    else:
+        resolved_projected_starters = _normalize_projected_starters(
+            status=status,
+            away_id=away_id,
+            home_id=home_id,
+            prior_game_summaries=prior_game_summaries,
+        )
     box_score = _normalize_box_score(payload, away_id=away_id, home_id=home_id)
 
     return WnbaGameDetail(
@@ -805,7 +858,7 @@ def normalize_espn_summary(
         plays=list(reversed(plays)),
         win_probability=win_probability,
         matchup_prediction=matchup_prediction,
-        projected_starters=projected_starters,
+        projected_starters=resolved_projected_starters,
         season_leaders=season_leaders,
         injuries=injuries,
         box_score=box_score,

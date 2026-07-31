@@ -178,7 +178,81 @@ def test_get_game_detail_fetches_prior_games_for_starters(monkeypatch):
             "401857060": prior_home,
         }[event_id]
 
+    async def fake_rw(**kwargs):
+        return None
+
     monkeypatch.setattr(svc, "fetch_espn_summary", fake_fetch)
+    monkeypatch.setattr(svc, "get_rotowire_starters_for_matchup", fake_rw)
     detail = asyncio.run(svc.get_game_detail("401857099"))
     assert detail.projected_starters is not None
     assert len(detail.projected_starters.away) == 5
+
+
+def test_get_game_detail_prefers_rotowire_starters(monkeypatch):
+    from app.services.wnba_espn_roster import roster_player_index
+
+    svc.clear_game_detail_cache()
+    scheduled = load_fixture("espn_wnba_summary_scheduled_preview.json")
+
+    async def fake_espn(event_id: str):
+        return scheduled
+
+    async def fake_rw(*, away_abbr: str, home_abbr: str):
+        return {
+            "away": [{"name": f"Away{i}", "position": "G"} for i in range(5)],
+            "home": [
+                {"name": "Allisha Gray", "position": "G"},
+                {"name": "Jordin Canada", "position": "G"},
+                {"name": "Rhyne Howard", "position": "G"},
+                {"name": "Naz Hillmon", "position": "F"},
+                {"name": "Angel Reese", "position": "F"},
+            ],
+        }
+
+    async def fake_roster(team_id: str):
+        if team_id.endswith("home") or team_id == "home1":
+            return roster_player_index(
+                json.loads((FIXTURES / "espn_wnba_roster_atl.json").read_text())
+            )
+        return {}
+
+    prior_calls: list[str] = []
+
+    async def tracking_fetch(event_id: str):
+        if event_id != "401857099":
+            prior_calls.append(event_id)
+        return await fake_espn(event_id)
+
+    monkeypatch.setattr(svc, "fetch_espn_summary", tracking_fetch)
+    monkeypatch.setattr(svc, "get_rotowire_starters_for_matchup", fake_rw)
+    monkeypatch.setattr(svc, "get_roster_index", fake_roster)
+
+    detail = asyncio.run(svc.get_game_detail("401857099"))
+    assert detail.projected_starters is not None
+    assert detail.projected_starters.note == "RotoWire expected lineup"
+    assert detail.projected_starters.home[-1].name == "Angel Reese"
+    assert detail.projected_starters.home[-1].jersey == "5"
+    assert prior_calls == []
+
+
+def test_get_game_detail_falls_back_to_prior_starters_when_rotowire_misses(monkeypatch):
+    svc.clear_game_detail_cache()
+    scheduled = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    prior_away = load_fixture("espn_wnba_summary_prior_away.json")
+    prior_home = load_fixture("espn_wnba_summary_prior_home.json")
+
+    async def fake_fetch(event_id: str):
+        return {
+            "401857099": scheduled,
+            "401857069": prior_away,
+            "401857060": prior_home,
+        }[event_id]
+
+    async def fake_rw(**kwargs):
+        return None
+
+    monkeypatch.setattr(svc, "fetch_espn_summary", fake_fetch)
+    monkeypatch.setattr(svc, "get_rotowire_starters_for_matchup", fake_rw)
+    detail = asyncio.run(svc.get_game_detail("401857099"))
+    assert detail.projected_starters is not None
+    assert detail.projected_starters.note == "from each team's last game"
