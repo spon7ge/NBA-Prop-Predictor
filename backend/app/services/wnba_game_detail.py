@@ -628,7 +628,9 @@ def _starters_from_summary(summary: dict, *, team_id: str) -> list[GameDetailSta
             pos = athlete.get("position") or {}
             position = str(pos.get("abbreviation") or "").strip() or None
             starters.append(
-                GameDetailStarter(jersey=jersey_s, name=name, position=position)
+                GameDetailStarter(
+                    jersey=jersey_s, name=name, position=position, gtd=False
+                )
             )
             if len(starters) == 5:
                 break

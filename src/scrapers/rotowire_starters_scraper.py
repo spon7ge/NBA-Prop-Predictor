@@ -209,11 +209,12 @@ class DailyLineups:
         return {"questionable": questionable, "out": out}
 
     @staticmethod
-    def _ordered_expected_starters(lineup_list) -> list[dict[str, str | None]]:
+    def _ordered_expected_starters(lineup_list) -> list[dict[str, object]]:
         if lineup_list is None:
             return []
         allowed_titles = {"Very Likely To Play", "Likely To Play", "Toss Up To Play"}
-        out: list[dict[str, str | None]] = []
+        gtd_titles = {"Likely To Play", "Toss Up To Play"}
+        out: list[dict[str, object]] = []
         for item in lineup_list.find_all("li", recursive=False):
             classes = item.get("class") or []
             if "lineup__title" in classes:
@@ -231,16 +232,31 @@ class DailyLineups:
                 continue
             pos_el = item.find(class_="lineup__pos")
             position = pos_el.get_text(strip=True) if pos_el else None
-            out.append({"name": name, "position": position or None})
+            inj_el = item.find(class_="lineup__inj")
+            inj_text = (inj_el.get_text(strip=True) if inj_el else "").casefold()
+            # RotoWire marks GTD / questionable expected starters with injury
+            # status or a non-"Very Likely" play-probability title.
+            gtd = (
+                title in gtd_titles
+                or "has-injury-status" in classes
+                or inj_text in {"gtd", "ques", "questionable", "doubtful"}
+            )
+            out.append(
+                {
+                    "name": name,
+                    "position": position or None,
+                    "gtd": gtd,
+                }
+            )
             if len(out) == 5:
                 break
         return out
 
-    def expected_starters_by_abbr(self) -> dict[str, list[dict[str, str | None]]]:
+    def expected_starters_by_abbr(self) -> dict[str, list[dict[str, object]]]:
         """Ordered expected fives keyed by team abbreviation (WNBA/NBA)."""
         if not self.data:
             self.getDict()
-        result: dict[str, list[dict[str, str | None]]] = {}
+        result: dict[str, list[dict[str, object]]] = {}
         for matchup_el, parsed in zip(self._matchup_cards(), self.data):
             for side, list_cls in (
                 ("away", "lineup__list is-visit"),

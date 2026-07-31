@@ -59,8 +59,14 @@ def enrich_starters(
         roster_entry = index.get(norm_player_name(name), {})
         jersey = roster_entry.get("jersey") or None
         position = rw_position or roster_entry.get("position")
+        gtd = bool(starter.get("gtd"))
         enriched.append(
-            GameDetailStarter(jersey=jersey, name=name, position=position or None)
+            GameDetailStarter(
+                jersey=jersey,
+                name=name,
+                position=position or None,
+                gtd=gtd,
+            )
         )
     return enriched
 

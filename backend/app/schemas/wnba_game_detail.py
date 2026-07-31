@@ -102,6 +102,7 @@ class GameDetailStarter(BaseModel):
     jersey: str | None
     name: str
     position: str | None
+    gtd: bool = False
 
 
 class GameDetailProjectedStarters(BaseModel):

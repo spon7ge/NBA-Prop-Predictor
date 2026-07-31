@@ -74,6 +74,7 @@ export type GameDetailStarter = {
   jersey: string | null;
   name: string;
   position: string | null;
+  gtd: boolean;
 };
 
 export type GameDetailProjectedStarters = {

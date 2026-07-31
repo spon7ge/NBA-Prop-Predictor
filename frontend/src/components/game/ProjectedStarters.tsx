@@ -7,12 +7,16 @@ type ProjectedStartersProps = {
 function StarterRow({ starter }: { starter: GameDetailStarter }) {
   return (
     <li className="flex items-baseline justify-between gap-3 text-sm">
-      <span className="min-w-0 truncate">
+      <span className="flex min-w-0 items-baseline gap-1.5 truncate">
         {starter.jersey ? (
-          <span className="text-white/45">#{starter.jersey}</span>
+          <span className="shrink-0 text-white/45">#{starter.jersey}</span>
         ) : null}
-        {starter.jersey ? " " : null}
-        <span className="font-medium text-white">{starter.name}</span>
+        <span className="truncate font-medium text-white">{starter.name}</span>
+        {starter.gtd ? (
+          <span className="shrink-0 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-white">
+            GTD
+          </span>
+        ) : null}
       </span>
       {starter.position ? (
         <span className="shrink-0 text-white/45">{starter.position}</span>

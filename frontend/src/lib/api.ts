@@ -95,6 +95,7 @@ export type ApiGameDetailStarter = {
   jersey: string | null;
   name: string;
   position: string | null;
+  gtd?: boolean;
 };
 
 export type ApiGameDetailProjectedStarters = {

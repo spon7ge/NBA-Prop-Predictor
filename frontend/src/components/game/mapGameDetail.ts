@@ -91,11 +91,13 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
             jersey: starter.jersey,
             name: starter.name,
             position: starter.position,
+            gtd: Boolean(starter.gtd),
           })),
           home: detail.projected_starters.home.map((starter) => ({
             jersey: starter.jersey,
             name: starter.name,
             position: starter.position,
+            gtd: Boolean(starter.gtd),
           })),
         }
       : null,

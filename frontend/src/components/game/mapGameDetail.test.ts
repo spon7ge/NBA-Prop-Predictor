@@ -237,8 +237,28 @@ describe("mapGameDetail", () => {
     });
     expect(mapped.matchupPrediction?.awayWinPct).toBe(67);
     expect(mapped.projectedStarters?.away[0].name).toBe("Natasha Howard");
+    expect(mapped.projectedStarters?.away[0].gtd).toBe(false);
     expect(mapped.seasonLeaders?.away[0].stat).toBe("points");
     expect(mapped.injuries?.home[0].detail).toBe("Ribs");
+  });
+
+  it("maps gtd true for game-time decision starters", () => {
+    const mapped = mapGameDetail({
+      ...buildApiDetail(),
+      projected_starters: {
+        note: "RotoWire expected lineup",
+        away: [
+          {
+            jersey: "14",
+            name: "Dominique Malonga",
+            position: "C",
+            gtd: true,
+          },
+        ],
+        home: [],
+      },
+    });
+    expect(mapped.projectedStarters?.away[0].gtd).toBe(true);
   });
 
   it("maps null preview fields", () => {

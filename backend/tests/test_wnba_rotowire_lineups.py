@@ -38,6 +38,9 @@ def test_expected_starters_by_abbr_preserves_order_and_positions(monkeypatch):
         "Dominique Malonga",
     ]
     assert sea[-1]["position"] == "C"
+    assert sea[-1]["gtd"] is True
+    assert all(p["gtd"] is False for p in sea[:-1])
+    assert all(p["gtd"] is False for p in atl)
     assert "Ebony Hoffman" not in [p["name"] for p in sea]
 
 
