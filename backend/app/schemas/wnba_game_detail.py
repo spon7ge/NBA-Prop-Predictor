@@ -32,6 +32,7 @@ class GameDetailTeam(BaseModel):
     name: str
     score: int | None
     color: str
+    logo_url: str | None = None
 
 
 class GameDetailShot(BaseModel):

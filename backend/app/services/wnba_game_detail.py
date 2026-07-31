@@ -183,6 +183,34 @@ def _hex_color(raw: str | None, fallback: str) -> str:
     return fallback
 
 
+def _rel_tokens(rel: object) -> set[str]:
+    if isinstance(rel, list):
+        return {str(x).lower() for x in rel}
+    if isinstance(rel, str) and rel.strip():
+        return {rel.strip().lower()}
+    return set()
+
+
+def _team_logo_url(logos: object) -> str | None:
+    if not isinstance(logos, list):
+        return None
+    entries: list[tuple[set[str], str]] = []
+    for item in logos:
+        if not isinstance(item, dict):
+            continue
+        href = str(item.get("href") or "").strip()
+        if not href:
+            continue
+        entries.append((_rel_tokens(item.get("rel")), href))
+    if not entries:
+        return None
+    for token in ("dark", "default"):
+        for rels, href in entries:
+            if token in rels:
+                return href
+    return entries[0][1]
+
+
 def _is_numeric_coordinate(value: object) -> bool:
     if value is None:
         return False
@@ -579,6 +607,7 @@ def normalize_espn_summary(
             name=str(t.get("displayName") or ""),
             score=score if status != "scheduled" else None,
             color=_hex_color(t.get("color"), fallback_color),
+            logo_url=_team_logo_url(t.get("logos")),
         )
 
     raw_plays = payload.get("plays") or []

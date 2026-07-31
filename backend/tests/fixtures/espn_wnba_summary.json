@@ -23,7 +23,17 @@
               "abbreviation": "PHX",
               "displayName": "Phoenix Mercury",
               "color": "e56020",
-              "alternateColor": "1c105e"
+              "alternateColor": "1c105e",
+              "logos": [
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500/phx.png",
+                  "rel": ["full", "default"]
+                },
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png",
+                  "rel": ["full", "dark"]
+                }
+              ]
             }
           },
           {
@@ -34,7 +44,17 @@
               "abbreviation": "GS",
               "displayName": "Golden State Valkyries",
               "color": "553987",
-              "alternateColor": "ffc72c"
+              "alternateColor": "ffc72c",
+              "logos": [
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500/gs.png",
+                  "rel": ["full", "default"]
+                },
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png",
+                  "rel": ["full", "dark"]
+                }
+              ]
             }
           }
         ]

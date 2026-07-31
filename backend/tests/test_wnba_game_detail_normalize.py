@@ -160,6 +160,36 @@ def test_normalize_espn_summary_header_shots_plays():
     assert len(field_goal_scoring) == 1
     assert field_goal_scoring[0].away_score == 10
     assert field_goal_scoring[0].home_score == 8
+    assert detail.away.logo_url is not None
+    assert detail.home.logo_url is not None
+
+
+def test_normalize_prefers_dark_logo_url():
+    payload = load_fixture("espn_wnba_summary.json")
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-29T19:00:00-04:00",
+    )
+    assert detail.away.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png"
+    )
+    assert detail.home.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png"
+    )
+
+
+def test_normalize_logo_url_null_when_logos_missing():
+    payload = load_fixture("espn_wnba_summary.json")
+    for competitor in payload["header"]["competitions"][0]["competitors"]:
+        competitor["team"].pop("logos", None)
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-29T19:00:00-04:00",
+    )
+    assert detail.away.logo_url is None
+    assert detail.home.logo_url is None
 
 
 def test_normalize_excludes_free_throws_and_missing_coordinates_from_shots():
