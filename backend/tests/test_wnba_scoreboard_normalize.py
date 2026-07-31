@@ -86,6 +86,42 @@ def test_normalize_espn_sets_venue_and_records():
     assert g.home.record == "18-10"
 
 
+def test_normalize_espn_sets_logo_url_from_team_logo():
+    payload = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
+    g = normalize_espn_scoreboard(payload, date_et="2026-07-29")[0]
+    assert g.away.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png"
+    )
+    assert g.home.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png"
+    )
+
+
+def test_normalize_stats_logo_url_is_null():
+    payload = json.loads((FIXTURES / "stats_wnba_scoreboard.json").read_text())
+    g = normalize_stats_scoreboard(payload, date_et="2026-07-29")[0]
+    assert g.away.logo_url is None
+    assert g.home.logo_url is None
+
+
+def test_merge_keeps_espn_logo_url_over_stats_null():
+    espn = normalize_espn_scoreboard(
+        json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text()),
+        date_et="2026-07-29",
+    )
+    stats = normalize_stats_scoreboard(
+        json.loads((FIXTURES / "stats_wnba_scoreboard.json").read_text()),
+        date_et="2026-07-29",
+    )
+    merged = merge_games(espn, stats)[0]
+    assert merged.away.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png"
+    )
+    assert merged.home.logo_url == (
+        "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png"
+    )
+
+
 def test_merge_preserves_venue_and_records_when_stats_id_wins():
     espn = [
         WnbaGame(

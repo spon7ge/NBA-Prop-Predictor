@@ -140,6 +140,11 @@ def _espn_venue(comps: dict) -> tuple[str | None, str | None]:
     return (str(name) if name else None, str(city) if city else None)
 
 
+def _team_logo_from_espn(team: dict) -> str | None:
+    logo = str(team.get("logo") or "").strip()
+    return logo or None
+
+
 def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
     games: list[WnbaGame] = []
     for event in payload.get("events") or []:
@@ -159,6 +164,7 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
                 name=str(t.get("displayName") or ""),
                 score=score if status != "scheduled" else None,
                 record=_espn_team_record(c),
+                logo_url=_team_logo_from_espn(t),
             )
 
         raw_id = str(event.get("id") or "").strip()
@@ -369,12 +375,14 @@ def merge_games(espn: list[WnbaGame], stats: list[WnbaGame]) -> list[WnbaGame]:
                 name=str(prefer_complete(a.away.name, g.away.name)),
                 score=prefer_complete(a.away.score, g.away.score),
                 record=prefer_complete(a.away.record, g.away.record) or None,
+                logo_url=prefer_complete(a.away.logo_url, g.away.logo_url) or None,
             ),
             home=WnbaTeam(
                 abbrev=str(prefer_complete(a.home.abbrev, g.home.abbrev)),
                 name=str(prefer_complete(a.home.name, g.home.name)),
                 score=prefer_complete(a.home.score, g.home.score),
                 record=prefer_complete(a.home.record, g.home.record) or None,
+                logo_url=prefer_complete(a.home.logo_url, g.home.logo_url) or None,
             ),
             start_time_et=str(prefer_complete(a.start_time_et, g.start_time_et)),
             venue=prefer_complete(a.venue, g.venue) or None,

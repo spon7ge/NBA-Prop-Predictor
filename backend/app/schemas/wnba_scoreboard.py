@@ -12,6 +12,7 @@ class WnbaTeam(BaseModel):
     name: str
     score: int | None = None
     record: str | None = None
+    logo_url: str | None = None
 
 
 class WnbaGame(BaseModel):
