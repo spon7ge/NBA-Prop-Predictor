@@ -1,0 +1,134 @@
+{
+  "season": {
+    "year": 2026,
+    "displayName": "2026"
+  },
+  "children": [
+    {
+      "id": "1",
+      "name": "Eastern Conference",
+      "abbreviation": "E",
+      "standings": {
+        "entries": [
+          {
+            "team": {
+              "id": "5",
+              "abbreviation": "IND",
+              "displayName": "Indiana Fever",
+              "logos": [
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500/ind.png"
+                }
+              ]
+            },
+            "stats": [
+              {"name": "playoffSeed", "displayValue": "1"},
+              {"name": "wins", "displayValue": "18", "value": 18},
+              {"name": "losses", "displayValue": "10", "value": 10},
+              {"name": "overall", "displayValue": "18-10"},
+              {"name": "winPercent", "displayValue": ".643"},
+              {"name": "gamesBehind", "displayValue": "-"},
+              {"name": "Home", "displayValue": "11-5"},
+              {"name": "Road", "displayValue": "7-5"},
+              {"name": "Last Ten Games", "displayValue": "8-2"},
+              {"name": "pointDifferential", "displayValue": "+169"},
+              {"name": "differential", "displayValue": "+6.0"},
+              {"name": "streak", "displayValue": "W4"}
+            ]
+          },
+          {
+            "team": {
+              "id": "20",
+              "abbreviation": "ATL",
+              "displayName": "Atlanta Dream",
+              "logos": [
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png"
+                }
+              ]
+            },
+            "stats": [
+              {"name": "playoffSeed", "displayValue": "2"},
+              {"name": "wins", "displayValue": "17", "value": 17},
+              {"name": "losses", "displayValue": "10", "value": 10},
+              {"name": "overall", "displayValue": "17-10"},
+              {"name": "winPercent", "displayValue": ".630"},
+              {"name": "gamesBehind", "displayValue": "0.5"},
+              {"name": "Home", "displayValue": "8-5"},
+              {"name": "Road", "displayValue": "9-5"},
+              {"name": "Last Ten Games", "displayValue": "6-4"},
+              {"name": "pointDifferential", "displayValue": "+91"},
+              {"name": "differential", "displayValue": "+3.4"},
+              {"name": "streak", "displayValue": "L1"}
+            ]
+          },
+          {
+            "team": {
+              "id": "999",
+              "abbreviation": "",
+              "displayName": "Broken Entry"
+            },
+            "stats": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "2",
+      "name": "Western Conference",
+      "abbreviation": "W",
+      "standings": {
+        "entries": [
+          {
+            "team": {
+              "id": "16",
+              "abbreviation": "MIN",
+              "displayName": "Minnesota Lynx",
+              "logos": [
+                {
+                  "href": "https://a.espncdn.com/i/teamlogos/wnba/500/min.png"
+                }
+              ]
+            },
+            "stats": [
+              {"name": "playoffSeed", "displayValue": "1"},
+              {"name": "wins", "displayValue": "24", "value": 24},
+              {"name": "losses", "displayValue": "6", "value": 6},
+              {"name": "overall", "displayValue": "24-6"},
+              {"name": "winPercent", "displayValue": ".800"},
+              {"name": "gamesBehind", "displayValue": "-"},
+              {"name": "Home", "displayValue": "13-2"},
+              {"name": "Road", "displayValue": "11-4"},
+              {"name": "Last Ten Games", "displayValue": "8-2"},
+              {"name": "pointDifferential", "displayValue": "+312"},
+              {"name": "differential", "displayValue": "+10.4"},
+              {"name": "streak", "displayValue": "W3"}
+            ]
+          },
+          {
+            "team": {
+              "id": "17",
+              "abbreviation": "LV",
+              "displayName": "Las Vegas Aces",
+              "logos": []
+            },
+            "stats": [
+              {"name": "playoffSeed", "displayValue": "2"},
+              {"name": "wins", "displayValue": "19", "value": 19},
+              {"name": "losses", "displayValue": "8", "value": 8},
+              {"name": "overall", "displayValue": "19-8"},
+              {"name": "winPercent", "displayValue": ".704"},
+              {"name": "gamesBehind", "displayValue": "3.5"},
+              {"name": "Home", "displayValue": "10-3"},
+              {"name": "Road", "displayValue": "9-5"},
+              {"name": "Last Ten Games", "displayValue": "7-3"},
+              {"name": "pointDifferential", "displayValue": "+140"},
+              {"name": "differential", "displayValue": "+5.2"},
+              {"name": "streak", "displayValue": "W1"}
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
