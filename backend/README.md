@@ -14,9 +14,11 @@ Ensure repo-root `.env` has `SUPABASE_DB_URL`.
 ## Run
 
 ```bash
-cd backend
-uvicorn app.main:app --reload --port 8000
+# from repo root — root must be on PYTHONPATH so `src.scrapers` imports work
+PYTHONPATH=.:backend uvicorn app.main:app --reload --port 8000
 ```
+
+WNBA game detail may call ESPN + RotoWire for scheduled projected starters.
 
 - API docs: http://localhost:8000/docs
 - Health: http://localhost:8000/api/health
