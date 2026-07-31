@@ -15,7 +15,16 @@ function TickerItem({
   game: TickerGame;
   interactive?: boolean;
 }) {
-  const content = (
+  const isScheduled = game.status === "scheduled";
+
+  const content = isScheduled ? (
+    <>
+      <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
+      <span className="text-white/30">@</span>
+      <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
+      <span className="text-white/40">{game.statusLabel}</span>
+    </>
+  ) : (
     <>
       <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
       {game.awayScore !== null ? (

@@ -83,6 +83,12 @@ describe("LiveTicker", () => {
     expect(screen.getAllByText("7:00 PM ET").length).toBeGreaterThanOrEqual(1);
   });
 
+  it("formats scheduled games with @ and no scores", () => {
+    render(<LiveTicker games={[scheduledGame]} />);
+    expect(screen.getAllByText("@").length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText("—")).not.toBeInTheDocument();
+  });
+
   it("shows TODAY rail and finals when the slate is finished", () => {
     render(<LiveTicker games={[finalGame]} />);
     expect(screen.getByText("Today")).toBeInTheDocument();
