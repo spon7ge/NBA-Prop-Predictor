@@ -212,12 +212,21 @@ class DailyLineups:
     def _ordered_expected_starters(lineup_list) -> list[dict[str, str | None]]:
         if lineup_list is None:
             return []
+        allowed_titles = {"Very Likely To Play", "Likely To Play", "Toss Up To Play"}
         out: list[dict[str, str | None]] = []
-        for item in lineup_list.find_all("li", {"title": "Very Likely To Play"}):
+        for item in lineup_list.find_all("li", recursive=False):
             classes = item.get("class") or []
-            if "has-injury-status" in classes or not item.a:
+            if "lineup__title" in classes:
+                break
+            if "lineup__player" not in classes:
                 continue
-            name = (item.a.get("title") or item.a.get_text(strip=True) or "").strip()
+            title = item.get("title") or ""
+            if title not in allowed_titles:
+                continue
+            link = item.find("a")
+            if not link:
+                continue
+            name = (link.get("title") or link.get_text(strip=True) or "").strip()
             if not name:
                 continue
             pos_el = item.find(class_="lineup__pos")

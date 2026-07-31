@@ -28,7 +28,17 @@ def test_expected_starters_by_abbr_preserves_order_and_positions(monkeypatch):
     ]
     assert atl[-1]["position"] == "F"
     assert "Madina Okot" not in [p["name"] for p in atl]
-    assert len(by_abbr["SEA"]) == 5
+    sea = by_abbr["SEA"]
+    assert len(sea) == 5
+    assert [p["name"] for p in sea] == [
+        "Natisha Hiedeman",
+        "Jade Melbourne",
+        "Flau'jae Johnson",
+        "Awa Fam",
+        "Dominique Malonga",
+    ]
+    assert sea[-1]["position"] == "C"
+    assert "Ebony Hoffman" not in [p["name"] for p in sea]
 
 
 def test_get_rotowire_starters_for_matchup_sea_atl(monkeypatch):
@@ -52,6 +62,7 @@ def test_get_rotowire_starters_for_matchup_sea_atl(monkeypatch):
     assert result is not None
     assert result["home"][-1]["name"] == "Angel Reese"
     assert len(result["away"]) == 5
+    assert result["away"][-1]["name"] == "Dominique Malonga"
 
 
 def test_get_rotowire_starters_returns_none_if_team_missing(monkeypatch):
