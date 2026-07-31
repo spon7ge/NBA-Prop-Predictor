@@ -6,6 +6,7 @@ export type GameDetailTeam = {
   name: string;
   score: number | null;
   color: string;
+  logoUrl: string | null;
 };
 
 export type GameDetailShot = {
@@ -105,6 +106,18 @@ export type GameDetailInjuries = {
   home: GameDetailInjury[];
 };
 
+export type GameDetailBoxScorePlayer = {
+  name: string;
+  didNotPlay: boolean;
+  values: string[];
+};
+
+export type GameDetailBoxScore = {
+  columns: string[];
+  away: GameDetailBoxScorePlayer[];
+  home: GameDetailBoxScorePlayer[];
+};
+
 export type GameDetail = {
   espnEventId: string;
   league: "wnba";
@@ -123,4 +136,5 @@ export type GameDetail = {
   projectedStarters: GameDetailProjectedStarters | null;
   seasonLeaders: GameDetailSeasonLeaders | null;
   injuries: GameDetailInjuries | null;
+  boxScore: GameDetailBoxScore | null;
 };

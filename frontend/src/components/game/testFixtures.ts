@@ -46,6 +46,7 @@ export const detail: GameDetail = {
     name: "Golden State Valkyries",
     score: 10,
     color: "#5B2C6F",
+    logoUrl: null,
   },
   home: {
     id: "home1",
@@ -53,6 +54,7 @@ export const detail: GameDetail = {
     name: "Phoenix Mercury",
     score: 9,
     color: "#E56020",
+    logoUrl: null,
   },
   fgMade: 1,
   fgAttempted: 2,
@@ -126,6 +128,7 @@ export const detail: GameDetail = {
   projectedStarters: null,
   seasonLeaders: null,
   injuries: null,
+  boxScore: null,
 };
 
 export function buildGameDetailFixture(
@@ -151,6 +154,7 @@ export function buildScheduledDetail(
       name: "Minnesota Lynx",
       score: null,
       color: "#266092",
+      logoUrl: null,
     },
     home: {
       id: "home1",
@@ -158,6 +162,7 @@ export function buildScheduledDetail(
       name: "Toronto Tempo",
       score: null,
       color: "#CE1141",
+      logoUrl: null,
     },
     fgMade: 0,
     fgAttempted: 0,
@@ -169,6 +174,7 @@ export function buildScheduledDetail(
     projectedStarters: null,
     seasonLeaders: null,
     injuries: null,
+    boxScore: null,
     ...overrides,
   });
 }

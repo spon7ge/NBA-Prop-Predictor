@@ -40,6 +40,7 @@ function previewFields() {
       ],
     },
     injuries: null,
+          box_score: null,
   };
 }
 
@@ -56,6 +57,7 @@ function baseGameDetail(overrides: Record<string, unknown> = {}) {
       name: "Minnesota Lynx",
       score: null,
       color: "#266092",
+      logo_url: null,
     },
     home: {
       id: "21",
@@ -63,6 +65,7 @@ function baseGameDetail(overrides: Record<string, unknown> = {}) {
       name: "Toronto Tempo",
       score: null,
       color: "#CE1141",
+      logo_url: null,
     },
     fg_made: 0,
     fg_attempted: 0,
@@ -117,6 +120,7 @@ describe("GameDetailPage", () => {
             name: "Golden State Valkyries",
             score: 10,
             color: "#553987",
+            logo_url: null,
           },
           home: {
             id: "21",
@@ -124,6 +128,7 @@ describe("GameDetailPage", () => {
             name: "Phoenix Mercury",
             score: 9,
             color: "#E56020",
+            logo_url: null,
           },
           fg_made: 1,
           fg_attempted: 2,
@@ -131,6 +136,7 @@ describe("GameDetailPage", () => {
           projected_starters: null,
           season_leaders: null,
           injuries: null,
+          box_score: null,
         }),
     });
 

@@ -98,6 +98,7 @@ describe("AppRouter", () => {
               name: "Golden State Valkyries",
               score: 10,
               color: "#553987",
+              logo_url: null,
             },
             home: {
               id: "21",
@@ -105,6 +106,7 @@ describe("AppRouter", () => {
               name: "Phoenix Mercury",
               score: 9,
               color: "#E56020",
+              logo_url: null,
             },
             fg_made: 1,
             fg_attempted: 2,
@@ -116,6 +118,7 @@ describe("AppRouter", () => {
             projected_starters: null,
             season_leaders: null,
             injuries: null,
+          box_score: null,
             fetched_at: "",
           }),
         };
@@ -149,6 +152,7 @@ describe("AppRouter", () => {
               name: "Golden State Valkyries",
               score: 10,
               color: "#553987",
+              logo_url: null,
             },
             home: {
               id: "21",
@@ -156,6 +160,7 @@ describe("AppRouter", () => {
               name: "Phoenix Mercury",
               score: 9,
               color: "#E56020",
+              logo_url: null,
             },
             fg_made: 1,
             fg_attempted: 2,
@@ -189,6 +194,7 @@ describe("AppRouter", () => {
             projected_starters: null,
             season_leaders: null,
             injuries: null,
+          box_score: null,
             fetched_at: "",
           }),
         };

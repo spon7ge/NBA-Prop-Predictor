@@ -14,6 +14,7 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
       name: detail.away.name,
       score: detail.away.score,
       color: detail.away.color,
+      logoUrl: detail.away.logo_url,
     },
     home: {
       id: detail.home.id,
@@ -21,6 +22,7 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
       name: detail.home.name,
       score: detail.home.score,
       color: detail.home.color,
+      logoUrl: detail.home.logo_url,
     },
     fgMade: detail.fg_made,
     fgAttempted: detail.fg_attempted,
@@ -126,6 +128,21 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
             position: injury.position,
             status: injury.status,
             detail: injury.detail,
+          })),
+        }
+      : null,
+    boxScore: detail.box_score
+      ? {
+          columns: detail.box_score.columns,
+          away: detail.box_score.away.map((player) => ({
+            name: player.name,
+            didNotPlay: player.did_not_play,
+            values: player.values,
+          })),
+          home: detail.box_score.home.map((player) => ({
+            name: player.name,
+            didNotPlay: player.did_not_play,
+            values: player.values,
           })),
         }
       : null,

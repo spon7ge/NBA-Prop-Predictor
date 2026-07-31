@@ -17,6 +17,7 @@ function buildApiDetail(
       name: "Golden State Valkyries",
       score: 10,
       color: "#5B2C6F",
+      logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png",
     },
     home: {
       id: "home1",
@@ -24,6 +25,7 @@ function buildApiDetail(
       name: "Phoenix Mercury",
       score: 9,
       color: "#E56020",
+      logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png",
     },
     fg_made: 6,
     fg_attempted: 16,
@@ -64,6 +66,7 @@ function buildApiDetail(
     projected_starters: null,
     season_leaders: null,
     injuries: null,
+    box_score: null,
     fetched_at: "2026-07-29T00:00:00Z",
     ...overrides,
   };
@@ -83,6 +86,7 @@ describe("mapGameDetail", () => {
         name: "Golden State Valkyries",
         score: 10,
         color: "#5B2C6F",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png",
       },
       home: {
         id: "home1",
@@ -90,6 +94,7 @@ describe("mapGameDetail", () => {
         name: "Phoenix Mercury",
         score: 9,
         color: "#E56020",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png",
       },
       fgMade: 6,
       fgAttempted: 16,
@@ -130,6 +135,7 @@ describe("mapGameDetail", () => {
       projectedStarters: null,
       seasonLeaders: null,
       injuries: null,
+      boxScore: null,
     });
   });
 
@@ -241,5 +247,21 @@ describe("mapGameDetail", () => {
     expect(mapped.projectedStarters).toBeNull();
     expect(mapped.seasonLeaders).toBeNull();
     expect(mapped.injuries).toBeNull();
+  });
+
+  it("maps null logo_url to null logoUrl", () => {
+    const mapped = mapGameDetail(
+      buildApiDetail({
+        away: {
+          id: "away1",
+          abbrev: "GS",
+          name: "Golden State Valkyries",
+          score: 10,
+          color: "#5B2C6F",
+          logo_url: null,
+        },
+      }),
+    );
+    expect(mapped.away.logoUrl).toBeNull();
   });
 });
