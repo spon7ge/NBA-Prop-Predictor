@@ -7,6 +7,7 @@ export type MatchupTeam = {
   name: string;
   score: number | null;
   record?: string | null;
+  logoUrl: string | null;
 };
 
 export type MatchupGame = {

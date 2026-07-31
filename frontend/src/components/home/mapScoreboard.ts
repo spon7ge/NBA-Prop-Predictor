@@ -31,11 +31,13 @@ export function mapToLiveGames(games: ApiWnbaGame[]): LiveGame[] {
       abbrev: g.away.abbrev,
       name: g.away.name,
       score: g.away.score,
+      logoUrl: g.away.logo_url,
     },
     home: {
       abbrev: g.home.abbrev,
       name: g.home.name,
       score: g.home.score,
+      logoUrl: g.home.logo_url,
     },
   }));
 }
@@ -54,12 +56,14 @@ export function mapToMatchupGames(games: ApiWnbaGame[]): MatchupGame[] {
       name: g.away.name,
       score: g.away.score,
       record: g.away.record ?? null,
+      logoUrl: g.away.logo_url,
     },
     home: {
       abbrev: g.home.abbrev,
       name: g.home.name,
       score: g.home.score,
       record: g.home.record ?? null,
+      logoUrl: g.home.logo_url,
     },
   }));
 }

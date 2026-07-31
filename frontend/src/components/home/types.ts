@@ -18,6 +18,7 @@ export type LiveGameTeam = {
   abbrev: string;
   name: string;
   score: number | null;
+  logoUrl: string | null;
 };
 
 export type LiveGame = {

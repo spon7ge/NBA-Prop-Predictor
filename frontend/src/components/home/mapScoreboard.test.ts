@@ -15,8 +15,8 @@ function apiGame(overrides: Partial<ApiWnbaGame> = {}): ApiWnbaGame {
     status: "live",
     status_label: "Q3 7:13",
     start_time_et: "2026-07-29T23:00:00Z",
-    away: { abbrev: "ATL", name: "Atlanta Dream", score: 36 },
-    home: { abbrev: "DAL", name: "Dallas Wings", score: 44 },
+    away: { abbrev: "ATL", name: "Atlanta Dream", score: 36, logo_url: null },
+    home: { abbrev: "DAL", name: "Dallas Wings", score: 44, logo_url: null },
     ...overrides,
   };
 }
@@ -67,8 +67,8 @@ describe("scoreboard mappers", () => {
     const scheduled = apiGame({
       status: "scheduled",
       status_label: "7:00 PM ET",
-      away: { abbrev: "NYL", name: "New York Liberty", score: null },
-      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
+      away: { abbrev: "NYL", name: "New York Liberty", score: null, logo_url: null },
+      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null, logo_url: null },
     });
     expect(mapToTickerGames([scheduled])[0]).toMatchObject({
       awayScore: null,
@@ -81,8 +81,8 @@ describe("scoreboard mappers", () => {
     const scheduled = apiGame({
       status: "scheduled",
       status_label: "7:00 PM ET",
-      away: { abbrev: "NYL", name: "New York Liberty", score: null },
-      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
+      away: { abbrev: "NYL", name: "New York Liberty", score: null, logo_url: null },
+      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null, logo_url: null },
     });
     expect(mapToLiveGames([scheduled])[0]).toEqual({
       id: "g1",
@@ -90,8 +90,8 @@ describe("scoreboard mappers", () => {
       league: "wnba",
       statusLabel: "7:00 PM ET",
       status: "scheduled",
-      away: { abbrev: "NYL", name: "New York Liberty", score: null },
-      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null },
+      away: { abbrev: "NYL", name: "New York Liberty", score: null, logoUrl: null },
+      home: { abbrev: "LVA", name: "Las Vegas Aces", score: null, logoUrl: null },
     });
   });
 
@@ -99,6 +99,43 @@ describe("scoreboard mappers", () => {
     const game = apiGame({ espn_event_id: "401857098" });
     expect(mapToTickerGames([game])[0].espnEventId).toBe("401857098");
     expect(mapToLiveGames([game])[0].espnEventId).toBe("401857098");
+  });
+
+  it("maps logo_url to logoUrl for live and matchup games", () => {
+    const game = apiGame({
+      away: {
+        abbrev: "ATL",
+        name: "Atlanta Dream",
+        score: 36,
+        logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+      },
+      home: {
+        abbrev: "DAL",
+        name: "Dallas Wings",
+        score: 44,
+        logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png",
+      },
+    });
+    const live = mapToLiveGames([game])[0];
+    expect(live.away.logoUrl).toBe(
+      "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+    );
+    expect(live.home.logoUrl).toBe(
+      "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png",
+    );
+    const matchup = mapToMatchupGames([game])[0];
+    expect(matchup.away.logoUrl).toBe(
+      "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+    );
+    expect(matchup.home.logoUrl).toBe(
+      "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png",
+    );
+  });
+
+  it("maps null logo_url to null logoUrl", () => {
+    const live = mapToLiveGames([apiGame()])[0];
+    expect(live.away.logoUrl).toBeNull();
+    expect(live.home.logoUrl).toBeNull();
   });
 
   it("mapToMatchupGames maps all games with venue and records", () => {
@@ -114,12 +151,14 @@ describe("scoreboard mappers", () => {
           name: "Atlanta Dream",
           score: 82,
           record: "17-10",
+          logo_url: null,
         },
         home: {
           abbrev: "DAL",
           name: "Dallas Wings",
           score: 81,
           record: "18-10",
+          logo_url: null,
         },
         start_time_et: "2026-07-29T23:00:00Z",
         venue: "College Park Center",
@@ -140,12 +179,14 @@ describe("scoreboard mappers", () => {
           name: "Atlanta Dream",
           score: 82,
           record: "17-10",
+          logoUrl: null,
         },
         home: {
           abbrev: "DAL",
           name: "Dallas Wings",
           score: 81,
           record: "18-10",
+          logoUrl: null,
         },
       },
     ]);

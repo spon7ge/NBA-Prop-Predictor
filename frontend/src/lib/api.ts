@@ -5,6 +5,7 @@ export type ApiWnbaTeam = {
   name: string;
   score: number | null;
   record?: string | null;
+  logo_url: string | null;
 };
 
 export type ApiWnbaGame = {
