@@ -135,6 +135,31 @@ describe("AppRouter", () => {
     expect(screen.getByText("No live games")).toBeInTheDocument(); // chrome ticker still present
   });
 
+  it("renders WNBA leaders at /wnba/leaders", async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo) => {
+      const url = String(input);
+      if (url.includes("/api/wnba/leaders")) {
+        return {
+          ok: true,
+          json: async () => ({
+            season: 2026,
+            pace: "per_game",
+            categories: [],
+          }),
+        };
+      }
+      return {
+        ok: true,
+        json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
+      };
+    });
+    renderWithProviders(["/wnba/leaders"]);
+    expect(
+      await screen.findByText(/2026 season · per game/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Data: stats.wnba.com")).toBeInTheDocument();
+  });
+
   it("renders win probability beneath shot chart and play-by-play", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/api/wnba/games/")) {
