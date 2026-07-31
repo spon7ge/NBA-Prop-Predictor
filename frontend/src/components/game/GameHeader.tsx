@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { GameDetail, GameDetailTeam } from "./types";
 
@@ -7,6 +8,20 @@ const statusAccent: Record<GameDetail["status"], string> = {
   halftime: "text-red-400",
   final: "text-white/55",
 };
+
+function TeamLogo({ url }: { url: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return null;
+  return (
+    <img
+      src={url}
+      alt=""
+      role="presentation"
+      className="size-8 shrink-0 object-contain"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 function ScoreBox({ score }: { score: number | null }) {
   return (
@@ -19,8 +34,14 @@ function ScoreBox({ score }: { score: number | null }) {
 function TeamRow({ team }: { team: GameDetailTeam }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-base font-semibold" style={{ color: team.color }}>
-        {team.name}
+      <span className="flex min-w-0 items-center gap-2.5">
+        {team.logoUrl ? <TeamLogo url={team.logoUrl} /> : null}
+        <span
+          className="truncate text-base font-semibold"
+          style={{ color: team.color }}
+        >
+          {team.name}
+        </span>
       </span>
       <ScoreBox score={team.score} />
     </div>

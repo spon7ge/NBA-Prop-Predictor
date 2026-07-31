@@ -58,4 +58,35 @@ describe("GameHeader", () => {
     expect(screen.queryByText("Mortgage Matchup Center")).not.toBeInTheDocument();
     expect(screen.getAllByText("4:13 - 1st").length).toBeGreaterThanOrEqual(1);
   });
+
+  it("renders team logos when logoUrl is set", () => {
+    renderHeader({
+      away: {
+        ...detail.away,
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png",
+      },
+      home: {
+        ...detail.home,
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png",
+      },
+    });
+    const images = screen.getAllByRole("presentation");
+    expect(images).toHaveLength(2);
+    expect(images[0]).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/wnba/500-dark/gs.png",
+    );
+    expect(images[1]).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/wnba/500-dark/phx.png",
+    );
+  });
+
+  it("omits logo images when logoUrl is null", () => {
+    renderHeader({
+      away: { ...detail.away, logoUrl: null },
+      home: { ...detail.home, logoUrl: null },
+    });
+    expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
+  });
 });
