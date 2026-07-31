@@ -199,3 +199,42 @@ export async function fetchGameDetail(
   }
   return res.json();
 }
+
+export type ApiWnbaLeaderRow = {
+  rank: number;
+  player_id: string;
+  name: string;
+  team_abbrev: string;
+  gp: number;
+  value: string;
+};
+
+export type ApiWnbaLeaderCategory = {
+  key:
+    | "points"
+    | "rebounds"
+    | "assists"
+    | "steals"
+    | "blocks"
+    | "three_pointers";
+  label: string;
+  stat: string;
+  leaders: ApiWnbaLeaderRow[];
+};
+
+export type ApiWnbaLeadersResponse = {
+  season: number;
+  pace: "per_game";
+  categories: ApiWnbaLeaderCategory[];
+};
+
+export async function fetchWnbaLeaders(): Promise<ApiWnbaLeadersResponse> {
+  const res = await fetch(`${API_BASE}/api/wnba/leaders`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Leaders request failed: ${res.status}`);
+  }
+  return res.json();
+}
