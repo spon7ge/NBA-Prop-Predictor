@@ -209,6 +209,44 @@ class DailyLineups:
         return {"questionable": questionable, "out": out}
 
     @staticmethod
+    def _ordered_expected_starters(lineup_list) -> list[dict[str, str | None]]:
+        if lineup_list is None:
+            return []
+        out: list[dict[str, str | None]] = []
+        for item in lineup_list.find_all("li", {"title": "Very Likely To Play"}):
+            classes = item.get("class") or []
+            if "has-injury-status" in classes or not item.a:
+                continue
+            name = (item.a.get("title") or item.a.get_text(strip=True) or "").strip()
+            if not name:
+                continue
+            pos_el = item.find(class_="lineup__pos")
+            position = pos_el.get_text(strip=True) if pos_el else None
+            out.append({"name": name, "position": position or None})
+            if len(out) == 5:
+                break
+        return out
+
+    def expected_starters_by_abbr(self) -> dict[str, list[dict[str, str | None]]]:
+        """Ordered expected fives keyed by team abbreviation (WNBA/NBA)."""
+        if not self.data:
+            self.getDict()
+        result: dict[str, list[dict[str, str | None]]] = {}
+        for matchup_el, parsed in zip(self._matchup_cards(), self.data):
+            for side, list_cls in (
+                ("away", "lineup__list is-visit"),
+                ("home", "lineup__list is-home"),
+            ):
+                abbr = parsed[side].get("abbr")
+                if not abbr:
+                    continue
+                ul = matchup_el.find("ul", {"class": list_cls})
+                starters = self._ordered_expected_starters(ul)
+                if starters:
+                    result[abbr] = starters
+        return result
+
+    @staticmethod
     def _players_by_title(lineup_list, titles: list[str] | str) -> set[str]:
         if lineup_list is None:
             return set()
