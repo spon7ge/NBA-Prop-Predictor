@@ -87,3 +87,23 @@ def test_rotowire_cache_reuses_scrape(monkeypatch):
     asyncio.run(rw.get_rotowire_starters_for_matchup(away_abbr="SEA", home_abbr="ATL"))
     asyncio.run(rw.get_rotowire_starters_for_matchup(away_abbr="SEA", home_abbr="ATL"))
     assert calls["n"] == 1
+
+
+def test_get_rotowire_starters_aliases_espn_wsh_to_was(monkeypatch):
+    """ESPN game detail uses WSH; RotoWire lineup__abbr is WAS."""
+    rw.clear_rotowire_lineups_cache()
+    five_dal = [{"name": f"Dal{i}", "position": "G"} for i in range(5)]
+    five_was = [{"name": f"Was{i}", "position": "G"} for i in range(5)]
+    five_was[-1] = {"name": "Shakira Austin", "position": "C"}
+
+    monkeypatch.setattr(
+        rw,
+        "_scrape_starters_by_abbr",
+        lambda: {"DAL": five_dal, "WAS": five_was},
+    )
+    result = asyncio.run(
+        rw.get_rotowire_starters_for_matchup(away_abbr="DAL", home_abbr="WSH")
+    )
+    assert result is not None
+    assert result["home"][-1]["name"] == "Shakira Austin"
+    assert len(result["away"]) == 5

@@ -62,14 +62,30 @@ def _cached_by_abbr() -> dict[str, list[dict[str, str | None]]] | None:
         return by_abbr
 
 
+def _lookup_starters(
+    by_abbr: dict[str, list[dict[str, str | None]]], abbrev: str
+) -> list[dict[str, str | None]] | None:
+    """Resolve starters, mapping ESPN tricodes (e.g. WSH) to RotoWire (WAS)."""
+    from app.services.wnba_scoreboard import canonical_abbrev
+
+    raw = str(abbrev or "").strip().upper()
+    if not raw:
+        return None
+    for key in (canonical_abbrev(raw), raw):
+        rows = by_abbr.get(key)
+        if rows:
+            return rows
+    return None
+
+
 async def get_rotowire_starters_for_matchup(
     *, away_abbr: str, home_abbr: str
 ) -> dict[str, list[dict[str, str | None]]] | None:
     by_abbr = await asyncio.to_thread(_cached_by_abbr)
     if not by_abbr:
         return None
-    away = by_abbr.get(away_abbr.upper())
-    home = by_abbr.get(home_abbr.upper())
+    away = _lookup_starters(by_abbr, away_abbr)
+    home = _lookup_starters(by_abbr, home_abbr)
     if not away or not home or len(away) != 5 or len(home) != 5:
         return None
     return {"away": away, "home": home}
