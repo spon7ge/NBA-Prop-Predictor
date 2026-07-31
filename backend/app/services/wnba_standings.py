@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+import asyncio
 import logging
+import time
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
+
+import httpx
 
 from app.schemas.wnba_standings import (
     ConferenceKey,
@@ -11,6 +17,15 @@ from app.schemas.wnba_standings import (
 )
 
 logger = logging.getLogger(__name__)
+
+ET = ZoneInfo("America/New_York")
+ESPN_URL = "https://site.api.espn.com/apis/v2/sports/basketball/wnba/standings"
+ESPN_TIMEOUT_SECONDS = 10.0
+CACHE_TTL_SECONDS = 10 * 60
+
+_cache: dict = {}  # response, expires_at, season
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
 _CONF_BY_ABBREV: dict[str, tuple[ConferenceKey, str]] = {
     "E": ("east", "Eastern Conference"),
@@ -171,3 +186,66 @@ def normalize_espn_standings(payload: dict[str, Any]) -> WnbaStandingsResponse:
         if key in by_key:
             conferences.append(by_key[key])
     return WnbaStandingsResponse(season=season, conferences=conferences)
+
+
+def current_wnba_season_year() -> int:
+    return datetime.now(ET).year
+
+
+def _get_refresh_lock() -> asyncio.Lock:
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
+async def fetch_espn_standings() -> dict:
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+    }
+    async with httpx.AsyncClient(
+        timeout=ESPN_TIMEOUT_SECONDS, headers=headers
+    ) as client:
+        res = await client.get(ESPN_URL)
+        res.raise_for_status()
+        return res.json()
+
+
+def _fresh_cached() -> WnbaStandingsResponse | None:
+    cached = _cache.get("response")
+    if cached is None:
+        return None
+    if _cache.get("season") != current_wnba_season_year():
+        return None
+    if time.time() >= float(_cache.get("expires_at") or 0):
+        return None
+    return cached
+
+
+async def get_wnba_standings() -> WnbaStandingsResponse:
+    fresh = _fresh_cached()
+    if fresh is not None:
+        return fresh
+
+    lock = _get_refresh_lock()
+    async with lock:
+        fresh = _fresh_cached()
+        if fresh is not None:
+            return fresh
+        season = current_wnba_season_year()
+        try:
+            payload = await fetch_espn_standings()
+            response = normalize_espn_standings(payload)
+        except Exception:
+            stale = _cache.get("response")
+            if stale is not None and _cache.get("season") == season:
+                logger.warning("WNBA standings refresh failed; serving stale cache")
+                return stale
+            raise
+        _cache["response"] = response
+        _cache["expires_at"] = time.time() + CACHE_TTL_SECONDS
+        _cache["season"] = response.season
+        return response
