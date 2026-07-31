@@ -238,3 +238,43 @@ export async function fetchWnbaLeaders(): Promise<ApiWnbaLeadersResponse> {
   }
   return res.json();
 }
+
+export type ApiWnbaStandingsRow = {
+  rank: number;
+  team_id: string;
+  abbrev: string;
+  name: string;
+  logo_url: string | null;
+  wins: number;
+  losses: number;
+  wl: string;
+  pct: string;
+  gb: string;
+  home: string;
+  away: string;
+  l10: string;
+  diff: string;
+  streak: string;
+};
+
+export type ApiWnbaStandingsConference = {
+  key: "east" | "west";
+  label: string;
+  teams: ApiWnbaStandingsRow[];
+};
+
+export type ApiWnbaStandingsResponse = {
+  season: number;
+  conferences: ApiWnbaStandingsConference[];
+};
+
+export async function fetchWnbaStandings(): Promise<ApiWnbaStandingsResponse> {
+  const res = await fetch(`${API_BASE}/api/wnba/standings`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Standings request failed: ${res.status}`);
+  }
+  return res.json();
+}
