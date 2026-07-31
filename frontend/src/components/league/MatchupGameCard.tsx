@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
+import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 import type { MatchupGame, MatchupTeam } from "./types";
 
 function TeamRow({
@@ -12,9 +13,11 @@ function TeamRow({
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-bold text-white/70">
-        {team.abbrev.slice(0, 1)}
-      </span>
+      <TeamAbbrevAvatar
+        abbrev={team.abbrev}
+        logoUrl={team.logoUrl}
+        sizeClassName="size-8"
+      />
       <span className="w-9 shrink-0 text-xs font-semibold text-white">
         {team.abbrev}
       </span>

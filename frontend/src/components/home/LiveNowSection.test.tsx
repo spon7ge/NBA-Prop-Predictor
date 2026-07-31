@@ -9,8 +9,8 @@ const liveGame: LiveGame = {
   league: "wnba",
   status: "live",
   statusLabel: "Q3 7:13",
-  away: { abbrev: "ATL", name: "Atlanta Dream", score: 36 },
-  home: { abbrev: "DAL", name: "Dallas Wings", score: 44 },
+  away: { abbrev: "ATL", name: "Atlanta Dream", score: 36, logoUrl: null },
+  home: { abbrev: "DAL", name: "Dallas Wings", score: 44, logoUrl: null },
 };
 
 const linkedLiveGame: LiveGame = {
@@ -23,8 +23,8 @@ const finalGame: LiveGame = {
   league: "wnba",
   status: "final",
   statusLabel: "Final",
-  away: { abbrev: "NYL", name: "New York Liberty", score: 90 },
-  home: { abbrev: "LAS", name: "Los Angeles Sparks", score: 80 },
+  away: { abbrev: "NYL", name: "New York Liberty", score: 90, logoUrl: null },
+  home: { abbrev: "LAS", name: "Los Angeles Sparks", score: 80, logoUrl: null },
 };
 
 describe("LiveNowSection", () => {
@@ -74,6 +74,34 @@ describe("LiveNowSection", () => {
     expect(screen.getByRole("link", { name: /Atlanta Dream/i })).toHaveAttribute(
       "href",
       "/games/401857098",
+    );
+  });
+
+  it("renders team logos when logoUrl is set", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <LiveNowSection
+          games={[
+            {
+              ...linkedLiveGame,
+              away: {
+                ...linkedLiveGame.away,
+                logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+              },
+              home: {
+                ...linkedLiveGame.home,
+                logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png",
+              },
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(2);
+    expect(images[0]).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
     );
   });
 });

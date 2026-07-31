@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 import type { HomeLeague, LiveGame } from "./types";
 import {
   LIVE_NOW_SKELETON_COUNT,
@@ -64,9 +65,11 @@ function LiveGameCard({ game }: { game: LiveGame }) {
       <div className="space-y-3">
         {[game.away, game.home].map((team) => (
           <div key={team.abbrev} className="flex items-center gap-2.5">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-bold text-white/70">
-              {team.abbrev.slice(0, 1)}
-            </span>
+            <TeamAbbrevAvatar
+              abbrev={team.abbrev}
+              logoUrl={team.logoUrl}
+              sizeClassName="size-7"
+            />
             <span className="shrink-0 text-xs font-semibold text-white">
               {team.abbrev}
             </span>

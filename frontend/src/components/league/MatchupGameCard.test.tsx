@@ -17,12 +17,14 @@ const liveGame: MatchupGame = {
     name: "Golden State Valkyries",
     score: 77,
     record: "19-8",
+    logoUrl: null,
   },
   home: {
     abbrev: "PHX",
     name: "Phoenix Mercury",
     score: 78,
     record: "10-18",
+    logoUrl: null,
   },
 };
 
@@ -81,5 +83,31 @@ describe("MatchupGameCard", () => {
     expect(screen.queryByText("78")).not.toBeInTheDocument();
     expect(screen.queryByText("Golden State Valkyries")).toBeInTheDocument();
     expect(screen.queryByText("Phoenix Mercury")).toBeInTheDocument();
+  });
+
+  it("renders team logos when logoUrl is set", () => {
+    const { container } = renderCard({
+      ...liveGame,
+      away: {
+        ...liveGame.away,
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500/gs.png",
+      },
+      home: {
+        ...liveGame.home,
+        logoUrl: "https://a.espncdn.com/i/teamlogos/wnba/500/phx.png",
+      },
+    });
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(2);
+    expect(images[0]).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/wnba/500/gs.png",
+    );
+  });
+
+  it("renders the abbrev letter when logoUrl is null", () => {
+    renderCard(liveGame);
+    expect(screen.getByText("G")).toBeInTheDocument();
+    expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
   });
 });
