@@ -7,7 +7,7 @@ type LeagueSubnavProps = {
 
 const exploreItems = [
   "Matchups",
-  "HoopVista Picks",
+  "Prop Picks",
   "Leaders",
   "Standings",
   "Playoff race",

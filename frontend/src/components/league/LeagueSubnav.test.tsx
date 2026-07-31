@@ -22,7 +22,7 @@ describe("LeagueSubnav", () => {
       "/wnba/matchups",
     );
     expect(
-      screen.getByRole("button", { name: "HoopVista Picks" }),
+      screen.getByRole("button", { name: "Prop Picks" }),
     ).toBeDisabled();
   });
 
