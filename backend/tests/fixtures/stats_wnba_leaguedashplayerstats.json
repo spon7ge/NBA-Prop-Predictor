@@ -1,0 +1,41 @@
+{
+  "resource": "leaguedashplayerstats",
+  "parameters": {
+    "LeagueID": "10",
+    "PerMode": "PerGame",
+    "Season": "2026",
+    "SeasonType": "Regular Season"
+  },
+  "resultSets": [
+    {
+      "name": "LeagueDashPlayerStats",
+      "headers": [
+        "PLAYER_ID",
+        "PLAYER_NAME",
+        "TEAM_ID",
+        "TEAM_ABBREVIATION",
+        "GP",
+        "PTS",
+        "REB",
+        "AST",
+        "STL",
+        "BLK",
+        "FG3M"
+      ],
+      "rowSet": [
+        [1001, "A'ja Wilson", 1611661319, "LVA", 25, 26.2, 9.1, 2.4, 1.2, 2.0, 0.4],
+        [1002, "Kelsey Mitchell", 1611661313, "IND", 28, 23.5, 2.1, 3.0, 1.0, 0.1, 2.8],
+        [1003, "Caitlin Clark", 1611661313, "IND", 24, 21.5, 5.0, 8.0, 1.5, 0.5, 3.0],
+        [1004, "Napheesa Collier", 1611661324, "MIN", 26, 22.0, 8.5, 3.2, 1.8, 1.5, 1.2],
+        [1005, "Breanna Stewart", 1611661313, "NYL", 22, 20.1, 7.2, 3.5, 1.1, 1.0, 1.5],
+        [1006, "Sabrina Ionescu", 1611661313, "NYL", 27, 19.8, 4.0, 6.1, 1.3, 0.3, 3.1],
+        [1007, "Alyssa Thomas", 1611661317, "PHO", 25, 14.0, 8.0, 8.3, 1.6, 0.4, 0.1],
+        [1008, "Jessica Shepard", 1611661321, "DAL", 24, 12.0, 12.1, 3.0, 0.8, 0.5, 0.2],
+        [1009, "Rhyne Howard", 1611661330, "ATL", 26, 16.0, 4.5, 3.8, 2.4, 0.6, 2.5],
+        [1010, "Marina Mabrey", 1611661325, "TOR", 25, 15.5, 3.5, 3.2, 1.0, 0.2, 3.3],
+        [1011, "Dearica Hamby", 1611661320, "LAS", 27, 17.0, 7.0, 2.5, 1.2, 0.3, 0.8],
+        [1012, "Incomplete Row", 1611661319, "LVA", null, null, null, null, null, null, null]
+      ]
+    }
+  ]
+}
