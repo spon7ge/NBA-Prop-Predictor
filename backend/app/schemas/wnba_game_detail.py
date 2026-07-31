@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from app.schemas.wnba_scoreboard import GameStatus
 
 __all__ = [
+    "GameDetailBoxScore",
+    "GameDetailBoxScorePlayer",
     "GameDetailInjuries",
     "GameDetailInjury",
     "GameDetailLatestPlay",
@@ -132,6 +134,18 @@ class GameDetailInjuries(BaseModel):
     home: list[GameDetailInjury]
 
 
+class GameDetailBoxScorePlayer(BaseModel):
+    name: str
+    did_not_play: bool
+    values: list[str]
+
+
+class GameDetailBoxScore(BaseModel):
+    columns: list[str]
+    away: list[GameDetailBoxScorePlayer]
+    home: list[GameDetailBoxScorePlayer]
+
+
 class WnbaGameDetail(BaseModel):
     espn_event_id: str
     league: Literal["wnba"] = "wnba"
@@ -150,4 +164,5 @@ class WnbaGameDetail(BaseModel):
     projected_starters: GameDetailProjectedStarters | None
     season_leaders: GameDetailSeasonLeaders | None
     injuries: GameDetailInjuries | None
+    box_score: GameDetailBoxScore | None
     fetched_at: str

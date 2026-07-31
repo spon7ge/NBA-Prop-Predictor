@@ -33,6 +33,11 @@ describe("SeasonLeaders", () => {
     expect(screen.getByText("Olivia Miles")).toBeInTheDocument();
     expect(screen.getByText("19.5")).toBeInTheDocument();
     expect(screen.getByText("Marina Mabrey")).toBeInTheDocument();
+    expect(screen.getAllByText("Points")).toHaveLength(2);
+    expect(screen.getByText("MIN")).toBeInTheDocument();
+    expect(screen.getByText("Minnesota Lynx")).toBeInTheDocument();
+    expect(screen.getByText("TOR")).toBeInTheDocument();
+    expect(screen.getByText("Toronto Tempo")).toBeInTheDocument();
   });
 
   it("renders nothing without season leaders", () => {

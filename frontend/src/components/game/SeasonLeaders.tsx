@@ -1,4 +1,8 @@
-import type { GameDetail, GameDetailSeasonLeader } from "./types";
+import type {
+  GameDetail,
+  GameDetailSeasonLeader,
+  GameDetailTeam,
+} from "./types";
 
 type SeasonLeadersProps = {
   detail: GameDetail;
@@ -6,32 +10,30 @@ type SeasonLeadersProps = {
 
 function LeaderRow({ leader }: { leader: GameDetailSeasonLeader }) {
   return (
-    <li className="text-sm text-white/80">
-      <span className="text-white/50">{leader.label}</span>
-      <div className="mt-0.5 flex items-baseline justify-between gap-2">
-        <span>{leader.name}</span>
-        <span className="font-medium text-white">{leader.value}</span>
-      </div>
+    <li className="flex items-baseline gap-3 text-sm">
+      <span className="w-16 shrink-0 text-white/45">{leader.label}</span>
+      <span className="min-w-0 flex-1 truncate font-medium text-white">
+        {leader.name}
+      </span>
+      <span className="shrink-0 font-medium text-white">{leader.value}</span>
     </li>
   );
 }
 
 function LeaderColumn({
-  abbrev,
-  color,
+  team,
   leaders,
 }: {
-  abbrev: string;
-  color: string;
+  team: GameDetailTeam;
   leaders: GameDetailSeasonLeader[];
 }) {
   return (
     <div>
-      <h3
-        className="mb-2 text-xs font-semibold uppercase tracking-wide"
-        style={{ color }}
-      >
-        {abbrev}
+      <h3 className="mb-3 flex items-baseline gap-2 text-sm">
+        <span className="font-semibold" style={{ color: team.color }}>
+          {team.abbrev}
+        </span>
+        <span className="truncate text-white/45">{team.name}</span>
       </h3>
       <ul className="space-y-2">
         {leaders.map((leader) => (
@@ -53,17 +55,9 @@ export function SeasonLeaders({ detail }: SeasonLeadersProps) {
     <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
       <h2 className="text-sm font-semibold text-white">Season leaders</h2>
 
-      <div className="mt-4 grid gap-6 md:grid-cols-2">
-        <LeaderColumn
-          abbrev={detail.away.abbrev}
-          color={detail.away.color}
-          leaders={seasonLeaders.away}
-        />
-        <LeaderColumn
-          abbrev={detail.home.abbrev}
-          color={detail.home.color}
-          leaders={seasonLeaders.home}
-        />
+      <div className="mt-4 grid gap-8 md:grid-cols-2">
+        <LeaderColumn team={detail.away} leaders={seasonLeaders.away} />
+        <LeaderColumn team={detail.home} leaders={seasonLeaders.home} />
       </div>
     </section>
   );

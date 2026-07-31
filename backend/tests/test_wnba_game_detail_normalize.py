@@ -78,6 +78,42 @@ def test_normalize_includes_win_probability_and_team_stats():
             away_value=24,
             home_value=19,
         ),
+        GameDetailTeamStat(
+            key="steals",
+            label="Steals",
+            away_value=7,
+            home_value=3,
+        ),
+        GameDetailTeamStat(
+            key="blocks",
+            label="Blocks",
+            away_value=1,
+            home_value=7,
+        ),
+        GameDetailTeamStat(
+            key="total_turnovers",
+            label="Total turnovers",
+            away_value=9,
+            home_value=10,
+        ),
+        GameDetailTeamStat(
+            key="points_in_paint",
+            label="Points in paint",
+            away_value=38,
+            home_value=40,
+        ),
+        GameDetailTeamStat(
+            key="fast_break_points",
+            label="Fast break points",
+            away_value=2,
+            home_value=14,
+        ),
+        GameDetailTeamStat(
+            key="fouls",
+            label="Fouls",
+            away_value=34,
+            home_value=23,
+        ),
     ]
 
 
@@ -108,8 +144,44 @@ def test_normalize_win_probability_allows_team_stats_only():
 
     assert detail.win_probability is not None
     assert detail.win_probability.timeline == []
-    assert len(detail.win_probability.team_stats) == 6
+    assert len(detail.win_probability.team_stats) == 12
     assert detail.win_probability.team_stats[0].label == "Field goal %"
+    assert detail.win_probability.team_stats[-1].label == "Fouls"
+
+
+def test_normalize_includes_box_score_players():
+    payload = load_fixture("espn_wnba_summary.json")
+    payload.update(load_fixture("espn_wnba_summary_with_winprobability.json"))
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.box_score is not None
+    assert detail.box_score.columns[0] == "MIN"
+    assert detail.box_score.columns[-1] == "+/-"
+    assert detail.box_score.away[0].name == "Kayla Thornton"
+    assert detail.box_score.away[0].did_not_play is False
+    assert detail.box_score.away[0].values[0] == "25"
+    assert detail.box_score.away[0].values[1] == "6"
+    assert detail.box_score.away[1].name == "Gabby Williams"
+    assert detail.box_score.away[1].did_not_play is True
+    assert detail.box_score.home[0].name == "Alyssa Thomas"
+    assert detail.box_score.home[0].values[-1] == "+4"
+
+
+def test_normalize_box_score_null_when_players_missing():
+    payload = load_fixture("espn_wnba_summary.json")
+
+    detail = normalize_espn_summary(
+        payload,
+        espn_event_id="401857098",
+        fetched_at="2026-07-30T00:00:00-04:00",
+    )
+
+    assert detail.box_score is None
 
 
 def test_normalize_win_probability_returns_none_when_missing_everything():

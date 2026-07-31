@@ -72,6 +72,36 @@
             "name": "assists",
             "label": "Assists",
             "displayValue": "24"
+          },
+          {
+            "name": "steals",
+            "label": "Steals",
+            "displayValue": "7"
+          },
+          {
+            "name": "blocks",
+            "label": "Blocks",
+            "displayValue": "1"
+          },
+          {
+            "name": "totalTurnovers",
+            "label": "Total Turnovers",
+            "displayValue": "9"
+          },
+          {
+            "name": "pointsInPaint",
+            "label": "Points in Paint",
+            "displayValue": "38"
+          },
+          {
+            "name": "fastBreakPoints",
+            "label": "Fast Break Points",
+            "displayValue": "2"
+          },
+          {
+            "name": "fouls",
+            "label": "Fouls",
+            "displayValue": "34"
           }
         ]
       },
@@ -108,6 +138,79 @@
             "name": "assists",
             "label": "Assists",
             "displayValue": "19"
+          },
+          {
+            "name": "steals",
+            "label": "Steals",
+            "displayValue": "3"
+          },
+          {
+            "name": "blocks",
+            "label": "Blocks",
+            "displayValue": "7"
+          },
+          {
+            "name": "totalTurnovers",
+            "label": "Total Turnovers",
+            "displayValue": "10"
+          },
+          {
+            "name": "pointsInPaint",
+            "label": "Points in Paint",
+            "displayValue": "40"
+          },
+          {
+            "name": "fastBreakPoints",
+            "label": "Fast Break Points",
+            "displayValue": "14"
+          },
+          {
+            "name": "fouls",
+            "label": "Fouls",
+            "displayValue": "23"
+          }
+        ]
+      }
+    ],
+    "players": [
+      {
+        "team": { "id": "129153", "abbreviation": "GS" },
+        "statistics": [
+          {
+            "names": ["MIN", "PTS", "FG", "3PT", "FT", "REB", "AST", "TO", "STL", "BLK", "OREB", "DREB", "PF", "+/-"],
+            "labels": ["MIN", "PTS", "FG", "3PT", "FT", "REB", "AST", "TO", "STL", "BLK", "OREB", "DREB", "PF", "+/-"],
+            "athletes": [
+              {
+                "starter": true,
+                "didNotPlay": false,
+                "athlete": { "displayName": "Kayla Thornton", "jersey": "5" },
+                "stats": ["25", "6", "2-7", "2-5", "0-0", "8", "2", "0", "0", "0", "4", "4", "5", "+6"]
+              },
+              {
+                "starter": false,
+                "didNotPlay": true,
+                "reason": "COACH'S DECISION",
+                "athlete": { "displayName": "Gabby Williams", "jersey": "5" },
+                "stats": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "team": { "id": "21", "abbreviation": "PHX" },
+        "statistics": [
+          {
+            "names": ["MIN", "PTS", "FG", "3PT", "FT", "REB", "AST", "TO", "STL", "BLK", "OREB", "DREB", "PF", "+/-"],
+            "labels": ["MIN", "PTS", "FG", "3PT", "FT", "REB", "AST", "TO", "STL", "BLK", "OREB", "DREB", "PF", "+/-"],
+            "athletes": [
+              {
+                "starter": true,
+                "didNotPlay": false,
+                "athlete": { "displayName": "Alyssa Thomas", "jersey": "25" },
+                "stats": ["30", "12", "5-10", "0-1", "2-2", "7", "5", "2", "1", "0", "2", "5", "3", "+4"]
+              }
+            ]
           }
         ]
       }

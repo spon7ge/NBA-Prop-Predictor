@@ -80,6 +80,12 @@ describe("PlayByPlay", () => {
           shooting: true,
         },
       ],
+      win_probability: null,
+      matchup_prediction: null,
+      projected_starters: null,
+      season_leaders: null,
+      injuries: null,
+      box_score: null,
       fetched_at: "2026-07-29T19:00:00-04:00",
     };
 

@@ -131,5 +131,20 @@ export function mapGameDetail(detail: ApiWnbaGameDetail): GameDetail {
           })),
         }
       : null,
+    boxScore: detail.box_score
+      ? {
+          columns: detail.box_score.columns,
+          away: detail.box_score.away.map((player) => ({
+            name: player.name,
+            didNotPlay: player.did_not_play,
+            values: player.values,
+          })),
+          home: detail.box_score.home.map((player) => ({
+            name: player.name,
+            didNotPlay: player.did_not_play,
+            values: player.values,
+          })),
+        }
+      : null,
   };
 }

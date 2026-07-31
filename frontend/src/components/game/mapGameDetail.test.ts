@@ -66,6 +66,7 @@ function buildApiDetail(
     projected_starters: null,
     season_leaders: null,
     injuries: null,
+    box_score: null,
     fetched_at: "2026-07-29T00:00:00Z",
     ...overrides,
   };
@@ -134,6 +135,7 @@ describe("mapGameDetail", () => {
       projectedStarters: null,
       seasonLeaders: null,
       injuries: null,
+      boxScore: null,
     });
   });
 

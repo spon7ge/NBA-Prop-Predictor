@@ -127,6 +127,18 @@ export type ApiGameDetailInjuries = {
   home: ApiGameDetailInjury[];
 };
 
+export type ApiGameDetailBoxScorePlayer = {
+  name: string;
+  did_not_play: boolean;
+  values: string[];
+};
+
+export type ApiGameDetailBoxScore = {
+  columns: string[];
+  away: ApiGameDetailBoxScorePlayer[];
+  home: ApiGameDetailBoxScorePlayer[];
+};
+
 export type ApiWnbaGameDetail = {
   espn_event_id: string;
   league: "wnba";
@@ -145,6 +157,7 @@ export type ApiWnbaGameDetail = {
   projected_starters: ApiGameDetailProjectedStarters | null;
   season_leaders: ApiGameDetailSeasonLeaders | null;
   injuries: ApiGameDetailInjuries | null;
+  box_score: ApiGameDetailBoxScore | null;
   fetched_at: string;
 };
 

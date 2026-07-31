@@ -128,6 +128,7 @@ export const detail: GameDetail = {
   projectedStarters: null,
   seasonLeaders: null,
   injuries: null,
+  boxScore: null,
 };
 
 export function buildGameDetailFixture(
@@ -173,6 +174,7 @@ export function buildScheduledDetail(
     projectedStarters: null,
     seasonLeaders: null,
     injuries: null,
+    boxScore: null,
     ...overrides,
   });
 }

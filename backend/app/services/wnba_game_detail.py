@@ -9,6 +9,8 @@ from zoneinfo import ZoneInfo
 import httpx
 
 from app.schemas.wnba_game_detail import (
+    GameDetailBoxScore,
+    GameDetailBoxScorePlayer,
     GameDetailInjuries,
     GameDetailInjury,
     GameDetailLatestPlay,
@@ -260,6 +262,12 @@ _TEAM_STAT_BY_NAME = {
     "totalrebounds": ("rebounds", "Rebounds"),
     "offensiverebounds": ("offensive_rebounds", "Offensive rebounds"),
     "assists": ("assists", "Assists"),
+    "steals": ("steals", "Steals"),
+    "blocks": ("blocks", "Blocks"),
+    "totalturnovers": ("total_turnovers", "Total turnovers"),
+    "pointsinpaint": ("points_in_paint", "Points in paint"),
+    "fastbreakpoints": ("fast_break_points", "Fast break points"),
+    "fouls": ("fouls", "Fouls"),
 }
 
 _TEAM_STAT_BY_LABEL = {
@@ -269,6 +277,12 @@ _TEAM_STAT_BY_LABEL = {
     "rebounds": ("rebounds", "Rebounds"),
     "offensive rebounds": ("offensive_rebounds", "Offensive rebounds"),
     "assists": ("assists", "Assists"),
+    "steals": ("steals", "Steals"),
+    "blocks": ("blocks", "Blocks"),
+    "total turnovers": ("total_turnovers", "Total turnovers"),
+    "points in paint": ("points_in_paint", "Points in paint"),
+    "fast break points": ("fast_break_points", "Fast break points"),
+    "fouls": ("fouls", "Fouls"),
 }
 
 
@@ -320,6 +334,12 @@ def _normalize_team_stats(payload: dict) -> list[GameDetailTeamStat]:
         ("rebounds", "Rebounds"),
         ("offensive_rebounds", "Offensive rebounds"),
         ("assists", "Assists"),
+        ("steals", "Steals"),
+        ("blocks", "Blocks"),
+        ("total_turnovers", "Total turnovers"),
+        ("points_in_paint", "Points in paint"),
+        ("fast_break_points", "Fast break points"),
+        ("fouls", "Fouls"),
     ):
         if key not in by_side["away"] or key not in by_side["home"]:
             continue
@@ -558,6 +578,89 @@ def _starters_from_summary(summary: dict, *, team_id: str) -> list[GameDetailSta
     return None
 
 
+_BOX_SCORE_COLUMNS = [
+    "MIN",
+    "PTS",
+    "FG",
+    "3PT",
+    "FT",
+    "REB",
+    "AST",
+    "TO",
+    "STL",
+    "BLK",
+    "OREB",
+    "DREB",
+    "PF",
+    "+/-",
+]
+
+
+def _players_from_boxscore_block(block: dict) -> list[GameDetailBoxScorePlayer]:
+    stats_groups = block.get("statistics") or []
+    if not stats_groups:
+        return []
+    group = stats_groups[0] if isinstance(stats_groups[0], dict) else {}
+    labels = [str(label) for label in (group.get("labels") or group.get("names") or [])]
+    label_index = {label: index for index, label in enumerate(labels)}
+    athletes = group.get("athletes") or []
+    players: list[GameDetailBoxScorePlayer] = []
+    for row in athletes:
+        if not isinstance(row, dict):
+            continue
+        athlete = row.get("athlete") or {}
+        name = str(athlete.get("displayName") or "").strip()
+        if not name:
+            continue
+        did_not_play = bool(row.get("didNotPlay"))
+        raw_stats = row.get("stats") or []
+        values: list[str] = []
+        for column in _BOX_SCORE_COLUMNS:
+            index = label_index.get(column)
+            if did_not_play or index is None or index >= len(raw_stats):
+                values.append("")
+            else:
+                values.append(str(raw_stats[index]))
+        players.append(
+            GameDetailBoxScorePlayer(
+                name=name,
+                did_not_play=did_not_play,
+                values=values,
+            )
+        )
+    return players
+
+
+def _normalize_box_score(
+    payload: dict, *, away_id: str, home_id: str
+) -> GameDetailBoxScore | None:
+    blocks = ((payload.get("boxscore") or {}).get("players") or [])
+    if not isinstance(blocks, list) or not blocks:
+        return None
+
+    by_team: dict[str, list[GameDetailBoxScorePlayer]] = {}
+    for block in blocks:
+        if not isinstance(block, dict):
+            continue
+        team_id = str((block.get("team") or {}).get("id") or "")
+        if not team_id:
+            continue
+        players = _players_from_boxscore_block(block)
+        if players:
+            by_team[team_id] = players
+
+    away = by_team.get(away_id) or []
+    home = by_team.get(home_id) or []
+    if not away and not home:
+        return None
+
+    return GameDetailBoxScore(
+        columns=list(_BOX_SCORE_COLUMNS),
+        away=away,
+        home=home,
+    )
+
+
 def _normalize_projected_starters(
     *,
     status: GameStatus,
@@ -686,6 +789,7 @@ def normalize_espn_summary(
         home_id=home_id,
         prior_game_summaries=prior_game_summaries,
     )
+    box_score = _normalize_box_score(payload, away_id=away_id, home_id=home_id)
 
     return WnbaGameDetail(
         espn_event_id=espn_event_id,
@@ -704,5 +808,6 @@ def normalize_espn_summary(
         projected_starters=projected_starters,
         season_leaders=season_leaders,
         injuries=injuries,
+        box_score=box_score,
         fetched_at=fetched_at,
     )

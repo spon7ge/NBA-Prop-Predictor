@@ -27,32 +27,32 @@ describe("WinProbabilityPanel", () => {
 
     expect(screen.getByText("Win probability")).toBeInTheDocument();
     expect(screen.getByLabelText("Win probability chart")).toBeInTheDocument();
-    expect(screen.getByText("GS")).toBeInTheDocument();
-    expect(screen.getByText("PHX")).toBeInTheDocument();
+    expect(screen.getByText("100%")).toBeInTheDocument();
+    expect(screen.getByText("50%")).toBeInTheDocument();
+    expect(screen.getByText("Team stats")).toBeInTheDocument();
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
 
-  it("renders the latest win probability point and team stats by default", () => {
+  it("renders the latest win probability point in a floating tooltip", () => {
     render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
 
     expect(screen.getByText("Win probability")).toBeInTheDocument();
-    expect(
-      screen.getByText("Above the midline favors PHX"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("10-8")).toBeInTheDocument();
+    expect(screen.getByText(/Above the midline favors/)).toBeInTheDocument();
+    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
     expect(screen.getByText("PHX 54%")).toBeInTheDocument();
     expect(screen.getByText("GS 46%")).toBeInTheDocument();
+    expect(screen.queryByText("Active state")).not.toBeInTheDocument();
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
     expect(screen.getByText("49")).toBeInTheDocument();
     expect(screen.getByText("41")).toBeInTheDocument();
   });
 
-  it("updates the active score snapshot when pointer moves near an earlier timeline point", () => {
+  it("updates the tooltip when pointer moves near an earlier timeline point", () => {
     const { container } = render(
       <WinProbabilityPanel detail={buildGameDetailFixture()} />,
     );
 
-    expect(screen.getByText("10-8")).toBeInTheDocument();
+    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
     expect(screen.getByText("PHX 54%")).toBeInTheDocument();
 
     const chart = container.querySelector("svg");
@@ -61,29 +61,29 @@ describe("WinProbabilityPanel", () => {
       ({
         left: 0,
         top: 0,
-        width: 320,
-        height: 120,
-        right: 320,
-        bottom: 120,
+        width: 640,
+        height: 140,
+        right: 640,
+        bottom: 140,
         x: 0,
         y: 0,
         toJSON: () => ({}),
       }) as DOMRect;
 
-    // Two points map to x=0 and x=320; pointer near the left selects the earlier point.
-    fireEvent.mouseMove(chart!, { clientX: 10, clientY: 60 });
+    // Plot starts after left pad; pointer near the left edge of the plot.
+    fireEvent.mouseMove(chart!, { clientX: 40, clientY: 110 });
 
-    expect(screen.getByText("2-0")).toBeInTheDocument();
+    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
     expect(screen.getByText("PHX 44%")).toBeInTheDocument();
     expect(screen.getByText("GS 56%")).toBeInTheDocument();
-    expect(screen.queryByText("10-8")).not.toBeInTheDocument();
+    expect(screen.queryByText("GS 10–8 PHX")).not.toBeInTheDocument();
   });
 
   it("lets keyboard users step away from the latest point via a single slider", async () => {
     const user = userEvent.setup();
     render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
 
-    expect(screen.getByText("10-8")).toBeInTheDocument();
+    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
 
     const slider = screen.getByRole("slider", {
       name: /win probability timeline/i,
@@ -91,14 +91,13 @@ describe("WinProbabilityPanel", () => {
     await user.tab();
     expect(slider).toHaveFocus();
 
-    // jsdom does not implement native range arrow-key stepping; change still
-    // proves a single focusable control can leave the default latest point.
     fireEvent.change(slider, { target: { value: "0" } });
 
-    expect(screen.getByText("2-0")).toBeInTheDocument();
+    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
     expect(screen.getByText("PHX 44%")).toBeInTheDocument();
     expect(screen.getByText("GS 56%")).toBeInTheDocument();
   });
+
   it("does not create a focusable marker for every dense timeline point", () => {
     const winProbability: GameDetailWinProbability = {
       summary: null,
@@ -140,7 +139,7 @@ describe("WinProbabilityPanel", () => {
       />,
     );
 
-    expect(screen.getByText("2-0")).toBeInTheDocument();
+    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
     expect(screen.getByText("PHX 44%")).toBeInTheDocument();
     expect(
       screen.getByRole("slider", { name: /win probability timeline/i }),
@@ -171,8 +170,8 @@ describe("WinProbabilityPanel", () => {
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
     expect(screen.getByText("41")).toBeInTheDocument();
     expect(screen.getByText("49")).toBeInTheDocument();
-    expect(screen.getByText("GS")).toBeInTheDocument();
-    expect(screen.getByText("PHX")).toBeInTheDocument();
+    expect(screen.getAllByText("GS").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("PHX").length).toBeGreaterThan(0);
     expect(screen.queryByRole("slider")).not.toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });

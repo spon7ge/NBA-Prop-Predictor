@@ -9,6 +9,7 @@ import { SeasonLeaders } from "@/components/game/SeasonLeaders";
 import { ShotChart } from "@/components/game/ShotChart";
 import { PlayByPlay } from "@/components/game/PlayByPlay";
 import { WinProbabilityPanel } from "@/components/game/WinProbabilityPanel";
+import { BoxScore } from "@/components/game/BoxScore";
 
 function GameDetailSkeleton() {
   return (
@@ -88,6 +89,7 @@ export function GameDetailPage() {
             <PlayByPlay detail={detail} />
           </div>
           <WinProbabilityPanel detail={detail} />
+          <BoxScore detail={detail} />
         </>
       )}
     </div>
