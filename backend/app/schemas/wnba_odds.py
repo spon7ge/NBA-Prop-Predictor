@@ -1,0 +1,18 @@
+from __future__ import annotations
+
+from pydantic import BaseModel, Field
+
+
+class WnbaOddsGame(BaseModel):
+    home_abbrev: str
+    away_abbrev: str
+    spread_team_abbrev: str | None = None
+    spread_line: float | None = None
+    total: float | None = None
+
+
+class WnbaOddsResponse(BaseModel):
+    as_of: str
+    sportsbook: str = "draftkings"
+    games: list[WnbaOddsGame] = Field(default_factory=list)
+    error: str | None = None

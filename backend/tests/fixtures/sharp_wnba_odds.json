@@ -1,0 +1,189 @@
+{
+  "data": [
+    {
+      "id": "atl-sea-spread-home",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "point_spread",
+      "selection": "ATL Dream",
+      "selection_type": "home",
+      "team_side": "home",
+      "line": -12.5,
+      "is_main_line": true,
+      "is_live": false,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "atl-sea-spread-away",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "point_spread",
+      "selection": "SEA Storm",
+      "selection_type": "away",
+      "team_side": "away",
+      "line": 12.5,
+      "is_main_line": true,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "atl-sea-total-over",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "total_points",
+      "selection": "Over",
+      "selection_type": "over",
+      "line": 179.5,
+      "is_main_line": true,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "atl-sea-total-under",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "total_points",
+      "selection": "Under",
+      "selection_type": "under",
+      "line": 179.5,
+      "is_main_line": true,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "atl-sea-alt-spread",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "point_spread",
+      "selection": "ATL Dream",
+      "selection_type": "home",
+      "line": -27.5,
+      "is_main_line": false,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "atl-sea-half-spread",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "ATL Dream",
+      "away_team": "SEA Storm",
+      "market_type": "1st_half_point_spread",
+      "selection": "ATL Dream",
+      "selection_type": "home",
+      "line": -7.5,
+      "is_main_line": true,
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA"
+      }
+    },
+    {
+      "id": "was-dal-spread-home",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_mystics_wings_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "WAS Mystics",
+      "away_team": "DAL Wings",
+      "market_type": "point_spread",
+      "selection": "WAS Mystics",
+      "selection_type": "home",
+      "team_side": "home",
+      "line": 3.5,
+      "is_main_line": true,
+      "home": null,
+      "away": {
+        "name": "Dallas Wings",
+        "abbreviation": "DAL"
+      }
+    },
+    {
+      "id": "was-dal-spread-away",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_mystics_wings_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "WAS Mystics",
+      "away_team": "DAL Wings",
+      "market_type": "point_spread",
+      "selection": "DAL Wings",
+      "selection_type": "away",
+      "team_side": "away",
+      "line": -3.5,
+      "is_main_line": true,
+      "home": null,
+      "away": {
+        "name": "Dallas Wings",
+        "abbreviation": "DAL"
+      }
+    },
+    {
+      "id": "was-dal-total-over",
+      "sportsbook": "draftkings",
+      "event_id": "wnba_mystics_wings_2026-07-31_b3",
+      "league": "wnba",
+      "home_team": "WAS Mystics",
+      "away_team": "DAL Wings",
+      "market_type": "total_points",
+      "selection": "Over",
+      "selection_type": "over",
+      "line": 167.5,
+      "is_main_line": true,
+      "home": null,
+      "away": {
+        "name": "Dallas Wings",
+        "abbreviation": "DAL"
+      }
+    }
+  ]
+}

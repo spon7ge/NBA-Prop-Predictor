@@ -26,3 +26,9 @@ CORS_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+# SharpAPI — WNBA DraftKings odds proxy (optional; empty → empty odds response)
+SHARP_API_KEY: str | None = os.environ.get("SHARP_API_KEY") or None
+# Strip accidental quotes from .env values like SHARP_API_KEY='sk_...'
+if SHARP_API_KEY:
+    SHARP_API_KEY = SHARP_API_KEY.strip().strip("'").strip('"') or None

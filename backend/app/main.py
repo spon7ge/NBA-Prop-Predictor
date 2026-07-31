@@ -16,6 +16,7 @@ from app.api.routes import (
     slates,
     wnba_game_detail,
     wnba_leaders,
+    wnba_odds,
     wnba_scoreboard,
     wnba_standings,
 )
@@ -28,8 +29,8 @@ app = FastAPI(
         "NBA prop prediction backend. Most endpoints read from Supabase "
         "(silver / gold / ml schemas) and make no NBA or Odds API calls. "
         "The exceptions are /api/wnba/scoreboard/today, /api/wnba/leaders, "
-        "/api/wnba/standings, and WNBA game detail routes, which call ESPN and "
-        "stats.wnba.com directly for live WNBA data."
+        "/api/wnba/standings, /api/wnba/odds/today, and WNBA game detail "
+        "routes, which call ESPN, stats.wnba.com, or SharpAPI for live WNBA data."
     ),
 )
 
@@ -61,4 +62,5 @@ app.include_router(slates.router, prefix="/api")
 app.include_router(wnba_scoreboard.router, prefix="/api")
 app.include_router(wnba_leaders.router, prefix="/api")
 app.include_router(wnba_standings.router, prefix="/api")
+app.include_router(wnba_odds.router, prefix="/api")
 app.include_router(wnba_game_detail.router, prefix="/api")
