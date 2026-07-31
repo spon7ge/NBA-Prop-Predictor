@@ -180,24 +180,43 @@ async def fetch_sharp_prop_rows() -> list[dict[str, Any]]:
         raise RuntimeError("SHARP_API_KEY is not configured")
 
     headers = {"X-API-Key": SHARP_API_KEY, "Accept": "application/json"}
-    params_base = {
-        "league": "wnba",
-        "sportsbook": "draftkings,fanduel",
-        "market": "props",
-        "is_main_line": "true",
-        "limit": str(PAGE_LIMIT),
-    }
 
-    rows: list[dict[str, Any]] = []
-    offset = 0
-    async with httpx.AsyncClient(timeout=FETCH_TIMEOUT_SECONDS) as client:
+    async def fetch_book(
+        client: httpx.AsyncClient, sportsbook: str
+    ) -> list[dict[str, Any]]:
+        rows: list[dict[str, Any]] = []
+        offset = 0
         for _ in range(MAX_PAGES):
-            params = {**params_base, "offset": str(offset)}
-            res = await client.get(SHARP_ODDS_URL, headers=headers, params=params)
-            res.raise_for_status()
+            params = {
+                "league": "wnba",
+                "sportsbook": sportsbook,
+                "market": "props",
+                "is_main_line": "true",
+                "limit": str(PAGE_LIMIT),
+                "offset": str(offset),
+            }
+            try:
+                res = await client.get(
+                    SHARP_ODDS_URL, headers=headers, params=params
+                )
+                res.raise_for_status()
+            except httpx.HTTPStatusError as exc:
+                # Sharp rejects deep offset (>~500) with 400; keep what we have.
+                if rows and exc.response is not None and exc.response.status_code in {
+                    400,
+                    404,
+                }:
+                    logger.warning(
+                        "Stopping Sharp %s props pagination after %s rows: %s",
+                        sportsbook,
+                        len(rows),
+                        exc,
+                    )
+                    break
+                raise
             payload = res.json()
             chunk = payload.get("data") or []
-            if not isinstance(chunk, list):
+            if not isinstance(chunk, list) or not chunk:
                 break
             rows.extend(chunk)
 
@@ -208,15 +227,21 @@ async def fetch_sharp_prop_rows() -> list[dict[str, Any]]:
             )
             if not pagination.get("has_more"):
                 break
+            # Sharp requires a cursor past ~offset 500; next_offset becomes null.
             next_offset = pagination.get("next_offset")
             if next_offset is None:
-                if not chunk:
-                    break
-                offset = offset + len(chunk)
-            else:
-                offset = int(next_offset)
+                break
+            offset = int(next_offset)
+        return rows
 
-    return rows
+    async with httpx.AsyncClient(timeout=FETCH_TIMEOUT_SECONDS) as client:
+        # Fetch books separately so FanDuel volume cannot crowd out DraftKings,
+        # and so we stay under Sharp's offset pagination limit.
+        book_rows = await asyncio.gather(
+            fetch_book(client, "fanduel"),
+            fetch_book(client, "draftkings"),
+        )
+    return [row for chunk in book_rows for row in chunk]
 
 
 async def _espn_teams_by_abbrev() -> dict[str, dict[str, str | None]]:

@@ -161,20 +161,29 @@ def test_props_route_stale_cache_on_error():
     assert len(res.json()["props"]) == 3
 
 
-def test_fetch_prop_rows_follows_top_level_pagination():
+def test_fetch_prop_rows_fetches_books_separately_and_stops_without_next_offset():
     import asyncio
 
-    pages = [
-        {
-            "data": [{"id": "fd-1", "sportsbook": "fanduel"}],
-            "pagination": {"has_more": True, "next_offset": 200},
-        },
-        {
-            "data": [{"id": "dk-1", "sportsbook": "draftkings"}],
-            "pagination": {"has_more": False},
-        },
-    ]
-    call = {"n": 0}
+    # Each book: page0 has_more+next, page1 has_more but no next_offset → stop.
+    pages_by_book = {
+        "fanduel": [
+            {
+                "data": [{"id": "fd-1", "sportsbook": "fanduel"}],
+                "pagination": {"has_more": True, "next_offset": 200},
+            },
+            {
+                "data": [{"id": "fd-2", "sportsbook": "fanduel"}],
+                "pagination": {"has_more": True, "next_offset": None},
+            },
+        ],
+        "draftkings": [
+            {
+                "data": [{"id": "dk-1", "sportsbook": "draftkings"}],
+                "pagination": {"has_more": False},
+            },
+        ],
+    }
+    calls: list[str] = []
 
     class FakeResp:
         def __init__(self, payload):
@@ -188,7 +197,7 @@ def test_fetch_prop_rows_follows_top_level_pagination():
 
     class FakeClient:
         def __init__(self, *args, **kwargs):
-            pass
+            self._idx = {"fanduel": 0, "draftkings": 0}
 
         async def __aenter__(self):
             return self
@@ -197,8 +206,12 @@ def test_fetch_prop_rows_follows_top_level_pagination():
             return None
 
         async def get(self, url, **kwargs):
-            i = call["n"]
-            call["n"] += 1
+            params = kwargs.get("params") or {}
+            book = str(params.get("sportsbook"))
+            calls.append(book)
+            pages = pages_by_book[book]
+            i = self._idx[book]
+            self._idx[book] = i + 1
             return FakeResp(pages[i])
 
     async def run():
@@ -209,5 +222,7 @@ def test_fetch_prop_rows_follows_top_level_pagination():
             return await svc.fetch_sharp_prop_rows()
 
     rows = asyncio.run(run())
-    assert call["n"] == 2
-    assert [r["sportsbook"] for r in rows] == ["fanduel", "draftkings"]
+    assert set(calls) == {"fanduel", "draftkings"}
+    assert calls.count("fanduel") == 2
+    assert calls.count("draftkings") == 1
+    assert [r["id"] for r in rows] == ["fd-1", "fd-2", "dk-1"]

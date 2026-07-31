@@ -223,13 +223,11 @@ async def fetch_sharp_odds_rows() -> list[dict[str, Any]]:
             )
             if not pagination.get("has_more"):
                 break
+            # Sharp requires a cursor past ~offset 500; next_offset becomes null.
             next_offset = pagination.get("next_offset")
             if next_offset is None:
-                if not chunk:
-                    break
-                offset = offset + len(chunk)
-            else:
-                offset = int(next_offset)
+                break
+            offset = int(next_offset)
 
     return rows
 
