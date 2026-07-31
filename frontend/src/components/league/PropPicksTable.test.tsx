@@ -66,6 +66,11 @@ describe("PropPicksTable", () => {
     expect(screen.getByText("Prop lines unavailable")).toBeInTheDocument();
   });
 
+  it("shows filter-empty copy when filters hide all rows", () => {
+    render(<PropPicksTable props={[]} filtersActive />);
+    expect(screen.getByText("No props match these filters")).toBeInTheDocument();
+  });
+
   it("shows loading skeletons", () => {
     render(<PropPicksTable props={[]} isLoading />);
     expect(screen.getByLabelText("Loading prop picks")).toBeInTheDocument();

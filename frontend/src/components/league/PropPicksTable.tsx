@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { ApiWnbaPropBookQuote, ApiWnbaPropLine } from "@/lib/api";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 
@@ -5,6 +6,9 @@ type PropPicksTableProps = {
   props: ApiWnbaPropLine[];
   isLoading?: boolean;
   isError?: boolean;
+  /** True when filters hid all rows (API still returned props). */
+  filtersActive?: boolean;
+  toolbar?: ReactNode;
 };
 
 function formatAmericanOdds(odds: number): string {
@@ -64,14 +68,22 @@ export function PropPicksTable({
   props,
   isLoading = false,
   isError = false,
+  filtersActive = false,
+  toolbar,
 }: PropPicksTableProps) {
+  const emptyCopy =
+    filtersActive && !isError
+      ? "No props match these filters"
+      : "Prop lines unavailable";
+
   return (
     <section className="mx-auto max-w-6xl space-y-3 px-4 sm:px-6">
       <h2 className="text-lg font-semibold text-white">Prop Picks</h2>
+      {toolbar}
       {isLoading ? (
         <Skeletons />
       ) : isError || props.length === 0 ? (
-        <p className="text-sm text-white/50">Prop lines unavailable</p>
+        <p className="text-sm text-white/50">{emptyCopy}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[56rem] border-collapse text-left text-sm">
