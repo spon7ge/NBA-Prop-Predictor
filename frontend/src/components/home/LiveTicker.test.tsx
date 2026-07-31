@@ -31,6 +31,17 @@ const scheduledGame: TickerGame = {
   homeScore: null,
 };
 
+const finalGame: TickerGame = {
+  id: "g3",
+  league: "wnba",
+  awayAbbrev: "CHI",
+  homeAbbrev: "MIN",
+  statusLabel: "Final",
+  status: "final",
+  awayScore: 78,
+  homeScore: 82,
+};
+
 describe("LiveTicker", () => {
   it("shows the empty copy when there are no games", () => {
     render(<LiveTicker games={[]} />);
@@ -64,9 +75,38 @@ describe("LiveTicker", () => {
     expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("shows empty copy when only non-live games are provided", () => {
+  it("shows TODAY rail and scheduled games when none are live", () => {
     render(<LiveTicker games={[scheduledGame]} />);
-    expect(screen.getByText("No live games")).toBeInTheDocument();
+    expect(screen.getByText("Today")).toBeInTheDocument();
+    expect(screen.queryByText("No live games")).not.toBeInTheDocument();
+    expect(screen.getAllByText("NYL").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("7:00 PM ET").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("shows TODAY rail and finals when the slate is finished", () => {
+    render(<LiveTicker games={[finalGame]} />);
+    expect(screen.getByText("Today")).toBeInTheDocument();
+    expect(screen.getAllByText("CHI").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("78").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Final").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("orders scheduled before finals in TODAY mode", () => {
+    const { container } = render(
+      <LiveTicker games={[finalGame, scheduledGame]} />,
+    );
+    const track = container.querySelector(".ticker-marquee-track");
+    const text = track?.textContent ?? "";
+    expect(text.indexOf("NYL")).toBeGreaterThanOrEqual(0);
+    expect(text.indexOf("NYL")).toBeLessThan(text.indexOf("CHI"));
+  });
+
+  it("keeps LIVE rail and hides scheduled when any game is live", () => {
+    render(<LiveTicker games={[scheduledGame, liveGame]} />);
+    expect(screen.getByText("Live")).toBeInTheDocument();
+    expect(screen.queryByText("Today")).not.toBeInTheDocument();
+    expect(screen.queryByText("NYL")).not.toBeInTheDocument();
+    expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
   });
 
   it("duplicates the game list for the marquee track", () => {

@@ -70,31 +70,59 @@ function TickerGameList({
 
 export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
   const liveGames = games.filter((g) => isInProgressStatus(g.status));
+  const scheduledGames = games.filter((g) => g.status === "scheduled");
+  const finalGames = games.filter((g) => g.status === "final");
+
+  const mode: "live" | "today" | "empty" =
+    liveGames.length > 0
+      ? "live"
+      : scheduledGames.length > 0 || finalGames.length > 0
+        ? "today"
+        : "empty";
+
+  const displayGames =
+    mode === "live"
+      ? liveGames
+      : mode === "today"
+        ? [...scheduledGames, ...finalGames]
+        : [];
+
+  const isToday = mode === "today";
 
   return (
     <div className="ticker-marquee border-b border-white/10 bg-[#0a0a0a]">
       <div className="mx-auto flex max-w-6xl items-center gap-4 overflow-hidden px-4 py-2 sm:px-6">
         <div className="flex shrink-0 items-center gap-2">
           <span
-            className="size-1.5 animate-pulse rounded-full bg-red-500"
+            className={
+              isToday
+                ? "size-1.5 rounded-full bg-white/40"
+                : "size-1.5 animate-pulse rounded-full bg-red-500"
+            }
             aria-hidden
           />
-          <span className="text-[10px] font-semibold tracking-widest text-red-400 uppercase">
-            Live
+          <span
+            className={
+              isToday
+                ? "text-[10px] font-semibold tracking-widest text-white/50 uppercase"
+                : "text-[10px] font-semibold tracking-widest text-red-400 uppercase"
+            }
+          >
+            {isToday ? "Today" : "Live"}
           </span>
         </div>
 
-        {liveGames.length === 0 ? (
+        {mode === "empty" ? (
           <p className="truncate text-xs text-white/40">
             {isError ? "Scoreboard unavailable" : "No live games"}
           </p>
         ) : (
           <div className="ticker-marquee-viewport min-w-0 flex-1 overflow-hidden">
             <div className="ticker-marquee-track flex w-max items-center">
-              <TickerGameList games={liveGames} keyPrefix="a" />
+              <TickerGameList games={displayGames} keyPrefix="a" />
               <div className="ticker-marquee-duplicate" aria-hidden="true">
                 <TickerGameList
-                  games={liveGames}
+                  games={displayGames}
                   keyPrefix="b"
                   interactive={false}
                 />
