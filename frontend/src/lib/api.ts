@@ -279,3 +279,29 @@ export async function fetchWnbaStandings(): Promise<ApiWnbaStandingsResponse> {
   }
   return res.json();
 }
+
+export type ApiWnbaOddsGame = {
+  home_abbrev: string;
+  away_abbrev: string;
+  spread_team_abbrev: string | null;
+  spread_line: number | null;
+  total: number | null;
+};
+
+export type ApiWnbaOddsResponse = {
+  as_of: string;
+  sportsbook: string;
+  games: ApiWnbaOddsGame[];
+  error?: string | null;
+};
+
+export async function fetchWnbaOdds(): Promise<ApiWnbaOddsResponse> {
+  const res = await fetch(`${API_BASE}/api/wnba/odds/today`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Odds request failed: ${res.status}`);
+  }
+  return res.json();
+}

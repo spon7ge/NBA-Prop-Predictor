@@ -110,4 +110,39 @@ describe("MatchupGameCard", () => {
     expect(screen.getByText("G")).toBeInTheDocument();
     expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
   });
+
+  it("shows DraftKings odds pill and caption when odds are present", () => {
+    renderCard({
+      ...liveGame,
+      odds: {
+        spreadTeamAbbrev: "ATL",
+        spreadLine: -12.5,
+        total: 178.5,
+      },
+    });
+    expect(
+      screen.getByText("Spread: ATL -12.5 · Total: 178.5"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Odds by DraftKings")).toBeInTheDocument();
+  });
+
+  it("shows a partial odds pill when only total is present", () => {
+    renderCard({
+      ...liveGame,
+      odds: {
+        spreadTeamAbbrev: null,
+        spreadLine: null,
+        total: 178.5,
+      },
+    });
+    expect(screen.getByText("Total: 178.5")).toBeInTheDocument();
+    expect(screen.getByText("Odds by DraftKings")).toBeInTheDocument();
+  });
+
+  it("omits odds pill when odds are absent", () => {
+    renderCard({ ...liveGame, odds: null });
+    expect(screen.queryByText(/Spread:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Total:/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Odds by DraftKings")).not.toBeInTheDocument();
+  });
 });

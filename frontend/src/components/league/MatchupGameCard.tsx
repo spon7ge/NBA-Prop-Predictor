@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
+import { formatOddsPill } from "./mergeMatchupOdds";
 import type { MatchupGame, MatchupTeam } from "./types";
 
 function TeamRow({
@@ -51,6 +52,7 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
         ? "border-l-sky-500"
         : "border-l-sky-400/80";
   const baseClassName = `block rounded-xl border border-l-2 border-white/10 bg-[#141414] p-4 ${accentClassName}`;
+  const oddsLabel = game.odds ? formatOddsPill(game.odds) : null;
 
   const content = (
     <div className="flex items-center gap-3">
@@ -76,6 +78,16 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
           <TeamRow team={game.away} showScore={showScores} />
           <TeamRow team={game.home} showScore={showScores} />
         </div>
+        {oddsLabel ? (
+          <div className="mt-3">
+            <span className="inline-flex max-w-full rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-white/75">
+              {oddsLabel}
+            </span>
+            <p className="mt-1 text-[10px] tracking-wide text-white/35">
+              Odds by DraftKings
+            </p>
+          </div>
+        ) : null}
       </div>
       <ChevronRight
         aria-hidden="true"

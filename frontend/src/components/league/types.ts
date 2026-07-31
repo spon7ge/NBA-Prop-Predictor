@@ -10,6 +10,12 @@ export type MatchupTeam = {
   logoUrl: string | null;
 };
 
+export type MatchupOdds = {
+  spreadTeamAbbrev: string | null;
+  spreadLine: number | null;
+  total: number | null;
+};
+
 export type MatchupGame = {
   id: string;
   espnEventId?: string | null;
@@ -20,4 +26,5 @@ export type MatchupGame = {
   venueCity?: string | null;
   away: MatchupTeam;
   home: MatchupTeam;
+  odds?: MatchupOdds | null;
 };

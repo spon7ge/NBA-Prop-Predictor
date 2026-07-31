@@ -81,3 +81,40 @@ describe("fetchGameDetail", () => {
     );
   });
 });
+
+describe("fetchWnbaOdds", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("hits /api/wnba/odds/today", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        as_of: "now",
+        sportsbook: "draftkings",
+        games: [],
+      }),
+    });
+    const { fetchWnbaOdds } = await import("./api");
+    await fetchWnbaOdds();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/wnba/odds/today",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+
+  it("throws when the response is not ok", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 502 });
+    const { fetchWnbaOdds } = await import("./api");
+    await expect(fetchWnbaOdds()).rejects.toThrow("Odds request failed: 502");
+  });
+});
