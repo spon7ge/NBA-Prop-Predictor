@@ -66,6 +66,38 @@ describe("AppRouter", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders WNBA prop picks at /wnba/prop_picks", async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        as_of: "now",
+        sportsbooks: ["fanduel", "draftkings"],
+        props: [
+          {
+            player_name: "Rhyne Howard",
+            stat: "Assists",
+            market_type: "player_assists",
+            side: "over",
+            model_prediction: null,
+            over_under_pct: null,
+            ev: null,
+            fanduel: { line: 3.5, odds_american: -114 },
+            draftkings: { line: 3.5, odds_american: -120 },
+          },
+        ],
+      }),
+    });
+    renderWithProviders(["/wnba/prop_picks"]);
+    expect(
+      await screen.findByRole("heading", { name: "Prop Picks" }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText("Rhyne Howard")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Prop Picks" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
   it("renders NBA coming-soon hub at /nba/matchups", async () => {
     renderWithProviders(["/nba/matchups"]);
     expect(

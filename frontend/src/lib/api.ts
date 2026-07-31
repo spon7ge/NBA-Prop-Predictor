@@ -305,3 +305,38 @@ export async function fetchWnbaOdds(): Promise<ApiWnbaOddsResponse> {
   }
   return res.json();
 }
+
+export type ApiWnbaPropBookQuote = {
+  line: number;
+  odds_american: number;
+};
+
+export type ApiWnbaPropLine = {
+  player_name: string;
+  stat: string;
+  market_type: string;
+  side: "over" | "under" | string;
+  model_prediction: number | null;
+  over_under_pct: number | null;
+  ev: number | null;
+  fanduel: ApiWnbaPropBookQuote | null;
+  draftkings: ApiWnbaPropBookQuote | null;
+};
+
+export type ApiWnbaPropsResponse = {
+  as_of: string;
+  sportsbooks: string[];
+  props: ApiWnbaPropLine[];
+  error?: string | null;
+};
+
+export async function fetchWnbaProps(): Promise<ApiWnbaPropsResponse> {
+  const res = await fetch(`${API_BASE}/api/wnba/props/today`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Props request failed: ${res.status}`);
+  }
+  return res.json();
+}

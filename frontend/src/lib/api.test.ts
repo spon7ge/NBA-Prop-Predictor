@@ -118,3 +118,40 @@ describe("fetchWnbaOdds", () => {
     await expect(fetchWnbaOdds()).rejects.toThrow("Odds request failed: 502");
   });
 });
+
+describe("fetchWnbaProps", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("hits /api/wnba/props/today", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        as_of: "now",
+        sportsbooks: ["fanduel", "draftkings"],
+        props: [],
+      }),
+    });
+    const { fetchWnbaProps } = await import("./api");
+    await fetchWnbaProps();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/wnba/props/today",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+
+  it("throws when the response is not ok", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 502 });
+    const { fetchWnbaProps } = await import("./api");
+    await expect(fetchWnbaProps()).rejects.toThrow("Props request failed: 502");
+  });
+});

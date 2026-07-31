@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { LeagueSubnav } from "./LeagueSubnav";
 
 describe("LeagueSubnav", () => {
-  it("links Matchups, Leaders, and Standings on WNBA; disables others", () => {
+  it("links Matchups, Prop Picks, Leaders, and Standings on WNBA; disables others", () => {
     render(
       <MemoryRouter initialEntries={["/wnba/standings"]}>
         <LeagueSubnav league="wnba" />
@@ -21,9 +21,22 @@ describe("LeagueSubnav", () => {
       "href",
       "/wnba/matchups",
     );
-    expect(
-      screen.getByRole("button", { name: "Prop Picks" }),
-    ).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Prop Picks" })).toHaveAttribute(
+      "href",
+      "/wnba/prop_picks",
+    );
+  });
+
+  it("marks Prop Picks active on /wnba/prop_picks", () => {
+    render(
+      <MemoryRouter initialEntries={["/wnba/prop_picks"]}>
+        <LeagueSubnav league="wnba" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: "Prop Picks" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 
   it("keeps Leaders and Standings disabled on NBA", () => {
