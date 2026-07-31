@@ -40,7 +40,6 @@ function previewFields() {
       ],
     },
     injuries: null,
-          box_score: null,
   };
 }
 
@@ -136,7 +135,6 @@ describe("GameDetailPage", () => {
           projected_starters: null,
           season_leaders: null,
           injuries: null,
-          box_score: null,
         }),
     });
 

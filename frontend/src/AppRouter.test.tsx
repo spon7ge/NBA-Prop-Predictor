@@ -118,7 +118,6 @@ describe("AppRouter", () => {
             projected_starters: null,
             season_leaders: null,
             injuries: null,
-          box_score: null,
             fetched_at: "",
           }),
         };
@@ -194,7 +193,6 @@ describe("AppRouter", () => {
             projected_starters: null,
             season_leaders: null,
             injuries: null,
-          box_score: null,
             fetched_at: "",
           }),
         };
