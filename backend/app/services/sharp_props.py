@@ -201,13 +201,20 @@ async def fetch_sharp_prop_rows() -> list[dict[str, Any]]:
                 break
             rows.extend(chunk)
 
-            pagination = (payload.get("meta") or {}).get("pagination") or {}
+            pagination = (
+                payload.get("pagination")
+                or (payload.get("meta") or {}).get("pagination")
+                or {}
+            )
             if not pagination.get("has_more"):
                 break
             next_offset = pagination.get("next_offset")
             if next_offset is None:
-                break
-            offset = int(next_offset)
+                if not chunk:
+                    break
+                offset = offset + len(chunk)
+            else:
+                offset = int(next_offset)
 
     return rows
 

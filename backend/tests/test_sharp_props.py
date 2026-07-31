@@ -159,3 +159,55 @@ def test_props_route_stale_cache_on_error():
 
     assert res.status_code == 200
     assert len(res.json()["props"]) == 3
+
+
+def test_fetch_prop_rows_follows_top_level_pagination():
+    import asyncio
+
+    pages = [
+        {
+            "data": [{"id": "fd-1", "sportsbook": "fanduel"}],
+            "pagination": {"has_more": True, "next_offset": 200},
+        },
+        {
+            "data": [{"id": "dk-1", "sportsbook": "draftkings"}],
+            "pagination": {"has_more": False},
+        },
+    ]
+    call = {"n": 0}
+
+    class FakeResp:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return None
+
+        async def get(self, url, **kwargs):
+            i = call["n"]
+            call["n"] += 1
+            return FakeResp(pages[i])
+
+    async def run():
+        with (
+            patch.object(svc, "SHARP_API_KEY", "sk_test"),
+            patch.object(svc.httpx, "AsyncClient", FakeClient),
+        ):
+            return await svc.fetch_sharp_prop_rows()
+
+    rows = asyncio.run(run())
+    assert call["n"] == 2
+    assert [r["sportsbook"] for r in rows] == ["fanduel", "draftkings"]
