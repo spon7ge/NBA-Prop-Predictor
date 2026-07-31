@@ -1,17 +1,15 @@
 from __future__ import annotations
 
-import logging
 from typing import Any
 
 from app.schemas.wnba_leaders import (
+    LeaderCategoryKey,
     WnbaLeaderCategory,
     WnbaLeaderRow,
     WnbaLeadersResponse,
 )
 
-logger = logging.getLogger(__name__)
-
-_CATEGORY_SPECS: list[tuple[str, str, str, str]] = [
+_CATEGORY_SPECS: list[tuple[LeaderCategoryKey, str, str, str]] = [
     # key, label, display_stat, upstream_header
     ("points", "Points", "PTS", "PTS"),
     ("rebounds", "Rebounds", "REB", "REB"),
@@ -83,13 +81,16 @@ def normalize_leaguedashplayerstats(
             scored.append((float(formatted), player, formatted))
         scored.sort(key=lambda item: item[0], reverse=True)
         leaders: list[WnbaLeaderRow] = []
-        for idx, (_num, player, formatted) in enumerate(scored[:TOP_N], start=1):
-            row = _leader_row(idx, player, formatted)
-            if row is not None:
-                leaders.append(row)
+        for _num, player, formatted in scored:
+            row = _leader_row(len(leaders) + 1, player, formatted)
+            if row is None:
+                continue
+            leaders.append(row)
+            if len(leaders) >= TOP_N:
+                break
         categories.append(
             WnbaLeaderCategory(
-                key=key,  # type: ignore[arg-type]
+                key=key,
                 label=label,
                 stat=stat,
                 leaders=leaders,

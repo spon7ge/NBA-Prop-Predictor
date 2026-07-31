@@ -63,6 +63,43 @@ def test_normalize_skips_incomplete_rows():
     assert "Incomplete Row" not in names
 
 
+def test_normalize_backfills_top_ten_when_top_stat_has_invalid_gp():
+    """Top scorer with null GP is skipped; 11th valid player fills rank 10."""
+    rows = [
+        [9001, "Bad GP Leader", "LVA", None, 30.0, 5.0, 2.0, 1.0, 1.0, 1.0],
+    ]
+    for i in range(2, 12):
+        rows.append(
+            [9000 + i, f"Player {i}", "IND", 20, 30.0 - i, 5.0, 2.0, 1.0, 1.0, 1.0]
+        )
+    payload = {
+        "resultSets": [
+            {
+                "headers": [
+                    "PLAYER_ID",
+                    "PLAYER_NAME",
+                    "TEAM_ABBREVIATION",
+                    "GP",
+                    "PTS",
+                    "REB",
+                    "AST",
+                    "STL",
+                    "BLK",
+                    "FG3M",
+                ],
+                "rowSet": rows,
+            }
+        ]
+    }
+    result = normalize_leaguedashplayerstats(payload, season=2026)
+    points = result.categories[0]
+    assert len(points.leaders) == 10
+    assert [r.rank for r in points.leaders] == list(range(1, 11))
+    assert points.leaders[0].name == "Player 2"
+    assert points.leaders[9].name == "Player 11"
+    assert "Bad GP Leader" not in {r.name for r in points.leaders}
+
+
 def test_normalize_empty_result_set():
     empty = {
         "resultSets": [
