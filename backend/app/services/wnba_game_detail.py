@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import re
 import time
 from datetime import datetime
@@ -30,6 +31,8 @@ from app.schemas.wnba_game_detail import (
 from app.schemas.wnba_scoreboard import GameStatus
 from app.services.wnba_espn_roster import enrich_starters, get_roster_index
 from app.services.wnba_rotowire_lineups import get_rotowire_starters_for_matchup
+
+logger = logging.getLogger(__name__)
 
 ET = ZoneInfo("America/New_York")
 
@@ -577,6 +580,12 @@ async def _projected_starters_from_rotowire(
             away_abbr=away_abbr, home_abbr=home_abbr
         )
     except Exception:
+        logger.warning(
+            "Rotowire projected starters fetch failed for %s @ %s",
+            away_abbr,
+            home_abbr,
+            exc_info=True,
+        )
         return None
     if rw is None:
         return None

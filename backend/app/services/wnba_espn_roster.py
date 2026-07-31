@@ -36,6 +36,7 @@ def roster_player_index(payload: dict) -> dict[str, dict[str, str | None]]:
             continue
         jersey_raw = athlete.get("jersey")
         jersey = str(jersey_raw).strip() if jersey_raw is not None else None
+        jersey = jersey or None
         position_block = athlete.get("position") or {}
         position = None
         if isinstance(position_block, dict):
@@ -56,7 +57,7 @@ def enrich_starters(
         name = str(starter.get("name") or "").strip()
         rw_position = str(starter.get("position") or "").strip()
         roster_entry = index.get(norm_player_name(name), {})
-        jersey = roster_entry.get("jersey")
+        jersey = roster_entry.get("jersey") or None
         position = rw_position or roster_entry.get("position")
         enriched.append(
             GameDetailStarter(jersey=jersey, name=name, position=position or None)
