@@ -63,7 +63,27 @@ describe("StandingsGrid", () => {
     expect(screen.getByText("Indiana Fever")).toBeInTheDocument();
     expect(screen.getByText("IND")).toBeInTheDocument();
     expect(screen.getByText("18-10")).toBeInTheDocument();
+    expect(screen.getByText("7-5")).toBeInTheDocument(); // away
+    expect(screen.getAllByText("8-2")).toHaveLength(2); // l10 (appears in both confs)
+    expect(screen.getByText("+169")).toBeInTheDocument();
+    expect(screen.getByText("W4")).toBeInTheDocument();
+    expect(screen.getByText("-12")).toBeInTheDocument();
+    expect(screen.getByText("L2")).toBeInTheDocument();
     expect(screen.getByText("Data: ESPN")).toBeInTheDocument();
+    expect(screen.getAllByRole("columnheader", { name: "Away" }).length).toBe(2);
+    expect(screen.getAllByRole("columnheader", { name: "L10" }).length).toBe(2);
+    expect(screen.getAllByRole("columnheader", { name: "Diff" }).length).toBe(2);
+    expect(screen.getAllByRole("columnheader", { name: "Strk" }).length).toBe(2);
+  });
+
+  it("uses a compact table without a forced min width", () => {
+    const { container } = render(
+      <StandingsGrid season={2026} conferences={sample} />,
+    );
+    const table = container.querySelector("table");
+    expect(table).not.toBeNull();
+    expect(table?.className).toContain("text-xs");
+    expect(table?.className).not.toContain("min-w-[720px]");
   });
 
   it("shows loading skeletons", () => {
