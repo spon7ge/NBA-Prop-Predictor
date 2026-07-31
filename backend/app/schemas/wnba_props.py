@@ -10,6 +10,8 @@ class WnbaPropBookQuote(BaseModel):
 
 class WnbaPropLine(BaseModel):
     player_name: str
+    team_abbrev: str | None = None
+    logo_url: str | None = None
     stat: str
     market_type: str
     side: str

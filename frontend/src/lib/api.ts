@@ -313,6 +313,8 @@ export type ApiWnbaPropBookQuote = {
 
 export type ApiWnbaPropLine = {
   player_name: string;
+  team_abbrev: string | null;
+  logo_url: string | null;
   stat: string;
   market_type: string;
   side: "over" | "under" | string;

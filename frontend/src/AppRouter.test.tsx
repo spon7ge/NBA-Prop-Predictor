@@ -75,6 +75,8 @@ describe("AppRouter", () => {
         props: [
           {
             player_name: "Rhyne Howard",
+            team_abbrev: "ATL",
+            logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
             stat: "Assists",
             market_type: "player_assists",
             side: "over",

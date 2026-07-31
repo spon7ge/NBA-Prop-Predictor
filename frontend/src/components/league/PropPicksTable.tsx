@@ -1,4 +1,5 @@
 import type { ApiWnbaPropBookQuote, ApiWnbaPropLine } from "@/lib/api";
+import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 
 type PropPicksTableProps = {
   props: ApiWnbaPropLine[];
@@ -49,6 +50,7 @@ function Skeletons() {
 
 const COLUMNS = [
   "Player",
+  "Team",
   "Stat",
   "O/U",
   "Model",
@@ -72,7 +74,7 @@ export function PropPicksTable({
         <p className="text-sm text-white/50">Prop lines unavailable</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
+          <table className="w-full min-w-[56rem] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-white/10 text-[10px] font-semibold tracking-[0.14em] text-white/35 uppercase">
                 {COLUMNS.map((col) => (
@@ -90,6 +92,17 @@ export function PropPicksTable({
                 >
                   <td className="px-3 py-3 font-medium text-white">
                     {row.player_name}
+                  </td>
+                  <td className="px-3 py-3">
+                    {row.team_abbrev ? (
+                      <TeamAbbrevAvatar
+                        abbrev={row.team_abbrev}
+                        logoUrl={row.logo_url}
+                        sizeClassName="size-7"
+                      />
+                    ) : (
+                      <span className="text-white/20">&nbsp;</span>
+                    )}
                   </td>
                   <td className="px-3 py-3 text-white/70">{row.stat}</td>
                   <td className="px-3 py-3 text-violet-300">

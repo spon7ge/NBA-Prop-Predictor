@@ -22,7 +22,10 @@ def clear_cache():
 
 def test_normalize_merges_books_and_both_sides():
     rows = json.loads(FIXTURE.read_text())["data"]
-    props = svc.normalize_sharp_props(rows)
+    player_teams = {
+        "rhyne howard": ("ATL", "https://cdn.sharpapi.io/teams/basketball/48.png"),
+    }
+    props = svc.normalize_sharp_props(rows, player_teams=player_teams)
     over = next(
         p for p in props if p.player_name == "Rhyne Howard" and p.side == "over"
     )
@@ -31,6 +34,8 @@ def test_normalize_merges_books_and_both_sides():
     )
     assert over.stat == "Assists"
     assert over.market_type == "player_assists"
+    assert over.team_abbrev == "ATL"
+    assert over.logo_url == "https://cdn.sharpapi.io/teams/basketball/48.png"
     assert over.model_prediction is None
     assert over.over_under_pct is None
     assert over.ev is None
@@ -54,6 +59,8 @@ def test_normalize_keeps_row_when_one_book_missing():
     assert gray.fanduel is not None
     assert gray.fanduel.line == 2.5
     assert gray.draftkings is None
+    assert gray.team_abbrev is None
+    assert gray.logo_url is None
 
 
 def test_normalize_ignores_non_props_and_alternates():
@@ -81,9 +88,15 @@ def test_props_route_returns_props_when_fetch_ok():
     async def fake_fetch():
         return payload["data"]
 
+    async def fake_teams(_rows):
+        return {
+            "rhyne howard": ("ATL", "https://cdn.sharpapi.io/teams/basketball/48.png"),
+        }
+
     with (
         patch.object(svc, "SHARP_API_KEY", "sk_test"),
         patch.object(svc, "fetch_sharp_prop_rows", side_effect=fake_fetch),
+        patch.object(svc, "build_player_team_index", side_effect=fake_teams),
     ):
         client = TestClient(app)
         res = client.get("/api/wnba/props/today")
@@ -101,6 +114,8 @@ def test_props_route_returns_props_when_fetch_ok():
     )
     assert over["fanduel"]["odds_american"] == -114
     assert over["draftkings"]["odds_american"] == -120
+    assert over["team_abbrev"] == "ATL"
+    assert over["logo_url"] == "https://cdn.sharpapi.io/teams/basketball/48.png"
 
 
 def test_props_route_empty_when_no_key():
@@ -123,9 +138,13 @@ def test_props_route_stale_cache_on_error():
     async def boom():
         raise RuntimeError("sharp down")
 
+    async def no_teams(_rows):
+        return {}
+
     with (
         patch.object(svc, "SHARP_API_KEY", "sk_test"),
         patch.object(svc, "fetch_sharp_prop_rows", side_effect=ok),
+        patch.object(svc, "build_player_team_index", side_effect=no_teams),
     ):
         client = TestClient(app)
         assert client.get("/api/wnba/props/today").status_code == 200

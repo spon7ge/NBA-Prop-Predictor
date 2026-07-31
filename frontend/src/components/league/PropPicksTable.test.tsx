@@ -6,6 +6,8 @@ import { PropPicksTable } from "./PropPicksTable";
 const sampleProps: ApiWnbaPropLine[] = [
   {
     player_name: "Rhyne Howard",
+    team_abbrev: "ATL",
+    logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
     stat: "Assists",
     market_type: "player_assists",
     side: "over",
@@ -17,6 +19,8 @@ const sampleProps: ApiWnbaPropLine[] = [
   },
   {
     player_name: "Rhyne Howard",
+    team_abbrev: "ATL",
+    logo_url: "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
     stat: "Assists",
     market_type: "player_assists",
     side: "under",
@@ -29,10 +33,11 @@ const sampleProps: ApiWnbaPropLine[] = [
 ];
 
 describe("PropPicksTable", () => {
-  it("renders player, stat, both sides, and book pills", () => {
+  it("renders player, team logo, stat, both sides, and book pills", () => {
     render(<PropPicksTable props={sampleProps} />);
 
     expect(screen.getByRole("columnheader", { name: "Player" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Team" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Model" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "O/U%" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "EV" })).toBeInTheDocument();
@@ -40,6 +45,11 @@ describe("PropPicksTable", () => {
     expect(screen.getByRole("columnheader", { name: "DraftKings" })).toBeInTheDocument();
 
     expect(screen.getAllByText("Rhyne Howard")).toHaveLength(2);
+    expect(screen.getAllByRole("presentation")).toHaveLength(2);
+    expect(screen.getAllByRole("presentation")[0]).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
+    );
     expect(screen.getByText("Over")).toBeInTheDocument();
     expect(screen.getByText("Under")).toBeInTheDocument();
     expect(screen.getAllByText("3.5 −114").length).toBeGreaterThanOrEqual(1);
