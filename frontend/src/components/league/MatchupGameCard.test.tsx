@@ -123,7 +123,8 @@ describe("MatchupGameCard", () => {
     expect(
       screen.getByText("Spread: ATL -12.5 · Total: 178.5"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Odds by DraftKings")).toBeInTheDocument();
+    expect(screen.getByText("Odds by")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "DraftKings" })).toBeInTheDocument();
   });
 
   it("shows a partial odds pill when only total is present", () => {
@@ -136,13 +137,17 @@ describe("MatchupGameCard", () => {
       },
     });
     expect(screen.getByText("Total: 178.5")).toBeInTheDocument();
-    expect(screen.getByText("Odds by DraftKings")).toBeInTheDocument();
+    expect(screen.getByText("Odds by")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "DraftKings" })).toBeInTheDocument();
   });
 
   it("omits odds pill when odds are absent", () => {
     renderCard({ ...liveGame, odds: null });
     expect(screen.queryByText(/Spread:/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Total:/)).not.toBeInTheDocument();
-    expect(screen.queryByText("Odds by DraftKings")).not.toBeInTheDocument();
+    expect(screen.queryByText("Odds by")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: "DraftKings" }),
+    ).not.toBeInTheDocument();
   });
 });

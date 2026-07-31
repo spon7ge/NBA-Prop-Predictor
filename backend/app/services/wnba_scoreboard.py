@@ -42,6 +42,7 @@ _ABBREV_ALIASES = {
     "LV": "LVA",
     "NY": "NYL",
     "PHX": "PHO",
+    "POR": "PDX",  # Sharp/ESPN POR vs stats.wnba.com PDX (Portland Fire)
     "WSH": "WAS",
 }
 

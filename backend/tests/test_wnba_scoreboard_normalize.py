@@ -596,9 +596,11 @@ def test_canonical_abbrev_aliases_espn_short_codes():
     assert canonical_abbrev("LV") == "LVA"
     assert canonical_abbrev("NY") == "NYL"
     assert canonical_abbrev("PHX") == "PHO"
+    assert canonical_abbrev("POR") == "PDX"
     assert canonical_abbrev("WSH") == "WAS"
     # Canonical spellings and unknown codes pass through unchanged.
     assert canonical_abbrev("GSV") == "GSV"
+    assert canonical_abbrev("PDX") == "PDX"
     assert canonical_abbrev("atl") == "ATL"
 
 
