@@ -1,6 +1,13 @@
 from __future__ import annotations
 
+import asyncio
+import logging
+import time
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
+
+import httpx
 
 from app.schemas.wnba_leaders import (
     LeaderCategoryKey,
@@ -8,6 +15,17 @@ from app.schemas.wnba_leaders import (
     WnbaLeaderRow,
     WnbaLeadersResponse,
 )
+
+logger = logging.getLogger(__name__)
+
+ET = ZoneInfo("America/New_York")
+STATS_URL = "https://stats.wnba.com/stats/leaguedashplayerstats"
+STATS_TIMEOUT_SECONDS = 10.0
+CACHE_TTL_SECONDS = 10 * 60
+
+_cache: dict = {}  # response, expires_at, season
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
 _CATEGORY_SPECS: list[tuple[LeaderCategoryKey, str, str, str]] = [
     # key, label, display_stat, upstream_header
@@ -97,3 +115,82 @@ def normalize_leaguedashplayerstats(
             )
         )
     return WnbaLeadersResponse(season=season, pace="per_game", categories=categories)
+
+
+def current_wnba_season_year() -> int:
+    return datetime.now(ET).year
+
+
+def _get_refresh_lock() -> asyncio.Lock:
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
+async def fetch_leaguedashplayerstats(season: int) -> dict:
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://www.wnba.com/",
+        "Accept": "application/json",
+    }
+    params = {
+        "LastNGames": "0",
+        "LeagueID": "10",
+        "MeasureType": "Base",
+        "Month": "0",
+        "OpponentTeamID": "0",
+        "PaceAdjust": "N",
+        "PerMode": "PerGame",
+        "Period": "0",
+        "PlusMinus": "N",
+        "Rank": "N",
+        "Season": str(season),
+        "SeasonType": "Regular Season",
+        "TeamID": "0",
+    }
+    async with httpx.AsyncClient(
+        timeout=STATS_TIMEOUT_SECONDS, headers=headers
+    ) as client:
+        res = await client.get(STATS_URL, params=params)
+        res.raise_for_status()
+        return res.json()
+
+
+def _fresh_cached() -> WnbaLeadersResponse | None:
+    cached = _cache.get("response")
+    if cached is None:
+        return None
+    if _cache.get("season") != current_wnba_season_year():
+        return None
+    if time.time() >= float(_cache.get("expires_at") or 0):
+        return None
+    return cached
+
+
+async def get_wnba_leaders() -> WnbaLeadersResponse:
+    fresh = _fresh_cached()
+    if fresh is not None:
+        return fresh
+
+    lock = _get_refresh_lock()
+    async with lock:
+        fresh = _fresh_cached()
+        if fresh is not None:
+            return fresh
+        season = current_wnba_season_year()
+        try:
+            payload = await fetch_leaguedashplayerstats(season)
+            response = normalize_leaguedashplayerstats(payload, season=season)
+        except Exception:
+            stale = _cache.get("response")
+            if stale is not None and _cache.get("season") == season:
+                logger.warning("WNBA leaders refresh failed; serving stale cache")
+                return stale
+            raise
+        _cache["response"] = response
+        _cache["expires_at"] = time.time() + CACHE_TTL_SECONDS
+        _cache["season"] = season
+        return response
