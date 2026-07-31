@@ -256,3 +256,29 @@ def test_get_game_detail_falls_back_to_prior_starters_when_rotowire_misses(monke
     detail = asyncio.run(svc.get_game_detail("401857099"))
     assert detail.projected_starters is not None
     assert detail.projected_starters.note == "from each team's last game"
+
+
+def test_get_game_detail_falls_back_to_prior_starters_when_rotowire_raises(monkeypatch):
+    svc.clear_game_detail_cache()
+    scheduled = load_fixture("espn_wnba_summary_scheduled_preview.json")
+    prior_away = load_fixture("espn_wnba_summary_prior_away.json")
+    prior_home = load_fixture("espn_wnba_summary_prior_home.json")
+
+    async def fake_fetch(event_id: str):
+        return {
+            "401857099": scheduled,
+            "401857069": prior_away,
+            "401857060": prior_home,
+        }[event_id]
+
+    async def fake_rw(**kwargs):
+        raise RuntimeError("RotoWire unavailable")
+
+    monkeypatch.setattr(svc, "fetch_espn_summary", fake_fetch)
+    monkeypatch.setattr(svc, "get_rotowire_starters_for_matchup", fake_rw)
+
+    res = client.get("/api/wnba/games/401857099")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["projected_starters"] is not None
+    assert body["projected_starters"]["note"] == "from each team's last game"
