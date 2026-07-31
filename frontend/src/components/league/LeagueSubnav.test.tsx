@@ -4,15 +4,19 @@ import { describe, expect, it } from "vitest";
 import { LeagueSubnav } from "./LeagueSubnav";
 
 describe("LeagueSubnav", () => {
-  it("links Matchups and Leaders on WNBA; disables others", () => {
+  it("links Matchups, Leaders, and Standings on WNBA; disables others", () => {
     render(
-      <MemoryRouter initialEntries={["/wnba/leaders"]}>
+      <MemoryRouter initialEntries={["/wnba/standings"]}>
         <LeagueSubnav league="wnba" />
       </MemoryRouter>,
     );
-    const leaders = screen.getByRole("link", { name: "Leaders" });
-    expect(leaders).toHaveAttribute("href", "/wnba/leaders");
-    expect(leaders).toHaveAttribute("aria-current", "page");
+    const standings = screen.getByRole("link", { name: "Standings" });
+    expect(standings).toHaveAttribute("href", "/wnba/standings");
+    expect(standings).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Leaders" })).toHaveAttribute(
+      "href",
+      "/wnba/leaders",
+    );
     expect(screen.getByRole("link", { name: "Matchups" })).toHaveAttribute(
       "href",
       "/wnba/matchups",
@@ -22,13 +26,14 @@ describe("LeagueSubnav", () => {
     ).toBeDisabled();
   });
 
-  it("keeps Leaders disabled on NBA", () => {
+  it("keeps Leaders and Standings disabled on NBA", () => {
     render(
       <MemoryRouter initialEntries={["/nba/matchups"]}>
         <LeagueSubnav league="nba" />
       </MemoryRouter>,
     );
     expect(screen.getByRole("button", { name: "Leaders" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Standings" })).toBeDisabled();
     expect(screen.getByRole("link", { name: "Matchups" })).toHaveAttribute(
       "href",
       "/nba/matchups",

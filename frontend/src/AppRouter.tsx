@@ -5,6 +5,7 @@ import { AboutPage } from "@/pages/AboutPage";
 import { GameDetailPage } from "@/pages/GameDetailPage";
 import { LeagueMatchupsPage } from "@/pages/LeagueMatchupsPage";
 import { LeagueLeadersPage } from "@/pages/LeagueLeadersPage";
+import { LeagueStandingsPage } from "@/pages/LeagueStandingsPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 export function AppRouter() {
@@ -19,6 +20,7 @@ export function AppRouter() {
           element={<LeagueMatchupsPage league="wnba" />}
         />
         <Route path="/wnba/leaders" element={<LeagueLeadersPage />} />
+        <Route path="/wnba/standings" element={<LeagueStandingsPage />} />
         <Route
           path="/nba/matchups"
           element={<LeagueMatchupsPage league="nba" />}
