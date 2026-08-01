@@ -58,6 +58,54 @@
   }
 }
 
+@keyframes league-logo-fade-a {
+  0%,
+  42% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50%,
+  92% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes league-logo-fade-b {
+  0%,
+  42% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  50%,
+  92% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.league-logo-slide-a {
+  animation: league-logo-fade-a 7s ease-in-out infinite;
+}
+
+.league-logo-slide-b {
+  animation: league-logo-fade-b 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .league-logo-slide {
+    animation: none;
+  }
+}
+
 .ticker-marquee-track {
   animation: ticker-marquee 40s linear infinite;
 }
