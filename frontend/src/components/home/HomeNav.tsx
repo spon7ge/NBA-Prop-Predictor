@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { BarChart3, Settings } from "lucide-react";
-import basketball from "@/assets/basketball.png";
-import wnbaBasketball from "@/assets/wnba_basketball.png";
+import nbaLogo from "@/assets/nba_logo.png";
+import wnbaLogo from "@/assets/wnba_logo.png";
 
 const leagues = [
-  { id: "nba", label: "NBA", icon: basketball },
-  { id: "wnba", label: "WNBA", icon: wnbaBasketball },
+  { id: "nba", label: "NBA", icon: nbaLogo },
+  { id: "wnba", label: "WNBA", icon: wnbaLogo },
 ] as const;
 
 export function HomeNav() {
@@ -43,7 +43,7 @@ export function HomeNav() {
                       src={league.icon}
                       alt=""
                       aria-hidden
-                      className="size-4 shrink-0 object-contain"
+                      className="size-5 shrink-0 object-contain"
                     />
                     {league.label}
                   </Link>

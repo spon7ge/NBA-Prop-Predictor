@@ -80,4 +80,12 @@ describe("HomeNav", () => {
       "page",
     );
   });
+
+  it("uses official league logos in the nav", () => {
+    const { container } = renderNav("/");
+    const images = container.querySelectorAll('nav img[aria-hidden="true"]');
+    expect(images).toHaveLength(2);
+    expect(images[0]?.getAttribute("src")).toMatch(/nba_logo/);
+    expect(images[1]?.getAttribute("src")).toMatch(/wnba_logo/);
+  });
 });

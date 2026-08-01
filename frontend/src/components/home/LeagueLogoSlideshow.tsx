@@ -32,13 +32,13 @@ export function LeagueLogoSlideshow() {
     const slide = SLIDES[0];
     return (
       <div
-        className="relative flex min-h-52 items-center justify-center sm:min-h-64"
+        className="relative flex min-h-72 items-center justify-center sm:min-h-80"
         aria-label="League logos"
       >
         <img
           src={slide.src}
           alt={slide.alt}
-          className="size-28 object-contain sm:size-32"
+          className="size-48 object-contain sm:size-56 lg:size-64"
         />
       </div>
     );
@@ -46,7 +46,7 @@ export function LeagueLogoSlideshow() {
 
   return (
     <div
-      className="relative flex min-h-52 items-center justify-center sm:min-h-64"
+      className="relative flex min-h-72 items-center justify-center sm:min-h-80"
       aria-label="League logos"
     >
       {SLIDES.map((slide, index) => (
@@ -56,8 +56,8 @@ export function LeagueLogoSlideshow() {
           alt={slide.alt}
           className={
             index === 0
-              ? "league-logo-slide league-logo-slide-a absolute size-28 object-contain sm:size-32"
-              : "league-logo-slide league-logo-slide-b absolute size-28 object-contain sm:size-32"
+              ? "league-logo-slide league-logo-slide-a absolute size-48 object-contain sm:size-56 lg:size-64"
+              : "league-logo-slide league-logo-slide-b absolute size-48 object-contain sm:size-56 lg:size-64"
           }
         />
       ))}
