@@ -448,6 +448,70 @@ def test_get_scoreboard_for_date_returns_requested_date_without_carryover():
     assert body.games == []
 
 
+def test_scoreboard_by_date_returns_requested_day():
+    target = "2026-07-28"
+    espn = json.loads((FIXTURES / "espn_wnba_scoreboard.json").read_text())
+
+    async def fake_fetch_espn(date_et: str):
+        assert date_et == target
+        return espn
+
+    async def fake_fetch_stats(date_et: str):
+        assert date_et == target
+        return {"scoreboard": {"games": []}}
+
+    with (
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=fake_fetch_espn),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=fake_fetch_stats),
+    ):
+        client = TestClient(app)
+        res = client.get("/api/wnba/scoreboard", params={"date": target})
+    assert res.status_code == 200
+    assert res.headers.get("cache-control") == "no-store"
+    assert res.json()["date"] == target
+    assert len(res.json()["games"]) >= 1
+
+
+def test_scoreboard_by_date_422_on_bad_date():
+    client = TestClient(app)
+    res = client.get("/api/wnba/scoreboard", params={"date": "07-28-2026"})
+    assert res.status_code == 422
+
+
+def test_scoreboard_by_date_empty_slate_ok():
+    target = "2026-01-01"
+
+    async def empty_espn(date_et: str):
+        return {"events": []}
+
+    async def empty_stats(date_et: str):
+        return {"scoreboard": {"games": []}}
+
+    with (
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=empty_espn),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=empty_stats),
+    ):
+        client = TestClient(app)
+        res = client.get("/api/wnba/scoreboard", params={"date": target})
+    assert res.status_code == 200
+    assert res.json()["date"] == target
+    assert res.json()["games"] == []
+
+
+def test_scoreboard_by_date_502_when_upstream_fails():
+    async def boom(date_et: str):
+        raise RuntimeError("upstream down")
+
+    with (
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=boom),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=boom),
+    ):
+        client = TestClient(app)
+        res = client.get("/api/wnba/scoreboard", params={"date": "2026-07-28"})
+    assert res.status_code == 502
+    assert res.headers.get("cache-control") == "no-store"
+
+
 def test_get_scoreboard_for_date_uses_per_date_cache():
     target = "2026-07-28"
     calls = {"n": 0}
