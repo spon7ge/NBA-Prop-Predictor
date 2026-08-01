@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { GameSection } from "./GameSection";
 import type { GameDetail } from "./types";
 
 /** Half-court in feet × 10 (ESPN: x 0–50, y 0–47 with y≈0 at the basket). */
@@ -85,7 +86,7 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
   ];
 
   return (
-    <div>
+    <GameSection>
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-sm font-semibold text-white">Shot chart</h2>
         <div className="flex items-center gap-1">
@@ -281,6 +282,6 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
           <span>Data: ESPN</span>
         </div>
       </div>
-    </div>
+    </GameSection>
   );
 }

@@ -132,4 +132,23 @@ describe("PlayByPlay", () => {
     expect(screen.queryByText("Play number 10")).not.toBeInTheDocument();
     expect(screen.queryByText("Play number 11")).not.toBeInTheDocument();
   });
+
+  it("wraps content in the quiet GameSection surface", () => {
+    render(<PlayByPlay detail={detail} />);
+    const heading = screen.getByRole("heading", { name: /play-by-play/i });
+    expect(heading.closest("section")).toHaveClass(
+      "rounded-xl",
+      "border-white/10",
+      "bg-white/[0.03]",
+      "p-4",
+    );
+  });
+
+  it("renders scoring scores in white mono without amber", () => {
+    const { container } = render(<PlayByPlay detail={detail} />);
+    expect(container.querySelector(".text-amber-300")).toBeNull();
+    const score = screen.getByText("2-3");
+    expect(score.className).toMatch(/text-white/);
+    expect(score.className).toMatch(/font-mono/);
+  });
 });

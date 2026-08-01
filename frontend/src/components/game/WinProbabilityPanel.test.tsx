@@ -215,4 +215,15 @@ describe("WinProbabilityPanel", () => {
 
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
+
+  it("wraps content in the quiet GameSection surface", () => {
+    render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
+    const heading = screen.getByRole("heading", { name: /win probability/i });
+    expect(heading.closest("section")).toHaveClass(
+      "rounded-xl",
+      "border-white/10",
+      "bg-white/[0.03]",
+      "p-4",
+    );
+  });
 });

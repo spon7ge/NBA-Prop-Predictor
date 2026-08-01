@@ -1,4 +1,5 @@
 import type { GameDetail, GameDetailBoxScorePlayer, GameDetailTeam } from "./types";
+import { GameSection } from "./GameSection";
 
 const STAT_COLS =
   "grid-cols-[minmax(8rem,1.4fr)_repeat(14,minmax(2.1rem,1fr))]";
@@ -73,7 +74,7 @@ export function BoxScore({ detail }: { detail: GameDetail }) {
   }
 
   return (
-    <section className="space-y-10 pt-2">
+    <GameSection className="space-y-10">
       {boxScore.away.length > 0 ? (
         <TeamBoxScore
           team={detail.away}
@@ -88,6 +89,6 @@ export function BoxScore({ detail }: { detail: GameDetail }) {
           columns={boxScore.columns}
         />
       ) : null}
-    </section>
+    </GameSection>
   );
 }

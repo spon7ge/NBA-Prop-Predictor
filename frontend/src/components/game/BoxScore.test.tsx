@@ -96,4 +96,28 @@ describe("BoxScore", () => {
     );
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("wraps content in the quiet GameSection surface", () => {
+    const fixture = buildGameDetailFixture({
+      boxScore: {
+        columns: ["MIN", "PTS"],
+        away: [
+          {
+            name: "Kayla Thornton",
+            didNotPlay: false,
+            values: ["25", "6"],
+          },
+        ],
+        home: [],
+      },
+    });
+    render(<BoxScore detail={fixture} />);
+    const section = screen.getByText(fixture.away.abbrev).closest("section");
+    expect(section).toHaveClass(
+      "rounded-xl",
+      "border-white/10",
+      "bg-white/[0.03]",
+      "p-4",
+    );
+  });
 });

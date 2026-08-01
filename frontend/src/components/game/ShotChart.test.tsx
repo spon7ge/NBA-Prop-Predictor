@@ -118,4 +118,15 @@ describe("ShotChart", () => {
     expect(screen.getByRole("img", { name: /C\. Player/ })).toBeInTheDocument();
     expect(screen.getByText("2/3 FG")).toBeInTheDocument();
   });
+
+  it("wraps content in the quiet GameSection surface", () => {
+    render(<ShotChart detail={detail} />);
+    const heading = screen.getByRole("heading", { name: /shot chart/i });
+    expect(heading.closest("section")).toHaveClass(
+      "rounded-xl",
+      "border-white/10",
+      "bg-white/[0.03]",
+      "p-4",
+    );
+  });
 });

@@ -1,4 +1,5 @@
 import { useEffect, useState, type MouseEvent } from "react";
+import { GameSection } from "./GameSection";
 import type { GameDetail, GameDetailWinProbabilityPoint } from "./types";
 
 const CHART_WIDTH = 640;
@@ -144,12 +145,12 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
 
   if (!data) {
     return (
-      <section>
+      <GameSection>
         <h2 className="text-sm font-semibold text-white">Win probability</h2>
         <p className="mt-2 text-sm text-white/50">
           Win probability unavailable for this game yet.
         </p>
-      </section>
+      </GameSection>
     );
   }
 
@@ -167,7 +168,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
   }
 
   return (
-    <section>
+    <GameSection>
       <h2 className="text-sm font-semibold text-white">Win probability</h2>
       <SummaryText
         homeAbbrev={detail.home.abbrev}
@@ -377,6 +378,6 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
           </div>
         </div>
       ) : null}
-    </section>
+    </GameSection>
   );
 }

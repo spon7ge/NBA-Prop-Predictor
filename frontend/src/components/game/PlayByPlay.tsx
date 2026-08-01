@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { GameSection } from "./GameSection";
 import type { GameDetail } from "./types";
 
 function periodLabel(period: number): string {
@@ -31,9 +32,9 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
     .slice(0, 10);
 
   return (
-    <div>
+    <GameSection>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[14px] font-semibold text-white">Play-by-play</h2>
+        <h2 className="text-sm font-semibold text-white">Play-by-play</h2>
         <div className="flex items-center gap-1">
           {periods.map((period) => (
             <button
@@ -88,7 +89,7 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
                 {play.text}
               </span>
               {play.scoring ? (
-                <span className="shrink-0 font-mono font-semibold text-amber-300">
+                <span className="shrink-0 font-mono font-semibold text-white">
                   {play.awayScore}-{play.homeScore}
                 </span>
               ) : null}
@@ -96,6 +97,6 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
           ))}
         </ul>
       )}
-    </div>
+    </GameSection>
   );
 }
