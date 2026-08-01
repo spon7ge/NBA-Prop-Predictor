@@ -12,7 +12,8 @@ describe("StoriesSection", () => {
     expect(
       screen.getByText("Summer League is over. Who won?"),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole("article")).toHaveLength(DEFAULT_STORIES.length);
+    expect(screen.getAllByRole("article")).toHaveLength(3);
+    expect(DEFAULT_STORIES.length).toBeGreaterThanOrEqual(3);
   });
 
   it("renders provided stories instead of defaults", () => {

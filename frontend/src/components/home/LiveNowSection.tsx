@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
-import type { HomeLeague, LiveGame } from "./types";
+import type { LiveGame } from "./types";
 import {
   LIVE_NOW_SKELETON_COUNT,
   formatGamesInProgress,
@@ -16,19 +16,14 @@ type LiveNowSectionProps = {
   isError?: boolean;
 };
 
-const leaguePill: Record<HomeLeague, string> = {
-  nba: "bg-sky-600/90 text-white",
-  wnba: "bg-violet-600/90 text-white",
-};
-
 function SkeletonGameCard() {
   return (
     <article
-      className="rounded-xl border border-white/10 bg-[#141414] p-4"
+      className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
       aria-hidden
     >
       <div className="mb-4 flex items-center justify-between">
-        <span className="h-5 w-12 animate-pulse rounded-full bg-white/10" />
+        <span className="h-4 w-10 animate-pulse rounded bg-white/10" />
         <span className="flex items-center gap-2">
           <span className="size-1.5 rounded-full bg-red-500/50" />
           <span className="h-3 w-14 animate-pulse rounded bg-white/10" />
@@ -40,7 +35,7 @@ function SkeletonGameCard() {
             <span className="size-7 shrink-0 animate-pulse rounded-full bg-white/10" />
             <span className="h-3 w-10 shrink-0 animate-pulse rounded bg-white/10" />
             <span className="h-3 min-w-0 flex-1 animate-pulse rounded bg-white/10" />
-            <span className="size-8 shrink-0 animate-pulse rounded-md bg-amber-400/15" />
+            <span className="h-5 w-8 shrink-0 animate-pulse rounded bg-white/10" />
           </div>
         ))}
       </div>
@@ -52,9 +47,7 @@ function LiveGameCard({ game }: { game: LiveGame }) {
   const card = (
     <>
       <div className="mb-4 flex items-center justify-between">
-        <span
-          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${leaguePill[game.league]}`}
-        >
+        <span className="text-[11px] font-medium tracking-wide text-white/40 uppercase">
           {game.league}
         </span>
         <span className="flex items-center gap-2 text-xs text-red-400">
@@ -76,7 +69,7 @@ function LiveGameCard({ game }: { game: LiveGame }) {
             <span className="min-w-0 flex-1 truncate text-xs text-white/45">
               {team.name}
             </span>
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-black font-mono text-sm font-bold text-amber-300">
+            <span className="shrink-0 font-mono text-sm font-semibold tracking-tight text-white">
               {team.score ?? "–"}
             </span>
           </div>
@@ -85,13 +78,14 @@ function LiveGameCard({ game }: { game: LiveGame }) {
     </>
   );
 
-  const baseCardClassName = "rounded-xl border border-white/10 bg-[#141414] p-4";
+  const baseCardClassName =
+    "rounded-xl border border-white/10 bg-white/[0.03] p-4";
 
   if (game.espnEventId) {
     return (
       <Link
         to={`/games/${game.espnEventId}`}
-        className={`block ${baseCardClassName} hover:border-white/20`}
+        className={`block ${baseCardClassName} transition-colors hover:border-white/20`}
       >
         {card}
       </Link>
@@ -114,9 +108,12 @@ export function LiveNowSection({
   const showError = isError && !isLoading && list.length === 0;
 
   return (
-    <section id="live-now" className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+    <section
+      id="live-now"
+      className="mx-auto max-w-6xl border-t border-white/10 px-4 py-16 sm:px-6 sm:py-20"
+    >
       <SectionHeading
-        title="Live Now"
+        title="Live now"
         subtitle={formatGamesInProgress(inProgressCount)}
       />
 

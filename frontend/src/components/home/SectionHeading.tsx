@@ -1,23 +1,21 @@
 type SectionHeadingProps = {
   title: string;
-  /** Optional muted subtitle shown between the title and the divider. */
+  /** Optional muted subtitle shown next to the title. */
   subtitle?: string;
 };
 
 /**
- * Shared home-section header: uppercase title, optional subtitle, then a
- * hairline rule that fills the remaining row (matches Learn the Game).
+ * Shared home-section header: display title, optional muted subtitle.
  */
 export function SectionHeading({ title, subtitle }: SectionHeadingProps) {
   return (
-    <div className="mb-5 flex items-center gap-4">
-      <h2 className="shrink-0 text-sm font-bold tracking-[0.15em] text-white/55 uppercase">
+    <div className="mb-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
         {title}
       </h2>
       {subtitle ? (
-        <p className="shrink-0 text-sm text-white/40">{subtitle}</p>
+        <p className="text-sm text-white/40">{subtitle}</p>
       ) : null}
-      <div className="h-px flex-1 bg-white/10" aria-hidden />
     </div>
   );
 }

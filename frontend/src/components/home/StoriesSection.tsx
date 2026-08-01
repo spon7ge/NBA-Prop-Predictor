@@ -1,36 +1,9 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  Clock,
-  Crown,
-  Goal,
-  ListChecks,
-  Network,
-  Trophy,
-  Waypoints,
-} from "lucide-react";
-import type { HomeLeague, Story, StoryGraphic } from "./types";
+import type { Story } from "./types";
 import { normalizeLiveGames } from "./format";
 import { SectionHeading } from "./SectionHeading";
 
 type StoriesSectionProps = {
   stories?: Story[];
-};
-
-const leaguePill: Record<HomeLeague, string> = {
-  nba: "bg-sky-600/90 text-white",
-  wnba: "bg-orange-500/90 text-white",
-};
-
-const graphicMeta: Record<
-  StoryGraphic,
-  { Icon: LucideIcon; color: string }
-> = {
-  bracket: { Icon: Trophy, color: "text-sky-400" },
-  crown: { Icon: Crown, color: "text-sky-400" },
-  arc: { Icon: Goal, color: "text-sky-400" },
-  trade: { Icon: Network, color: "text-orange-400" },
-  diamond: { Icon: Waypoints, color: "text-orange-400" },
-  checklist: { Icon: ListChecks, color: "text-orange-400" },
 };
 
 /** Default marketing stories when no `stories` prop is provided. */
@@ -93,44 +66,25 @@ export const DEFAULT_STORIES: Story[] = [
   },
 ];
 
+const DEFAULT_STORY_LIMIT = 3;
+
 function resolveStories(stories: Story[] | undefined): Story[] {
-  if (stories === undefined) return DEFAULT_STORIES;
+  if (stories === undefined) {
+    return DEFAULT_STORIES.slice(0, DEFAULT_STORY_LIMIT);
+  }
   return normalizeLiveGames(stories);
 }
 
 function StoryCard({ story }: { story: Story }) {
-  const { Icon, color } = graphicMeta[story.graphic];
-
   return (
-    <article className="flex gap-4 rounded-xl border border-white/10 bg-[#141414] p-5">
-      <div className="min-w-0 flex-1 space-y-2.5">
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${leaguePill[story.league]}`}
-          >
-            {story.league}
-          </span>
-          {story.daysLeft != null ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-red-600/90 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white uppercase">
-              <Clock className="size-2.5" aria-hidden />
-              {story.daysLeft} days left
-            </span>
-          ) : null}
-        </div>
-        <h3 className="text-base font-semibold leading-snug text-white sm:text-lg">
-          {story.headline}
-        </h3>
-        <p className="text-[11px] font-medium tracking-wide text-white/40 uppercase">
-          {story.dateLabel}
-        </p>
-        <p className="text-sm leading-relaxed text-white/50">{story.summary}</p>
-      </div>
-      <div
-        className={`flex size-16 shrink-0 items-center justify-center self-center sm:size-20 ${color}`}
-        aria-hidden
-      >
-        <Icon className="size-10 sm:size-12" strokeWidth={1.25} />
-      </div>
+    <article className="rounded-xl border border-white/10 px-5 py-6">
+      <p className="text-[11px] font-medium tracking-wide text-white/35 uppercase">
+        {story.league} · {story.dateLabel}
+      </p>
+      <h3 className="mt-3 text-base font-semibold leading-snug tracking-tight text-white sm:text-lg">
+        {story.headline}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-white/45">{story.summary}</p>
     </article>
   );
 }
@@ -139,13 +93,19 @@ export function StoriesSection({ stories }: StoriesSectionProps) {
   const list = resolveStories(stories);
 
   return (
-    <section id="stories" className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <SectionHeading title="Stories" />
+    <section
+      id="stories"
+      className="mx-auto max-w-6xl border-t border-white/10 px-4 py-16 sm:px-6 sm:py-20"
+    >
+      <SectionHeading
+        title="Stories"
+        subtitle="A few things worth knowing before tip-off."
+      />
 
       {list.length === 0 ? (
         <p className="text-sm text-white/40">No stories yet.</p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((story) => (
             <StoryCard key={story.id} story={story} />
           ))}
