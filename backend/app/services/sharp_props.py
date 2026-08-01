@@ -529,6 +529,12 @@ async def get_today_props() -> WnbaPropsResponse:
     try:
         rows = await fetch_sharp_prop_rows()
         try:
+            from src.odds.load_snapshots import maybe_persist_sharp_props
+
+            maybe_persist_sharp_props(rows, league="wnba")
+        except Exception as exc:
+            logger.warning("Sharp props snapshot persist skipped: %s", exc)
+        try:
             player_teams = await build_player_team_index(rows)
         except Exception as exc:
             logger.warning("Prop team enrichment failed: %s", exc)

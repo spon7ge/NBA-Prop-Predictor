@@ -177,6 +177,10 @@ def test_props_route_returns_props_when_fetch_ok():
         patch.object(svc, "build_player_team_index", side_effect=fake_teams),
         patch.object(svc, "fetch_latest_prizepicks", return_value=[]),
         patch.object(svc, "fetch_latest_underdog", return_value=[]),
+        patch(
+            "src.odds.load_snapshots.maybe_persist_sharp_props",
+            return_value={"fanduel": 0, "draftkings": 0},
+        ),
     ):
         client = TestClient(app)
         res = client.get("/api/wnba/props/today")
@@ -201,6 +205,33 @@ def test_props_route_returns_props_when_fetch_ok():
     assert over["draftkings"]["odds_american"] == -120
     assert over["team_abbrev"] == "ATL"
     assert over["logo_url"] == "https://cdn.sharpapi.io/teams/basketball/48.png"
+
+
+def test_props_route_ok_when_snapshot_persist_raises():
+    payload = json.loads(FIXTURE.read_text())
+
+    async def fake_fetch():
+        return payload["data"]
+
+    async def fake_teams(_rows):
+        return {}
+
+    def boom(*_a, **_k):
+        raise RuntimeError("db unavailable")
+
+    with (
+        patch.object(svc, "SHARP_API_KEY", "sk_test"),
+        patch.object(svc, "fetch_sharp_prop_rows", side_effect=fake_fetch),
+        patch.object(svc, "build_player_team_index", side_effect=fake_teams),
+        patch.object(svc, "fetch_latest_prizepicks", return_value=[]),
+        patch.object(svc, "fetch_latest_underdog", return_value=[]),
+        patch("src.odds.load_snapshots.maybe_persist_sharp_props", side_effect=boom),
+    ):
+        client = TestClient(app)
+        res = client.get("/api/wnba/props/today")
+
+    assert res.status_code == 200
+    assert len(res.json()["props"]) >= 1
 
 
 def test_props_route_empty_when_no_key():
@@ -232,6 +263,10 @@ def test_props_route_stale_cache_on_error():
         patch.object(svc, "build_player_team_index", side_effect=no_teams),
         patch.object(svc, "fetch_latest_prizepicks", return_value=[]),
         patch.object(svc, "fetch_latest_underdog", return_value=[]),
+        patch(
+            "src.odds.load_snapshots.maybe_persist_sharp_props",
+            return_value={"fanduel": 0, "draftkings": 0},
+        ),
     ):
         client = TestClient(app)
         assert client.get("/api/wnba/props/today").status_code == 200

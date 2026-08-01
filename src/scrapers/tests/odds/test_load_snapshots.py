@@ -149,3 +149,113 @@ def test_load_prizepicks_coerces_string_line_score(mock_upsert):
     load_snapshots.load_prizepicks_snapshot(projections, league="nba", scraped_at=SCRAPED)
     df = mock_upsert.call_args[0][1]
     assert df.iloc[0]["line_score"] == 10.5
+
+
+SHARP_ROWS = [
+    {
+        "sportsbook": "fanduel",
+        "is_main_line": True,
+        "market_type": "player_assists",
+        "selection_type": "over",
+        "player_name": "Rhyne Howard",
+        "stat_category": "assists",
+        "line": 3.5,
+        "odds_american": -114,
+    },
+    {
+        "sportsbook": "draftkings",
+        "is_main_line": True,
+        "market_type": "player_assists",
+        "selection_type": "under",
+        "player_name": "Rhyne Howard",
+        "stat_category": "assists",
+        "line": 3.5,
+        "odds_american": -110,
+    },
+]
+
+
+def test_load_sharp_book_snapshot_fanduel(mock_upsert):
+    count = load_snapshots.load_sharp_book_snapshot(
+        SHARP_ROWS, sportsbook="fanduel", league="wnba", scraped_at=SCRAPED
+    )
+    assert count == 1
+    table, df = mock_upsert.call_args[0]
+    assert table == "wnba_fanduel"
+    assert df.iloc[0]["player_name"] == "Rhyne Howard"
+    assert df.iloc[0]["american_price"] == -114
+    assert mock_upsert.call_args[1]["conflict_cols"] == [
+        "league",
+        "player_name",
+        "market_type",
+        "side",
+        "line_score",
+        "scraped_at",
+    ]
+
+
+def test_load_sharp_book_snapshot_skip_db(monkeypatch, mock_upsert):
+    monkeypatch.setenv("SHARP_PROPS_SKIP_DB", "1")
+    count = load_snapshots.load_sharp_book_snapshot(
+        SHARP_ROWS, sportsbook="draftkings", league="wnba", scraped_at=SCRAPED
+    )
+    assert count == 0
+    mock_upsert.assert_not_called()
+
+
+def test_should_persist_when_no_prior_snapshot(monkeypatch):
+    monkeypatch.setattr(load_snapshots, "latest_sharp_props_scraped_at", lambda league: None)
+    assert load_snapshots.should_persist_sharp_props(league="wnba") is True
+
+
+def test_should_persist_false_when_recent(monkeypatch):
+    now = datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc)
+    recent = datetime(2026, 8, 1, 11, 45, tzinfo=timezone.utc)
+    monkeypatch.setattr(
+        load_snapshots, "latest_sharp_props_scraped_at", lambda league: recent
+    )
+    assert (
+        load_snapshots.should_persist_sharp_props(
+            league="wnba", now=now, interval_minutes=30
+        )
+        is False
+    )
+
+
+def test_should_persist_true_when_stale(monkeypatch):
+    now = datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc)
+    stale = datetime(2026, 8, 1, 11, 0, tzinfo=timezone.utc)
+    monkeypatch.setattr(
+        load_snapshots, "latest_sharp_props_scraped_at", lambda league: stale
+    )
+    assert (
+        load_snapshots.should_persist_sharp_props(
+            league="wnba", now=now, interval_minutes=30
+        )
+        is True
+    )
+
+
+def test_maybe_persist_sharp_props_writes_both_books(monkeypatch, mock_upsert):
+    monkeypatch.setattr(load_snapshots, "should_persist_sharp_props", lambda **kw: True)
+    counts = load_snapshots.maybe_persist_sharp_props(
+        SHARP_ROWS, league="wnba", scraped_at=SCRAPED
+    )
+    assert counts == {"fanduel": 1, "draftkings": 1}
+    assert mock_upsert.call_count == 2
+    tables = {call.args[0] for call in mock_upsert.call_args_list}
+    assert tables == {"wnba_fanduel", "wnba_draftkings"}
+
+
+def test_maybe_persist_sharp_props_skips_when_throttled(monkeypatch, mock_upsert):
+    monkeypatch.setattr(load_snapshots, "should_persist_sharp_props", lambda **kw: False)
+    counts = load_snapshots.maybe_persist_sharp_props(SHARP_ROWS, league="wnba")
+    assert counts == {"fanduel": 0, "draftkings": 0}
+    mock_upsert.assert_not_called()
+
+
+def test_maybe_persist_sharp_props_swallows_write_errors(monkeypatch, mock_upsert):
+    monkeypatch.setattr(load_snapshots, "should_persist_sharp_props", lambda **kw: True)
+    mock_upsert.side_effect = RuntimeError("db down")
+    counts = load_snapshots.maybe_persist_sharp_props(SHARP_ROWS, league="wnba")
+    assert counts == {"fanduel": 0, "draftkings": 0}

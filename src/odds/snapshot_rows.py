@@ -90,3 +90,74 @@ def underdog_picks_to_rows(
         )
 
     return rows
+
+
+_VALID_SIDES = frozenset({"over", "under"})
+_SHARP_BOOKS = frozenset({"fanduel", "draftkings"})
+
+
+def _sharp_player_name(row: dict) -> str | None:
+    name = row.get("player_name") or row.get("selection")
+    if not name:
+        return None
+    text = str(name).strip()
+    return text or None
+
+
+def sharp_props_to_book_rows(
+    rows: list[dict],
+    *,
+    sportsbook: str,
+    league: str,
+    scraped_at: datetime,
+) -> list[dict]:
+    """Map Sharp prop API rows to odds.wnba_{fanduel|draftkings} row dicts."""
+    book = sportsbook.lower().strip()
+    if book not in _SHARP_BOOKS:
+        raise ValueError(f"unsupported sportsbook: {sportsbook}")
+
+    out: list[dict] = []
+    league_key = league.lower()
+
+    for row in rows:
+        if not row.get("is_main_line", False):
+            continue
+        if str(row.get("sportsbook") or "").lower() != book:
+            continue
+        market = str(row.get("market_type") or "")
+        if not market.startswith("player_"):
+            continue
+        side = str(row.get("selection_type") or "").lower()
+        if side not in _VALID_SIDES:
+            continue
+        player = _sharp_player_name(row)
+        if not player:
+            continue
+        line_raw = row.get("line")
+        odds_raw = row.get("odds_american")
+        if line_raw is None or odds_raw is None:
+            continue
+        try:
+            line_score = float(line_raw)
+            american_price = int(odds_raw)
+        except (TypeError, ValueError):
+            continue
+
+        stat_category = row.get("stat_category")
+        if stat_category is not None:
+            stat_category = str(stat_category).strip() or None
+
+        out.append(
+            {
+                "league": league_key,
+                "player_name": player,
+                "market_type": market,
+                "stat_category": stat_category,
+                "side": side,
+                "line_score": line_score,
+                "american_price": american_price,
+                "scraped_at": scraped_at,
+            }
+        )
+
+    return out

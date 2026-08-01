@@ -43,7 +43,7 @@ describe("PropPicksTable", () => {
     expect(screen.getByRole("columnheader", { name: "Player" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Team" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Model" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "O/U%" })).toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: "O/U%" })).not.toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "EV" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "FanDuel" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "DraftKings" })).toBeInTheDocument();

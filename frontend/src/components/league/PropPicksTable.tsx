@@ -65,7 +65,6 @@ const COLUMNS = [
   "Stat",
   "O/U",
   "Model",
-  "O/U%",
   "EV",
   ...BOOK_COLUMNS.map((b) => b.label),
 ] as const;
@@ -126,7 +125,6 @@ export function PropPicksTable({
                   <td className="px-3 py-3 text-violet-300">
                     <SideLabel side={row.side} />
                   </td>
-                  <td className="px-3 py-3 text-white/20" />
                   <td className="px-3 py-3 text-white/20" />
                   <td className="px-3 py-3 text-white/20" />
                   {BOOK_COLUMNS.map((book) => (
