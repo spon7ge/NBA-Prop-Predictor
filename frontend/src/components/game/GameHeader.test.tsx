@@ -89,4 +89,36 @@ describe("GameHeader", () => {
     });
     expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
   });
+
+  it("uses red live accents, not violet", () => {
+    const { container } = renderHeader({ status: "live", statusLabel: "4:13 - 1st" });
+    expect(container.querySelector(".bg-violet-500")).toBeNull();
+    expect(container.querySelector(".bg-red-500")).not.toBeNull();
+    expect(container.querySelector(".text-red-400")).not.toBeNull();
+  });
+
+  it("does not pulse a live accent when final", () => {
+    const { container } = renderHeader({
+      status: "final",
+      statusLabel: "Final",
+    });
+    expect(container.querySelector(".bg-red-500")).toBeNull();
+    expect(container.querySelector(".bg-violet-500")).toBeNull();
+    expect(container.querySelector(".animate-pulse")).toBeNull();
+  });
+
+  it("renders scores in white mono without amber chrome", () => {
+    const { container } = renderHeader();
+    expect(container.querySelector(".text-amber-300")).toBeNull();
+    const score = screen.getByText("10");
+    expect(score.className).toMatch(/text-white/);
+    expect(score.className).toMatch(/font-mono/);
+  });
+
+  it("uses the quiet surface on the scoreboard card", () => {
+    const { container } = renderHeader();
+    expect(container.querySelector(".bg-\\[\\#141414\\]")).toBeNull();
+    const card = screen.getByText("Golden State Valkyries").closest("div.rounded-xl");
+    expect(card).toHaveClass("border-white/10", "bg-white/[0.03]", "p-4");
+  });
 });

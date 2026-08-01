@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { GAME_SECTION_SURFACE } from "./GameSection";
 import type { GameDetail, GameDetailTeam } from "./types";
 
 const statusAccent: Record<GameDetail["status"], string> = {
@@ -23,9 +24,9 @@ function TeamLogo({ url }: { url: string }) {
   );
 }
 
-function ScoreBox({ score }: { score: number | null }) {
+function ScoreValue({ score }: { score: number | null }) {
   return (
-    <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-black font-mono text-xl font-bold text-amber-300">
+    <span className="shrink-0 font-mono text-xl font-semibold tracking-tight text-white">
       {score ?? "–"}
     </span>
   );
@@ -43,7 +44,7 @@ function TeamRow({ team }: { team: GameDetailTeam }) {
           {team.name}
         </span>
       </span>
-      <ScoreBox score={team.score} />
+      <ScoreValue score={team.score} />
     </div>
   );
 }
@@ -73,19 +74,12 @@ export function GameHeader({ detail }: { detail: GameDetail }) {
         </span>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+      <div className={GAME_SECTION_SURFACE}>
         <p className="mb-3 flex items-center gap-2 text-[14px] text-white/55">
-          {inProgress ? (
-            <span
-              className="size-1.5 shrink-0 rounded-full bg-violet-500"
-              aria-hidden
-            />
-          ) : (
-            <span
-              className="size-1.5 shrink-0 rounded-full bg-white/25"
-              aria-hidden
-            />
-          )}
+          <span
+            className="size-1.5 shrink-0 rounded-full bg-white/25"
+            aria-hidden
+          />
           <span>
             <span className="text-white/80">{detail.statusLabel}</span>
             {detail.venue ? (
