@@ -5,13 +5,17 @@ import { PropPicksTable } from "@/components/league/PropPicksTable";
 import {
   collectStatOptions,
   collectTeamOptions,
+  excludePropsFromFinalGames,
   filterPropLines,
 } from "@/components/league/filterPropLines";
 import { useWnbaProps } from "@/hooks/useWnbaProps";
+import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function LeaguePropPicksPage() {
   const { data, isLoading, isError, isFetched } = useWnbaProps();
+  const { games } = useWnbaScoreboard();
   const props = data?.props ?? [];
+  const activeProps = excludePropsFromFinalGames(props, games);
   const showError = isError && !data;
   const showLoading = isLoading && !isFetched;
   const apiEmpty =
@@ -32,7 +36,7 @@ export function LeaguePropPicksPage() {
     selectedSides.size > 0 ||
     selectedTeams.size > 0;
 
-  const filtered = filterPropLines(props, {
+  const filtered = filterPropLines(activeProps, {
     stats: selectedStats,
     sides: selectedSides,
     teams: selectedTeams,
@@ -45,12 +49,12 @@ export function LeaguePropPicksPage() {
         props={filtered}
         isLoading={showLoading}
         isError={apiEmpty}
-        filtersActive={filtersActive && !apiEmpty && props.length > 0}
+        filtersActive={filtersActive && !apiEmpty && activeProps.length > 0}
         toolbar={
-          !showLoading && !apiEmpty && props.length > 0 ? (
+          !showLoading && !apiEmpty && activeProps.length > 0 ? (
             <PropPicksFilters
-              stats={collectStatOptions(props)}
-              teams={collectTeamOptions(props)}
+              stats={collectStatOptions(activeProps)}
+              teams={collectTeamOptions(activeProps)}
               selectedStats={selectedStats}
               selectedSides={selectedSides}
               selectedTeams={selectedTeams}
