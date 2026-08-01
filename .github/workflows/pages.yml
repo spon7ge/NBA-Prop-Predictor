@@ -33,6 +33,13 @@ jobs:
       - name: Install backend deps
         run: pip install -r backend/requirements-dev.txt
 
+      - name: Check OpenAPI snapshot is up to date
+        env:
+          PYTHONPATH: backend
+        run: |
+          python scripts/export_openapi.py
+          git diff --exit-code -- frontend/openapi.json
+
       - name: Run pytest
         env:
           PYTHONPATH: backend
@@ -54,6 +61,12 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
+
+      - name: Check generated API types are up to date
+        working-directory: frontend
+        run: |
+          npm run generate:api
+          git diff --exit-code -- src/lib/api.schema.d.ts
 
       - name: Run vitest
         working-directory: frontend
