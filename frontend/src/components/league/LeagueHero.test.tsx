@@ -10,6 +10,7 @@ describe("LeagueHero", () => {
       screen.getByRole("heading", { name: /women.?s basketball/i }),
     ).toBeInTheDocument();
     expect(screen.getByText("WED, JUL 29")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /wnba logo/i })).toBeInTheDocument();
   });
 
   it("renders NBA hero copy", () => {
@@ -17,6 +18,7 @@ describe("LeagueHero", () => {
     expect(
       screen.getByRole("heading", { name: /men.?s basketball/i }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /nba logo/i })).toBeInTheDocument();
   });
 
   it("formats slate dates in ET", () => {

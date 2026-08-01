@@ -47,8 +47,8 @@ export function LeagueHero({ league, dateEt }: LeagueHeroProps) {
 
   return (
     <section className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-16">
-      <div className="relative overflow-hidden border-b border-white/10 pb-10 sm:pb-12">
-        <div className="relative z-10 max-w-2xl">
+      <div className="grid items-center gap-8 border-b border-white/10 pb-10 sm:grid-cols-[1.2fr_0.8fr] sm:gap-12 sm:pb-12">
+        <div className="max-w-2xl">
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <span className="text-[11px] font-medium tracking-[0.18em] text-white/40 uppercase">
               {content.label}
@@ -68,12 +68,13 @@ export function LeagueHero({ league, dateEt }: LeagueHeroProps) {
           </p>
         </div>
 
-        <img
-          src={content.image}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute -right-4 -bottom-10 size-40 object-contain opacity-[0.12] sm:right-4 sm:size-52"
-        />
+        <div className="flex justify-center sm:justify-end">
+          <img
+            src={content.image}
+            alt={`${content.label} logo`}
+            className="size-36 object-contain sm:size-44 lg:size-52"
+          />
+        </div>
       </div>
     </section>
   );
