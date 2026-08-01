@@ -1,4 +1,4 @@
-import type { ApiWnbaPropLine } from "@/lib/api";
+import type { ApiWnbaGame, ApiWnbaPropLine } from "@/lib/api";
 
 export type PropFilterSelection = {
   stats: Set<string>;
@@ -43,4 +43,23 @@ export function collectTeamOptions(props: ApiWnbaPropLine[]): TeamFilterOption[]
   return [...byAbbrev.entries()]
     .map(([abbrev, logoUrl]) => ({ abbrev, logoUrl }))
     .sort((a, b) => a.abbrev.localeCompare(b.abbrev));
+}
+
+export function excludePropsFromFinalGames(
+  props: ApiWnbaPropLine[],
+  games: ApiWnbaGame[] | undefined | null,
+): ApiWnbaPropLine[] {
+  if (!games || games.length === 0) return props;
+
+  const finalTeams = new Set<string>();
+  for (const g of games) {
+    if (g.status !== "final") continue;
+    if (g.home?.abbrev) finalTeams.add(g.home.abbrev);
+    if (g.away?.abbrev) finalTeams.add(g.away.abbrev);
+  }
+  if (finalTeams.size === 0) return props;
+
+  return props.filter(
+    (row) => !row.team_abbrev || !finalTeams.has(row.team_abbrev),
+  );
 }

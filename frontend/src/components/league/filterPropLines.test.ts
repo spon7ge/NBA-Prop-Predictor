@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { ApiWnbaPropLine } from "@/lib/api";
+import type { ApiWnbaGame, ApiWnbaPropLine } from "@/lib/api";
 import {
   collectStatOptions,
   collectTeamOptions,
+  excludePropsFromFinalGames,
   filterPropLines,
   type PropFilterSelection,
 } from "./filterPropLines";
@@ -114,5 +115,68 @@ describe("collectStatOptions / collectTeamOptions", () => {
       { abbrev: "ATL", logoUrl: "atl.png" },
       { abbrev: "SEA", logoUrl: "sea.png" },
     ]);
+  });
+});
+
+function game(
+  partial: Partial<ApiWnbaGame> & {
+    status: ApiWnbaGame["status"];
+    homeAbbrev: string;
+    awayAbbrev: string;
+  },
+): ApiWnbaGame {
+  return {
+    id: partial.id ?? "g1",
+    espn_event_id: null,
+    league: "wnba",
+    status: partial.status,
+    status_label: partial.status_label ?? partial.status,
+    start_time_et: "7:00 PM ET",
+    away: {
+      abbrev: partial.awayAbbrev,
+      name: partial.awayAbbrev,
+      score: null,
+      logo_url: null,
+    },
+    home: {
+      abbrev: partial.homeAbbrev,
+      name: partial.homeAbbrev,
+      score: null,
+      logo_url: null,
+    },
+  };
+}
+
+describe("excludePropsFromFinalGames", () => {
+  it("removes props for both teams in a final game", () => {
+    const games = [game({ status: "final", homeAbbrev: "ATL", awayAbbrev: "SEA" })];
+    const out = excludePropsFromFinalGames(rows, games);
+    expect(out.map((r) => r.player_name)).toEqual(["Unknown"]);
+  });
+
+  it("keeps props for live and scheduled games", () => {
+    const games = [
+      game({ status: "live", homeAbbrev: "ATL", awayAbbrev: "CHI", id: "live" }),
+      game({
+        status: "scheduled",
+        homeAbbrev: "SEA",
+        awayAbbrev: "LAS",
+        id: "sched",
+      }),
+    ];
+    const out = excludePropsFromFinalGames(rows, games);
+    expect(out).toEqual(rows);
+  });
+
+  it("keeps rows with null team_abbrev", () => {
+    const games = [game({ status: "final", homeAbbrev: "ATL", awayAbbrev: "SEA" })];
+    const out = excludePropsFromFinalGames(rows, games);
+    expect(out.some((r) => r.team_abbrev == null)).toBe(true);
+  });
+
+  it("does not filter when games are empty or undefined", () => {
+    expect(excludePropsFromFinalGames(rows, [])).toEqual(rows);
+    expect(excludePropsFromFinalGames(rows, undefined)).toEqual(rows);
+    expect(excludePropsFromFinalGames(rows, null)).toEqual(rows);
   });
 });
