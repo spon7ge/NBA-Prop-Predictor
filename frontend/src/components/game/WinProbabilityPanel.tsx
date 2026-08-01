@@ -1,136 +1,13 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import { GameSection } from "./GameSection";
-import type { GameDetail, GameDetailWinProbabilityPoint } from "./types";
-
-const CHART_WIDTH = 640;
-const CHART_HEIGHT = 140;
-const CHART_PAD_LEFT = 36;
-const CHART_PAD_RIGHT = 8;
-const CHART_PAD_TOP = 8;
-const CHART_PAD_BOTTOM = 6;
-const PLOT_WIDTH = CHART_WIDTH - CHART_PAD_LEFT - CHART_PAD_RIGHT;
-const PLOT_HEIGHT = CHART_HEIGHT - CHART_PAD_TOP - CHART_PAD_BOTTOM;
-const Y_LABEL_X = CHART_PAD_LEFT - 8;
-
-function xForIndex(index: number, count: number): number {
-  if (count <= 1) return CHART_PAD_LEFT + PLOT_WIDTH / 2;
-  return CHART_PAD_LEFT + (index / (count - 1)) * PLOT_WIDTH;
-}
-
-function yForPct(pct: number): number {
-  return CHART_PAD_TOP + PLOT_HEIGHT - (pct / 100) * PLOT_HEIGHT;
-}
-
-function nearestIndexForClientX(
-  clientX: number,
-  rect: DOMRect,
-  count: number,
-): number {
-  if (count <= 1) return 0;
-  const plotLeft = rect.left + (CHART_PAD_LEFT / CHART_WIDTH) * rect.width;
-  const plotWidth = (PLOT_WIDTH / CHART_WIDTH) * rect.width;
-  const ratio = Math.min(Math.max((clientX - plotLeft) / plotWidth, 0), 1);
-  return Math.round(ratio * (count - 1));
-}
-
-function buildWinProbabilityPath(
-  points: GameDetailWinProbabilityPoint[],
-): { line: string; area: string } {
-  if (points.length === 0) {
-    return { line: "", area: "" };
-  }
-
-  const coords = points.map((point, index) => ({
-    x: xForIndex(index, points.length),
-    y: yForPct(point.homeWinPct),
-  }));
-
-  const line = coords
-    .map((c, i) => `${i === 0 ? "M" : "L"}${c.x} ${c.y}`)
-    .join(" ");
-
-  const midY = yForPct(50);
-  const first = coords[0];
-  const last = coords[coords.length - 1];
-  const area = [
-    `M${first.x} ${midY}`,
-    ...coords.map((c) => `L${c.x} ${c.y}`),
-    `L${last.x} ${midY}`,
-    "Z",
-  ].join(" ");
-
-  return { line, area };
-}
-
-function SummaryText({
-  homeAbbrev,
-  homeColor,
-}: {
-  homeAbbrev: string;
-  homeColor: string;
-}) {
-  return (
-    <p className="mt-1 text-xs text-white/50">
-      Above the midline favors{" "}
-      <span className="font-medium" style={{ color: homeColor }}>
-        {homeAbbrev}
-      </span>
-    </p>
-  );
-}
-
-function ActiveTooltip({
-  detail,
-  point,
-  index,
-  count,
-}: {
-  detail: GameDetail;
-  point: GameDetailWinProbabilityPoint;
-  index: number;
-  count: number;
-}) {
-  const markerX = xForIndex(index, count);
-  const markerY = yForPct(point.homeWinPct);
-  const placeLeft = markerX > CHART_PAD_LEFT + PLOT_WIDTH * 0.75;
-  const homeLeads = point.homeWinPct >= point.awayWinPct;
-
-  const leftPct = (markerX / CHART_WIDTH) * 100;
-  const topPct = (markerY / CHART_HEIGHT) * 100;
-
-  return (
-    <div
-      className="pointer-events-none absolute z-10"
-      style={{
-        left: `${leftPct}%`,
-        top: `${topPct}%`,
-        transform: placeLeft
-          ? "translate(calc(-100% - 12px), -50%)"
-          : "translate(12px, -50%)",
-      }}
-    >
-      <div className="whitespace-nowrap rounded-md border border-white/10 bg-black px-2.5 py-1.5">
-        <p className="font-mono text-xs font-semibold leading-tight text-white">
-          {detail.away.abbrev} {point.awayScore}–{point.homeScore}{" "}
-          {detail.home.abbrev}
-        </p>
-        <p className="mt-0.5 text-[11px] leading-tight">
-          <span
-            className={homeLeads ? "font-semibold text-white" : "text-white/45"}
-          >
-            {detail.home.abbrev} {point.homeWinPct}%
-          </span>
-          <span className="text-white/35"> · </span>
-          <span
-            className={homeLeads ? "text-white/45" : "font-semibold text-white"}
-          >
-            {detail.away.abbrev} {point.awayWinPct}%
-          </span>
-        </p>
-      </div>
-    </div>
-  );
-}
+import type { GameDetail } from "./types";
+import {
+  buildSplitSeriesPaths,
+  CHART_GEOMETRY,
+  nearestIndexForClientX,
+  xForIndex,
+  yForPct,
+} from "./winProbabilityPaths";
 
 export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
   const data = detail.winProbability;
@@ -154,47 +31,71 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
     );
   }
 
+  const scrub = Math.min(
+    Math.max(activeIndex, 0),
+    Math.max(points.length - 1, 0),
+  );
+  const paths = buildSplitSeriesPaths(points, scrub);
   const activePoint =
-    points.length > 0 ? (points[activeIndex] ?? points[points.length - 1]) : null;
-  const path = buildWinProbabilityPath(points);
+    points.length > 0 ? (points[scrub] ?? points[points.length - 1]) : null;
   const midY = yForPct(50);
   const gridXs = [0.25, 0.5, 0.75].map(
-    (ratio) => CHART_PAD_LEFT + ratio * PLOT_WIDTH,
+    (ratio) => CHART_GEOMETRY.padLeft + ratio * CHART_GEOMETRY.plotWidth,
   );
+
+  const vividProps = {
+    fill: "none" as const,
+    strokeWidth: 2.25,
+    strokeLinejoin: "round" as const,
+    strokeLinecap: "round" as const,
+    "data-wp-segment": "vivid",
+  };
+  const mutedProps = {
+    fill: "none" as const,
+    strokeWidth: 2.25,
+    strokeLinejoin: "round" as const,
+    strokeLinecap: "round" as const,
+    stroke: "rgba(255,255,255,0.28)",
+    opacity: 0.35,
+    "data-wp-segment": "muted",
+  };
 
   function handleChartPointerMove(event: MouseEvent<SVGSVGElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
     setActiveIndex(nearestIndexForClientX(event.clientX, rect, points.length));
   }
 
+  const scrubX = xForIndex(scrub, points.length);
+  const placeLeft =
+    scrubX >
+    CHART_GEOMETRY.padLeft + CHART_GEOMETRY.plotWidth * 0.75;
+  const labelX = placeLeft ? scrubX - 8 : scrubX + 8;
+  const labelAnchor = placeLeft ? "end" : "start";
+
   return (
     <GameSection>
       <h2 className="text-sm font-semibold text-white">Win probability</h2>
-      <SummaryText
-        homeAbbrev={detail.home.abbrev}
-        homeColor={detail.home.color}
-      />
 
       {points.length > 0 ? (
         <div className="relative mt-4">
           <svg
             aria-label="Win probability chart"
-            viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+            viewBox={`0 0 ${CHART_GEOMETRY.width} ${CHART_GEOMETRY.height}`}
             className="w-full overflow-visible"
             onMouseMove={handleChartPointerMove}
           >
             <line
-              x1={CHART_PAD_LEFT}
-              x2={CHART_PAD_LEFT}
-              y1={CHART_PAD_TOP}
-              y2={CHART_PAD_TOP + PLOT_HEIGHT}
+              x1={CHART_GEOMETRY.padLeft}
+              x2={CHART_GEOMETRY.padLeft}
+              y1={CHART_GEOMETRY.padTop}
+              y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
               stroke="#FFFFFF"
               strokeWidth={1}
             />
 
             <text
-              x={Y_LABEL_X}
-              y={CHART_PAD_TOP}
+              x={CHART_GEOMETRY.yLabelX}
+              y={CHART_GEOMETRY.padTop}
               fill="#FFFFFF"
               textAnchor="end"
               dominantBaseline="middle"
@@ -203,16 +104,16 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
               100%
             </text>
             <line
-              x1={CHART_PAD_LEFT - 5}
-              x2={CHART_PAD_LEFT}
-              y1={CHART_PAD_TOP}
-              y2={CHART_PAD_TOP}
+              x1={CHART_GEOMETRY.padLeft - 5}
+              x2={CHART_GEOMETRY.padLeft}
+              y1={CHART_GEOMETRY.padTop}
+              y2={CHART_GEOMETRY.padTop}
               stroke="#FFFFFF"
               strokeWidth={1}
             />
 
             <text
-              x={Y_LABEL_X}
+              x={CHART_GEOMETRY.yLabelX}
               y={midY}
               fill="#FFFFFF"
               textAnchor="end"
@@ -222,8 +123,8 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
               50%
             </text>
             <line
-              x1={CHART_PAD_LEFT - 5}
-              x2={CHART_PAD_LEFT}
+              x1={CHART_GEOMETRY.padLeft - 5}
+              x2={CHART_GEOMETRY.padLeft}
               y1={midY}
               y2={midY}
               stroke="#FFFFFF"
@@ -235,63 +136,104 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 key={x}
                 x1={x}
                 x2={x}
-                y1={CHART_PAD_TOP}
-                y2={CHART_PAD_TOP + PLOT_HEIGHT}
+                y1={CHART_GEOMETRY.padTop}
+                y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
                 stroke="rgba(255,255,255,0.06)"
               />
             ))}
 
             <line
-              x1={CHART_PAD_LEFT}
-              x2={CHART_PAD_LEFT + PLOT_WIDTH}
+              x1={CHART_GEOMETRY.padLeft}
+              x2={CHART_GEOMETRY.padLeft + CHART_GEOMETRY.plotWidth}
               y1={midY}
               y2={midY}
               stroke="rgba(255,255,255,0.22)"
               strokeDasharray="4 4"
             />
 
-            <path d={path.area} fill={`${detail.home.color}33`} />
-            <path
-              d={path.line}
-              fill="none"
-              stroke={detail.home.color}
-              strokeWidth={2.25}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
+            {paths.awayVivid ? (
+              <path
+                d={paths.awayVivid}
+                stroke={detail.away.color}
+                {...vividProps}
+              />
+            ) : null}
+            {paths.homeVivid ? (
+              <path
+                d={paths.homeVivid}
+                stroke={detail.home.color}
+                {...vividProps}
+              />
+            ) : null}
+            {paths.awayMuted ? (
+              <path d={paths.awayMuted} {...mutedProps} />
+            ) : null}
+            {paths.homeMuted ? (
+              <path d={paths.homeMuted} {...mutedProps} />
+            ) : null}
 
             {activePoint ? (
               <>
                 <line
-                  x1={xForIndex(activeIndex, points.length)}
-                  x2={xForIndex(activeIndex, points.length)}
-                  y1={CHART_PAD_TOP}
-                  y2={CHART_PAD_TOP + PLOT_HEIGHT}
-                  stroke="rgba(255,255,255,0.35)"
-                  strokeWidth={1}
+                  x1={scrubX}
+                  x2={scrubX}
+                  y1={CHART_GEOMETRY.padTop}
+                  y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
+                  stroke="rgba(255,255,255,0.45)"
+                  strokeDasharray="3 3"
                   pointerEvents="none"
                 />
                 <circle
-                  cx={xForIndex(activeIndex, points.length)}
-                  cy={yForPct(activePoint.homeWinPct)}
+                  cx={scrubX}
+                  cy={yForPct(activePoint.awayWinPct)}
                   r={3.5}
-                  fill="#FFFFFF"
-                  stroke={detail.home.color}
-                  strokeWidth={2}
+                  fill={detail.away.color}
+                  stroke="#FFFFFF"
+                  strokeWidth={1.5}
                   pointerEvents="none"
                 />
+                <circle
+                  cx={scrubX}
+                  cy={yForPct(activePoint.homeWinPct)}
+                  r={3.5}
+                  fill={detail.home.color}
+                  stroke="#FFFFFF"
+                  strokeWidth={1.5}
+                  pointerEvents="none"
+                />
+                <text
+                  x={labelX}
+                  y={yForPct(activePoint.homeWinPct)}
+                  fill={detail.home.color}
+                  textAnchor={labelAnchor}
+                  dominantBaseline="middle"
+                  style={{ fontSize: "11px", fontWeight: 600 }}
+                >
+                  {detail.home.abbrev} {activePoint.homeWinPct}%
+                </text>
+                <text
+                  x={labelX}
+                  y={yForPct(activePoint.awayWinPct)}
+                  fill={detail.away.color}
+                  textAnchor={labelAnchor}
+                  dominantBaseline="middle"
+                  style={{ fontSize: "11px", fontWeight: 600 }}
+                >
+                  {detail.away.abbrev} {activePoint.awayWinPct}%
+                </text>
+                <text
+                  x={scrubX}
+                  y={CHART_GEOMETRY.padTop + 10}
+                  fill="rgba(255,255,255,0.7)"
+                  textAnchor="middle"
+                  data-wp-clock
+                  style={{ fontSize: "10px" }}
+                >
+                  {`Q${activePoint.period} ${activePoint.clock}`}
+                </text>
               </>
             ) : null}
           </svg>
-
-          {activePoint ? (
-            <ActiveTooltip
-              detail={detail}
-              point={activePoint}
-              index={activeIndex}
-              count={points.length}
-            />
-          ) : null}
 
           <input
             type="range"

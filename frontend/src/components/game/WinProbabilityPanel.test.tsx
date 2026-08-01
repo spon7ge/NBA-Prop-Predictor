@@ -33,28 +33,25 @@ describe("WinProbabilityPanel", () => {
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
 
-  it("renders the latest win probability point in a floating tooltip", () => {
+  it("renders dual on-chart labels for the latest point", () => {
     render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
 
-    expect(screen.getByText("Win probability")).toBeInTheDocument();
-    expect(screen.getByText(/Above the midline favors/)).toBeInTheDocument();
-    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
-    expect(screen.getByText("PHX 54%")).toBeInTheDocument();
-    expect(screen.getByText("GS 46%")).toBeInTheDocument();
-    expect(screen.queryByText("Active state")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Above the midline favors/)).not.toBeInTheDocument();
+    expect(screen.queryByText("GS 10–8 PHX")).not.toBeInTheDocument();
+
+    const chart = screen.getByLabelText("Win probability chart");
+    expect(chart).toHaveTextContent("PHX");
+    expect(chart).toHaveTextContent("54%");
+    expect(chart).toHaveTextContent("GS");
+    expect(chart).toHaveTextContent("46%");
+    expect(chart).toHaveTextContent("Q1 4:29");
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
-    expect(screen.getByText("49")).toBeInTheDocument();
-    expect(screen.getByText("41")).toBeInTheDocument();
   });
 
-  it("updates the tooltip when pointer moves near an earlier timeline point", () => {
+  it("updates on-chart labels when pointer moves near an earlier timeline point", () => {
     const { container } = render(
       <WinProbabilityPanel detail={buildGameDetailFixture()} />,
     );
-
-    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
-    expect(screen.getByText("PHX 54%")).toBeInTheDocument();
-
     const chart = container.querySelector("svg");
     expect(chart).not.toBeNull();
     chart!.getBoundingClientRect = () =>
@@ -70,20 +67,19 @@ describe("WinProbabilityPanel", () => {
         toJSON: () => ({}),
       }) as DOMRect;
 
-    // Plot starts after left pad; pointer near the left edge of the plot.
     fireEvent.mouseMove(chart!, { clientX: 40, clientY: 110 });
 
-    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
-    expect(screen.getByText("PHX 44%")).toBeInTheDocument();
-    expect(screen.getByText("GS 56%")).toBeInTheDocument();
-    expect(screen.queryByText("GS 10–8 PHX")).not.toBeInTheDocument();
+    expect(chart).toHaveTextContent("44%");
+    expect(chart).toHaveTextContent("56%");
+    expect(chart).toHaveTextContent("Q1 8:00");
+    expect(chart).not.toHaveTextContent("54%");
   });
 
   it("lets keyboard users step away from the latest point via a single slider", async () => {
     const user = userEvent.setup();
-    render(<WinProbabilityPanel detail={buildGameDetailFixture()} />);
-
-    expect(screen.getByText("GS 10–8 PHX")).toBeInTheDocument();
+    const { container } = render(
+      <WinProbabilityPanel detail={buildGameDetailFixture()} />,
+    );
 
     const slider = screen.getByRole("slider", {
       name: /win probability timeline/i,
@@ -93,9 +89,28 @@ describe("WinProbabilityPanel", () => {
 
     fireEvent.change(slider, { target: { value: "0" } });
 
-    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
-    expect(screen.getByText("PHX 44%")).toBeInTheDocument();
-    expect(screen.getByText("GS 56%")).toBeInTheDocument();
+    const chart = container.querySelector("svg");
+    expect(chart).toHaveTextContent("44%");
+    expect(chart).toHaveTextContent("56%");
+    expect(chart).toHaveTextContent("Q1 8:00");
+    expect(chart).not.toHaveTextContent("54%");
+    expect(screen.queryByText("GS 2–0 PHX")).not.toBeInTheDocument();
+  });
+
+  it("renders muted future path segments when scrub is not at the end", () => {
+    const { container } = render(
+      <WinProbabilityPanel detail={buildGameDetailFixture()} />,
+    );
+    const slider = screen.getByRole("slider", {
+      name: /win probability timeline/i,
+    });
+    fireEvent.change(slider, { target: { value: "0" } });
+
+    const muted = container.querySelectorAll("[data-wp-segment='muted']");
+    expect(muted.length).toBeGreaterThanOrEqual(2);
+    muted.forEach((el) => {
+      expect(el.getAttribute("opacity")).toBe("0.35");
+    });
   });
 
   it("does not create a focusable marker for every dense timeline point", () => {
@@ -139,8 +154,11 @@ describe("WinProbabilityPanel", () => {
       />,
     );
 
-    expect(screen.getByText("GS 2–0 PHX")).toBeInTheDocument();
-    expect(screen.getByText("PHX 44%")).toBeInTheDocument();
+    const chart = screen.getByLabelText("Win probability chart");
+    expect(chart).toHaveTextContent("PHX");
+    expect(chart).toHaveTextContent("44%");
+    expect(chart).toHaveTextContent("GS");
+    expect(chart).toHaveTextContent("56%");
     expect(
       screen.getByRole("slider", { name: /win probability timeline/i }),
     ).toBeInTheDocument();
