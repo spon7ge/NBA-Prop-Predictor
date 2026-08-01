@@ -7,23 +7,23 @@ type StandingsConferenceCardProps = {
 };
 
 function diffClass(diff: string): string {
-  if (diff.startsWith("+")) return "text-emerald-400";
-  if (diff.startsWith("-") && diff !== "-") return "text-rose-400";
-  return "text-white/50";
+  if (diff.startsWith("+")) return "text-white/80";
+  if (diff.startsWith("-") && diff !== "-") return "text-white/45";
+  return "text-white/40";
 }
 
 function streakClass(streak: string): string {
-  if (streak.startsWith("W")) return "text-emerald-400";
-  if (streak.startsWith("L")) return "text-rose-400";
-  return "text-white/50";
+  if (streak.startsWith("W")) return "text-white/80";
+  if (streak.startsWith("L")) return "text-white/45";
+  return "text-white/40";
 }
 
 export function StandingsConferenceCard({
   conference,
 }: StandingsConferenceCardProps) {
   return (
-    <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
-      <h3 className="mb-3 text-base font-semibold text-white">
+    <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <h3 className="mb-3 text-base font-semibold tracking-tight text-white">
         {conference.label}
       </h3>
       <div className="overflow-x-auto">

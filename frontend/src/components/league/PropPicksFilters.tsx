@@ -58,14 +58,14 @@ function MultiSelectFilter({
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((v) => !v)}
-        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium ${
+        className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors ${
           selected.size > 0
-            ? "border-violet-500/50 bg-violet-600/20 text-violet-100"
-            : "border-white/10 bg-white/[0.03] text-white/70 hover:text-white"
+            ? "border-white/20 bg-white/10 text-white"
+            : "border-white/10 bg-transparent text-white/55 hover:text-white"
         }`}
       >
         {triggerLabel}
-        <ChevronDown className="size-3.5 opacity-70" aria-hidden />
+        <ChevronDown className="size-3.5 opacity-70" aria-hidden strokeWidth={1.75} />
       </button>
       {open ? (
         <ul
@@ -73,7 +73,7 @@ function MultiSelectFilter({
           role="listbox"
           aria-label={label}
           aria-multiselectable="true"
-          className="absolute top-full left-0 z-20 mt-2 max-h-64 min-w-[11rem] overflow-y-auto rounded-xl border border-white/10 bg-[#121212] py-1 shadow-xl"
+          className="absolute top-full left-0 z-20 mt-2 max-h-64 min-w-[11rem] overflow-y-auto rounded-xl border border-white/10 bg-black py-1"
         >
           {options.length === 0 ? (
             <li className="px-3 py-2 text-xs text-white/40">No options</li>
@@ -92,7 +92,7 @@ function MultiSelectFilter({
                     <span
                       className={`flex size-4 shrink-0 items-center justify-center rounded border text-[10px] ${
                         checked
-                          ? "border-violet-400 bg-violet-600 text-white"
+                          ? "border-white/40 bg-white/15 text-white"
                           : "border-white/20 bg-transparent text-transparent"
                       }`}
                       aria-hidden
@@ -193,7 +193,7 @@ export function PropPicksFilters({
       <button
         type="button"
         disabled
-        className="cursor-not-allowed rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-sm font-medium text-white/35"
+        className="cursor-not-allowed rounded-md border border-white/10 px-3 py-1.5 text-sm font-medium text-white/25"
         title="Coming soon"
       >
         +EV · Soon
@@ -202,7 +202,7 @@ export function PropPicksFilters({
         <button
           type="button"
           onClick={onClear}
-          className="px-2 text-sm text-white/50 hover:text-white"
+          className="px-2 text-sm text-white/40 transition-colors hover:text-white"
         >
           Clear filters
         </button>

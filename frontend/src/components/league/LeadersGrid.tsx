@@ -17,7 +17,7 @@ function Skeletons() {
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
-          className="h-72 animate-pulse rounded-xl border border-white/10 bg-white/5"
+          className="h-72 animate-pulse rounded-xl border border-white/10 bg-white/[0.03]"
         />
       ))}
     </div>
@@ -31,14 +31,17 @@ export function LeadersGrid({
   isError = false,
 }: LeadersGridProps) {
   return (
-    <section className="mx-auto max-w-6xl space-y-4 px-4 sm:px-6">
-      <p className="text-sm text-white/45">
-        {season} season · per game
-      </p>
+    <section className="mx-auto max-w-6xl space-y-6 px-4 pb-16 sm:px-6 sm:pb-20">
+      <header>
+        <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+          Leaders
+        </h2>
+        <p className="mt-2 text-sm text-white/40">{season} season · per game</p>
+      </header>
       {isLoading ? (
         <Skeletons />
       ) : isError ? (
-        <p className="text-sm text-white/50">Leaders unavailable</p>
+        <p className="text-sm text-white/40">Leaders unavailable</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (

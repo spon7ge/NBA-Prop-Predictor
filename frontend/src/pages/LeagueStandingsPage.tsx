@@ -7,7 +7,7 @@ export function LeagueStandingsPage() {
   const season = data?.season ?? new Date().getFullYear();
 
   return (
-    <div className="space-y-6 py-6">
+    <div className="space-y-0">
       <LeagueSubnav league="wnba" />
       <StandingsGrid
         season={season}
