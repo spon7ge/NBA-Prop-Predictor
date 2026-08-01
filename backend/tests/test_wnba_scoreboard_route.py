@@ -20,8 +20,12 @@ FIXTURES = Path(__file__).parent / "fixtures"
 @pytest.fixture(autouse=True)
 def clear_cache():
     svc._cache.clear()
+    if hasattr(svc, "_date_cache"):
+        svc._date_cache.clear()
     yield
     svc._cache.clear()
+    if hasattr(svc, "_date_cache"):
+        svc._date_cache.clear()
 
 
 def test_scoreboard_today_returns_no_store_and_games():
@@ -420,3 +424,47 @@ def test_scoreboard_includes_overnight_live_from_previous_et_day():
     statuses = {g["away"]["abbrev"]: g["status"] for g in body["games"]}
     assert statuses["GS"] == "live"
     assert statuses["MIN"] == "scheduled"
+
+
+def test_get_scoreboard_for_date_returns_requested_date_without_carryover():
+    today = "2026-07-30"
+    target = "2026-07-28"
+
+    async def fake_fetch_espn(date_et: str):
+        assert date_et == target
+        return {"events": []}
+
+    async def fake_fetch_stats(date_et: str):
+        assert date_et == target
+        return {"scoreboard": {"games": []}}
+
+    svc._date_cache.clear()
+    with (
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=fake_fetch_espn),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=fake_fetch_stats),
+    ):
+        body = asyncio.run(svc.get_scoreboard_for_date(target))
+    assert body.date == target
+    assert body.games == []
+
+
+def test_get_scoreboard_for_date_uses_per_date_cache():
+    target = "2026-07-28"
+    calls = {"n": 0}
+
+    async def fake_fetch_espn(date_et: str):
+        calls["n"] += 1
+        return {"events": []}
+
+    async def fake_fetch_stats(date_et: str):
+        return {"scoreboard": {"games": []}}
+
+    svc._date_cache.clear()
+    with (
+        patch.object(svc, "fetch_espn_scoreboard", side_effect=fake_fetch_espn),
+        patch.object(svc, "fetch_stats_scoreboard", side_effect=fake_fetch_stats),
+    ):
+        first = asyncio.run(svc.get_scoreboard_for_date(target))
+        second = asyncio.run(svc.get_scoreboard_for_date(target))
+    assert first.date == second.date == target
+    assert calls["n"] == 1

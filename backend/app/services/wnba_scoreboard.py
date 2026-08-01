@@ -31,6 +31,9 @@ STATS_TIMEOUT_SECONDS = 4.0
 
 _cache: dict = {}  # keys: response, expires_at, date
 
+DATED_CACHE_TTL_SECONDS = 300
+_date_cache: dict[str, dict] = {}
+
 _refresh_lock: asyncio.Lock | None = None
 _refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
@@ -563,6 +566,30 @@ async def _merged_games_for_date(date_et: str) -> tuple[list[WnbaGame], bool]:
     if not espn_usable and not stats_usable:
         return [], False
     return merge_games(espn_games, stats_games), True
+
+
+async def get_scoreboard_for_date(date_et: str) -> WnbaScoreboardResponse:
+    """Scoreboard for one ET calendar day (no overnight live carryover)."""
+    cached = _date_cache.get(date_et)
+    if cached is not None and time.time() < float(cached.get("expires_at") or 0):
+        return cached["response"]
+
+    games, usable = await _merged_games_for_date(date_et)
+    if not usable:
+        if cached is not None:
+            return cached["response"]
+        raise RuntimeError(f"No usable WNBA scoreboard source for {date_et}")
+
+    response = WnbaScoreboardResponse(
+        date=date_et,
+        games=games,
+        fetched_at=datetime.now(tz=ET).isoformat(),
+    )
+    _date_cache[date_et] = {
+        "response": response,
+        "expires_at": time.time() + DATED_CACHE_TTL_SECONDS,
+    }
+    return response
 
 
 async def _refresh_today_scoreboard() -> WnbaScoreboardResponse:
