@@ -1,23 +1,23 @@
-import { TicketHero } from "@/components/home/TicketHero";
+import { BrandHero } from "@/components/home/BrandHero";
 import { LiveNowSection } from "@/components/home/LiveNowSection";
 import { StoriesSection } from "@/components/home/StoriesSection";
-import { ExploreSection } from "@/components/home/ExploreSection";
-import { LearnTheGameSection } from "@/components/home/LearnTheGameSection";
+import { FeatureStrip } from "@/components/home/FeatureStrip";
+import { LeagueCtaSection } from "@/components/home/LeagueCtaSection";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function HomePage() {
   const { liveGames, isLoading, hasNeverLoaded } = useWnbaScoreboard();
   return (
     <>
-      <TicketHero />
+      <BrandHero />
       <LiveNowSection
         games={liveGames}
         isLoading={isLoading}
         isError={hasNeverLoaded}
       />
       <StoriesSection />
-      <ExploreSection />
-      <LearnTheGameSection />
+      <FeatureStrip />
+      <LeagueCtaSection />
     </>
   );
 }

@@ -27,10 +27,20 @@ describe("AppRouter", () => {
       json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
     });
     vi.stubGlobal("fetch", fetchMock);
+    window.matchMedia = vi.fn().mockImplementation(() => ({
+      matches: false,
+      media: "",
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it("renders home at /", () => {
