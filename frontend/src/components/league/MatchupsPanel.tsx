@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
+import { formatMatchupNavLabel } from "./matchupSlateDate";
 import { MatchupGameCard } from "./MatchupGameCard";
 import type { MatchupGame } from "./types";
 
@@ -7,6 +8,11 @@ type MatchupsPanelProps = {
   games: MatchupGame[];
   isLoading?: boolean;
   isError?: boolean;
+  selectedDate: string;
+  todayDate: string;
+  onPrevDay: () => void;
+  onNextDay: () => void;
+  onGoToday: () => void;
 };
 
 function MatchupSkeletons() {
@@ -50,7 +56,13 @@ export function MatchupsPanel({
   games,
   isLoading = false,
   isError = false,
+  selectedDate,
+  todayDate,
+  onPrevDay,
+  onNextDay,
+  onGoToday,
 }: MatchupsPanelProps) {
+  const navLabel = formatMatchupNavLabel(selectedDate, todayDate);
   const live = games.filter((game) => isInProgressStatus(game.status));
   const rest = games.filter((game) => !isInProgressStatus(game.status));
   const gameLabel = games.length === 1 ? "game" : "games";
@@ -66,19 +78,23 @@ export function MatchupsPanel({
             <button
               type="button"
               aria-label="Previous day"
-              disabled
-              className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/30 disabled:cursor-not-allowed"
+              onClick={onPrevDay}
+              className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/70 hover:bg-white/5"
             >
               <ChevronLeft aria-hidden="true" className="size-4" strokeWidth={1.75} />
             </button>
-            <span className="min-w-14 text-center text-sm font-medium text-white/55">
-              Today
-            </span>
+            <button
+              type="button"
+              onClick={onGoToday}
+              className="min-w-14 text-center text-sm font-medium text-white/55 hover:text-white/80"
+            >
+              {navLabel}
+            </button>
             <button
               type="button"
               aria-label="Next day"
-              disabled
-              className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/30 disabled:cursor-not-allowed"
+              onClick={onNextDay}
+              className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/70 hover:bg-white/5"
             >
               <ChevronRight aria-hidden="true" className="size-4" strokeWidth={1.75} />
             </button>
@@ -98,9 +114,7 @@ export function MatchupsPanel({
             role={isError ? "status" : undefined}
             className="py-8 text-center text-sm text-white/40"
           >
-            {isError
-              ? "Unable to load matchups"
-              : "No games on today's slate"}
+            {isError ? "Unable to load matchups" : "No games on this slate"}
           </p>
         )
       ) : (
