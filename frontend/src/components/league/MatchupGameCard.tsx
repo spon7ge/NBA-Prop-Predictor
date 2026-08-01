@@ -26,11 +26,11 @@ function TeamRow({
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs text-white">{team.name}</span>
         {team.record ? (
-          <span className="block text-[11px] text-white/45">{team.record}</span>
+          <span className="block text-[11px] text-white/40">{team.record}</span>
         ) : null}
       </span>
       {showScore ? (
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-black font-mono text-sm font-bold text-amber-300">
+        <span className="shrink-0 font-mono text-sm font-semibold tracking-tight text-white">
           {team.score ?? "–"}
         </span>
       ) : null}
@@ -51,7 +51,7 @@ function OddsBlock({
       data-placement={placement}
       className="shrink-0 text-right"
     >
-      <span className="inline-flex max-w-[11rem] rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-white/75 sm:max-w-none">
+      <span className="inline-flex max-w-[11rem] rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-white/70 sm:max-w-none">
         {label}
       </span>
       <p className="mt-1 flex items-center justify-end gap-1 text-[10px] tracking-wide text-white/35">
@@ -72,15 +72,8 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
   const venueLabel = game.venue
     ? [game.venue, game.venueCity].filter(Boolean).join(" · ")
     : null;
-  const accentClassName =
-    game.league === "wnba"
-      ? isLive
-        ? "border-l-violet-500"
-        : "border-l-violet-400/80"
-      : isLive
-        ? "border-l-sky-500"
-        : "border-l-sky-400/80";
-  const baseClassName = `block rounded-xl border border-l-2 border-white/10 bg-[#141414] p-4 ${accentClassName}`;
+  const baseClassName =
+    "block rounded-xl border border-white/10 bg-white/[0.03] p-4";
   const oddsLabel = game.odds ? formatOddsPill(game.odds) : null;
 
   const content = (
@@ -89,16 +82,16 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
         <div className="mb-4 flex items-start justify-between gap-3">
           <span
             className={`flex shrink-0 items-center gap-2 text-xs ${
-              isLive ? "text-violet-300" : "text-white/55"
+              isLive ? "text-red-400" : "text-white/45"
             }`}
           >
             {isLive ? (
-              <span className="size-1.5 animate-pulse rounded-full bg-violet-500" />
+              <span className="size-1.5 animate-pulse rounded-full bg-red-500" />
             ) : null}
             {game.statusLabel}
           </span>
           {venueLabel ? (
-            <span className="truncate text-right text-[11px] text-white/40">
+            <span className="truncate text-right text-[11px] text-white/35">
               {venueLabel}
             </span>
           ) : null}
@@ -130,6 +123,7 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
       <ChevronRight
         aria-hidden="true"
         className="size-4 shrink-0 text-white/25"
+        strokeWidth={1.75}
       />
     </div>
   );

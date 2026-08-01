@@ -33,8 +33,8 @@ function Section({
   games: MatchupGame[];
 }) {
   return (
-    <section className="space-y-3">
-      <h3 className="text-xs font-semibold tracking-wider text-white/50">
+    <section className="space-y-4">
+      <h3 className="text-[11px] font-medium tracking-[0.14em] text-white/35 uppercase">
         {label}
       </h3>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -56,10 +56,12 @@ export function MatchupsPanel({
   const gameLabel = games.length === 1 ? "game" : "games";
 
   return (
-    <section className="mx-auto max-w-6xl space-y-5 px-4 sm:px-6">
+    <section className="mx-auto max-w-6xl space-y-8 px-4 pb-16 sm:px-6 sm:pb-20">
       <header>
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold text-white">Matchups</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            Matchups
+          </h2>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -67,9 +69,9 @@ export function MatchupsPanel({
               disabled
               className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/30 disabled:cursor-not-allowed"
             >
-              <ChevronLeft aria-hidden="true" className="size-4" />
+              <ChevronLeft aria-hidden="true" className="size-4" strokeWidth={1.75} />
             </button>
-            <span className="min-w-14 text-center text-sm font-medium text-white/70">
+            <span className="min-w-14 text-center text-sm font-medium text-white/55">
               Today
             </span>
             <button
@@ -78,11 +80,11 @@ export function MatchupsPanel({
               disabled
               className="flex size-8 items-center justify-center rounded-md border border-white/10 text-white/30 disabled:cursor-not-allowed"
             >
-              <ChevronRight aria-hidden="true" className="size-4" />
+              <ChevronRight aria-hidden="true" className="size-4" strokeWidth={1.75} />
             </button>
           </div>
         </div>
-        <p className="mt-1 text-sm text-white/45">
+        <p className="mt-2 text-sm text-white/40">
           {games.length} {gameLabel} · open a card for box score, play-by-play
           &amp; win probability
         </p>
@@ -94,7 +96,7 @@ export function MatchupsPanel({
         ) : (
           <p
             role={isError ? "status" : undefined}
-            className="py-8 text-center text-sm text-white/45"
+            className="py-8 text-center text-sm text-white/40"
           >
             {isError
               ? "Unable to load matchups"
@@ -102,10 +104,10 @@ export function MatchupsPanel({
           </p>
         )
       ) : (
-        <div className="space-y-6">
-          {live.length > 0 ? <Section label="LIVE NOW" games={live} /> : null}
+        <div className="space-y-8">
+          {live.length > 0 ? <Section label="Live now" games={live} /> : null}
           {rest.length > 0 ? (
-            <Section label="REST OF THE SLATE" games={rest} />
+            <Section label="Rest of the slate" games={rest} />
           ) : null}
         </div>
       )}

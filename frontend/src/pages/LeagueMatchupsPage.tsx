@@ -17,10 +17,10 @@ export function LeagueMatchupsPage({ league }: LeagueMatchupsPageProps) {
   }
 
   return (
-    <div className="space-y-6 py-6">
+    <div className="space-y-0 pb-8">
       <LeagueHero league="nba" />
       <LeagueSubnav league="nba" />
-      <p className="mx-auto max-w-6xl px-4 text-sm text-white/50 sm:px-6">
+      <p className="mx-auto max-w-6xl px-4 text-sm text-white/40 sm:px-6">
         NBA matchups coming soon.
       </p>
     </div>
@@ -36,7 +36,7 @@ function WnbaMatchupsPage() {
   );
 
   return (
-    <div className="space-y-6 py-6">
+    <div className="space-y-0">
       <LeagueHero league="wnba" dateEt={data?.date} />
       <LeagueSubnav league="wnba" />
       <MatchupsPanel

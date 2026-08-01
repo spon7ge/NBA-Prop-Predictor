@@ -41,27 +41,27 @@ describe("MatchupsPanel", () => {
         "2 games · open a card for box score, play-by-play & win probability",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText("LIVE NOW")).toBeInTheDocument();
-    expect(screen.getByText("REST OF THE SLATE")).toBeInTheDocument();
+    expect(screen.getByText("Live now")).toBeInTheDocument();
+    expect(screen.getByText("Rest of the slate")).toBeInTheDocument();
     expect(screen.getByText("Today")).toBeInTheDocument();
     const prev = screen.getByRole("button", { name: /previous day/i });
     const next = screen.getByRole("button", { name: /next day/i });
     expect(prev).toBeDisabled();
     expect(next).toBeDisabled();
-    expect(screen.getByText("LIVE NOW").nextElementSibling).toHaveClass(
+    expect(screen.getByText("Live now").nextElementSibling).toHaveClass(
       "grid",
       "md:grid-cols-2",
     );
-    expect(screen.getByText("REST OF THE SLATE").nextElementSibling).toHaveClass(
+    expect(screen.getByText("Rest of the slate").nextElementSibling).toHaveClass(
       "grid",
       "md:grid-cols-2",
     );
   });
 
-  it("hides LIVE NOW when no in-progress games", () => {
+  it("hides Live now when no in-progress games", () => {
     renderPanel([finalGame]);
-    expect(screen.queryByText("LIVE NOW")).not.toBeInTheDocument();
-    expect(screen.getByText("REST OF THE SLATE")).toBeInTheDocument();
+    expect(screen.queryByText("Live now")).not.toBeInTheDocument();
+    expect(screen.getByText("Rest of the slate")).toBeInTheDocument();
   });
 
   it("shows muted empty copy when no games and not loading", () => {
