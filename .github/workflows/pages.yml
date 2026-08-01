@@ -3,7 +3,7 @@ name: CI and Deploy
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
   workflow_dispatch:
 
@@ -64,7 +64,7 @@ jobs:
         run: npm run build
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs:
       - backend-tests
       - frontend-tests
