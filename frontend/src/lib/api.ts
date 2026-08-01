@@ -62,6 +62,19 @@ export async function fetchWnbaScoreboard(): Promise<WnbaScoreboardResponse> {
   return res.json();
 }
 
+export async function fetchWnbaScoreboardByDate(
+  dateEt: string,
+): Promise<WnbaScoreboardResponse> {
+  const res = await fetch(
+    `${API_BASE}/api/wnba/scoreboard?date=${encodeURIComponent(dateEt)}`,
+    { headers: { Accept: "application/json" }, cache: "no-store" },
+  );
+  if (!res.ok) {
+    throw new Error(`Scoreboard request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchGameDetail(
   espnEventId: string,
 ): Promise<ApiWnbaGameDetail> {

@@ -503,6 +503,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/wnba/scoreboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wnba Scoreboard By Date */
+        get: operations["wnba_scoreboard_by_date_api_wnba_scoreboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/wnba/scoreboard/today": {
         parameters: {
             query?: never;
@@ -2763,6 +2780,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WnbaPropsResponse"];
+                };
+            };
+        };
+    };
+    wnba_scoreboard_by_date_api_wnba_scoreboard_get: {
+        parameters: {
+            query: {
+                date: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WnbaScoreboardResponse"];
                 };
             };
         };
