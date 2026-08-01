@@ -15,7 +15,7 @@ __pycache__/
 
 .env
 data/credentials/
-frontend/node_modules/
+node_modules/
 frontend/dist/
 
 # dbt
