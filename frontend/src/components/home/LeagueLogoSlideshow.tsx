@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import basketball from "@/assets/basketball.png";
-import wnbaBasketball from "@/assets/wnba_basketball.png";
+import nbaLogo from "@/assets/nba_logo.png";
+import wnbaLogo from "@/assets/wnba_logo.png";
 
 const SLIDES = [
-  { src: basketball, alt: "NBA" },
-  { src: wnbaBasketball, alt: "WNBA" },
+  { src: nbaLogo, alt: "NBA" },
+  { src: wnbaLogo, alt: "WNBA" },
 ] as const;
 
 function usePrefersReducedMotion(): boolean {
