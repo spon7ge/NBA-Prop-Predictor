@@ -1,9 +1,10 @@
-name: Deploy GitHub Pages
+name: CI and Deploy
 
 on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -12,11 +13,61 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+
+      - name: Install backend deps
+        run: pip install -r backend/requirements-dev.txt
+
+      - name: Run pytest
+        env:
+          PYTHONPATH: backend
+        run: python -m pytest backend/tests/ -q
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run vitest
+        working-directory: frontend
+        run: npm test
+
+      - name: Typecheck and build
+        working-directory: frontend
+        run: npm run build
+
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - backend-tests
+      - frontend-tests
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -29,15 +80,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install and build React frontend
         # Pages serves static files with no /api proxy, so the live scoreboard
         # needs VITE_API_BASE_URL pointing at the deployed API origin, e.g.:
         #   env:
         #     VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        working-directory: frontend
         run: |
-          cd frontend
-          npm install
+          npm ci
           npm run build
 
       - name: Setup Pages
@@ -46,7 +99,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/dist'
+          path: "./frontend/dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
