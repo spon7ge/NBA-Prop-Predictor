@@ -60,6 +60,12 @@ describe("HomePage", () => {
       screen.getByRole("heading", { name: /built to get you ready/i }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("heading", { name: /read the line\. see the edge/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /see live props/i }),
+    ).toHaveAttribute("href", "/wnba/prop_picks");
+    expect(
       screen.queryByRole("heading", { name: /learn the game/i }),
     ).not.toBeInTheDocument();
     expect(

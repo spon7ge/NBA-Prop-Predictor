@@ -2,6 +2,7 @@ import { BrandHero } from "@/components/home/BrandHero";
 import { LiveNowSection } from "@/components/home/LiveNowSection";
 import { StoriesSection } from "@/components/home/StoriesSection";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
+import { PropExplainerSection } from "@/components/home/PropExplainerSection";
 import { LeagueCtaSection } from "@/components/home/LeagueCtaSection";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
@@ -17,6 +18,7 @@ export function HomePage() {
       />
       <StoriesSection />
       <FeatureStrip />
+      <PropExplainerSection />
       <LeagueCtaSection />
     </>
   );
