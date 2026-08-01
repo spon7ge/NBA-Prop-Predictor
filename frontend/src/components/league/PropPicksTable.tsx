@@ -19,13 +19,13 @@ function OddsPill({ quote }: { quote: ApiWnbaPropBookQuote | null }) {
   if (!quote) {
     return <span className="text-white/20">&nbsp;</span>;
   }
-  const hasOdds = quote.odds_american != null;
+  const odds = quote.odds_american;
   return (
     <span className="inline-flex flex-col items-center rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-mono leading-tight text-white/75">
       <span className="text-[11px] text-white/90">{quote.line}</span>
-      {hasOdds ? (
+      {odds != null ? (
         <span className="text-[10px] text-white/55">
-          {formatAmericanOdds(quote.odds_american)}
+          {formatAmericanOdds(odds)}
         </span>
       ) : null}
     </span>

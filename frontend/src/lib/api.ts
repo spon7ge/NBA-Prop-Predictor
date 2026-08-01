@@ -1,172 +1,46 @@
-export type ApiGameStatus = "scheduled" | "live" | "halftime" | "final";
+import type { components } from "./api.schema";
 
-export type ApiWnbaTeam = {
-  abbrev: string;
-  name: string;
-  score: number | null;
-  record?: string | null;
-  logo_url: string | null;
-};
+type Schemas = components["schemas"];
 
-export type ApiWnbaGame = {
-  id: string;
-  espn_event_id: string | null;
-  league: "wnba";
-  status: ApiGameStatus;
-  status_label: string;
-  away: ApiWnbaTeam;
-  home: ApiWnbaTeam;
-  start_time_et: string;
-  venue?: string | null;
-  venue_city?: string | null;
-};
+export type ApiGameStatus = Schemas["WnbaGame"]["status"];
+export type ApiWnbaTeam = Schemas["WnbaTeam"];
+export type ApiWnbaGame = Schemas["WnbaGame"];
+export type ApiGameDetailTeam = Schemas["GameDetailTeam"];
+export type ApiGameDetailShot = Schemas["GameDetailShot"];
+export type ApiGameDetailPlay = Schemas["GameDetailPlay"];
+export type ApiGameDetailLatestPlay = Schemas["GameDetailLatestPlay"];
+export type ApiGameDetailWinProbabilityPoint =
+  Schemas["GameDetailWinProbabilityPoint"];
+export type ApiGameDetailTeamStat = Schemas["GameDetailTeamStat"];
+export type ApiGameDetailWinProbability = Schemas["GameDetailWinProbability"];
+export type ApiGameDetailMatchupPrediction =
+  Schemas["GameDetailMatchupPrediction"];
+export type ApiGameDetailStarter = Schemas["GameDetailStarter"];
+export type ApiGameDetailProjectedStarters =
+  Schemas["GameDetailProjectedStarters"];
+export type ApiGameDetailSeasonLeader = Schemas["GameDetailSeasonLeader"];
+export type ApiGameDetailSeasonLeaders = Schemas["GameDetailSeasonLeaders"];
+export type ApiGameDetailInjury = Schemas["GameDetailInjury"];
+export type ApiGameDetailInjuries = Schemas["GameDetailInjuries"];
+export type ApiGameDetailBoxScorePlayer = Schemas["GameDetailBoxScorePlayer"];
+export type ApiGameDetailBoxScore = Schemas["GameDetailBoxScore"];
+export type ApiWnbaGameDetail = Schemas["WnbaGameDetail"];
+export type WnbaScoreboardResponse = Schemas["WnbaScoreboardResponse"];
 
-export type ApiGameDetailTeam = {
-  id: string;
-  abbrev: string;
-  name: string;
-  score: number | null;
-  color: string;
-  logo_url: string | null;
-};
+export type ApiWnbaLeaderRow = Schemas["WnbaLeaderRow"];
+export type ApiWnbaLeaderCategory = Schemas["WnbaLeaderCategory"];
+export type ApiWnbaLeadersResponse = Schemas["WnbaLeadersResponse"];
 
-export type ApiGameDetailShot = {
-  id: string;
-  team_id: string;
-  player_name: string;
-  made: boolean;
-  x: number;
-  y: number;
-  period: number;
-  clock: string;
-};
+export type ApiWnbaStandingsRow = Schemas["WnbaStandingsRow"];
+export type ApiWnbaStandingsConference = Schemas["WnbaStandingsConference"];
+export type ApiWnbaStandingsResponse = Schemas["WnbaStandingsResponse"];
 
-export type ApiGameDetailPlay = {
-  id: string;
-  team_id: string | null;
-  period: number;
-  clock: string;
-  text: string;
-  scoring: boolean;
-  away_score: number;
-  home_score: number;
-  shooting: boolean;
-};
+export type ApiWnbaOddsGame = Schemas["WnbaOddsGame"];
+export type ApiWnbaOddsResponse = Schemas["WnbaOddsResponse"];
 
-export type ApiGameDetailLatestPlay = {
-  id: string;
-  clock: string;
-  period: number;
-  text: string;
-  team_id: string | null;
-};
-
-export type ApiGameDetailWinProbabilityPoint = {
-  id: string;
-  period: number;
-  clock: string;
-  away_score: number;
-  home_score: number;
-  away_win_pct: number;
-  home_win_pct: number;
-  team_id: string | null;
-};
-
-export type ApiGameDetailTeamStat = {
-  key: string;
-  label: string;
-  away_value: number;
-  home_value: number;
-};
-
-export type ApiGameDetailWinProbability = {
-  summary: string | null;
-  timeline: ApiGameDetailWinProbabilityPoint[];
-  team_stats: ApiGameDetailTeamStat[];
-};
-
-export type ApiGameDetailMatchupPrediction = {
-  away_win_pct: number;
-  home_win_pct: number;
-  source_label: string;
-};
-
-export type ApiGameDetailStarter = {
-  jersey: string | null;
-  name: string;
-  position: string | null;
-  gtd?: boolean;
-};
-
-export type ApiGameDetailProjectedStarters = {
-  note: string;
-  away: ApiGameDetailStarter[];
-  home: ApiGameDetailStarter[];
-};
-
-export type ApiGameDetailSeasonLeader = {
-  stat: "points" | "assists" | "rebounds";
-  label: string;
-  name: string;
-  value: string;
-};
-
-export type ApiGameDetailSeasonLeaders = {
-  away: ApiGameDetailSeasonLeader[];
-  home: ApiGameDetailSeasonLeader[];
-};
-
-export type ApiGameDetailInjury = {
-  name: string;
-  position: string | null;
-  status: string;
-  detail: string | null;
-};
-
-export type ApiGameDetailInjuries = {
-  away: ApiGameDetailInjury[];
-  home: ApiGameDetailInjury[];
-};
-
-export type ApiGameDetailBoxScorePlayer = {
-  name: string;
-  did_not_play: boolean;
-  values: string[];
-};
-
-export type ApiGameDetailBoxScore = {
-  columns: string[];
-  away: ApiGameDetailBoxScorePlayer[];
-  home: ApiGameDetailBoxScorePlayer[];
-};
-
-export type ApiWnbaGameDetail = {
-  espn_event_id: string;
-  league: "wnba";
-  status: ApiGameStatus;
-  status_label: string;
-  venue: string | null;
-  away: ApiGameDetailTeam;
-  home: ApiGameDetailTeam;
-  fg_made: number;
-  fg_attempted: number;
-  latest_play: ApiGameDetailLatestPlay | null;
-  shots: ApiGameDetailShot[];
-  plays: ApiGameDetailPlay[];
-  win_probability: ApiGameDetailWinProbability | null;
-  matchup_prediction: ApiGameDetailMatchupPrediction | null;
-  projected_starters: ApiGameDetailProjectedStarters | null;
-  season_leaders: ApiGameDetailSeasonLeaders | null;
-  injuries: ApiGameDetailInjuries | null;
-  box_score: ApiGameDetailBoxScore | null;
-  fetched_at: string;
-};
-
-export type WnbaScoreboardResponse = {
-  date: string;
-  games: ApiWnbaGame[];
-  fetched_at: string;
-};
+export type ApiWnbaPropBookQuote = Schemas["WnbaPropBookQuote"];
+export type ApiWnbaPropLine = Schemas["WnbaPropLine"];
+export type ApiWnbaPropsResponse = Schemas["WnbaPropsResponse"];
 
 /**
  * Origin of the HoopVista API, without a trailing slash.
@@ -201,34 +75,6 @@ export async function fetchGameDetail(
   return res.json();
 }
 
-export type ApiWnbaLeaderRow = {
-  rank: number;
-  player_id: string;
-  name: string;
-  team_abbrev: string;
-  gp: number;
-  value: string;
-};
-
-export type ApiWnbaLeaderCategory = {
-  key:
-    | "points"
-    | "rebounds"
-    | "assists"
-    | "steals"
-    | "blocks"
-    | "three_pointers";
-  label: string;
-  stat: string;
-  leaders: ApiWnbaLeaderRow[];
-};
-
-export type ApiWnbaLeadersResponse = {
-  season: number;
-  pace: "per_game";
-  categories: ApiWnbaLeaderCategory[];
-};
-
 export async function fetchWnbaLeaders(): Promise<ApiWnbaLeadersResponse> {
   const res = await fetch(`${API_BASE}/api/wnba/leaders`, {
     headers: { Accept: "application/json" },
@@ -239,35 +85,6 @@ export async function fetchWnbaLeaders(): Promise<ApiWnbaLeadersResponse> {
   }
   return res.json();
 }
-
-export type ApiWnbaStandingsRow = {
-  rank: number;
-  team_id: string;
-  abbrev: string;
-  name: string;
-  logo_url: string | null;
-  wins: number;
-  losses: number;
-  wl: string;
-  pct: string;
-  gb: string;
-  home: string;
-  away: string;
-  l10: string;
-  diff: string;
-  streak: string;
-};
-
-export type ApiWnbaStandingsConference = {
-  key: "east" | "west";
-  label: string;
-  teams: ApiWnbaStandingsRow[];
-};
-
-export type ApiWnbaStandingsResponse = {
-  season: number;
-  conferences: ApiWnbaStandingsConference[];
-};
 
 export async function fetchWnbaStandings(): Promise<ApiWnbaStandingsResponse> {
   const res = await fetch(`${API_BASE}/api/wnba/standings`, {
@@ -280,21 +97,6 @@ export async function fetchWnbaStandings(): Promise<ApiWnbaStandingsResponse> {
   return res.json();
 }
 
-export type ApiWnbaOddsGame = {
-  home_abbrev: string;
-  away_abbrev: string;
-  spread_team_abbrev: string | null;
-  spread_line: number | null;
-  total: number | null;
-};
-
-export type ApiWnbaOddsResponse = {
-  as_of: string;
-  sportsbook: string;
-  games: ApiWnbaOddsGame[];
-  error?: string | null;
-};
-
 export async function fetchWnbaOdds(): Promise<ApiWnbaOddsResponse> {
   const res = await fetch(`${API_BASE}/api/wnba/odds/today`, {
     headers: { Accept: "application/json" },
@@ -305,34 +107,6 @@ export async function fetchWnbaOdds(): Promise<ApiWnbaOddsResponse> {
   }
   return res.json();
 }
-
-export type ApiWnbaPropBookQuote = {
-  line: number;
-  odds_american: number | null;
-};
-
-export type ApiWnbaPropLine = {
-  player_name: string;
-  team_abbrev: string | null;
-  logo_url: string | null;
-  stat: string;
-  market_type: string;
-  side: "over" | "under" | string;
-  model_prediction: number | null;
-  over_under_pct: number | null;
-  ev: number | null;
-  fanduel: ApiWnbaPropBookQuote | null;
-  draftkings: ApiWnbaPropBookQuote | null;
-  prizepicks: ApiWnbaPropBookQuote | null;
-  underdog: ApiWnbaPropBookQuote | null;
-};
-
-export type ApiWnbaPropsResponse = {
-  as_of: string;
-  sportsbooks: string[];
-  props: ApiWnbaPropLine[];
-  error?: string | null;
-};
 
 export async function fetchWnbaProps(): Promise<ApiWnbaPropsResponse> {
   const res = await fetch(`${API_BASE}/api/wnba/props/today`, {

@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.schemas.wnba_scoreboard import GameStatus
+
+_RESPONSE_CONFIG = ConfigDict(json_schema_serialization_defaults_required=True)
 
 __all__ = [
     "GameDetailBoxScore",
@@ -29,6 +31,8 @@ __all__ = [
 
 
 class GameDetailTeam(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     id: str
     abbrev: str
     name: str

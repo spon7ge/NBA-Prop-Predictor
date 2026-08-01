@@ -762,7 +762,7 @@ export interface components {
             /** Id */
             id: string;
             /** Logo Url */
-            logo_url?: string | null;
+            logo_url: string | null;
             /** Name */
             name: string;
             /** Score */
@@ -1687,7 +1687,7 @@ export interface components {
         WnbaGame: {
             away: components["schemas"]["WnbaTeam"];
             /** Espn Event Id */
-            espn_event_id?: string | null;
+            espn_event_id: string | null;
             home: components["schemas"]["WnbaTeam"];
             /** Id */
             id: string;
@@ -1707,9 +1707,9 @@ export interface components {
             /** Status Label */
             status_label: string;
             /** Venue */
-            venue?: string | null;
+            venue: string | null;
             /** Venue City */
-            venue_city?: string | null;
+            venue_city: string | null;
         };
         /** WnbaGameDetail */
         WnbaGameDetail: {
@@ -1799,20 +1799,20 @@ export interface components {
             /** Home Abbrev */
             home_abbrev: string;
             /** Spread Line */
-            spread_line?: number | null;
+            spread_line: number | null;
             /** Spread Team Abbrev */
-            spread_team_abbrev?: string | null;
+            spread_team_abbrev: string | null;
             /** Total */
-            total?: number | null;
+            total: number | null;
         };
         /** WnbaOddsResponse */
         WnbaOddsResponse: {
             /** As Of */
             as_of: string;
             /** Error */
-            error?: string | null;
+            error: string | null;
             /** Games */
-            games?: components["schemas"]["WnbaOddsGame"][];
+            games: components["schemas"]["WnbaOddsGame"][];
             /**
              * Sportsbook
              * @default draftkings
@@ -1824,43 +1824,43 @@ export interface components {
             /** Line */
             line: number;
             /** Odds American */
-            odds_american?: number | null;
+            odds_american: number | null;
         };
         /** WnbaPropLine */
         WnbaPropLine: {
-            draftkings?: components["schemas"]["WnbaPropBookQuote"] | null;
+            draftkings: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Ev */
-            ev?: number | null;
-            fanduel?: components["schemas"]["WnbaPropBookQuote"] | null;
+            ev: number | null;
+            fanduel: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Logo Url */
-            logo_url?: string | null;
+            logo_url: string | null;
             /** Market Type */
             market_type: string;
             /** Model Prediction */
-            model_prediction?: number | null;
+            model_prediction: number | null;
             /** Over Under Pct */
-            over_under_pct?: number | null;
+            over_under_pct: number | null;
             /** Player Name */
             player_name: string;
-            prizepicks?: components["schemas"]["WnbaPropBookQuote"] | null;
+            prizepicks: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Side */
             side: string;
             /** Stat */
             stat: string;
             /** Team Abbrev */
-            team_abbrev?: string | null;
-            underdog?: components["schemas"]["WnbaPropBookQuote"] | null;
+            team_abbrev: string | null;
+            underdog: components["schemas"]["WnbaPropBookQuote"] | null;
         };
         /** WnbaPropsResponse */
         WnbaPropsResponse: {
             /** As Of */
             as_of: string;
             /** Error */
-            error?: string | null;
+            error: string | null;
             /** Props */
-            props?: components["schemas"]["WnbaPropLine"][];
+            props: components["schemas"]["WnbaPropLine"][];
             /** Sportsbooks */
-            sportsbooks?: string[];
+            sportsbooks: string[];
         };
         /** WnbaScoreboardResponse */
         WnbaScoreboardResponse: {
@@ -1931,13 +1931,13 @@ export interface components {
             /** Abbrev */
             abbrev: string;
             /** Logo Url */
-            logo_url?: string | null;
+            logo_url: string | null;
             /** Name */
             name: string;
             /** Record */
-            record?: string | null;
+            record: string | null;
             /** Score */
-            score?: number | null;
+            score: number | null;
         };
     };
     responses: never;

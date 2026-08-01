@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 PROP_SPORTSBOOKS = (
     "fanduel",
@@ -9,13 +9,19 @@ PROP_SPORTSBOOKS = (
     "underdog",
 )
 
+_RESPONSE_CONFIG = ConfigDict(json_schema_serialization_defaults_required=True)
+
 
 class WnbaPropBookQuote(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     line: float
     odds_american: int | None = None
 
 
 class WnbaPropLine(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     player_name: str
     team_abbrev: str | None = None
     logo_url: str | None = None
@@ -32,6 +38,8 @@ class WnbaPropLine(BaseModel):
 
 
 class WnbaPropsResponse(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     as_of: str
     sportsbooks: list[str] = Field(default_factory=lambda: list(PROP_SPORTSBOOKS))
     props: list[WnbaPropLine] = Field(default_factory=list)

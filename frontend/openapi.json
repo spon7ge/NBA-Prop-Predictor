@@ -716,7 +716,8 @@
           "abbrev",
           "name",
           "score",
-          "color"
+          "color",
+          "logo_url"
         ],
         "title": "GameDetailTeam",
         "type": "object"
@@ -3743,11 +3744,15 @@
         },
         "required": [
           "id",
+          "espn_event_id",
+          "league",
           "status",
           "status_label",
           "away",
           "home",
-          "start_time_et"
+          "start_time_et",
+          "venue",
+          "venue_city"
         ],
         "title": "WnbaGame",
         "type": "object"
@@ -4065,7 +4070,10 @@
         },
         "required": [
           "home_abbrev",
-          "away_abbrev"
+          "away_abbrev",
+          "spread_team_abbrev",
+          "spread_line",
+          "total"
         ],
         "title": "WnbaOddsGame",
         "type": "object"
@@ -4101,7 +4109,10 @@
           }
         },
         "required": [
-          "as_of"
+          "as_of",
+          "sportsbook",
+          "games",
+          "error"
         ],
         "title": "WnbaOddsResponse",
         "type": "object"
@@ -4125,7 +4136,8 @@
           }
         },
         "required": [
-          "line"
+          "line",
+          "odds_american"
         ],
         "title": "WnbaPropBookQuote",
         "type": "object"
@@ -4246,9 +4258,18 @@
         },
         "required": [
           "player_name",
+          "team_abbrev",
+          "logo_url",
           "stat",
           "market_type",
-          "side"
+          "side",
+          "model_prediction",
+          "over_under_pct",
+          "ev",
+          "fanduel",
+          "draftkings",
+          "prizepicks",
+          "underdog"
         ],
         "title": "WnbaPropLine",
         "type": "object"
@@ -4286,7 +4307,10 @@
           }
         },
         "required": [
-          "as_of"
+          "as_of",
+          "sportsbooks",
+          "props",
+          "error"
         ],
         "title": "WnbaPropsResponse",
         "type": "object"
@@ -4505,7 +4529,10 @@
         },
         "required": [
           "abbrev",
-          "name"
+          "name",
+          "score",
+          "record",
+          "logo_url"
         ],
         "title": "WnbaTeam",
         "type": "object"

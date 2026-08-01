@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+_RESPONSE_CONFIG = ConfigDict(json_schema_serialization_defaults_required=True)
 
 
 class WnbaOddsGame(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     home_abbrev: str
     away_abbrev: str
     spread_team_abbrev: str | None = None
@@ -12,6 +16,8 @@ class WnbaOddsGame(BaseModel):
 
 
 class WnbaOddsResponse(BaseModel):
+    model_config = _RESPONSE_CONFIG
+
     as_of: str
     sportsbook: str = "draftkings"
     games: list[WnbaOddsGame] = Field(default_factory=list)
