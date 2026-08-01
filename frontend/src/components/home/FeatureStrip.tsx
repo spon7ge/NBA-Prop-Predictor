@@ -1,15 +1,15 @@
 const FEATURES = [
   {
-    title: "Reference",
-    body: "Live games, standings, leaders, and box scores — the full basketball picture.",
+    title: "Follow",
+    body: "Live scores and tonight’s slate — a calm place to watch the game.",
   },
   {
-    title: "Lines",
-    body: "Player props and market odds in one quiet board, not ten open tabs.",
+    title: "Understand",
+    body: "Props and matchups explained simply, whether you’re new or deep in.",
   },
   {
-    title: "Projections",
-    body: "Model numbers next to the books — so your bets start with an edge.",
+    title: "Decide",
+    body: "Model projections next to the market — so your bets start with an edge.",
   },
 ] as const;
 
@@ -21,10 +21,10 @@ export function FeatureStrip() {
     >
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          The stats site. The betting edge. Together.
+          Built to get you ready
         </h2>
         <p className="mt-3 text-sm text-white/40 sm:text-base">
-          Follow the game like a reference site. Bet like you have a model.
+          Watch first. Learn the lines. Bet with a plan.
         </p>
       </div>
       <div className="mx-auto mt-12 grid max-w-4xl gap-10 text-left sm:grid-cols-3 sm:gap-8">

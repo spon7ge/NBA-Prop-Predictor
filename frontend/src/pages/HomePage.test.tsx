@@ -57,12 +57,7 @@ describe("HomePage", () => {
       screen.getByRole("heading", { name: /stories/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", {
-        name: /the stats site\. the betting edge\. together/i,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /enter a league/i }),
+      screen.getByRole("heading", { name: /built to get you ready/i }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: /learn the game/i }),

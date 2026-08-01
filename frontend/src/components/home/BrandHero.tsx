@@ -7,18 +7,18 @@ export function BrandHero() {
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-5 text-left">
           <p className="text-[11px] font-medium tracking-[0.18em] text-white/40 uppercase">
-            Stats + edges · Beta
+            Basketball intelligence · Beta
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             HoopVista
           </h1>
           <p className="text-xl tracking-tight text-white/85 sm:text-2xl">
-            Basketball Reference meets BettingPros — in one place.
+            From first tip to smarter bets.
           </p>
           <p className="max-w-md text-sm leading-relaxed text-white/45 sm:text-base">
-            Box scores, standings, and leaders for fans who want the full
-            picture — plus model projections next to the lines when you&apos;re
-            ready to bet smarter.
+            Built for fans and beginners alike. Follow the games, learn the
+            lines, and use model projections when you&apos;re ready to place a
+            bet — so you&apos;re deciding with numbers, not guessing.
           </p>
           <div className="pt-1">
             <a
