@@ -4144,6 +4144,57 @@
       },
       "WnbaPropLine": {
         "properties": {
+          "bet365": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "betmgm": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "betr": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "caesars": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "commence_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commence Time"
+          },
           "draftkings": {
             "anyOf": [
               {
@@ -4175,6 +4226,17 @@
               }
             ]
           },
+          "game_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Game Date"
+          },
           "logo_url": {
             "anyOf": [
               {
@@ -4201,6 +4263,16 @@
             ],
             "title": "Model Prediction"
           },
+          "novig": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "over_under_pct": {
             "anyOf": [
               {
@@ -4211,6 +4283,26 @@
               }
             ],
             "title": "Over Under Pct"
+          },
+          "pick6": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pinnacle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "player_name": {
             "title": "Player Name",
@@ -4229,6 +4321,16 @@
           "side": {
             "title": "Side",
             "type": "string"
+          },
+          "sleeper": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "stat": {
             "title": "Stat",
@@ -4263,13 +4365,23 @@
           "stat",
           "market_type",
           "side",
+          "game_date",
+          "commence_time",
           "model_prediction",
           "over_under_pct",
           "ev",
           "fanduel",
           "draftkings",
+          "caesars",
+          "betmgm",
+          "pinnacle",
+          "bet365",
           "prizepicks",
-          "underdog"
+          "underdog",
+          "betr",
+          "novig",
+          "sleeper",
+          "pick6"
         ],
         "title": "WnbaPropLine",
         "type": "object"

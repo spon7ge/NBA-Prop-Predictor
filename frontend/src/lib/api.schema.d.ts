@@ -1828,23 +1828,35 @@ export interface components {
         };
         /** WnbaPropLine */
         WnbaPropLine: {
+            bet365: components["schemas"]["WnbaPropBookQuote"] | null;
+            betmgm: components["schemas"]["WnbaPropBookQuote"] | null;
+            betr: components["schemas"]["WnbaPropBookQuote"] | null;
+            caesars: components["schemas"]["WnbaPropBookQuote"] | null;
+            /** Commence Time */
+            commence_time: string | null;
             draftkings: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Ev */
             ev: number | null;
             fanduel: components["schemas"]["WnbaPropBookQuote"] | null;
+            /** Game Date */
+            game_date: string | null;
             /** Logo Url */
             logo_url: string | null;
             /** Market Type */
             market_type: string;
             /** Model Prediction */
             model_prediction: number | null;
+            novig: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Over Under Pct */
             over_under_pct: number | null;
+            pick6: components["schemas"]["WnbaPropBookQuote"] | null;
+            pinnacle: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Player Name */
             player_name: string;
             prizepicks: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Side */
             side: string;
+            sleeper: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Stat */
             stat: string;
             /** Team Abbrev */

@@ -1,4 +1,4 @@
-"""Load scraper / Sharp snapshots into Supabase odds tables."""
+"""Load scraper / Parlay snapshots into Supabase odds tables."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import pandas as pd
 from sqlalchemy import text
 
 from src.odds.snapshot_rows import (
+    parlay_props_to_book_rows,
     prizepicks_projections_to_rows,
     sharp_props_to_book_rows,
     underdog_picks_to_rows,
@@ -46,12 +47,32 @@ _SHARP_BOOK_CONFLICT_COLS = [
     "scraped_at",
 ]
 
+_PARLAY_BOOK_CONFLICT_COLS = _SHARP_BOOK_CONFLICT_COLS
+
 _SHARP_BOOK_TABLES = {
     "fanduel": "wnba_fanduel",
     "draftkings": "wnba_draftkings",
 }
 
-DEFAULT_SHARP_SNAPSHOT_MINUTES = 30
+_PARLAY_BOOK_TABLES = {
+    "fanduel": "wnba_fanduel",
+    "draftkings": "wnba_draftkings",
+    "caesars": "wnba_caesars",
+    "betmgm": "wnba_betmgm",
+    "pinnacle": "wnba_pinnacle",
+    "bet365": "wnba_bet365",
+    # Scraper tables wnba_prizepicks / wnba_underdogs use a different shape.
+    "prizepicks": "wnba_prizepicks_parlay",
+    "underdog": "wnba_underdog_parlay",
+    "betr": "wnba_betr",
+    "novig": "wnba_novig",
+    "sleeper": "wnba_sleeper",
+    "pick6": "wnba_pick6",
+}
+
+PARLAY_PROP_SPORTSBOOKS = tuple(_PARLAY_BOOK_TABLES.keys())
+
+DEFAULT_SNAPSHOT_MINUTES = 30
 
 
 def _skip_db(env_var: str) -> bool:
@@ -66,13 +87,16 @@ def _coerce_float_columns(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
 
 
 def snapshot_interval_minutes() -> int:
-    raw = os.environ.get("SHARP_PROPS_SNAPSHOT_MINUTES", "").strip()
+    raw = (
+        os.environ.get("PARLAY_PROPS_SNAPSHOT_MINUTES", "").strip()
+        or os.environ.get("SHARP_PROPS_SNAPSHOT_MINUTES", "").strip()
+    )
     if not raw:
-        return DEFAULT_SHARP_SNAPSHOT_MINUTES
+        return DEFAULT_SNAPSHOT_MINUTES
     try:
         value = int(raw)
     except ValueError:
-        return DEFAULT_SHARP_SNAPSHOT_MINUTES
+        return DEFAULT_SNAPSHOT_MINUTES
     return max(value, 0)
 
 
@@ -171,6 +195,17 @@ def latest_sharp_props_scraped_at(league: str = "wnba") -> datetime | None:
     return max(present)
 
 
+def latest_parlay_props_scraped_at(league: str = "wnba") -> datetime | None:
+    """Return the newest scraped_at across all Parlay book snapshot tables."""
+    times = [
+        _latest_scraped_at(table, league) for table in _PARLAY_BOOK_TABLES.values()
+    ]
+    present = [t for t in times if t is not None]
+    if not present:
+        return None
+    return max(present)
+
+
 def should_persist_sharp_props(
     *,
     league: str = "wnba",
@@ -187,6 +222,29 @@ def should_persist_sharp_props(
         return True
 
     latest = latest_sharp_props_scraped_at(league)
+    if latest is None:
+        return True
+
+    now = now or datetime.now(timezone.utc)
+    return now - latest >= timedelta(minutes=minutes)
+
+
+def should_persist_parlay_props(
+    *,
+    league: str = "wnba",
+    now: datetime | None = None,
+    interval_minutes: int | None = None,
+) -> bool:
+    """True when no recent joint Parlay snapshot exists within the throttle window."""
+    minutes = (
+        snapshot_interval_minutes()
+        if interval_minutes is None
+        else max(interval_minutes, 0)
+    )
+    if minutes == 0:
+        return True
+
+    latest = latest_parlay_props_scraped_at(league)
     if latest is None:
         return True
 
@@ -222,6 +280,39 @@ def load_sharp_book_snapshot(
         df,
         schema="odds",
         conflict_cols=_SHARP_BOOK_CONFLICT_COLS,
+        lineage_col="fetched_at",
+    )
+    return len(rows)
+
+
+def load_parlay_book_snapshot(
+    parlay_rows: list[dict],
+    *,
+    sportsbook: str,
+    league: str,
+    scraped_at: datetime | None = None,
+) -> int:
+    if _skip_db("PARLAY_PROPS_SKIP_DB") or _skip_db("SHARP_PROPS_SKIP_DB"):
+        return 0
+
+    book = sportsbook.lower().strip()
+    table = _PARLAY_BOOK_TABLES.get(book)
+    if not table:
+        raise ValueError(f"unsupported sportsbook: {sportsbook}")
+
+    scraped_at = scraped_at or datetime.now(timezone.utc)
+    rows = parlay_props_to_book_rows(
+        parlay_rows, sportsbook=book, league=league, scraped_at=scraped_at
+    )
+    if not rows:
+        return 0
+
+    df = _coerce_float_columns(pd.DataFrame(rows), ["line_score"])
+    upsert_df(
+        table,
+        df,
+        schema="odds",
+        conflict_cols=_PARLAY_BOOK_CONFLICT_COLS,
         lineage_col="fetched_at",
     )
     return len(rows)
@@ -273,6 +364,54 @@ def maybe_persist_sharp_props(
             )
     except Exception as exc:
         logger.warning("Sharp props snapshot write failed: %s", exc)
+        return empty
+
+    return counts
+
+
+def maybe_persist_parlay_props(
+    parlay_rows: list[dict[str, Any]],
+    *,
+    league: str = "wnba",
+    scraped_at: datetime | None = None,
+) -> dict[str, int]:
+    """
+    Persist all Parlay display books when the throttle allows.
+
+    Best-effort: never raises. Returns counts written per book (0 if skipped).
+    """
+    empty = {book: 0 for book in PARLAY_PROP_SPORTSBOOKS}
+    if _skip_db("PARLAY_PROPS_SKIP_DB") or _skip_db("SHARP_PROPS_SKIP_DB"):
+        return empty
+    if not parlay_rows:
+        return empty
+
+    try:
+        if not should_persist_parlay_props(league=league):
+            return empty
+    except Exception as exc:
+        logger.warning("Parlay props snapshot throttle check failed: %s", exc)
+        return empty
+
+    scraped_at = scraped_at or datetime.now(timezone.utc)
+    counts = dict(empty)
+    try:
+        for book in PARLAY_PROP_SPORTSBOOKS:
+            counts[book] = load_parlay_book_snapshot(
+                parlay_rows,
+                sportsbook=book,
+                league=league,
+                scraped_at=scraped_at,
+            )
+        if any(counts.values()):
+            logger.info(
+                "Parlay props snapshot written league=%s scraped_at=%s counts=%s",
+                league,
+                scraped_at.isoformat(),
+                counts,
+            )
+    except Exception as exc:
+        logger.warning("Parlay props snapshot write failed: %s", exc)
         return empty
 
     return counts

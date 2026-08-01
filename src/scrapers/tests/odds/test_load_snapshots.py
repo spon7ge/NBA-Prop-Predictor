@@ -259,3 +259,97 @@ def test_maybe_persist_sharp_props_swallows_write_errors(monkeypatch, mock_upser
     mock_upsert.side_effect = RuntimeError("db down")
     counts = load_snapshots.maybe_persist_sharp_props(SHARP_ROWS, league="wnba")
     assert counts == {"fanduel": 0, "draftkings": 0}
+
+
+PARLAY_ROWS = [
+    {
+        "bookmaker": "fanduel",
+        "player": "Rhyne Howard",
+        "market_key": "player_assists",
+        "market": "Assists",
+        "line": 3.5,
+        "over_price": -114,
+        "under_price": -110,
+    },
+    {
+        "bookmaker": "draftkings",
+        "player": "Rhyne Howard",
+        "market_key": "player_assists",
+        "market": "Assists",
+        "line": 3.5,
+        "over_price": -120,
+        "under_price": -110,
+    },
+    {
+        "bookmaker": "pinnacle",
+        "player": "Rhyne Howard",
+        "market_key": "player_assists",
+        "market": "Assists",
+        "line": 3.5,
+        "over_price": -108,
+        "under_price": -112,
+    },
+    {
+        "bookmaker": "prizepicks",
+        "player": "Rhyne Howard",
+        "market_key": "player_assists",
+        "market": "Assists",
+        "line": 3.5,
+        "over_price": -100,
+        "under_price": -100,
+    },
+    {
+        "bookmaker": "novig",
+        "player": "Rhyne Howard",
+        "market_key": "player_assists",
+        "market": "Assists",
+        "line": 3.5,
+        "over_price": -110,
+        "under_price": -110,
+    },
+]
+
+
+def test_maybe_persist_parlay_props_writes_books(monkeypatch, mock_upsert):
+    monkeypatch.setattr(load_snapshots, "should_persist_parlay_props", lambda **kw: True)
+    counts = load_snapshots.maybe_persist_parlay_props(
+        PARLAY_ROWS, league="wnba", scraped_at=SCRAPED
+    )
+    assert counts["fanduel"] == 2
+    assert counts["draftkings"] == 2
+    assert counts["pinnacle"] == 2
+    assert counts["prizepicks"] == 2
+    assert counts["novig"] == 2
+    assert counts["caesars"] == 0
+    assert counts["betr"] == 0
+    tables = {call.args[0] for call in mock_upsert.call_args_list}
+    assert tables == {
+        "wnba_fanduel",
+        "wnba_draftkings",
+        "wnba_pinnacle",
+        "wnba_prizepicks_parlay",
+        "wnba_novig",
+    }
+    assert set(counts) == set(load_snapshots.PARLAY_PROP_SPORTSBOOKS)
+    assert len(load_snapshots.PARLAY_PROP_SPORTSBOOKS) == 12
+
+
+def test_maybe_persist_parlay_props_skips_when_throttled(monkeypatch, mock_upsert):
+    monkeypatch.setattr(load_snapshots, "should_persist_parlay_props", lambda **kw: False)
+    counts = load_snapshots.maybe_persist_parlay_props(PARLAY_ROWS, league="wnba")
+    assert all(v == 0 for v in counts.values())
+    mock_upsert.assert_not_called()
+
+
+def test_should_persist_parlay_false_when_recent(monkeypatch):
+    now = datetime(2026, 8, 1, 12, 0, tzinfo=timezone.utc)
+    recent = datetime(2026, 8, 1, 11, 45, tzinfo=timezone.utc)
+    monkeypatch.setattr(
+        load_snapshots, "latest_parlay_props_scraped_at", lambda league: recent
+    )
+    assert (
+        load_snapshots.should_persist_parlay_props(
+            league="wnba", now=now, interval_minutes=30
+        )
+        is False
+    )

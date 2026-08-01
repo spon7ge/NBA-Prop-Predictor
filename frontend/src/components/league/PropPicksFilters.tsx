@@ -1,7 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
-import type { TeamFilterOption } from "./filterPropLines";
+import {
+  PROP_BOOK_OPTIONS,
+  type TeamFilterOption,
+} from "./filterPropLines";
 
 type MultiSelectFilterProps = {
   label: string;
@@ -121,9 +124,11 @@ export type PropPicksFiltersProps = {
   selectedStats: Set<string>;
   selectedSides: Set<string>;
   selectedTeams: Set<string>;
+  selectedBooks: Set<string>;
   onStatsChange: (next: Set<string>) => void;
   onSidesChange: (next: Set<string>) => void;
   onTeamsChange: (next: Set<string>) => void;
+  onBooksChange: (next: Set<string>) => void;
   onClear: () => void;
 };
 
@@ -133,21 +138,33 @@ export function PropPicksFilters({
   selectedStats,
   selectedSides,
   selectedTeams,
+  selectedBooks,
   onStatsChange,
   onSidesChange,
   onTeamsChange,
+  onBooksChange,
   onClear,
 }: PropPicksFiltersProps) {
   const hasActive =
     selectedStats.size > 0 ||
     selectedSides.size > 0 ||
-    selectedTeams.size > 0;
+    selectedTeams.size > 0 ||
+    selectedBooks.size > 0;
 
   return (
     <div
       className="flex flex-wrap items-center gap-2"
       aria-label="Prop picks filters"
     >
+      <MultiSelectFilter
+        label="Book"
+        options={PROP_BOOK_OPTIONS.map((b) => ({
+          value: b.key,
+          label: b.label,
+        }))}
+        selected={selectedBooks}
+        onChange={onBooksChange}
+      />
       <MultiSelectFilter
         label="Stat"
         options={stats.map((s) => ({ value: s, label: s }))}

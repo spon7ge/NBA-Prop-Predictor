@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Response
 
 from app.schemas.wnba_props import WnbaPropsResponse
-from app.services.sharp_props import get_today_props
+from app.services.parlay_props import get_today_props
 
 router = APIRouter(tags=["wnba"])
 

@@ -27,8 +27,13 @@ CORS_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
-# SharpAPI — WNBA DraftKings odds proxy (optional; empty → empty odds response)
+# SharpAPI — legacy; WNBA odds/props now use ParlayAPI
 SHARP_API_KEY: str | None = os.environ.get("SHARP_API_KEY") or None
 # Strip accidental quotes from .env values like SHARP_API_KEY='sk_...'
 if SHARP_API_KEY:
     SHARP_API_KEY = SHARP_API_KEY.strip().strip("'").strip('"') or None
+
+# ParlayAPI — WNBA props + matchup odds (optional; empty → empty response)
+PARLAY_API_KEY: str | None = os.environ.get("PARLAY_API_KEY") or None
+if PARLAY_API_KEY:
+    PARLAY_API_KEY = PARLAY_API_KEY.strip().strip("'").strip('"') or None

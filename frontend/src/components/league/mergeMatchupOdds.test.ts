@@ -52,6 +52,28 @@ describe("mergeMatchupOdds", () => {
     ]);
     expect(merged[0].odds).toBeNull();
   });
+
+  it("matches PHX scoreboard abbrev to PHO odds abbrev", () => {
+    const phxGame: MatchupGame = {
+      ...baseGame,
+      away: { ...baseGame.away, abbrev: "NYL", name: "New York Liberty" },
+      home: { ...baseGame.home, abbrev: "PHX", name: "Phoenix Mercury" },
+    };
+    const merged = mergeMatchupOdds([phxGame], [
+      {
+        home_abbrev: "PHO",
+        away_abbrev: "NYL",
+        spread_team_abbrev: "NYL",
+        spread_line: -2.5,
+        total: 176.5,
+      },
+    ]);
+    expect(merged[0].odds).toEqual({
+      spreadTeamAbbrev: "NYL",
+      spreadLine: -2.5,
+      total: 176.5,
+    });
+  });
 });
 
 describe("formatOddsPill", () => {

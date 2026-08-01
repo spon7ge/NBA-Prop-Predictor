@@ -5,8 +5,16 @@ from pydantic import BaseModel, ConfigDict, Field
 PROP_SPORTSBOOKS = (
     "fanduel",
     "draftkings",
+    "caesars",
+    "betmgm",
+    "pinnacle",
+    "bet365",
     "prizepicks",
     "underdog",
+    "betr",
+    "novig",
+    "sleeper",
+    "pick6",
 )
 
 _RESPONSE_CONFIG = ConfigDict(json_schema_serialization_defaults_required=True)
@@ -28,13 +36,24 @@ class WnbaPropLine(BaseModel):
     stat: str
     market_type: str
     side: str
+    # Tip metadata from Parlay (used to flip to tomorrow's slate when today is final).
+    game_date: str | None = None
+    commence_time: str | None = None
     model_prediction: float | None = None
     over_under_pct: float | None = None
     ev: float | None = None
     fanduel: WnbaPropBookQuote | None = None
     draftkings: WnbaPropBookQuote | None = None
+    caesars: WnbaPropBookQuote | None = None
+    betmgm: WnbaPropBookQuote | None = None
+    pinnacle: WnbaPropBookQuote | None = None
+    bet365: WnbaPropBookQuote | None = None
     prizepicks: WnbaPropBookQuote | None = None
     underdog: WnbaPropBookQuote | None = None
+    betr: WnbaPropBookQuote | None = None
+    novig: WnbaPropBookQuote | None = None
+    sleeper: WnbaPropBookQuote | None = None
+    pick6: WnbaPropBookQuote | None = None
 
 
 class WnbaPropsResponse(BaseModel):

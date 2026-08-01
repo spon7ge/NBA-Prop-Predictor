@@ -161,7 +161,7 @@ def normalize_espn_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]:
             raw = c.get("score")
             score = int(raw) if raw not in (None, "") else None
             return WnbaTeam(
-                abbrev=str(t.get("abbreviation") or ""),
+                abbrev=canonical_abbrev(str(t.get("abbreviation") or "")),
                 name=str(t.get("displayName") or ""),
                 score=score if status != "scheduled" else None,
                 record=_espn_team_record(c),
@@ -228,7 +228,7 @@ def normalize_stats_scoreboard(payload: dict, *, date_et: str) -> list[WnbaGame]
             raw = t.get("score")
             score = int(raw) if raw is not None and status != "scheduled" else None
             return WnbaTeam(
-                abbrev=str(t.get("teamTricode") or ""),
+                abbrev=canonical_abbrev(str(t.get("teamTricode") or "")),
                 name=full,
                 score=score,
             )

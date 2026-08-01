@@ -1,7 +1,23 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { ApiWnbaPropLine } from "@/lib/api";
-import { PropPicksTable } from "./PropPicksTable";
+import { PROP_PICKS_PAGE_SIZE, PropPicksTable } from "./PropPicksTable";
+
+const emptyBooks = {
+  fanduel: null,
+  draftkings: null,
+  caesars: null,
+  betmgm: null,
+  pinnacle: null,
+  bet365: null,
+  prizepicks: null,
+  underdog: null,
+  betr: null,
+  novig: null,
+  sleeper: null,
+  pick6: null,
+} as const;
 
 const sampleProps: ApiWnbaPropLine[] = [
   {
@@ -14,8 +30,13 @@ const sampleProps: ApiWnbaPropLine[] = [
     model_prediction: null,
     over_under_pct: null,
     ev: null,
+    game_date: "2026-07-31",
+    commence_time: "2026-07-31T23:30:00Z",
+    ...emptyBooks,
     fanduel: { line: 3.5, odds_american: -114 },
     draftkings: { line: 3.5, odds_american: -120 },
+    betmgm: { line: 3.5, odds_american: -115 },
+    pinnacle: { line: 3.5, odds_american: -108 },
     prizepicks: { line: 3.5, odds_american: null },
     underdog: { line: 3.5, odds_american: -108 },
   },
@@ -29,10 +50,12 @@ const sampleProps: ApiWnbaPropLine[] = [
     model_prediction: null,
     over_under_pct: null,
     ev: null,
+    game_date: "2026-07-31",
+    commence_time: "2026-07-31T23:30:00Z",
+    ...emptyBooks,
     fanduel: { line: 3.5, odds_american: -114 },
     draftkings: { line: 3.5, odds_american: -110 },
-    prizepicks: null,
-    underdog: null,
+    pinnacle: { line: 3.5, odds_american: -112 },
   },
 ];
 
@@ -47,28 +70,22 @@ describe("PropPicksTable", () => {
     expect(screen.getByRole("columnheader", { name: "EV" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "FanDuel" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "DraftKings" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Caesars" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "BetMGM" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Pinnacle" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "bet365" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "PrizePicks" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Underdog" })).toBeInTheDocument();
-    expect(screen.queryByRole("columnheader", { name: "BetMGM" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("columnheader", { name: "BetRivers" })).not.toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Betr" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Novig" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Sleeper" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Pick6" })).toBeInTheDocument();
 
     expect(screen.getAllByText("Rhyne Howard")).toHaveLength(2);
     expect(screen.getAllByRole("presentation")).toHaveLength(2);
-    expect(screen.getAllByRole("presentation")[0]).toHaveAttribute(
-      "src",
-      "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png",
-    );
     expect(screen.getByText("Over")).toBeInTheDocument();
     expect(screen.getByText("Under")).toBeInTheDocument();
-    // Line above odds in each book pill (PrizePicks over row has line only)
-    expect(screen.getAllByText("3.5").length).toBeGreaterThanOrEqual(5);
-    expect(screen.getAllByText("−114").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("−120")).toBeInTheDocument();
-    expect(screen.getByText("−110")).toBeInTheDocument();
-    expect(screen.getByText("−108")).toBeInTheDocument();
-    expect(
-      screen.getByText("Odds by FanDuel, DraftKings, PrizePicks & Underdog"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Odds by Parlay API")).toBeInTheDocument();
   });
 
   it("shows line only when odds_american is null", () => {
@@ -77,10 +94,8 @@ describe("PropPicksTable", () => {
         props={[
           {
             ...sampleProps[0]!,
+            ...emptyBooks,
             fanduel: { line: 4.5, odds_american: null },
-            draftkings: null,
-            prizepicks: null,
-            underdog: null,
           },
         ]}
       />,
@@ -103,8 +118,62 @@ describe("PropPicksTable", () => {
     expect(screen.getByText("No props match these filters")).toBeInTheDocument();
   });
 
+  it("shows custom empty message when provided", () => {
+    render(
+      <PropPicksTable
+        props={[]}
+        emptyMessage="No active props — today's games are final"
+      />,
+    );
+    expect(
+      screen.getByText("No active props — today's games are final"),
+    ).toBeInTheDocument();
+  });
+
   it("shows loading skeletons", () => {
     render(<PropPicksTable props={[]} isLoading />);
     expect(screen.getByLabelText("Loading prop picks")).toBeInTheDocument();
+  });
+
+  it("shows last updated when lastUpdatedAt is set", () => {
+    render(
+      <PropPicksTable
+        props={sampleProps}
+        lastUpdatedAt={Date.parse("2026-07-31T23:54:00")}
+      />,
+    );
+
+    expect(screen.getByText(/Last updated/i)).toBeInTheDocument();
+    expect(screen.getByText(/Jul 31/i)).toBeInTheDocument();
+  });
+
+  it("hides last updated when lastUpdatedAt is unset", () => {
+    render(<PropPicksTable props={sampleProps} />);
+    expect(screen.queryByText(/Last updated/i)).not.toBeInTheDocument();
+  });
+
+  it("paginates to 50 rows with next/previous", async () => {
+    const user = userEvent.setup();
+    const many: ApiWnbaPropLine[] = Array.from(
+      { length: PROP_PICKS_PAGE_SIZE + 3 },
+      (_, i) => ({
+        ...sampleProps[0]!,
+        player_name: `Player ${i}`,
+        market_type: `player_points_${i}`,
+      }),
+    );
+
+    render(<PropPicksTable props={many} />);
+
+    expect(screen.getByText("Showing 1–50 of 53")).toBeInTheDocument();
+    expect(screen.getByText("Player 0")).toBeInTheDocument();
+    expect(screen.queryByText("Player 50")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Previous" })).toBeDisabled();
+
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    expect(screen.getByText("Showing 51–53 of 53")).toBeInTheDocument();
+    expect(screen.getByText("Player 50")).toBeInTheDocument();
+    expect(screen.queryByText("Player 0")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
   });
 });

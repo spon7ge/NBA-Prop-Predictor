@@ -1,12 +1,30 @@
 import type { ApiWnbaOddsGame } from "@/lib/api";
 import type { MatchupGame, MatchupOdds } from "./types";
 
+/** Align ESPN tricodes with odds / stats.wnba.com spellings. */
+const ABBREV_ALIASES: Record<string, string> = {
+  GS: "GSV",
+  LA: "LAS",
+  LV: "LVA",
+  NY: "NYL",
+  PHX: "PHO",
+  POR: "PDX",
+  WSH: "WAS",
+};
+
+function canonicalAbbrev(abbrev: string): string {
+  const upper = abbrev.trim().toUpperCase();
+  return ABBREV_ALIASES[upper] ?? upper;
+}
+
 function oddsKey(homeAbbrev: string, awayAbbrev: string): string {
-  return `${awayAbbrev.trim().toUpperCase()}@${homeAbbrev.trim().toUpperCase()}`;
+  return `${canonicalAbbrev(awayAbbrev)}@${canonicalAbbrev(homeAbbrev)}`;
 }
 
 function toMatchupOdds(game: ApiWnbaOddsGame): MatchupOdds | null {
-  const spreadTeamAbbrev = game.spread_team_abbrev ?? null;
+  const spreadTeamAbbrev = game.spread_team_abbrev
+    ? canonicalAbbrev(game.spread_team_abbrev)
+    : null;
   const spreadLine = game.spread_line ?? null;
   const total = game.total ?? null;
   if (spreadLine == null && total == null) {

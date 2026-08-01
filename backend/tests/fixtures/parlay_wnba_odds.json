@@ -1,0 +1,76 @@
+[
+  {
+    "id": "evt1",
+    "home_team": "Atlanta Dream",
+    "away_team": "Chicago Sky",
+    "bookmakers": [
+      {
+        "key": "pinnacle",
+        "title": "Pinnacle",
+        "markets": [
+          {
+            "key": "spreads",
+            "outcomes": [
+              {"name": "Atlanta Dream", "price": -110, "point": -4.5},
+              {"name": "Chicago Sky", "price": -110, "point": 4.5}
+            ]
+          },
+          {
+            "key": "totals",
+            "outcomes": [
+              {"name": "Over", "price": -110, "point": 162.5},
+              {"name": "Under", "price": -110, "point": 162.5}
+            ]
+          }
+        ]
+      },
+      {
+        "key": "draftkings",
+        "title": "DraftKings",
+        "markets": [
+          {
+            "key": "spreads",
+            "outcomes": [
+              {"name": "Atlanta Dream", "price": -110, "point": -5.0},
+              {"name": "Chicago Sky", "price": -110, "point": 5.0}
+            ]
+          },
+          {
+            "key": "totals",
+            "outcomes": [
+              {"name": "Over", "price": -110, "point": 163.5},
+              {"name": "Under", "price": -110, "point": 163.5}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt2",
+    "home_team": "New York Liberty",
+    "away_team": "Indiana Fever",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "title": "DraftKings",
+        "markets": [
+          {
+            "key": "spreads",
+            "outcomes": [
+              {"name": "New York Liberty", "price": -110, "point": -8.5},
+              {"name": "Indiana Fever", "price": -110, "point": 8.5}
+            ]
+          },
+          {
+            "key": "totals",
+            "outcomes": [
+              {"name": "Over", "price": -110, "point": 170.5},
+              {"name": "Under", "price": -110, "point": 170.5}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

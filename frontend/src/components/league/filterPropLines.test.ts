@@ -4,7 +4,10 @@ import {
   collectStatOptions,
   collectTeamOptions,
   excludePropsFromFinalGames,
+  excludePastGameProps,
   filterPropLines,
+  nextEtDate,
+  tipEtDate,
   type PropFilterSelection,
 } from "./filterPropLines";
 
@@ -13,13 +16,23 @@ function prop(partial: Partial<ApiWnbaPropLine> & Pick<ApiWnbaPropLine, "player_
     team_abbrev: null,
     logo_url: null,
     market_type: "player_assists",
+    game_date: null,
+    commence_time: null,
     model_prediction: null,
     over_under_pct: null,
     ev: null,
     fanduel: null,
     draftkings: null,
+    caesars: null,
+    betmgm: null,
+    pinnacle: null,
+    bet365: null,
     prizepicks: null,
     underdog: null,
+    betr: null,
+    novig: null,
+    sleeper: null,
+    pick6: null,
     ...partial,
   };
 }
@@ -61,6 +74,7 @@ const empty: PropFilterSelection = {
   stats: new Set(),
   sides: new Set(),
   teams: new Set(),
+  books: new Set(),
 };
 
 describe("filterPropLines", () => {
@@ -87,6 +101,7 @@ describe("filterPropLines", () => {
 
   it("ANDs across filters", () => {
     const out = filterPropLines(rows, {
+      ...empty,
       stats: new Set(["Assists", "Points"]),
       sides: new Set(["over"]),
       teams: new Set(["SEA"]),
@@ -102,6 +117,36 @@ describe("filterPropLines", () => {
     });
     expect(out.every((r) => r.team_abbrev != null)).toBe(true);
     expect(out).toHaveLength(3);
+  });
+
+  it("keeps rows that have a quote on any selected book", () => {
+    const withBooks = [
+      prop({
+        player_name: "PP only",
+        team_abbrev: "ATL",
+        stat: "Points",
+        side: "over",
+        prizepicks: { line: 20, price: -110, is_dfs_flat_payout: true },
+      }),
+      prop({
+        player_name: "FD only",
+        team_abbrev: "SEA",
+        stat: "Points",
+        side: "over",
+        fanduel: { line: 18, price: -115 },
+      }),
+      prop({
+        player_name: "No books",
+        team_abbrev: "NYL",
+        stat: "Points",
+        side: "over",
+      }),
+    ];
+    const out = filterPropLines(withBooks, {
+      ...empty,
+      books: new Set(["prizepicks", "underdog"]),
+    });
+    expect(out.map((r) => r.player_name)).toEqual(["PP only"]);
   });
 });
 
@@ -178,5 +223,103 @@ describe("excludePropsFromFinalGames", () => {
     expect(excludePropsFromFinalGames(rows, [])).toEqual(rows);
     expect(excludePropsFromFinalGames(rows, undefined)).toEqual(rows);
     expect(excludePropsFromFinalGames(rows, null)).toEqual(rows);
+  });
+});
+
+describe("excludePastGameProps", () => {
+  it("removes final-game teams and prior-day tips", () => {
+    const games = [
+      game({ status: "final", homeAbbrev: "ATL", awayAbbrev: "SEA" }),
+      game({
+        status: "scheduled",
+        homeAbbrev: "WAS",
+        awayAbbrev: "DAL",
+        id: "later",
+      }),
+    ];
+    const slateProps = [
+      prop({
+        player_name: "Yesterday",
+        team_abbrev: "MIN",
+        logo_url: "min.png",
+        stat: "Points",
+        side: "over",
+        market_type: "player_points",
+        commence_time: "2026-07-30T23:00:00Z",
+      }),
+      prop({
+        player_name: "Final ATL",
+        team_abbrev: "ATL",
+        logo_url: "atl.png",
+        stat: "Points",
+        side: "over",
+        market_type: "player_points",
+        commence_time: "2026-07-31T23:30:00Z",
+      }),
+      prop({
+        player_name: "Still on",
+        team_abbrev: "WAS",
+        logo_url: "was.png",
+        stat: "Points",
+        side: "over",
+        market_type: "player_points",
+        commence_time: "2026-07-31T23:30:00Z",
+      }),
+      prop({
+        player_name: "Tomorrow",
+        team_abbrev: "NYL",
+        logo_url: "nyl.png",
+        stat: "Points",
+        side: "over",
+        market_type: "player_points",
+        commence_time: "2026-08-01T23:00:00Z",
+      }),
+    ];
+    const out = excludePastGameProps(slateProps, games, "2026-07-31");
+    expect(out.map((r) => r.player_name)).toEqual(["Still on", "Tomorrow"]);
+  });
+
+  it("keeps tomorrow tips when today's slate is entirely final", () => {
+    const games = [
+      game({ status: "final", homeAbbrev: "ATL", awayAbbrev: "SEA" }),
+      game({
+        status: "final",
+        homeAbbrev: "WAS",
+        awayAbbrev: "DAL",
+        id: "g2",
+      }),
+    ];
+    const slateProps = [
+      prop({
+        player_name: "Today Player",
+        team_abbrev: "ATL",
+        logo_url: "atl.png",
+        stat: "Points",
+        side: "over",
+        commence_time: "2026-07-31T23:30:00Z",
+      }),
+      prop({
+        player_name: "Tomorrow Player",
+        team_abbrev: "NYL",
+        logo_url: "nyl.png",
+        stat: "Points",
+        side: "over",
+        market_type: "player_points",
+        commence_time: "2026-08-01T23:00:00Z",
+      }),
+    ];
+    const out = excludePastGameProps(slateProps, games, "2026-07-31");
+    expect(out.map((r) => r.player_name)).toEqual(["Tomorrow Player"]);
+  });
+});
+
+describe("tipEtDate / nextEtDate", () => {
+  it("maps commence times into ET calendar dates", () => {
+    expect(tipEtDate("2026-08-01T02:00:00Z")).toBe("2026-07-31");
+    expect(tipEtDate("2026-08-01T23:00:00Z")).toBe("2026-08-01");
+  });
+
+  it("advances YYYY-MM-DD by one day", () => {
+    expect(nextEtDate("2026-07-31")).toBe("2026-08-01");
   });
 });

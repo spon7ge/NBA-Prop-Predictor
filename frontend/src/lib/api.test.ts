@@ -136,7 +136,20 @@ describe("fetchWnbaProps", () => {
       ok: true,
       json: async () => ({
         as_of: "now",
-        sportsbooks: ["fanduel", "draftkings", "prizepicks", "underdog"],
+        sportsbooks: [
+          "fanduel",
+          "draftkings",
+          "caesars",
+          "betmgm",
+          "pinnacle",
+          "bet365",
+          "prizepicks",
+          "underdog",
+          "betr",
+          "novig",
+          "sleeper",
+          "pick6",
+        ],
         props: [],
       }),
     });

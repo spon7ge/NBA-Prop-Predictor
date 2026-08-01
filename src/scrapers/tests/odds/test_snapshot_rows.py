@@ -4,6 +4,7 @@ import pytest
 
 from src.odds.snapshot_rows import (
     parse_american_price,
+    parlay_props_to_book_rows,
     prizepicks_projections_to_rows,
     sharp_props_to_book_rows,
     underdog_picks_to_rows,
@@ -110,3 +111,89 @@ def test_sharp_props_to_book_rows_rejects_unknown_book():
         sharp_props_to_book_rows(
             [], sportsbook="betmgm", league="wnba", scraped_at=scraped
         )
+
+
+def test_parlay_props_to_book_rows_main_line_over_under():
+    scraped = datetime(2026, 8, 1, tzinfo=timezone.utc)
+    rows = parlay_props_to_book_rows(
+        [
+            {
+                "bookmaker": "pinnacle",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 3.5,
+                "over_price": -108,
+                "under_price": -112,
+            },
+            {
+                "bookmaker": "pinnacle",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 4.5,
+                "over_price": 140,
+                "under_price": -180,
+            },
+            {
+                "bookmaker": "fanduel",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 3.5,
+                "over_price": -114,
+                "under_price": -110,
+            },
+        ],
+        sportsbook="pinnacle",
+        league="WNBA",
+        scraped_at=scraped,
+    )
+    assert len(rows) == 2
+    sides = {r["side"]: r for r in rows}
+    assert sides["over"]["line_score"] == 3.5
+    assert sides["over"]["american_price"] == -108
+    assert sides["under"]["american_price"] == -112
+    assert sides["over"]["stat_category"] == "Assists"
+
+
+def test_parlay_props_to_book_rows_allows_one_sided_dfs():
+    scraped = datetime(2026, 8, 1, tzinfo=timezone.utc)
+    rows = parlay_props_to_book_rows(
+        [
+            {
+                "bookmaker": "fanduel",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 3.5,
+                "over_price": -114,
+                "under_price": -110,
+            },
+            {
+                "bookmaker": "underdog",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 3.5,
+                "over_price": -110,
+                "under_price": None,
+            },
+            {
+                "bookmaker": "underdog",
+                "player": "Rhyne Howard",
+                "market_key": "player_assists",
+                "market": "Assists",
+                "line": 6.5,
+                "over_price": -110,
+                "under_price": None,
+            },
+        ],
+        sportsbook="underdog",
+        league="wnba",
+        scraped_at=scraped,
+    )
+    assert len(rows) == 1
+    assert rows[0]["side"] == "over"
+    assert rows[0]["line_score"] == 3.5
+    assert rows[0]["american_price"] == -110

@@ -5,17 +5,17 @@ import { PropPicksTable } from "@/components/league/PropPicksTable";
 import {
   collectStatOptions,
   collectTeamOptions,
-  excludePropsFromFinalGames,
+  excludePastGameProps,
   filterPropLines,
 } from "@/components/league/filterPropLines";
 import { useWnbaProps } from "@/hooks/useWnbaProps";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function LeaguePropPicksPage() {
-  const { data, isLoading, isError, isFetched } = useWnbaProps();
-  const { games } = useWnbaScoreboard();
+  const { data, isLoading, isError, isFetched, dataUpdatedAt } = useWnbaProps();
+  const { games, data: scoreboard } = useWnbaScoreboard();
   const props = data?.props ?? [];
-  const activeProps = excludePropsFromFinalGames(props, games);
+  const activeProps = excludePastGameProps(props, games, scoreboard?.date);
   const showError = isError && !data;
   const showLoading = isLoading && !isFetched;
   const apiEmpty =
@@ -30,16 +30,21 @@ export function LeaguePropPicksPage() {
   const [selectedTeams, setSelectedTeams] = useState<Set<string>>(
     () => new Set(),
   );
+  const [selectedBooks, setSelectedBooks] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   const filtersActive =
     selectedStats.size > 0 ||
     selectedSides.size > 0 ||
-    selectedTeams.size > 0;
+    selectedTeams.size > 0 ||
+    selectedBooks.size > 0;
 
   const filtered = filterPropLines(activeProps, {
     stats: selectedStats,
     sides: selectedSides,
     teams: selectedTeams,
+    books: selectedBooks,
   });
 
   return (
@@ -49,6 +54,8 @@ export function LeaguePropPicksPage() {
         props={filtered}
         isLoading={showLoading}
         isError={apiEmpty}
+        visibleBooks={selectedBooks}
+        lastUpdatedAt={dataUpdatedAt || undefined}
         filtersActive={filtersActive && !apiEmpty && activeProps.length > 0}
         toolbar={
           !showLoading && !apiEmpty && activeProps.length > 0 ? (
@@ -58,13 +65,16 @@ export function LeaguePropPicksPage() {
               selectedStats={selectedStats}
               selectedSides={selectedSides}
               selectedTeams={selectedTeams}
+              selectedBooks={selectedBooks}
               onStatsChange={setSelectedStats}
               onSidesChange={setSelectedSides}
               onTeamsChange={setSelectedTeams}
+              onBooksChange={setSelectedBooks}
               onClear={() => {
                 setSelectedStats(new Set());
                 setSelectedSides(new Set());
                 setSelectedTeams(new Set());
+                setSelectedBooks(new Set());
               }}
             />
           ) : null

@@ -94,6 +94,22 @@ def underdog_picks_to_rows(
 
 _VALID_SIDES = frozenset({"over", "under"})
 _SHARP_BOOKS = frozenset({"fanduel", "draftkings"})
+_PARLAY_BOOKS = frozenset(
+    {
+        "fanduel",
+        "draftkings",
+        "caesars",
+        "betmgm",
+        "pinnacle",
+        "bet365",
+        "prizepicks",
+        "underdog",
+        "betr",
+        "novig",
+        "sleeper",
+        "pick6",
+    }
+)
 
 
 def _sharp_player_name(row: dict) -> str | None:
@@ -159,5 +175,64 @@ def sharp_props_to_book_rows(
                 "scraped_at": scraped_at,
             }
         )
+
+    return out
+
+
+def parlay_props_to_book_rows(
+    rows: list[dict],
+    *,
+    sportsbook: str,
+    league: str,
+    scraped_at: datetime,
+) -> list[dict]:
+    """Map Parlay prop API rows to odds.wnba_{book} row dicts (main lines only)."""
+    from src.odds.parlay_main_lines import select_parlay_main_lines
+
+    book = sportsbook.lower().strip()
+    if book not in _PARLAY_BOOKS:
+        raise ValueError(f"unsupported sportsbook: {sportsbook}")
+
+    out: list[dict] = []
+    league_key = league.lower()
+
+    for row in select_parlay_main_lines(rows, books=frozenset({book})):
+        player = str(row.get("player") or "").strip()
+        market = str(row.get("market_key") or "").strip()
+        if not player or not market.startswith("player_"):
+            continue
+        try:
+            line_score = float(row["line"])
+        except (KeyError, TypeError, ValueError):
+            continue
+
+        sides: list[tuple[str, int]] = []
+        for side, raw in (
+            ("over", row.get("over_price")),
+            ("under", row.get("under_price")),
+        ):
+            if raw is None:
+                continue
+            try:
+                sides.append((side, int(raw)))
+            except (TypeError, ValueError):
+                continue
+        if not sides:
+            continue
+
+        market_label = str(row.get("market") or "").strip() or None
+        for side, price in sides:
+            out.append(
+                {
+                    "league": league_key,
+                    "player_name": player,
+                    "market_type": market,
+                    "stat_category": market_label,
+                    "side": side,
+                    "line_score": line_score,
+                    "american_price": price,
+                    "scraped_at": scraped_at,
+                }
+            )
 
     return out
