@@ -10,6 +10,7 @@ import { ShotChart } from "@/components/game/ShotChart";
 import { PlayByPlay } from "@/components/game/PlayByPlay";
 import { WinProbabilityPanel } from "@/components/game/WinProbabilityPanel";
 import { BoxScore } from "@/components/game/BoxScore";
+import { GAME_SECTION_SURFACE } from "@/components/game/GameSection";
 
 function GameDetailSkeleton() {
   return (
@@ -19,7 +20,7 @@ function GameDetailSkeleton() {
           <span className="h-4 w-16 animate-pulse rounded bg-white/10" />
           <span className="h-3 w-20 animate-pulse rounded bg-white/10" />
         </div>
-        <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+        <div className={GAME_SECTION_SURFACE}>
           <span className="mb-3 block h-3 w-40 animate-pulse rounded bg-white/10" />
           <div className="space-y-3">
             {[0, 1].map((row) => (

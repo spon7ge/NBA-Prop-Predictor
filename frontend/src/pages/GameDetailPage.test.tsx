@@ -162,4 +162,46 @@ describe("GameDetailPage", () => {
     expect(screen.getByText(/Play-by-play/i)).toBeInTheDocument();
     expect(screen.queryByText(/Matchup prediction/i)).not.toBeInTheDocument();
   });
+
+  it("live detail page has no legacy #141414, amber, or violet chrome", async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () =>
+        baseGameDetail({
+          espn_event_id: "401857098",
+          status: "live",
+          status_label: "4:13 - 1st",
+          away: {
+            id: "129153",
+            abbrev: "GS",
+            name: "Golden State Valkyries",
+            score: 10,
+            color: "#553987",
+            logo_url: null,
+          },
+          home: {
+            id: "21",
+            abbrev: "PHX",
+            name: "Phoenix Mercury",
+            score: 9,
+            color: "#E56020",
+            logo_url: null,
+          },
+          fg_made: 1,
+          fg_attempted: 2,
+          matchup_prediction: null,
+          projected_starters: null,
+          season_leaders: null,
+          injuries: null,
+          box_score: null,
+        }),
+    });
+
+    renderGameDetail("401857098");
+
+    expect(await screen.findByText(/Shot chart/i)).toBeInTheDocument();
+    expect(document.body.innerHTML).not.toMatch(/#141414/);
+    expect(document.querySelector(".text-amber-300")).toBeNull();
+    expect(document.querySelector(".bg-violet-500")).toBeNull();
+  });
 });
