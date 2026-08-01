@@ -2,10 +2,17 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+PROP_SPORTSBOOKS = (
+    "fanduel",
+    "draftkings",
+    "prizepicks",
+    "underdog",
+)
+
 
 class WnbaPropBookQuote(BaseModel):
     line: float
-    odds_american: int
+    odds_american: int | None = None
 
 
 class WnbaPropLine(BaseModel):
@@ -20,10 +27,12 @@ class WnbaPropLine(BaseModel):
     ev: float | None = None
     fanduel: WnbaPropBookQuote | None = None
     draftkings: WnbaPropBookQuote | None = None
+    prizepicks: WnbaPropBookQuote | None = None
+    underdog: WnbaPropBookQuote | None = None
 
 
 class WnbaPropsResponse(BaseModel):
     as_of: str
-    sportsbooks: list[str] = Field(default_factory=lambda: ["fanduel", "draftkings"])
+    sportsbooks: list[str] = Field(default_factory=lambda: list(PROP_SPORTSBOOKS))
     props: list[WnbaPropLine] = Field(default_factory=list)
     error: str | None = None

@@ -308,7 +308,7 @@ export async function fetchWnbaOdds(): Promise<ApiWnbaOddsResponse> {
 
 export type ApiWnbaPropBookQuote = {
   line: number;
-  odds_american: number;
+  odds_american: number | null;
 };
 
 export type ApiWnbaPropLine = {
@@ -323,6 +323,8 @@ export type ApiWnbaPropLine = {
   ev: number | null;
   fanduel: ApiWnbaPropBookQuote | null;
   draftkings: ApiWnbaPropBookQuote | null;
+  prizepicks: ApiWnbaPropBookQuote | null;
+  underdog: ApiWnbaPropBookQuote | null;
 };
 
 export type ApiWnbaPropsResponse = {

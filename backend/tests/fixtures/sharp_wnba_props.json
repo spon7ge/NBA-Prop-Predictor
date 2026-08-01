@@ -126,6 +126,81 @@
       }
     },
     {
+      "id": "ud-howard-ast-over",
+      "sportsbook": "underdog",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "market_type": "player_assists",
+      "selection": "Rhyne Howard",
+      "selection_type": "over",
+      "line": 3.5,
+      "odds_american": -108,
+      "is_main_line": true,
+      "is_player_prop": true,
+      "player_name": "Rhyne Howard",
+      "stat_category": "assists",
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/48.png"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/352.png"
+      }
+    },
+    {
+      "id": "mgm-howard-ast-over",
+      "sportsbook": "betmgm",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "market_type": "player_assists",
+      "selection": "Rhyne Howard",
+      "selection_type": "over",
+      "line": 3.5,
+      "odds_american": -105,
+      "is_main_line": true,
+      "is_player_prop": true,
+      "player_name": "Rhyne Howard",
+      "stat_category": "assists",
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/48.png"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/352.png"
+      }
+    },
+    {
+      "id": "br-howard-ast-over",
+      "sportsbook": "betrivers",
+      "event_id": "wnba_dream_storm_2026-07-31_b3",
+      "league": "wnba",
+      "market_type": "player_assists",
+      "selection": "Rhyne Howard",
+      "selection_type": "over",
+      "line": 3.5,
+      "odds_american": -102,
+      "is_main_line": true,
+      "is_player_prop": true,
+      "player_name": "Rhyne Howard",
+      "stat_category": "assists",
+      "home": {
+        "name": "Atlanta Dream",
+        "abbreviation": "ATL",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/48.png"
+      },
+      "away": {
+        "name": "Seattle Storm",
+        "abbreviation": "SEA",
+        "logo": "https://cdn.sharpapi.io/teams/basketball/352.png"
+      }
+    },
+    {
       "id": "fd-howard-ast-alt",
       "sportsbook": "fanduel",
       "event_id": "wnba_dream_storm_2026-07-31_b3",

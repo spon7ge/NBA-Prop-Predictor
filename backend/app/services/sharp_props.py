@@ -9,7 +9,13 @@ from typing import Any
 import httpx
 
 from app.core.config import SHARP_API_KEY
-from app.schemas.wnba_props import WnbaPropBookQuote, WnbaPropLine, WnbaPropsResponse
+from app.schemas.wnba_props import (
+    PROP_SPORTSBOOKS,
+    WnbaPropBookQuote,
+    WnbaPropLine,
+    WnbaPropsResponse,
+)
+from app.services.odds_snapshots import fetch_latest_prizepicks, fetch_latest_underdog
 from app.services.wnba_espn_roster import get_roster_index, norm_player_name
 from app.services.wnba_scoreboard import canonical_abbrev
 
@@ -20,14 +26,16 @@ ESPN_TEAMS_URL = (
     "https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/teams"
 )
 CACHE_TTL_SECONDS = 45.0
-FETCH_TIMEOUT_SECONDS = 8.0
+FETCH_TIMEOUT_SECONDS = 12.0
 ESPN_TIMEOUT_SECONDS = 8.0
 ESPN_TEAMS_CACHE_TTL_SECONDS = 600.0
 MAX_PAGES = 10
 PAGE_LIMIT = 200
 
 _VALID_SIDES = frozenset({"over", "under"})
-_VALID_BOOKS = frozenset({"fanduel", "draftkings"})
+# Sharp API books only — PrizePicks / Underdog come from Supabase snapshots.
+SHARP_PROP_SPORTSBOOKS = ("fanduel", "draftkings")
+_SHARP_BOOKS = frozenset(SHARP_PROP_SPORTSBOOKS)
 
 _cache: dict[str, Any] = {}  # response, expires_at
 _espn_teams_cache: dict[str, Any] = {}  # by_abbrev, expires_at
@@ -100,7 +108,7 @@ def normalize_sharp_props(
             continue
 
         book = str(row.get("sportsbook") or "").lower()
-        if book not in _VALID_BOOKS:
+        if book not in _SHARP_BOOKS:
             continue
 
         player = _player_name(row)
@@ -125,8 +133,7 @@ def normalize_sharp_props(
                 "stat": _stat_label(row),
                 "market_type": market,
                 "side": side,
-                "fanduel": None,
-                "draftkings": None,
+                **{book_id: None for book_id in PROP_SPORTSBOOKS},
                 "event_logos": _event_team_candidates(row),
             },
         )
@@ -139,7 +146,7 @@ def normalize_sharp_props(
 
     props: list[WnbaPropLine] = []
     for bucket in buckets.values():
-        if bucket["fanduel"] is None and bucket["draftkings"] is None:
+        if all(bucket[book_id] is None for book_id in PROP_SPORTSBOOKS):
             continue
 
         team_abbrev: str | None = None
@@ -162,6 +169,172 @@ def normalize_sharp_props(
                 side=bucket["side"],
                 fanduel=bucket["fanduel"],
                 draftkings=bucket["draftkings"],
+                prizepicks=bucket["prizepicks"],
+                underdog=bucket["underdog"],
+            )
+        )
+
+    props.sort(
+        key=lambda p: (
+            p.player_name.lower(),
+            p.market_type,
+            0 if p.side == "over" else 1,
+        )
+    )
+    return props
+
+
+def _stat_key_from_sharp_market(market_type: str) -> str:
+    market = market_type.strip().lower()
+    if market.startswith("player_"):
+        return market[len("player_") :]
+    return market
+
+
+def _stat_key_from_pp_stat_type(stat_type: str) -> str:
+    return stat_type.strip().lower().replace(" ", "_").replace("+", "_")
+
+
+def _stat_key_from_ud_stat_name(stat_name: str) -> str:
+    return stat_name.strip().lower().replace(" ", "_")
+
+
+def _ud_stat_label(stat_name: str) -> str:
+    return stat_name.replace("_", " ").title()
+
+
+def _prop_merge_key(player_name: str, stat_key: str, side: str) -> tuple[str, str, str]:
+    return (norm_player_name(player_name), stat_key, side)
+
+
+def _bucket_from_prop(prop: WnbaPropLine) -> dict[str, Any]:
+    return {
+        "player_name": prop.player_name,
+        "stat": prop.stat,
+        "market_type": prop.market_type,
+        "side": prop.side,
+        "team_abbrev": prop.team_abbrev,
+        "logo_url": prop.logo_url,
+        "fanduel": prop.fanduel,
+        "draftkings": prop.draftkings,
+        "prizepicks": prop.prizepicks,
+        "underdog": prop.underdog,
+    }
+
+
+def _bucket_has_any_book(bucket: dict[str, Any]) -> bool:
+    return any(bucket.get(book_id) is not None for book_id in PROP_SPORTSBOOKS)
+
+
+def _apply_roster(bucket: dict[str, Any], teams: PlayerTeamIndex) -> None:
+    if bucket.get("team_abbrev"):
+        return
+    hit = teams.get(norm_player_name(bucket["player_name"]))
+    if hit:
+        bucket["team_abbrev"], bucket["logo_url"] = hit
+
+
+def merge_snapshot_props(
+    sharp_props: list[WnbaPropLine],
+    pp_rows: list[dict[str, Any]],
+    ud_rows: list[dict[str, Any]],
+    player_teams: PlayerTeamIndex | None = None,
+) -> list[WnbaPropLine]:
+    """Merge Supabase PrizePicks / Underdog snapshots into Sharp-normalized props."""
+    teams = player_teams or {}
+    buckets: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+    for prop in sharp_props:
+        stat_key = _stat_key_from_sharp_market(prop.market_type)
+        key = _prop_merge_key(prop.player_name, stat_key, prop.side)
+        buckets[key] = _bucket_from_prop(prop)
+
+    for row in pp_rows:
+        player = str(row.get("player_name") or "").strip()
+        stat_type = str(row.get("stat_type") or "").strip()
+        line_raw = row.get("line_score")
+        if not player or not stat_type or line_raw is None:
+            continue
+        try:
+            line_f = float(line_raw)
+        except (TypeError, ValueError):
+            continue
+
+        stat_key = _stat_key_from_pp_stat_type(stat_type)
+        quote = WnbaPropBookQuote(line=line_f, odds_american=None)
+        for side in _VALID_SIDES:
+            key = _prop_merge_key(player, stat_key, side)
+            bucket = buckets.get(key)
+            if bucket is None:
+                bucket = {
+                    "player_name": player,
+                    "stat": stat_type,
+                    "market_type": f"prizepicks:{stat_type}",
+                    "side": side,
+                    "team_abbrev": None,
+                    "logo_url": None,
+                    **{book_id: None for book_id in PROP_SPORTSBOOKS},
+                }
+                buckets[key] = bucket
+            bucket["prizepicks"] = quote
+            _apply_roster(bucket, teams)
+
+    for row in ud_rows:
+        player = str(row.get("player_name") or "").strip()
+        stat_name = str(row.get("stat_name") or "").strip()
+        side = str(row.get("side") or "").lower()
+        line_raw = row.get("line_score")
+        if not player or not stat_name or side not in _VALID_SIDES or line_raw is None:
+            continue
+        try:
+            line_f = float(line_raw)
+        except (TypeError, ValueError):
+            continue
+
+        odds_raw = row.get("american_price")
+        odds_i: int | None
+        if odds_raw is None:
+            odds_i = None
+        else:
+            try:
+                odds_i = int(odds_raw)
+            except (TypeError, ValueError):
+                odds_i = None
+
+        stat_key = _stat_key_from_ud_stat_name(stat_name)
+        key = _prop_merge_key(player, stat_key, side)
+        quote = WnbaPropBookQuote(line=line_f, odds_american=odds_i)
+        bucket = buckets.get(key)
+        if bucket is None:
+            bucket = {
+                "player_name": player,
+                "stat": _ud_stat_label(stat_name),
+                "market_type": f"underdog:{stat_name}",
+                "side": side,
+                "team_abbrev": None,
+                "logo_url": None,
+                **{book_id: None for book_id in PROP_SPORTSBOOKS},
+            }
+            buckets[key] = bucket
+        bucket["underdog"] = quote
+        _apply_roster(bucket, teams)
+
+    props: list[WnbaPropLine] = []
+    for bucket in buckets.values():
+        if not _bucket_has_any_book(bucket):
+            continue
+        props.append(
+            WnbaPropLine(
+                player_name=bucket["player_name"],
+                team_abbrev=bucket.get("team_abbrev"),
+                logo_url=bucket.get("logo_url"),
+                stat=bucket["stat"],
+                market_type=bucket["market_type"],
+                side=bucket["side"],
+                fanduel=bucket["fanduel"],
+                draftkings=bucket["draftkings"],
+                prizepicks=bucket["prizepicks"],
+                underdog=bucket["underdog"],
             )
         )
 
@@ -234,14 +407,21 @@ async def fetch_sharp_prop_rows() -> list[dict[str, Any]]:
             offset = int(next_offset)
         return rows
 
+    # Fetch books one-at-a-time so free-tier rate limits (FanDuel volume)
+    # do not starve DraftKings on a parallel burst.
+    rows: list[dict[str, Any]] = []
+    errors: list[BaseException] = []
     async with httpx.AsyncClient(timeout=FETCH_TIMEOUT_SECONDS) as client:
-        # Fetch books separately so FanDuel volume cannot crowd out DraftKings,
-        # and so we stay under Sharp's offset pagination limit.
-        book_rows = await asyncio.gather(
-            fetch_book(client, "fanduel"),
-            fetch_book(client, "draftkings"),
-        )
-    return [row for chunk in book_rows for row in chunk]
+        for book in SHARP_PROP_SPORTSBOOKS:
+            try:
+                rows.extend(await fetch_book(client, book))
+            except Exception as exc:
+                logger.warning("Sharp %s props fetch failed: %s", book, exc)
+                errors.append(exc)
+
+    if not rows and errors:
+        raise errors[0]
+    return rows
 
 
 async def _espn_teams_by_abbrev() -> dict[str, dict[str, str | None]]:
@@ -353,7 +533,12 @@ async def get_today_props() -> WnbaPropsResponse:
         except Exception as exc:
             logger.warning("Prop team enrichment failed: %s", exc)
             player_teams = {}
-        props = normalize_sharp_props(rows, player_teams=player_teams)
+        sharp_props = normalize_sharp_props(rows, player_teams=player_teams)
+        pp_rows = fetch_latest_prizepicks("wnba")
+        ud_rows = fetch_latest_underdog("wnba")
+        props = merge_snapshot_props(
+            sharp_props, pp_rows, ud_rows, player_teams=player_teams
+        )
         response = WnbaPropsResponse(as_of=_utcnow_iso(), props=props)
         _cache["response"] = response
         _cache["expires_at"] = now + CACHE_TTL_SECONDS

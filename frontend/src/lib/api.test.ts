@@ -136,7 +136,7 @@ describe("fetchWnbaProps", () => {
       ok: true,
       json: async () => ({
         as_of: "now",
-        sportsbooks: ["fanduel", "draftkings"],
+        sportsbooks: ["fanduel", "draftkings", "prizepicks", "underdog"],
         props: [],
       }),
     });

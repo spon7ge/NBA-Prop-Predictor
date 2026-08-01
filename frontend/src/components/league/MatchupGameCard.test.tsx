@@ -127,6 +127,53 @@ describe("MatchupGameCard", () => {
     expect(screen.getByRole("img", { name: "DraftKings" })).toBeInTheDocument();
   });
 
+  it("places odds under scores for live and final games", () => {
+    const withOdds = {
+      ...liveGame,
+      odds: {
+        spreadTeamAbbrev: "ATL" as const,
+        spreadLine: -12.5,
+        total: 178.5,
+      },
+    };
+
+    const { unmount } = renderCard(withOdds);
+    expect(screen.getByTestId("matchup-odds")).toHaveAttribute(
+      "data-placement",
+      "under-scores",
+    );
+    unmount();
+
+    renderCard({
+      ...withOdds,
+      status: "final",
+      statusLabel: "Final",
+    });
+    expect(screen.getByTestId("matchup-odds")).toHaveAttribute(
+      "data-placement",
+      "under-scores",
+    );
+  });
+
+  it("keeps odds beside the home row for scheduled games", () => {
+    renderCard({
+      ...liveGame,
+      status: "scheduled",
+      statusLabel: "8:00 PM ET",
+      away: { ...liveGame.away, score: null },
+      home: { ...liveGame.home, score: null },
+      odds: {
+        spreadTeamAbbrev: "ATL",
+        spreadLine: -12.5,
+        total: 178.5,
+      },
+    });
+    expect(screen.getByTestId("matchup-odds")).toHaveAttribute(
+      "data-placement",
+      "beside-home",
+    );
+  });
+
   it("shows a partial odds pill when only total is present", () => {
     renderCard({
       ...liveGame,

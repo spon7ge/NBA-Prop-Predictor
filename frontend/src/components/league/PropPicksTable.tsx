@@ -15,19 +15,19 @@ function formatAmericanOdds(odds: number): string {
   return odds > 0 ? `+${odds}` : `${odds}`.replace("-", "−");
 }
 
-function formatBookPill(quote: ApiWnbaPropBookQuote | null): string | null {
-  if (!quote) return null;
-  return `${quote.line} ${formatAmericanOdds(quote.odds_american)}`;
-}
-
 function OddsPill({ quote }: { quote: ApiWnbaPropBookQuote | null }) {
-  const label = formatBookPill(quote);
-  if (!label) {
+  if (!quote) {
     return <span className="text-white/20">&nbsp;</span>;
   }
+  const hasOdds = quote.odds_american != null;
   return (
-    <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-white/75">
-      {label}
+    <span className="inline-flex flex-col items-center rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 font-mono leading-tight text-white/75">
+      <span className="text-[11px] text-white/90">{quote.line}</span>
+      {hasOdds ? (
+        <span className="text-[10px] text-white/55">
+          {formatAmericanOdds(quote.odds_american)}
+        </span>
+      ) : null}
     </span>
   );
 }
@@ -52,6 +52,13 @@ function Skeletons() {
   );
 }
 
+const BOOK_COLUMNS = [
+  { key: "fanduel", label: "FanDuel" },
+  { key: "draftkings", label: "DraftKings" },
+  { key: "prizepicks", label: "PrizePicks" },
+  { key: "underdog", label: "Underdog" },
+] as const;
+
 const COLUMNS = [
   "Player",
   "Team",
@@ -60,8 +67,7 @@ const COLUMNS = [
   "Model",
   "O/U%",
   "EV",
-  "FanDuel",
-  "DraftKings",
+  ...BOOK_COLUMNS.map((b) => b.label),
 ] as const;
 
 export function PropPicksTable({
@@ -86,7 +92,7 @@ export function PropPicksTable({
         <p className="text-sm text-white/50">{emptyCopy}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[56rem] border-collapse text-left text-sm">
+          <table className="w-full min-w-[72rem] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-white/10 text-[10px] font-semibold tracking-[0.14em] text-white/35 uppercase">
                 {COLUMNS.map((col) => (
@@ -123,12 +129,11 @@ export function PropPicksTable({
                   <td className="px-3 py-3 text-white/20" />
                   <td className="px-3 py-3 text-white/20" />
                   <td className="px-3 py-3 text-white/20" />
-                  <td className="px-3 py-3">
-                    <OddsPill quote={row.fanduel} />
-                  </td>
-                  <td className="px-3 py-3">
-                    <OddsPill quote={row.draftkings} />
-                  </td>
+                  {BOOK_COLUMNS.map((book) => (
+                    <td key={book.key} className="px-3 py-3">
+                      <OddsPill quote={row[book.key]} />
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -136,7 +141,9 @@ export function PropPicksTable({
         </div>
       )}
       {!isLoading && props.length > 0 ? (
-        <p className="text-xs text-white/35">Odds by FanDuel &amp; DraftKings</p>
+        <p className="text-xs text-white/35">
+          Odds by FanDuel, DraftKings, PrizePicks &amp; Underdog
+        </p>
       ) : null}
     </section>
   );

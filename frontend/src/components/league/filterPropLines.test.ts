@@ -17,6 +17,8 @@ function prop(partial: Partial<ApiWnbaPropLine> & Pick<ApiWnbaPropLine, "player_
     ev: null,
     fanduel: null,
     draftkings: null,
+    prizepicks: null,
+    underdog: null,
     ...partial,
   };
 }

@@ -16,6 +16,8 @@ const sampleProps: ApiWnbaPropLine[] = [
     ev: null,
     fanduel: { line: 3.5, odds_american: -114 },
     draftkings: { line: 3.5, odds_american: -120 },
+    prizepicks: { line: 3.5, odds_american: null },
+    underdog: { line: 3.5, odds_american: -108 },
   },
   {
     player_name: "Rhyne Howard",
@@ -29,6 +31,8 @@ const sampleProps: ApiWnbaPropLine[] = [
     ev: null,
     fanduel: { line: 3.5, odds_american: -114 },
     draftkings: { line: 3.5, odds_american: -110 },
+    prizepicks: null,
+    underdog: null,
   },
 ];
 
@@ -43,6 +47,10 @@ describe("PropPicksTable", () => {
     expect(screen.getByRole("columnheader", { name: "EV" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "FanDuel" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "DraftKings" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "PrizePicks" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Underdog" })).toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: "BetMGM" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: "BetRivers" })).not.toBeInTheDocument();
 
     expect(screen.getAllByText("Rhyne Howard")).toHaveLength(2);
     expect(screen.getAllByRole("presentation")).toHaveLength(2);
@@ -52,10 +60,34 @@ describe("PropPicksTable", () => {
     );
     expect(screen.getByText("Over")).toBeInTheDocument();
     expect(screen.getByText("Under")).toBeInTheDocument();
-    expect(screen.getAllByText("3.5 −114").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText("3.5 −120")).toBeInTheDocument();
-    expect(screen.getByText("3.5 −110")).toBeInTheDocument();
-    expect(screen.getByText("Odds by FanDuel & DraftKings")).toBeInTheDocument();
+    // Line above odds in each book pill (PrizePicks over row has line only)
+    expect(screen.getAllByText("3.5").length).toBeGreaterThanOrEqual(5);
+    expect(screen.getAllByText("−114").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("−120")).toBeInTheDocument();
+    expect(screen.getByText("−110")).toBeInTheDocument();
+    expect(screen.getByText("−108")).toBeInTheDocument();
+    expect(
+      screen.getByText("Odds by FanDuel, DraftKings, PrizePicks & Underdog"),
+    ).toBeInTheDocument();
+  });
+
+  it("shows line only when odds_american is null", () => {
+    render(
+      <PropPicksTable
+        props={[
+          {
+            ...sampleProps[0]!,
+            fanduel: { line: 4.5, odds_american: null },
+            draftkings: null,
+            prizepicks: null,
+            underdog: null,
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText("4.5")).toBeInTheDocument();
+    expect(screen.queryByText("−114")).not.toBeInTheDocument();
   });
 
   it("shows unavailable copy when empty or error", () => {

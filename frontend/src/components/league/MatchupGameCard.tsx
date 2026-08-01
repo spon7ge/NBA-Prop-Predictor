@@ -38,6 +38,34 @@ function TeamRow({
   );
 }
 
+function OddsBlock({
+  label,
+  placement,
+}: {
+  label: string;
+  placement: "under-scores" | "beside-home";
+}) {
+  return (
+    <div
+      data-testid="matchup-odds"
+      data-placement={placement}
+      className="shrink-0 text-right"
+    >
+      <span className="inline-flex max-w-[11rem] rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-white/75 sm:max-w-none">
+        {label}
+      </span>
+      <p className="mt-1 flex items-center justify-end gap-1 text-[10px] tracking-wide text-white/35">
+        <span>Odds by</span>
+        <img
+          src={draftKingsLogo}
+          alt="DraftKings"
+          className="h-4 w-4 object-contain"
+        />
+      </p>
+    </div>
+  );
+}
+
 export function MatchupGameCard({ game }: { game: MatchupGame }) {
   const isLive = isInProgressStatus(game.status);
   const showScores = game.status !== "scheduled";
@@ -75,29 +103,29 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
             </span>
           ) : null}
         </div>
-        <div className="space-y-3">
-          <TeamRow team={game.away} showScore={showScores} />
-          <div className="flex items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <TeamRow team={game.home} showScore={showScores} />
-            </div>
+        {showScores ? (
+          <div className="space-y-3">
+            <TeamRow team={game.away} showScore />
+            <TeamRow team={game.home} showScore />
             {oddsLabel ? (
-              <div className="shrink-0 text-right">
-                <span className="inline-flex max-w-[11rem] rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-white/75 sm:max-w-none">
-                  {oddsLabel}
-                </span>
-                <p className="mt-1 flex items-center justify-end gap-1 text-[10px] tracking-wide text-white/35">
-                  <span>Odds by</span>
-                  <img
-                    src={draftKingsLogo}
-                    alt="DraftKings"
-                    className="h-4 w-4 object-contain"
-                  />
-                </p>
+              <div className="flex justify-end">
+                <OddsBlock label={oddsLabel} placement="under-scores" />
               </div>
             ) : null}
           </div>
-        </div>
+        ) : (
+          <div className="space-y-3">
+            <TeamRow team={game.away} showScore={false} />
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <TeamRow team={game.home} showScore={false} />
+              </div>
+              {oddsLabel ? (
+                <OddsBlock label={oddsLabel} placement="beside-home" />
+              ) : null}
+            </div>
+          </div>
+        )}
       </div>
       <ChevronRight
         aria-hidden="true"

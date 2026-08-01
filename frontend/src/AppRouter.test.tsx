@@ -71,7 +71,7 @@ describe("AppRouter", () => {
       ok: true,
       json: async () => ({
         as_of: "now",
-        sportsbooks: ["fanduel", "draftkings"],
+        sportsbooks: ["fanduel", "draftkings", "prizepicks", "underdog"],
         props: [
           {
             player_name: "Rhyne Howard",
@@ -85,6 +85,8 @@ describe("AppRouter", () => {
             ev: null,
             fanduel: { line: 3.5, odds_american: -114 },
             draftkings: { line: 3.5, odds_american: -120 },
+            prizepicks: { line: 3.5, odds_american: null },
+            underdog: null,
           },
         ],
       }),
