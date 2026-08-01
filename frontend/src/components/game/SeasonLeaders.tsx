@@ -1,3 +1,4 @@
+import { GameSection } from "./GameSection";
 import type {
   GameDetail,
   GameDetailSeasonLeader,
@@ -52,13 +53,13 @@ export function SeasonLeaders({ detail }: SeasonLeadersProps) {
   }
 
   return (
-    <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
+    <GameSection>
       <h2 className="text-sm font-semibold text-white">Season leaders</h2>
 
       <div className="mt-4 grid gap-8 md:grid-cols-2">
         <LeaderColumn team={detail.away} leaders={seasonLeaders.away} />
         <LeaderColumn team={detail.home} leaders={seasonLeaders.home} />
       </div>
-    </section>
+    </GameSection>
   );
 }

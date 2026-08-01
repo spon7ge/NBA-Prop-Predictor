@@ -1,3 +1,4 @@
+import { GameSection } from "./GameSection";
 import type { GameDetail, GameDetailInjury } from "./types";
 
 type InjuryReportProps = {
@@ -67,7 +68,7 @@ export function InjuryReport({ detail }: InjuryReportProps) {
   const eitherSideHasInjuries = awayHasInjuries || homeHasInjuries;
 
   return (
-    <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
+    <GameSection>
       <h2 className="text-sm font-semibold text-white">Injury report</h2>
 
       <div className="mt-4 grid gap-6 md:grid-cols-2">
@@ -84,6 +85,6 @@ export function InjuryReport({ detail }: InjuryReportProps) {
           showEmptyPlaceholder={eitherSideHasInjuries && !homeHasInjuries}
         />
       </div>
-    </section>
+    </GameSection>
   );
 }

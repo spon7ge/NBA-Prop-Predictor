@@ -1,3 +1,4 @@
+import { GameSection } from "./GameSection";
 import type { GameDetail, GameDetailStarter, GameDetailTeam } from "./types";
 
 type ProjectedStartersProps = {
@@ -60,7 +61,7 @@ export function ProjectedStarters({ detail }: ProjectedStartersProps) {
   }
 
   return (
-    <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
+    <GameSection>
       <h2 className="text-sm font-semibold text-white">
         Projected starters
         <span className="font-normal text-white/45">
@@ -73,6 +74,6 @@ export function ProjectedStarters({ detail }: ProjectedStartersProps) {
         <StarterColumn team={detail.away} starters={projectedStarters.away} />
         <StarterColumn team={detail.home} starters={projectedStarters.home} />
       </div>
-    </section>
+    </GameSection>
   );
 }

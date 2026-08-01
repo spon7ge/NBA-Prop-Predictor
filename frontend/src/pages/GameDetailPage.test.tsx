@@ -106,6 +106,22 @@ describe("GameDetailPage", () => {
     expect(screen.queryByText(/Play-by-play/i)).not.toBeInTheDocument();
   });
 
+  it("scheduled panels use quiet surfaces instead of #141414", async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => baseGameDetail(),
+    });
+
+    renderGameDetail("401857099");
+
+    expect(await screen.findByText("Matchup prediction")).toBeInTheDocument();
+    expect(document.querySelector(".bg-\\[\\#141414\\]")).toBeNull();
+    expect(screen.getByText("Matchup prediction").closest("section")).toHaveClass(
+      "bg-white/[0.03]",
+      "border-white/10",
+    );
+  });
+
   it("shows live panels for live games", async () => {
     fetchMock.mockResolvedValue({
       ok: true,

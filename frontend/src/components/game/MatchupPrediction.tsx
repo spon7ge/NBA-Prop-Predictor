@@ -1,3 +1,4 @@
+import { GameSection } from "./GameSection";
 import type { GameDetail } from "./types";
 
 type MatchupPredictionProps = {
@@ -12,7 +13,7 @@ export function MatchupPrediction({ detail }: MatchupPredictionProps) {
   }
 
   return (
-    <section className="rounded-xl border border-white/10 bg-[#141414] p-4">
+    <GameSection>
       <h2 className="text-sm font-semibold text-white">Matchup prediction</h2>
 
       <div className="mt-3 flex h-2 overflow-hidden rounded-full">
@@ -43,6 +44,6 @@ export function MatchupPrediction({ detail }: MatchupPredictionProps) {
       </div>
 
       <p className="mt-2 text-xs text-white/50">{prediction.sourceLabel}</p>
-    </section>
+    </GameSection>
   );
 }
