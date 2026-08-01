@@ -19,23 +19,23 @@ function TickerItem({
 
   const content = isScheduled ? (
     <>
-      <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
-      <span className="text-white/30">@</span>
-      <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
-      <span className="text-white/40">{game.statusLabel}</span>
+      <span className="font-medium text-white/80">{game.awayAbbrev}</span>
+      <span className="text-white/25">@</span>
+      <span className="font-medium text-white/80">{game.homeAbbrev}</span>
+      <span className="text-white/35">{game.statusLabel}</span>
     </>
   ) : (
     <>
-      <span className="font-medium text-sky-400">{game.awayAbbrev}</span>
+      <span className="font-medium text-white/80">{game.awayAbbrev}</span>
       {game.awayScore !== null ? (
-        <span className="text-white/80">{game.awayScore}</span>
+        <span className="text-white/55">{game.awayScore}</span>
       ) : null}
-      <span className="text-white/30">—</span>
-      <span className="font-medium text-rose-400">{game.homeAbbrev}</span>
+      <span className="text-white/25">—</span>
+      <span className="font-medium text-white/80">{game.homeAbbrev}</span>
       {game.homeScore !== null ? (
-        <span className="text-white/80">{game.homeScore}</span>
+        <span className="text-white/55">{game.homeScore}</span>
       ) : null}
-      <span className="text-white/40">{game.statusLabel}</span>
+      <span className="text-white/35">{game.statusLabel}</span>
     </>
   );
 
@@ -99,13 +99,13 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
   const isToday = mode === "today";
 
   return (
-    <div className="ticker-marquee border-b border-white/10 bg-[#0a0a0a]">
+    <div className="ticker-marquee border-b border-white/10 bg-black">
       <div className="mx-auto flex max-w-6xl items-center gap-4 overflow-hidden px-4 py-2 sm:px-6">
         <div className="flex shrink-0 items-center gap-2">
           <span
             className={
               isToday
-                ? "size-1.5 rounded-full bg-white/40"
+                ? "size-1.5 rounded-full bg-white/35"
                 : "size-1.5 animate-pulse rounded-full bg-red-500"
             }
             aria-hidden
@@ -113,7 +113,7 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
           <span
             className={
               isToday
-                ? "text-[10px] font-semibold tracking-widest text-white/50 uppercase"
+                ? "text-[10px] font-semibold tracking-widest text-white/40 uppercase"
                 : "text-[10px] font-semibold tracking-widest text-red-400 uppercase"
             }
           >
@@ -122,7 +122,7 @@ export function LiveTicker({ games = [], isError = false }: LiveTickerProps) {
         </div>
 
         {mode === "empty" ? (
-          <p className="truncate text-xs text-white/40">
+          <p className="truncate text-xs text-white/35">
             {isError ? "Scoreboard unavailable" : "No live games"}
           </p>
         ) : (
