@@ -1,15 +1,15 @@
 const FEATURES = [
   {
-    title: "Props",
-    body: "Player lines from the books that matter, in one place.",
+    title: "Follow",
+    body: "Live scores and tonight’s slate — a calm place to watch the game.",
   },
   {
-    title: "Edges",
-    body: "Where the model and the market disagree.",
+    title: "Understand",
+    body: "Props and matchups explained simply, whether you’re new or deep in.",
   },
   {
-    title: "Explain",
-    body: "Plain-language why — not just a number.",
+    title: "Decide",
+    body: "Model projections next to the market — so your bets start with an edge.",
   },
 ] as const;
 
@@ -21,10 +21,10 @@ export function FeatureStrip() {
     >
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          Built for clarity
+          Built to get you ready
         </h2>
         <p className="mt-3 text-sm text-white/40 sm:text-base">
-          Three things we surface before every tip-off.
+          Watch first. Learn the lines. Bet with a plan.
         </p>
       </div>
       <div className="mx-auto mt-12 grid max-w-4xl gap-10 text-left sm:grid-cols-3 sm:gap-8">

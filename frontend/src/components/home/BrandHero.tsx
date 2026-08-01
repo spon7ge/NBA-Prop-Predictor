@@ -7,17 +7,18 @@ export function BrandHero() {
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-5 text-left">
           <p className="text-[11px] font-medium tracking-[0.18em] text-white/40 uppercase">
-            Season Pass · Beta
+            Basketball intelligence · Beta
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             HoopVista
           </h1>
           <p className="text-xl tracking-tight text-white/85 sm:text-2xl">
-            Your seat to every game.
+            From first tip to smarter bets.
           </p>
           <p className="max-w-md text-sm leading-relaxed text-white/45 sm:text-base">
-            Props, edges, and clear explanations — so you know what you&apos;re
-            looking at before tip-off.
+            Built for fans and beginners alike. Follow the games, learn the
+            lines, and use model projections when you&apos;re ready to place a
+            bet — so you&apos;re deciding with numbers, not guessing.
           </p>
           <div className="pt-1">
             <a
