@@ -1,6 +1,14 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { LeagueHero } from "@/components/league/LeagueHero";
 import { LeagueSubnav } from "@/components/league/LeagueSubnav";
 import { MatchupsPanel } from "@/components/league/MatchupsPanel";
+import {
+  isValidEtDate,
+  parseMatchupDateParam,
+  shiftEtDate,
+  slateEtDate,
+} from "@/components/league/matchupSlateDate";
 import { mergeMatchupOdds } from "@/components/league/mergeMatchupOdds";
 import type { LeagueSlug } from "@/components/league/types";
 import { mapToMatchupGames } from "@/components/home/mapScoreboard";
@@ -28,21 +36,44 @@ export function LeagueMatchupsPage({ league }: LeagueMatchupsPageProps) {
 }
 
 function WnbaMatchupsPage() {
-  const { games, isLoading, hasNeverLoaded, data } = useWnbaScoreboard();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const today = slateEtDate();
+  const raw = searchParams.get("date");
+  const selectedDate = parseMatchupDateParam(raw, today);
+  const isToday = selectedDate === today;
+
+  useEffect(() => {
+    if (raw !== null && !isValidEtDate(raw)) {
+      setSearchParams({}, { replace: true });
+    }
+  }, [raw, setSearchParams]);
+
+  const { games, isLoading, hasNeverLoaded, data } =
+    useWnbaScoreboard(selectedDate);
   const oddsQuery = useWnbaOdds();
   const matchupGames = mergeMatchupOdds(
     mapToMatchupGames(games),
-    oddsQuery.data?.games,
+    isToday ? oddsQuery.data?.games : undefined,
   );
+
+  const setDate = (next: string) => {
+    if (next === today) setSearchParams({});
+    else setSearchParams({ date: next });
+  };
 
   return (
     <div className="space-y-0">
-      <LeagueHero league="wnba" dateEt={data?.date} />
+      <LeagueHero league="wnba" dateEt={data?.date ?? selectedDate} />
       <LeagueSubnav league="wnba" />
       <MatchupsPanel
         games={matchupGames}
         isLoading={isLoading}
         isError={hasNeverLoaded}
+        selectedDate={selectedDate}
+        todayDate={today}
+        onPrevDay={() => setDate(shiftEtDate(selectedDate, -1))}
+        onNextDay={() => setDate(shiftEtDate(selectedDate, 1))}
+        onGoToday={() => setDate(today)}
       />
     </div>
   );
