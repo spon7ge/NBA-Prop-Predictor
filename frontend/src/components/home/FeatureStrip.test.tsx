@@ -6,10 +6,12 @@ describe("FeatureStrip", () => {
   it("renders clarity features", () => {
     render(<FeatureStrip />);
     expect(
-      screen.getByRole("heading", { name: /built to get you ready/i }),
+      screen.getByRole("heading", {
+        name: /the stats site\. the betting edge\. together/i,
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Follow")).toBeInTheDocument();
-    expect(screen.getByText("Understand")).toBeInTheDocument();
-    expect(screen.getByText("Decide")).toBeInTheDocument();
+    expect(screen.getByText("Reference")).toBeInTheDocument();
+    expect(screen.getByText("Lines")).toBeInTheDocument();
+    expect(screen.getByText("Projections")).toBeInTheDocument();
   });
 });

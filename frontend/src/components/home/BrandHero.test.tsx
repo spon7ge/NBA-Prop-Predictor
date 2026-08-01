@@ -24,8 +24,10 @@ describe("BrandHero", () => {
     expect(
       screen.getByRole("heading", { name: /hoopvista/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/from first tip to smarter bets/i)).toBeInTheDocument();
-    expect(screen.getByText(/basketball intelligence/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/basketball reference meets bettingpros/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/stats \+ edges/i)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /see what.?s live/i }),
     ).toHaveAttribute("href", "#live-now");
