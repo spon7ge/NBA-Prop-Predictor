@@ -74,6 +74,67 @@ describe("mergeMatchupOdds", () => {
       total: 176.5,
     });
   });
+
+  it("prefers odds whose game_date matches the slate", () => {
+    const merged = mergeMatchupOdds(
+      [baseGame],
+      [
+        {
+          home_abbrev: "ATL",
+          away_abbrev: "SEA",
+          spread_team_abbrev: "ATL",
+          spread_line: -10.5,
+          total: 170.5,
+          game_date: "2026-07-30",
+        },
+        {
+          home_abbrev: "ATL",
+          away_abbrev: "SEA",
+          spread_team_abbrev: "ATL",
+          spread_line: -12.5,
+          total: 179.5,
+          game_date: "2026-07-31",
+        },
+      ],
+      "2026-07-31",
+    );
+    expect(merged[0].odds?.spreadLine).toBe(-12.5);
+  });
+
+  it("does not use odds from a different game_date", () => {
+    const merged = mergeMatchupOdds(
+      [baseGame],
+      [
+        {
+          home_abbrev: "ATL",
+          away_abbrev: "SEA",
+          spread_team_abbrev: "ATL",
+          spread_line: -12.5,
+          total: 179.5,
+          game_date: "2026-07-30",
+        },
+      ],
+      "2026-07-31",
+    );
+    expect(merged[0].odds).toBeNull();
+  });
+
+  it("falls back to undated odds when slateDate is set", () => {
+    const merged = mergeMatchupOdds(
+      [baseGame],
+      [
+        {
+          home_abbrev: "ATL",
+          away_abbrev: "SEA",
+          spread_team_abbrev: "ATL",
+          spread_line: -12.5,
+          total: 179.5,
+        },
+      ],
+      "2026-07-31",
+    );
+    expect(merged[0].odds?.spreadLine).toBe(-12.5);
+  });
 });
 
 describe("formatOddsPill", () => {

@@ -47,21 +47,43 @@ export function formatOddsPill(odds: MatchupOdds): string | null {
 export function mergeMatchupOdds(
   games: MatchupGame[],
   oddsGames: ApiWnbaOddsGame[] | undefined,
+  slateDate?: string,
 ): MatchupGame[] {
   if (!oddsGames || oddsGames.length === 0) {
     return games.map((game) => ({ ...game, odds: game.odds ?? null }));
   }
 
-  const byMatchup = new Map<string, MatchupOdds>();
+  const byDated = new Map<string, MatchupOdds>();
+  const byUndated = new Map<string, MatchupOdds>();
+
   for (const row of oddsGames) {
     const odds = toMatchupOdds(row);
     if (!odds) continue;
-    byMatchup.set(oddsKey(row.home_abbrev, row.away_abbrev), odds);
+    const key = oddsKey(row.home_abbrev, row.away_abbrev);
+    if (row.game_date) {
+      byDated.set(`${row.game_date}|${key}`, odds);
+    } else {
+      byUndated.set(key, odds);
+    }
   }
 
   return games.map((game) => {
-    const odds =
-      byMatchup.get(oddsKey(game.home.abbrev, game.away.abbrev)) ?? null;
+    const key = oddsKey(game.home.abbrev, game.away.abbrev);
+    let odds: MatchupOdds | null = null;
+    if (slateDate) {
+      odds = byDated.get(`${slateDate}|${key}`) ?? byUndated.get(key) ?? null;
+    } else {
+      odds = byUndated.get(key) ?? null;
+      if (!odds) {
+        // abbrev-only legacy: accept any dated row for this matchup
+        for (const [datedKey, value] of byDated) {
+          if (datedKey.endsWith(`|${key}`)) {
+            odds = value;
+            break;
+          }
+        }
+      }
+    }
     return { ...game, odds };
   });
 }
