@@ -1,0 +1,31 @@
+{
+  "resource": "leaguedashplayerstats",
+  "parameters": {
+    "LeagueID": "10",
+    "PerMode": "PerGame",
+    "Season": "2026",
+    "SeasonType": "Regular Season"
+  },
+  "resultSets": [
+    {
+      "name": "LeagueDashPlayerStats",
+      "headers": [
+        "PLAYER_ID",
+        "PLAYER_NAME",
+        "TEAM_ID",
+        "TEAM_ABBREVIATION",
+        "TEAM_NAME",
+        "GP",
+        "PTS",
+        "REB",
+        "AST",
+        "FG_PCT",
+        "FG3_PCT"
+      ],
+      "rowSet": [
+        [1628932, "A'ja Wilson", 1611661319, "LVA", "Las Vegas Aces", 28, 26.4, 10.1, 2.8, 0.482, 0.331],
+        [1002, "Kelsey Mitchell", 1611661313, "IND", "Indiana Fever", 30, 23.5, 2.1, 3.0, 0.445, 0.380]
+      ]
+    }
+  ]
+}

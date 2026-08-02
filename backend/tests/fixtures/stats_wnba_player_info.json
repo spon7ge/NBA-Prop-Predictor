@@ -1,0 +1,28 @@
+{
+  "resource": "commonplayerinfo",
+  "parameters": {
+    "PlayerID": "1628932",
+    "LeagueID": "10"
+  },
+  "resultSets": [
+    {
+      "name": "CommonPlayerInfo",
+      "headers": [
+        "PERSON_ID",
+        "DISPLAY_FIRST_LAST",
+        "POSITION",
+        "TEAM_ID",
+        "TEAM_NAME",
+        "TEAM_ABBREVIATION"
+      ],
+      "rowSet": [
+        [1628932, "A'ja Wilson", "F", 1611661319, "Las Vegas Aces", "LVA"]
+      ]
+    },
+    {
+      "name": "PlayerHeadlineStats",
+      "headers": ["PLAYER_ID", "PLAYER_NAME", "TimeFrame", "PTS", "AST", "REB"],
+      "rowSet": [[1628932, "A'ja Wilson", "2025-26", "26.4", "2.8", "10.1"]]
+    }
+  ]
+}
