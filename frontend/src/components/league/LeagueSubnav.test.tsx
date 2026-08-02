@@ -53,6 +53,27 @@ describe("LeagueSubnav", () => {
     );
   });
 
+  it("links Futures for WNBA and leaves it disabled for NBA", () => {
+    const { unmount } = render(
+      <MemoryRouter initialEntries={["/wnba/futures"]}>
+        <LeagueSubnav league="wnba" />
+      </MemoryRouter>,
+    );
+    const futures = screen.getByRole("link", { name: "Futures" });
+    expect(futures).toHaveAttribute("href", "/wnba/futures");
+    expect(futures).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByRole("link", { name: "Clutch" })).not.toBeInTheDocument();
+    unmount();
+
+    render(
+      <MemoryRouter initialEntries={["/nba/matchups"]}>
+        <LeagueSubnav league="nba" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("button", { name: "Futures" })).toBeDisabled();
+    expect(screen.queryByRole("link", { name: "Clutch" })).not.toBeInTheDocument();
+  });
+
   it("places Explore and Learn labels inline with a divider before Learn", () => {
     render(
       <MemoryRouter initialEntries={["/wnba/matchups"]}>

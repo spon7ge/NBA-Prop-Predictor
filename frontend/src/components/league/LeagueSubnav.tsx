@@ -11,7 +11,7 @@ const exploreItems = [
   "Leaders",
   "Standings",
   "Playoff race",
-  "Clutch",
+  "Futures",
 ] as const;
 
 const learnItems = ["How it works", "Glossary"] as const;
@@ -24,6 +24,7 @@ export function LeagueSubnav({ league }: LeagueSubnavProps) {
     if (item === "Prop Picks" && league === "wnba") return "/wnba/prop_picks";
     if (item === "Leaders" && league === "wnba") return "/wnba/leaders";
     if (item === "Standings" && league === "wnba") return "/wnba/standings";
+    if (item === "Futures" && league === "wnba") return "/wnba/futures";
     return null;
   }
 
@@ -32,6 +33,7 @@ export function LeagueSubnav({ league }: LeagueSubnavProps) {
     if (item === "Prop Picks") return pathname.endsWith("/prop_picks");
     if (item === "Leaders") return pathname.endsWith("/leaders");
     if (item === "Standings") return pathname.endsWith("/standings");
+    if (item === "Futures") return pathname.endsWith("/futures");
     return false;
   }
 
