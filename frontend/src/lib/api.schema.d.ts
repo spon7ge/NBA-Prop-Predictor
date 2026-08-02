@@ -435,6 +435,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/wnba/futures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wnba Futures */
+        get: operations["wnba_futures_api_wnba_futures_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/wnba/games/{espn_event_id}": {
         parameters: {
             query?: never;
@@ -1700,6 +1717,43 @@ export interface components {
             /** Over Rate At Line */
             over_rate_at_line?: number | null;
         };
+        /** WnbaFuturesEntry */
+        WnbaFuturesEntry: {
+            /** Abbrev */
+            abbrev: string;
+            /** Logo Url */
+            logo_url: string | null;
+            /** Name */
+            name: string;
+            /** Odds American */
+            odds_american: string;
+            /** Team Id */
+            team_id: string;
+        };
+        /** WnbaFuturesMarket */
+        WnbaFuturesMarket: {
+            /** Display Name */
+            display_name: string;
+            /** Entries */
+            entries: components["schemas"]["WnbaFuturesEntry"][];
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Provider */
+            provider: string;
+        };
+        /** WnbaFuturesResponse */
+        WnbaFuturesResponse: {
+            /** As Of */
+            as_of: string;
+            /** Error */
+            error?: string | null;
+            /** Markets */
+            markets: components["schemas"]["WnbaFuturesMarket"][];
+            /** Season */
+            season: number;
+        };
         /** WnbaGame */
         WnbaGame: {
             away: components["schemas"]["WnbaTeam"];
@@ -2693,6 +2747,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    wnba_futures_api_wnba_futures_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WnbaFuturesResponse"];
                 };
             };
         };

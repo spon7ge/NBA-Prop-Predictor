@@ -168,3 +168,43 @@ describe("fetchWnbaProps", () => {
     await expect(fetchWnbaProps()).rejects.toThrow("Props request failed: 502");
   });
 });
+
+describe("fetchWnbaFutures", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("hits /api/wnba/futures", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        season: 2026,
+        as_of: "now",
+        markets: [],
+        error: null,
+      }),
+    });
+    const { fetchWnbaFutures } = await import("./api");
+    await fetchWnbaFutures();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/wnba/futures",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+
+  it("throws when the response is not ok", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 502 });
+    const { fetchWnbaFutures } = await import("./api");
+    await expect(fetchWnbaFutures()).rejects.toThrow(
+      "Futures request failed: 502",
+    );
+  });
+});

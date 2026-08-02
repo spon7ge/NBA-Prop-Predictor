@@ -18,6 +18,7 @@ REQUIRED_WNBA_PATHS = (
     "/api/wnba/standings",
     "/api/wnba/odds/today",
     "/api/wnba/props/today",
+    "/api/wnba/futures",
 )
 
 
