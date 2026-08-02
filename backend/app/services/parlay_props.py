@@ -13,6 +13,8 @@ from app.schemas.wnba_props import (
     WnbaPropLine,
     WnbaPropsResponse,
 )
+from app.services.dfs_attach import attach_dfs_snapshots
+from app.services.odds_snapshots import fetch_latest_prizepicks, fetch_latest_underdog
 from app.services.parlay_client import parlay_get
 from app.services.wnba_espn_roster import get_roster_index, norm_player_name
 from app.services.wnba_scoreboard import canonical_abbrev
@@ -23,27 +25,29 @@ logger = logging.getLogger(__name__)
 
 SPORT_KEY = "basketball_wnba"
 # Markets that Parlay currently lists for WNBA (steals/blocks/turnovers often absent).
-PROP_MARKETS = ",".join(
-    [
-        "player_points",
-        "player_rebounds",
-        "player_assists",
-        "player_threes",
-        "player_pra",
-        "player_pts_rebs",
-        "player_pts_asts",
-        "player_rebs_asts",
-        "player_pts_rebs_asts",
-        "player_double_double",
-        "player_triple_double",
-        "player_points_rebounds",
-        "player_points_assists",
-        "player_assists_rebounds",
-        "player_points_rebounds_assists",
-        "player_three_pointers",
-        "player_three_pointers_made",
-    ]
+_PROP_MARKET_KEYS = (
+    "player_points",
+    "player_rebounds",
+    "player_assists",
+    "player_threes",
+    "player_pra",
+    "player_pts_rebs",
+    "player_pts_asts",
+    "player_rebs_asts",
+    "player_pts_rebs_asts",
+    "player_double_double",
+    "player_triple_double",
+    "player_points_rebounds",
+    "player_points_assists",
+    "player_assists_rebounds",
+    "player_points_rebounds_assists",
+    "player_three_pointers",
+    "player_three_pointers_made",
 )
+PROP_MARKETS = ",".join(_PROP_MARKET_KEYS)
+# Parlay still returns milestone/alt keys even when markets= is set; drop them.
+ALLOWED_PROP_MARKET_KEYS = frozenset(_PROP_MARKET_KEYS)
+_DFS_OR_SKIP_BOOKS = frozenset({"prizepicks", "underdog", "betr", "sleeper", "pick6"})
 
 CACHE_TTL_SECONDS = 45.0
 FETCH_TIMEOUT_SECONDS = 12.0
@@ -76,19 +80,38 @@ def _stat_label(row: dict[str, Any]) -> str:
     return market.replace("_", " ").title() or "Unknown"
 
 
+def _is_allowed_prop_market(market_key: str) -> bool:
+    key = market_key.lower().strip()
+    if key not in ALLOWED_PROP_MARKET_KEYS:
+        return False
+    # Defense in depth if allowlist is ever widened carelessly.
+    if "milestone" in key or key.endswith("_alt"):
+        return False
+    return True
+
+
 def normalize_parlay_props(
     rows: list[dict[str, Any]],
     player_teams: PlayerTeamIndex | None = None,
 ) -> list[WnbaPropLine]:
     """Collapse Parlay prop rows into one line per player + market + side."""
     teams = player_teams or {}
-    main_rows = select_parlay_main_lines(rows)
+    filtered = [
+        row
+        for row in rows
+        if _is_allowed_prop_market(str(row.get("market_key") or ""))
+    ]
+    main_rows = select_parlay_main_lines(filtered)
     buckets: dict[tuple[str, str, str], dict[str, Any]] = {}
 
     for row in main_rows:
         book = str(row.get("bookmaker") or "").lower().strip()
+        if book in _DFS_OR_SKIP_BOOKS:
+            continue
         player = str(row.get("player") or "").strip()
         market = str(row.get("market_key") or "").strip()
+        if not _is_allowed_prop_market(market):
+            continue
         try:
             line_f = float(row["line"])
         except (KeyError, TypeError, ValueError):
@@ -183,12 +206,13 @@ async def fetch_parlay_prop_rows() -> list[dict[str, Any]]:
     )
     if not isinstance(payload, list):
         raise RuntimeError("Parlay props response was not a list")
-    allowed = frozenset(PROP_SPORTSBOOKS)
+    allowed_books = frozenset(PROP_SPORTSBOOKS)
     return [
         row
         for row in payload
         if isinstance(row, dict)
-        and str(row.get("bookmaker") or "").lower().strip() in allowed
+        and str(row.get("bookmaker") or "").lower().strip() in allowed_books
+        and _is_allowed_prop_market(str(row.get("market_key") or ""))
     ]
 
 
@@ -295,6 +319,10 @@ async def get_today_props() -> WnbaPropsResponse:
             error="PARLAY_API_KEY is not configured",
         )
 
+    parlay_error: str | None = None
+    rows: list[dict[str, Any]] = []
+    player_teams: PlayerTeamIndex = {}
+
     try:
         rows = await fetch_parlay_prop_rows()
         try:
@@ -308,22 +336,41 @@ async def get_today_props() -> WnbaPropsResponse:
         except Exception as exc:
             logger.warning("Prop team enrichment failed: %s", exc)
             player_teams = {}
-        props = normalize_parlay_props(rows, player_teams=player_teams)
-        response = WnbaPropsResponse(as_of=_utcnow_iso(), props=props)
+    except Exception as exc:
+        logger.warning("Parlay WNBA props unavailable: %s", exc)
+        parlay_error = str(exc)
+        rows = []
+        player_teams = {}
+
+    sportsbook_props = (
+        normalize_parlay_props(rows, player_teams=player_teams) if rows else []
+    )
+    pp_rows = fetch_latest_prizepicks("wnba")
+    ud_rows = fetch_latest_underdog("wnba")
+    props = attach_dfs_snapshots(
+        sportsbook_props, pp_rows, ud_rows, player_teams=player_teams
+    )
+
+    if not props:
+        if parlay_error:
+            if cached is not None:
+                return WnbaPropsResponse(
+                    as_of=cached.as_of,
+                    sportsbooks=cached.sportsbooks,
+                    props=cached.props,
+                    error=parlay_error,
+                )
+            return WnbaPropsResponse(
+                as_of=_utcnow_iso(),
+                props=[],
+                error=parlay_error,
+            )
+        response = WnbaPropsResponse(as_of=_utcnow_iso(), props=[])
         _cache["response"] = response
         _cache["expires_at"] = now + CACHE_TTL_SECONDS
         return response
-    except Exception as exc:
-        logger.warning("Parlay WNBA props unavailable: %s", exc)
-        if cached is not None:
-            return WnbaPropsResponse(
-                as_of=cached.as_of,
-                sportsbooks=cached.sportsbooks,
-                props=cached.props,
-                error=str(exc),
-            )
-        return WnbaPropsResponse(
-            as_of=_utcnow_iso(),
-            props=[],
-            error=str(exc),
-        )
+
+    response = WnbaPropsResponse(as_of=_utcnow_iso(), props=props)
+    _cache["response"] = response
+    _cache["expires_at"] = now + CACHE_TTL_SECONDS
+    return response
