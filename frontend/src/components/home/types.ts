@@ -1,10 +1,11 @@
-export type HomeLeague = "nba" | "wnba";
+export type HomeLeague = "nba" | "wnba" | "mlb";
 
 export type GameStatus = "scheduled" | "live" | "halftime" | "final";
 
 export type TickerGame = {
   id: string;
   espnEventId?: string | null;
+  mlbGamePk?: string | null;
   league: HomeLeague;
   awayAbbrev: string;
   homeAbbrev: string;
@@ -24,6 +25,7 @@ export type LiveGameTeam = {
 export type LiveGame = {
   id: string;
   espnEventId?: string | null;
+  mlbGamePk?: string | null;
   league: HomeLeague;
   statusLabel: string;
   status: GameStatus;

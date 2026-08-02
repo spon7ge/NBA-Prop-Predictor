@@ -19,6 +19,10 @@ const leagueStyles: Record<
     badge: "bg-violet-600/25 text-violet-300",
     link: "text-violet-400 hover:text-violet-300",
   },
+  mlb: {
+    badge: "bg-emerald-600/25 text-emerald-300",
+    link: "text-emerald-400 hover:text-emerald-300",
+  },
 };
 
 export const DEFAULT_LEARN_SPORTS: LearnSport[] = [

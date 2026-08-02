@@ -1,15 +1,40 @@
-import type { ApiWnbaGame } from "@/lib/api";
 import type { MatchupGame } from "@/components/league/types";
-import type { GameStatus, LiveGame, TickerGame } from "./types";
+import type { GameStatus, HomeLeague, LiveGame, TickerGame } from "./types";
+
+type ScoreboardGame = {
+  id: string;
+  league: HomeLeague;
+  status: GameStatus;
+  status_label: string;
+  espn_event_id?: string | null;
+  mlb_game_pk?: string | null;
+  away: {
+    abbrev: string;
+    name: string;
+    score: number | null;
+    logo_url: string | null;
+    record?: string | null;
+  };
+  home: {
+    abbrev: string;
+    name: string;
+    score: number | null;
+    logo_url: string | null;
+    record?: string | null;
+  };
+  venue?: string | null;
+  venue_city?: string | null;
+};
 
 export function isInProgressStatus(status: GameStatus): boolean {
   return status === "live" || status === "halftime";
 }
 
-export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
+export function mapToTickerGames(games: ScoreboardGame[]): TickerGame[] {
   return games.map((g) => ({
     id: g.id,
-    espnEventId: g.espn_event_id,
+    espnEventId: g.espn_event_id ?? null,
+    mlbGamePk: g.mlb_game_pk ?? null,
     league: g.league,
     awayAbbrev: g.away.abbrev,
     homeAbbrev: g.home.abbrev,
@@ -20,10 +45,11 @@ export function mapToTickerGames(games: ApiWnbaGame[]): TickerGame[] {
   }));
 }
 
-export function mapToLiveGames(games: ApiWnbaGame[]): LiveGame[] {
+export function mapToLiveGames(games: ScoreboardGame[]): LiveGame[] {
   return games.map((g) => ({
     id: g.id,
-    espnEventId: g.espn_event_id,
+    espnEventId: g.espn_event_id ?? null,
+    mlbGamePk: g.mlb_game_pk ?? null,
     league: g.league,
     statusLabel: g.status_label,
     status: g.status,
@@ -42,10 +68,11 @@ export function mapToLiveGames(games: ApiWnbaGame[]): LiveGame[] {
   }));
 }
 
-export function mapToMatchupGames(games: ApiWnbaGame[]): MatchupGame[] {
+export function mapToMatchupGames(games: ScoreboardGame[]): MatchupGame[] {
   return games.map((g) => ({
     id: g.id,
-    espnEventId: g.espn_event_id,
+    espnEventId: g.espn_event_id ?? null,
+    mlbGamePk: g.mlb_game_pk ?? null,
     league: g.league,
     statusLabel: g.status_label,
     status: g.status,
@@ -68,7 +95,7 @@ export function mapToMatchupGames(games: ApiWnbaGame[]): MatchupGame[] {
   }));
 }
 
-export function shouldPollScoreboard(games: ApiWnbaGame[] | undefined): boolean {
+export function shouldPollScoreboard(games: ScoreboardGame[] | undefined): boolean {
   if (!games || games.length === 0) return false;
   return games.some((g) => g.status !== "final");
 }

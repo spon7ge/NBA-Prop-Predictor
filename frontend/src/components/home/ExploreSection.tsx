@@ -24,6 +24,7 @@ const EXPLORE_SKELETON_COUNT = 4;
 const leaguePill: Record<HomeLeague, string> = {
   nba: "bg-sky-600/90 text-white",
   wnba: "bg-orange-500/90 text-white",
+  mlb: "bg-emerald-600/90 text-white",
 };
 
 const graphicMeta: Record<

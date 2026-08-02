@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ApiWnbaGame } from "@/lib/api";
+import type { ApiMlbGame, ApiWnbaGame } from "@/lib/api";
 import {
   mapToLiveGames,
   mapToMatchupGames,
@@ -17,6 +17,34 @@ function apiGame(overrides: Partial<ApiWnbaGame> = {}): ApiWnbaGame {
     start_time_et: "2026-07-29T23:00:00Z",
     away: { abbrev: "ATL", name: "Atlanta Dream", score: 36, logo_url: null },
     home: { abbrev: "DAL", name: "Dallas Wings", score: 44, logo_url: null },
+    ...overrides,
+  };
+}
+
+function mlbApiGame(overrides: Partial<ApiMlbGame> = {}): ApiMlbGame {
+  return {
+    id: "mlb-9",
+    mlb_game_pk: "9",
+    league: "mlb",
+    status: "live",
+    status_label: "Top 3rd",
+    start_time_et: "2026-08-02T23:00:00Z",
+    venue: "Yankee Stadium",
+    venue_city: "New York",
+    away: {
+      abbrev: "BOS",
+      name: "Boston Red Sox",
+      score: 2,
+      record: "50-40",
+      logo_url: null,
+    },
+    home: {
+      abbrev: "NYY",
+      name: "New York Yankees",
+      score: 3,
+      record: "55-35",
+      logo_url: null,
+    },
     ...overrides,
   };
 }
@@ -52,6 +80,7 @@ describe("scoreboard mappers", () => {
       {
         id: "g1",
         espnEventId: null,
+        mlbGamePk: null,
         league: "wnba",
         awayAbbrev: "ATL",
         homeAbbrev: "DAL",
@@ -87,6 +116,7 @@ describe("scoreboard mappers", () => {
     expect(mapToLiveGames([scheduled])[0]).toEqual({
       id: "g1",
       espnEventId: null,
+      mlbGamePk: null,
       league: "wnba",
       statusLabel: "7:00 PM ET",
       status: "scheduled",
@@ -169,6 +199,7 @@ describe("scoreboard mappers", () => {
       {
         id: "1",
         espnEventId: "401",
+        mlbGamePk: null,
         league: "wnba",
         status: "final",
         statusLabel: "Final",
@@ -190,5 +221,24 @@ describe("scoreboard mappers", () => {
         },
       },
     ]);
+  });
+
+  it("maps MLB mlb_game_pk and leaves espnEventId null", () => {
+    const game = mlbApiGame();
+    const ticker = mapToTickerGames([game])[0];
+    const live = mapToLiveGames([game])[0];
+    const matchup = mapToMatchupGames([game])[0];
+
+    expect(ticker.mlbGamePk).toBe("9");
+    expect(ticker.espnEventId).toBeNull();
+    expect(ticker.league).toBe("mlb");
+
+    expect(live.mlbGamePk).toBe("9");
+    expect(live.espnEventId).toBeNull();
+    expect(live.league).toBe("mlb");
+
+    expect(matchup.mlbGamePk).toBe("9");
+    expect(matchup.espnEventId).toBeNull();
+    expect(matchup.league).toBe("mlb");
   });
 });

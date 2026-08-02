@@ -20,6 +20,7 @@ export type MatchupOdds = {
 export type MatchupGame = {
   id: string;
   espnEventId?: string | null;
+  mlbGamePk?: string | null;
   league: HomeLeague;
   status: GameStatus;
   statusLabel: string;
