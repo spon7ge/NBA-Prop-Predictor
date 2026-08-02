@@ -39,6 +39,10 @@ describe("PlayerHeader", () => {
       screen.getByText((content) => content.includes("Las Vegas Aces")),
     ).toBeInTheDocument();
 
+    expect(
+      screen.getByText("2026 REGULAR SEASON STATS"),
+    ).toBeInTheDocument();
+
     expect(screen.getByText("PTS")).toBeInTheDocument();
     expect(screen.getByText("REB")).toBeInTheDocument();
     expect(screen.getByText("AST")).toBeInTheDocument();

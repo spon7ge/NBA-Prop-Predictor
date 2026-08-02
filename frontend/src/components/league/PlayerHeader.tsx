@@ -78,20 +78,22 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-2 sm:gap-3">
-          {AVG_TILES.map(({ key, label }) => (
-            <div
-              key={key}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-2 py-2 text-center"
-            >
-              <div className="text-[10px] font-medium tracking-wide text-white/35 uppercase">
-                {label}
+        <div className="w-full shrink-0 overflow-hidden rounded-xl border border-white/10 md:max-w-md md:min-w-[18rem]">
+          <div className="bg-white/10 px-3 py-2 text-center text-[11px] font-semibold tracking-wide text-white uppercase">
+            {player.season} REGULAR SEASON STATS
+          </div>
+          <div className="grid grid-cols-5 gap-1 px-2 py-4 sm:gap-2 sm:px-3">
+            {AVG_TILES.map(({ key, label }) => (
+              <div key={key} className="text-center">
+                <div className="text-[10px] font-medium tracking-wide text-white/40 uppercase">
+                  {label}
+                </div>
+                <div className="mt-1 text-lg font-semibold tabular-nums text-white sm:text-xl">
+                  {player.averages[key]}
+                </div>
               </div>
-              <div className="mt-1 text-base font-semibold tabular-nums text-white">
-                {player.averages[key]}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
