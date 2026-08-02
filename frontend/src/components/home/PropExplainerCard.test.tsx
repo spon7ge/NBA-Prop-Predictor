@@ -1,13 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { PropExplainerCard } from "./PropExplainerCard";
 
 describe("PropExplainerCard", () => {
-  it("renders player, line, model, FanDuel, and EV for Over", () => {
-    render(
-      <PropExplainerCard selectedSide="over" onSelectSide={vi.fn()} />,
-    );
+  it("renders player, line, model, FanDuel, EV, and Over example", () => {
+    render(<PropExplainerCard />);
     expect(screen.getByText("LeBron James")).toBeInTheDocument();
     expect(screen.getByText("LAL · F")).toBeInTheDocument();
     expect(screen.getByText("DEN vs LAL")).toBeInTheDocument();
@@ -17,34 +14,7 @@ describe("PropExplainerCard", () => {
     expect(screen.getByText("24.7")).toBeInTheDocument();
     expect(screen.getByText("+4%")).toBeInTheDocument();
     expect(screen.getByText(/−110/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /over/i })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: /under/i })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-  });
-
-  it("shows negative EV when Under is selected", () => {
-    render(
-      <PropExplainerCard selectedSide="under" onSelectSide={vi.fn()} />,
-    );
-    expect(screen.getByText("−4%")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /under/i })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-  });
-
-  it("calls onSelectSide when toggling", async () => {
-    const user = userEvent.setup();
-    const onSelectSide = vi.fn();
-    render(
-      <PropExplainerCard selectedSide="over" onSelectSide={onSelectSide} />,
-    );
-    await user.click(screen.getByRole("button", { name: /under/i }));
-    expect(onSelectSide).toHaveBeenCalledWith("under");
+    expect(screen.getByLabelText(/example side over/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /under/i })).not.toBeInTheDocument();
   });
 });

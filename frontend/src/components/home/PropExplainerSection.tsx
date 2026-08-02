@@ -1,12 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PropExplainerCard } from "./PropExplainerCard";
 import { PropExplainerCallouts } from "./PropExplainerCallouts";
-import type { PropSide } from "./propExplainerDemo";
 
 export function PropExplainerSection() {
-  const [selectedSide, setSelectedSide] = useState<PropSide>("over");
-
   return (
     <section
       id="how-a-prop-works"
@@ -20,45 +16,27 @@ export function PropExplainerSection() {
           Read the line. See the edge.
         </h2>
         <p className="mt-3 text-sm text-white/40 sm:text-base">
-          Model projection next to the market — tap Over or Under to see how EV
-          flips.
+          A simple Over example — line, odds, model, and EV in plain English.
         </p>
       </div>
 
       <div className="mx-auto mt-12 hidden max-w-5xl items-center gap-4 lg:grid lg:grid-cols-[1fr_minmax(260px,320px)_1fr]">
-        <PropExplainerCallouts
-          selectedSide={selectedSide}
-          layout="desktop"
-          slot="left"
-        />
-        <PropExplainerCard
-          selectedSide={selectedSide}
-          onSelectSide={setSelectedSide}
-        />
-        <PropExplainerCallouts
-          selectedSide={selectedSide}
-          layout="desktop"
-          slot="right"
-        />
+        <PropExplainerCallouts layout="desktop" slot="left" />
+        <PropExplainerCard />
+        <PropExplainerCallouts layout="desktop" slot="right" />
       </div>
 
       <div className="mx-auto mt-10 max-w-md lg:hidden">
-        <PropExplainerCard
-          selectedSide={selectedSide}
-          onSelectSide={setSelectedSide}
-        />
+        <PropExplainerCard />
         <div className="mt-4">
-          <PropExplainerCallouts
-            selectedSide={selectedSide}
-            layout="mobile"
-          />
+          <PropExplainerCallouts layout="mobile" />
         </div>
       </div>
 
       <div className="mx-auto mt-12 max-w-2xl text-center">
         <p className="text-sm leading-relaxed text-white/40 sm:text-base">
-          We project the player. Books set the line. Positive EV means the model
-          likes your side more than the price implies.
+          We project the player. Books set the line and price. Positive EV means
+          the model likes your side a bit more than that price implies.
         </p>
         <div className="mt-6">
           <Link

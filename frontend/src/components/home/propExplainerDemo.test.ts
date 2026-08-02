@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  CALLOUTS,
   DEMO_PROP,
-  evForSide,
   formatEvPercent,
-  isCalloutEmphasized,
 } from "./propExplainerDemo";
 
 describe("propExplainerDemo", () => {
@@ -15,15 +14,10 @@ describe("propExplainerDemo", () => {
     expect(DEMO_PROP.line).toBe(22.5);
     expect(DEMO_PROP.oddsAmerican).toBe(-110);
     expect(DEMO_PROP.model).toBe(24.7);
-    expect(DEMO_PROP.evOver).toBe(4);
-    expect(DEMO_PROP.evUnder).toBe(-4);
+    expect(DEMO_PROP.ev).toBe(4);
+    expect(DEMO_PROP.side).toBe("Over");
     expect(DEMO_PROP.matchup).toBe("DEN vs LAL");
     expect(DEMO_PROP.tip).toBe("Tue 7:00pm");
-  });
-
-  it("returns EV for the selected side", () => {
-    expect(evForSide("over")).toBe(4);
-    expect(evForSide("under")).toBe(-4);
   });
 
   it("formats EV with sign and Unicode minus for negatives", () => {
@@ -31,15 +25,11 @@ describe("propExplainerDemo", () => {
     expect(formatEvPercent(-4)).toBe("−4%");
   });
 
-  it("emphasizes callouts per side rules", () => {
-    expect(isCalloutEmphasized("line", "over")).toBe(true);
-    expect(isCalloutEmphasized("side", "over")).toBe(true);
-    expect(isCalloutEmphasized("edge", "over")).toBe(false);
-    expect(isCalloutEmphasized("flip", "over")).toBe(false);
-
-    expect(isCalloutEmphasized("edge", "under")).toBe(true);
-    expect(isCalloutEmphasized("flip", "under")).toBe(true);
-    expect(isCalloutEmphasized("line", "under")).toBe(false);
-    expect(isCalloutEmphasized("side", "under")).toBe(false);
+  it("teaches line, odds, model, and EV in plain language", () => {
+    expect(CALLOUTS.line.body).toMatch(/more than 22\.5/i);
+    expect(CALLOUTS.odds.body).toMatch(/bet \$110 to profit \$100/i);
+    expect(CALLOUTS.odds.body).toMatch(/favorite/i);
+    expect(CALLOUTS.edge.body).toMatch(/fed into our model/i);
+    expect(CALLOUTS.ev.body).toMatch(/expected value/i);
   });
 });

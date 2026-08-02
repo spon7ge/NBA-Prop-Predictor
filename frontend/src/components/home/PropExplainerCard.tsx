@@ -1,36 +1,18 @@
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
-import {
-  DEMO_PROP,
-  evForSide,
-  formatEvPercent,
-  type PropSide,
-} from "./propExplainerDemo";
-
-export type PropExplainerCardProps = {
-  selectedSide: PropSide;
-  onSelectSide: (side: PropSide) => void;
-};
+import { DEMO_PROP, formatEvPercent } from "./propExplainerDemo";
 
 function formatAmericanOdds(odds: number): string {
   return String(odds).replace("-", "−");
 }
 
-export function PropExplainerCard({
-  selectedSide,
-  onSelectSide,
-}: PropExplainerCardProps) {
-  const ev = evForSide(selectedSide);
+export function PropExplainerCard() {
+  const ev = DEMO_PROP.ev;
   const evClassName =
     ev > 0
       ? "text-emerald-300 border-emerald-300/30"
       : ev < 0
         ? "text-red-300 border-red-300/30"
         : "text-white/60 border-white/10";
-
-  const sideButtonClass = (side: PropSide) =>
-    selectedSide === side
-      ? "bg-white text-black"
-      : "border border-white/10 bg-white/[0.04] text-white/45";
 
   return (
     <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
@@ -83,23 +65,11 @@ export function PropExplainerCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          aria-pressed={selectedSide === "under"}
-          onClick={() => onSelectSide("under")}
-          className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${sideButtonClass("under")}`}
-        >
-          ↓ Under
-        </button>
-        <button
-          type="button"
-          aria-pressed={selectedSide === "over"}
-          onClick={() => onSelectSide("over")}
-          className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${sideButtonClass("over")}`}
-        >
-          ↑ Over
-        </button>
+      <div
+        className="rounded-xl bg-white px-4 py-2.5 text-center text-sm font-medium text-black"
+        aria-label={`Example side ${DEMO_PROP.side}`}
+      >
+        ↑ {DEMO_PROP.side}
       </div>
     </article>
   );

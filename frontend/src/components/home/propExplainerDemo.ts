@@ -1,5 +1,4 @@
-export type PropSide = "over" | "under";
-export type CalloutId = "line" | "side" | "edge" | "flip";
+export type CalloutId = "line" | "odds" | "edge" | "ev";
 
 export const DEMO_PROP = {
   playerName: "LeBron James",
@@ -11,41 +10,32 @@ export const DEMO_PROP = {
   line: 22.5,
   oddsAmerican: -110,
   model: 24.7,
-  evOver: 4,
-  evUnder: -4,
+  ev: 4,
+  side: "Over" as const,
   bookLabel: "FanDuel",
 } as const;
 
 export const CALLOUTS: Record<CalloutId, { title: string; body: string }> = {
   line: {
     title: "The number to beat",
-    body: "FanDuel lists 22.5 points at −110. That’s the line you’re betting against.",
+    body: "22.5 is the points line. Over means you think he’ll score more than 22.5 in the game.",
   },
-  side: {
-    title: "Pick the side",
-    body: "Over — he clears 22.5. Under — he stays under. Active side drives the EV shown.",
+  odds: {
+    title: "What −110 means",
+    body: "A minus means this side is the favorite — you risk more than you win. −110 means bet $110 to profit $100.",
   },
   edge: {
-    title: "Model edge",
-    body: "Projection 24.7 vs line 22.5 → about +4% EV on Over.",
+    title: "Our model’s guess",
+    body: "We project 24.7 points based on the information fed into our model.",
   },
-  flip: {
-    title: "Why EV flipped",
-    body: "Same line and model — you just chose the side the projection doesn’t favor.",
+  ev: {
+    title: "What EV means",
+    body: "Expected value tells you whether a bet is a good deal on average — not whether it'll win this time, but whether making bets like it over and over would leave you ahead.",
   },
 };
-
-export function evForSide(side: PropSide): number {
-  return side === "over" ? DEMO_PROP.evOver : DEMO_PROP.evUnder;
-}
 
 export function formatEvPercent(ev: number): string {
   if (ev > 0) return `+${ev}%`;
   if (ev < 0) return `−${Math.abs(ev)}%`;
   return "0%";
-}
-
-export function isCalloutEmphasized(id: CalloutId, side: PropSide): boolean {
-  if (side === "over") return id === "line" || id === "side";
-  return id === "edge" || id === "flip";
 }
