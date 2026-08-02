@@ -29,8 +29,8 @@ STATS_TIMEOUT_SECONDS = 10.0
 CACHE_TTL_SECONDS = 10 * 60
 
 _cache: dict[str, dict] = {}  # player_id → {response, expires_at, season}
-_refresh_lock: asyncio.Lock | None = None
-_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
+_refresh_locks: dict[str, asyncio.Lock] = {}  # player_id → lock
+_refresh_locks_loop: asyncio.AbstractEventLoop | None = None
 
 _STATS_HEADERS = {
     "User-Agent": "Mozilla/5.0",
@@ -192,14 +192,8 @@ def normalize_wnba_player(
     if not name or not team_abbrev:
         return None
 
-    pts = format_avg(dash_row.get("PTS"))
-    reb = format_avg(dash_row.get("REB"))
-    ast = format_avg(dash_row.get("AST"))
-    fg_pct = format_pct(dash_row.get("FG_PCT"))
-    fg3_pct = format_pct(dash_row.get("FG3_PCT"))
-    if not all([pts, reb, ast, fg_pct, fg3_pct]):
-        return None
-
+    # Missing/unparseable averages should not 404 — only a missing dash row
+    # (or identity fields above) means the player is unknown.
     return WnbaPlayerResponse(
         player_id=player_id,
         name=name,
@@ -209,23 +203,28 @@ def normalize_wnba_player(
         headshot_url=headshot_url_for(player_id),
         season=season,
         averages=WnbaPlayerAverages(
-            pts=pts,
-            reb=reb,
-            ast=ast,
-            fg_pct=fg_pct,
-            fg3_pct=fg3_pct,
+            pts=format_avg(dash_row.get("PTS")) or "0.0",
+            reb=format_avg(dash_row.get("REB")) or "0.0",
+            ast=format_avg(dash_row.get("AST")) or "0.0",
+            fg_pct=format_pct(dash_row.get("FG_PCT")) or "—",
+            fg3_pct=format_pct(dash_row.get("FG3_PCT")) or "—",
         ),
         games=_normalize_games(gamelog),
     )
 
 
-def _get_refresh_lock() -> asyncio.Lock:
-    global _refresh_lock, _refresh_lock_loop
+def _get_refresh_lock(player_id: str) -> asyncio.Lock:
+    """Return a per-player refresh lock so distinct cold loads can proceed in parallel."""
+    global _refresh_locks_loop
     loop = asyncio.get_running_loop()
-    if _refresh_lock is None or _refresh_lock_loop is not loop:
-        _refresh_lock = asyncio.Lock()
-        _refresh_lock_loop = loop
-    return _refresh_lock
+    if _refresh_locks_loop is not loop:
+        _refresh_locks.clear()
+        _refresh_locks_loop = loop
+    lock = _refresh_locks.get(player_id)
+    if lock is None:
+        lock = asyncio.Lock()
+        _refresh_locks[player_id] = lock
+    return lock
 
 
 async def fetch_leaguedashplayerstats(season: int) -> dict:
@@ -295,7 +294,7 @@ async def get_wnba_player(player_id: str) -> WnbaPlayerResponse:
     if fresh is not None:
         return fresh
 
-    lock = _get_refresh_lock()
+    lock = _get_refresh_lock(player_id)
     async with lock:
         fresh = _fresh_cached(player_id, season)
         if fresh is not None:

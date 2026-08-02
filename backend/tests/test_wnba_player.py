@@ -22,8 +22,12 @@ def _load(name: str) -> dict:
 @pytest.fixture(autouse=True)
 def clear_player_cache():
     svc._cache.clear()
+    svc._refresh_locks.clear()
+    svc._refresh_locks_loop = None
     yield
     svc._cache.clear()
+    svc._refresh_locks.clear()
+    svc._refresh_locks_loop = None
 
 
 def test_format_pct_handles_fraction_and_percent():
@@ -70,6 +74,36 @@ def test_normalize_unknown_player_returns_none():
         gamelog=_load("stats_wnba_player_gamelog.json"),
     )
     assert result is None
+
+
+def test_normalize_sparse_averages_returns_player():
+    """Missing/unparseable avg fields must not 404 — use display fallbacks."""
+    dash = _load("stats_wnba_player_dash.json")
+    headers = [str(h) for h in dash["resultSets"][0]["headers"]]
+    fg_pct_i = headers.index("FG_PCT")
+    fg3_pct_i = headers.index("FG3_PCT")
+    ast_i = headers.index("AST")
+    player_i = headers.index("PLAYER_ID")
+    for row in dash["resultSets"][0]["rowSet"]:
+        if str(row[player_i]) == "1628932":
+            row[fg_pct_i] = None
+            row[fg3_pct_i] = "n/a"
+            row[ast_i] = None
+            break
+
+    result = svc.normalize_wnba_player(
+        player_id="1628932",
+        season=2026,
+        dash=dash,
+        info=_load("stats_wnba_player_info.json"),
+        gamelog=_load("stats_wnba_player_gamelog.json"),
+    )
+    assert result is not None
+    assert result.name == "A'ja Wilson"
+    assert result.averages.fg_pct == "—"
+    assert result.averages.fg3_pct == "—"
+    assert result.averages.ast == "0.0"
+    assert result.averages.pts  # still parsed from fixture
 
 
 def test_player_route_200_no_store():
@@ -186,3 +220,43 @@ def test_get_wnba_player_404_when_missing():
         with pytest.raises(HTTPException) as exc_info:
             asyncio.run(svc.get_wnba_player("999"))
     assert exc_info.value.status_code == 404
+
+
+def test_refresh_locks_are_per_player_id():
+    """Distinct player_ids must not share a single process-wide lock."""
+
+    async def run():
+        lock_a = svc._get_refresh_lock("111")
+        lock_b = svc._get_refresh_lock("222")
+        assert lock_a is not lock_b
+        assert svc._get_refresh_lock("111") is lock_a
+
+        # Concurrent holders of different locks must both proceed (no global serialize).
+        order: list[str] = []
+        started = asyncio.Event()
+        release_a = asyncio.Event()
+
+        async def hold_a():
+            async with lock_a:
+                order.append("a_enter")
+                started.set()
+                await release_a.wait()
+                order.append("a_exit")
+
+        async def hold_b():
+            await started.wait()
+            async with lock_b:
+                order.append("b_enter")
+                order.append("b_exit")
+
+        task_a = asyncio.create_task(hold_a())
+        task_b = asyncio.create_task(hold_b())
+        await started.wait()
+        # Give hold_b a turn; with a global lock it would block until a exits.
+        await asyncio.sleep(0.01)
+        assert "b_enter" in order
+        release_a.set()
+        await asyncio.gather(task_a, task_b)
+        assert order == ["a_enter", "b_enter", "b_exit", "a_exit"]
+
+    asyncio.run(run())
