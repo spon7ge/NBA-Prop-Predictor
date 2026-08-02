@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import logging
+import time
 from datetime import datetime, timezone
 from typing import Any
 
@@ -11,6 +13,7 @@ from app.schemas.wnba_futures import (
     WnbaFuturesMarket,
     WnbaFuturesResponse,
 )
+from app.services.wnba_standings import current_wnba_season_year
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +24,9 @@ FUTURES_URL = (
 CACHE_TTL_SECONDS = 300.0
 
 _team_cache: dict[str, dict[str, Any]] = {}
+_cache: dict = {}
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
 
 def display_name_for_market(name: str) -> str:
@@ -205,3 +211,58 @@ async def normalize_futures_payload(
         "+00:00", "Z"
     )
     return WnbaFuturesResponse(season=season, as_of=as_of, markets=markets)
+
+
+def _get_refresh_lock() -> asyncio.Lock:
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
+async def fetch_espn_futures(season: int) -> dict:
+    url = FUTURES_URL.format(season=season)
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        res = await client.get(url, params={"limit": 200, "lang": "en", "region": "us"})
+        res.raise_for_status()
+        return res.json()
+
+
+def _fresh_cached() -> WnbaFuturesResponse | None:
+    cached = _cache.get("response")
+    if cached is None:
+        return None
+    if _cache.get("season") != current_wnba_season_year():
+        return None
+    if time.time() >= float(_cache.get("expires_at") or 0):
+        return None
+    return cached
+
+
+async def get_wnba_futures() -> WnbaFuturesResponse:
+    fresh = _fresh_cached()
+    if fresh is not None:
+        return fresh
+
+    lock = _get_refresh_lock()
+    async with lock:
+        fresh = _fresh_cached()
+        if fresh is not None:
+            return fresh
+        season = current_wnba_season_year()
+        try:
+            payload = await fetch_espn_futures(season)
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await normalize_futures_payload(payload, season, client)
+        except Exception:
+            stale = _cache.get("response")
+            if stale is not None and _cache.get("season") == season:
+                logger.warning("WNBA futures refresh failed; serving stale cache")
+                return stale
+            raise
+        _cache["response"] = response
+        _cache["expires_at"] = time.time() + CACHE_TTL_SECONDS
+        _cache["season"] = response.season
+        return response
