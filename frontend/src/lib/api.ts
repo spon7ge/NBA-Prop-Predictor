@@ -46,6 +46,10 @@ export type ApiWnbaFuturesEntry = Schemas["WnbaFuturesEntry"];
 export type ApiWnbaFuturesMarket = Schemas["WnbaFuturesMarket"];
 export type ApiWnbaFuturesResponse = Schemas["WnbaFuturesResponse"];
 
+export type ApiWnbaPlayerAverages = Schemas["WnbaPlayerAverages"];
+export type ApiWnbaPlayerGame = Schemas["WnbaPlayerGame"];
+export type ApiWnbaPlayerResponse = Schemas["WnbaPlayerResponse"];
+
 /**
  * Origin of the HoopVista API, without a trailing slash.
  *
@@ -143,6 +147,19 @@ export async function fetchWnbaFutures(): Promise<ApiWnbaFuturesResponse> {
   });
   if (!res.ok) {
     throw new Error(`Futures request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function fetchWnbaPlayer(
+  playerId: string,
+): Promise<ApiWnbaPlayerResponse> {
+  const res = await fetch(`${API_BASE}/api/wnba/player/${playerId}`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Player request failed: ${res.status}`);
   }
   return res.json();
 }

@@ -4254,6 +4254,186 @@
         "title": "WnbaOddsResponse",
         "type": "object"
       },
+      "WnbaPlayerAverages": {
+        "properties": {
+          "ast": {
+            "title": "Ast",
+            "type": "string"
+          },
+          "fg3_pct": {
+            "title": "Fg3 Pct",
+            "type": "string"
+          },
+          "fg_pct": {
+            "title": "Fg Pct",
+            "type": "string"
+          },
+          "pts": {
+            "title": "Pts",
+            "type": "string"
+          },
+          "reb": {
+            "title": "Reb",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pts",
+          "reb",
+          "ast",
+          "fg_pct",
+          "fg3_pct"
+        ],
+        "title": "WnbaPlayerAverages",
+        "type": "object"
+      },
+      "WnbaPlayerGame": {
+        "properties": {
+          "ast": {
+            "title": "Ast",
+            "type": "string"
+          },
+          "blk": {
+            "title": "Blk",
+            "type": "string"
+          },
+          "fg": {
+            "title": "Fg",
+            "type": "string"
+          },
+          "ft": {
+            "title": "Ft",
+            "type": "string"
+          },
+          "game_date": {
+            "title": "Game Date",
+            "type": "string"
+          },
+          "game_id": {
+            "title": "Game Id",
+            "type": "string"
+          },
+          "matchup": {
+            "title": "Matchup",
+            "type": "string"
+          },
+          "min": {
+            "title": "Min",
+            "type": "string"
+          },
+          "pts": {
+            "title": "Pts",
+            "type": "string"
+          },
+          "reb": {
+            "title": "Reb",
+            "type": "string"
+          },
+          "stl": {
+            "title": "Stl",
+            "type": "string"
+          },
+          "three_pt": {
+            "title": "Three Pt",
+            "type": "string"
+          },
+          "to": {
+            "title": "To",
+            "type": "string"
+          }
+        },
+        "required": [
+          "game_id",
+          "game_date",
+          "matchup",
+          "min",
+          "pts",
+          "fg",
+          "three_pt",
+          "ft",
+          "reb",
+          "ast",
+          "to",
+          "stl",
+          "blk"
+        ],
+        "title": "WnbaPlayerGame",
+        "type": "object"
+      },
+      "WnbaPlayerResponse": {
+        "properties": {
+          "averages": {
+            "$ref": "#/components/schemas/WnbaPlayerAverages"
+          },
+          "games": {
+            "items": {
+              "$ref": "#/components/schemas/WnbaPlayerGame"
+            },
+            "title": "Games",
+            "type": "array"
+          },
+          "headshot_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Headshot Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "player_id": {
+            "title": "Player Id",
+            "type": "string"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "season": {
+            "title": "Season",
+            "type": "integer"
+          },
+          "source_label": {
+            "default": "stats.wnba.com",
+            "title": "Source Label",
+            "type": "string"
+          },
+          "team_abbrev": {
+            "title": "Team Abbrev",
+            "type": "string"
+          },
+          "team_name": {
+            "title": "Team Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "player_id",
+          "name",
+          "position",
+          "team_name",
+          "team_abbrev",
+          "headshot_url",
+          "season",
+          "averages",
+          "games"
+        ],
+        "title": "WnbaPlayerResponse",
+        "type": "object"
+      },
       "WnbaPropBookQuote": {
         "properties": {
           "line": {
@@ -4789,7 +4969,7 @@
     }
   },
   "info": {
-    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/wnba/leaders, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, or SharpAPI for live WNBA data.",
+    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, or SharpAPI for live WNBA data.",
     "title": "HoopVista API",
     "version": "0.3.0"
   },
@@ -6592,6 +6772,48 @@
           }
         },
         "summary": "Wnba Odds Today",
+        "tags": [
+          "wnba"
+        ]
+      }
+    },
+    "/api/wnba/player/{player_id}": {
+      "get": {
+        "operationId": "wnba_player_api_wnba_player__player_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "player_id",
+            "required": true,
+            "schema": {
+              "title": "Player Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WnbaPlayerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Wnba Player",
         "tags": [
           "wnba"
         ]

@@ -503,6 +503,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/wnba/player/{player_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wnba Player */
+        get: operations["wnba_player_api_wnba_player__player_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/wnba/props/today": {
         parameters: {
             query?: never;
@@ -1894,6 +1911,73 @@ export interface components {
              */
             sportsbook: string;
         };
+        /** WnbaPlayerAverages */
+        WnbaPlayerAverages: {
+            /** Ast */
+            ast: string;
+            /** Fg3 Pct */
+            fg3_pct: string;
+            /** Fg Pct */
+            fg_pct: string;
+            /** Pts */
+            pts: string;
+            /** Reb */
+            reb: string;
+        };
+        /** WnbaPlayerGame */
+        WnbaPlayerGame: {
+            /** Ast */
+            ast: string;
+            /** Blk */
+            blk: string;
+            /** Fg */
+            fg: string;
+            /** Ft */
+            ft: string;
+            /** Game Date */
+            game_date: string;
+            /** Game Id */
+            game_id: string;
+            /** Matchup */
+            matchup: string;
+            /** Min */
+            min: string;
+            /** Pts */
+            pts: string;
+            /** Reb */
+            reb: string;
+            /** Stl */
+            stl: string;
+            /** Three Pt */
+            three_pt: string;
+            /** To */
+            to: string;
+        };
+        /** WnbaPlayerResponse */
+        WnbaPlayerResponse: {
+            averages: components["schemas"]["WnbaPlayerAverages"];
+            /** Games */
+            games: components["schemas"]["WnbaPlayerGame"][];
+            /** Headshot Url */
+            headshot_url: string | null;
+            /** Name */
+            name: string;
+            /** Player Id */
+            player_id: string;
+            /** Position */
+            position: string | null;
+            /** Season */
+            season: number;
+            /**
+             * Source Label
+             * @default stats.wnba.com
+             */
+            source_label: string;
+            /** Team Abbrev */
+            team_abbrev: string;
+            /** Team Name */
+            team_name: string;
+        };
         /** WnbaPropBookQuote */
         WnbaPropBookQuote: {
             /** Line */
@@ -2838,6 +2922,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WnbaOddsResponse"];
+                };
+            };
+        };
+    };
+    wnba_player_api_wnba_player__player_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                player_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WnbaPlayerResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
