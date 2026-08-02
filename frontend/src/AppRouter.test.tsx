@@ -298,6 +298,43 @@ describe("AppRouter", () => {
     );
   });
 
+  it("renders WNBA player page at /wnba/player/:playerId", async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo) => {
+      const url = String(input);
+      if (url.includes("/api/wnba/player/1628932")) {
+        return {
+          ok: true,
+          json: async () => ({
+            player_id: "1628932",
+            name: "A'ja Wilson",
+            position: "C",
+            team_name: "Las Vegas Aces",
+            team_abbrev: "LVA",
+            headshot_url: null,
+            season: 2026,
+            averages: {
+              pts: "26.2",
+              reb: "10.1",
+              ast: "2.5",
+              fg_pct: "52.0",
+              fg3_pct: "33.0",
+            },
+            games: [],
+            source_label: "stats.wnba.com",
+          }),
+        };
+      }
+      return {
+        ok: true,
+        json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
+      };
+    });
+    renderWithProviders(["/wnba/player/1628932"]);
+    expect(await screen.findByText("A'ja Wilson")).toBeInTheDocument();
+    expect(screen.getByText("Data: stats.wnba.com")).toBeInTheDocument();
+  });
+
+
   it("renders win probability beneath shot chart and play-by-play", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/api/wnba/games/")) {

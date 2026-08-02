@@ -7,6 +7,7 @@ import { LeagueMatchupsPage } from "@/pages/LeagueMatchupsPage";
 import { LeagueLeadersPage } from "@/pages/LeagueLeadersPage";
 import { LeagueStandingsPage } from "@/pages/LeagueStandingsPage";
 import { LeagueFuturesPage } from "@/pages/LeagueFuturesPage";
+import { LeaguePlayerPage } from "@/pages/LeaguePlayerPage";
 import { LeaguePropPicksPage } from "@/pages/LeaguePropPicksPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
@@ -25,6 +26,8 @@ export function AppRouter() {
         <Route path="/wnba/leaders" element={<LeagueLeadersPage />} />
         <Route path="/wnba/standings" element={<LeagueStandingsPage />} />
         <Route path="/wnba/futures" element={<LeagueFuturesPage />} />
+        <Route path="/wnba/player/:playerId" element={<LeaguePlayerPage />} />
+
         <Route
           path="/nba/matchups"
           element={<LeagueMatchupsPage league="nba" />}
