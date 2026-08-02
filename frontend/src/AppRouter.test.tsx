@@ -267,7 +267,7 @@ describe("AppRouter", () => {
                 id: "8146",
                 name: "WNBA - Winner",
                 display_name: "Finals Winner",
-                provider: "ESPN BET",
+                provider: "DraftKings",
                 entries: [
                   {
                     team_id: "8",

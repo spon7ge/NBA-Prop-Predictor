@@ -8,7 +8,7 @@ const sampleMarkets: ApiWnbaFuturesMarket[] = [
     id: "8146",
     name: "WNBA - Winner",
     display_name: "Finals Winner",
-    provider: "ESPN BET",
+    provider: "DraftKings",
     entries: [
       {
         team_id: "8",
@@ -23,26 +23,10 @@ const sampleMarkets: ApiWnbaFuturesMarket[] = [
 
 describe("FuturesBoard", () => {
   it("renders Finals Winner rows with odds and provider", () => {
-    render(
+    const { container } = render(
       <FuturesBoard
         season={2026}
-        markets={[
-          {
-            id: "8146",
-            name: "WNBA - Winner",
-            display_name: "Finals Winner",
-            provider: "ESPN BET",
-            entries: [
-              {
-                team_id: "8",
-                abbrev: "NYL",
-                name: "New York Liberty",
-                logo_url: null,
-                odds_american: "+250",
-              },
-            ],
-          },
-        ]}
+        markets={sampleMarkets}
         isLoading={false}
         isError={false}
       />,
@@ -51,7 +35,8 @@ describe("FuturesBoard", () => {
     expect(screen.getByText("New York Liberty")).toBeInTheDocument();
     expect(screen.getByText("+250")).toBeInTheDocument();
     expect(screen.getByText(/Odds by/)).toBeInTheDocument();
-    expect(screen.getByText("ESPN BET")).toBeInTheDocument();
+    expect(screen.getByText("DraftKings")).toBeInTheDocument();
+    expect(container.querySelector("ul")?.className).toContain("sm:grid-cols-2");
   });
 
   it("shows season in the header", () => {

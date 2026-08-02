@@ -98,7 +98,7 @@ def test_normalize_sorts_favorites_first_and_maps_teams(monkeypatch):
     assert market.id == "8146"
     assert market.name == "WNBA - Winner"
     assert market.display_name == "Finals Winner"
-    assert market.provider == "ESPN BET"
+    assert market.provider == "DraftKings"
     assert len(market.entries) == 4
 
     odds = [entry.odds_american for entry in market.entries]
@@ -130,7 +130,7 @@ def test_normalize_embedded_team_skips_http():
                 "name": "WNBA - Winner",
                 "futures": [
                     {
-                        "provider": {"name": "ESPN BET", "active": 1},
+                        "provider": {"name": "DraftKings", "active": 1},
                         "books": [
                             {
                                 "value": "+250",

@@ -13,11 +13,10 @@ export function BrandHero() {
             HoopVista
           </h1>
           <p className="text-xl tracking-tight text-white/85 sm:text-2xl">
-            From first tip to smarter bets.
+            The only research tool you need to make smarter bets.
           </p>
           <p className="max-w-md text-sm leading-relaxed text-white/45 sm:text-base">
-            Built for fans and beginners alike. Follow the games, learn the
-            lines, and use model projections when you&apos;re ready to place a
+            Follow the games, learn the lines, and use model projections when you&apos;re ready to place a
             bet — so you&apos;re deciding with numbers, not guessing.
           </p>
           <div className="pt-1">

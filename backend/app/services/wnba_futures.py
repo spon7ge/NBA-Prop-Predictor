@@ -70,7 +70,7 @@ def pick_provider(futures: list[dict]) -> dict | None:
             continue
         provider = entry.get("provider") or {}
         name = str(provider.get("name") or "").lower()
-        if is_active(entry) and "espn bet" in name:
+        if is_active(entry) and "draftkings" in name:
             return entry
 
     for entry in futures:

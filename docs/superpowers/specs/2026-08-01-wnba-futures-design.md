@@ -18,7 +18,7 @@ Replace the disabled Explore **Clutch** pill with **Futures**, linking to `/wnba
 | Season | Current WNBA season year (e.g. `2026`); no season picker |
 | Markets | All markets returned by ESPN for that season (today: `WNBA - Winner`) |
 | Display name | Map `WNBA - Winner` → **Finals Winner**; otherwise use ESPN `name` |
-| Provider | Prefer active provider named like ESPN BET; else first active / first listed |
+| Provider | Prefer active provider named like DraftKings; else first active / first listed |
 | Sort | Shortest American odds first (favorites at top) |
 | UI shell | Same as standings: `LeagueSubnav` + content (no `LeagueHero` date strip required) |
 | Cache | ~5 minutes in-process |
@@ -59,7 +59,7 @@ Response shape:
       "id": "8146",
       "name": "WNBA - Winner",
       "display_name": "Finals Winner",
-      "provider": "ESPN BET",
+      "provider": "DraftKings",
       "entries": [
         {
           "team_id": "8",
@@ -78,7 +78,7 @@ Response shape:
 ### Normalize
 
 - Parse `items[]` markets; each has `futures[]` provider blobs with `books[]`.
-- Select one provider per market (ESPN BET preferred).
+- Select one provider per market (DraftKings preferred).
 - For each book row, resolve `team.$ref` (or embedded team) to `team_id`, `abbrev`, `name`, `logo_url` via ESPN team resource; cache team lookups.
 - Skip rows that cannot resolve to a usable team + odds string.
 - Sort entries by American odds ascending (more negative / shorter plus = favorite). Prefer numeric parse of American odds for sort; keep display string from ESPN (`+250`).
@@ -105,7 +105,7 @@ Derive current season as the calendar year in America/New_York unless an existin
 - `LeagueSubnav league="wnba"`.
 - Section heading / market title from `display_name`.
 - Quiet list or table: `TeamAbbrevAvatar` + name + mono American odds.
-- Caption: `Odds by {provider}` (text is fine; no new logo asset required for ESPN BET).
+- Caption: `Odds by {provider}` (text is fine; no new logo asset required for DraftKings).
 - Loading skeletons; error with no data; empty markets copy.
 - If multiple markets: one block per market (title + rows).
 

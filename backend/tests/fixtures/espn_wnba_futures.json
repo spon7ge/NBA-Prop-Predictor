@@ -19,6 +19,22 @@
           "books": [
             {
               "team": {
+                "$ref": "http://sports.core.api.espn.com/v2/sports/basketball/leagues/wnba/seasons/2026/teams/8?lang=en&region=us"
+              },
+              "value": "+999"
+            }
+          ]
+        },
+        {
+          "provider": {
+            "id": "100",
+            "name": "DraftKings",
+            "active": 1,
+            "priority": 1
+          },
+          "books": [
+            {
+              "team": {
                 "$ref": "http://sports.core.api.espn.com/v2/sports/basketball/leagues/wnba/seasons/2026/teams/9?lang=en&region=us"
               },
               "value": "+600"
@@ -40,22 +56,6 @@
                 "$ref": "http://sports.core.api.espn.com/v2/sports/basketball/leagues/wnba/seasons/2026/teams/5?lang=en&region=us"
               },
               "value": "+290"
-            }
-          ]
-        },
-        {
-          "provider": {
-            "id": "100",
-            "name": "DraftKings",
-            "active": 1,
-            "priority": 1
-          },
-          "books": [
-            {
-              "team": {
-                "$ref": "http://sports.core.api.espn.com/v2/sports/basketball/leagues/wnba/seasons/2026/teams/8?lang=en&region=us"
-              },
-              "value": "+115"
             }
           ]
         }
