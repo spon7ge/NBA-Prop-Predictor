@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 import time
@@ -203,14 +204,34 @@ def normalize_sharp_odds(
     return games
 
 
-async def fetch_sharp_odds_rows() -> list[dict[str, Any]]:
+def _odds_merge_key(game: WnbaOddsGame) -> tuple[str, str, str]:
+    return (game.away_abbrev, game.home_abbrev, game.game_date or "")
+
+
+def merge_odds_prefer_primary(
+    primary: list[WnbaOddsGame],
+    fallback: list[WnbaOddsGame],
+) -> list[WnbaOddsGame]:
+    by_key: dict[tuple[str, str, str], WnbaOddsGame] = {}
+    for game in primary:
+        by_key[_odds_merge_key(game)] = game
+    for game in fallback:
+        key = _odds_merge_key(game)
+        if key not in by_key:
+            by_key[key] = game
+    games = list(by_key.values())
+    games.sort(key=lambda g: (g.game_date or "", g.home_abbrev, g.away_abbrev))
+    return games
+
+
+async def fetch_sharp_odds_rows(sportsbook: str = "draftkings") -> list[dict[str, Any]]:
     if not SHARP_API_KEY:
         raise RuntimeError("SHARP_API_KEY is not configured")
 
     headers = {"X-API-Key": SHARP_API_KEY, "Accept": "application/json"}
     params_base = {
         "league": "wnba",
-        "sportsbook": "draftkings",
+        "sportsbook": sportsbook,
         "market": "point_spread,total_points",
         "is_main_line": "true",
         "limit": str(PAGE_LIMIT),
@@ -260,9 +281,35 @@ async def get_today_odds() -> WnbaOddsResponse:
         )
 
     try:
-        rows = await fetch_sharp_odds_rows()
-        games = normalize_sharp_odds(rows)
-        response = WnbaOddsResponse(as_of=_utcnow_iso(), games=games)
+        dk_result, fd_result = await asyncio.gather(
+            fetch_sharp_odds_rows("draftkings"),
+            fetch_sharp_odds_rows("fanduel"),
+            return_exceptions=True,
+        )
+        errors: list[str] = []
+        dk_games: list[WnbaOddsGame] = []
+        fd_games: list[WnbaOddsGame] = []
+        if isinstance(dk_result, BaseException):
+            errors.append(f"draftkings: {dk_result}")
+        else:
+            dk_games = normalize_sharp_odds(dk_result, sportsbook="draftkings")
+        if isinstance(fd_result, BaseException):
+            errors.append(f"fanduel: {fd_result}")
+        else:
+            fd_games = normalize_sharp_odds(fd_result, sportsbook="fanduel")
+
+        if not dk_games and not fd_games:
+            if errors:
+                raise RuntimeError("; ".join(errors))
+            games = []
+        else:
+            games = merge_odds_prefer_primary(dk_games, fd_games)
+
+        response = WnbaOddsResponse(
+            as_of=_utcnow_iso(),
+            games=games,
+            error="; ".join(errors) if errors else None,
+        )
         _cache["response"] = response
         _cache["expires_at"] = now + CACHE_TTL_SECONDS
         return response
