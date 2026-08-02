@@ -85,7 +85,7 @@ export function GameDetailPage() {
         </>
       ) : (
         <>
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid items-start gap-3 lg:grid-cols-2">
             <ShotChart detail={detail} />
             <PlayByPlay detail={detail} />
           </div>

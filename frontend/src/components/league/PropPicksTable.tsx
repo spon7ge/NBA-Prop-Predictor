@@ -42,7 +42,7 @@ function OddsPill({ quote }: { quote: ApiWnbaPropBookQuote | null }) {
   }
   const odds = quote.odds_american;
   return (
-    <span className="inline-flex flex-col items-center rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono leading-tight text-white/75">
+    <span className="inline-flex flex-col items-center rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono leading-tight text-white/75">
       <span className="text-[11px] text-white/90">{quote.line}</span>
       {odds != null ? (
         <span className="text-[10px] text-white/45">
@@ -66,7 +66,7 @@ function Skeletons() {
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
-          className="h-11 animate-pulse border-b border-white/10 bg-white/[0.03]"
+          className="h-9 animate-pulse border-b border-white/10 bg-white/[0.03]"
         />
       ))}
     </div>
@@ -127,13 +127,13 @@ export function PropPicksTable({
   const showPager = props.length > PROP_PICKS_PAGE_SIZE;
 
   return (
-    <section className="mx-auto max-w-6xl space-y-5 px-4 pb-16 sm:px-6 sm:pb-20">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+    <section className="mx-auto max-w-6xl space-y-3 px-4 pb-10 sm:px-6 sm:pb-12">
+      <div className="flex flex-wrap items-baseline gap-2">
+        <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
           Prop Picks
         </h2>
         {lastUpdatedAt ? (
-          <p className="text-sm text-white/40">
+          <p className="text-xs text-white/40">
             Last updated {formatPropPicksUpdatedAt(lastUpdatedAt)}
           </p>
         ) : null}
@@ -142,17 +142,17 @@ export function PropPicksTable({
       {isLoading ? (
         <Skeletons />
       ) : isError || props.length === 0 ? (
-        <p className="text-sm text-white/40">{emptyCopy}</p>
+        <p className="text-xs text-white/40">{emptyCopy}</p>
       ) : (
         <>
           <div className="overflow-x-auto rounded-xl border border-white/10">
             <table
-              className={`w-full ${minWidthClass} border-collapse text-left text-sm`}
+              className={`w-full ${minWidthClass} border-collapse text-left text-xs`}
             >
               <thead>
                 <tr className="border-b border-white/10 text-[10px] font-medium tracking-[0.14em] text-white/35 uppercase">
                   {columns.map((col) => (
-                    <th key={col} className="px-3 py-2.5 font-medium">
+                    <th key={col} className="px-2 py-1.5 font-medium">
                       {col}
                     </th>
                   ))}
@@ -164,28 +164,28 @@ export function PropPicksTable({
                     key={`${row.player_name}-${row.market_type}-${row.side}`}
                     className="border-b border-white/10 text-white/90 last:border-b-0"
                   >
-                    <td className="px-3 py-3 font-medium text-white">
+                    <td className="px-2 py-1.5 font-medium text-white">
                       {row.player_name}
                     </td>
-                    <td className="px-3 py-3">
+                    <td className="px-2 py-1.5">
                       {row.team_abbrev ? (
                         <TeamAbbrevAvatar
                           abbrev={row.team_abbrev}
                           logoUrl={row.logo_url}
-                          sizeClassName="size-7"
+                          sizeClassName="size-6"
                         />
                       ) : (
                         <span className="text-white/20">&nbsp;</span>
                       )}
                     </td>
-                    <td className="px-3 py-3 text-white/55">{row.stat}</td>
-                    <td className="px-3 py-3 text-white/70">
+                    <td className="px-2 py-1.5 text-white/55">{row.stat}</td>
+                    <td className="px-2 py-1.5 text-white/70">
                       <SideLabel side={row.side} />
                     </td>
-                    <td className="px-3 py-3 text-white/20" />
-                    <td className="px-3 py-3 text-white/20" />
+                    <td className="px-2 py-1.5 text-white/20" />
+                    <td className="px-2 py-1.5 text-white/20" />
                     {bookColumns.map((book) => (
-                      <td key={book.key} className="px-3 py-3">
+                      <td key={book.key} className="px-2 py-1.5">
                         <OddsPill quote={row[book.key as PropBookKey]} />
                       </td>
                     ))}
@@ -194,21 +194,21 @@ export function PropPicksTable({
               </tbody>
             </table>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs text-white/40">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-[11px] text-white/40">
               Showing {start + 1}–{end} of {props.length}
             </p>
             {showPager ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   disabled={safePage <= 0}
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  className="rounded-md border border-white/10 px-3 py-1 text-sm text-white/55 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
+                  className="rounded-md border border-white/10 px-2.5 py-0.5 text-xs text-white/55 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   Previous
                 </button>
-                <span className="text-xs text-white/35">
+                <span className="text-[11px] text-white/35">
                   Page {safePage + 1} of {totalPages}
                 </span>
                 <button
@@ -217,7 +217,7 @@ export function PropPicksTable({
                   onClick={() =>
                     setPage((p) => Math.min(totalPages - 1, p + 1))
                   }
-                  className="rounded-md border border-white/10 px-3 py-1 text-sm text-white/55 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
+                  className="rounded-md border border-white/10 px-2.5 py-0.5 text-xs text-white/55 enabled:hover:text-white disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   Next
                 </button>
@@ -227,7 +227,7 @@ export function PropPicksTable({
         </>
       )}
       {!isLoading && props.length > 0 ? (
-        <p className="text-xs text-white/35">Odds by Parlay API</p>
+        <p className="text-[11px] text-white/35">Odds by Parlay API</p>
       ) : null}
     </section>
   );

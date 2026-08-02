@@ -27,8 +27,7 @@ describe("WinProbabilityPanel", () => {
 
     expect(screen.getByText("Win probability")).toBeInTheDocument();
     expect(screen.getByLabelText("Win probability chart")).toBeInTheDocument();
-    expect(screen.getByText("100%")).toBeInTheDocument();
-    expect(screen.getByText("50%")).toBeInTheDocument();
+    expect(screen.queryByText("100%")).not.toBeInTheDocument();
     expect(screen.getByText("Team stats")).toBeInTheDocument();
     expect(screen.getByText("Field goal %")).toBeInTheDocument();
   });
@@ -59,9 +58,9 @@ describe("WinProbabilityPanel", () => {
         left: 0,
         top: 0,
         width: 640,
-        height: 140,
+        height: 112,
         right: 640,
-        bottom: 140,
+        bottom: 112,
         x: 0,
         y: 0,
         toJSON: () => ({}),
@@ -241,7 +240,7 @@ describe("WinProbabilityPanel", () => {
       "rounded-xl",
       "border-white/10",
       "bg-white/[0.03]",
-      "p-4",
+      "!p-3",
     );
   });
 });

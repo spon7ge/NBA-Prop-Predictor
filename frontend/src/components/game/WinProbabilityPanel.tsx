@@ -22,9 +22,9 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
 
   if (!data) {
     return (
-      <GameSection>
+      <GameSection className="!p-3">
         <h2 className="text-sm font-semibold text-white">Win probability</h2>
-        <p className="mt-2 text-sm text-white/50">
+        <p className="mt-1.5 text-xs text-white/50">
           Win probability unavailable for this game yet.
         </p>
       </GameSection>
@@ -39,20 +39,17 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
   const activePoint =
     points.length > 0 ? (points[scrub] ?? points[points.length - 1]) : null;
   const midY = yForPct(50);
-  const gridXs = [0.25, 0.5, 0.75].map(
-    (ratio) => CHART_GEOMETRY.padLeft + ratio * CHART_GEOMETRY.plotWidth,
-  );
 
   const vividProps = {
     fill: "none" as const,
-    strokeWidth: 2.25,
+    strokeWidth: 1.5,
     strokeLinejoin: "round" as const,
     strokeLinecap: "round" as const,
     "data-wp-segment": "vivid",
   };
   const mutedProps = {
     fill: "none" as const,
-    strokeWidth: 2.25,
+    strokeWidth: 1.5,
     strokeLinejoin: "round" as const,
     strokeLinecap: "round" as const,
     stroke: "rgba(255,255,255,0.28)",
@@ -66,82 +63,35 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
   }
 
   const scrubX = xForIndex(scrub, points.length);
-  const placeLeft =
-    scrubX >
-    CHART_GEOMETRY.padLeft + CHART_GEOMETRY.plotWidth * 0.75;
-  const labelX = placeLeft ? scrubX - 8 : scrubX + 8;
-  const labelAnchor = placeLeft ? "end" : "start";
+  const atEnd = points.length === 0 || scrub >= points.length - 1;
+  // Keep win-% labels on the right of the scrub point.
+  const labelX = scrubX + 8;
+  const labelAnchor = "start" as const;
+
+  const homeY = activePoint ? yForPct(activePoint.homeWinPct) : 0;
+  const awayY = activePoint ? yForPct(activePoint.awayWinPct) : 0;
+  const topSeriesY = Math.min(homeY, awayY);
+  const clockDefaultY = CHART_GEOMETRY.padTop + 10;
+  // When a high win-% label sits near the clock, lift the clock and extend
+  // the tracker upward so time and % don't stack on the same spot.
+  const clockOverlapsPct = Boolean(activePoint) && topSeriesY < clockDefaultY + 18;
+  const clockY = clockOverlapsPct ? CHART_GEOMETRY.padTop - 16 : clockDefaultY;
+  const trackerTop = clockOverlapsPct ? clockY + 6 : CHART_GEOMETRY.padTop;
+  // No full-height guide on the right edge — it reads as a Y-axis.
+  const showTracker = Boolean(activePoint) && !atEnd;
 
   return (
-    <GameSection>
+    <GameSection className="!p-3">
       <h2 className="text-sm font-semibold text-white">Win probability</h2>
 
       {points.length > 0 ? (
-        <div className="relative mt-4">
+        <div className="relative mt-2">
           <svg
             aria-label="Win probability chart"
             viewBox={`0 0 ${CHART_GEOMETRY.width} ${CHART_GEOMETRY.height}`}
             className="w-full overflow-visible"
             onMouseMove={handleChartPointerMove}
           >
-            <line
-              x1={CHART_GEOMETRY.padLeft}
-              x2={CHART_GEOMETRY.padLeft}
-              y1={CHART_GEOMETRY.padTop}
-              y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
-              stroke="#FFFFFF"
-              strokeWidth={1}
-            />
-
-            <text
-              x={CHART_GEOMETRY.yLabelX}
-              y={CHART_GEOMETRY.padTop}
-              fill="#FFFFFF"
-              textAnchor="end"
-              dominantBaseline="middle"
-              style={{ fontSize: "10px" }}
-            >
-              100%
-            </text>
-            <line
-              x1={CHART_GEOMETRY.padLeft - 5}
-              x2={CHART_GEOMETRY.padLeft}
-              y1={CHART_GEOMETRY.padTop}
-              y2={CHART_GEOMETRY.padTop}
-              stroke="#FFFFFF"
-              strokeWidth={1}
-            />
-
-            <text
-              x={CHART_GEOMETRY.yLabelX}
-              y={midY}
-              fill="#FFFFFF"
-              textAnchor="end"
-              dominantBaseline="middle"
-              style={{ fontSize: "10px" }}
-            >
-              50%
-            </text>
-            <line
-              x1={CHART_GEOMETRY.padLeft - 5}
-              x2={CHART_GEOMETRY.padLeft}
-              y1={midY}
-              y2={midY}
-              stroke="#FFFFFF"
-              strokeWidth={1}
-            />
-
-            {gridXs.map((x) => (
-              <line
-                key={x}
-                x1={x}
-                x2={x}
-                y1={CHART_GEOMETRY.padTop}
-                y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
-                stroke="rgba(255,255,255,0.06)"
-              />
-            ))}
-
             <line
               x1={CHART_GEOMETRY.padLeft}
               x2={CHART_GEOMETRY.padLeft + CHART_GEOMETRY.plotWidth}
@@ -174,18 +124,20 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
 
             {activePoint ? (
               <>
-                <line
-                  x1={scrubX}
-                  x2={scrubX}
-                  y1={CHART_GEOMETRY.padTop}
-                  y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
-                  stroke="rgba(255,255,255,0.45)"
-                  strokeDasharray="3 3"
-                  pointerEvents="none"
-                />
+                {showTracker ? (
+                  <line
+                    x1={scrubX}
+                    x2={scrubX}
+                    y1={trackerTop}
+                    y2={CHART_GEOMETRY.padTop + CHART_GEOMETRY.plotHeight}
+                    stroke="rgba(255,255,255,0.45)"
+                    strokeDasharray="3 3"
+                    pointerEvents="none"
+                  />
+                ) : null}
                 <circle
                   cx={scrubX}
-                  cy={yForPct(activePoint.awayWinPct)}
+                  cy={awayY}
                   r={3.5}
                   fill={detail.away.color}
                   stroke="#FFFFFF"
@@ -194,7 +146,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 />
                 <circle
                   cx={scrubX}
-                  cy={yForPct(activePoint.homeWinPct)}
+                  cy={homeY}
                   r={3.5}
                   fill={detail.home.color}
                   stroke="#FFFFFF"
@@ -203,7 +155,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 />
                 <text
                   x={labelX}
-                  y={yForPct(activePoint.homeWinPct)}
+                  y={homeY}
                   fill={detail.home.color}
                   textAnchor={labelAnchor}
                   dominantBaseline="middle"
@@ -213,7 +165,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 </text>
                 <text
                   x={labelX}
-                  y={yForPct(activePoint.awayWinPct)}
+                  y={awayY}
                   fill={detail.away.color}
                   textAnchor={labelAnchor}
                   dominantBaseline="middle"
@@ -223,7 +175,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 </text>
                 <text
                   x={scrubX}
-                  y={CHART_GEOMETRY.padTop + 10}
+                  y={clockY}
                   fill="rgba(255,255,255,0.7)"
                   textAnchor="middle"
                   data-wp-clock
@@ -256,10 +208,10 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
       ) : null}
 
       {data.teamStats.length > 0 ? (
-        <div className="mt-6">
-          <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="mt-3">
+          <div className="mb-2 flex items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-white">Team stats</h3>
-            <div className="flex items-center gap-3 text-[10px] text-white/70">
+            <div className="flex items-center gap-2.5 text-[10px] text-white/70">
               <span className="flex items-center gap-1.5">
                 <span
                   className="size-1.5 rounded-full"
@@ -277,7 +229,7 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {data.teamStats.map((stat) => {
               const total = stat.awayValue + stat.homeValue;
               const awayShare =
@@ -286,15 +238,15 @@ export function WinProbabilityPanel({ detail }: { detail: GameDetail }) {
                 total === 0 ? 50 : (stat.homeValue / total) * 100;
 
               return (
-                <div key={stat.key} className="space-y-1.5">
-                  <p className="text-center text-[10px] font-medium uppercase tracking-wide text-white">
+                <div key={stat.key} className="space-y-1">
+                  <p className="text-center text-[10px] font-medium uppercase tracking-wide text-white/80">
                     {stat.label}
                   </p>
-                  <div className="grid grid-cols-[2rem_1fr_2rem] items-center gap-2">
+                  <div className="grid grid-cols-[1.75rem_1fr_1.75rem] items-center gap-1.5">
                     <span className="text-right font-mono text-[10px] text-white">
                       {stat.awayValue}
                     </span>
-                    <div className="flex h-1.5 overflow-hidden rounded-sm">
+                    <div className="flex h-1 overflow-hidden rounded-sm">
                       <div
                         className="h-full"
                         style={{

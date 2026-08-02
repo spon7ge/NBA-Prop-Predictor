@@ -32,17 +32,17 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
     .slice(0, 10);
 
   return (
-    <GameSection>
-      <div className="mb-3 flex items-center justify-between">
+    <GameSection className="!p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-white">Play-by-play</h2>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {periods.map((period) => (
             <button
               key={period}
               type="button"
               onClick={() => setSelectedPeriod(period)}
               aria-pressed={activePeriod === period}
-              className={`rounded-full px-2.5 py-1 text-[14px] font-medium transition-colors ${
+              className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
                 activePeriod === period
                   ? "bg-white/15 text-white"
                   : "text-white/50 hover:text-white/80"
@@ -55,13 +55,13 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
       </div>
 
       {playsForPeriod.length === 0 ? (
-        <p className="text-[14px] text-white/40">Tip-off pending</p>
+        <p className="text-xs text-white/40">Tip-off pending</p>
       ) : (
-        <ul className="space-y-1.5 text-[14px]">
+        <ul className="space-y-0.5 text-xs">
           {playsForPeriod.map((play, index) => (
             <li
               key={play.id}
-              className={`flex items-center gap-2 rounded-md px-2 py-1.5 ${
+              className={`flex items-center gap-1.5 rounded-md px-1.5 py-1 ${
                 play.scoring ? "bg-white/5" : ""
               } ${
                 index === 0
@@ -70,19 +70,19 @@ export function PlayByPlay({ detail }: { detail: GameDetail }) {
               }`}
             >
               <span
-                className="size-2 shrink-0 rounded-full"
+                className="size-1.5 shrink-0 rounded-full"
                 style={{ backgroundColor: teamColor(play.teamId) }}
                 aria-hidden
               />
               <span
-                className={`w-10 shrink-0 font-mono ${
+                className={`w-9 shrink-0 font-mono ${
                   index === 0 ? "text-white/60" : "text-white/40"
                 }`}
               >
                 {play.clock}
               </span>
               <span
-                className={`min-w-0 flex-1 ${
+                className={`min-w-0 flex-1 truncate ${
                   index === 0 ? "text-white" : "text-white/80"
                 }`}
               >

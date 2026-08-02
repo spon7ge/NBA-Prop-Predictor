@@ -2,7 +2,7 @@ import type { GameDetail, GameDetailBoxScorePlayer, GameDetailTeam } from "./typ
 import { GameSection } from "./GameSection";
 
 const STAT_COLS =
-  "grid-cols-[minmax(8rem,1.4fr)_repeat(14,minmax(2.1rem,1fr))]";
+  "grid-cols-[minmax(7rem,1.3fr)_repeat(14,minmax(1.85rem,1fr))]";
 
 function TeamBoxScore({
   team,
@@ -15,15 +15,15 @@ function TeamBoxScore({
 }) {
   return (
     <div className="overflow-x-auto">
-      <div className="mb-3 flex items-baseline gap-2 text-sm">
+      <div className="mb-1.5 flex items-baseline gap-1.5 text-xs">
         <span className="font-semibold" style={{ color: team.color }}>
           {team.abbrev}
         </span>
-        <span className="font-medium text-white">{team.name}</span>
+        <span className="font-medium text-white/90">{team.name}</span>
       </div>
 
       <div
-        className={`grid ${STAT_COLS} gap-x-2 border-b border-white/[0.08] pb-2 text-[10px] tracking-wide text-white/40`}
+        className={`grid ${STAT_COLS} gap-x-1.5 border-b border-white/[0.08] pb-1.5 text-[9px] tracking-wide text-white/40`}
       >
         <span>Player</span>
         {columns.map((column) => (
@@ -37,7 +37,7 @@ function TeamBoxScore({
         {players.map((player) => (
           <li
             key={`${team.id}-${player.name}`}
-            className={`grid ${STAT_COLS} gap-x-2 border-b border-white/[0.06] py-2.5 text-[12px]`}
+            className={`grid ${STAT_COLS} gap-x-1.5 border-b border-white/[0.06] py-1.5 text-[11px]`}
           >
             <span className="truncate text-white">{player.name}</span>
             {player.didNotPlay ? (
@@ -74,7 +74,7 @@ export function BoxScore({ detail }: { detail: GameDetail }) {
   }
 
   return (
-    <GameSection className="space-y-10">
+    <GameSection className="!p-3 space-y-5">
       {boxScore.away.length > 0 ? (
         <TeamBoxScore
           team={detail.away}

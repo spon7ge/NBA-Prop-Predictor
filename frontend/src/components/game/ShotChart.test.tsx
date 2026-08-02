@@ -126,7 +126,7 @@ describe("ShotChart", () => {
       "rounded-xl",
       "border-white/10",
       "bg-white/[0.03]",
-      "p-4",
+      "!p-3",
     );
   });
 });

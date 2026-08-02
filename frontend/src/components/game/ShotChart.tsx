@@ -86,17 +86,17 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
   ];
 
   return (
-    <GameSection>
-      <div className="mb-3 flex items-center justify-between">
+    <GameSection className="!p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-white">Shot chart</h2>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {teamFilters.map((f) => (
             <button
               key={f.value}
               type="button"
               onClick={() => setTeamFilter(f.value)}
               aria-pressed={teamFilter === f.value}
-              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
                 teamFilter === f.value
                   ? "bg-white/15 text-white"
                   : "text-white/50 hover:text-white/80"
@@ -109,25 +109,25 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
       </div>
 
       {detail.latestPlay ? (
-        <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-white/15 px-3 py-2.5">
+        <div className="mb-2 flex items-center gap-2 rounded-lg border border-white/15 px-2.5 py-1.5">
           <span
-            className="size-2 shrink-0 rounded-full bg-emerald-500"
+            className="size-1.5 shrink-0 rounded-full bg-emerald-500"
             aria-hidden
           />
-          <p className="min-w-0 flex-1 truncate text-[14px] text-white/90">
+          <p className="min-w-0 flex-1 truncate text-xs text-white/90">
             {detail.latestPlay.text}
           </p>
-          <span className="shrink-0 text-[14px] text-white/70">
+          <span className="shrink-0 text-xs text-white/70">
             {periodClockLabel(detail.latestPlay.period, detail.latestPlay.clock)}
           </span>
         </div>
       ) : (
-        <p className="mb-3 text-[14px] text-white/40">Tip-off pending</p>
+        <p className="mb-2 text-xs text-white/40">Tip-off pending</p>
       )}
 
       <svg
         viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
-        className="w-full"
+        className="mx-auto block max-h-82 w-auto max-w-full"
         role="img"
         aria-label="Half-court shot chart"
       >
@@ -242,14 +242,14 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
         })}
       </svg>
 
-      <div className="mt-3 mb-3 flex items-center gap-1">
+      <div className="mt-2 mb-2 flex items-center gap-0.5">
         {periodFilters.map((f) => (
           <button
             key={String(f.value)}
             type="button"
             onClick={() => setPeriodFilter(f.value)}
             aria-pressed={periodFilter === f.value}
-            className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
               periodFilter === f.value
                 ? "bg-white/15 text-white"
                 : "text-white/50 hover:text-white/80"
@@ -260,15 +260,15 @@ export function ShotChart({ detail }: { detail: GameDetail }) {
         ))}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-white/50">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between text-[11px] text-white/50">
+        <div className="flex items-center gap-2.5">
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-full bg-white/70" aria-hidden />
+            <span className="size-2 rounded-full bg-white/70" aria-hidden />
             Made
           </span>
           <span className="flex items-center gap-1.5">
             <span
-              className="size-2.5 rounded-full border border-white/70"
+              className="size-2 rounded-full border border-white/70"
               aria-hidden
             />
             Missed
