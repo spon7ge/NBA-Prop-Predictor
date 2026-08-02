@@ -346,10 +346,8 @@ git commit -m "feat: merge Sharp WNBA odds with DraftKings over FanDuel"
 Run from repo root:
 
 ```bash
-cd backend && python -c "from pathlib import Path; from app.openapi_export import export_openapi; export_openapi(Path('../frontend/openapi.json'))"
+python scripts/export_openapi.py
 ```
-
-(or `python scripts/export_openapi.py` if that is the project’s entrypoint — use whichever already exists)
 
 - [ ] **Step 2: Generate TypeScript types**
 
@@ -535,8 +533,8 @@ git commit -m "feat: match merge odds by slate game_date when present"
 **Files:**
 - Modify: `frontend/src/components/league/matchupSlateDate.ts`
 - Modify: `frontend/src/pages/LeagueMatchupsPage.tsx`
-- Test: `frontend/src/components/league/matchupSlateDate.test.ts` (create if missing; else append)
-- Test: extend page/panel tests only if they assert odds gating; otherwise unit-test the helper thoroughly
+- Modify: `frontend/src/components/league/matchupSlateDate.test.ts`
+- Test: helper coverage in `matchupSlateDate.test.ts` (page already mocks odds; helper is the gate under test)
 
 **Interfaces:**
 - Consumes: `shiftEtDate`
@@ -546,7 +544,7 @@ git commit -m "feat: match merge odds by slate game_date when present"
 
 - [ ] **Step 1: Write the failing helper tests**
 
-If `matchupSlateDate.test.ts` exists, append; else create:
+Append to `frontend/src/components/league/matchupSlateDate.test.ts`:
 
 ```typescript
 import { describe, expect, it } from "vitest";
