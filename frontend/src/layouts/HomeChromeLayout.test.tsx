@@ -35,5 +35,8 @@ describe("HomeChromeLayout", () => {
     );
     expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("DAL").length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByText(/informational and entertainment purposes only/i),
+    ).toBeInTheDocument();
   });
 });
