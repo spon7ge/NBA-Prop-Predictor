@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 import time
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 
 import httpx
@@ -27,6 +28,21 @@ INFO_URL = "https://stats.wnba.com/stats/commonplayerinfo"
 GAMELOG_URL = "https://stats.wnba.com/stats/playergamelog"
 STATS_TIMEOUT_SECONDS = 10.0
 CACHE_TTL_SECONDS = 10 * 60
+
+_HEIGHT_FEET_INCHES = re.compile(r"^(\d+)\s*-\s*(\d+)$")
+
+_POSITION_DISPLAY = {
+    "G": "Guard",
+    "GUARD": "Guard",
+    "F": "Forward",
+    "FORWARD": "Forward",
+    "C": "Center",
+    "CENTER": "Center",
+    "G-F": "Guard-Forward",
+    "F-G": "Forward-Guard",
+    "F-C": "Forward-Center",
+    "C-F": "Center-Forward",
+}
 
 _cache: dict[str, dict] = {}  # player_id → {response, expires_at, season}
 _refresh_locks: dict[str, asyncio.Lock] = {}  # player_id → lock
@@ -118,15 +134,134 @@ def _game_id(row: dict[str, Any]) -> str:
     return ""
 
 
+def format_jersey(raw: Any) -> str | None:
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text:
+        return None
+    digits = re.sub(r"\D", "", text)
+    return digits or None
+
+
+def format_height(raw: Any) -> str | None:
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text:
+        return None
+    if "'" in text:
+        return text
+    match = _HEIGHT_FEET_INCHES.match(text)
+    if match:
+        return f"{match.group(1)}' {match.group(2)}\""
+    return text
+
+
+def format_birthdate(raw: Any, *, today: date | None = None) -> str | None:
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text:
+        return None
+    born: date | None = None
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+        try:
+            born = datetime.strptime(text, fmt).date()
+            break
+        except ValueError:
+            continue
+    if born is None:
+        return None
+    ref = today or date.today()
+    age = ref.year - born.year - (
+        (ref.month, ref.day) < (born.month, born.day)
+    )
+    return f"{born.month}/{born.day}/{born.year} ({age})"
+
+
+def format_position(raw: Any) -> str | None:
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text:
+        return None
+    mapped = _POSITION_DISPLAY.get(text.upper())
+    if mapped:
+        return mapped
+    return text
+
+
+def format_draft(
+    year: Any, round_: Any, number: Any, team_abbrev: Any
+) -> str | None:
+    year_s = str(year).strip() if year is not None else ""
+    round_s = str(round_).strip() if round_ is not None else ""
+    number_s = str(number).strip() if number is not None else ""
+    team_s = str(team_abbrev).strip().upper() if team_abbrev is not None else ""
+
+    # Treat sentinel empties / Undrafted-style year as missing.
+    if year_s.upper() in {"", "NONE", "N/A", "UNDRAFTED", "0"}:
+        year_s = ""
+    if round_s.upper() in {"", "NONE", "N/A"}:
+        round_s = ""
+    if number_s.upper() in {"", "NONE", "N/A"}:
+        number_s = ""
+
+    if not year_s and not round_s and not number_s:
+        return None
+
+    parts: list[str] = []
+    if year_s:
+        parts.append(f"{year_s}:")
+    draft_bits: list[str] = []
+    if round_s:
+        draft_bits.append(f"Rd {round_s}")
+    if number_s:
+        draft_bits.append(f"Pk {number_s}")
+    if draft_bits:
+        parts.append(", ".join(draft_bits))
+    if team_s:
+        parts.append(f"({team_s})")
+    return " ".join(parts)
+
+
+def format_college(raw: Any) -> str | None:
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text or text.upper() == "N/A":
+        return None
+    # LAST_AFFILIATION sometimes looks like "School/country".
+    if "/" in text:
+        before, _, after = text.partition("/")
+        before = before.strip()
+        after = after.strip()
+        if before and after and len(after) <= 3:
+            return before
+    return text
+
+
+def _info_value(row: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        if key in row and row[key] is not None and str(row[key]).strip():
+            return row[key]
+    return None
+
+
+def _college_from_info(row: dict[str, Any]) -> str | None:
+    school = format_college(_info_value(row, "SCHOOL"))
+    if school:
+        return school
+    return format_college(_info_value(row, "LAST_AFFILIATION"))
+
+
 def _position_from_info(info_rows: list[dict[str, Any]]) -> str | None:
     if not info_rows:
         return None
     row = info_rows[0]
-    for key in ("POSITION", "POSITION_ABBREVIATION"):
-        value = str(row.get(key) or "").strip()
-        if value:
-            return value
-    return None
+    raw = _info_value(row, "POSITION", "POSITION_ABBREVIATION")
+    return format_position(raw)
 
 
 def _team_name(
@@ -192,6 +327,21 @@ def normalize_wnba_player(
     if not name or not team_abbrev:
         return None
 
+    info_row = info_rows[0] if info_rows else {}
+    info_team = str(
+        _info_value(info_row, "TEAM_ABBREVIATION") or team_abbrev
+    ).strip().upper()
+    jersey = format_jersey(_info_value(info_row, "JERSEY"))
+    height = format_height(_info_value(info_row, "HEIGHT"))
+    birthdate = format_birthdate(_info_value(info_row, "BIRTHDATE"))
+    college = _college_from_info(info_row) if info_row else None
+    draft_info = format_draft(
+        _info_value(info_row, "DRAFT_YEAR"),
+        _info_value(info_row, "DRAFT_ROUND"),
+        _info_value(info_row, "DRAFT_NUMBER"),
+        info_team or team_abbrev,
+    )
+
     # Missing/unparseable averages should not 404 — only a missing dash row
     # (or identity fields above) means the player is unknown.
     return WnbaPlayerResponse(
@@ -210,6 +360,11 @@ def normalize_wnba_player(
             fg3_pct=format_pct(dash_row.get("FG3_PCT")) or "—",
         ),
         games=_normalize_games(gamelog),
+        jersey=jersey,
+        height=height,
+        birthdate=birthdate,
+        college=college,
+        draft_info=draft_info,
     )
 
 

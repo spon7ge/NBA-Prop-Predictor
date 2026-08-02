@@ -10,13 +10,32 @@
       "headers": [
         "PERSON_ID",
         "DISPLAY_FIRST_LAST",
+        "BIRTHDATE",
+        "SCHOOL",
+        "HEIGHT",
+        "JERSEY",
         "POSITION",
-        "TEAM_ID",
         "TEAM_NAME",
-        "TEAM_ABBREVIATION"
+        "TEAM_ABBREVIATION",
+        "DRAFT_YEAR",
+        "DRAFT_ROUND",
+        "DRAFT_NUMBER"
       ],
       "rowSet": [
-        [1628932, "A'ja Wilson", "F", 1611661319, "Las Vegas Aces", "LVA"]
+        [
+          1628932,
+          "A'ja Wilson",
+          "1996-08-08T00:00:00",
+          "South Carolina",
+          "6-4",
+          "22",
+          "C",
+          "Las Vegas Aces",
+          "LVA",
+          "2018",
+          "1",
+          "1"
+        ]
       ]
     },
     {

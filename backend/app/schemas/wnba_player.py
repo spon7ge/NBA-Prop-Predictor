@@ -38,3 +38,8 @@ class WnbaPlayerResponse(BaseModel):
     averages: WnbaPlayerAverages
     games: list[WnbaPlayerGame]
     source_label: str = "stats.wnba.com"
+    jersey: str | None = None
+    height: str | None = None
+    birthdate: str | None = None
+    college: str | None = None
+    draft_info: str | None = None

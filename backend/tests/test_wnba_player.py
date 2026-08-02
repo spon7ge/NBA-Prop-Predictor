@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import date
 from pathlib import Path
 from unittest.mock import patch
 
@@ -40,6 +41,33 @@ def test_made_attempt():
     assert svc.made_attempt(11, 20) == "11-20"
 
 
+def test_format_height():
+    assert svc.format_height("5-10") == "5' 10\""
+    assert svc.format_height("6-4") == "6' 4\""
+    assert svc.format_height(None) is None
+
+
+def test_format_birthdate_with_age():
+    assert svc.format_birthdate(
+        "2003-01-29T00:00:00", today=date(2026, 8, 1)
+    ) == "1/29/2003 (23)"
+
+
+def test_format_position_expands_abbrev():
+    assert svc.format_position("G") == "Guard"
+    assert svc.format_position("F") == "Forward"
+    assert svc.format_position("C") == "Center"
+    assert svc.format_position("Guard") == "Guard"
+
+
+def test_format_draft():
+    assert (
+        svc.format_draft("2026", "1", "2", "MIN")
+        == "2026: Rd 1, Pk 2 (MIN)"
+    )
+    assert svc.format_draft(None, None, None, "MIN") is None
+
+
 def test_normalize_player_happy_path():
     result = svc.normalize_wnba_player(
         player_id="1628932",
@@ -63,6 +91,50 @@ def test_normalize_player_happy_path():
     assert g0.ft
     assert result.source_label == "stats.wnba.com"
     assert result.headshot_url  # non-empty CDN URL containing player_id
+
+
+def test_normalize_includes_bio_fields():
+    result = svc.normalize_wnba_player(
+        player_id="1628932",
+        season=2026,
+        dash=_load("stats_wnba_player_dash.json"),
+        info=_load("stats_wnba_player_info.json"),
+        gamelog=_load("stats_wnba_player_gamelog.json"),
+    )
+    assert result is not None
+    assert result.jersey == "22"
+    assert result.position == "Center"
+    assert result.height == "6' 4\""
+    assert result.college == "South Carolina"
+    assert result.draft_info == "2018: Rd 1, Pk 1 (LVA)"
+    assert result.birthdate  # contains year and age parens
+    assert "1996" in result.birthdate
+    assert "(" in result.birthdate and ")" in result.birthdate
+
+
+def test_normalize_sparse_info_bio_fields_none():
+    """Missing HEIGHT/SCHOOL must yield None bio fields; player still returns."""
+    info = _load("stats_wnba_player_info.json")
+    headers = [str(h) for h in info["resultSets"][0]["headers"]]
+    height_i = headers.index("HEIGHT")
+    school_i = headers.index("SCHOOL")
+    for row in info["resultSets"][0]["rowSet"]:
+        row[height_i] = None
+        row[school_i] = None
+
+    result = svc.normalize_wnba_player(
+        player_id="1628932",
+        season=2026,
+        dash=_load("stats_wnba_player_dash.json"),
+        info=info,
+        gamelog=_load("stats_wnba_player_gamelog.json"),
+    )
+    assert result is not None
+    assert result.name == "A'ja Wilson"
+    assert result.height is None
+    assert result.college is None
+    assert result.jersey == "22"
+    assert result.position == "Center"
 
 
 def test_normalize_unknown_player_returns_none():
