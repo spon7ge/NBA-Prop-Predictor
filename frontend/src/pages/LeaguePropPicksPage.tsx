@@ -31,7 +31,7 @@ export function LeaguePropPicksPage() {
     () => new Set(),
   );
   const [selectedBooks, setSelectedBooks] = useState<Set<string>>(
-    () => new Set(),
+    () => new Set(["prizepicks", "underdog"]),
   );
 
   const filtersActive =
