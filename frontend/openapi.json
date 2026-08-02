@@ -4365,6 +4365,39 @@
           "averages": {
             "$ref": "#/components/schemas/WnbaPlayerAverages"
           },
+          "birthdate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birthdate"
+          },
+          "college": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "College"
+          },
+          "draft_info": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Draft Info"
+          },
           "games": {
             "items": {
               "$ref": "#/components/schemas/WnbaPlayerGame"
@@ -4382,6 +4415,28 @@
               }
             ],
             "title": "Headshot Url"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "jersey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Jersey"
           },
           "name": {
             "title": "Name",

@@ -1956,10 +1956,20 @@ export interface components {
         /** WnbaPlayerResponse */
         WnbaPlayerResponse: {
             averages: components["schemas"]["WnbaPlayerAverages"];
+            /** Birthdate */
+            birthdate?: string | null;
+            /** College */
+            college?: string | null;
+            /** Draft Info */
+            draft_info?: string | null;
             /** Games */
             games: components["schemas"]["WnbaPlayerGame"][];
             /** Headshot Url */
             headshot_url: string | null;
+            /** Height */
+            height?: string | null;
+            /** Jersey */
+            jersey?: string | null;
             /** Name */
             name: string;
             /** Player Id */
