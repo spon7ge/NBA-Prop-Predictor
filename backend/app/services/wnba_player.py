@@ -1,17 +1,42 @@
 from __future__ import annotations
 
+import asyncio
+import logging
+import time
 from datetime import datetime
 from typing import Any
+
+import httpx
+from fastapi import HTTPException
 
 from app.schemas.wnba_player import (
     WnbaPlayerAverages,
     WnbaPlayerGame,
     WnbaPlayerResponse,
 )
+from app.services.wnba_leaders import current_wnba_season_year
+
+logger = logging.getLogger(__name__)
 
 HEADSHOT_URL_TEMPLATE = (
     "https://cdn.wnba.com/headshots/wnba/latest/1040x760/{player_id}.png"
 )
+
+DASH_URL = "https://stats.wnba.com/stats/leaguedashplayerstats"
+INFO_URL = "https://stats.wnba.com/stats/commonplayerinfo"
+GAMELOG_URL = "https://stats.wnba.com/stats/playergamelog"
+STATS_TIMEOUT_SECONDS = 10.0
+CACHE_TTL_SECONDS = 10 * 60
+
+_cache: dict[str, dict] = {}  # player_id → {response, expires_at, season}
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
+
+_STATS_HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Referer": "https://www.wnba.com/",
+    "Accept": "application/json",
+}
 
 
 def rows_as_dicts(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -192,3 +217,120 @@ def normalize_wnba_player(
         ),
         games=_normalize_games(gamelog),
     )
+
+
+def _get_refresh_lock() -> asyncio.Lock:
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
+async def fetch_leaguedashplayerstats(season: int) -> dict:
+    params = {
+        "LastNGames": "0",
+        "LeagueID": "10",
+        "MeasureType": "Base",
+        "Month": "0",
+        "OpponentTeamID": "0",
+        "PaceAdjust": "N",
+        "PerMode": "PerGame",
+        "Period": "0",
+        "PlusMinus": "N",
+        "Rank": "N",
+        "Season": str(season),
+        "SeasonType": "Regular Season",
+        "TeamID": "0",
+    }
+    async with httpx.AsyncClient(
+        timeout=STATS_TIMEOUT_SECONDS, headers=_STATS_HEADERS
+    ) as client:
+        res = await client.get(DASH_URL, params=params)
+        res.raise_for_status()
+        return res.json()
+
+
+async def fetch_commonplayerinfo(player_id: str) -> dict:
+    params = {"PlayerID": player_id, "LeagueID": "10"}
+    async with httpx.AsyncClient(
+        timeout=STATS_TIMEOUT_SECONDS, headers=_STATS_HEADERS
+    ) as client:
+        res = await client.get(INFO_URL, params=params)
+        res.raise_for_status()
+        return res.json()
+
+
+async def fetch_playergamelog(player_id: str, season: int) -> dict:
+    params = {
+        "PlayerID": player_id,
+        "Season": str(season),
+        "SeasonType": "Regular Season",
+        "LeagueID": "10",
+    }
+    async with httpx.AsyncClient(
+        timeout=STATS_TIMEOUT_SECONDS, headers=_STATS_HEADERS
+    ) as client:
+        res = await client.get(GAMELOG_URL, params=params)
+        res.raise_for_status()
+        return res.json()
+
+
+def _fresh_cached(player_id: str, season: int) -> WnbaPlayerResponse | None:
+    entry = _cache.get(player_id)
+    if entry is None:
+        return None
+    if entry.get("season") != season:
+        _cache.pop(player_id, None)
+        return None
+    if time.time() >= float(entry.get("expires_at") or 0):
+        return None
+    return entry.get("response")
+
+
+async def get_wnba_player(player_id: str) -> WnbaPlayerResponse:
+    season = current_wnba_season_year()
+    fresh = _fresh_cached(player_id, season)
+    if fresh is not None:
+        return fresh
+
+    lock = _get_refresh_lock()
+    async with lock:
+        fresh = _fresh_cached(player_id, season)
+        if fresh is not None:
+            return fresh
+        try:
+            dash, info, gamelog = await asyncio.gather(
+                fetch_leaguedashplayerstats(season),
+                fetch_commonplayerinfo(player_id),
+                fetch_playergamelog(player_id, season),
+            )
+            response = normalize_wnba_player(
+                player_id=player_id,
+                season=season,
+                dash=dash,
+                info=info,
+                gamelog=gamelog,
+            )
+        except Exception:
+            entry = _cache.get(player_id)
+            if entry is not None and entry.get("season") == season:
+                stale = entry.get("response")
+                if stale is not None:
+                    logger.warning(
+                        "WNBA player refresh failed; serving stale cache for %s",
+                        player_id,
+                    )
+                    return stale
+            raise
+
+        if response is None:
+            raise HTTPException(status_code=404, detail="Player not found")
+
+        _cache[player_id] = {
+            "response": response,
+            "expires_at": time.time() + CACHE_TTL_SECONDS,
+            "season": season,
+        }
+        return response
