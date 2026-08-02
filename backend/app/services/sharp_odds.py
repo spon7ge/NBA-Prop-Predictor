@@ -57,6 +57,7 @@ _NAME_TO_ABBREV = {
 }
 
 _TRICODE_RE = re.compile(r"^[A-Z]{2,3}$")
+_EVENT_DATE_RE = re.compile(r"(20\d{2}-\d{2}-\d{2})")
 
 _cache: dict[str, Any] = {}  # response, expires_at
 
@@ -94,6 +95,13 @@ def _abbrev_from_team_blob(
     return None
 
 
+def _game_date_from_event_id(event_id: str | None) -> str | None:
+    if not event_id:
+        return None
+    match = _EVENT_DATE_RE.search(str(event_id))
+    return match.group(1) if match else None
+
+
 def _spread_side_abbrev(row: dict[str, Any], home: str, away: str) -> str | None:
     side = str(row.get("team_side") or row.get("selection_type") or "").lower()
     if side == "home":
@@ -112,7 +120,9 @@ def _spread_side_abbrev(row: dict[str, Any], home: str, away: str) -> str | None
     return None
 
 
-def normalize_sharp_odds(rows: list[dict[str, Any]]) -> list[WnbaOddsGame]:
+def normalize_sharp_odds(
+    rows: list[dict[str, Any]], sportsbook: str | None = None
+) -> list[WnbaOddsGame]:
     """Collapse Sharp odds rows into one game record with favorite spread + total."""
     by_event: dict[str, dict[str, Any]] = {}
 
@@ -139,6 +149,7 @@ def normalize_sharp_odds(rows: list[dict[str, Any]]) -> list[WnbaOddsGame]:
             {
                 "home_abbrev": home,
                 "away_abbrev": away,
+                "game_date": _game_date_from_event_id(row.get("event_id")),
                 "spreads": [],
                 "totals": [],
             },
@@ -183,6 +194,8 @@ def normalize_sharp_odds(rows: list[dict[str, Any]]) -> list[WnbaOddsGame]:
                 spread_team_abbrev=spread_team,
                 spread_line=spread_line,
                 total=total,
+                game_date=bucket.get("game_date"),
+                sportsbook=sportsbook,
             )
         )
 

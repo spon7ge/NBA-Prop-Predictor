@@ -29,6 +29,7 @@ def test_normalize_picks_favorite_spread_and_total():
     assert atl.spread_team_abbrev == "ATL"
     assert atl.spread_line == -12.5
     assert atl.total == 179.5
+    assert atl.game_date == "2026-07-31"
 
 
 def test_normalize_handles_missing_home_object_and_favorite_away():
@@ -46,6 +47,33 @@ def test_normalize_ignores_halves_and_alternates():
     games = svc.normalize_sharp_odds(rows)
     assert {g.home_abbrev for g in games} == {"ATL", "WAS"}
     assert len(games) == 2
+
+
+def test_normalize_parses_game_date_from_event_id():
+    rows = json.loads(FIXTURE.read_text())["data"]
+    games = svc.normalize_sharp_odds(rows, sportsbook="draftkings")
+    atl = next(g for g in games if g.home_abbrev == "ATL")
+    assert atl.game_date == "2026-07-31"
+    assert atl.sportsbook == "draftkings"
+
+
+def test_normalize_omits_game_date_when_event_id_has_none():
+    rows = [
+        {
+            "event_id": "wnba_no_date_here",
+            "is_main_line": True,
+            "market_type": "total_points",
+            "line": 170.5,
+            "home": {"abbreviation": "ATL"},
+            "away": {"abbreviation": "SEA"},
+            "home_team": "ATL Dream",
+            "away_team": "SEA Storm",
+        }
+    ]
+    games = svc.normalize_sharp_odds(rows, sportsbook="fanduel")
+    assert len(games) == 1
+    assert games[0].game_date is None
+    assert games[0].sportsbook == "fanduel"
 
 
 def test_odds_route_returns_games_when_fetch_ok():
