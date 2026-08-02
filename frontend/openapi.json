@@ -4030,9 +4030,31 @@
             "title": "Away Abbrev",
             "type": "string"
           },
+          "game_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Game Date"
+          },
           "home_abbrev": {
             "title": "Home Abbrev",
             "type": "string"
+          },
+          "sportsbook": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sportsbook"
           },
           "spread_line": {
             "anyOf": [
@@ -4073,7 +4095,9 @@
           "away_abbrev",
           "spread_team_abbrev",
           "spread_line",
-          "total"
+          "total",
+          "game_date",
+          "sportsbook"
         ],
         "title": "WnbaOddsGame",
         "type": "object"
@@ -6469,8 +6493,9 @@
             "name": "date",
             "required": true,
             "schema": {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "title": "Date",
+              "type": "string"
             }
           }
         ],
@@ -6484,6 +6509,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
           }
         },
         "summary": "Wnba Scoreboard By Date",

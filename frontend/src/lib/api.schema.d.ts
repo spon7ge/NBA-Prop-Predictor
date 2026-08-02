@@ -1813,8 +1813,12 @@ export interface components {
         WnbaOddsGame: {
             /** Away Abbrev */
             away_abbrev: string;
+            /** Game Date */
+            game_date: string | null;
             /** Home Abbrev */
             home_abbrev: string;
+            /** Sportsbook */
+            sportsbook: string | null;
             /** Spread Line */
             spread_line: number | null;
             /** Spread Team Abbrev */
@@ -2802,6 +2806,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WnbaScoreboardResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
