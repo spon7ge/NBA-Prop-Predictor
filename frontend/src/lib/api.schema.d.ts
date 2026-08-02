@@ -252,6 +252,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mlb/scoreboard/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mlb Scoreboard Today */
+        get: operations["mlb_scoreboard_today_api_mlb_scoreboard_today_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/models/{model_id}/accuracy": {
         parameters: {
             query?: never;
@@ -1301,6 +1318,59 @@ export interface components {
             team_pace_roll10?: number | null;
             /** Team Spread */
             team_spread?: number | null;
+        };
+        /** MlbGame */
+        MlbGame: {
+            away: components["schemas"]["MlbTeam"];
+            home: components["schemas"]["MlbTeam"];
+            /** Id */
+            id: string;
+            /**
+             * League
+             * @default mlb
+             * @constant
+             */
+            league: "mlb";
+            /** Mlb Game Pk */
+            mlb_game_pk: string;
+            /** Start Time Et */
+            start_time_et: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "scheduled" | "live" | "halftime" | "final";
+            /** Status Label */
+            status_label: string;
+            /** Venue */
+            venue: string | null;
+            /** Venue City */
+            venue_city: string | null;
+        };
+        /** MlbScoreboardResponse */
+        MlbScoreboardResponse: {
+            /**
+             * Date
+             * @description YYYY-MM-DD in America/New_York
+             */
+            date: string;
+            /** Fetched At */
+            fetched_at: string;
+            /** Games */
+            games: components["schemas"]["MlbGame"][];
+        };
+        /** MlbTeam */
+        MlbTeam: {
+            /** Abbrev */
+            abbrev: string;
+            /** Logo Url */
+            logo_url: string | null;
+            /** Name */
+            name: string;
+            /** Record */
+            record: string | null;
+            /** Score */
+            score: number | null;
         };
         /**
          * ModelAccuracy
@@ -2514,6 +2584,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mlb_scoreboard_today_api_mlb_scoreboard_today_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MlbScoreboardResponse"];
                 };
             };
         };

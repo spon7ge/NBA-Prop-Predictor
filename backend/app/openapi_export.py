@@ -22,6 +22,12 @@ REQUIRED_WNBA_PATHS = (
     "/api/wnba/player/{player_id}",
 )
 
+REQUIRED_MLB_PATHS = (
+    "/api/mlb/scoreboard/today",
+)
+
+REQUIRED_FRONTEND_PATHS = REQUIRED_WNBA_PATHS + REQUIRED_MLB_PATHS
+
 
 def export_openapi(path: Path | None = None) -> Path:
     """Write sorted OpenAPI JSON to ``path`` (default: frontend/openapi.json)."""

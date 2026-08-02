@@ -50,6 +50,10 @@ export type ApiWnbaPlayerAverages = Schemas["WnbaPlayerAverages"];
 export type ApiWnbaPlayerGame = Schemas["WnbaPlayerGame"];
 export type ApiWnbaPlayerResponse = Schemas["WnbaPlayerResponse"];
 
+export type ApiMlbTeam = Schemas["MlbTeam"];
+export type ApiMlbGame = Schemas["MlbGame"];
+export type MlbScoreboardResponse = Schemas["MlbScoreboardResponse"];
+
 /**
  * Origin of the HoopVista API, without a trailing slash.
  *
@@ -160,6 +164,17 @@ export async function fetchWnbaPlayer(
   });
   if (!res.ok) {
     throw new Error(`Player request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function fetchMlbScoreboard(): Promise<MlbScoreboardResponse> {
+  const res = await fetch(`${API_BASE}/api/mlb/scoreboard/today`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`MLB scoreboard request failed: ${res.status}`);
   }
   return res.json();
 }

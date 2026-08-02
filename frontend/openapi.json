@@ -2203,6 +2203,165 @@
         "title": "MatchupFeatures",
         "type": "object"
       },
+      "MlbGame": {
+        "properties": {
+          "away": {
+            "$ref": "#/components/schemas/MlbTeam"
+          },
+          "home": {
+            "$ref": "#/components/schemas/MlbTeam"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "league": {
+            "const": "mlb",
+            "default": "mlb",
+            "title": "League",
+            "type": "string"
+          },
+          "mlb_game_pk": {
+            "title": "Mlb Game Pk",
+            "type": "string"
+          },
+          "start_time_et": {
+            "title": "Start Time Et",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "scheduled",
+              "live",
+              "halftime",
+              "final"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "status_label": {
+            "title": "Status Label",
+            "type": "string"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          },
+          "venue_city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue City"
+          }
+        },
+        "required": [
+          "id",
+          "mlb_game_pk",
+          "league",
+          "status",
+          "status_label",
+          "away",
+          "home",
+          "start_time_et",
+          "venue",
+          "venue_city"
+        ],
+        "title": "MlbGame",
+        "type": "object"
+      },
+      "MlbScoreboardResponse": {
+        "properties": {
+          "date": {
+            "description": "YYYY-MM-DD in America/New_York",
+            "title": "Date",
+            "type": "string"
+          },
+          "fetched_at": {
+            "title": "Fetched At",
+            "type": "string"
+          },
+          "games": {
+            "items": {
+              "$ref": "#/components/schemas/MlbGame"
+            },
+            "title": "Games",
+            "type": "array"
+          }
+        },
+        "required": [
+          "date",
+          "games",
+          "fetched_at"
+        ],
+        "title": "MlbScoreboardResponse",
+        "type": "object"
+      },
+      "MlbTeam": {
+        "properties": {
+          "abbrev": {
+            "title": "Abbrev",
+            "type": "string"
+          },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "record": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Record"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          }
+        },
+        "required": [
+          "abbrev",
+          "name",
+          "score",
+          "record",
+          "logo_url"
+        ],
+        "title": "MlbTeam",
+        "type": "object"
+      },
       "ModelAccuracy": {
         "description": "All prop-level accuracy breakdowns for a single model version.",
         "properties": {
@@ -5024,7 +5183,7 @@
     }
   },
   "info": {
-    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, or SharpAPI for live WNBA data.",
+    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/mlb/scoreboard/today, /api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, MLB Stats API, or SharpAPI for live league data.",
     "title": "HoopVista API",
     "version": "0.3.0"
   },
@@ -5884,6 +6043,27 @@
         "summary": "List Matchups",
         "tags": [
           "matchups"
+        ]
+      }
+    },
+    "/api/mlb/scoreboard/today": {
+      "get": {
+        "operationId": "mlb_scoreboard_today_api_mlb_scoreboard_today_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MlbScoreboardResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Mlb Scoreboard Today",
+        "tags": [
+          "mlb"
         ]
       }
     },

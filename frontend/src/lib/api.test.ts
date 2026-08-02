@@ -208,3 +208,51 @@ describe("fetchWnbaFutures", () => {
     );
   });
 });
+
+describe("fetchMlbScoreboard", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    fetchMock.mockReset();
+    vi.stubGlobal("fetch", fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("uses a relative path when VITE_API_BASE_URL is unset", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue(okResponse);
+
+    const { fetchMlbScoreboard } = await import("./api");
+    await fetchMlbScoreboard();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/mlb/scoreboard/today",
+      expect.anything(),
+    );
+  });
+
+  it("prefixes the configured API origin and strips a trailing slash", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", "https://api.example.com/");
+    fetchMock.mockResolvedValue(okResponse);
+
+    const { fetchMlbScoreboard } = await import("./api");
+    await fetchMlbScoreboard();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.example.com/api/mlb/scoreboard/today",
+      expect.anything(),
+    );
+  });
+
+  it("throws when the response is not ok", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 502 });
+
+    const { fetchMlbScoreboard } = await import("./api");
+    await expect(fetchMlbScoreboard()).rejects.toThrow(
+      "MLB scoreboard request failed: 502",
+    );
+  });
+});
