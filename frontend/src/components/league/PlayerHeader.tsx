@@ -41,25 +41,6 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
   return (
     <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
-        <div className="min-w-0 flex-1">
-          <h2 className="truncate text-xl font-semibold tracking-tight text-white">
-            {player.name}
-          </h2>
-          {subtitle ? (
-            <p className="text-sm text-white/45">{subtitle}</p>
-          ) : null}
-          {rows.length > 0 ? (
-            <dl className="mt-4 space-y-2 text-sm">
-              {rows.map(({ label, value }) => (
-                <div key={label} className="grid grid-cols-[7rem_1fr] gap-2">
-                  <dt className="text-white/35">{label}</dt>
-                  <dd className="text-white">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          ) : null}
-        </div>
-
         <div className="flex shrink-0 justify-center">
           {showHeadshot ? (
             <img
@@ -77,6 +58,25 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
               {player.team_abbrev.slice(0, 3)}
             </div>
           )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate text-xl font-semibold tracking-tight text-white">
+            {player.name}
+          </h2>
+          {subtitle ? (
+            <p className="text-sm text-white/45">{subtitle}</p>
+          ) : null}
+          {rows.length > 0 ? (
+            <dl className="mt-4 space-y-2 text-sm">
+              {rows.map(({ label, value }) => (
+                <div key={label} className="grid grid-cols-[7rem_1fr] gap-2">
+                  <dt className="text-white/35">{label}</dt>
+                  <dd className="text-white">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
         </div>
 
         <div className="flex w-full shrink-0 justify-center md:w-auto">
