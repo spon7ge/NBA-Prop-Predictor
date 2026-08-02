@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { ApiWnbaLeaderCategory } from "@/lib/api";
 import { teamColor } from "./wnbaTeamColors";
 
@@ -32,7 +33,14 @@ export function LeaderCategoryCard({ category }: LeaderCategoryCardProps) {
             category.leaders.map((row) => (
               <tr key={`${category.key}-${row.rank}-${row.player_id}`}>
                 <td className="py-1.5 text-white/40">{row.rank}</td>
-                <td className="py-1.5 text-white">{row.name}</td>
+                <td className="py-1.5 text-white">
+                  <Link
+                    to={`/wnba/player/${row.player_id}`}
+                    className="text-white hover:underline focus-visible:underline"
+                  >
+                    {row.name}
+                  </Link>
+                </td>
                 <td
                   className="py-1.5 font-semibold"
                   style={{ color: teamColor(row.team_abbrev) }}
