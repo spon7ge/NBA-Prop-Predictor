@@ -9,6 +9,7 @@ import { LeagueStandingsPage } from "@/pages/LeagueStandingsPage";
 import { LeagueFuturesPage } from "@/pages/LeagueFuturesPage";
 import { LeaguePlayerPage } from "@/pages/LeaguePlayerPage";
 import { LeaguePropPicksPage } from "@/pages/LeaguePropPicksPage";
+import { MlbGameStubPage } from "@/pages/MlbGameStubPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 export function AppRouter() {
@@ -32,6 +33,11 @@ export function AppRouter() {
           path="/nba/matchups"
           element={<LeagueMatchupsPage league="nba" />}
         />
+        <Route
+          path="/mlb/matchups"
+          element={<LeagueMatchupsPage league="mlb" />}
+        />
+        <Route path="/mlb/games/:gamePk" element={<MlbGameStubPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

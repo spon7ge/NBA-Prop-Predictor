@@ -60,6 +60,10 @@ describe("HomeNav", () => {
       "href",
       "/wnba/matchups",
     );
+    expect(screen.getByRole("link", { name: "MLB" })).toHaveAttribute(
+      "href",
+      "/mlb/matchups",
+    );
   });
 
   it("marks WNBA current on /wnba/matchups", () => {
@@ -84,8 +88,11 @@ describe("HomeNav", () => {
   it("uses official league logos in the nav", () => {
     const { container } = renderNav("/");
     const images = container.querySelectorAll('nav img[aria-hidden="true"]');
-    expect(images).toHaveLength(2);
+    expect(images).toHaveLength(3);
     expect(images[0]?.getAttribute("src")).toMatch(/nba_logo/);
     expect(images[1]?.getAttribute("src")).toMatch(/wnba_logo/);
+    expect(images[2]?.getAttribute("src")).toBe(
+      "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png",
+    );
   });
 });

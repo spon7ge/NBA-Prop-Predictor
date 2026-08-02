@@ -25,6 +25,18 @@ export function LeagueMatchupsPage({ league }: LeagueMatchupsPageProps) {
     return <WnbaMatchupsPage />;
   }
 
+  if (league === "mlb") {
+    return (
+      <div className="space-y-0 pb-8">
+        <LeagueHero league="mlb" />
+        <LeagueSubnav league="mlb" />
+        <p className="mx-auto max-w-6xl px-4 text-sm text-white/40 sm:px-6">
+          MLB matchups coming soon.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-0 pb-8">
       <LeagueHero league="nba" />

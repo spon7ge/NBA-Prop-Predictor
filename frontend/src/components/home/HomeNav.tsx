@@ -3,9 +3,13 @@ import { BarChart3, Settings } from "lucide-react";
 import nbaLogo from "@/assets/nba_logo.png";
 import wnbaLogo from "@/assets/wnba_logo.png";
 
+const MLB_LOGO =
+  "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png";
+
 const leagues = [
   { id: "nba", label: "NBA", icon: nbaLogo },
   { id: "wnba", label: "WNBA", icon: wnbaLogo },
+  { id: "mlb", label: "MLB", icon: MLB_LOGO },
 ] as const;
 
 export function HomeNav() {

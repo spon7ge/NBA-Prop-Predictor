@@ -143,11 +143,17 @@ describe("AppRouter", () => {
     expect(screen.getByText(/coming soon/i)).toBeInTheDocument();
   });
 
-  it("renders not found for unknown league matchups", () => {
+  it("renders MLB coming-soon hub at /mlb/matchups", async () => {
     renderWithProviders(["/mlb/matchups"]);
     expect(
-      screen.getByRole("heading", { name: /page not found/i }),
+      await screen.findByRole("heading", { name: /major league baseball/i }),
     ).toBeInTheDocument();
+    expect(screen.getByText(/MLB matchups coming soon/i)).toBeInTheDocument();
+  });
+
+  it("renders MLB game stub at /mlb/games/:gamePk", async () => {
+    renderWithProviders(["/mlb/games/824971"]);
+    expect(await screen.findByText(/coming soon/i)).toBeInTheDocument();
   });
 
   it("renders game detail at /games/:espnEventId", async () => {

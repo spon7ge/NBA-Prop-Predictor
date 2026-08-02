@@ -23,6 +23,13 @@ const leagueContent = {
       "Tonight's matchups, league leaders, standings, and the playoff race—all in one place.",
     image: nbaLogo,
   },
+  mlb: {
+    label: "MLB",
+    title: "Major League Baseball",
+    blurb:
+      "Tonight's matchups and live scores—standings, leaders, and props coming soon.",
+    image: "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png",
+  },
 } as const;
 
 /** Format a YYYY-MM-DD (or Date) as `WED, JUL 29` in America/New_York. */

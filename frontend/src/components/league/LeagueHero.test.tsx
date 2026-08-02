@@ -21,6 +21,17 @@ describe("LeagueHero", () => {
     expect(screen.getByRole("img", { name: /nba logo/i })).toBeInTheDocument();
   });
 
+  it("renders MLB hero copy", () => {
+    render(<LeagueHero league="mlb" />);
+    expect(
+      screen.getByRole("heading", { name: /major league baseball/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /mlb logo/i })).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png",
+    );
+  });
+
   it("formats slate dates in ET", () => {
     expect(formatSlateDateLabel("2026-07-29")).toBe("WED, JUL 29");
     expect(formatSlateDateLabel("2026-07-30")).toBe("THU, JUL 30");
