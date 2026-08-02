@@ -9,6 +9,7 @@ const ABBREV_ALIASES: Record<string, string> = {
   NY: "NYL",
   PHX: "PHO",
   POR: "PDX",
+  CONN: "CON", // Sharp CONN vs ESPN/stats CON (Connecticut Sun)
   WSH: "WAS",
 };
 
@@ -30,7 +31,8 @@ function toMatchupOdds(game: ApiWnbaOddsGame): MatchupOdds | null {
   if (spreadLine == null && total == null) {
     return null;
   }
-  return { spreadTeamAbbrev, spreadLine, total };
+  const sportsbook = game.sportsbook?.trim() || null;
+  return { spreadTeamAbbrev, spreadLine, total, sportsbook };
 }
 
 export function formatOddsPill(odds: MatchupOdds): string | null {

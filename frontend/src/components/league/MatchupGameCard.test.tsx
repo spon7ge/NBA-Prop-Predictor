@@ -118,6 +118,7 @@ describe("MatchupGameCard", () => {
         spreadTeamAbbrev: "ATL",
         spreadLine: -12.5,
         total: 178.5,
+        sportsbook: "draftkings",
       },
     });
     expect(
@@ -125,6 +126,31 @@ describe("MatchupGameCard", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Odds by")).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "DraftKings" })).toBeInTheDocument();
+    expect(screen.getByTestId("matchup-odds")).toHaveAttribute(
+      "data-sportsbook",
+      "draftkings",
+    );
+  });
+
+  it("shows FanDuel caption when sportsbook is fanduel", () => {
+    renderCard({
+      ...liveGame,
+      odds: {
+        spreadTeamAbbrev: "DAL",
+        spreadLine: -11.5,
+        total: 171.5,
+        sportsbook: "fanduel",
+      },
+    });
+    expect(screen.getByText("Odds by")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "FanDuel" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: "DraftKings" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("matchup-odds")).toHaveAttribute(
+      "data-sportsbook",
+      "fanduel",
+    );
   });
 
   it("places odds under scores for live and final games", () => {

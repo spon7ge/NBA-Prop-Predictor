@@ -14,6 +14,7 @@ export type MatchupOdds = {
   spreadTeamAbbrev: string | null;
   spreadLine: number | null;
   total: number | null;
+  sportsbook?: string | null;
 };
 
 export type MatchupGame = {

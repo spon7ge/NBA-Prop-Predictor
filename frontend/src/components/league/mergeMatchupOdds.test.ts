@@ -37,6 +37,7 @@ describe("mergeMatchupOdds", () => {
       spreadTeamAbbrev: "ATL",
       spreadLine: -12.5,
       total: 179.5,
+      sportsbook: null,
     });
   });
 
@@ -72,6 +73,36 @@ describe("mergeMatchupOdds", () => {
       spreadTeamAbbrev: "NYL",
       spreadLine: -2.5,
       total: 176.5,
+      sportsbook: null,
+    });
+  });
+
+  it("matches CON scoreboard abbrev to CONN odds abbrev", () => {
+    const sunWings: MatchupGame = {
+      ...baseGame,
+      away: { ...baseGame.away, abbrev: "CON", name: "Connecticut Sun" },
+      home: { ...baseGame.home, abbrev: "DAL", name: "Dallas Wings" },
+    };
+    const merged = mergeMatchupOdds(
+      [sunWings],
+      [
+        {
+          home_abbrev: "DAL",
+          away_abbrev: "CONN",
+          spread_team_abbrev: "DAL",
+          spread_line: -11.5,
+          total: 171.5,
+          game_date: "2026-08-02",
+          sportsbook: "fanduel",
+        },
+      ],
+      "2026-08-02",
+    );
+    expect(merged[0].odds).toEqual({
+      spreadTeamAbbrev: "DAL",
+      spreadLine: -11.5,
+      total: 171.5,
+      sportsbook: "fanduel",
     });
   });
 

@@ -1,10 +1,11 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import draftKingsLogo from "@/assets/draftkings.png";
+import fanDuelLogo from "@/assets/fanduel.png";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 import { formatOddsPill } from "./mergeMatchupOdds";
-import type { MatchupGame, MatchupTeam } from "./types";
+import type { MatchupGame, MatchupOdds, MatchupTeam } from "./types";
 
 function TeamRow({
   team,
@@ -38,30 +39,41 @@ function TeamRow({
   );
 }
 
+function OddsByCaption({ sportsbook }: { sportsbook?: string | null }) {
+  const book = (sportsbook || "draftkings").toLowerCase();
+  const isFanDuel = book === "fanduel";
+  return (
+    <p className="mt-1 flex items-center justify-end gap-1 text-[10px] tracking-wide text-white/35">
+      <span>Odds by</span>
+      <img
+        src={isFanDuel ? fanDuelLogo : draftKingsLogo}
+        alt={isFanDuel ? "FanDuel" : "DraftKings"}
+        className="h-4 w-4 object-contain"
+      />
+    </p>
+  );
+}
+
 function OddsBlock({
   label,
   placement,
+  sportsbook,
 }: {
   label: string;
   placement: "under-scores" | "beside-home";
+  sportsbook?: string | null;
 }) {
   return (
     <div
       data-testid="matchup-odds"
       data-placement={placement}
+      data-sportsbook={(sportsbook || "draftkings").toLowerCase()}
       className="shrink-0 text-right"
     >
       <span className="inline-flex max-w-[11rem] rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] text-white/70 sm:max-w-none">
         {label}
       </span>
-      <p className="mt-1 flex items-center justify-end gap-1 text-[10px] tracking-wide text-white/35">
-        <span>Odds by</span>
-        <img
-          src={draftKingsLogo}
-          alt="DraftKings"
-          className="h-4 w-4 object-contain"
-        />
-      </p>
+      <OddsByCaption sportsbook={sportsbook} />
     </div>
   );
 }
@@ -74,7 +86,8 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
     : null;
   const baseClassName =
     "block rounded-xl border border-white/10 bg-white/[0.03] p-4";
-  const oddsLabel = game.odds ? formatOddsPill(game.odds) : null;
+  const odds: MatchupOdds | null | undefined = game.odds;
+  const oddsLabel = odds ? formatOddsPill(odds) : null;
 
   const content = (
     <div className="flex items-center gap-3">
@@ -100,9 +113,13 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
           <div className="space-y-3">
             <TeamRow team={game.away} showScore />
             <TeamRow team={game.home} showScore />
-            {oddsLabel ? (
+            {oddsLabel && odds ? (
               <div className="flex justify-end">
-                <OddsBlock label={oddsLabel} placement="under-scores" />
+                <OddsBlock
+                  label={oddsLabel}
+                  placement="under-scores"
+                  sportsbook={odds.sportsbook}
+                />
               </div>
             ) : null}
           </div>
@@ -113,8 +130,12 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
               <div className="min-w-0 flex-1">
                 <TeamRow team={game.home} showScore={false} />
               </div>
-              {oddsLabel ? (
-                <OddsBlock label={oddsLabel} placement="beside-home" />
+              {oddsLabel && odds ? (
+                <OddsBlock
+                  label={oddsLabel}
+                  placement="beside-home"
+                  sportsbook={odds.sportsbook}
+                />
               ) : null}
             </div>
           </div>

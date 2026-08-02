@@ -76,6 +76,40 @@ def test_normalize_omits_game_date_when_event_id_has_none():
     assert games[0].sportsbook == "fanduel"
 
 
+def test_normalize_maps_conn_abbrev_to_con():
+    rows = [
+        {
+            "event_id": "wnba_sun_wings_2026-08-02_b3",
+            "is_main_line": True,
+            "market_type": "point_spread",
+            "line": -11.5,
+            "team_side": "home",
+            "home": {"abbreviation": "DAL", "name": "Dallas Wings"},
+            "away": {"abbreviation": "CONN", "name": "Connecticut Sun"},
+            "home_team": "DAL Wings",
+            "away_team": "CONN Sun",
+        },
+        {
+            "event_id": "wnba_sun_wings_2026-08-02_b3",
+            "is_main_line": True,
+            "market_type": "total_points",
+            "line": 171.5,
+            "home": {"abbreviation": "DAL"},
+            "away": {"abbreviation": "CONN"},
+            "home_team": "DAL Wings",
+            "away_team": "CONN Sun",
+        },
+    ]
+    games = svc.normalize_sharp_odds(rows, sportsbook="fanduel")
+    assert len(games) == 1
+    assert games[0].away_abbrev == "CON"
+    assert games[0].home_abbrev == "DAL"
+    assert games[0].spread_team_abbrev == "DAL"
+    assert games[0].spread_line == -11.5
+    assert games[0].total == 171.5
+    assert games[0].game_date == "2026-08-02"
+
+
 def test_merge_odds_prefer_primary_keeps_dk_over_fd():
     from app.schemas.wnba_odds import WnbaOddsGame
 
