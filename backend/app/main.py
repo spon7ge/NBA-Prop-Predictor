@@ -9,6 +9,7 @@ from app.api.routes import (
     live_props,
     live_slates,
     matchups,
+    mlb_scoreboard,
     performance,
     players,
     predictions,
@@ -31,10 +32,11 @@ app = FastAPI(
     description=(
         "NBA prop prediction backend. Most endpoints read from Supabase "
         "(silver / gold / ml schemas) and make no NBA or Odds API calls. "
-        "The exceptions are /api/wnba/scoreboard/today, /api/wnba/leaders, "
-        "/api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, "
-        "/api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail "
-        "routes, which call ESPN, stats.wnba.com, or SharpAPI for live WNBA data."
+        "The exceptions are /api/wnba/scoreboard/today, /api/mlb/scoreboard/today, "
+        "/api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, "
+        "/api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and "
+        "WNBA game detail routes, which call ESPN, stats.wnba.com, MLB Stats API, "
+        "or SharpAPI for live league data."
     ),
 )
 
@@ -64,6 +66,7 @@ app.include_router(slates.router, prefix="/api")
 
 # ── Direct upstream (non-DB) routes ────────────────────────────────────────
 app.include_router(wnba_scoreboard.router, prefix="/api")
+app.include_router(mlb_scoreboard.router, prefix="/api")
 app.include_router(wnba_leaders.router, prefix="/api")
 app.include_router(wnba_player.router, prefix="/api")
 app.include_router(wnba_standings.router, prefix="/api")

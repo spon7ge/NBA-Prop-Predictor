@@ -1,15 +1,35 @@
 from __future__ import annotations
 
-from datetime import datetime
+import asyncio
+import logging
+import time
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
-from app.schemas.mlb_scoreboard import GameStatus, MlbGame, MlbTeam
+import httpx
 
+from app.schemas.mlb_scoreboard import (
+    GameStatus,
+    MlbGame,
+    MlbScoreboardResponse,
+    MlbTeam,
+)
+
+logger = logging.getLogger(__name__)
 ET = ZoneInfo("America/New_York")
 
 TEAM_LOGO = "https://www.mlbstatic.com/team-logos/{id}.svg"
+SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule"
+TIMEOUT_SECONDS = 12.0
+
+# Slate flips at 3:00 AM ET so late West Coast finishes stay on yesterday's board.
+SLATE_ROLLOVER_HOUR_ET = 3
 
 _NON_RESULT_KEYWORDS = ("postponed", "cancelled", "canceled", "suspended")
+
+_cache: dict = {}  # keys: response, expires_at, date
+_refresh_lock: asyncio.Lock | None = None
+_refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
 
 def _parse_start(start: str) -> datetime | None:
@@ -142,3 +162,99 @@ def normalize_mlb_schedule(payload: dict, *, date_et: str) -> list[MlbGame]:
                 )
             )
     return sorted(games, key=lambda g: (g.start_time_et or "", g.id))
+
+
+def slate_et_date(*, now: datetime | None = None) -> str:
+    """ET calendar date used for ``/scoreboard/today`` (lags until 3:00 AM ET)."""
+    current = now.astimezone(ET) if now is not None else datetime.now(ET)
+    if current.hour < SLATE_ROLLOVER_HOUR_ET:
+        return (current.date() - timedelta(days=1)).isoformat()
+    return current.date().isoformat()
+
+
+def cache_ttl_seconds(games: list[MlbGame]) -> int:
+    if any(g.status in ("live", "halftime") for g in games):
+        return 30
+    return 60
+
+
+async def fetch_mlb_schedule(date_et: str) -> dict:
+    async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
+        r = await client.get(
+            SCHEDULE_URL,
+            params={
+                "sportId": 1,
+                "date": date_et,
+                "hydrate": "team,linescore",
+            },
+        )
+        r.raise_for_status()
+        return r.json()
+
+
+def _cache_valid_for_today() -> MlbScoreboardResponse | None:
+    cached = _cache.get("response")
+    if cached is None:
+        return None
+    if _cache.get("date") != slate_et_date():
+        return None
+    return cached
+
+
+def _fresh_cached_response() -> MlbScoreboardResponse | None:
+    cached = _cache_valid_for_today()
+    if cached is None:
+        return None
+    if time.time() >= float(_cache.get("expires_at") or 0):
+        return None
+    return cached
+
+
+def _refresh_lock_for_loop() -> asyncio.Lock:
+    """Serializes upstream refreshes so concurrent cache misses share one fetch."""
+    global _refresh_lock, _refresh_lock_loop
+    loop = asyncio.get_running_loop()
+    if _refresh_lock is None or _refresh_lock_loop is not loop:
+        _refresh_lock = asyncio.Lock()
+        _refresh_lock_loop = loop
+    return _refresh_lock
+
+
+async def get_today_scoreboard() -> MlbScoreboardResponse:
+    fresh = _fresh_cached_response()
+    if fresh is not None:
+        return fresh
+    async with _refresh_lock_for_loop():
+        fresh = _fresh_cached_response()
+        if fresh is not None:
+            return fresh
+        return await _refresh_today_scoreboard()
+
+
+async def _refresh_today_scoreboard() -> MlbScoreboardResponse:
+    now = time.time()
+    date_et = slate_et_date()
+    cached = _cache_valid_for_today()
+
+    try:
+        payload = await fetch_mlb_schedule(date_et)
+        games = normalize_mlb_schedule(payload, date_et=date_et)
+    except Exception as exc:
+        if cached is not None:
+            logger.warning(
+                "MLB scoreboard refresh failed; serving stale cache (%s): %s",
+                date_et,
+                exc,
+            )
+            return cached
+        raise RuntimeError(f"No usable MLB scoreboard source for {date_et}") from exc
+
+    response = MlbScoreboardResponse(
+        date=date_et,
+        games=games,
+        fetched_at=datetime.now(timezone.utc).isoformat(),
+    )
+    _cache["response"] = response
+    _cache["expires_at"] = now + cache_ttl_seconds(games)
+    _cache["date"] = date_et
+    return response
