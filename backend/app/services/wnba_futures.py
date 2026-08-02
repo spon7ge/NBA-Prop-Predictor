@@ -5,6 +5,7 @@ import logging
 import time
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 
@@ -22,6 +23,14 @@ FUTURES_URL = (
     "wnba/seasons/{season}/futures"
 )
 CACHE_TTL_SECONDS = 300.0
+
+# Team $ref GETs are limited to ESPN sports API hosts (not arbitrary URLs).
+_ALLOWED_ESPN_TEAM_REF_HOSTS = frozenset(
+    {
+        "sports.core.api.espn.com",
+        "site.api.espn.com",
+    }
+)
 
 _team_cache: dict[str, dict[str, Any]] = {}
 _cache: dict = {}
@@ -99,16 +108,35 @@ def _normalize_team_payload(payload: dict[str, Any]) -> dict[str, Any] | None:
     }
 
 
-def _team_ref(book: dict[str, Any]) -> str | None:
-    team = book.get("team") or {}
+def _is_allowed_espn_team_ref_url(url: str) -> bool:
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False
+    if parsed.scheme not in ("http", "https"):
+        return False
+    host = (parsed.hostname or "").lower()
+    return host in _ALLOWED_ESPN_TEAM_REF_HOSTS
+
+
+async def resolve_book_team(
+    book: dict[str, Any], client: httpx.AsyncClient
+) -> dict | None:
+    """Resolve a book row's team from embedded payload or $ref (HTTP only if needed)."""
+    team = book.get("team")
     if not isinstance(team, dict):
         return None
+
+    embedded = _normalize_team_payload(team)
+    if embedded is not None:
+        cache_key = str(embedded["id"])
+        _team_cache[cache_key] = embedded
+        return embedded
+
     ref = str(team.get("$ref") or "").strip()
     if ref:
-        return ref
-    team_id = str(team.get("id") or "").strip()
-    if team_id:
-        return team_id
+        return await resolve_team(ref, client)
+
     return None
 
 
@@ -123,6 +151,9 @@ async def resolve_team(ref_or_id: str, client: httpx.AsyncClient) -> dict | None
 
     if ref.startswith("http://") or ref.startswith("https://"):
         url = ref.replace("http://", "https://", 1)
+        if not _is_allowed_espn_team_ref_url(url):
+            logger.warning("Rejected non-ESPN WNBA team ref host: %s", ref)
+            return None
         try:
             res = await client.get(url)
             res.raise_for_status()
@@ -178,11 +209,7 @@ async def normalize_futures_payload(
             if not odds:
                 continue
 
-            ref = _team_ref(book)
-            if ref is None:
-                continue
-
-            team = await resolve_team(ref, client)
+            team = await resolve_book_team(book, client)
             if team is None:
                 continue
 
