@@ -79,18 +79,18 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
           ) : null}
         </div>
 
-        <div className="flex w-full shrink-0 justify-center md:w-auto">
-          <div className="w-full overflow-hidden rounded-xl border border-white/10 md:max-w-md md:min-w-[18rem]">
-            <div className="bg-white/10 px-3 py-2 text-center text-[11px] font-semibold tracking-wide text-white uppercase">
+        <div className="flex w-full shrink-0 justify-center md:ml-auto md:w-auto md:justify-end">
+          <div className="w-full overflow-hidden rounded-xl border border-white/10 md:w-[28rem] md:min-w-[24rem]">
+            <div className="bg-white/10 px-4 py-2.5 text-center text-xs font-semibold tracking-wide text-white uppercase sm:text-sm">
               {player.season} REGULAR SEASON STATS
             </div>
-            <div className="grid grid-cols-5 gap-1 px-2 py-4 sm:gap-2 sm:px-3">
+            <div className="grid grid-cols-5 gap-2 px-3 py-5 sm:gap-3 sm:px-5 sm:py-6">
               {AVG_TILES.map(({ key, label }) => (
                 <div key={key} className="text-center">
-                  <div className="text-[10px] font-medium tracking-wide text-white/40 uppercase">
+                  <div className="text-[11px] font-medium tracking-wide text-white/40 uppercase sm:text-xs">
                     {label}
                   </div>
-                  <div className="mt-1 text-lg font-semibold tabular-nums text-white sm:text-xl">
+                  <div className="mt-1.5 text-xl font-semibold tabular-nums text-white sm:text-2xl">
                     {player.averages[key]}
                   </div>
                 </div>
