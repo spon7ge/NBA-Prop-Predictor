@@ -53,6 +53,12 @@ def test_format_birthdate_with_age():
     ) == "1/29/2003 (23)"
 
 
+def test_format_birthdate_iso_fractional_z():
+    assert svc.format_birthdate(
+        "2003-01-29T00:00:00.000Z", today=date(2026, 8, 1)
+    ) == "1/29/2003 (23)"
+
+
 def test_format_position_expands_abbrev():
     assert svc.format_position("G") == "Guard"
     assert svc.format_position("F") == "Forward"

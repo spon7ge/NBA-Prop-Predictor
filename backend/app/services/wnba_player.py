@@ -165,12 +165,16 @@ def format_birthdate(raw: Any, *, today: date | None = None) -> str | None:
     if not text:
         return None
     born: date | None = None
-    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
-        try:
-            born = datetime.strptime(text, fmt).date()
-            break
-        except ValueError:
-            continue
+    normalized = text.replace("Z", "+00:00")
+    try:
+        born = datetime.fromisoformat(normalized).date()
+    except ValueError:
+        for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+            try:
+                born = datetime.strptime(text, fmt).date()
+                break
+            except ValueError:
+                continue
     if born is None:
         return None
     ref = today or date.today()
