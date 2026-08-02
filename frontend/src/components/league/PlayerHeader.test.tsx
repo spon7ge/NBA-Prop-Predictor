@@ -6,7 +6,12 @@ import { PlayerHeader } from "./PlayerHeader";
 const player: ApiWnbaPlayerResponse = {
   player_id: "1628932",
   name: "A'ja Wilson",
-  position: "C",
+  position: "Center",
+  jersey: "22",
+  height: "6' 4\"",
+  birthdate: "8/8/1996 (29)",
+  college: "South Carolina",
+  draft_info: "2018: Rd 1, Pk 1 (LVA)",
   team_name: "Las Vegas Aces",
   team_abbrev: "LVA",
   headshot_url: "https://cdn.example.com/1628932.png",
@@ -27,8 +32,12 @@ describe("PlayerHeader", () => {
     render(<PlayerHeader player={player} />);
 
     expect(screen.getByText("A'ja Wilson")).toBeInTheDocument();
-    expect(screen.getByText("C")).toBeInTheDocument();
-    expect(screen.getByText("Las Vegas Aces")).toBeInTheDocument();
+    expect(
+      screen.getByText((content) => content.includes("#22") && content.includes("Center")),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText((content) => content.includes("Las Vegas Aces")),
+    ).toBeInTheDocument();
 
     expect(screen.getByText("PTS")).toBeInTheDocument();
     expect(screen.getByText("REB")).toBeInTheDocument();
@@ -41,6 +50,36 @@ describe("PlayerHeader", () => {
     expect(screen.getByText("2.5")).toBeInTheDocument();
     expect(screen.getByText("52.0")).toBeInTheDocument();
     expect(screen.getByText("33.0")).toBeInTheDocument();
+  });
+
+  it("renders ESPN-style bio facts", () => {
+    render(<PlayerHeader player={player} />);
+    expect(screen.getByText(/#22/)).toBeInTheDocument();
+    expect(screen.getByText(/Center/)).toBeInTheDocument();
+    expect(screen.getByText("Height")).toBeInTheDocument();
+    expect(screen.getByText("6' 4\"")).toBeInTheDocument();
+    expect(screen.getByText("Birthdate")).toBeInTheDocument();
+    expect(screen.getByText("College")).toBeInTheDocument();
+    expect(screen.getByText("South Carolina")).toBeInTheDocument();
+    expect(screen.getByText("Draft Info")).toBeInTheDocument();
+    expect(screen.getByText("2018: Rd 1, Pk 1 (LVA)")).toBeInTheDocument();
+  });
+
+  it("omits missing bio rows", () => {
+    render(
+      <PlayerHeader
+        player={{
+          ...player,
+          height: null,
+          college: null,
+          draft_info: null,
+          birthdate: null,
+        }}
+      />,
+    );
+    expect(screen.queryByText("Height")).not.toBeInTheDocument();
+    expect(screen.queryByText("College")).not.toBeInTheDocument();
+    expect(screen.queryByText("Draft Info")).not.toBeInTheDocument();
   });
 
   it("keeps a placeholder after headshot load error", () => {
