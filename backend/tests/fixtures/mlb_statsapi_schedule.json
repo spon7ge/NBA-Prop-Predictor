@@ -1,0 +1,105 @@
+{
+  "dates": [
+    {
+      "date": "2026-08-02",
+      "games": [
+        {
+          "gamePk": 824900,
+          "gameDate": "2026-08-02T23:10:00Z",
+          "status": {
+            "abstractGameState": "Preview",
+            "detailedState": "Scheduled",
+            "codedGameState": "S"
+          },
+          "teams": {
+            "away": {
+              "score": 0,
+              "leagueRecord": { "wins": 50, "losses": 50 },
+              "team": {
+                "id": 147,
+                "abbreviation": "NYY",
+                "name": "New York Yankees"
+              }
+            },
+            "home": {
+              "score": 0,
+              "leagueRecord": { "wins": 55, "losses": 45 },
+              "team": {
+                "id": 121,
+                "abbreviation": "NYM",
+                "name": "New York Mets"
+              }
+            }
+          },
+          "venue": { "name": "Citi Field" }
+        },
+        {
+          "gamePk": 824971,
+          "gameDate": "2026-08-02T17:10:00Z",
+          "status": {
+            "abstractGameState": "Live",
+            "detailedState": "In Progress",
+            "codedGameState": "I"
+          },
+          "linescore": {
+            "currentInning": 8,
+            "currentInningOrdinal": "8th",
+            "inningState": "Top",
+            "isTopInning": true
+          },
+          "teams": {
+            "away": {
+              "score": 9,
+              "leagueRecord": { "wins": 40, "losses": 60 },
+              "team": {
+                "id": 139,
+                "abbreviation": "TB",
+                "name": "Tampa Bay Rays"
+              }
+            },
+            "home": {
+              "score": 0,
+              "leagueRecord": { "wins": 48, "losses": 52 },
+              "team": {
+                "id": 141,
+                "abbreviation": "TOR",
+                "name": "Toronto Blue Jays"
+              }
+            }
+          },
+          "venue": { "name": "Rogers Centre" }
+        },
+        {
+          "gamePk": 824807,
+          "gameDate": "2026-08-02T17:35:00Z",
+          "status": {
+            "abstractGameState": "Final",
+            "detailedState": "Final",
+            "codedGameState": "F"
+          },
+          "teams": {
+            "away": {
+              "score": 8,
+              "leagueRecord": { "wins": 59, "losses": 53 },
+              "team": {
+                "id": 143,
+                "abbreviation": "PHI",
+                "name": "Philadelphia Phillies"
+              }
+            },
+            "home": {
+              "score": 2,
+              "leagueRecord": { "wins": 45, "losses": 65 },
+              "team": {
+                "id": 110,
+                "abbreviation": "BAL",
+                "name": "Baltimore Orioles"
+              }
+            }
+          },
+          "venue": { "name": "Oriole Park at Camden Yards" }
+        }
+      ]
+    }
+  ]
+}
