@@ -4,10 +4,17 @@ import { StoriesSection } from "@/components/home/StoriesSection";
 import { FeatureStrip } from "@/components/home/FeatureStrip";
 import { PropExplainerSection } from "@/components/home/PropExplainerSection";
 import { LeagueCtaSection } from "@/components/home/LeagueCtaSection";
+import { mergeLeagueScoreboards } from "@/components/home/mergeLeagueScoreboards";
+import { useMlbScoreboard } from "@/hooks/useMlbScoreboard";
 import { useWnbaScoreboard } from "@/hooks/useWnbaScoreboard";
 
 export function HomePage() {
-  const { liveGames, isLoading, hasNeverLoaded } = useWnbaScoreboard();
+  const wnba = useWnbaScoreboard();
+  const mlb = useMlbScoreboard();
+  const { liveGames, isLoading, hasNeverLoaded } = mergeLeagueScoreboards([
+    wnba,
+    mlb,
+  ]);
   return (
     <>
       <BrandHero />

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { gameDetailHref } from "./gameDetailHref";
 import { isInProgressStatus } from "./mapScoreboard";
 import type { TickerGame } from "./types";
 
@@ -42,10 +43,11 @@ function TickerItem({
   const itemClassName =
     "flex items-center gap-2 border-l border-white/10 px-5 font-mono text-xs text-white/70 first:border-l-0";
 
-  if (game.espnEventId && interactive) {
+  const href = gameDetailHref(game);
+  if (href && interactive) {
     return (
       <li className={itemClassName}>
-        <Link to={`/games/${game.espnEventId}`} className="flex items-center gap-2">
+        <Link to={href} className="flex items-center gap-2">
           {content}
         </Link>
       </li>

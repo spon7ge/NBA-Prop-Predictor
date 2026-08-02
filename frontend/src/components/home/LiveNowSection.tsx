@@ -6,6 +6,7 @@ import {
   formatGamesInProgress,
   normalizeLiveGames,
 } from "./format";
+import { gameDetailHref } from "./gameDetailHref";
 import { isInProgressStatus } from "./mapScoreboard";
 import { SectionHeading } from "./SectionHeading";
 
@@ -81,10 +82,11 @@ function LiveGameCard({ game }: { game: LiveGame }) {
   const baseCardClassName =
     "rounded-xl border border-white/10 bg-white/[0.03] p-4";
 
-  if (game.espnEventId) {
+  const href = gameDetailHref(game);
+  if (href) {
     return (
       <Link
-        to={`/games/${game.espnEventId}`}
+        to={href}
         className={`block ${baseCardClassName} transition-colors hover:border-white/20`}
       >
         {card}

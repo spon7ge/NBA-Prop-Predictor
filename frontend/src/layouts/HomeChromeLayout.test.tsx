@@ -6,6 +6,7 @@ import { HomeChromeLayout } from "./HomeChromeLayout";
 vi.mock("@/hooks/useWnbaScoreboard", () => ({
   useWnbaScoreboard: () => ({
     isLoading: false,
+    hasNeverLoaded: false,
     tickerGames: [
       {
         id: "1",
@@ -22,8 +23,29 @@ vi.mock("@/hooks/useWnbaScoreboard", () => ({
   }),
 }));
 
+vi.mock("@/hooks/useMlbScoreboard", () => ({
+  useMlbScoreboard: () => ({
+    isLoading: false,
+    hasNeverLoaded: false,
+    tickerGames: [
+      {
+        id: "mlb-9",
+        league: "mlb",
+        mlbGamePk: "9",
+        awayAbbrev: "BOS",
+        homeAbbrev: "NYY",
+        statusLabel: "Top 3rd",
+        status: "live",
+        awayScore: 2,
+        homeScore: 3,
+      },
+    ],
+    liveGames: [],
+  }),
+}));
+
 describe("HomeChromeLayout", () => {
-  it("renders ticker games from scoreboard hook", () => {
+  it("renders ticker games from merged WNBA and MLB scoreboards", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <Routes>
@@ -35,6 +57,8 @@ describe("HomeChromeLayout", () => {
     );
     expect(screen.getAllByText("ATL").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("DAL").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("BOS").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("NYY").length).toBeGreaterThanOrEqual(1);
     expect(
       screen.getByText(/informational and entertainment purposes only/i),
     ).toBeInTheDocument();

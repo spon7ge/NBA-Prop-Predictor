@@ -77,6 +77,37 @@ describe("LiveNowSection", () => {
     );
   });
 
+  it("links MLB games to /mlb/games/:gamePk", () => {
+    const mlbLiveGame: LiveGame = {
+      id: "mlb-9",
+      league: "mlb",
+      espnEventId: null,
+      mlbGamePk: "9",
+      status: "live",
+      statusLabel: "Top 3rd",
+      away: {
+        abbrev: "BOS",
+        name: "Boston Red Sox",
+        score: 2,
+        logoUrl: null,
+      },
+      home: {
+        abbrev: "NYY",
+        name: "New York Yankees",
+        score: 3,
+        logoUrl: null,
+      },
+    };
+    render(
+      <MemoryRouter>
+        <LiveNowSection games={[mlbLiveGame]} />
+      </MemoryRouter>,
+    );
+    expect(
+      screen.getByRole("link", { name: /Boston Red Sox/i }),
+    ).toHaveAttribute("href", "/mlb/games/9");
+  });
+
   it("renders team logos when logoUrl is set", () => {
     const { container } = render(
       <MemoryRouter>

@@ -149,4 +149,28 @@ describe("LiveTicker", () => {
       "/games/401857098",
     );
   });
+
+  it("links MLB games to /mlb/games/:gamePk", () => {
+    const mlbLiveGame: TickerGame = {
+      id: "mlb-9",
+      league: "mlb",
+      espnEventId: null,
+      mlbGamePk: "9",
+      awayAbbrev: "BOS",
+      homeAbbrev: "NYY",
+      statusLabel: "Top 3rd",
+      status: "live",
+      awayScore: 2,
+      homeScore: 3,
+    };
+    render(
+      <MemoryRouter>
+        <LiveTicker games={[mlbLiveGame]} />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /BOS/i })).toHaveAttribute(
+      "href",
+      "/mlb/games/9",
+    );
+  });
 });
