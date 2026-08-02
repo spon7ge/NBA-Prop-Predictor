@@ -18,8 +18,14 @@ async def wnba_player(player_id: str, response: Response) -> WnbaPlayerResponse:
     response.headers["Cache-Control"] = "no-store"
     try:
         return await get_wnba_player(player_id)
-    except HTTPException:
-        raise
+    except HTTPException as exc:
+        headers = dict(exc.headers or {})
+        headers.setdefault("Cache-Control", "no-store")
+        raise HTTPException(
+            status_code=exc.status_code,
+            detail=exc.detail,
+            headers=headers,
+        ) from exc
     except Exception as exc:
         logger.warning("WNBA player unavailable: %s", exc)
         raise HTTPException(

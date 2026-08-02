@@ -326,7 +326,11 @@ async def get_wnba_player(player_id: str) -> WnbaPlayerResponse:
             raise
 
         if response is None:
-            raise HTTPException(status_code=404, detail="Player not found")
+            raise HTTPException(
+                status_code=404,
+                detail="Player not found",
+                headers={"Cache-Control": "no-store"},
+            )
 
         _cache[player_id] = {
             "response": response,

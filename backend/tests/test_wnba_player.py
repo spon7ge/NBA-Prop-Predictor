@@ -82,7 +82,7 @@ def test_player_route_200_no_store():
             gamelog=_load("stats_wnba_player_gamelog.json"),
         )
 
-    with patch.object(svc, "get_wnba_player", side_effect=fake_get):
+    with patch("app.api.routes.wnba_player.get_wnba_player", side_effect=fake_get):
         client = TestClient(app)
         res = client.get("/api/wnba/player/1628932")
     assert res.status_code == 200
@@ -94,10 +94,11 @@ def test_player_route_404():
     async def missing(player_id: str):
         raise HTTPException(status_code=404, detail="Player not found")
 
-    with patch.object(svc, "get_wnba_player", side_effect=missing):
+    with patch("app.api.routes.wnba_player.get_wnba_player", side_effect=missing):
         client = TestClient(app)
         res = client.get("/api/wnba/player/999")
     assert res.status_code == 404
+    assert res.headers.get("cache-control") == "no-store"
 
 
 def test_player_route_502_cold():
