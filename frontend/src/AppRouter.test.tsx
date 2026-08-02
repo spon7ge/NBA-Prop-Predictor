@@ -253,6 +253,51 @@ describe("AppRouter", () => {
     expect(screen.getByText("Data: stats.wnba.com")).toBeInTheDocument();
   });
 
+  it("renders WNBA futures at /wnba/futures", async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo) => {
+      const url = String(input);
+      if (url.includes("/api/wnba/futures")) {
+        return {
+          ok: true,
+          json: async () => ({
+            season: 2026,
+            as_of: "2026-08-01T00:00:00Z",
+            markets: [
+              {
+                id: "8146",
+                name: "WNBA - Winner",
+                display_name: "Finals Winner",
+                provider: "ESPN BET",
+                entries: [
+                  {
+                    team_id: "8",
+                    abbrev: "NYL",
+                    name: "New York Liberty",
+                    logo_url: null,
+                    odds_american: "+250",
+                  },
+                ],
+              },
+            ],
+            error: null,
+          }),
+        };
+      }
+      return {
+        ok: true,
+        json: async () => ({ date: "2026-07-29", fetched_at: "", games: [] }),
+      };
+    });
+    renderWithProviders(["/wnba/futures"]);
+    expect(await screen.findByText("Finals Winner")).toBeInTheDocument();
+    expect(await screen.findByText("New York Liberty")).toBeInTheDocument();
+    expect(screen.getByText("+250")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Futures" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
   it("renders win probability beneath shot chart and play-by-play", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/api/wnba/games/")) {
