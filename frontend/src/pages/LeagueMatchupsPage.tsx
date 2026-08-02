@@ -4,6 +4,7 @@ import { LeagueHero } from "@/components/league/LeagueHero";
 import { LeagueSubnav } from "@/components/league/LeagueSubnav";
 import { MatchupsPanel } from "@/components/league/MatchupsPanel";
 import {
+  isOddsWindowDate,
   isValidEtDate,
   parseMatchupDateParam,
   shiftEtDate,
@@ -40,7 +41,7 @@ function WnbaMatchupsPage() {
   const today = slateEtDate();
   const raw = searchParams.get("date");
   const selectedDate = parseMatchupDateParam(raw, today);
-  const isToday = selectedDate === today;
+  const showOdds = isOddsWindowDate(selectedDate, today);
 
   useEffect(() => {
     if (raw !== null && !isValidEtDate(raw)) {
@@ -53,7 +54,8 @@ function WnbaMatchupsPage() {
   const oddsQuery = useWnbaOdds();
   const matchupGames = mergeMatchupOdds(
     mapToMatchupGames(games),
-    isToday ? oddsQuery.data?.games : undefined,
+    showOdds ? oddsQuery.data?.games : undefined,
+    selectedDate,
   );
 
   const setDate = (next: string) => {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatMatchupNavLabel,
+  isOddsWindowDate,
   isValidEtDate,
   parseMatchupDateParam,
   shiftEtDate,
@@ -31,5 +32,20 @@ describe("matchupSlateDate", () => {
   it("labels today vs short month day", () => {
     expect(formatMatchupNavLabel("2026-08-01", "2026-08-01")).toBe("Today");
     expect(formatMatchupNavLabel("2026-07-28", "2026-08-01")).toBe("Jul 28");
+  });
+});
+
+describe("isOddsWindowDate", () => {
+  const today = "2026-08-01";
+
+  it("includes today through day+2", () => {
+    expect(isOddsWindowDate("2026-08-01", today)).toBe(true);
+    expect(isOddsWindowDate("2026-08-02", today)).toBe(true);
+    expect(isOddsWindowDate("2026-08-03", today)).toBe(true);
+  });
+
+  it("excludes past and day+3", () => {
+    expect(isOddsWindowDate("2026-07-31", today)).toBe(false);
+    expect(isOddsWindowDate("2026-08-04", today)).toBe(false);
   });
 });

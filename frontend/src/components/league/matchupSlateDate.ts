@@ -61,3 +61,14 @@ export function formatMatchupNavLabel(
     day: "numeric",
   }).format(date);
 }
+
+export function isOddsWindowDate(
+  selectedDate: string,
+  today: string,
+): boolean {
+  return (
+    selectedDate === today ||
+    selectedDate === shiftEtDate(today, 1) ||
+    selectedDate === shiftEtDate(today, 2)
+  );
+}
