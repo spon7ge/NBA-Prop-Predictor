@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { LeagueCtaSection } from "./LeagueCtaSection";
 
 describe("LeagueCtaSection", () => {
-  it("links into NBA and WNBA matchups", () => {
+  it("links into NBA, WNBA, and MLB matchups", () => {
     render(
       <MemoryRouter>
         <LeagueCtaSection />
@@ -20,6 +20,10 @@ describe("LeagueCtaSection", () => {
     expect(screen.getByRole("link", { name: "WNBA" })).toHaveAttribute(
       "href",
       "/wnba/matchups",
+    );
+    expect(screen.getByRole("link", { name: "MLB" })).toHaveAttribute(
+      "href",
+      "/mlb/matchups",
     );
   });
 });

@@ -67,7 +67,7 @@ _PARLAY_BOOK_TABLES = {
     "betr": "wnba_betr",
     "novig": "wnba_novig",
     "sleeper": "wnba_sleeper",
-    "pick6": "wnba_pick6",
+    "betrivers": "wnba_betrivers",
 }
 
 PARLAY_PROP_SPORTSBOOKS = tuple(_PARLAY_BOOK_TABLES.keys())
@@ -84,6 +84,25 @@ def _coerce_float_columns(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
     return df
+
+
+def _dedupe_conflict_rows(
+    df: pd.DataFrame, conflict_cols: list[str]
+) -> pd.DataFrame:
+    """Drop duplicate PK rows so Postgres ON CONFLICT does not raise CardinalityViolation."""
+    present = [c for c in conflict_cols if c in df.columns]
+    if not present:
+        return df
+    before = len(df)
+    out = df.drop_duplicates(subset=present, keep="last")
+    dropped = before - len(out)
+    if dropped:
+        logger.warning(
+            "Dropped %s duplicate snapshot row(s) on %s",
+            dropped,
+            ", ".join(present),
+        )
+    return out
 
 
 def snapshot_interval_minutes() -> int:
@@ -115,6 +134,9 @@ def load_prizepicks_snapshot(
         return 0
 
     df = _coerce_float_columns(pd.DataFrame(rows), ["line_score"])
+    df = _dedupe_conflict_rows(df, _PRIZEPICKS_CONFLICT_COLS)
+    if df.empty:
+        return 0
     upsert_df(
         "wnba_prizepicks",
         df,
@@ -122,7 +144,7 @@ def load_prizepicks_snapshot(
         conflict_cols=_PRIZEPICKS_CONFLICT_COLS,
         lineage_col="fetched_at",
     )
-    return len(rows)
+    return len(df)
 
 
 def load_underdog_snapshot(
@@ -140,6 +162,9 @@ def load_underdog_snapshot(
         return 0
 
     df = _coerce_float_columns(pd.DataFrame(rows), ["line_score", "payout_multiplier"])
+    df = _dedupe_conflict_rows(df, _UNDERDOG_CONFLICT_COLS)
+    if df.empty:
+        return 0
     upsert_df(
         "wnba_underdogs",
         df,
@@ -147,7 +172,7 @@ def load_underdog_snapshot(
         conflict_cols=_UNDERDOG_CONFLICT_COLS,
         lineage_col="fetched_at",
     )
-    return len(rows)
+    return len(df)
 
 
 def _latest_scraped_at(table: str, league: str) -> datetime | None:

@@ -44,6 +44,33 @@ describe("MatchupGameCard", () => {
     ).toHaveAttribute("href", "/games/401857098");
   });
 
+  it("links to MLB game stub when mlbGamePk is set", () => {
+    renderCard({
+      ...liveGame,
+      id: "mlb-824971",
+      espnEventId: null,
+      mlbGamePk: "824971",
+      league: "mlb",
+      away: {
+        abbrev: "NYY",
+        name: "New York Yankees",
+        score: 3,
+        record: "55-35",
+        logoUrl: null,
+      },
+      home: {
+        abbrev: "BOS",
+        name: "Boston Red Sox",
+        score: 2,
+        record: "50-40",
+        logoUrl: null,
+      },
+    });
+    expect(
+      screen.getByRole("link", { name: /new york yankees/i }),
+    ).toHaveAttribute("href", "/mlb/games/824971");
+  });
+
   it("shows venue · city, status, records, and scores", () => {
     renderCard(liveGame);
     expect(screen.getByText("3:31 - 4th")).toBeInTheDocument();

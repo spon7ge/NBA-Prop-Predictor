@@ -54,3 +54,24 @@ def test_mlb_scoreboard_today_upstream_failure_is_502(client):
         res = client.get("/api/mlb/scoreboard/today")
     assert res.status_code == 502
     assert res.headers.get("cache-control") == "no-store"
+
+
+def test_mlb_scoreboard_by_date_ok(client):
+    with patch(
+        "app.api.routes.mlb_scoreboard.get_scoreboard_for_date",
+        new=AsyncMock(return_value=_sample_response()),
+    ):
+        res = client.get("/api/mlb/scoreboard?date=2026-08-02")
+    assert res.status_code == 200
+    assert res.headers.get("cache-control") == "no-store"
+    assert res.json()["date"] == "2026-08-02"
+
+
+def test_mlb_scoreboard_by_date_upstream_failure_is_502(client):
+    with patch(
+        "app.api.routes.mlb_scoreboard.get_scoreboard_for_date",
+        new=AsyncMock(side_effect=RuntimeError("upstream down")),
+    ):
+        res = client.get("/api/mlb/scoreboard?date=2026-08-01")
+    assert res.status_code == 502
+    assert res.headers.get("cache-control") == "no-store"

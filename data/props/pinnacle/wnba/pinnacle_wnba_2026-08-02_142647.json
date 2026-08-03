@@ -1,0 +1,209 @@
+{
+  "fetched_at": "2026-08-02T14:28:40-07:00",
+  "source": "pinnacle_selenium",
+  "sport": "basketball",
+  "league": "wnba",
+  "list_page": "https://www.pinnacle.com/en/basketball/wnba/matchups/#all",
+  "parallel_workers_configured": 5,
+  "parallel_workers_effective": 2,
+  "games_per_worker_target": 2,
+  "arcadia_timeout_s": 90.0,
+  "arcadia_poll_s": 0.22,
+  "games": [
+    {
+      "matchup_id": 1632984203,
+      "source_url": "https://www.pinnacle.com/en/basketball/wnba/connecticut-sun-vs-dallas-wings/1632984203/#all",
+      "path": "/en/basketball/wnba/connecticut-sun-vs-dallas-wings/1632984203/",
+      "league": "WNBA",
+      "start_time": null,
+      "label": "Connecticut Sun vs Dallas Wings",
+      "participants": [
+        "Connecticut Sun",
+        "Dallas Wings"
+      ],
+      "props": [],
+      "team_markets": {
+        "moneyline": [],
+        "spread": [],
+        "total": []
+      }
+    },
+    {
+      "matchup_id": 1633289462,
+      "source_url": "https://www.pinnacle.com/en/basketball/wnba/los-angeles-sparks-vs-portland-fire/1633289462/#all",
+      "path": "/en/basketball/wnba/los-angeles-sparks-vs-portland-fire/1633289462/",
+      "league": "WNBA",
+      "start_time": null,
+      "label": "Los Angeles Sparks vs Portland Fire",
+      "participants": [
+        "Los Angeles Sparks",
+        "Portland Fire"
+      ],
+      "props": [],
+      "team_markets": {
+        "moneyline": [],
+        "spread": [],
+        "total": []
+      }
+    },
+    {
+      "matchup_id": 1632984219,
+      "source_url": "https://www.pinnacle.com/en/basketball/wnba/toronto-tempo-vs-golden-state-valkyries/1632984219/#all",
+      "path": "/en/basketball/wnba/toronto-tempo-vs-golden-state-valkyries/1632984219/",
+      "league": "WNBA",
+      "start_time": null,
+      "label": "Toronto Tempo vs Golden State Valkyries",
+      "participants": [
+        "Toronto Tempo",
+        "Golden State Valkyries"
+      ],
+      "props": [
+        {
+          "stat": "points",
+          "player": "Cecilia Zandalasini",
+          "line": 8.5,
+          "market_id": 1633293436,
+          "decimal_over": 1.82,
+          "decimal_under": 1.917,
+          "american_over": -122,
+          "american_under": -109
+        },
+        {
+          "stat": "points",
+          "player": "Gabby Williams",
+          "line": 14.5,
+          "market_id": 1633293442,
+          "decimal_over": 1.855,
+          "decimal_under": 1.885,
+          "american_over": -117,
+          "american_under": -113
+        },
+        {
+          "stat": "points",
+          "player": "Isabelle Harrison",
+          "line": 12.5,
+          "market_id": 1633293445,
+          "decimal_over": 1.909,
+          "decimal_under": 1.833,
+          "american_over": -110,
+          "american_under": -120
+        },
+        {
+          "stat": "rebounds",
+          "player": "Isabelle Harrison",
+          "line": 5.5,
+          "market_id": 1633293448,
+          "decimal_over": 1.741,
+          "decimal_under": 2.1,
+          "american_over": -135,
+          "american_under": 110
+        },
+        {
+          "stat": "points",
+          "player": "Janelle Salaun",
+          "line": 12.5,
+          "market_id": 1633293454,
+          "decimal_over": 1.877,
+          "decimal_under": 1.862,
+          "american_over": -114,
+          "american_under": -116
+        },
+        {
+          "stat": "rebounds",
+          "player": "Janelle Salaun",
+          "line": 4.5,
+          "market_id": 1633293457,
+          "decimal_over": 2.24,
+          "decimal_under": 1.649,
+          "american_over": 124,
+          "american_under": -154
+        },
+        {
+          "stat": "assists",
+          "player": "Julie Allemand",
+          "line": 6.5,
+          "market_id": 1633293460,
+          "decimal_over": 2.27,
+          "decimal_under": 1.629,
+          "american_over": 127,
+          "american_under": -159
+        },
+        {
+          "stat": "points",
+          "player": "Julie Allemand",
+          "line": 7.5,
+          "market_id": 1633293463,
+          "decimal_over": 2.09,
+          "decimal_under": 1.746,
+          "american_over": 109,
+          "american_under": -134
+        },
+        {
+          "stat": "points",
+          "player": "Kayla Thornton",
+          "line": 8.5,
+          "market_id": 1633293469,
+          "decimal_over": 1.833,
+          "decimal_under": 1.99,
+          "american_over": -120,
+          "american_under": -101
+        },
+        {
+          "stat": "rebounds",
+          "player": "Kayla Thornton",
+          "line": 4.5,
+          "market_id": 1633293472,
+          "decimal_over": 1.571,
+          "decimal_under": 2.31,
+          "american_over": -175,
+          "american_under": 131
+        },
+        {
+          "stat": "points",
+          "player": "Nyara Sabally",
+          "line": 10.5,
+          "market_id": 1633293487,
+          "decimal_over": 1.943,
+          "decimal_under": 1.87,
+          "american_over": -106,
+          "american_under": -115
+        },
+        {
+          "stat": "rebounds",
+          "player": "Nyara Sabally",
+          "line": 4.5,
+          "market_id": 1633293490,
+          "decimal_over": 2.14,
+          "decimal_under": 1.658,
+          "american_over": 114,
+          "american_under": -152
+        },
+        {
+          "stat": "assists",
+          "player": "Veronica Burton",
+          "line": 6.5,
+          "market_id": 1633293496,
+          "decimal_over": 1.962,
+          "decimal_under": 1.769,
+          "american_over": -104,
+          "american_under": -130
+        },
+        {
+          "stat": "points",
+          "player": "Veronica Burton",
+          "line": 12.5,
+          "market_id": 1633293499,
+          "decimal_over": 1.98,
+          "decimal_under": 1.833,
+          "american_over": -102,
+          "american_under": -120
+        }
+      ],
+      "team_markets": {
+        "moneyline": [],
+        "spread": [],
+        "total": []
+      }
+    }
+  ]
+}

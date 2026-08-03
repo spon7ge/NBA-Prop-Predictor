@@ -18,6 +18,7 @@ SHARPNESS_ORDER: tuple[str, ...] = (
     "fanduel",
     "caesars",
     "betmgm",
+    "betrivers",
 )
 
 SPORTSBOOK_BOOKS = frozenset(SHARPNESS_ORDER)
@@ -28,7 +29,6 @@ DFS_BOOKS = frozenset(
         "underdog",
         "betr",
         "sleeper",
-        "pick6",
     }
 )
 

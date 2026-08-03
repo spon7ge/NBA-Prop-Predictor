@@ -5,9 +5,12 @@ import type { ReactNode } from "react";
 import { useMlbScoreboard } from "./useMlbScoreboard";
 
 const fetchMlbScoreboard = vi.fn();
+const fetchMlbScoreboardByDate = vi.fn();
 
 vi.mock("@/lib/api", () => ({
   fetchMlbScoreboard: (...args: unknown[]) => fetchMlbScoreboard(...args),
+  fetchMlbScoreboardByDate: (...args: unknown[]) =>
+    fetchMlbScoreboardByDate(...args),
 }));
 
 function wrapper({ children }: { children: ReactNode }) {
@@ -45,6 +48,7 @@ const liveMlbGame = {
 describe("useMlbScoreboard", () => {
   beforeEach(() => {
     fetchMlbScoreboard.mockReset();
+    fetchMlbScoreboardByDate.mockReset();
   });
   afterEach(() => {
     vi.clearAllMocks();

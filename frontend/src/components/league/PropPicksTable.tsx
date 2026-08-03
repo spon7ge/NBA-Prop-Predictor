@@ -161,7 +161,7 @@ export function PropPicksTable({
               <tbody>
                 {pageRows.map((row) => (
                   <tr
-                    key={`${row.player_name}-${row.market_type}-${row.side}`}
+                    key={`${row.player_name}-${row.market_type}-${row.side}-${row.prizepicks?.line ?? ""}-${row.underdog?.line ?? ""}`}
                     className="border-b border-white/10 text-white/90 last:border-b-0"
                   >
                     <td className="px-2 py-1.5 font-medium text-white">

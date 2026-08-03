@@ -58,14 +58,15 @@
   }
 }
 
+/* Three-phase crossfade: NBA → WNBA → MLB (~3.5s each). */
 @keyframes league-logo-fade-a {
   0%,
-  42% {
+  28% {
     opacity: 1;
     transform: scale(1);
   }
-  50%,
-  92% {
+  33%,
+  95% {
     opacity: 0;
     transform: scale(0.96);
   }
@@ -77,12 +78,30 @@
 
 @keyframes league-logo-fade-b {
   0%,
-  42% {
+  28% {
     opacity: 0;
     transform: scale(0.96);
   }
-  50%,
-  92% {
+  33%,
+  61% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes league-logo-fade-c {
+  0%,
+  61% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  66%,
+  95% {
     opacity: 1;
     transform: scale(1);
   }
@@ -93,11 +112,15 @@
 }
 
 .league-logo-slide-a {
-  animation: league-logo-fade-a 7s ease-in-out infinite;
+  animation: league-logo-fade-a 10.5s ease-in-out infinite;
 }
 
 .league-logo-slide-b {
-  animation: league-logo-fade-b 7s ease-in-out infinite;
+  animation: league-logo-fade-b 10.5s ease-in-out infinite;
+}
+
+.league-logo-slide-c {
+  animation: league-logo-fade-c 10.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

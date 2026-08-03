@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 const LEAGUES = [
   { id: "nba", label: "NBA", href: "/nba/matchups" },
   { id: "wnba", label: "WNBA", href: "/wnba/matchups" },
+  { id: "mlb", label: "MLB", href: "/mlb/matchups" },
 ] as const;
 
 export function LeagueCtaSection() {
@@ -19,7 +20,7 @@ export function LeagueCtaSection() {
           Matchups, props, and standings — pick your court.
         </p>
       </div>
-      <div className="mx-auto mt-10 grid max-w-2xl gap-4 sm:grid-cols-2">
+      <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
         {LEAGUES.map((league) => (
           <Link
             key={league.id}

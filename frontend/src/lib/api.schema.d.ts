@@ -252,6 +252,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/mlb/odds/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mlb Odds Today */
+        get: operations["mlb_odds_today_api_mlb_odds_today_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/mlb/scoreboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mlb Scoreboard By Date */
+        get: operations["mlb_scoreboard_by_date_api_mlb_scoreboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/mlb/scoreboard/today": {
         parameters: {
             query?: never;
@@ -1347,6 +1381,37 @@ export interface components {
             /** Venue City */
             venue_city: string | null;
         };
+        /** MlbOddsGame */
+        MlbOddsGame: {
+            /** Away Abbrev */
+            away_abbrev: string;
+            /** Game Date */
+            game_date: string | null;
+            /** Home Abbrev */
+            home_abbrev: string;
+            /** Sportsbook */
+            sportsbook: string | null;
+            /** Spread Line */
+            spread_line: number | null;
+            /** Spread Team Abbrev */
+            spread_team_abbrev: string | null;
+            /** Total */
+            total: number | null;
+        };
+        /** MlbOddsResponse */
+        MlbOddsResponse: {
+            /** As Of */
+            as_of: string;
+            /** Error */
+            error: string | null;
+            /** Games */
+            games: components["schemas"]["MlbOddsGame"][];
+            /**
+             * Sportsbook
+             * @default draftkings
+             */
+            sportsbook: string;
+        };
         /** MlbScoreboardResponse */
         MlbScoreboardResponse: {
             /**
@@ -2070,6 +2135,7 @@ export interface components {
             bet365: components["schemas"]["WnbaPropBookQuote"] | null;
             betmgm: components["schemas"]["WnbaPropBookQuote"] | null;
             betr: components["schemas"]["WnbaPropBookQuote"] | null;
+            betrivers: components["schemas"]["WnbaPropBookQuote"] | null;
             caesars: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Commence Time */
             commence_time: string | null;
@@ -2088,7 +2154,6 @@ export interface components {
             novig: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Over Under Pct */
             over_under_pct: number | null;
-            pick6: components["schemas"]["WnbaPropBookQuote"] | null;
             pinnacle: components["schemas"]["WnbaPropBookQuote"] | null;
             /** Player Name */
             player_name: string;
@@ -2575,6 +2640,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MatchupFeatures"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mlb_odds_today_api_mlb_odds_today_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MlbOddsResponse"];
+                };
+            };
+        };
+    };
+    mlb_scoreboard_by_date_api_mlb_scoreboard_get: {
+        parameters: {
+            query: {
+                date: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MlbScoreboardResponse"];
                 };
             };
             /** @description Validation Error */

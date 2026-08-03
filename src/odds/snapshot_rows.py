@@ -107,7 +107,7 @@ _PARLAY_BOOKS = frozenset(
         "betr",
         "novig",
         "sleeper",
-        "pick6",
+        "betrivers",
     }
 )
 

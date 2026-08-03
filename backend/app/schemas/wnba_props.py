@@ -3,18 +3,18 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field
 
 PROP_SPORTSBOOKS = (
+    "prizepicks",
+    "underdog",
     "fanduel",
     "draftkings",
     "caesars",
     "betmgm",
     "pinnacle",
     "bet365",
-    "prizepicks",
-    "underdog",
     "betr",
     "novig",
     "sleeper",
-    "pick6",
+    "betrivers",
 )
 
 _RESPONSE_CONFIG = ConfigDict(json_schema_serialization_defaults_required=True)
@@ -53,7 +53,7 @@ class WnbaPropLine(BaseModel):
     betr: WnbaPropBookQuote | None = None
     novig: WnbaPropBookQuote | None = None
     sleeper: WnbaPropBookQuote | None = None
-    pick6: WnbaPropBookQuote | None = None
+    betrivers: WnbaPropBookQuote | None = None
 
 
 class WnbaPropsResponse(BaseModel):

@@ -1,18 +1,18 @@
 import type { ApiWnbaGame, ApiWnbaPropLine } from "@/lib/api";
 
 export const PROP_BOOK_OPTIONS = [
+  { key: "prizepicks", label: "PrizePicks" },
+  { key: "underdog", label: "Underdog" },
   { key: "fanduel", label: "FanDuel" },
   { key: "draftkings", label: "DraftKings" },
   { key: "caesars", label: "Caesars" },
   { key: "betmgm", label: "BetMGM" },
   { key: "pinnacle", label: "Pinnacle" },
   { key: "bet365", label: "bet365" },
-  { key: "prizepicks", label: "PrizePicks" },
-  { key: "underdog", label: "Underdog" },
   { key: "betr", label: "Betr" },
   { key: "novig", label: "Novig" },
   { key: "sleeper", label: "Sleeper" },
-  { key: "pick6", label: "Pick6" },
+  { key: "betrivers", label: "BetRivers" },
 ] as const;
 
 export type PropBookKey = (typeof PROP_BOOK_OPTIONS)[number]["key"];

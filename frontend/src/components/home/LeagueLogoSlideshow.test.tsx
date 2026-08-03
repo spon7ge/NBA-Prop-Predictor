@@ -24,10 +24,16 @@ describe("LeagueLogoSlideshow", () => {
     vi.restoreAllMocks();
   });
 
-  it("renders NBA and WNBA logo images", () => {
+  it("renders NBA, WNBA, and MLB logo images", () => {
     render(<LeagueLogoSlideshow />);
     expect(screen.getByAltText("NBA")).toBeInTheDocument();
     expect(screen.getByAltText("WNBA")).toBeInTheDocument();
+    const mlb = screen.getByAltText("MLB");
+    expect(mlb).toBeInTheDocument();
+    expect(mlb).toHaveAttribute(
+      "src",
+      "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png",
+    );
   });
 
   it("shows only the first logo when prefers-reduced-motion is set", () => {
@@ -35,5 +41,6 @@ describe("LeagueLogoSlideshow", () => {
     render(<LeagueLogoSlideshow />);
     expect(screen.getByAltText("NBA")).toBeInTheDocument();
     expect(screen.queryByAltText("WNBA")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("MLB")).not.toBeInTheDocument();
   });
 });

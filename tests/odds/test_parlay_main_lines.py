@@ -14,6 +14,7 @@ def test_sharpness_order_lists_all_sportsbooks():
         "fanduel",
         "caesars",
         "betmgm",
+        "betrivers",
     }
     assert SHARPNESS_ORDER[0] == "pinnacle"
 

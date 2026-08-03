@@ -93,7 +93,7 @@ describe("AppRouter", () => {
           "betr",
           "novig",
           "sleeper",
-          "pick6",
+          "betrivers",
         ],
         props: [
           {
@@ -119,7 +119,7 @@ describe("AppRouter", () => {
             betr: null,
             novig: null,
             sleeper: null,
-            pick6: null,
+            betrivers: null,
           },
         ],
       }),
@@ -143,12 +143,17 @@ describe("AppRouter", () => {
     expect(screen.getByText(/coming soon/i)).toBeInTheDocument();
   });
 
-  it("renders MLB coming-soon hub at /mlb/matchups", async () => {
+  it("renders MLB matchups hub at /mlb/matchups", async () => {
     renderWithProviders(["/mlb/matchups"]);
     expect(
       await screen.findByRole("heading", { name: /major league baseball/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/MLB matchups coming soon/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: /^matchups$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/MLB matchups coming soon/i),
+    ).not.toBeInTheDocument();
   });
 
   it("renders MLB game stub at /mlb/games/:gamePk", async () => {

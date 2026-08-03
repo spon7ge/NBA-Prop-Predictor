@@ -16,7 +16,7 @@ const emptyBooks = {
   betr: null,
   novig: null,
   sleeper: null,
-  pick6: null,
+  betrivers: null,
 } as const;
 
 const sampleProps: ApiWnbaPropLine[] = [
@@ -79,7 +79,7 @@ describe("PropPicksTable", () => {
     expect(screen.getByRole("columnheader", { name: "Betr" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Novig" })).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Sleeper" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Pick6" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "BetRivers" })).toBeInTheDocument();
 
     expect(screen.getAllByText("Rhyne Howard")).toHaveLength(2);
     expect(screen.getAllByRole("presentation")).toHaveLength(2);

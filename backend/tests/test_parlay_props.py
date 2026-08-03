@@ -157,7 +157,8 @@ def test_get_today_props_success():
     assert len(body["props"]) >= 2
     assert body["sportsbooks"] == list(PROP_SPORTSBOOKS)
     assert "prizepicks" in body["sportsbooks"]
-    assert "pick6" in body["sportsbooks"]
+    assert "betrivers" in body["sportsbooks"]
+    assert "pick6" not in body["sportsbooks"]
 
 
 def test_get_today_props_persist_failure_still_returns():

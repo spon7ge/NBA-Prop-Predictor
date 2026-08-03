@@ -27,7 +27,10 @@ SLATE_ROLLOVER_HOUR_ET = 3
 
 _NON_RESULT_KEYWORDS = ("postponed", "cancelled", "canceled", "suspended")
 
+DATED_CACHE_TTL_SECONDS = 300
+
 _cache: dict = {}  # keys: response, expires_at, date
+_date_cache: dict[str, dict] = {}
 _refresh_lock: asyncio.Lock | None = None
 _refresh_lock_loop: asyncio.AbstractEventLoop | None = None
 
@@ -257,4 +260,35 @@ async def _refresh_today_scoreboard() -> MlbScoreboardResponse:
     _cache["response"] = response
     _cache["expires_at"] = now + cache_ttl_seconds(games)
     _cache["date"] = date_et
+    return response
+
+
+async def get_scoreboard_for_date(date_et: str) -> MlbScoreboardResponse:
+    """Scoreboard for one ET calendar day (no overnight live carryover)."""
+    cached = _date_cache.get(date_et)
+    if cached is not None and time.time() < float(cached.get("expires_at") or 0):
+        return cached["response"]
+
+    try:
+        payload = await fetch_mlb_schedule(date_et)
+        games = normalize_mlb_schedule(payload, date_et=date_et)
+    except Exception as exc:
+        if cached is not None:
+            logger.warning(
+                "MLB dated scoreboard refresh failed; serving stale (%s): %s",
+                date_et,
+                exc,
+            )
+            return cached["response"]
+        raise RuntimeError(f"No usable MLB scoreboard source for {date_et}") from exc
+
+    response = MlbScoreboardResponse(
+        date=date_et,
+        games=games,
+        fetched_at=datetime.now(timezone.utc).isoformat(),
+    )
+    _date_cache[date_et] = {
+        "response": response,
+        "expires_at": time.time() + DATED_CACHE_TTL_SECONDS,
+    }
     return response

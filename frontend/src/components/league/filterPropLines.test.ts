@@ -32,7 +32,7 @@ function prop(partial: Partial<ApiWnbaPropLine> & Pick<ApiWnbaPropLine, "player_
     betr: null,
     novig: null,
     sleeper: null,
-    pick6: null,
+    betrivers: null,
     ...partial,
   };
 }

@@ -1,7 +1,7 @@
-import type { ApiWnbaOddsGame } from "@/lib/api";
+import type { ApiMatchupOddsGame } from "@/lib/api";
 import type { MatchupGame, MatchupOdds } from "./types";
 
-/** Align ESPN tricodes with odds / stats.wnba.com spellings. */
+/** Align ESPN tricodes with odds / stats.wnba.com spellings (WNBA only). */
 const ABBREV_ALIASES: Record<string, string> = {
   GS: "GSV",
   LA: "LAS",
@@ -13,18 +13,26 @@ const ABBREV_ALIASES: Record<string, string> = {
   WSH: "WAS",
 };
 
-function canonicalAbbrev(abbrev: string): string {
+function canonicalAbbrev(abbrev: string, wnbaAliases: boolean): string {
   const upper = abbrev.trim().toUpperCase();
+  if (!wnbaAliases) return upper;
   return ABBREV_ALIASES[upper] ?? upper;
 }
 
-function oddsKey(homeAbbrev: string, awayAbbrev: string): string {
-  return `${canonicalAbbrev(awayAbbrev)}@${canonicalAbbrev(homeAbbrev)}`;
+function oddsKey(
+  homeAbbrev: string,
+  awayAbbrev: string,
+  wnbaAliases: boolean,
+): string {
+  return `${canonicalAbbrev(awayAbbrev, wnbaAliases)}@${canonicalAbbrev(homeAbbrev, wnbaAliases)}`;
 }
 
-function toMatchupOdds(game: ApiWnbaOddsGame): MatchupOdds | null {
+function toMatchupOdds(
+  game: ApiMatchupOddsGame,
+  wnbaAliases: boolean,
+): MatchupOdds | null {
   const spreadTeamAbbrev = game.spread_team_abbrev
-    ? canonicalAbbrev(game.spread_team_abbrev)
+    ? canonicalAbbrev(game.spread_team_abbrev, wnbaAliases)
     : null;
   const spreadLine = game.spread_line ?? null;
   const total = game.total ?? null;
@@ -48,9 +56,11 @@ export function formatOddsPill(odds: MatchupOdds): string | null {
 
 export function mergeMatchupOdds(
   games: MatchupGame[],
-  oddsGames: ApiWnbaOddsGame[] | undefined,
+  oddsGames: ApiMatchupOddsGame[] | undefined,
   slateDate?: string,
+  options?: { wnbaAliases?: boolean },
 ): MatchupGame[] {
+  const wnbaAliases = options?.wnbaAliases ?? true;
   if (!oddsGames || oddsGames.length === 0) {
     return games.map((game) => ({ ...game, odds: game.odds ?? null }));
   }
@@ -59,9 +69,9 @@ export function mergeMatchupOdds(
   const byUndated = new Map<string, MatchupOdds>();
 
   for (const row of oddsGames) {
-    const odds = toMatchupOdds(row);
+    const odds = toMatchupOdds(row, wnbaAliases);
     if (!odds) continue;
-    const key = oddsKey(row.home_abbrev, row.away_abbrev);
+    const key = oddsKey(row.home_abbrev, row.away_abbrev, wnbaAliases);
     if (row.game_date) {
       byDated.set(`${row.game_date}|${key}`, odds);
     } else {
@@ -70,7 +80,7 @@ export function mergeMatchupOdds(
   }
 
   return games.map((game) => {
-    const key = oddsKey(game.home.abbrev, game.away.abbrev);
+    const key = oddsKey(game.home.abbrev, game.away.abbrev, wnbaAliases);
     let odds: MatchupOdds | null = null;
     if (slateDate) {
       odds = byDated.get(`${slateDate}|${key}`) ?? byUndated.get(key) ?? null;

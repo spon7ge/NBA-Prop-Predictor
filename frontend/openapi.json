@@ -2281,6 +2281,123 @@
         "title": "MlbGame",
         "type": "object"
       },
+      "MlbOddsGame": {
+        "properties": {
+          "away_abbrev": {
+            "title": "Away Abbrev",
+            "type": "string"
+          },
+          "game_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Game Date"
+          },
+          "home_abbrev": {
+            "title": "Home Abbrev",
+            "type": "string"
+          },
+          "sportsbook": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sportsbook"
+          },
+          "spread_line": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spread Line"
+          },
+          "spread_team_abbrev": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spread Team Abbrev"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          }
+        },
+        "required": [
+          "home_abbrev",
+          "away_abbrev",
+          "spread_team_abbrev",
+          "spread_line",
+          "total",
+          "game_date",
+          "sportsbook"
+        ],
+        "title": "MlbOddsGame",
+        "type": "object"
+      },
+      "MlbOddsResponse": {
+        "properties": {
+          "as_of": {
+            "title": "As Of",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "games": {
+            "items": {
+              "$ref": "#/components/schemas/MlbOddsGame"
+            },
+            "title": "Games",
+            "type": "array"
+          },
+          "sportsbook": {
+            "default": "draftkings",
+            "title": "Sportsbook",
+            "type": "string"
+          }
+        },
+        "required": [
+          "as_of",
+          "sportsbook",
+          "games",
+          "error"
+        ],
+        "title": "MlbOddsResponse",
+        "type": "object"
+      },
       "MlbScoreboardResponse": {
         "properties": {
           "date": {
@@ -4705,6 +4822,16 @@
               }
             ]
           },
+          "betrivers": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WnbaPropBookQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "caesars": {
             "anyOf": [
               {
@@ -4815,16 +4942,6 @@
             ],
             "title": "Over Under Pct"
           },
-          "pick6": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/WnbaPropBookQuote"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "pinnacle": {
             "anyOf": [
               {
@@ -4912,7 +5029,7 @@
           "betr",
           "novig",
           "sleeper",
-          "pick6"
+          "betrivers"
         ],
         "title": "WnbaPropLine",
         "type": "object"
@@ -5183,7 +5300,7 @@
     }
   },
   "info": {
-    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/mlb/scoreboard/today, /api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, MLB Stats API, or SharpAPI for live league data.",
+    "description": "NBA prop prediction backend. Most endpoints read from Supabase (silver / gold / ml schemas) and make no NBA or Odds API calls. The exceptions are /api/wnba/scoreboard/today, /api/mlb/scoreboard/today, /api/mlb/scoreboard, /api/mlb/odds/today, /api/wnba/leaders, /api/wnba/player/{player_id}, /api/wnba/standings, /api/wnba/futures, /api/wnba/odds/today, /api/wnba/props/today, and WNBA game detail routes, which call ESPN, stats.wnba.com, MLB Stats API, or SharpAPI for live league data.",
     "title": "HoopVista API",
     "version": "0.3.0"
   },
@@ -6043,6 +6160,70 @@
         "summary": "List Matchups",
         "tags": [
           "matchups"
+        ]
+      }
+    },
+    "/api/mlb/odds/today": {
+      "get": {
+        "operationId": "mlb_odds_today_api_mlb_odds_today_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MlbOddsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Mlb Odds Today",
+        "tags": [
+          "mlb"
+        ]
+      }
+    },
+    "/api/mlb/scoreboard": {
+      "get": {
+        "operationId": "mlb_scoreboard_by_date_api_mlb_scoreboard_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "title": "Date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MlbScoreboardResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mlb Scoreboard By Date",
+        "tags": [
+          "mlb"
         ]
       }
     },

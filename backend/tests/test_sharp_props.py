@@ -70,8 +70,8 @@ def test_merge_snapshot_props_fills_prizepicks_and_underdog():
     assert under.prizepicks.line == 3.5
     assert under.underdog is not None
     assert under.underdog.odds_american == -112
-    assert not hasattr(over, "betmgm")
-    assert not hasattr(over, "betrivers")
+    assert over.betmgm is None
+    assert over.betrivers is None
 
 
 def test_merge_snapshot_props_pp_only_creates_both_sides():

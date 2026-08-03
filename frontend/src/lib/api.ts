@@ -53,6 +53,11 @@ export type ApiWnbaPlayerResponse = Schemas["WnbaPlayerResponse"];
 export type ApiMlbTeam = Schemas["MlbTeam"];
 export type ApiMlbGame = Schemas["MlbGame"];
 export type MlbScoreboardResponse = Schemas["MlbScoreboardResponse"];
+export type ApiMlbOddsGame = Schemas["MlbOddsGame"];
+export type ApiMlbOddsResponse = Schemas["MlbOddsResponse"];
+
+/** Shared shape for matchup odds merge (WNBA + MLB). */
+export type ApiMatchupOddsGame = ApiWnbaOddsGame | ApiMlbOddsGame;
 
 /**
  * Origin of the HoopVista API, without a trailing slash.
@@ -175,6 +180,30 @@ export async function fetchMlbScoreboard(): Promise<MlbScoreboardResponse> {
   });
   if (!res.ok) {
     throw new Error(`MLB scoreboard request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function fetchMlbScoreboardByDate(
+  dateEt: string,
+): Promise<MlbScoreboardResponse> {
+  const res = await fetch(
+    `${API_BASE}/api/mlb/scoreboard?date=${encodeURIComponent(dateEt)}`,
+    { headers: { Accept: "application/json" }, cache: "no-store" },
+  );
+  if (!res.ok) {
+    throw new Error(`MLB scoreboard request failed: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function fetchMlbOdds(): Promise<ApiMlbOddsResponse> {
+  const res = await fetch(`${API_BASE}/api/mlb/odds/today`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`MLB odds request failed: ${res.status}`);
   }
   return res.json();
 }

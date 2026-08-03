@@ -122,6 +122,37 @@ def test_load_underdog_snapshot_calls_upsert(mock_upsert):
     ]
 
 
+def test_load_underdog_snapshot_dedupes_conflict_keys(mock_upsert):
+    """Duplicate PK rows in one INSERT trigger Postgres CardinalityViolation."""
+    picks = [
+        {
+            "full_name": "Erica Wheeler",
+            "stat_name": "rebounds",
+            "stat_value": "3.5",
+            "choice": "over",
+            "american_price": "-110",
+            "payout_multiplier": "0.94",
+            "updated_at": "2026-07-31T23:57:11Z",
+        },
+        {
+            "full_name": "Erica Wheeler",
+            "stat_name": "rebounds",
+            "stat_value": "3.5",
+            "choice": "over",
+            "american_price": "-105",
+            "payout_multiplier": "0.95",
+            "updated_at": "2026-07-31T23:58:00Z",
+        },
+    ]
+    count = load_snapshots.load_underdog_snapshot(
+        picks, league="wnba", scraped_at=SCRAPED
+    )
+    assert count == 1
+    _table, df = mock_upsert.call_args[0]
+    assert len(df) == 1
+    assert df.iloc[0]["american_price"] == -105
+
+
 def test_load_underdog_snapshot_empty_returns_zero(mock_upsert):
     count = load_snapshots.load_underdog_snapshot([], league="wnba", scraped_at=SCRAPED)
     assert count == 0

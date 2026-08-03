@@ -1,0 +1,13 @@
+{
+  "fetched_at": "2026-08-02T14:26:47-07:00",
+  "source": "pinnacle_selenium",
+  "sport": "basketball",
+  "league": "nba",
+  "list_page": "https://www.pinnacle.com/en/basketball/nba/matchups/#all",
+  "parallel_workers_configured": 5,
+  "parallel_workers_effective": null,
+  "games_per_worker_target": 2,
+  "arcadia_timeout_s": 90.0,
+  "arcadia_poll_s": 0.22,
+  "games": []
+}

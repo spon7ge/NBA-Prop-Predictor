@@ -2,9 +2,19 @@ import { useEffect, useState } from "react";
 import nbaLogo from "@/assets/nba_logo.png";
 import wnbaLogo from "@/assets/wnba_logo.png";
 
+const MLB_LOGO =
+  "https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png";
+
 const SLIDES = [
   { src: nbaLogo, alt: "NBA" },
   { src: wnbaLogo, alt: "WNBA" },
+  { src: MLB_LOGO, alt: "MLB" },
+] as const;
+
+const SLIDE_ANIMATION = [
+  "league-logo-slide-a",
+  "league-logo-slide-b",
+  "league-logo-slide-c",
 ] as const;
 
 function usePrefersReducedMotion(): boolean {
@@ -54,11 +64,7 @@ export function LeagueLogoSlideshow() {
           key={slide.alt}
           src={slide.src}
           alt={slide.alt}
-          className={
-            index === 0
-              ? "league-logo-slide league-logo-slide-a absolute size-48 object-contain sm:size-56 lg:size-64"
-              : "league-logo-slide league-logo-slide-b absolute size-48 object-contain sm:size-56 lg:size-64"
-          }
+          className={`league-logo-slide ${SLIDE_ANIMATION[index]} absolute size-48 object-contain sm:size-56 lg:size-64`}
         />
       ))}
     </div>

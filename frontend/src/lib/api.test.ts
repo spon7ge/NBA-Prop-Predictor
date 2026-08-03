@@ -148,7 +148,7 @@ describe("fetchWnbaProps", () => {
           "betr",
           "novig",
           "sleeper",
-          "pick6",
+          "betrivers",
         ],
         props: [],
       }),

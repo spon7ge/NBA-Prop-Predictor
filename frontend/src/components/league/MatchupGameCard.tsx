@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import draftKingsLogo from "@/assets/draftkings.png";
 import fanDuelLogo from "@/assets/fanduel.png";
+import { gameDetailHref } from "@/components/home/gameDetailHref";
 import { isInProgressStatus } from "@/components/home/mapScoreboard";
 import { TeamAbbrevAvatar } from "@/components/TeamAbbrevAvatar";
 import { formatOddsPill } from "./mergeMatchupOdds";
@@ -149,10 +150,11 @@ export function MatchupGameCard({ game }: { game: MatchupGame }) {
     </div>
   );
 
-  if (game.espnEventId) {
+  const href = gameDetailHref(game);
+  if (href) {
     return (
       <Link
-        to={`/games/${game.espnEventId}`}
+        to={href}
         className={`${baseClassName} transition-colors hover:border-white/20`}
       >
         {content}

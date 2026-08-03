@@ -21,7 +21,11 @@ FETCH_TIMEOUT_SECONDS = 8.0
 MAX_PAGES = 3
 PAGE_LIMIT = 200
 
-_MAIN_MARKETS = frozenset({"point_spread", "total_points"})
+_MAIN_MARKETS = frozenset(
+    {"point_spread", "total_points", "run_line", "total_runs"}
+)
+_SPREAD_MARKETS = frozenset({"point_spread", "run_line"})
+_TOTAL_MARKETS = frozenset({"total_points", "total_runs"})
 
 # Fallback when Sharp omits nested team objects (seen for some Mystics rows).
 _NAME_TO_ABBREV = {
@@ -55,6 +59,39 @@ _NAME_TO_ABBREV = {
     "washington mystics": "WAS",
     "was mystics": "WAS",
     "wsh mystics": "WAS",
+    # MLB (Sharp / books occasionally omit nested team objects)
+    "arizona diamondbacks": "AZ",
+    "atlanta braves": "ATL",
+    "baltimore orioles": "BAL",
+    "boston red sox": "BOS",
+    "chicago cubs": "CHC",
+    "chicago white sox": "CWS",
+    "cincinnati reds": "CIN",
+    "cleveland guardians": "CLE",
+    "colorado rockies": "COL",
+    "detroit tigers": "DET",
+    "houston astros": "HOU",
+    "kansas city royals": "KC",
+    "los angeles angels": "LAA",
+    "los angeles dodgers": "LAD",
+    "miami marlins": "MIA",
+    "milwaukee brewers": "MIL",
+    "minnesota twins": "MIN",
+    "new york mets": "NYM",
+    "new york yankees": "NYY",
+    "oakland athletics": "ATH",
+    "athletics": "ATH",
+    "philadelphia phillies": "PHI",
+    "pittsburgh pirates": "PIT",
+    "san diego padres": "SD",
+    "san francisco giants": "SF",
+    "seattle mariners": "SEA",
+    "st. louis cardinals": "STL",
+    "st louis cardinals": "STL",
+    "tampa bay rays": "TB",
+    "texas rangers": "TEX",
+    "toronto blue jays": "TOR",
+    "washington nationals": "WSH",
 }
 
 _TRICODE_RE = re.compile(r"^[A-Z]{2,3}$")
@@ -69,17 +106,26 @@ def _utcnow_iso() -> str:
     )
 
 
+def _canon_abbrev(abbrev: str, *, wnba_aliases: bool) -> str:
+    upper = str(abbrev or "").strip().upper()
+    if not wnba_aliases:
+        return upper
+    return canonical_abbrev(upper)
+
+
 def _abbrev_from_team_blob(
     team: dict[str, Any] | None,
     team_label: str | None,
+    *,
+    wnba_aliases: bool = True,
 ) -> str | None:
     if isinstance(team, dict):
         raw = str(team.get("abbreviation") or "").strip().upper()
         if raw:
-            return canonical_abbrev(raw)
+            return _canon_abbrev(raw, wnba_aliases=wnba_aliases)
         name = str(team.get("name") or "").strip().lower()
         if name and name in _NAME_TO_ABBREV:
-            return canonical_abbrev(_NAME_TO_ABBREV[name])
+            return _canon_abbrev(_NAME_TO_ABBREV[name], wnba_aliases=wnba_aliases)
 
     label = str(team_label or "").strip()
     if not label:
@@ -88,11 +134,11 @@ def _abbrev_from_team_blob(
     # "WAS Mystics" / "ATL Dream" → leading tricode
     first = label.split()[0].upper()
     if _TRICODE_RE.match(first):
-        return canonical_abbrev(first)
+        return _canon_abbrev(first, wnba_aliases=wnba_aliases)
 
     mapped = _NAME_TO_ABBREV.get(label.lower())
     if mapped:
-        return canonical_abbrev(mapped)
+        return _canon_abbrev(mapped, wnba_aliases=wnba_aliases)
     return None
 
 
@@ -122,7 +168,10 @@ def _spread_side_abbrev(row: dict[str, Any], home: str, away: str) -> str | None
 
 
 def normalize_sharp_odds(
-    rows: list[dict[str, Any]], sportsbook: str | None = None
+    rows: list[dict[str, Any]],
+    sportsbook: str | None = None,
+    *,
+    wnba_aliases: bool = True,
 ) -> list[WnbaOddsGame]:
     """Collapse Sharp odds rows into one game record with favorite spread + total."""
     by_event: dict[str, dict[str, Any]] = {}
@@ -134,8 +183,12 @@ def normalize_sharp_odds(
         if market not in _MAIN_MARKETS:
             continue
 
-        home = _abbrev_from_team_blob(row.get("home"), row.get("home_team"))
-        away = _abbrev_from_team_blob(row.get("away"), row.get("away_team"))
+        home = _abbrev_from_team_blob(
+            row.get("home"), row.get("home_team"), wnba_aliases=wnba_aliases
+        )
+        away = _abbrev_from_team_blob(
+            row.get("away"), row.get("away_team"), wnba_aliases=wnba_aliases
+        )
         if not home or not away:
             logger.debug(
                 "Skipping Sharp row without abbrevs: event=%s market=%s",
@@ -164,11 +217,11 @@ def normalize_sharp_odds(
         except (TypeError, ValueError):
             continue
 
-        if market == "point_spread":
+        if market in _SPREAD_MARKETS:
             team = _spread_side_abbrev(row, home, away)
             if team:
                 bucket["spreads"].append((team, line_f))
-        else:
+        elif market in _TOTAL_MARKETS:
             bucket["totals"].append(line_f)
 
     games: list[WnbaOddsGame] = []
@@ -224,15 +277,20 @@ def merge_odds_prefer_primary(
     return games
 
 
-async def fetch_sharp_odds_rows(sportsbook: str = "draftkings") -> list[dict[str, Any]]:
+async def fetch_sharp_odds_rows(
+    sportsbook: str = "draftkings",
+    *,
+    league: str = "wnba",
+    market: str = "point_spread,total_points",
+) -> list[dict[str, Any]]:
     if not SHARP_API_KEY:
         raise RuntimeError("SHARP_API_KEY is not configured")
 
     headers = {"X-API-Key": SHARP_API_KEY, "Accept": "application/json"}
     params_base = {
-        "league": "wnba",
+        "league": league,
         "sportsbook": sportsbook,
-        "market": "point_spread,total_points",
+        "market": market,
         "is_main_line": "true",
         "limit": str(PAGE_LIMIT),
     }
